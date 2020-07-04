@@ -8,14 +8,12 @@
 
 import Foundation
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol AsyncUtil {
-
 	func run(qos: DispatchQoS.QoSClass, code: @escaping () -> Void)
 }
 
 public final class AsyncUtilImpl: AsyncUtil {
-
 	public final func run(qos: DispatchQoS.QoSClass, code: @escaping () -> Void) {
 		DispatchQueue.global(qos: qos).async { code() }
 	}

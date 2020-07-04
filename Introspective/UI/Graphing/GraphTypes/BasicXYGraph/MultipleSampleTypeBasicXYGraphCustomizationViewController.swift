@@ -6,10 +6,10 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
 import AAInfographics
-import Presentr
 import os
+import Presentr
+import UIKit
 
 import Common
 import DependencyInjection
@@ -20,31 +20,31 @@ import Samples
 import UIExtensions
 
 final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGraphTypeSetupViewController {
-
 	// MARK: - Static Variables
 
 	private typealias Me = MultipleSampleTypeBasicXYGraphCustomizationViewController
 	private static let presenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
-		center: .center)
+		center: .center
+	)
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var chooseXAxisSampleTypeButton: UIButton!
-	@IBOutlet weak final var clearXAxisQueryButton: UIButton!
-	@IBOutlet weak final var chooseXAxisQueryButton: UIButton!
-	@IBOutlet weak final var chooseXAxisInformationButton: UIButton!
+	@IBOutlet final var chooseXAxisSampleTypeButton: UIButton!
+	@IBOutlet final var clearXAxisQueryButton: UIButton!
+	@IBOutlet final var chooseXAxisQueryButton: UIButton!
+	@IBOutlet final var chooseXAxisInformationButton: UIButton!
 
-	@IBOutlet weak final var chooseYAxisSampleTypeButton: UIButton!
-	@IBOutlet weak final var clearYAxisQueryButton: UIButton!
-	@IBOutlet weak final var chooseYAxisQueryButton: UIButton!
-	@IBOutlet weak final var chooseYAxisInformationButton: UIButton!
+	@IBOutlet final var chooseYAxisSampleTypeButton: UIButton!
+	@IBOutlet final var clearYAxisQueryButton: UIButton!
+	@IBOutlet final var chooseYAxisQueryButton: UIButton!
+	@IBOutlet final var chooseYAxisInformationButton: UIButton!
 
-	@IBOutlet weak final var clearSeriesGroupingButton: UIButton!
-	@IBOutlet weak final var chooseSeriesGroupingButton: UIButton!
-	@IBOutlet weak final var choosePointGroupingButton: UIButton!
-	@IBOutlet weak final var showGraphButton: UIButton!
+	@IBOutlet final var clearSeriesGroupingButton: UIButton!
+	@IBOutlet final var chooseSeriesGroupingButton: UIButton!
+	@IBOutlet final var choosePointGroupingButton: UIButton!
+	@IBOutlet final var showGraphButton: UIButton!
 
 	// MARK: - Instance Variables
 
@@ -52,41 +52,52 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	private final var xAxisSampleType: Sample.Type! {
 		didSet { xAxisSampleTypeSet() }
 	}
+
 	private final var oldYAxisSampleType: Sample.Type!
 	private final var yAxisSampleType: Sample.Type! {
 		didSet { yAxisSampleTypeSet() }
 	}
+
 	private final var xAxisQuery: Query? {
 		didSet { xAxisQuerySet() }
 	}
+
 	private final var yAxisQuery: Query? {
 		didSet { yAxisQuerySet() }
 	}
+
 	private final var seriesGrouperAttributeType: String?
 	private final var seriesGroupers: MultipleSampleTypeXYGraphDataGenerator.Groupers? {
 		didSet { seriesGrouperSet() }
 	}
+
 	private final var pointGrouperAttributeType: String?
 	private final var pointGroupers: MultipleSampleTypeXYGraphDataGenerator.Groupers? {
 		didSet { pointGrouperSet() }
 	}
+
 	private final var usePointGroupValueForXAxis = false
 	private final var xAxisInformation: SampleGroupInformation? {
 		didSet { xAxisInformationSet() }
 	}
+
 	private final var yAxisInformation: [SampleGroupInformation]? {
 		didSet { yAxisInformationSet() }
 	}
+
 	private final var xAxisSamples: [Sample]! { didSet { samplesAssigned() } }
 	private final var yAxisSamples: [Sample]! { didSet { samplesAssigned() } }
 	private final var chartController: BasicXYChartViewController!
 
-	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "MultipleSampleTypeBasicXYGraphCustomizationViewController"))
+	private final let signpost = Signpost(log: OSLog(
+		subsystem: Bundle.main.bundleIdentifier!,
+		category: "MultipleSampleTypeBasicXYGraphCustomizationViewController"
+	))
 	private final let log = Log()
 
 	// MARK: - UIViewController Overloads
 
-	final override func viewDidLoad() {
+	override final func viewDidLoad() {
 		super.viewDidLoad()
 
 		observe(selector: #selector(xAxisQueryChanged), name: .xAxisQueryChanged)
@@ -107,11 +118,11 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 
 	// MARK: - Button Actions
 
-	@IBAction final func clearSeriesGroupingButtonPressed(_ sender: Any) {
+	@IBAction final func clearSeriesGroupingButtonPressed(_: Any) {
 		seriesGroupers = nil
 	}
 
-	@IBAction final func chooseSeriesGroupingButtonPressed(_ sender: Any) {
+	@IBAction final func chooseSeriesGroupingButtonPressed(_: Any) {
 		let controller = viewController(named: "chooseXYGroupers") as! ChooseGroupersForXYGraphViewController
 		controller.xSampleType = xAxisSampleType
 		controller.ySampleType = yAxisSampleType
@@ -123,13 +134,15 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		realNavigationController?.pushViewController(controller, animated: false)
 	}
 
-	@IBAction final func seriesGroupingInfoButtonPressed(_ sender: Any) {
+	@IBAction final func seriesGroupingInfoButtonPressed(_: Any) {
 		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")
-		controller.descriptionText = "This allows you to optionally group things into different data series. Each data series is drawn in its own color on the generated graph."
+		controller
+			.descriptionText =
+			"This allows you to optionally group things into different data series. Each data series is drawn in its own color on the generated graph."
 		present(controller, using: Me.presenter)
 	}
 
-	@IBAction final func choosePointGroupingButtonPressed(_ sender: Any) {
+	@IBAction final func choosePointGroupingButtonPressed(_: Any) {
 		let controller = viewController(named: "chooseXYGroupers") as! ChooseGroupersForXYGraphViewController
 		controller.xSampleType = xAxisSampleType
 		controller.ySampleType = yAxisSampleType
@@ -141,24 +154,29 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		realNavigationController?.pushViewController(controller, animated: false)
 	}
 
-	@IBAction final func pointGroupingInfoButtonPressed(_ sender: Any) {
+	@IBAction final func pointGroupingInfoButtonPressed(_: Any) {
 		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")
-		controller.descriptionText = "This is how the x-axis samples are connected to the y-axis samples. Groups from the x-axis samples are matched to groups from the y-axis samples based on group values (i.e. same day of week or same group name for advanced grouping). This allows you to connect two types of data that don't have the same attributes."
+		controller
+			.descriptionText =
+			"This is how the x-axis samples are connected to the y-axis samples. Groups from the x-axis samples are matched to groups from the y-axis samples based on group values (i.e. same day of week or same group name for advanced grouping). This allows you to connect two types of data that don't have the same attributes."
 		present(controller, using: Me.presenter)
 	}
 
-	@IBAction final func chooseXAxisSampleTypeButtonPressed(_ sender: Any) {
-		let controller = viewController(named: "chooseSampleType", fromStoryboard: "Util") as! ChooseSampleTypeViewController
+	@IBAction final func chooseXAxisSampleTypeButtonPressed(_: Any) {
+		let controller = viewController(
+			named: "chooseSampleType",
+			fromStoryboard: "Util"
+		) as! ChooseSampleTypeViewController
 		controller.selectedSampleType = xAxisSampleType
 		controller.notificationToSendOnAccept = .xAxisSampleTypeChanged
 		customPresentViewController(Me.presenter, viewController: controller, animated: false)
 	}
 
-	@IBAction final func clearXAxisQueryButtonPressed(_ sender: Any) {
+	@IBAction final func clearXAxisQueryButtonPressed(_: Any) {
 		xAxisQuery = nil
 	}
 
-	@IBAction final func chooseXAxisQueryButtonPressed(_ sender: Any) {
+	@IBAction final func chooseXAxisQueryButtonPressed(_: Any) {
 		let controller = viewController(named: "queryView", fromStoryboard: "Query") as! QueryViewController
 		controller.finishedButtonTitle = "Use Query"
 		controller.topmostSampleType = xAxisSampleType
@@ -167,7 +185,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		realNavigationController?.pushViewController(controller, animated: false)
 	}
 
-	@IBAction final func chooseXAxisInformationButtonPressed(_ sender: Any) {
+	@IBAction final func chooseXAxisInformationButtonPressed(_: Any) {
 		let controller = viewController(named: "xAxisSetup") as! XAxisSetupViewController
 		controller.attributes = xAxisSampleType.attributes
 		controller.selectedAttribute = xAxisInformation?.attribute
@@ -178,18 +196,21 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		realNavigationController?.pushViewController(controller, animated: false)
 	}
 
-	@IBAction final func chooseYAxisSampleTypeButtonPressed(_ sender: Any) {
-		let controller = viewController(named: "chooseSampleType", fromStoryboard: "Util") as! ChooseSampleTypeViewController
+	@IBAction final func chooseYAxisSampleTypeButtonPressed(_: Any) {
+		let controller = viewController(
+			named: "chooseSampleType",
+			fromStoryboard: "Util"
+		) as! ChooseSampleTypeViewController
 		controller.selectedSampleType = yAxisSampleType
 		controller.notificationToSendOnAccept = .yAxisSampleTypeChanged
 		customPresentViewController(Me.presenter, viewController: controller, animated: false)
 	}
 
-	@IBAction final func clearYAxisQueryButtonPressed(_ sender: Any) {
+	@IBAction final func clearYAxisQueryButtonPressed(_: Any) {
 		yAxisQuery = nil
 	}
 
-	@IBAction final func chooseYAxisQueryButtonPressed(_ sender: Any) {
+	@IBAction final func chooseYAxisQueryButtonPressed(_: Any) {
 		let controller = viewController(named: "queryView", fromStoryboard: "Query") as! QueryViewController
 		controller.finishedButtonTitle = "Use Query"
 		controller.topmostSampleType = yAxisSampleType
@@ -198,7 +219,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		realNavigationController?.pushViewController(controller, animated: false)
 	}
 
-	@IBAction final func chooseYAxisInformationButtonPressed(_ sender: Any) {
+	@IBAction final func chooseYAxisInformationButtonPressed(_: Any) {
 		let controller = viewController(named: "chooseInformation") as! ChooseInformationToGraphTableViewController
 		controller.attributes = yAxisSampleType.attributes
 		if let yAxisInformation = yAxisInformation {
@@ -208,7 +229,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		realNavigationController?.pushViewController(controller, animated: false)
 	}
 
-	@IBAction final func showMeTheGraphButtonPressed(_ sender: Any) {
+	@IBAction final func showMeTheGraphButtonPressed(_: Any) {
 		chartController = (viewController(named: "BasicXYChartViewController") as! BasicXYChartViewController)
 
 		do {
@@ -238,8 +259,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		if
 			let xGrouper: SampleGrouper? = value(for: .x, from: notification),
 			let yGrouper: SampleGrouper? = value(for: .y, from: notification),
-			let currentAttributeType: String? = value(for: .attribute, from: notification)
-		{
+			let currentAttributeType: String? = value(for: .attribute, from: notification) {
 			seriesGroupers = MultipleSampleTypeXYGraphDataGenerator.Groupers(x: xGrouper!, y: yGrouper!)
 			seriesGrouperAttributeType = currentAttributeType
 		}
@@ -250,8 +270,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		if
 			let xGrouper: SampleGrouper? = value(for: .x, from: notification),
 			let yGrouper: SampleGrouper? = value(for: .y, from: notification),
-			let currentAttributeType: String? = value(for: .attribute, from: notification)
-		{
+			let currentAttributeType: String? = value(for: .attribute, from: notification) {
 			pointGroupers = MultipleSampleTypeXYGraphDataGenerator.Groupers(x: xGrouper!, y: yGrouper!)
 			pointGrouperAttributeType = currentAttributeType
 		}
@@ -282,7 +301,11 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	}
 
 	@objc private final func xAxisInformationChanged(notification: Notification) {
-		if let information: SampleGroupInformation? = value(for: .information, from: notification, keyIsOptional: true) {
+		if let information: SampleGroupInformation? = value(
+			for: .information,
+			from: notification,
+			keyIsOptional: true
+		) {
 			usePointGroupValueForXAxis = false
 			xAxisInformation = information
 		} else if let _: Bool = value(for: .usePointGroupValue, from: notification) {
@@ -315,7 +338,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 
 	private final func runQueries() {
 		xAxisQuery?.resetStoppedState()
-		xAxisQuery!.runQuery { (result, error) in
+		xAxisQuery!.runQuery { result, error in
 			if let error = error {
 				self.log.error("X-axis query run failed: %@", errorInfo(error))
 				DispatchQueue.main.async {
@@ -331,7 +354,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		}
 
 		yAxisQuery?.resetStoppedState()
-		yAxisQuery!.runQuery { (result, error) in
+		yAxisQuery!.runQuery { result, error in
 			if let error = error {
 				self.log.error("Y-axis query run failed: %@", errorInfo(error))
 				DispatchQueue.main.async {
@@ -360,13 +383,13 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 
 	private final func updateChartData() throws {
 		guard let xAxisSamples = xAxisSamples, let yAxisSamples = yAxisSamples else { return }
-		if xAxisSamples.count == 0 {
+		if xAxisSamples.isEmpty {
 			DispatchQueue.main.async {
 				self.chartController.showError(title: "No data returned for x-axis query")
 			}
 			return
 		}
-		if yAxisSamples.count == 0 {
+		if yAxisSamples.isEmpty {
 			DispatchQueue.main.async {
 				self.chartController.showError(title: "No data returned for y-axis query")
 			}
@@ -376,7 +399,8 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		signpost.begin(
 			name: "Update Chart Data", "Number of samples: (x-axis: %d, y-axis: %d)",
 			xAxisSamples.count,
-			yAxisSamples.count)
+			yAxisSamples.count
+		)
 
 		guard let yInformation = yAxisInformation else {
 			throw GenericDisplayableError(title: "Must choose y-axis information")
@@ -385,7 +409,8 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		guard let pointGroupers = pointGroupers else {
 			throw GenericDisplayableError(
 				title: "Unable to graph",
-				description: "Must choose point grouping or there is no way to correlate x-axis to y-axis")
+				description: "Must choose point grouping or there is no way to correlate x-axis to y-axis"
+			)
 		}
 
 		let dataGenerator = MultipleSampleTypeXYGraphDataGenerator(
@@ -393,7 +418,8 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 			pointGroupers: pointGroupers,
 			xInformation: xAxisInformation,
 			yInformation: yInformation,
-			usePointGroupValueForXAxis: usePointGroupValueForXAxis)
+			usePointGroupValueForXAxis: usePointGroupValueForXAxis
+		)
 		// leave this outside of DispatchQueue.main.async because it can take a while
 		let allData = try dataGenerator.generateData(xSamples: xAxisSamples, ySamples: yAxisSamples)
 

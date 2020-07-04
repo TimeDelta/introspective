@@ -14,7 +14,6 @@ import DependencyInjection
 import Samples
 
 public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Equatable {
-
 	// MARK: - Static Variables
 
 	private typealias Me = OnDayOfWeekAttributeRestriction
@@ -25,8 +24,8 @@ public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Eq
 
 	// MARK: - Display Information
 
-	public final override var attributedName: String { return "On day(s) of the week" }
-	public final override var description: String {
+	override public final var attributedName: String { "On day(s) of the week" }
+	override public final var description: String {
 		do {
 			let daysOfWeekText = try Me.daysOfWeekAttribute.convertToDisplayableString(from: daysOfWeek)
 			return "On a " + daysOfWeekText
@@ -38,7 +37,7 @@ public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Eq
 				daysOfWeekText += day.abbreviation
 				if index == daysOfWeek.count - 2 && daysOfWeek.count > 1 {
 					daysOfWeekText += " or "
-				} else if index < daysOfWeek.count - 1  {
+				} else if index < daysOfWeek.count - 1 {
 					daysOfWeekText += ", "
 				}
 				index += 1
@@ -65,14 +64,14 @@ public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Eq
 
 	// MARK: - Attribute Functions
 
-	public final override func value(of attribute: Attribute) throws -> Any? {
+	override public final func value(of attribute: Attribute) throws -> Any? {
 		if !attribute.equalTo(Me.daysOfWeekAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
 		return daysOfWeek
 	}
 
-	public final override func set(attribute: Attribute, to value: Any?) throws {
+	override public final func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(Me.daysOfWeekAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
@@ -87,7 +86,7 @@ public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Eq
 
 	// MARK: - Attribute Restriction Functions
 
-	public final override func samplePasses(_ sample: Sample) throws -> Bool {
+	override public final func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
 		if sampleValue == nil { return false }
 		guard let sampleDate = sampleValue as? Date else {
@@ -96,20 +95,20 @@ public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Eq
 		return DependencyInjector.get(CalendarUtil.self).date(sampleDate, isOnOneOf: daysOfWeek)
 	}
 
-	public override func copy() -> AttributeRestriction {
-		return OnDayOfWeekAttributeRestriction(restrictedAttribute: restrictedAttribute, daysOfWeek: daysOfWeek)
+	override public func copy() -> AttributeRestriction {
+		OnDayOfWeekAttributeRestriction(restrictedAttribute: restrictedAttribute, daysOfWeek: daysOfWeek)
 	}
 
 	// MARK: - Boolean Expression Functions
 
-	public override func predicate() -> NSPredicate? {
-		return nil
+	override public func predicate() -> NSPredicate? {
+		nil
 	}
 
 	// MARK: - Equality
 
-	public static func ==(lhs: OnDayOfWeekAttributeRestriction, rhs: OnDayOfWeekAttributeRestriction) -> Bool {
-		return lhs.equalTo(rhs)
+	public static func == (lhs: OnDayOfWeekAttributeRestriction, rhs: OnDayOfWeekAttributeRestriction) -> Bool {
+		lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
@@ -118,13 +117,13 @@ public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Eq
 		return equalTo(other)
 	}
 
-	public final override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	override public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is OnDayOfWeekAttributeRestriction) { return false }
 		let other = otherRestriction as! OnDayOfWeekAttributeRestriction
 		return equalTo(other)
 	}
 
 	public final func equalTo(_ other: OnDayOfWeekAttributeRestriction) -> Bool {
-		return restrictedAttribute.equalTo(other.restrictedAttribute) && daysOfWeek == other.daysOfWeek
+		restrictedAttribute.equalTo(other.restrictedAttribute) && daysOfWeek == other.daysOfWeek
 	}
 }

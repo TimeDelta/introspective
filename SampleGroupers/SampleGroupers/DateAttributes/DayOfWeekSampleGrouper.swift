@@ -14,7 +14,6 @@ import DependencyInjection
 import Samples
 
 public final class DayOfWeekSampleGrouper: SampleGrouper {
-
 	// MARK: - Display Information
 
 	public static var userVisibleDescription: String = "Group By Day Of Week"
@@ -43,7 +42,7 @@ public final class DayOfWeekSampleGrouper: SampleGrouper {
 	}
 
 	public required init(attributes: [Attribute]) {
-		let applicableAttributes = attributes.filter{
+		let applicableAttributes = attributes.filter {
 			$0 is DateAttribute || $0 is DayOfWeekAttribute || $0 is DaysOfWeekAttribute
 		}
 		groupByAttribute = applicableAttributes.first
@@ -64,7 +63,7 @@ public final class DayOfWeekSampleGrouper: SampleGrouper {
 
 	public final func group(samples: [Sample]) throws -> [(Any, [Sample])] {
 		let groupByAttribute = try getGroupByAttribute(methodName: "group(samples:)")
-		guard samples.count > 0 else { return [] }
+		guard !samples.isEmpty else { return [] }
 		var groups = [(Any, [Sample])]()
 		for sample in samples {
 			let daysOfWeek = try getDaysOfWeekForSample(sample, forAttribute: groupByAttribute)
@@ -97,7 +96,9 @@ public final class DayOfWeekSampleGrouper: SampleGrouper {
 		} else if groupByAttribute is DaysOfWeekAttribute {
 			return "\(groupByAttribute.name) contains \(dayName)"
 		} else {
-			throw GenericError("Unknown type of attribute in DayOfWeekSampleGrouper for attribute named \(groupByAttribute.name)")
+			throw GenericError(
+				"Unknown type of attribute in DayOfWeekSampleGrouper for attribute named \(groupByAttribute.name)"
+			)
 		}
 	}
 
@@ -113,9 +114,10 @@ public final class DayOfWeekSampleGrouper: SampleGrouper {
 	}
 
 	public final func copy() -> SampleGrouper {
-		return DayOfWeekSampleGrouper(
+		DayOfWeekSampleGrouper(
 			groupByAttribute: groupByAttribute,
-			attributeSelectAttribute: attributeSelectAttribute)
+			attributeSelectAttribute: attributeSelectAttribute
+		)
 	}
 
 	// MARK: - Attributed Functions
@@ -143,7 +145,10 @@ public final class DayOfWeekSampleGrouper: SampleGrouper {
 
 	// MARK: - Helper Functions
 
-	private final func getDaysOfWeekForSample(_ sample: Sample, forAttribute attribute: Attribute) throws -> [DayOfWeek] {
+	private final func getDaysOfWeekForSample(
+		_ sample: Sample,
+		forAttribute attribute: Attribute
+	) throws -> [DayOfWeek] {
 		if attribute is DateAttribute {
 			let sampleValue = try sample.value(of: attribute)
 			guard let date = sampleValue as? Date else {
@@ -161,7 +166,7 @@ public final class DayOfWeekSampleGrouper: SampleGrouper {
 			if let daysOfWeek = sampleValue as? [DayOfWeek] {
 				return daysOfWeek
 			} else if let daysOfWeek = sampleValue as? Set<DayOfWeek> {
-				return daysOfWeek.map{ $0 }
+				return daysOfWeek.map { $0 }
 			}
 			throw TypeMismatchError(attribute: attribute, of: sample, wasA: type(of: sampleValue))
 		}
@@ -185,8 +190,7 @@ public final class DayOfWeekSampleGrouper: SampleGrouper {
 		}
 		if
 			let groupByAttribute = groupByAttribute,
-			let otherGroupByAttribute = sameValueGrouper.groupByAttribute
-		{
+			let otherGroupByAttribute = sameValueGrouper.groupByAttribute {
 			return groupByAttribute.equalTo(otherGroupByAttribute)
 		}
 		return false

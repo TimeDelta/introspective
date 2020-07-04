@@ -11,25 +11,24 @@ import Foundation
 import DependencyInjection
 
 public struct TimeOfDay: Comparable {
-
-	public static func ==(lhs: TimeOfDay, rhs: TimeOfDay) -> Bool {
-		return lhs.hour == rhs.hour
+	public static func == (lhs: TimeOfDay, rhs: TimeOfDay) -> Bool {
+		lhs.hour == rhs.hour
 			&& lhs.minute == rhs.minute
 			&& lhs.second == rhs.second
 	}
 
-	public static func !=(lhs: TimeOfDay, rhs: TimeOfDay) -> Bool {
-		return lhs.hour != rhs.hour
+	public static func != (lhs: TimeOfDay, rhs: TimeOfDay) -> Bool {
+		lhs.hour != rhs.hour
 			|| lhs.minute != rhs.minute
 			|| lhs.second != rhs.second
 	}
 
 	public static func < (lhs: TimeOfDay, rhs: TimeOfDay) -> Bool {
-		return lhs.compare(to: rhs) == .orderedAscending
+		lhs.compare(to: rhs) == .orderedAscending
 	}
 
 	public static func > (lhs: TimeOfDay, rhs: TimeOfDay) -> Bool {
-		return lhs.compare(to: rhs) == .orderedDescending
+		lhs.compare(to: rhs) == .orderedDescending
 	}
 
 	public var hour: Int = 0
@@ -52,7 +51,7 @@ public struct TimeOfDay: Comparable {
 		// - nesting all parts inside each other is technically faster
 		//   in cases where not all parts are provided but speed gain
 		//   is very minor so favor readability
-		if parts.count > 0 {
+		if !parts.isEmpty {
 			guard let h = Int(parts[0]) else { return nil }
 			hour = h
 			if str.lowercased().contains("pm") && hour < 12 {
@@ -89,21 +88,20 @@ public struct TimeOfDay: Comparable {
 }
 
 public extension Date {
-
-	static func <(lhs: Date, rhs: TimeOfDay) -> Bool {
-		return lhs.isBefore(timeOfDay: rhs)
+	static func < (lhs: Date, rhs: TimeOfDay) -> Bool {
+		lhs.isBefore(timeOfDay: rhs)
 	}
 
-	static func >(lhs: Date, rhs: TimeOfDay) -> Bool {
-		return lhs.isAfter(timeOfDay: rhs)
+	static func > (lhs: Date, rhs: TimeOfDay) -> Bool {
+		lhs.isAfter(timeOfDay: rhs)
 	}
 
-	static func <=(lhs: Date, rhs: TimeOfDay) -> Bool {
+	static func <= (lhs: Date, rhs: TimeOfDay) -> Bool {
 		let comparisonResult = lhs.compare(to: rhs)
 		return comparisonResult == .orderedAscending || comparisonResult == .orderedSame
 	}
 
-	static func >=(lhs: Date, rhs: TimeOfDay) -> Bool {
+	static func >= (lhs: Date, rhs: TimeOfDay) -> Bool {
 		let comparisonResult = lhs.compare(to: rhs)
 		return comparisonResult == .orderedDescending || comparisonResult == .orderedSame
 	}
@@ -111,16 +109,21 @@ public extension Date {
 	init(_ timeOfDay: TimeOfDay) {
 		self.init()
 		let calendar = Calendar.autoupdatingCurrent
-		self = calendar.date(bySettingHour: timeOfDay.hour, minute: timeOfDay.minute, second: timeOfDay.second, of: self)!
+		self = calendar.date(
+			bySettingHour: timeOfDay.hour,
+			minute: timeOfDay.minute,
+			second: timeOfDay.second,
+			of: self
+		)!
 		self = calendar.date(bySetting: .nanosecond, value: 0, of: self)!
 	}
 
 	func isBefore(timeOfDay: TimeOfDay) -> Bool {
-		return compare(to: timeOfDay) == .orderedAscending
+		compare(to: timeOfDay) == .orderedAscending
 	}
 
 	func isAfter(timeOfDay: TimeOfDay) -> Bool {
-		return compare(to: timeOfDay) == .orderedDescending
+		compare(to: timeOfDay) == .orderedDescending
 	}
 
 	func compare(to timeOfDay: TimeOfDay) -> ComparisonResult {

@@ -12,7 +12,6 @@ import Common
 import Queries
 
 final class ExploreCollectionViewController: UICollectionViewController {
-
 	// MARK: - Static Variables
 
 	private typealias Me = ExploreCollectionViewController
@@ -26,7 +25,7 @@ final class ExploreCollectionViewController: UICollectionViewController {
 
 	// MARK: - UIViewController Overrides
 
-	final override func viewDidLoad() {
+	override final func viewDidLoad() {
 		super.viewDidLoad()
 		observe(selector: #selector(showResultsScreen), name: .showResultsScreen)
 	}
@@ -37,16 +36,18 @@ final class ExploreCollectionViewController: UICollectionViewController {
 
 	// MARK: - UICollectionViewDataSource
 
-	final override func numberOfSections(in collectionView: UICollectionView) -> Int {
-		return 1
+	override final func numberOfSections(in _: UICollectionView) -> Int {
+		1
 	}
 
-
-	final override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return 2
+	override final func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
+		2
 	}
 
-	final override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+	override final func collectionView(
+		_ collectionView: UICollectionView,
+		cellForItemAt indexPath: IndexPath
+	) -> UICollectionViewCell {
 		if indexPath.row == 0 {
 			return collectionView.dequeueReusableCell(withReuseIdentifier: Me.queryCellReuseIdentifier, for: indexPath)
 		}
@@ -60,23 +61,34 @@ final class ExploreCollectionViewController: UICollectionViewController {
 
 	// MARK: - UICollectionViewDelegate
 
-	final override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-		return indexPath.row == 1
+	override final func collectionView(_: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
+		indexPath.row == 1
 	}
 
-	final override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-		return true
+	override final func collectionView(
+		_: UICollectionView,
+		canPerformAction _: Selector,
+		forItemAt _: IndexPath,
+		withSender _: Any?
+	) -> Bool {
+		true
 	}
 
-	final override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-
-	}
+	override final func collectionView(
+		_: UICollectionView,
+		performAction _: Selector,
+		forItemAt _: IndexPath,
+		withSender _: Any?
+	) {}
 
 	// MARK: - Received Notifications
 
 	@objc private final func showResultsScreen(notification: Notification) {
 		if let query: Query = value(for: .query, from: notification) {
-			let resultsController = viewController(named: "results", fromStoryboard: "Results") as! ResultsViewController
+			let resultsController = viewController(
+				named: "results",
+				fromStoryboard: "Results"
+			) as! ResultsViewController
 			query.runQuery { (result: QueryResult?, error: Error?) in
 				if let error = error {
 					DispatchQueue.main.async {

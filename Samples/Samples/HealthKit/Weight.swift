@@ -14,7 +14,6 @@ import Common
 import DependencyInjection
 
 public final class Weight: HealthKitQuantitySample {
-
 	private typealias Me = Weight
 
 	// MARK: - HealthKit Stuff
@@ -25,7 +24,7 @@ public final class Weight: HealthKitQuantitySample {
 	public static let writePermissions: Set<HKSampleType> = Set([sampleType])
 	public static var unit: HKUnit = HKUnit(from: .pound)
 	public final var unitString: String {
-		return Me.unit.unitString
+		Me.unit.unitString
 	}
 
 	public static func initUnits() {
@@ -39,11 +38,15 @@ public final class Weight: HealthKitQuantitySample {
 
 	// MARK: - Attributes
 
-	public static let weight = DoubleAttribute(name: "Weight", pluralName: "Weights", variableName: HKPredicateKeyPathQuantity)
+	public static let weight = DoubleAttribute(
+		name: "Weight",
+		pluralName: "Weights",
+		variableName: HKPredicateKeyPathQuantity
+	)
 	public static let attributes: [Attribute] = [CommonSampleAttributes.healthKitTimestamp, weight]
 	public static let defaultDependentAttribute: Attribute = weight
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp
-	public final var attributes: [Attribute] { return Me.attributes }
+	public final var attributes: [Attribute] { Me.attributes }
 
 	// MARK: - Instance Variables
 
@@ -74,19 +77,20 @@ public final class Weight: HealthKitQuantitySample {
 			quantity: quantity,
 			start: timestamp,
 			end: timestamp,
-			metadata: [HKMetadataKeyTimeZone : TimeZone.autoupdatingCurrent.identifier])
+			metadata: [HKMetadataKeyTimeZone: TimeZone.autoupdatingCurrent.identifier]
+		)
 	}
 
 	// MARK: - HealthKitQuantitySample Functions
 
 	public func quantityValue() -> Double {
-		return weight
+		weight
 	}
 
 	// MARK: - Sample Functions
 
 	public final func dates() -> [DateType: Date] {
-		return [.start: timestamp]
+		[.start: timestamp]
 	}
 
 	// MARK: - Attributed Functions
@@ -123,9 +127,8 @@ public final class Weight: HealthKitQuantitySample {
 // MARK: - Equatable
 
 extension Weight: Equatable {
-
-	public static func ==(lhs: Weight, rhs: Weight) -> Bool {
-		return lhs.equalTo(rhs)
+	public static func == (lhs: Weight, rhs: Weight) -> Bool {
+		lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
@@ -141,15 +144,14 @@ extension Weight: Equatable {
 	}
 
 	public final func equalTo(_ other: Weight) -> Bool {
-		return timestamp == other.timestamp && weight == other.weight
+		timestamp == other.timestamp && weight == other.weight
 	}
 }
 
 // MARK: - Debug
 
 extension Weight: CustomDebugStringConvertible {
-
 	public final var debugDescription: String {
-		return "Weight of \(weight) at " + DependencyInjector.get(CalendarUtil.self).string(for: timestamp)
+		"Weight of \(weight) at " + DependencyInjector.get(CalendarUtil.self).string(for: timestamp)
 	}
 }

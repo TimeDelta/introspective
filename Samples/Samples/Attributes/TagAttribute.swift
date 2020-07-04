@@ -6,8 +6,8 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 import Attributes
 import Common
@@ -15,7 +15,6 @@ import DependencyInjection
 import Persistence
 
 public final class TagAttribute: TypedSelectOneAttribute<Tag> {
-
 	// MARK: - Initializers
 
 	public init(
@@ -23,8 +22,8 @@ public final class TagAttribute: TypedSelectOneAttribute<Tag> {
 		pluralName: String? = "Tags",
 		description: String? = nil,
 		variableName: String? = nil,
-		optional: Bool = false)
-	{
+		optional: Bool = false
+	) {
 		super.init(
 			name: name,
 			typeName: "Tag",
@@ -43,6 +42,7 @@ public final class TagAttribute: TypedSelectOneAttribute<Tag> {
 				}
 			},
 			possibleValueToString: { $0.name },
-			areEqual: { $0.equalTo($1) })
+			areEqual: { $0.equalTo($1) }
+		)
 	}
 }

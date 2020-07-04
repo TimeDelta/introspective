@@ -6,13 +6,12 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 public extension EasyPillMedicationDoseImporterImpl {
-
 	@nonobjc class func fetchRequest() -> NSFetchRequest<EasyPillMedicationDoseImporterImpl> {
-		return NSFetchRequest<EasyPillMedicationDoseImporterImpl>(entityName: "EasyPillMedicationDoseImporter")
+		NSFetchRequest<EasyPillMedicationDoseImporterImpl>(entityName: "EasyPillMedicationDoseImporter")
 	}
 
 	@NSManaged var lastImport: Date?

@@ -9,7 +9,6 @@
 import Foundation
 
 public final class DayOfWeek: Hashable, Comparable {
-
 	public enum ErrorTypes: Error {
 		case UnknownDayOfWeek
 	}
@@ -25,23 +24,23 @@ public final class DayOfWeek: Hashable, Comparable {
 	public static let allDays = [Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday]
 
 	public static func < (lhs: DayOfWeek, rhs: DayOfWeek) -> Bool {
-		return lhs.intValue < rhs.intValue
+		lhs.intValue < rhs.intValue
 	}
 
 	public static func <= (lhs: DayOfWeek, rhs: DayOfWeek) -> Bool {
-		return lhs.intValue <= rhs.intValue
+		lhs.intValue <= rhs.intValue
 	}
 
 	public static func == (lhs: DayOfWeek, rhs: DayOfWeek) -> Bool {
-		return lhs.intValue == rhs.intValue
+		lhs.intValue == rhs.intValue
 	}
 
 	public static func >= (lhs: DayOfWeek, rhs: DayOfWeek) -> Bool {
-		return lhs.intValue >= rhs.intValue
+		lhs.intValue >= rhs.intValue
 	}
 
 	public static func > (lhs: DayOfWeek, rhs: DayOfWeek) -> Bool {
-		return lhs.intValue > rhs.intValue
+		lhs.intValue > rhs.intValue
 	}
 
 	/// - Throws: When not a valid day name
@@ -56,11 +55,11 @@ public final class DayOfWeek: Hashable, Comparable {
 	}
 
 	public static func fromInt(_ intValue: Int) -> DayOfWeek {
-		return allDays[intValue]
+		allDays[intValue]
 	}
 
 	public var description: String {
-		return fullDayName
+		fullDayName
 	}
 
 	public final let fullDayName: String
@@ -69,7 +68,7 @@ public final class DayOfWeek: Hashable, Comparable {
 
 	private init(_ intValue: Int, _ minRequiredString: String, _ fullDayName: String) {
 		self.intValue = intValue
-		self.abbreviation = minRequiredString
+		abbreviation = minRequiredString
 		self.fullDayName = fullDayName
 	}
 

@@ -14,7 +14,6 @@ import Persistence
 import Samples
 
 public protocol MedicationDoseEditorViewController: UIViewController {
-
 	var medicationDose: MedicationDose? { get set }
 	/// If `medicationDose` is not set, will use default dosage and is only required if not editing an existing dose
 	var medication: Medication! { get set }
@@ -23,13 +22,12 @@ public protocol MedicationDoseEditorViewController: UIViewController {
 }
 
 public final class MedicationDoseEditorViewControllerImpl: UIViewController, MedicationDoseEditorViewController {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var dosageLabel: UILabel!
-	@IBOutlet weak final var dosageTextField: UITextField!
-	@IBOutlet weak final var datePicker: UIDatePicker!
-	@IBOutlet weak final var saveButton: UIButton!
+	@IBOutlet final var dosageLabel: UILabel!
+	@IBOutlet final var dosageTextField: UITextField!
+	@IBOutlet final var datePicker: UIDatePicker!
+	@IBOutlet final var saveButton: UIButton!
 
 	// MARK: - Instance Variables
 
@@ -43,7 +41,7 @@ public final class MedicationDoseEditorViewControllerImpl: UIViewController, Med
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 		dosageTextField.text = medicationDose?.dosage?.description ?? medication.dosage?.description
 		if let date = medicationDose?.date {
@@ -78,8 +76,9 @@ public final class MedicationDoseEditorViewControllerImpl: UIViewController, Med
 			post(
 				notificationToSendOnAccept,
 				userInfo: [
-					userInfoKey: self.medicationDose as Any,
-				])
+					userInfoKey: medicationDose as Any,
+				]
+			)
 			dismiss(animated: false, completion: nil)
 		} catch {
 			log.error("Failed to create medication dose: %@", errorInfo(error))
@@ -87,7 +86,7 @@ public final class MedicationDoseEditorViewControllerImpl: UIViewController, Med
 		}
 	}
 
-	@IBAction final func dosageTextChanged(_ sender: Any) {
+	@IBAction final func dosageTextChanged(_: Any) {
 		validate()
 	}
 
@@ -115,7 +114,7 @@ public final class MedicationDoseEditorViewControllerImpl: UIViewController, Med
 	}
 
 	private final func dosageIsValid() -> Bool {
-		 return dosageTextField.text == nil ||
+		dosageTextField.text == nil ||
 			dosageTextField.text!.isEmpty ||
 			Dosage(dosageTextField.text!) != nil
 	}

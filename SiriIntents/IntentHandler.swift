@@ -11,7 +11,6 @@ import Foundation
 import Common
 
 public class IntentHandler: NSObject {
-
 	public final func errorDescription(_ error: DisplayableError) -> String {
 		var result = error.displayableTitle
 		if let description = error.displayableDescription {

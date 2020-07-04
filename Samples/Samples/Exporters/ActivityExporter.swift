@@ -6,8 +6,8 @@
 //  Copyright © 2019 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 import Common
 import DataExport
@@ -16,12 +16,10 @@ import Persistence
 
 import CSV
 
-//sourcery: AutoMockable
-public protocol ActivityExporter: Exporter {
-}
+// sourcery: AutoMockable
+public protocol ActivityExporter: Exporter {}
 
 public final class ActivityExporterImpl: BaseExporter, ActivityExporter {
-
 	// MARK: - Instance Variables
 
 	private final var activities = [Exportable]()
@@ -40,15 +38,17 @@ public final class ActivityExporterImpl: BaseExporter, ActivityExporter {
 			for: .documentDirectory,
 			in: .userDomainMask,
 			appropriateFor: nil,
-			create: false)
+			create: false
+		)
 		super.init(
 			dataTypePluralName: "Activities",
-			url: DependencyInjector.get(ExporterUtil.self).urlOfExportFile(for: Activity.self, in: directory))
+			url: DependencyInjector.get(ExporterUtil.self).urlOfExportFile(for: Activity.self, in: directory)
+		)
 	}
 
 	// MARK: - Functions
 
-	public final override func exportData() throws {
+	override public final func exportData() throws {
 		guard !isCancelled else { return }
 		guard !(started && isPaused) else {
 			throw GenericError("Tried to start a new activities export with an exporter that is already in use.")
@@ -58,7 +58,7 @@ public final class ActivityExporterImpl: BaseExporter, ActivityExporter {
 
 		try getActivities()
 
-		guard activities.count > 0 else {
+		guard !activities.isEmpty else {
 			throw GenericDisplayableError(title: "Nothing to export")
 		}
 
@@ -70,13 +70,13 @@ public final class ActivityExporterImpl: BaseExporter, ActivityExporter {
 		try exportRemaining()
 	}
 
-	public final override func cancel() {
+	override public final func cancel() {
 		isCancelled = true
 		// release memory for activities
 		activities = []
 	}
 
-	public final override func resume() throws {
+	override public final func resume() throws {
 		isPaused = false
 		try exportRemaining()
 	}

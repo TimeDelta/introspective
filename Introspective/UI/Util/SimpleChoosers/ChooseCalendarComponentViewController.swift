@@ -12,10 +12,9 @@ import Attributes
 import Common
 
 final class ChooseCalendarComponentViewController: UIViewController {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var calendarComponentPicker: UIPickerView!
+	@IBOutlet final var calendarComponentPicker: UIPickerView!
 
 	// MARK: - Instance Variables
 
@@ -27,7 +26,7 @@ final class ChooseCalendarComponentViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	final override func viewDidLoad() {
+	override final func viewDidLoad() {
 		super.viewDidLoad()
 		calendarComponentPicker.dataSource = self
 		calendarComponentPicker.delegate = self
@@ -42,13 +41,14 @@ final class ChooseCalendarComponentViewController: UIViewController {
 
 	// MARK: - Button Actions
 
-	@IBAction final func userPressedAccept(_ sender: Any) {
+	@IBAction final func userPressedAccept(_: Any) {
 		NotificationCenter.default.post(
 			name: notificationToSendOnAccept,
 			object: self,
 			userInfo: info([
 				.calendarComponent: selectedComponent as Any,
-			]))
+			])
+		)
 		dismiss(animated: false, completion: nil)
 	}
 }
@@ -56,25 +56,23 @@ final class ChooseCalendarComponentViewController: UIViewController {
 // MARK: - UIPickerViewDataSource
 
 extension ChooseCalendarComponentViewController: UIPickerViewDataSource {
-
-	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
-		return 1
+	public final func numberOfComponents(in _: UIPickerView) -> Int {
+		1
 	}
 
-	public final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return applicableComponents.count
+	public final func pickerView(_: UIPickerView, numberOfRowsInComponent _: Int) -> Int {
+		applicableComponents.count
 	}
 }
 
 // MARK: - UIPickerViewDelegate
 
 extension ChooseCalendarComponentViewController: UIPickerViewDelegate {
-
-	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return applicableComponents[row].description.localizedCapitalized
+	public final func pickerView(_: UIPickerView, titleForRow row: Int, forComponent _: Int) -> String? {
+		applicableComponents[row].description.localizedCapitalized
 	}
 
-	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+	public final func pickerView(_: UIPickerView, didSelectRow row: Int, inComponent _: Int) {
 		selectedComponent = applicableComponents[row]
 	}
 }

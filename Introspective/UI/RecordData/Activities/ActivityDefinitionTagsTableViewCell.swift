@@ -6,9 +6,9 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
+import CoreData
 import UIKit
 import WSTagsField
-import CoreData
 
 import Common
 import DependencyInjection
@@ -16,11 +16,10 @@ import Persistence
 import Samples
 
 public final class ActivityDefinitionTagsTableViewCell: UITableViewCell {
-
 	// MARK: - IBOutlets
 
 	/// This field automatically prevents duplication of tags
-	@IBOutlet weak final var tagsField: WSTagsField! {
+	@IBOutlet final var tagsField: WSTagsField! {
 		didSet {
 			guard let tagsField = tagsField else { return }
 			tagsField.spaceBetweenLines = 20
@@ -37,7 +36,7 @@ public final class ActivityDefinitionTagsTableViewCell: UITableViewCell {
 
 			do {
 				let tags = try DependencyInjector.get(Database.self).query(Tag.fetchRequest() as NSFetchRequest<Tag>)
-				tagsField.textField.filterStrings(tags.map{ $0.name })
+				tagsField.textField.filterStrings(tags.map { $0.name })
 			} catch {
 				log.error("Auto complete failure: %@", errorInfo(error))
 			}
@@ -51,33 +50,34 @@ public final class ActivityDefinitionTagsTableViewCell: UITableViewCell {
 		didSet {
 			// this gets executed every time something is inserted into the set
 			guard !initialTagsSet else { return }
-			tagsField.addTags(tagNames.map{ $0 })
+			tagsField.addTags(tagNames.map { $0 })
 			setAccessibilityValue()
 			initialTagsSet = true
 		}
 	}
+
 	private final var initialTagsSet = false
 
 	private final let log = Log()
 
 	// MARK: - Helper Functions
 
-	private final func addedTag(_ field: WSTagsField, _ tag: WSTag) {
+	private final func addedTag(_: WSTagsField, _ tag: WSTag) {
 		guard initialTagsSet else { return } // avoid sending pointless updates
 		tagNames.insert(tag.text)
 		setAccessibilityValue()
 		sendTagsChangedNotification()
 	}
 
-	private final func removedTag(_ field: WSTagsField, _ tag: WSTag) {
+	private final func removedTag(_: WSTagsField, _ tag: WSTag) {
 		tagNames.remove(tag.text)
 		setAccessibilityValue()
 		sendTagsChangedNotification()
 	}
 
 	private final func setAccessibilityValue() {
-		tagsField.accessibilityValue = tagNames.map{ $0 }.joined(separator: ";")
-		tagsField.textField.accessibilityValue = tagNames.map{ $0 }.joined(separator: ";")
+		tagsField.accessibilityValue = tagNames.map { $0 }.joined(separator: ";")
+		tagsField.textField.accessibilityValue = tagNames.map { $0 }.joined(separator: ";")
 	}
 
 	private final func sendTagsChangedNotification() {
@@ -87,14 +87,14 @@ public final class ActivityDefinitionTagsTableViewCell: UITableViewCell {
 				object: self,
 				userInfo: self.info([
 					.tagNames: self.tagNames,
-				]))
+				])
+			)
 		}
 	}
 }
 
 extension ActivityDefinitionTagsTableViewCell: UITextFieldDelegate {
-
-	public func textFieldDidEndEditing(_ textField: UITextField) {
+	public func textFieldDidEndEditing(_: UITextField) {
 		tagsField.acceptCurrentTextAsTag()
 	}
 }

@@ -13,7 +13,6 @@ import Common
 import Samples
 
 public class HasOneOfTagAttributeRestriction: AnyAttributeRestriction, Equatable {
-
 	private typealias Me = HasOneOfTagAttributeRestriction
 
 	// MARK: - Attributes
@@ -23,9 +22,9 @@ public class HasOneOfTagAttributeRestriction: AnyAttributeRestriction, Equatable
 
 	// MARK: - Display Information
 
-	public override var attributedName: String { return "Tagged with one of" }
-	public override var description: String {
-		if tags.count == 0 {
+	override public var attributedName: String { "Tagged with one of" }
+	override public var description: String {
+		if tags.isEmpty {
 			return "Tagged with one of:"
 		}
 		let tagsText = try! Me.tagsAttribute.convertToDisplayableString(from: tags)
@@ -51,7 +50,7 @@ public class HasOneOfTagAttributeRestriction: AnyAttributeRestriction, Equatable
 
 	// MARK: - Attribute Restriction Functions
 
-	public final override func samplePasses(_ sample: Sample) throws -> Bool {
+	override public final func samplePasses(_ sample: Sample) throws -> Bool {
 		if restrictedAttribute is TagAttribute {
 			if let sampleTag = try sample.value(of: restrictedAttribute) as? Tag {
 				return tags.contains(where: { $0.equalTo(sampleTag) })
@@ -61,9 +60,9 @@ public class HasOneOfTagAttributeRestriction: AnyAttributeRestriction, Equatable
 			return false
 		} else if restrictedAttribute is TagsAttribute {
 			if let sampleTags = try sample.value(of: restrictedAttribute) as? [Tag] {
-				return sampleTags.filter() { sampleTag in
-					return tags.contains(where: { $0.equalTo(sampleTag) })
-				}.count > 0
+				return !sampleTags.filter { sampleTag in
+					tags.contains(where: { $0.equalTo(sampleTag) })
+				}.isEmpty
 			} else if !restrictedAttribute.optional {
 				throw TypeMismatchError(attribute: restrictedAttribute, of: sample, wasA: type(of: value))
 			}
@@ -73,22 +72,22 @@ public class HasOneOfTagAttributeRestriction: AnyAttributeRestriction, Equatable
 		return false
 	}
 
-	public override func copy() -> AttributeRestriction {
-		return HasOneOfTagAttributeRestriction(tags: tags, restrictedAttribute: restrictedAttribute)
+	override public func copy() -> AttributeRestriction {
+		HasOneOfTagAttributeRestriction(tags: tags, restrictedAttribute: restrictedAttribute)
 	}
 
 	// MARK: - Boolean Expression Functions
 
-	public override func predicate() -> NSPredicate? {
+	override public func predicate() -> NSPredicate? {
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		if restrictedAttribute is TagAttribute {
-			let predicates = tags.map{
+			let predicates = tags.map {
 				NSPredicate(format: "%K.name == %@", variableName, $0.name)
 			}
 			return NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
 		}
 		if restrictedAttribute is TagsAttribute {
-			let predicates = tags.map{
+			let predicates = tags.map {
 				NSPredicate(format: "SUBQUERY(%K, $tag, $tag.name ==[cd] %@) .@count > 0", variableName, $0.name)
 			}
 			return NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
@@ -99,14 +98,14 @@ public class HasOneOfTagAttributeRestriction: AnyAttributeRestriction, Equatable
 
 	// MARK: - Attributed Functions
 
-	public final override func value(of attribute: Attribute) throws -> Any? {
+	override public final func value(of attribute: Attribute) throws -> Any? {
 		if !attribute.equalTo(Me.tagsAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
 		return tags
 	}
 
-	public final override func set(attribute: Attribute, to value: Any?) throws {
+	override public final func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(Me.tagsAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
@@ -114,7 +113,7 @@ public class HasOneOfTagAttributeRestriction: AnyAttributeRestriction, Equatable
 			tags = castedValue
 			return
 		} else if let castedValue = value as? Set<Tag> {
-			tags = castedValue.map{ $0 }
+			tags = castedValue.map { $0 }
 			return
 		}
 		throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
@@ -122,8 +121,8 @@ public class HasOneOfTagAttributeRestriction: AnyAttributeRestriction, Equatable
 
 	// MARK: - Equality
 
-	public static func ==(lhs: HasOneOfTagAttributeRestriction, rhs: HasOneOfTagAttributeRestriction) -> Bool {
-		return lhs.equalTo(rhs)
+	public static func == (lhs: HasOneOfTagAttributeRestriction, rhs: HasOneOfTagAttributeRestriction) -> Bool {
+		lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ attributed: Attributed) -> Bool {
@@ -133,7 +132,7 @@ public class HasOneOfTagAttributeRestriction: AnyAttributeRestriction, Equatable
 		return equalTo(other)
 	}
 
-	public final override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	override public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		guard let other = otherRestriction as? HasOneOfTagAttributeRestriction else {
 			return false
 		}
@@ -141,7 +140,7 @@ public class HasOneOfTagAttributeRestriction: AnyAttributeRestriction, Equatable
 	}
 
 	public final func equalTo(_ other: HasOneOfTagAttributeRestriction) -> Bool {
-		return restrictedAttribute.equalTo(other.restrictedAttribute) && tagsAreEqual(other)
+		restrictedAttribute.equalTo(other.restrictedAttribute) && tagsAreEqual(other)
 	}
 
 	/// - Note: This is necessary because == operator cannot be overriden for any subclass
@@ -158,21 +157,20 @@ public class HasOneOfTagAttributeRestriction: AnyAttributeRestriction, Equatable
 }
 
 public final class ActivityHasOneOfTagAttributeRestriction: HasOneOfTagAttributeRestriction {
-
-	public override func predicate() -> NSPredicate? {
+	override public func predicate() -> NSPredicate? {
 		guard let variableName = restrictedAttribute.variableName else { return nil }
-		var activityPredicates = tags.map{
+		var activityPredicates = tags.map {
 			NSPredicate(format: "SUBQUERY(definition.tags, $tag, $tag.name ==[cd] %@) .@count > 0", $0.name)
 		}
 		if restrictedAttribute is TagAttribute {
-			let regularPredicates = tags.map{
+			let regularPredicates = tags.map {
 				NSPredicate(format: "%K.name == %@", variableName, $0.name)
 			}
 			activityPredicates.append(contentsOf: regularPredicates)
 			return NSCompoundPredicate(orPredicateWithSubpredicates: activityPredicates)
 		}
 		if restrictedAttribute is TagsAttribute {
-			let regularPredicates = tags.map{
+			let regularPredicates = tags.map {
 				NSPredicate(format: "SUBQUERY(%K, $tag, $tag.name ==[cd] %@) .@count > 0", variableName, $0.name)
 			}
 			activityPredicates.append(contentsOf: regularPredicates)

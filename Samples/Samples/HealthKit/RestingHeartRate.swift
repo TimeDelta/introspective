@@ -14,7 +14,6 @@ import Common
 import DependencyInjection
 
 public class RestingHeartRate: HealthKitQuantitySample {
-
 	private typealias Me = RestingHeartRate
 
 	// MARK: - HealthKit Stuff
@@ -25,11 +24,12 @@ public class RestingHeartRate: HealthKitQuantitySample {
 	public static let writePermissions: Set<HKSampleType> = Set([sampleType])
 	public static var unit: HKUnit = HKUnit(from: "count/min")
 	public final var unitString: String {
-		return Me.unit.unitString
+		Me.unit.unitString
 	}
 
 	public static func initUnits() {
-		unit = DependencyInjector.get(HealthKitUtil.self).preferredUnitFor(.restingHeartRate) ?? HKUnit(from: "count/min")
+		unit = DependencyInjector.get(HealthKitUtil.self)
+			.preferredUnitFor(.restingHeartRate) ?? HKUnit(from: "count/min")
 	}
 
 	// MARK: - Display Information
@@ -39,11 +39,15 @@ public class RestingHeartRate: HealthKitQuantitySample {
 
 	// MARK: - Attributes
 
-	public static let restingHeartRate = DoubleAttribute(name: "Resting heart rate", pluralName: "Resting heart rates", variableName: HKPredicateKeyPathQuantity)
+	public static let restingHeartRate = DoubleAttribute(
+		name: "Resting heart rate",
+		pluralName: "Resting heart rates",
+		variableName: HKPredicateKeyPathQuantity
+	)
 	public static let attributes: [Attribute] = [CommonSampleAttributes.healthKitTimestamp, restingHeartRate]
 	public static let defaultDependentAttribute: Attribute = restingHeartRate
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp
-	public final var attributes: [Attribute] { return Me.attributes }
+	public final var attributes: [Attribute] { Me.attributes }
 
 	// MARK: - Instance Variables
 
@@ -74,19 +78,20 @@ public class RestingHeartRate: HealthKitQuantitySample {
 			quantity: quantity,
 			start: timestamp,
 			end: timestamp,
-			metadata: [HKMetadataKeyTimeZone : TimeZone.autoupdatingCurrent.identifier])
+			metadata: [HKMetadataKeyTimeZone: TimeZone.autoupdatingCurrent.identifier]
+		)
 	}
 
 	// MARK: - HealthKitQuantitySample Functions
 
 	public func quantityValue() -> Double {
-		return restingHeartRate
+		restingHeartRate
 	}
 
 	// MARK: - Sample Functions
 
 	public final func dates() -> [DateType: Date] {
-		return [.start: timestamp]
+		[.start: timestamp]
 	}
 
 	// MARK: - Attributed Functions
@@ -123,9 +128,8 @@ public class RestingHeartRate: HealthKitQuantitySample {
 // MARK: - Equatable
 
 extension RestingHeartRate: Equatable {
-
-	public static func ==(lhs: RestingHeartRate, rhs: RestingHeartRate) -> Bool {
-		return lhs.equalTo(rhs)
+	public static func == (lhs: RestingHeartRate, rhs: RestingHeartRate) -> Bool {
+		lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
@@ -141,15 +145,14 @@ extension RestingHeartRate: Equatable {
 	}
 
 	public final func equalTo(_ other: RestingHeartRate) -> Bool {
-		return timestamp == other.timestamp && restingHeartRate == other.restingHeartRate
+		timestamp == other.timestamp && restingHeartRate == other.restingHeartRate
 	}
 }
 
 // MARK: - Debug
 
 extension RestingHeartRate: CustomDebugStringConvertible {
-
 	public final var debugDescription: String {
-		return "RestingHeartRate of \(restingHeartRate) at " + DependencyInjector.get(CalendarUtil.self).string(for: timestamp)
+		"RestingHeartRate of \(restingHeartRate) at " + DependencyInjector.get(CalendarUtil.self).string(for: timestamp)
 	}
 }

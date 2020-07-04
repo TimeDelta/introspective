@@ -10,7 +10,6 @@ import Foundation
 import HealthKit
 
 public protocol HealthKitSample: Sample {
-
 	static var readPermissions: Set<HKObjectType> { get }
 	static var writePermissions: Set<HKSampleType> { get }
 

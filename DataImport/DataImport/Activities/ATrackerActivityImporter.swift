@@ -6,20 +6,19 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import CoreData
 import CSV
+import Foundation
 
 import Common
 import DependencyInjection
 import Persistence
 import Samples
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol ATrackerActivityImporter: ActivityImporter {}
 
 public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivityImporter, CoreDataObject {
-
 	// MARK: - Static Variables
 
 	private typealias Me = ATrackerActivityImporterImpl
@@ -126,7 +125,11 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 
 	// MARK: - Helper Functions
 
-	private final func importActivity(from csv: CSVReader, latestDate: inout Date!, using transaction: Transaction) throws {
+	private final func importActivity(
+		from csv: CSVReader,
+		latestDate: inout Date!,
+		using transaction: Transaction
+	) throws {
 		var definition: ActivityDefinition! = try retrieveExistingDefinition(from: csv, using: transaction)
 		if definition == nil {
 			definition = try createDefinition(from: csv, using: transaction)
@@ -147,7 +150,8 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 
 	private final func getStartDate(from csv: CSVReader) throws -> Date {
 		if let startDateText = csv[Me.startDateColumn] {
-			if let startDate = DependencyInjector.get(CalendarUtil.self).date(from: startDateText, format: "YYYY-MM-dd HH:mm") {
+			if let startDate = DependencyInjector.get(CalendarUtil.self)
+				.date(from: startDateText, format: "YYYY-MM-dd HH:mm") {
 				return startDate
 			} else {
 				throw InvalidFileFormatError("Invalid format for start date / time for record \(recordNumber).")
@@ -157,10 +161,11 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 		}
 	}
 
-	private final func getEndDate(from csv: CSVReader) throws -> Date?  {
+	private final func getEndDate(from csv: CSVReader) throws -> Date? {
 		if let endDateText = csv[Me.endDateColumn] {
 			if !endDateText.isEmpty {
-				if let endDate = DependencyInjector.get(CalendarUtil.self).date(from: endDateText, format: "YYYY-MM-dd HH:mm") {
+				if let endDate = DependencyInjector.get(CalendarUtil.self)
+					.date(from: endDateText, format: "YYYY-MM-dd HH:mm") {
 					return endDate
 				}
 				throw InvalidFileFormatError("Invalid format for end date / time for record \(recordNumber).")
@@ -174,20 +179,28 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 		activity.note = csv[Me.noteColumn]
 	}
 
-	private final func retrieveExistingDefinition(from csv: CSVReader, using transaction: Transaction) throws -> ActivityDefinition? {
-		guard let name = csv[Me.nameColumn] else { throw InvalidFileFormatError("No name given for activity for record \(recordNumber)")}
+	private final func retrieveExistingDefinition(
+		from csv: CSVReader,
+		using transaction: Transaction
+	) throws -> ActivityDefinition? {
+		guard let name = csv[Me.nameColumn]
+		else { throw InvalidFileFormatError("No name given for activity for record \(recordNumber)") }
 		let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
 		// query from the transaction to include definitions created in this import
 		let matchingActivities = try transaction.query(fetchRequest)
-		if matchingActivities.count > 0 {
+		if !matchingActivities.isEmpty {
 			return matchingActivities[0]
 		}
 		return nil
 	}
 
-	private final func createDefinition(from csv: CSVReader, using transaction: Transaction) throws -> ActivityDefinition {
-		guard let name = csv[Me.nameColumn] else { throw InvalidFileFormatError("No name given for activity for record \(recordNumber)")}
+	private final func createDefinition(
+		from csv: CSVReader,
+		using transaction: Transaction
+	) throws -> ActivityDefinition {
+		guard let name = csv[Me.nameColumn]
+		else { throw InvalidFileFormatError("No name given for activity for record \(recordNumber)") }
 		let description = csv[Me.descriptionColumn]
 		let tagNames = csv[Me.tagsColumn]?.split(separator: "|")
 
@@ -217,8 +230,9 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 		for definition: ActivityDefinition,
 		startingAt start: Date,
 		from csv: CSVReader,
-		using transaction: Transaction)
-	throws {
+		using transaction: Transaction
+	)
+		throws {
 		let childTransaction = transaction.childTransaction()
 		let activity = try childTransaction.new(Activity.self)
 		activity.definition = try childTransaction.pull(savedObject: definition)
@@ -232,48 +246,52 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 	private final func createOrRetrieveTag(
 		named tagName: String,
 		for definition: ActivityDefinition,
-		using transaction: Transaction)
-	throws -> Tag {
-		let tagRequest: NSFetchRequest<Tag> = Tag.fetchRequest()
-		tagRequest.predicate = NSPredicate(format: "name ==[cd] %@", tagName)
-		let matchingTags = try transaction.query(tagRequest)
-		let tag: Tag
-		if matchingTags.count > 0 {
-			tag = try DependencyInjector.get(Database.self).pull(savedObject: matchingTags[0], fromSameContextAs: definition)
-		} else {
-			let childTransaction = transaction.childTransaction()
-			tag = try childTransaction.new(Tag.self)
-			tag.name = tagName
-			try retryOnFail({ try childTransaction.commit() }, maxRetries: 2)
+		using transaction: Transaction
+	)
+		throws -> Tag {
+			let tagRequest: NSFetchRequest<Tag> = Tag.fetchRequest()
+			tagRequest.predicate = NSPredicate(format: "name ==[cd] %@", tagName)
+			let matchingTags = try transaction.query(tagRequest)
+			let tag: Tag
+			if !matchingTags.isEmpty {
+				tag = try DependencyInjector.get(Database.self)
+					.pull(savedObject: matchingTags[0], fromSameContextAs: definition)
+			} else {
+				let childTransaction = transaction.childTransaction()
+				tag = try childTransaction.new(Tag.self)
+				tag.name = tagName
+				try retryOnFail({ try childTransaction.commit() }, maxRetries: 2)
+			}
+			return try transaction.pull(savedObject: tag)
 		}
-		return try transaction.pull(savedObject: tag)
-	}
 
 	private final func unfinishedActivity(at startDate: Date, for definition: ActivityDefinition) throws -> Activity? {
 		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
 		fetchRequest.predicate = NSPredicate(
 			format: "definition.name ==[cd] %@ AND startDate == startDate AND endDate == nil",
 			definition.name,
-			startDate as NSDate)
+			startDate as NSDate
+		)
 		let unfinishedActivities = try DependencyInjector.get(Database.self).query(fetchRequest)
-		if unfinishedActivities.count > 0 {
+		if !unfinishedActivities.isEmpty {
 			return unfinishedActivities[0]
 		}
 		return nil
 	}
 
 	private final func shouldImport(_ date: Date) -> Bool {
-		return !importOnlyNewData || // user doesn't care about data duplication -> import everything
-			lastImport == nil || (   // never imported before -> import everything
+		!importOnlyNewData || // user doesn't care about data duplication -> import everything
+			lastImport == nil || ( // never imported before -> import everything
 				importOnlyNewData &&
-				lastImport != nil &&
-				date.isAfterDate(lastImport!, granularity: .nanosecond)
+					lastImport != nil &&
+					date.isAfterDate(lastImport!, granularity: .nanosecond)
 			)
 	}
 
 	private final func correctRecordScreenIndices() throws {
 		let definitions = try getAllActivityDefinitions(using: mainTransaction).sorted(by: {
-			$0.recordScreenIndex < $1.recordScreenIndex || ($0.getSource() == .introspective && $1.getSource() != .introspective)
+			$0.recordScreenIndex < $1
+				.recordScreenIndex || ($0.getSource() == .introspective && $1.getSource() != .introspective)
 		})
 		var index = 0
 		for var definition in definitions {
@@ -285,10 +303,13 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 
 	private final func getAllActivityDefinitions(using transaction: Transaction) throws -> Set<ActivityDefinition> {
 		let definitionsInTransaction = Set(try transaction.query(ActivityDefinition.fetchRequest()))
-		let definitionsInMainContext = Set(try DependencyInjector.get(Database.self).query(ActivityDefinition.fetchRequest())).filter({
+		let definitionsInMainContext = Set(
+			try DependencyInjector.get(Database.self)
+				.query(ActivityDefinition.fetchRequest())
+		).filter {
 			let id = $0.objectID
-			return !definitionsInTransaction.contains(where: { def in def.objectID == id})
-		})
+			return !definitionsInTransaction.contains(where: { def in def.objectID == id })
+		}
 		return definitionsInTransaction.union(definitionsInMainContext)
 	}
 }

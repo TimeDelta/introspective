@@ -14,7 +14,6 @@ import Common
 import DependencyInjection
 
 public final class HeartRate: HealthKitQuantitySample {
-
 	private typealias Me = HeartRate
 
 	// MARK: - HealthKit Stuff
@@ -25,7 +24,7 @@ public final class HeartRate: HealthKitQuantitySample {
 	public static let writePermissions: Set<HKSampleType> = Set([sampleType])
 	public static var unit: HKUnit = HKUnit(from: "count/min")
 	public final var unitString: String {
-		return Me.unit.unitString
+		Me.unit.unitString
 	}
 
 	public static func initUnits() {
@@ -41,11 +40,15 @@ public final class HeartRate: HealthKitQuantitySample {
 
 	// MARK: - Attributes
 
-	public static let heartRate = DoubleAttribute(name: "Heart rate", pluralName: "Heart rates", variableName: HKPredicateKeyPathQuantity)
+	public static let heartRate = DoubleAttribute(
+		name: "Heart rate",
+		pluralName: "Heart rates",
+		variableName: HKPredicateKeyPathQuantity
+	)
 	public static let attributes: [Attribute] = [CommonSampleAttributes.healthKitTimestamp, heartRate]
 	public static let defaultDependentAttribute: Attribute = heartRate
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp
-	public final var attributes: [Attribute] { return Me.attributes }
+	public final var attributes: [Attribute] { Me.attributes }
 
 	// MARK: - Instance Variables
 
@@ -74,19 +77,20 @@ public final class HeartRate: HealthKitQuantitySample {
 			quantity: quantity,
 			start: timestamp,
 			end: timestamp,
-			metadata: [HKMetadataKeyTimeZone : TimeZone.autoupdatingCurrent.identifier])
+			metadata: [HKMetadataKeyTimeZone: TimeZone.autoupdatingCurrent.identifier]
+		)
 	}
 
 	// MARK: - HealthKitQuantitySample Functions
 
 	public func quantityValue() -> Double {
-		return heartRate
+		heartRate
 	}
 
 	// MARK: - Sample Functions
 
 	public final func dates() -> [DateType: Date] {
-		return [.start: timestamp]
+		[.start: timestamp]
 	}
 
 	// MARK: - Attributed Functions
@@ -123,9 +127,8 @@ public final class HeartRate: HealthKitQuantitySample {
 // MARK: - Equatable
 
 extension HeartRate: Equatable {
-
-	public static func ==(lhs: HeartRate, rhs: HeartRate) -> Bool {
-		return lhs.equalTo(rhs)
+	public static func == (lhs: HeartRate, rhs: HeartRate) -> Bool {
+		lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
@@ -141,15 +144,14 @@ extension HeartRate: Equatable {
 	}
 
 	public final func equalTo(_ other: HeartRate) -> Bool {
-		return timestamp == other.timestamp && heartRate == other.heartRate
+		timestamp == other.timestamp && heartRate == other.heartRate
 	}
 }
 
 // MARK: - Debug
 
 extension HeartRate: CustomDebugStringConvertible {
-
 	public final var debugDescription: String {
-		return "HeartRate of \(heartRate) at " + DependencyInjector.get(CalendarUtil.self).string(for: timestamp)
+		"HeartRate of \(heartRate) at " + DependencyInjector.get(CalendarUtil.self).string(for: timestamp)
 	}
 }

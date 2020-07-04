@@ -10,9 +10,8 @@ import Foundation
 
 import Common
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol Attribute {
-
 	/// This is a name that should be understandable by the user
 	var name: String { get }
 	var pluralName: String { get }
@@ -33,9 +32,8 @@ public protocol Attribute {
 }
 
 public extension Attribute {
-
 	func equalTo(_ otherAttribute: Attribute) -> Bool {
-		return type(of: self) == type(of: otherAttribute) &&
+		type(of: self) == type(of: otherAttribute) &&
 			name.lowercased() == otherAttribute.name.lowercased() &&
 			extendedDescription == otherAttribute.extendedDescription &&
 			variableName == otherAttribute.variableName &&
@@ -44,7 +42,6 @@ public extension Attribute {
 }
 
 open class AttributeBase<ValueType>: Attribute {
-
 	/// This is a name that should be understandable by the user
 	public final let name: String
 	public final let pluralName: String
@@ -71,20 +68,20 @@ open class AttributeBase<ValueType>: Attribute {
 		pluralName: String? = nil,
 		description: String? = nil,
 		variableName: String? = nil,
-		optional: Bool = false)
-	{
+		optional: Bool = false
+	) {
 		self.name = name
 		self.pluralName = pluralName ?? name
-		self.extendedDescription = description
+		extendedDescription = description
 		self.variableName = variableName
 		self.optional = optional
 	}
 
 	open func isValid(value: Any?) -> Bool {
-		return value != nil || optional
+		value != nil || optional
 	}
 
-	open func convertToDisplayableString(from value: Any?) throws -> String {
+	open func convertToDisplayableString(from _: Any?) throws -> String {
 		throw NotOverriddenError(functionName: "convertToDisplayableString")
 	}
 
@@ -102,7 +99,7 @@ open class AttributeBase<ValueType>: Attribute {
 		return typedValuesAreEqual(castedFirst, castedSecond)
 	}
 
-	open func typedValuesAreEqual(_ first: ValueType, _ second: ValueType) -> Bool {
+	open func typedValuesAreEqual(_: ValueType, _: ValueType) -> Bool {
 		Log().error("typedValuesAreEqual not overridden for %@", String(describing: type(of: self)))
 		return true
 	}

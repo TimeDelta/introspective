@@ -12,7 +12,6 @@ import Common
 import DependencyInjection
 
 public final class Frequency: NSObject, NSSecureCoding, Codable, Comparable {
-
 	// MARK: - Enums
 
 	public enum Errors: String, Error {
@@ -28,12 +27,12 @@ public final class Frequency: NSObject, NSSecureCoding, Codable, Comparable {
 
 	private typealias Me = Frequency
 
-	private static let nanosecondsPerMinute: Double = 6000000000
+	private static let nanosecondsPerMinute: Double = 6_000_000_000
 	private static let minutesPerSecond: Double = 1 / 60
 	private static let minutesPerHour: Double = 60
 	private static let minutesPerDay: Double = minutesPerHour * 24
 	private static let minutesPerWeek: Double = minutesPerDay * 7
-	private static let minutesPerYear: Double = 525600
+	private static let minutesPerYear: Double = 525_600
 	private static let minutesPerQuarter: Double = minutesPerYear / 4
 	private static let minutesPerMonth: Double = minutesPerYear / 12
 
@@ -57,7 +56,7 @@ public final class Frequency: NSObject, NSSecureCoding, Codable, Comparable {
 	public final var timesPerTimeUnit: Double
 	public final var timeUnit: Calendar.Component
 
-	public final override var description: String {
+	override public final var description: String {
 		var text = String(timesPerTimeUnit)
 		if text.hasSuffix(".0") {
 			text = String(text.prefix(text.count - 2))
@@ -81,7 +80,8 @@ public final class Frequency: NSObject, NSSecureCoding, Codable, Comparable {
 			in: text,
 			options: [],
 			range: NSMakeRange(0, text.count),
-			withTemplate: "")
+			withTemplate: ""
+		)
 		if DependencyInjector.get(StringUtil.self).isNumber(numbersOnly) {
 			timesPerTimeUnit = Double(numbersOnly)!
 		} else {
@@ -127,23 +127,23 @@ public final class Frequency: NSObject, NSSecureCoding, Codable, Comparable {
 	// MARK: - Other
 
 	public final func per(_ newTimeUnit: Calendar.Component) throws -> Double {
-		switch (newTimeUnit) {
-			case .nanosecond: return timesPerMinute() / Me.nanosecondsPerMinute
-			case .second: return timesPerMinute() * Me.minutesPerSecond
-			case .minute: return timesPerMinute()
-			case .hour: return timesPerMinute() * Me.minutesPerHour
-			case .day: return timesPerMinute() * Me.minutesPerDay
-			case .weekOfYear: return timesPerMinute() * Me.minutesPerWeek
-			case .month: return timesPerMinute() * Me.minutesPerMonth
-			case .quarter: return timesPerMinute() * Me.minutesPerQuarter
-			case .year: return timesPerMinute() * Me.minutesPerYear
-			default: throw Errors.cannotConvertToTimesPerSecond
+		switch newTimeUnit {
+		case .nanosecond: return timesPerMinute() / Me.nanosecondsPerMinute
+		case .second: return timesPerMinute() * Me.minutesPerSecond
+		case .minute: return timesPerMinute()
+		case .hour: return timesPerMinute() * Me.minutesPerHour
+		case .day: return timesPerMinute() * Me.minutesPerDay
+		case .weekOfYear: return timesPerMinute() * Me.minutesPerWeek
+		case .month: return timesPerMinute() * Me.minutesPerMonth
+		case .quarter: return timesPerMinute() * Me.minutesPerQuarter
+		case .year: return timesPerMinute() * Me.minutesPerYear
+		default: throw Errors.cannotConvertToTimesPerSecond
 		}
 	}
 
 	// MARK: - NSObject Overrides
 
-	public override func isEqual(_ object: Any?) -> Bool {
+	override public func isEqual(_ object: Any?) -> Bool {
 		guard let other = object as? Frequency else { return false }
 		return self == other
 	}
@@ -151,17 +151,17 @@ public final class Frequency: NSObject, NSSecureCoding, Codable, Comparable {
 	// MARK: - Helper Functions
 
 	private final func timesPerMinute() -> Double {
-		switch (timeUnit) {
-			case .nanosecond: return timesPerTimeUnit * Me.nanosecondsPerMinute
-			case .second: return timesPerTimeUnit / Me.minutesPerSecond
-			case .minute: return timesPerTimeUnit
-			case .hour: return timesPerTimeUnit / Me.minutesPerHour
-			case .day: return timesPerTimeUnit / Me.minutesPerDay
-			case .weekOfYear: return timesPerTimeUnit / Me.minutesPerWeek
-			case .month: return timesPerTimeUnit / Me.minutesPerMonth
-			case .quarter: return timesPerTimeUnit / Me.minutesPerQuarter
-			case .year: return timesPerTimeUnit / Me.minutesPerYear
-			default: fatalError("Missing conversion for supported time unit: " + timeUnit.description)
+		switch timeUnit {
+		case .nanosecond: return timesPerTimeUnit * Me.nanosecondsPerMinute
+		case .second: return timesPerTimeUnit / Me.minutesPerSecond
+		case .minute: return timesPerTimeUnit
+		case .hour: return timesPerTimeUnit / Me.minutesPerHour
+		case .day: return timesPerTimeUnit / Me.minutesPerDay
+		case .weekOfYear: return timesPerTimeUnit / Me.minutesPerWeek
+		case .month: return timesPerTimeUnit / Me.minutesPerMonth
+		case .quarter: return timesPerTimeUnit / Me.minutesPerQuarter
+		case .year: return timesPerTimeUnit / Me.minutesPerYear
+		default: fatalError("Missing conversion for supported time unit: " + timeUnit.description)
 		}
 	}
 
@@ -176,13 +176,13 @@ public final class Frequency: NSObject, NSSecureCoding, Codable, Comparable {
 
 	// MARK: - Comparable
 
-	public static func ==(lhs: Frequency, rhs: Frequency) -> Bool {
+	public static func == (lhs: Frequency, rhs: Frequency) -> Bool {
 		let left = lhs.timesPerMinute()
 		let right = rhs.timesPerMinute()
 		return left == right
 	}
 
-	public static func <(lhs: Frequency, rhs: Frequency) -> Bool {
+	public static func < (lhs: Frequency, rhs: Frequency) -> Bool {
 		let left = lhs.timesPerMinute()
 		let right = rhs.timesPerMinute()
 		return left < right
@@ -190,72 +190,72 @@ public final class Frequency: NSObject, NSSecureCoding, Codable, Comparable {
 
 	// MARK: - Math Operators
 
-	public static func +(lhs: Frequency, rhs: Frequency) -> Frequency {
-		return math(lhs: lhs, rhs: rhs, operation: { $0 + $1 })
+	public static func + (lhs: Frequency, rhs: Frequency) -> Frequency {
+		math(lhs: lhs, rhs: rhs, operation: { $0 + $1 })
 	}
 
-	public static func +=(lhs: inout Frequency, rhs: Frequency) {
+	public static func += (lhs: inout Frequency, rhs: Frequency) {
 		lhs = lhs + rhs
 	}
 
-	public static func -(lhs: Frequency, rhs: Frequency) -> Frequency {
-		return math(lhs: lhs, rhs: rhs, operation: { $0 - $1 })
+	public static func - (lhs: Frequency, rhs: Frequency) -> Frequency {
+		math(lhs: lhs, rhs: rhs, operation: { $0 - $1 })
 	}
 
-	public static func -=(lhs: inout Frequency, rhs: Frequency) {
+	public static func -= (lhs: inout Frequency, rhs: Frequency) {
 		lhs = lhs - rhs
 	}
 
-	public static func /(lhs: Frequency, rhs: Double) -> Frequency {
-		return math(lhs: lhs, rhs: rhs, operation: { $0 / $1 })
+	public static func / (lhs: Frequency, rhs: Double) -> Frequency {
+		math(lhs: lhs, rhs: rhs, operation: { $0 / $1 })
 	}
 
-	public static func /(lhs: Frequency, rhs: Int) -> Frequency {
-		return math(lhs: lhs, rhs: rhs, operation: { $0 / $1 })
+	public static func / (lhs: Frequency, rhs: Int) -> Frequency {
+		math(lhs: lhs, rhs: rhs, operation: { $0 / $1 })
 	}
 
-	public static func /=(lhs: inout Frequency, rhs: Double) {
+	public static func /= (lhs: inout Frequency, rhs: Double) {
 		lhs = lhs / rhs
 	}
 
-	public static func /=(lhs: inout Frequency, rhs: Int) {
+	public static func /= (lhs: inout Frequency, rhs: Int) {
 		lhs = lhs / rhs
 	}
 
-	public static func *(lhs: Double, rhs: Frequency) -> Frequency {
-		return rhs * lhs // commutative
+	public static func * (lhs: Double, rhs: Frequency) -> Frequency {
+		rhs * lhs // commutative
 	}
 
-	public static func *(lhs: Int, rhs: Frequency) -> Frequency {
-		return rhs * lhs // commutative
+	public static func * (lhs: Int, rhs: Frequency) -> Frequency {
+		rhs * lhs // commutative
 	}
 
-	public static func *(lhs: Frequency, rhs: Double) -> Frequency {
-		return math(lhs: lhs, rhs: rhs, operation: { $0 * $1 })
+	public static func * (lhs: Frequency, rhs: Double) -> Frequency {
+		math(lhs: lhs, rhs: rhs, operation: { $0 * $1 })
 	}
 
-	public static func *(lhs: Frequency, rhs: Int) -> Frequency {
-		return math(lhs: lhs, rhs: rhs, operation: { $0 * $1 })
+	public static func * (lhs: Frequency, rhs: Int) -> Frequency {
+		math(lhs: lhs, rhs: rhs, operation: { $0 * $1 })
 	}
 
-	public static func *=(lhs: inout Frequency, rhs: Double) {
+	public static func *= (lhs: inout Frequency, rhs: Double) {
 		lhs = lhs * rhs
 	}
 
-	public static func *=(lhs: inout Frequency, rhs: Int) {
+	public static func *= (lhs: inout Frequency, rhs: Int) {
 		lhs = lhs * rhs
 	}
 
 	private static func math(lhs: Frequency, rhs: Frequency, operation: (Double, Double) -> Double) -> Frequency {
-		return math(lhs.timeUnit, lhs.timesPerMinute(), rhs.timesPerMinute(), operation)
+		math(lhs.timeUnit, lhs.timesPerMinute(), rhs.timesPerMinute(), operation)
 	}
 
 	private static func math(lhs: Frequency, rhs: Double, operation: (Double, Double) -> Double) -> Frequency {
-		return math(lhs.timeUnit, lhs.timesPerMinute(), rhs, operation)
+		math(lhs.timeUnit, lhs.timesPerMinute(), rhs, operation)
 	}
 
 	private static func math(lhs: Frequency, rhs: Int, operation: (Double, Double) -> Double) -> Frequency {
-		return math(lhs.timeUnit, lhs.timesPerMinute(), Double(rhs), operation)
+		math(lhs.timeUnit, lhs.timesPerMinute(), Double(rhs), operation)
 	}
 
 	/// - Parameter left: The number of times per minute for the left operand
@@ -264,8 +264,9 @@ public final class Frequency: NSObject, NSSecureCoding, Codable, Comparable {
 		_ unit: Calendar.Component,
 		_ left: Double,
 		_ right: Double,
-		_ operation: (Double, Double) -> Double)
-	-> Frequency {
+		_ operation: (Double, Double) -> Double
+	)
+		-> Frequency {
 		let frequency = Frequency(operation(left, right), .minute)!
 		do {
 			guard let result = Frequency(try frequency.per(unit), unit) else {

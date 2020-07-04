@@ -25,47 +25,46 @@ import Common
 ///         loading, which accesses the Settings object, requiring an
 ///         instantiation of Database in order to create a settings object.
 public final class DummySettings: Settings {
-
 	public static var entityName: String = "Settings"
 
 	private final let log = Log()
 
 	public final let minMood: Double = 2
-	public final func setMinMood(_ value: Double) {
+	public final func setMinMood(_: Double) {
 		log.error("tried to set MinMood")
 	}
 
 	public final let maxMood: Double = 2
-	public final func setMaxMood(_ value: Double) {
+	public final func setMaxMood(_: Double) {
 		log.error("tried to set MaxMood")
 	}
 
 	public final let discreteMoods: Bool = true
-	public final func setDiscreteMoods(_ value: Bool) {
+	public final func setDiscreteMoods(_: Bool) {
 		log.error("tried to set DiscreteMoods")
 	}
 
 	public final let scaleMoodsOnImport: Bool = true
-	public final func setScaleMoodsOnImport(_ value: Bool) {
+	public final func setScaleMoodsOnImport(_: Bool) {
 		log.error("tried to set ScaleMoodsOnImport")
 	}
 
 	public final let autoIgnoreEnabled: Bool = true
-	public final func setAutoIgnoreEnabled(_ value: Bool) {
+	public final func setAutoIgnoreEnabled(_: Bool) {
 		log.error("tried to set AutoIgnoreEnabled")
 	}
 
 	public final let autoIgnoreSeconds: Int = 2
-	public final func setAutoIgnoreSeconds(_ value: Int) {
+	public final func setAutoIgnoreSeconds(_: Int) {
 		log.error("tried to set AutoIgnoreSeconds")
 	}
 
 	public final let convertTimeZones: Bool = true
-	public final func setConvertTimeZones(_ value: Bool) {
+	public final func setConvertTimeZones(_: Bool) {
 		log.error("tried to set ConvertTimeZones")
 	}
 
-	public final func changed(_ setting: Setting) -> Bool {
+	public final func changed(_: Setting) -> Bool {
 		log.error("tried to check if setting was changed")
 		return false
 	}

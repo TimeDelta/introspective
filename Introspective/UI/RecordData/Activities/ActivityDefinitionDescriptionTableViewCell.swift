@@ -6,14 +6,13 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
 import UIExtensions
+import UIKit
 
 public final class ActivityDefinitionDescriptionTableViewCell: UITableViewCell {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var descriptionView: UITextView!
+	@IBOutlet final var descriptionView: UITextView!
 
 	// MARK: - Instance Variables
 
@@ -34,7 +33,8 @@ public final class ActivityDefinitionDescriptionTableViewCell: UITableViewCell {
 				object: self,
 				userInfo: self.info([
 					.text: self.descriptionView.text,
-				]))
+				])
+			)
 		}
 	}
 }
@@ -42,16 +42,15 @@ public final class ActivityDefinitionDescriptionTableViewCell: UITableViewCell {
 // MARK: - UITextViewDelegate
 
 extension ActivityDefinitionDescriptionTableViewCell: UITextViewDelegate {
-
-	public final func textViewDidChange(_ textView: UITextView) {
+	public final func textViewDidChange(_: UITextView) {
 		sendDescriptionChangeNotification()
 	}
 
-	public final func textViewDidBeginEditing(_ textView: UITextView) {
+	public final func textViewDidBeginEditing(_: UITextView) {
 		sendDescriptionChangeNotification()
 	}
 
-	public final func textViewDidEndEditing(_ textView: UITextView) {
+	public final func textViewDidEndEditing(_: UITextView) {
 		sendDescriptionChangeNotification()
 	}
 }

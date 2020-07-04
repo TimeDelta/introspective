@@ -6,12 +6,11 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
+import _SwiftOSOverlayShims
 import Foundation
 import os
-import _SwiftOSOverlayShims
 
 public final class Signpost {
-
 	private final let log: OSLog
 
 	public init(log: OSLog) {
@@ -24,7 +23,13 @@ public final class Signpost {
 		}
 	}
 
-	public final func begin(name: StaticString, dso: UnsafeRawPointer = #dsohandle, idObject: AnyObject? = nil, _ format: StaticString, _ arguments: CVarArg...) {
+	public final func begin(
+		name: StaticString,
+		dso: UnsafeRawPointer = #dsohandle,
+		idObject: AnyObject? = nil,
+		_ format: StaticString,
+		_ arguments: CVarArg...
+	) {
 		if #available(iOS 12.0, *) {
 			signpost(.begin, dso: dso, name: name, idObject: idObject, format, arguments)
 		}
@@ -36,7 +41,13 @@ public final class Signpost {
 		}
 	}
 
-	public final func event(name: StaticString, dso: UnsafeRawPointer = #dsohandle, idObject: AnyObject? = nil, _ format: StaticString, _ arguments: CVarArg...) {
+	public final func event(
+		name: StaticString,
+		dso: UnsafeRawPointer = #dsohandle,
+		idObject: AnyObject? = nil,
+		_ format: StaticString,
+		_ arguments: CVarArg...
+	) {
 		if #available(iOS 12.0, *) {
 			signpost(.event, dso: dso, name: name, idObject: idObject, format, arguments)
 		}
@@ -48,14 +59,25 @@ public final class Signpost {
 		}
 	}
 
-	public final func end(name: StaticString, dso: UnsafeRawPointer = #dsohandle, idObject: AnyObject? = nil, _ format: StaticString, _ arguments: CVarArg...) {
+	public final func end(
+		name: StaticString,
+		dso: UnsafeRawPointer = #dsohandle,
+		idObject: AnyObject? = nil,
+		_ format: StaticString,
+		_ arguments: CVarArg...
+	) {
 		if #available(iOS 12.0, *) {
 			signpost(.end, dso: dso, name: name, idObject: idObject, format, arguments)
 		}
 	}
 
 	@available(iOS 12.0, *)
-	private final func signpost(_ type: OSSignpostType, dso: UnsafeRawPointer = #dsohandle, name: StaticString, idObject: AnyObject? = nil) {
+	private final func signpost(
+		_ type: OSSignpostType,
+		dso: UnsafeRawPointer = #dsohandle,
+		name: StaticString,
+		idObject: AnyObject? = nil
+	) {
 		guard log.signpostsEnabled else { return }
 		let signpostID = getSignpostId(forObject: idObject)
 		os_signpost(type, dso: dso, log: log, name: name, signpostID: signpostID)
@@ -68,8 +90,8 @@ public final class Signpost {
 		name: StaticString,
 		idObject: AnyObject? = nil,
 		_ format: StaticString,
-		_ arguments: [CVarArg])
-	{
+		_ arguments: [CVarArg]
+	) {
 		// This crazy mess is because [CVarArg] gets treated as a single CVarArg and repassing a CVarArg... actually passes a [CVarArg]
 		// This was copied from the publicly available Swift source code at https://github.com/apple/swift/blob/master/stdlib/public/Darwin/os/os_signpost.swift#L40
 		// THIS IS A HACK
@@ -86,7 +108,16 @@ public final class Signpost {
 					// the cstring argument type.
 					formatBuf.baseAddress!.withMemoryRebound(to: CChar.self, capacity: formatBuf.count) { formatStr in
 						withVaList(arguments) { valist in
-							_swift_os_signpost_with_format(dso, ra, log, type, nameStr, signpostID.rawValue, formatStr, valist)
+							_swift_os_signpost_with_format(
+								dso,
+								ra,
+								log,
+								type,
+								nameStr,
+								signpostID.rawValue,
+								formatStr,
+								valist
+							)
 						}
 					}
 				}

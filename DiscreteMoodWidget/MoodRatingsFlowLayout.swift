@@ -12,7 +12,6 @@ import DependencyInjection
 import Settings
 
 class MoodRatingsFlowLayout: UICollectionViewFlowLayout {
-
 	private final let minCellWidth: CGFloat = 40
 	private final var availableWidth: CGFloat!
 
@@ -25,7 +24,7 @@ class MoodRatingsFlowLayout: UICollectionViewFlowLayout {
 		scrollDirection = .vertical
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	required init?(coder _: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
@@ -55,7 +54,8 @@ class MoodRatingsFlowLayout: UICollectionViewFlowLayout {
 	}
 
 	override func invalidationContext(forBoundsChange newBounds: CGRect) -> UICollectionViewLayoutInvalidationContext {
-		let context = super.invalidationContext(forBoundsChange: newBounds) as! UICollectionViewFlowLayoutInvalidationContext
+		let context = super
+			.invalidationContext(forBoundsChange: newBounds) as! UICollectionViewFlowLayoutInvalidationContext
 		context.invalidateFlowLayoutDelegateMetrics = newBounds.size != collectionView?.bounds.size
 		return context
 	}
@@ -78,13 +78,15 @@ class MoodRatingsFlowLayout: UICollectionViewFlowLayout {
 	override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
 		guard let superLayoutAttributes = super.layoutAttributesForElements(in: rect) else { return nil }
 		let computedAttributes = superLayoutAttributes.compactMap { layoutAttribute in
-			return layoutAttribute.representedElementCategory == .cell ? layoutAttributesForItem(at: layoutAttribute.indexPath) : layoutAttribute
+			layoutAttribute
+				.representedElementCategory == .cell ? layoutAttributesForItem(at: layoutAttribute.indexPath) :
+				layoutAttribute
 		}
 		return computedAttributes
 	}
 
-	override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
-		return true
+	override func shouldInvalidateLayout(forBoundsChange _: CGRect) -> Bool {
+		true
 	}
 
 	// MARK: Helper Functions

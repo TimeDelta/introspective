@@ -6,9 +6,9 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import CoreData
 import CSV
+import Foundation
 
 import Common
 import DependencyInjection
@@ -16,11 +16,10 @@ import Persistence
 import Samples
 import Settings
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol WellnessMoodImporter: MoodImporter {}
 
 public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImporter, CoreDataObject {
-
 	private typealias Me = WellnessMoodImporterImpl
 	public static let entityName = "WellnessMoodImporter"
 	private static let dateColumn = "Date"
@@ -131,8 +130,9 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 		withDate date: Date,
 		rating: Double,
 		andNote note: String?,
-		using transaction: Transaction)
-	throws {
+		using transaction: Transaction
+	)
+		throws {
 		let currentMood = try transaction.new(MoodImpl.self)
 		currentMood.date = date
 		currentMood.minRating = 1
@@ -149,28 +149,33 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 		let currentLine = csv.currentRow?.joined(separator: ",") ?? ""
 		guard let dateString = csv[Me.dateColumn] else {
 			throw InvalidFileFormatError(
-				"No date for record \(recordNumber): \(currentLine)")
+				"No date for record \(recordNumber): \(currentLine)"
+			)
 		}
 		guard let timeString = csv[Me.timeColumn] else {
 			throw InvalidFileFormatError(
-				"No time for record \(recordNumber): \(currentLine)")
+				"No time for record \(recordNumber): \(currentLine)"
+			)
 		}
-		guard let date = DependencyInjector.get(CalendarUtil.self).date(from: dateString + timeString, format: "M/d/yy HH:mm") else {
-			throw InvalidFileFormatError("Unexpected date / time for record \(recordNumber): \(dateString + timeString)")
+		guard let date = DependencyInjector.get(CalendarUtil.self)
+			.date(from: dateString + timeString, format: "M/d/yy HH:mm") else {
+			throw InvalidFileFormatError(
+				"Unexpected date / time for record \(recordNumber): \(dateString + timeString)"
+			)
 		}
 		return date
 	}
 
 	private final func string(_ str: String, matches regex: String) -> Bool {
-		return str.range(of: regex, options: .regularExpression, range: nil, locale: nil) != nil
+		str.range(of: regex, options: .regularExpression, range: nil, locale: nil) != nil
 	}
 
 	private final func shouldImport(_ date: Date) -> Bool {
-		return !importOnlyNewData || // user doesn't care about data duplication -> import everything
-			lastImport == nil || (   // never imported before -> import everything
+		!importOnlyNewData || // user doesn't care about data duplication -> import everything
+			lastImport == nil || ( // never imported before -> import everything
 				importOnlyNewData &&
-				lastImport != nil &&
-				date.isAfterDate(lastImport!, granularity: .nanosecond)
+					lastImport != nil &&
+					date.isAfterDate(lastImport!, granularity: .nanosecond)
 			)
 	}
 }

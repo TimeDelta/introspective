@@ -13,16 +13,14 @@ import DependencyInjection
 import Samples
 
 protocol ChooseSampleTypeViewController: UIViewController {
-
 	var selectedSampleType: Sample.Type? { get set }
 	var notificationToSendOnAccept: NotificationName! { get set }
 }
 
 final class ChooseSampleTypeViewControllerImpl: UIViewController, ChooseSampleTypeViewController {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var sampleTypePicker: UIPickerView!
+	@IBOutlet final var sampleTypePicker: UIPickerView!
 
 	// MARK: - Instance Variables
 
@@ -33,12 +31,13 @@ final class ChooseSampleTypeViewControllerImpl: UIViewController, ChooseSampleTy
 
 	// MARK: - UIViewController Overrides
 
-	final override func viewDidLoad() {
+	override final func viewDidLoad() {
 		super.viewDidLoad()
 		sampleTypePicker.dataSource = self
 		sampleTypePicker.delegate = self
 		if selectedSampleType != nil {
-			if let selectedIndex = DependencyInjector.get(SampleFactory.self).allTypes().index(where: { $0 == selectedSampleType }) {
+			if let selectedIndex = DependencyInjector.get(SampleFactory.self).allTypes()
+				.index(where: { $0 == selectedSampleType }) {
 				sampleTypePicker.selectRow(selectedIndex, inComponent: 0, animated: false)
 			} else {
 				log.error("Could not find index for specified type")
@@ -48,14 +47,15 @@ final class ChooseSampleTypeViewControllerImpl: UIViewController, ChooseSampleTy
 
 	// MARK: - Button Actions
 
-	@IBAction final func userPressedAccept(_ sender: Any) {
+	@IBAction final func userPressedAccept(_: Any) {
 		let selectedIndex = sampleTypePicker.selectedRow(inComponent: 0)
 		let selectedSampleType = DependencyInjector.get(SampleFactory.self).allTypes()[selectedIndex]
 		syncPost(
 			notificationToSendOnAccept,
 			userInfo: [
 				.sampleType: selectedSampleType,
-			])
+			]
+		)
 		dismiss(animated: false, completion: nil)
 	}
 }
@@ -63,25 +63,23 @@ final class ChooseSampleTypeViewControllerImpl: UIViewController, ChooseSampleTy
 // MARK: - UIPickerViewDataSource
 
 extension ChooseSampleTypeViewControllerImpl: UIPickerViewDataSource {
-
-	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
-		return 1
+	public final func numberOfComponents(in _: UIPickerView) -> Int {
+		1
 	}
 
-	public final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return DependencyInjector.get(SampleFactory.self).allTypes().count
+	public final func pickerView(_: UIPickerView, numberOfRowsInComponent _: Int) -> Int {
+		DependencyInjector.get(SampleFactory.self).allTypes().count
 	}
 }
 
 // MARK: - UIPickerViewDelegate
 
 extension ChooseSampleTypeViewControllerImpl: UIPickerViewDelegate {
-
-	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return DependencyInjector.get(SampleFactory.self).allTypes()[row].name.localizedCapitalized
+	public final func pickerView(_: UIPickerView, titleForRow row: Int, forComponent _: Int) -> String? {
+		DependencyInjector.get(SampleFactory.self).allTypes()[row].name.localizedCapitalized
 	}
 
-	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+	public final func pickerView(_: UIPickerView, didSelectRow row: Int, inComponent _: Int) {
 		selectedSampleType = DependencyInjector.get(SampleFactory.self).allTypes()[row]
 	}
 }

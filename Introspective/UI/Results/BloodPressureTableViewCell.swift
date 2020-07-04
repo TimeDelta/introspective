@@ -13,7 +13,6 @@ import DependencyInjection
 import Samples
 
 class BloodPressureTableViewCell: UITableViewCell {
-
 	// MARK: - Static Variables
 
 	private typealias Me = BloodPressureTableViewCell
@@ -25,8 +24,8 @@ class BloodPressureTableViewCell: UITableViewCell {
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var valueLabel: UILabel!
-	@IBOutlet weak final var timestampLabel: UILabel!
+	@IBOutlet final var valueLabel: UILabel!
+	@IBOutlet final var timestampLabel: UILabel!
 
 	// MARK: - Instance Variables
 
@@ -39,7 +38,8 @@ class BloodPressureTableViewCell: UITableViewCell {
 			timestampLabel.text = DependencyInjector.get(CalendarUtil.self).string(
 				for: sample.timestamp,
 				dateStyle: .medium,
-				timeStyle: .short)
+				timeStyle: .short
+			)
 
 			setConstraints()
 		}
@@ -48,7 +48,7 @@ class BloodPressureTableViewCell: UITableViewCell {
 	// MARK: - Helper Functions
 
 	private func formatValue(_ value: Double) -> String {
-		return Me.valueFormatter.string(from: NSNumber(value: value))!
+		Me.valueFormatter.string(from: NSNumber(value: value))!
 	}
 
 	private final func setConstraints() {
@@ -78,10 +78,14 @@ class BloodPressureTableViewCell: UITableViewCell {
 		timestampHeightConstraint.isActive = true
 		let bufferConstraint = timestampLabel.leadingAnchor.constraint(
 			greaterThanOrEqualToSystemSpacingAfter: valueLabel.trailingAnchor,
-			multiplier: 1)
+			multiplier: 1
+		)
 		bufferConstraint.priority = .required
 		bufferConstraint.isActive = true
-		let trailingConstraint = timestampLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5)
+		let trailingConstraint = timestampLabel.trailingAnchor.constraint(
+			equalTo: contentView.trailingAnchor,
+			constant: -5
+		)
 		trailingConstraint.priority = .required
 		trailingConstraint.isActive = true
 		timestampLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5).isActive = true
@@ -94,7 +98,8 @@ class BloodPressureTableViewCell: UITableViewCell {
 		let size = label.systemLayoutSizeFitting(
 			UIView.layoutFittingCompressedSize,
 			withHorizontalFittingPriority: .defaultHigh,
-			verticalFittingPriority: .init(1))
+			verticalFittingPriority: .init(1)
+		)
 		label.frame.size = size
 	}
 }

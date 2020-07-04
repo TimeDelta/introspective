@@ -9,10 +9,9 @@
 import UIKit
 
 public final class MoodNoteTableViewCell: UITableViewCell {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var noteView: UITextView!
+	@IBOutlet final var noteView: UITextView!
 
 	// MARK: - Instance Variables
 
@@ -28,7 +27,6 @@ public final class MoodNoteTableViewCell: UITableViewCell {
 // MARK: - UITextViewDelegate
 
 extension MoodNoteTableViewCell: UITextViewDelegate {
-
 	public final func textViewDidChange(_ textView: UITextView) {
 		DispatchQueue.main.async {
 			NotificationCenter.default.post(
@@ -36,7 +34,8 @@ extension MoodNoteTableViewCell: UITextViewDelegate {
 				object: self,
 				userInfo: self.info([
 					.text: textView.text,
-				]))
+				])
+			)
 		}
 	}
 }

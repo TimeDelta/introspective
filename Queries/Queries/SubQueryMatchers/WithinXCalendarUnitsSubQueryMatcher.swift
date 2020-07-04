@@ -14,7 +14,6 @@ import DependencyInjection
 import Samples
 
 public final class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatable {
-
 	private typealias Me = WithinXCalendarUnitsSubQueryMatcher
 
 	// MARK: - Attributes
@@ -67,9 +66,10 @@ public final class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatab
 	/// Grab only the provided samples that start within `numberOfCalendarUnits` `calendarUnit` of a sub-query sample
 	public final func getSamples<QuerySampleType: Sample>(
 		from querySamples: [QuerySampleType],
-		matching subQuerySamples: [Sample])
-	-> [QuerySampleType] {
-		if subQuerySamples.count == 0 {
+		matching subQuerySamples: [Sample]
+	)
+		-> [QuerySampleType] {
+		if subQuerySamples.isEmpty {
 			return []
 		}
 
@@ -77,15 +77,18 @@ public final class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatab
 
 		var applicableSubQuerySamples = subQuerySamples
 		if mostRecentOnly {
-			applicableSubQuerySamples = DependencyInjector.get(SampleUtil.self).sort(samples: subQuerySamples, by: .start, in: .orderedDescending)
+			applicableSubQuerySamples = DependencyInjector.get(SampleUtil.self)
+				.sort(samples: subQuerySamples, by: .start, in: .orderedDescending)
 			applicableSubQuerySamples = [applicableSubQuerySamples[0]]
 		}
 
 		for sample in querySamples {
-			let closestSubQuerySample = DependencyInjector.get(SearchUtil.self).closestItem(to: sample, in: applicableSubQuerySamples) { (sample1, sample2) in
-				return DependencyInjector.get(SampleUtil.self).distance(between: sample1, and: sample2, in: self.timeUnit)
-			}
-			let distance = DependencyInjector.get(SampleUtil.self).distance(between: sample, and: closestSubQuerySample, in: timeUnit)
+			let closestSubQuerySample = DependencyInjector.get(SearchUtil.self)
+				.closestItem(to: sample, in: applicableSubQuerySamples) { sample1, sample2 in
+					DependencyInjector.get(SampleUtil.self).distance(between: sample1, and: sample2, in: self.timeUnit)
+				}
+			let distance = DependencyInjector.get(SampleUtil.self)
+				.distance(between: sample, and: closestSubQuerySample, in: timeUnit)
 			if distance <= numberOfTimeUnits {
 				matchingSamples.append(sample)
 			}
@@ -131,8 +134,8 @@ public final class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatab
 
 	// MARK: - Equality
 
-	public static func ==(lhs: WithinXCalendarUnitsSubQueryMatcher, rhs: WithinXCalendarUnitsSubQueryMatcher) -> Bool {
-		return lhs.equalTo(rhs)
+	public static func == (lhs: WithinXCalendarUnitsSubQueryMatcher, rhs: WithinXCalendarUnitsSubQueryMatcher) -> Bool {
+		lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
@@ -148,6 +151,7 @@ public final class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatab
 	}
 
 	public final func equalTo(_ other: WithinXCalendarUnitsSubQueryMatcher) -> Bool {
-		return numberOfTimeUnits == other.numberOfTimeUnits && timeUnit == other.timeUnit && mostRecentOnly == other.mostRecentOnly
+		numberOfTimeUnits == other.numberOfTimeUnits && timeUnit == other.timeUnit && mostRecentOnly == other
+			.mostRecentOnly
 	}
 }

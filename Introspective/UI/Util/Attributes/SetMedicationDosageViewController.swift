@@ -12,11 +12,10 @@ import Common
 import DependencyInjection
 
 public final class SetMedicationDosageViewController: UIViewController {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var textField: UITextField!
-	@IBOutlet weak final var saveButton: UIButton!
+	@IBOutlet final var textField: UITextField!
+	@IBOutlet final var saveButton: UIButton!
 
 	// MARK: - Instance Variables
 
@@ -25,14 +24,14 @@ public final class SetMedicationDosageViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 		textField.text = initialDosage?.description
 	}
 
 	// MARK: - Actions
 
-	@IBAction final func saveButtonPressed(_ sender: Any) {
+	@IBAction final func saveButtonPressed(_: Any) {
 		var dosage: Dosage?
 		if let dosageText = textField.text {
 			dosage = Dosage(dosageText)
@@ -43,12 +42,13 @@ public final class SetMedicationDosageViewController: UIViewController {
 				object: self,
 				userInfo: self.info([
 					.attributeValue: dosage as Any,
-				]))
+				])
+			)
 		}
 		dismiss(animated: false, completion: nil)
 	}
 
-	@IBAction final func dosageTextChanged(_ sender: Any) {
+	@IBAction final func dosageTextChanged(_: Any) {
 		if dosageIsValid() {
 			if #available(iOS 13.0, *) {
 				saveButton.backgroundColor = .label
@@ -69,7 +69,7 @@ public final class SetMedicationDosageViewController: UIViewController {
 	// MARK: - Helper Functions
 
 	private final func dosageIsValid() -> Bool {
-		 return textField.text == nil ||
+		textField.text == nil ||
 			textField.text!.isEmpty ||
 			Dosage(textField.text!) != nil
 	}

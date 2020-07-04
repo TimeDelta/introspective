@@ -14,7 +14,6 @@ import DependencyInjection
 import Samples
 
 public final class OldestDateInformation: AnyInformation {
-
 	// MARK: - Static Variables
 
 	private typealias Me = OldestDateInformation
@@ -22,8 +21,8 @@ public final class OldestDateInformation: AnyInformation {
 
 	// MARK: Display Information
 
-	public final override var name: String { return "Oldest" }
-	public final override var description: String { return name + " " + attribute.name.localizedLowercase }
+	override public final var name: String { "Oldest" }
+	override public final var description: String { name + " " + attribute.name.localizedLowercase }
 
 	// MARK: - Instance Variables
 
@@ -37,25 +36,25 @@ public final class OldestDateInformation: AnyInformation {
 
 	// MARK: - Information Functions
 
-	public final override func compute(forSamples samples: [Sample]) throws -> String {
-		return try compute(samples, shouldThrowOnEmptyFilter: false)
+	override public final func compute(forSamples samples: [Sample]) throws -> String {
+		try compute(samples, shouldThrowOnEmptyFilter: false)
 	}
 
-	public final override func computeGraphable(forSamples samples: [Sample]) throws -> String {
-		return try compute(samples, shouldThrowOnEmptyFilter: true)
+	override public final func computeGraphable(forSamples samples: [Sample]) throws -> String {
+		try compute(samples, shouldThrowOnEmptyFilter: true)
 	}
 
 	// MARK: - Equality
 
-	public final override func equalTo(_ other: SampleGroupInformation) -> Bool {
-		return other is OldestDateInformation && attribute.equalTo(other.attribute)
+	override public final func equalTo(_ other: SampleGroupInformation) -> Bool {
+		other is OldestDateInformation && attribute.equalTo(other.attribute)
 	}
 
 	// MARK: - Helper Functions
 
 	private final func compute(_ samples: [Sample], shouldThrowOnEmptyFilter: Bool) throws -> String {
 		let filteredSamples = try filterSamples(samples, as: Date.self)
-		if filteredSamples.count == 0 {
+		if filteredSamples.isEmpty {
 			if shouldThrowOnEmptyFilter {
 				throw GenericDisplayableError(title: Me.noSamplesMessage)
 			}
@@ -74,9 +73,15 @@ public final class OldestDateInformation: AnyInformation {
 					oldestSampleDate = date
 				}
 			} else if !attribute.optional || value != nil {
-				log.error("non-optional attribute (%@) of sample (%@) returned %@", attribute.name, sample.attributedName, String(describing: value))
+				log.error(
+					"non-optional attribute (%@) of sample (%@) returned %@",
+					attribute.name,
+					sample.attributedName,
+					String(describing: value)
+				)
 			}
 		}
-		return DependencyInjector.get(CalendarUtil.self).string(for: oldestSampleDate, dateStyle: .short, timeStyle: .short)
+		return DependencyInjector.get(CalendarUtil.self)
+			.string(for: oldestSampleDate, dateStyle: .short, timeStyle: .short)
 	}
 }

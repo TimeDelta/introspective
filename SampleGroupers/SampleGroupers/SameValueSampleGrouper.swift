@@ -13,7 +13,6 @@ import Common
 import Samples
 
 public final class SameValueSampleGrouper: SampleGrouper {
-
 	// MARK: - Display Information
 
 	public static var userVisibleDescription: String = "Group By Same Value"
@@ -58,7 +57,7 @@ public final class SameValueSampleGrouper: SampleGrouper {
 
 	public final func group(samples: [Sample]) throws -> [(Any, [Sample])] {
 		let groupByAttribute = try getGroupByAttribute(methodName: "group(samples:)")
-		guard samples.count > 0 else { return [] }
+		guard !samples.isEmpty else { return [] }
 		// grouping by hashable value is better time complexity
 		if try samples[0].value(of: groupByAttribute) is AnyHashable {
 			return try getGroupsForHashableValues(samples)
@@ -78,9 +77,10 @@ public final class SameValueSampleGrouper: SampleGrouper {
 	}
 
 	public final func copy() -> SampleGrouper {
-		return SameValueSampleGrouper(
+		SameValueSampleGrouper(
 			groupByAttribute: groupByAttribute,
-			attributeSelectAttribute: attributeSelectAttribute)
+			attributeSelectAttribute: attributeSelectAttribute
+		)
 	}
 
 	// MARK: - Attributed Functions
@@ -114,7 +114,7 @@ public final class SameValueSampleGrouper: SampleGrouper {
 			}
 			return hashableValue
 		})
-		return groupsByValue.map{ (key, value) in return (key, value) }
+		return groupsByValue.map { key, value in (key, value) }
 	}
 
 	private final func getGroupsForNonHashableValues(_ samples: [Sample]) throws -> [(Any, [Sample])] {
@@ -151,8 +151,7 @@ public final class SameValueSampleGrouper: SampleGrouper {
 		}
 		if
 			let groupByAttribute = groupByAttribute,
-			let otherGroupByAttribute = sameValueGrouper.groupByAttribute
-		{
+			let otherGroupByAttribute = sameValueGrouper.groupByAttribute {
 			return groupByAttribute.equalTo(otherGroupByAttribute)
 		}
 		return false

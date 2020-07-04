@@ -14,14 +14,16 @@ import Common
 import DependencyInjection
 
 public final class BloodPressure: HealthKitCorrelationSample {
-
 	private typealias Me = BloodPressure
 
 	// MARK: - HealthKit Stuff
 
-	public static let systolicQuantityType: HKQuantityType = HKQuantityType.quantityType(forIdentifier: .bloodPressureSystolic)!
-	public static let diastolicQuantityType: HKQuantityType = HKQuantityType.quantityType(forIdentifier: .bloodPressureDiastolic)!
-	public static let correlationType: HKCorrelationType = HKCorrelationType.correlationType(forIdentifier: .bloodPressure)!
+	public static let systolicQuantityType: HKQuantityType = HKQuantityType
+		.quantityType(forIdentifier: .bloodPressureSystolic)!
+	public static let diastolicQuantityType: HKQuantityType = HKQuantityType
+		.quantityType(forIdentifier: .bloodPressureDiastolic)!
+	public static let correlationType: HKCorrelationType = HKCorrelationType
+		.correlationType(forIdentifier: .bloodPressure)!
 	public static let sampleType: HKSampleType = correlationType
 	public static var readPermissions: Set<HKObjectType> = Set([systolicQuantityType, diastolicQuantityType])
 	public static var writePermissions: Set<HKSampleType> = Set([systolicQuantityType, diastolicQuantityType])
@@ -29,23 +31,34 @@ public final class BloodPressure: HealthKitCorrelationSample {
 	public static var diastolicUnit: HKUnit = HKUnit.millimeterOfMercury()
 
 	public static func initUnits() {
-		systolicUnit = DependencyInjector.get(HealthKitUtil.self).preferredUnitFor(.bloodPressureSystolic) ?? HKUnit.millimeterOfMercury()
-		diastolicUnit = DependencyInjector.get(HealthKitUtil.self).preferredUnitFor(.bloodPressureDiastolic) ?? HKUnit.millimeterOfMercury()
+		systolicUnit = DependencyInjector.get(HealthKitUtil.self).preferredUnitFor(.bloodPressureSystolic) ?? HKUnit
+			.millimeterOfMercury()
+		diastolicUnit = DependencyInjector.get(HealthKitUtil.self).preferredUnitFor(.bloodPressureDiastolic) ?? HKUnit
+			.millimeterOfMercury()
 	}
 
 	// MARK: - Display Information
 
 	public static let name: String = "Blood Pressure"
-	public static let description: String = "Blood pressure is the force of blood pushing against the walls of the arteries as your heart pumps blood. It includes two measurements. \"Systolic\" is your blood pressure when your heart beats while pumping blood. \"Diastolic\" is your blood pressure when the heart is at rest between beats. You usually see blood pressure numbers written with the systolic number above or before the diastolic number."
+	public static let description: String =
+		"Blood pressure is the force of blood pushing against the walls of the arteries as your heart pumps blood. It includes two measurements. \"Systolic\" is your blood pressure when your heart beats while pumping blood. \"Diastolic\" is your blood pressure when the heart is at rest between beats. You usually see blood pressure numbers written with the systolic number above or before the diastolic number."
 
 	// MARK: - Attributes
 
-	public static let systolic = DoubleAttribute(name: "Systolic blood pressure", pluralName: "Systolic blood pressures", variableName: HKPredicateKeyPathQuantity)
-	public static let diastolic = DoubleAttribute(name: "Diastolic blood pressure", pluralName: "Diastolic blood pressures", variableName: HKPredicateKeyPathQuantity)
+	public static let systolic = DoubleAttribute(
+		name: "Systolic blood pressure",
+		pluralName: "Systolic blood pressures",
+		variableName: HKPredicateKeyPathQuantity
+	)
+	public static let diastolic = DoubleAttribute(
+		name: "Diastolic blood pressure",
+		pluralName: "Diastolic blood pressures",
+		variableName: HKPredicateKeyPathQuantity
+	)
 	public static let attributes: [Attribute] = [CommonSampleAttributes.healthKitTimestamp, systolic, diastolic]
 	public static let defaultDependentAttribute: Attribute = diastolic
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp
-	public final var attributes: [Attribute] { return Me.attributes }
+	public final var attributes: [Attribute] { Me.attributes }
 
 	// MARK: - Instance Variables
 
@@ -92,21 +105,28 @@ public final class BloodPressure: HealthKitCorrelationSample {
 			quantity: systolicPressure,
 			start: timestamp,
 			end: timestamp,
-			metadata: [HKMetadataKeyTimeZone : TimeZone.autoupdatingCurrent.identifier])
+			metadata: [HKMetadataKeyTimeZone: TimeZone.autoupdatingCurrent.identifier]
+		)
 		let diastolicPressure = HKQuantity(unit: Me.diastolicUnit, doubleValue: diastolic)
 		let diastolicSample = HKQuantitySample(
 			type: Me.diastolicQuantityType,
 			quantity: diastolicPressure,
 			start: timestamp,
 			end: timestamp,
-			metadata: [HKMetadataKeyTimeZone : TimeZone.autoupdatingCurrent.identifier])
-		return HKCorrelation(type: Me.correlationType, start: timestamp, end: timestamp, objects: Set([systolicSample, diastolicSample]))
+			metadata: [HKMetadataKeyTimeZone: TimeZone.autoupdatingCurrent.identifier]
+		)
+		return HKCorrelation(
+			type: Me.correlationType,
+			start: timestamp,
+			end: timestamp,
+			objects: Set([systolicSample, diastolicSample])
+		)
 	}
 
 	// MARK: - Sample Functions
 
 	public final func dates() -> [DateType: Date] {
-		return [.start: timestamp]
+		[.start: timestamp]
 	}
 
 	// MARK: - Attributed Functions
@@ -153,9 +173,8 @@ public final class BloodPressure: HealthKitCorrelationSample {
 // MARK: - Equatable
 
 extension BloodPressure: Equatable {
-
-	public static func ==(lhs: BloodPressure, rhs: BloodPressure) -> Bool {
-		return lhs.equalTo(rhs)
+	public static func == (lhs: BloodPressure, rhs: BloodPressure) -> Bool {
+		lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
@@ -171,15 +190,14 @@ extension BloodPressure: Equatable {
 	}
 
 	public final func equalTo(_ other: BloodPressure) -> Bool {
-		return timestamp == other.timestamp && diastolic == other.diastolic && systolic == other.systolic
+		timestamp == other.timestamp && diastolic == other.diastolic && systolic == other.systolic
 	}
 }
 
 // MARK: - Debug
 
 extension BloodPressure: CustomDebugStringConvertible {
-
 	public final var debugDescription: String {
-		return "BloodPressure of \(diastolic) at " + DependencyInjector.get(CalendarUtil.self).string(for: timestamp)
+		"BloodPressure of \(diastolic) at " + DependencyInjector.get(CalendarUtil.self).string(for: timestamp)
 	}
 }

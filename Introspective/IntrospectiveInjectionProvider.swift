@@ -12,7 +12,6 @@ import Common
 import DependencyInjection
 
 internal class IntrospectiveInjectionProvider: InjectionProvider {
-
 	private typealias Me = IntrospectiveInjectionProvider
 	private static let coachMarkFactory = CoachMarkFactoryImpl()
 
@@ -22,10 +21,10 @@ internal class IntrospectiveInjectionProvider: InjectionProvider {
 
 	public func get<Type>(_ type: Type.Type) throws -> Type {
 		switch type {
-			case is CoachMarkFactory.Protocol:
-				return Me.coachMarkFactory as! Type
-			default:
-				throw GenericError("Unknown type: " + String(describing: type))
+		case is CoachMarkFactory.Protocol:
+			return Me.coachMarkFactory as! Type
+		default:
+			throw GenericError("Unknown type: " + String(describing: type))
 		}
 	}
 }

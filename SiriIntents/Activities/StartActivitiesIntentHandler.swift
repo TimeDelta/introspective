@@ -14,22 +14,28 @@ import DependencyInjection
 import Persistence
 import Samples
 
-public final class StartActivitiesIntentHandler: ActivityIntentHandler<StartActivitiesIntent>, StartActivitiesIntentHandling {
-
+public final class StartActivitiesIntentHandler: ActivityIntentHandler<StartActivitiesIntent>,
+	StartActivitiesIntentHandling {
 	private typealias Me = StartActivitiesIntentHandler
 
 	private static let log = Log()
 
-	public func resolveActivityNames(for intent: StartActivitiesIntent, with completion: @escaping ([INStringResolutionResult]) -> Void) {
+	public func resolveActivityNames(
+		for intent: StartActivitiesIntent,
+		with completion: @escaping ([INStringResolutionResult]) -> Void
+	) {
 		Me.log.info("Resolving activity names")
 		guard let activityNames = intent.activityNames else {
 			completion([INStringResolutionResult.needsValue()])
 			return
 		}
-		completion(activityNames.map{ n in INStringResolutionResult.success(with: n) })
+		completion(activityNames.map { n in INStringResolutionResult.success(with: n) })
 	}
 
-	public func provideActivityNamesOptions(for intent: StartActivitiesIntent, with completion: @escaping ([String]?, Error?) -> Void) {
+	public func provideActivityNamesOptions(
+		for intent: StartActivitiesIntent,
+		with completion: @escaping ([String]?, Error?) -> Void
+	) {
 		provideActivityNameOptions(for: intent, with: completion)
 	}
 
@@ -45,13 +51,16 @@ public final class StartActivitiesIntentHandler: ActivityIntentHandler<StartActi
 			for name in activityNames {
 				guard let definition = try DependencyInjector.get(ActivityDAO.self).getDefinitionWith(name: name) else {
 					Me.log.error("Activity named %{private}@ does not exist.", name)
-					completion(StartActivitiesIntentResponse.failure(error: "Activity named \"\(name)\" does not exist."))
+					completion(
+						StartActivitiesIntentResponse
+							.failure(error: "Activity named \"\(name)\" does not exist.")
+					)
 					return
 				}
 				let activity = try DependencyInjector.get(ActivityDAO.self).startActivity(definition)
 				startedActivities.append(activity)
 			}
-			let activitiesInfo = startedActivities.map{ a in ActivityIntentInfo(a) }
+			let activitiesInfo = startedActivities.map { a in ActivityIntentInfo(a) }
 			completion(StartActivitiesIntentResponse.success(activities: activitiesInfo))
 		} catch {
 			Me.log.error("Failed StartActivitiesIntent: %@", errorInfo(error))

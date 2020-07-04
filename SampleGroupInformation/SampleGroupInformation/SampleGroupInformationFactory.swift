@@ -11,19 +11,18 @@ import Foundation
 import Attributes
 import Common
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol SampleGroupInformationFactory {
-
 	func getApplicableInformationTypes(forAttribute attribute: Attribute) -> [SampleGroupInformation.Type]
 	func getApplicableNumericInformationTypes(forAttribute attribute: Attribute) -> [SampleGroupInformation.Type]
 	func initInformation(
 		_ informationType: SampleGroupInformation.Type,
-		_ attribute: Attribute)
-	-> SampleGroupInformation
+		_ attribute: Attribute
+	)
+		-> SampleGroupInformation
 }
 
 public final class SampleGroupInformationFactoryImpl: SampleGroupInformationFactory {
-
 	private typealias Me = SampleGroupInformationFactoryImpl
 
 	private static let genericInformationTypes: [SampleGroupInformation.Type] = [
@@ -41,7 +40,8 @@ public final class SampleGroupInformationFactoryImpl: SampleGroupInformationFact
 		MostRecentDateInformation.self,
 	]
 
-	public final func getApplicableInformationTypes(forAttribute attribute: Attribute) -> [SampleGroupInformation.Type] {
+	public final func getApplicableInformationTypes(forAttribute attribute: Attribute)
+		-> [SampleGroupInformation.Type] {
 		var applicableInformationTypes = [SampleGroupInformation.Type]()
 		if attribute is DoubleAttribute {
 			applicableInformationTypes.append(contentsOf: Me.numericInformationTypes)
@@ -72,12 +72,13 @@ public final class SampleGroupInformationFactoryImpl: SampleGroupInformationFact
 			applicableInformationTypes.append(MinimumInformation<Duration>.self)
 			applicableInformationTypes.append(MedianInformation<Duration>.self)
 		}
-		// TODO - additional attribute types
+		// TODO: - additional attribute types
 		applicableInformationTypes.append(contentsOf: Me.genericInformationTypes)
 		return applicableInformationTypes
 	}
 
-	public final func getApplicableNumericInformationTypes(forAttribute attribute: Attribute) -> [SampleGroupInformation.Type] {
+	public final func getApplicableNumericInformationTypes(forAttribute attribute: Attribute)
+		-> [SampleGroupInformation.Type] {
 		var applicableInformationTypes = [SampleGroupInformation.Type]()
 		if attribute is DoubleAttribute {
 			applicableInformationTypes.append(contentsOf: Me.numericInformationTypes)
@@ -104,8 +105,9 @@ public final class SampleGroupInformationFactoryImpl: SampleGroupInformationFact
 
 	public final func initInformation(
 		_ informationType: SampleGroupInformation.Type,
-		_ attribute: Attribute)
-	-> SampleGroupInformation {
-		return informationType.init(attribute)
+		_ attribute: Attribute
+	)
+		-> SampleGroupInformation {
+		informationType.init(attribute)
 	}
 }

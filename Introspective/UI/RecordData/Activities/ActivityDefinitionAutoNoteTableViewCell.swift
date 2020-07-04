@@ -12,18 +12,18 @@ import Common
 import DependencyInjection
 
 public final class ActivityDefinitionAutoNoteTableViewCell: UITableViewCell {
-
 	// MARK: - Static Variables
 
 	private typealias Me = ActivityDefinitionAutoNoteTableViewCell
 	private static let descriptionPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
-		center: .center)
+		center: .center
+	)
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var toggleSwitch: UISwitch! {
+	@IBOutlet final var toggleSwitch: UISwitch! {
 		didSet { updateUI() }
 	}
 
@@ -37,25 +37,29 @@ public final class ActivityDefinitionAutoNoteTableViewCell: UITableViewCell {
 
 	// MARK: - Actions
 
-	@IBAction final func valueChanged(_ sender: Any) {
+	@IBAction final func valueChanged(_: Any) {
 		NotificationCenter.default.post(
 			name: notificationToSendOnChange,
 			object: self,
 			userInfo: info([
 				.activityDefinitionAutoNote: toggleSwitch.isOn,
-			]))
+			])
+		)
 	}
 
-	@IBAction final func showDescription(_ sender: Any) {
+	@IBAction final func showDescription(_: Any) {
 		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")
-		controller.descriptionText = "Automatically display the edit screen for this activity with the note ready to be filled in on completion."
+		controller
+			.descriptionText =
+			"Automatically display the edit screen for this activity with the note ready to be filled in on completion."
 		NotificationCenter.default.post(
 			name: notificationToSendForPopup,
 			object: self,
 			userInfo: info([
 				.controller: controller,
 				.presenter: Me.descriptionPresenter,
-			]))
+			])
+		)
 	}
 
 	// MARK: - Helper Functions

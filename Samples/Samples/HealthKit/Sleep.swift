@@ -14,7 +14,6 @@ import Common
 import DependencyInjection
 
 public final class Sleep: HealthKitCategorySample, SearchableSample {
-
 	private typealias Me = Sleep
 
 	public enum State: CustomStringConvertible {
@@ -25,18 +24,18 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 		public static var allValues: [State] = [awake, inBed, asleep]
 
 		public var description: String {
-			switch (self) {
-				case .awake: return "Awake"
-				case .inBed: return "In bed"
-				case .asleep: return "Asleep"
+			switch self {
+			case .awake: return "Awake"
+			case .inBed: return "In bed"
+			case .asleep: return "Asleep"
 			}
 		}
 
 		public var rawValue: Int {
-			switch (self) {
-				case .awake: return HKCategoryValueSleepAnalysis.awake.rawValue
-				case .inBed: return HKCategoryValueSleepAnalysis.inBed.rawValue
-				case .asleep: return HKCategoryValueSleepAnalysis.asleep.rawValue
+			switch self {
+			case .awake: return HKCategoryValueSleepAnalysis.awake.rawValue
+			case .inBed: return HKCategoryValueSleepAnalysis.inBed.rawValue
+			case .asleep: return HKCategoryValueSleepAnalysis.asleep.rawValue
 			}
 		}
 	}
@@ -65,7 +64,8 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 		variableName: HKPredicateKeyPathCategoryValue,
 		possibleValues: State.allValues,
 		possibleValueToString: { $0.description },
-		areEqual: { $0 == $1 })
+		areEqual: { $0 == $1 }
+	)
 	public static let durationAttribute = DurationAttribute()
 	public static let attributes: [Attribute] = [
 		durationAttribute,
@@ -75,12 +75,12 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 	]
 	public static let defaultDependentAttribute: Attribute = durationAttribute
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitStartDate
-	public final var attributes: [Attribute] { return Me.attributes }
+	public final var attributes: [Attribute] { Me.attributes }
 
 	// MARK: - Searching
 
 	public func matchesSearchString(_ searchString: String) -> Bool {
-		return state.description.localizedCaseInsensitiveContains(searchString)
+		state.description.localizedCaseInsensitiveContains(searchString)
 	}
 
 	// MARK: - Instance Variables
@@ -102,20 +102,20 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 	}
 
 	public required init(_ sample: HKCategorySample) {
-		switch (sample.value) {
-			case HKCategoryValueSleepAnalysis.awake.rawValue:
-				state = .awake
-				break
-			case HKCategoryValueSleepAnalysis.inBed.rawValue:
-				state = .inBed
-				break
-			case HKCategoryValueSleepAnalysis.asleep.rawValue:
-				state = .asleep
-				break
-			default:
-				log.error("Unknown state: %d", sample.value)
-				state = .awake
-				break
+		switch sample.value {
+		case HKCategoryValueSleepAnalysis.awake.rawValue:
+			state = .awake
+			break
+		case HKCategoryValueSleepAnalysis.inBed.rawValue:
+			state = .inBed
+			break
+		case HKCategoryValueSleepAnalysis.asleep.rawValue:
+			state = .asleep
+			break
+		default:
+			log.error("Unknown state: %d", sample.value)
+			state = .awake
+			break
 		}
 		startDate = sample.startDate
 		DependencyInjector.get(HealthKitUtil.self).setTimeZoneIfApplicable(for: &startDate, from: sample)
@@ -126,18 +126,19 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 	// MARK: - HealthKitSample Functions
 
 	public func hkSample() -> HKSample {
-		return HKCategorySample(
+		HKCategorySample(
 			type: Me.categoryType,
 			value: state.rawValue,
 			start: startDate,
 			end: endDate,
-			metadata: [HKMetadataKeyTimeZone : TimeZone.autoupdatingCurrent.identifier])
+			metadata: [HKMetadataKeyTimeZone: TimeZone.autoupdatingCurrent.identifier]
+		)
 	}
 
 	// MARK: - Sample Functions
 
 	public final func dates() -> [DateType: Date] {
-		return [.start: startDate, .end: endDate]
+		[.start: startDate, .end: endDate]
 	}
 
 	public final func graphableValue(of attribute: Attribute) throws -> Any? {
@@ -194,9 +195,8 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 // MARK: - Equatable
 
 extension Sleep: Equatable {
-
-	public static func ==(lhs: Sleep, rhs: Sleep) -> Bool {
-		return lhs.equalTo(rhs)
+	public static func == (lhs: Sleep, rhs: Sleep) -> Bool {
+		lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
@@ -212,7 +212,7 @@ extension Sleep: Equatable {
 	}
 
 	public final func equalTo(_ other: Sleep) -> Bool {
-		return startDate == other.startDate &&
+		startDate == other.startDate &&
 			endDate == other.endDate &&
 			state == other.state
 	}
@@ -221,8 +221,8 @@ extension Sleep: Equatable {
 // MARK: - Debug
 
 extension Sleep: CustomDebugStringConvertible {
-
 	public final var debugDescription: String {
-		return "Sleep with state \(state) from " + DependencyInjector.get(CalendarUtil.self).string(for: startDate) + " to " + DependencyInjector.get(CalendarUtil.self).string(for: endDate)
+		"Sleep with state \(state) from " + DependencyInjector.get(CalendarUtil.self)
+			.string(for: startDate) + " to " + DependencyInjector.get(CalendarUtil.self).string(for: endDate)
 	}
 }

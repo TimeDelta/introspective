@@ -6,16 +6,15 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import CoreData
 import CSV
+import Foundation
 
 import Attributes
 import Common
 import DependencyInjection
 
 public protocol Mood: CoreDataSample, SearchableSample {
-
 	static var rating: DoubleAttribute { get }
 	static var maxRating: DoubleAttribute { get }
 	static var note: TextAttribute { get }
@@ -30,7 +29,6 @@ public protocol Mood: CoreDataSample, SearchableSample {
 }
 
 public final class MoodImpl: NSManagedObject, Mood {
-
 	private typealias Me = MoodImpl
 
 	// MARK: - CoreData Stuff
@@ -50,16 +48,19 @@ public final class MoodImpl: NSManagedObject, Mood {
 		name: "Source",
 		typeName: "Mood Source",
 		pluralName: "Sources",
-		possibleValues: Sources.MoodSourceNum.values.map{ $0.description },
-		possibleValueToString: { $0 })
+		possibleValues: Sources.MoodSourceNum.values.map { $0.description },
+		possibleValueToString: { $0 }
+	)
 	public static let minRating = DoubleAttribute(
 		name: "Min Allowed Mood Rating",
 		pluralName: "Min allowed mood ratings",
-		variableName: "minRating")
+		variableName: "minRating"
+	)
 	public static let maxRating = DoubleAttribute(
 		name: "Max Allowed Mood Rating",
 		pluralName: "Max allowed mood ratings",
-		variableName: "maxRating")
+		variableName: "maxRating"
+	)
 
 	public static let defaultDependentAttribute: Attribute = rating
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.timestamp
@@ -77,18 +78,19 @@ public final class MoodImpl: NSManagedObject, Mood {
 	// MARK: - Searching
 
 	public func matchesSearchString(_ searchString: String) -> Bool {
-		return (note?.localizedCaseInsensitiveContains(searchString) ?? false)
+		(note?.localizedCaseInsensitiveContains(searchString) ?? false)
 	}
 
 	// MARK: - Instance Variables
 
 	public final let attributedName: String = "Mood"
-	public final override var description: String { return Me.description }
+	override public final var description: String { Me.description }
 	public final var date: Date {
 		get {
-			return DependencyInjector.get(CoreDataSampleUtil.self).convertTimeZoneIfApplicable(
+			DependencyInjector.get(CoreDataSampleUtil.self).convertTimeZoneIfApplicable(
 				for: timestamp,
-				timeZoneId: timestampTimeZoneId)
+				timeZoneId: timestampTimeZoneId
+			)
 		}
 		set {
 			timestamp = newValue
@@ -97,6 +99,7 @@ public final class MoodImpl: NSManagedObject, Mood {
 			}
 		}
 	}
+
 	public final var timeZone: TimeZone? {
 		get {
 			if let timeZoneId = timestampTimeZoneId {
@@ -110,7 +113,7 @@ public final class MoodImpl: NSManagedObject, Mood {
 	// MARK: - Sample Functions
 
 	public final func dates() -> [DateType: Date] {
-		return [.start: date]
+		[.start: date]
 	}
 
 	// MARK: - Export
@@ -140,11 +143,13 @@ public final class MoodImpl: NSManagedObject, Mood {
 				noteColumn,
 				sourceColumn,
 			],
-			quotedAtIndex: { _ in true })
+			quotedAtIndex: { _ in true }
+		)
 	}
 
 	public func export(to csv: CSVWriter) throws {
-		let timestampText = DependencyInjector.get(CalendarUtil.self).string(for: timestamp, dateStyle: .full, timeStyle: .full)
+		let timestampText = DependencyInjector.get(CalendarUtil.self)
+			.string(for: timestamp, dateStyle: .full, timeStyle: .full)
 		try csv.write(field: timestampText, quoted: true)
 
 		try csv.write(field: timestampTimeZoneId ?? "", quoted: true)
@@ -227,7 +232,7 @@ public final class MoodImpl: NSManagedObject, Mood {
 	// MARK: - Other
 
 	public final func getSource() -> Sources.MoodSourceNum {
-		return Sources.resolveMoodSource(source)
+		Sources.resolveMoodSource(source)
 	}
 
 	public final func setSource(_ source: Sources.MoodSourceNum) {
@@ -252,7 +257,7 @@ public final class MoodImpl: NSManagedObject, Mood {
 	}
 
 	public final func equalTo(_ other: Mood) -> Bool {
-		return rating == other.rating &&
+		rating == other.rating &&
 			minRating == other.minRating &&
 			maxRating == other.maxRating &&
 			note == other.note &&
@@ -261,17 +266,16 @@ public final class MoodImpl: NSManagedObject, Mood {
 
 	// MARK: - Debug
 
-	public final override var debugDescription: String {
-		return "Mood with rating = \(rating), timestamp = \(timestamp), and note = \(note ?? "nil")"
+	override public final var debugDescription: String {
+		"Mood with rating = \(rating), timestamp = \(timestamp), and note = \(note ?? "nil")"
 	}
 }
 
 // MARK: - CoreData
 
 public extension MoodImpl {
-
 	@nonobjc class func fetchRequest() -> NSFetchRequest<MoodImpl> {
-		return NSFetchRequest<MoodImpl>(entityName: "Mood")
+		NSFetchRequest<MoodImpl>(entityName: "Mood")
 	}
 
 	@NSManaged var note: String?

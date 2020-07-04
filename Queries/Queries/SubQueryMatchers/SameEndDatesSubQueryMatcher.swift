@@ -14,7 +14,6 @@ import DependencyInjection
 import Samples
 
 public final class SameEndDatesSubQueryMatcher: SubQueryMatcher, Equatable {
-
 	// MARK: - Attributes
 
 	public final let attributes: [Attribute] = [CommonSubQueryMatcherAttributes.mostRecentOnly]
@@ -46,23 +45,26 @@ public final class SameEndDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 
 	public final func getSamples<QuerySampleType: Sample>(
 		from querySamples: [QuerySampleType],
-		matching subQuerySamples: [Sample])
-	-> [QuerySampleType] {
+		matching subQuerySamples: [Sample]
+	)
+		-> [QuerySampleType] {
 		var matchingSamples = [QuerySampleType]()
 
 		var applicableSubQuerySamples = subQuerySamples
 		if mostRecentOnly {
-			applicableSubQuerySamples = DependencyInjector.get(SampleUtil.self).sort(samples: subQuerySamples, by: .end, in: .orderedDescending)
+			applicableSubQuerySamples = DependencyInjector.get(SampleUtil.self)
+				.sort(samples: subQuerySamples, by: .end, in: .orderedDescending)
 			applicableSubQuerySamples = [subQuerySamples[0]]
 		}
 
-		let subQuerySamplesSortedByEndDate = DependencyInjector.get(SampleUtil.self).sort(samples: applicableSubQuerySamples, by: .end, in: .orderedAscending)
+		let subQuerySamplesSortedByEndDate = DependencyInjector.get(SampleUtil.self)
+			.sort(samples: applicableSubQuerySamples, by: .end, in: .orderedAscending)
 		for sample in querySamples {
 			let matchingSampleIndex = DependencyInjector.get(SearchUtil.self).binarySearch(
 				for: sample,
 				in: subQuerySamplesSortedByEndDate,
 				compare: { (s1: Sample, s2: Sample) -> ComparisonResult in
-					return DependencyInjector.get(CalendarUtil.self).compare(s1.dates()[.end], s2.dates()[.end])
+					DependencyInjector.get(CalendarUtil.self).compare(s1.dates()[.end], s2.dates()[.end])
 				}
 			)
 			if matchingSampleIndex != nil {
@@ -94,8 +96,8 @@ public final class SameEndDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 
 	// MARK: - Equality
 
-	public static func ==(lhs: SameEndDatesSubQueryMatcher, rhs: SameEndDatesSubQueryMatcher) -> Bool {
-		return lhs.equalTo(rhs as SubQueryMatcher)
+	public static func == (lhs: SameEndDatesSubQueryMatcher, rhs: SameEndDatesSubQueryMatcher) -> Bool {
+		lhs.equalTo(rhs as SubQueryMatcher)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
@@ -111,6 +113,6 @@ public final class SameEndDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 	}
 
 	public func equalTo(_ other: SameEndDatesSubQueryMatcher) -> Bool {
-		return mostRecentOnly == other.mostRecentOnly
+		mostRecentOnly == other.mostRecentOnly
 	}
 }

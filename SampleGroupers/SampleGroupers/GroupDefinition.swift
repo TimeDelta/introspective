@@ -12,9 +12,8 @@ import BooleanAlgebra
 import DependencyInjection
 import Samples
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol GroupDefinition: CustomStringConvertible {
-
 	var name: String { get set }
 	var description: String { get }
 	var sampleType: Sample.Type { get }
@@ -31,25 +30,23 @@ public protocol GroupDefinition: CustomStringConvertible {
 }
 
 public final class GroupDefinitionImpl: GroupDefinition {
-
 	// MARK: - Instance Variables
 
 	public final var name: String = "Name this group"
 	public final let sampleType: Sample.Type
 	public final var attributeRestrictionExpression: BooleanExpression? {
-		get {
-			do {
-				let parser = DependencyInjector.get(BooleanExpressionParser.self)
-				return try parser.parse(expressionParts)
-			} catch {
-				return nil
-			}
+		do {
+			let parser = DependencyInjector.get(BooleanExpressionParser.self)
+			return try parser.parse(expressionParts)
+		} catch {
+			return nil
 		}
 	}
+
 	public final var expressionParts = [BooleanExpressionPart]()
 
 	public final var description: String {
-		return attributeRestrictionExpression?.description ?? ""
+		attributeRestrictionExpression?.description ?? ""
 	}
 
 	// MARK: - Initializers
@@ -68,10 +65,10 @@ public final class GroupDefinitionImpl: GroupDefinition {
 
 	public final func isValid() -> Bool {
 		guard !name.isEmpty else { return false }
-		guard expressionParts.count > 0 else { return false }
+		guard !expressionParts.isEmpty else { return false }
 		let parser = DependencyInjector.get(BooleanExpressionParser.self)
 		do {
-			let _ = try parser.parse(expressionParts)
+			_ = try parser.parse(expressionParts)
 		} catch {
 			return false
 		}
@@ -93,8 +90,7 @@ public final class GroupDefinitionImpl: GroupDefinition {
 		var expressionsEqual: Bool
 		if
 			let lExpression = attributeRestrictionExpression,
-			let rExpression = other.attributeRestrictionExpression
-		{
+			let rExpression = other.attributeRestrictionExpression {
 			expressionsEqual = lExpression.equalTo(rExpression)
 		} else {
 			expressionsEqual = expressionParts.elementsEqual(other.expressionParts, by: {

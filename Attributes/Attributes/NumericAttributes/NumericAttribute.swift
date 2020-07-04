@@ -10,7 +10,6 @@ import Foundation
 import HealthKit
 
 public protocol NumericAttribute: GraphableAttribute, ComparableAttribute {
-
 	/// Is the specified value valid for this attribute?
 	func isValid(value: String) -> Bool
 	func errorMessageFor(invalidValue: String) -> String

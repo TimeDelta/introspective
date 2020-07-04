@@ -9,7 +9,6 @@
 import Foundation
 
 public final class CalendarComponentAttribute: TypedEquatableSelectOneAttribute<Calendar.Component> {
-
 	public static let supportedComponents: [Calendar.Component] = [
 		.year,
 		.quarter,
@@ -30,8 +29,8 @@ public final class CalendarComponentAttribute: TypedEquatableSelectOneAttribute<
 		description: String? = nil,
 		variableName: String? = nil,
 		optional: Bool = false,
-		possibleValues: [Calendar.Component] = CalendarComponentAttribute.supportedComponents)
-	{
+		possibleValues: [Calendar.Component] = CalendarComponentAttribute.supportedComponents
+	) {
 		super.init(
 			name: name,
 			typeName: "Time Unit",
@@ -40,6 +39,7 @@ public final class CalendarComponentAttribute: TypedEquatableSelectOneAttribute<
 			variableName: variableName,
 			optional: optional,
 			possibleValues: possibleValues,
-			possibleValueToString: { $0.description })
+			possibleValueToString: { $0.description }
+		)
 	}
 }

@@ -12,7 +12,6 @@ import Common
 import DependencyInjection
 
 final class GraphSetupViewController: UIViewController {
-
 	// MARK: - Static Variables
 
 	private typealias Me = GraphSetupViewController
@@ -20,8 +19,8 @@ final class GraphSetupViewController: UIViewController {
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var graphTypeButton: UIButton!
-	@IBOutlet weak final var subView: UIView!
+	@IBOutlet final var graphTypeButton: UIButton!
+	@IBOutlet final var subView: UIView!
 
 	// MARK: - Instance Variables
 
@@ -30,7 +29,7 @@ final class GraphSetupViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	final override func viewDidLoad() {
+	override final func viewDidLoad() {
 		super.viewDidLoad()
 		if graphType == nil {
 			graphType = GraphType.allTypes[0]
@@ -58,20 +57,24 @@ final class GraphSetupViewController: UIViewController {
 
 	// MARK: - Actions
 
-	@IBAction final func setGraphTypewButtonPressed(sender: Any) {
+	@IBAction final func setGraphTypewButtonPressed(sender _: Any) {
 		let controller: ChooseGraphTypeViewController = viewController(named: "chooseGraphType")
 		controller.currentValue = graphType
 		controller.notificationToSendOnAccept = Me.setGraphType
-		customPresentViewController(DependencyInjector.get(UiUtil.self).defaultPresenter, viewController: controller, animated: false)
+		customPresentViewController(
+			DependencyInjector.get(UiUtil.self).defaultPresenter,
+			viewController: controller,
+			animated: false
+		)
 	}
 
 	// MARK: - Helper Functions
 
 	private final func shouldNotResetSubView(_ newGraphType: GraphType) -> Bool {
-		return graphType == newGraphType || (
+		graphType == newGraphType || (
 			(graphType == .line || graphType == .bar || graphType == .scatter)
-			&&
-			(newGraphType == .line || newGraphType == .bar || newGraphType == .scatter)
+				&&
+				(newGraphType == .line || newGraphType == .bar || newGraphType == .scatter)
 		)
 	}
 
@@ -83,17 +86,20 @@ final class GraphSetupViewController: UIViewController {
 	private final func updateSubView() {
 		subViewController?.view.removeFromSuperview()
 		subViewController?.removeFromParent()
-		switch (graphType!) {
-			case .line, .bar, .scatter:
-				let controller: BasicXYGraphSetupViewController = viewController(named: "graphSetup", fromStoryboard: "BasicXYGraph")
-				controller.realNavigationController = navigationController
-				controller.chartType = graphType.aaChartType
-				controller.view.frame = subView.frame
-				controller.view.addConstraints(subView.constraints)
-				subViewController = controller
-				view.addSubview(controller.view)
-				addChild(controller)
-				break
+		switch graphType! {
+		case .line, .bar, .scatter:
+			let controller: BasicXYGraphSetupViewController = viewController(
+				named: "graphSetup",
+				fromStoryboard: "BasicXYGraph"
+			)
+			controller.realNavigationController = navigationController
+			controller.chartType = graphType.aaChartType
+			controller.view.frame = subView.frame
+			controller.view.addConstraints(subView.constraints)
+			subViewController = controller
+			view.addSubview(controller.view)
+			addChild(controller)
+			break
 		}
 	}
 }

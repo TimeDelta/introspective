@@ -9,10 +9,9 @@
 import UIKit
 
 final class ChooseGraphTypeViewController: UIViewController {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var graphTypePicker: UIPickerView!
+	@IBOutlet final var graphTypePicker: UIPickerView!
 
 	// MARK: - Instance Variables
 
@@ -21,7 +20,7 @@ final class ChooseGraphTypeViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	final override func viewDidLoad() {
+	override final func viewDidLoad() {
 		super.viewDidLoad()
 
 		graphTypePicker.dataSource = self
@@ -36,13 +35,14 @@ final class ChooseGraphTypeViewController: UIViewController {
 
 	// MARK: - Actions
 
-	@IBAction final func acceptButtonPressed(sender: Any) {
+	@IBAction final func acceptButtonPressed(sender _: Any) {
 		NotificationCenter.default.post(
 			name: notificationToSendOnAccept,
 			object: self,
 			userInfo: info([
 				.graphType: currentValue!,
-			]))
+			])
+		)
 		dismiss(animated: false, completion: nil)
 	}
 }
@@ -50,25 +50,23 @@ final class ChooseGraphTypeViewController: UIViewController {
 // MARK: - UIPickerViewDataSource
 
 extension ChooseGraphTypeViewController: UIPickerViewDataSource {
-
-	public func numberOfComponents(in pickerView: UIPickerView) -> Int {
-		return 1
+	public func numberOfComponents(in _: UIPickerView) -> Int {
+		1
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return GraphType.allTypes.count
+	public func pickerView(_: UIPickerView, numberOfRowsInComponent _: Int) -> Int {
+		GraphType.allTypes.count
 	}
 }
 
 // MARK: - UIPickerViewDelegate
 
 extension ChooseGraphTypeViewController: UIPickerViewDelegate {
-
-	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return GraphType.allTypes[row].description
+	public func pickerView(_: UIPickerView, titleForRow row: Int, forComponent _: Int) -> String? {
+		GraphType.allTypes[row].description
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+	public func pickerView(_: UIPickerView, didSelectRow row: Int, inComponent _: Int) {
 		currentValue = GraphType.allTypes[row]
 	}
 }

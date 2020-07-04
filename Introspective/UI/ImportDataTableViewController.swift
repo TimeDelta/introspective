@@ -6,10 +6,10 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
-import SwiftDate
-import UserNotifications
 import NotificationBannerSwift
+import SwiftDate
+import UIKit
+import UserNotifications
 
 import Common
 import DataImport
@@ -17,7 +17,6 @@ import DependencyInjection
 import Notifications
 
 public final class ImportDataTableViewController: UITableViewController {
-
 	// MARK: - Static Variables
 
 	private typealias Me = ImportDataTableViewController
@@ -26,36 +25,45 @@ public final class ImportDataTableViewController: UITableViewController {
 	}
 
 	public static let sectionRows = [
-		(section: "Activity",
-		rows: [
-			"ATracker",
-			"Introspective",
-		]),
-		(section: "Medication",
-		rows: [
-			"EasyPill Medications",
-			"EasyPill Doses",
-			"Introspective",
-		]),
-		(section: "Mood",
-		rows: [
-			"Wellness",
-			"Introspective",
-		]),
+		(
+			section: "Activity",
+			rows: [
+				"ATracker",
+				"Introspective",
+			]
+		),
+		(
+			section: "Medication",
+			rows: [
+				"EasyPill Medications",
+				"EasyPill Doses",
+				"Introspective",
+			]
+		),
+		(
+			section: "Mood",
+			rows: [
+				"Wellness",
+				"Introspective",
+			]
+		),
 	]
 
 	// MARK: activities
+
 	private static let activitiesSection = 0
 	private static let aTrackerActivityIndex = IndexPath(row: 0, section: activitiesSection)
 	private static let introspectiveActivityIndex = IndexPath(row: 1, section: activitiesSection)
 
 	// MARK: medications
+
 	private static let medicationSection = 1
 	private static let easyPillMedicationIndex = IndexPath(row: 0, section: medicationSection)
 	private static let easyPillDoseIndex = IndexPath(row: 1, section: medicationSection)
 	private static let introspectiveMedicationIndex = IndexPath(row: 2, section: medicationSection)
 
 	// MARK: moods
+
 	private static let moodSection = 2
 	private static let wellnessMoodIndex = IndexPath(row: 0, section: moodSection)
 	private static let introspectiveMoodIndex = IndexPath(row: 1, section: moodSection)
@@ -66,7 +74,8 @@ public final class ImportDataTableViewController: UITableViewController {
 	private final var backgroundImportOrder = [UIBackgroundTaskIdentifier]()
 	private final let backgroundImportsAccessQueue = DispatchQueue(
 		label: "backgroundImports access",
-		attributes: .concurrent)
+		attributes: .concurrent
+	)
 	private final var _backgroundImports = [UIBackgroundTaskIdentifier: Importer]()
 	public final func backgroundImports<Type>(_ code: ([UIBackgroundTaskIdentifier: Importer]) -> Type) -> Type {
 		var result: Type?
@@ -76,6 +85,7 @@ public final class ImportDataTableViewController: UITableViewController {
 		}
 		return result!
 	}
+
 	/// This is necessary because can't reference the local variable with
 	/// the returned id from its expiration handler otherwise compiler will
 	/// complain about referencing a variable in its definition.
@@ -85,7 +95,7 @@ public final class ImportDataTableViewController: UITableViewController {
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		observe(selector: #selector(extendTime), name: .extendBackgroundTaskTime)
 		observe(selector: #selector(cancelBackgroundImport), name: .cancelBackgroundTask)
 	}
@@ -96,32 +106,38 @@ public final class ImportDataTableViewController: UITableViewController {
 
 	// MARK: - Table View Data Source
 
-	public final override func numberOfSections(in tableView: UITableView) -> Int {
+	override public final func numberOfSections(in _: UITableView) -> Int {
 		if backgroundImports({ $0.count }) > 0 {
 			return 4
 		}
 		return 3
 	}
 
-	public final override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+	override public final func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section >= Me.sectionRows.count {
 			return "Active Imports"
 		}
 		return Me.sectionRows[section].section
 	}
 
-	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override public final func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if section >= Me.sectionRows.count {
-			return backgroundImports({ $0.count })
+			return backgroundImports { $0.count }
 		}
 		return Me.sectionRows[section].rows.count
 	}
 
-	public final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override public final func tableView(
+		_ tableView: UITableView,
+		cellForRowAt indexPath: IndexPath
+	) -> UITableViewCell {
 		if indexPath.section >= Me.sectionRows.count {
-			let cell = tableView.dequeueReusableCell(withIdentifier: "activeImport", for: indexPath) as! ActiveImportTableViewCell
+			let cell = tableView.dequeueReusableCell(
+				withIdentifier: "activeImport",
+				for: indexPath
+			) as! ActiveImportTableViewCell
 			cell.backgroundTaskId = backgroundImportOrder[indexPath.row]
-			cell.importer = backgroundImports({ $0[cell.backgroundTaskId] })
+			cell.importer = backgroundImports { $0[cell.backgroundTaskId] }
 			// need to do this or will double subscribe and receive event twice, causing app to crash
 			DependencyInjector.get(UiUtil.self).stopObserving(self, name: .presentView, object: cell.importer)
 			observe(selector: #selector(presentViewFrom), name: .presentView, object: cell.importer)
@@ -134,14 +150,14 @@ public final class ImportDataTableViewController: UITableViewController {
 
 	// MARK: - Table View Delegate
 
-	public final override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+	override public final func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		if indexPath.section < Me.sectionRows.count {
 			return 44
 		}
 		return 75
 	}
 
-	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	override public final func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		guard indexPath.section < Me.sectionRows.count else {
 			tableView.deselectRow(at: indexPath, animated: false)
 			return
@@ -150,16 +166,17 @@ public final class ImportDataTableViewController: UITableViewController {
 			importer = try getImporterFor(indexPath)
 			var lastImportedText: String
 			if let importDate = importer.lastImport {
-				let dateText = DependencyInjector.get(CalendarUtil.self).string(for: importDate, dateStyle: .medium, timeStyle: .medium)
+				let dateText = DependencyInjector.get(CalendarUtil.self)
+					.string(for: importDate, dateStyle: .medium, timeStyle: .medium)
 				lastImportedText = "Last import date: \(dateText)"
 			} else {
 				lastImportedText = "Never imported"
 			}
 			let actionSheet = UIAlertController(title: lastImportedText, message: nil, preferredStyle: .actionSheet)
-			actionSheet.addAction(UIAlertAction(title: "Import", style: .default){ _ in
+			actionSheet.addAction(UIAlertAction(title: "Import", style: .default) { _ in
 				self.promptForDataImport(indexPath)
 			})
-			actionSheet.addAction(UIAlertAction(title: "Reset Last Import Date", style: .default){ _ in
+			actionSheet.addAction(UIAlertAction(title: "Reset Last Import Date", style: .default) { _ in
 				do {
 					try self.importer.resetLastImportDate()
 				} catch {
@@ -167,7 +184,7 @@ public final class ImportDataTableViewController: UITableViewController {
 					self.showError(title: "Failed to reset last import date", error: error)
 				}
 			})
-			actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel){ _ in
+			actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
 				self.tableView.deselectRow(at: indexPath, animated: false)
 			})
 			presentView(actionSheet)
@@ -223,7 +240,7 @@ public final class ImportDataTableViewController: UITableViewController {
 
 	// MARK: - Helper Functions
 
-	private final func promptForDataImport(_ indexPath: IndexPath) {
+	private final func promptForDataImport(_: IndexPath) {
 		let message = importer.customImportMessage ??
 			"This will only import data that was recorded after the imported record with the most recent date and time."
 		let prompt = UIAlertController(title: "Import new data only?", message: message, preferredStyle: .alert)
@@ -237,7 +254,8 @@ public final class ImportDataTableViewController: UITableViewController {
 	}
 
 	private final func importData(newDataOnly: Bool) {
-		let documentPickerController = DependencyInjector.get(UiUtil.self).documentPicker(docTypes: ["public.data"], in: .import)
+		let documentPickerController = DependencyInjector.get(UiUtil.self)
+			.documentPicker(docTypes: ["public.data"], in: .import)
 		documentPickerController.allowsMultipleSelection = false
 		documentPickerController.delegate = self
 		importer.importOnlyNewData = newDataOnly
@@ -254,7 +272,10 @@ public final class ImportDataTableViewController: UITableViewController {
 				self?.log.info("Background task to import %@ from %@ expired", dataType, source)
 				importer.pause()
 				guard let taskId = self?.taskIds[uuid] else {
-					self?.log.error("Missing background task id. App might be killed by iOS due to inability to end background task.")
+					self?.log
+						.error(
+							"Missing background task id. App might be killed by iOS due to inability to end background task."
+						)
 					return
 				}
 				self?.sendExtendTimeNotification(for: taskId)
@@ -331,20 +352,22 @@ public final class ImportDataTableViewController: UITableViewController {
 			forKey: "Finished importing %@ from %@",
 			arguments: [
 				importer.dataTypePluralName.localizedLowercase,
-				importer.sourceName])
+				importer.sourceName,
+			]
+		)
 		content.sound = UNNotificationSound.default
-		switch(importer) {
-			case is ActivityImporter:
-				content.categoryIdentifier = UserNotificationDelegate.finishedImportingActivities.identifier
-				break
-			case is MedicationImporter:
-				content.categoryIdentifier = UserNotificationDelegate.finishedImportingMedications.identifier
-				break
-			case is MoodImporter:
-				content.categoryIdentifier = UserNotificationDelegate.finishedImportingMoods.identifier
-				break
-			default:
-				log.error("Forgot a type of importer for notifications: %@", String(describing: importer))
+		switch importer {
+		case is ActivityImporter:
+			content.categoryIdentifier = UserNotificationDelegate.finishedImportingActivities.identifier
+			break
+		case is MedicationImporter:
+			content.categoryIdentifier = UserNotificationDelegate.finishedImportingMedications.identifier
+			break
+		case is MoodImporter:
+			content.categoryIdentifier = UserNotificationDelegate.finishedImportingMoods.identifier
+			break
+		default:
+			log.error("Forgot a type of importer for notifications: %@", String(describing: importer))
 		}
 		sendUserNotification(withContent: content, id: "FinishedImport")
 	}
@@ -358,10 +381,12 @@ public final class ImportDataTableViewController: UITableViewController {
 		let content = UNMutableNotificationContent()
 		content.title = NSString.localizedUserNotificationString(
 			forKey: "Long running %@ import",
-			arguments: [importer.dataTypePluralName])
+			arguments: [importer.dataTypePluralName]
+		)
 		content.body = NSString.localizedUserNotificationString(
 			forKey: "Would you like to continue the import from %@?",
-			arguments: [importer.sourceName])
+			arguments: [importer.sourceName]
+		)
 		content.sound = UNNotificationSound.default
 		content.categoryIdentifier = UserNotificationDelegate.timeExpired.identifier
 		// can't use normal UserInfoKey : Any. Must be String : String
@@ -381,7 +406,8 @@ public final class ImportDataTableViewController: UITableViewController {
 			arguments: [
 				dataType,
 				source,
-			])
+			]
+		)
 		var message = ""
 		if let displayableError = error as? DisplayableError {
 			message = displayableError.displayableTitle + "."
@@ -399,8 +425,7 @@ public final class ImportDataTableViewController: UITableViewController {
 // MARK: - UIDocumentPickerDelegate
 
 extension ImportDataTableViewController: UIDocumentPickerDelegate {
-
-	public final func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+	public final func documentPicker(_: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
 		if urls.count != 1 {
 			log.error("Wrong number of urls for document picker: received %d", urls.count)
 			return
@@ -409,10 +434,15 @@ extension ImportDataTableViewController: UIDocumentPickerDelegate {
 		runImportInBackground(importer, url)
 
 		let taskDescription = "Importing " + importer.dataTypePluralName + " from " + importer.sourceName
-		let alert = UIAlertController(title: taskDescription, message: "This may take a while. You can do something else and, if enabled, you will receive a notification when done.", preferredStyle: .alert)
+		let alert = UIAlertController(
+			title: taskDescription,
+			message: "This may take a while. You can do something else and, if enabled, you will receive a notification when done.",
+			preferredStyle: .alert
+		)
 		alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
 		presentView(alert)
 
-		importer = nil // do this in order to make sure no importer type initialization from tableView(didSelectRowAt:) was forgotten
+		importer =
+			nil // do this in order to make sure no importer type initialization from tableView(didSelectRowAt:) was forgotten
 	}
 }

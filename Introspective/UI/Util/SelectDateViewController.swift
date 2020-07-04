@@ -6,16 +6,15 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
-import SwiftDate
 import Instructions
+import SwiftDate
+import UIKit
 
 import Common
 import DependencyInjection
 import UIExtensions
 
 public protocol SelectDateViewController: UIViewController {
-
 	var initialDate: Date? { get set }
 	var earliestPossibleDate: Date? { get set }
 	var latestPossibleDate: Date? { get set }
@@ -25,11 +24,10 @@ public protocol SelectDateViewController: UIViewController {
 }
 
 public final class SelectDateViewControllerImpl: UIViewController, SelectDateViewController {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var datePicker: UIDatePicker!
-	@IBOutlet weak final var toolbar: UIToolbar!
+	@IBOutlet final var datePicker: UIDatePicker!
+	@IBOutlet final var toolbar: UIToolbar!
 
 	// MARK: - Instance Variables
 
@@ -43,6 +41,7 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 			}
 		}
 	}
+
 	public final var lastDate: Date?
 	public final var notificationToSendOnAccept: Notification.Name!
 
@@ -58,12 +57,13 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 		CoachMarkInfo(
 			hint: "Use these buttons to increment / decrement the time by the corresponding number of minutes. You can also long press them to increment / decrement by a time unit of your choosing.",
 			useArrow: true,
-			view: { return self.decrementByThirtyButton.value(forKey: "view") as? UIView }),
+			view: { self.decrementByThirtyButton.value(forKey: "view") as? UIView }
+		),
 	]
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 		if let date = initialDate {
 			datePicker.setDate(date, animated: false)
@@ -81,17 +81,24 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 		coachMarksDataSourceAndDelegate = DefaultCoachMarksDataSourceAndDelegate(
 			coachMarksInfo,
 			instructionsShownKey: .selectDateViewInstructionsShown,
-			skipViewLayoutConstraints: defaultCoachMarkSkipViewConstraints())
+			skipViewLayoutConstraints: defaultCoachMarkSkipViewConstraints()
+		)
 		coachMarksController.dataSource = coachMarksDataSourceAndDelegate
 		coachMarksController.delegate = coachMarksDataSourceAndDelegate
 		coachMarksController.skipView = defaultSkipInstructionsView()
 
-		let lastButton = UIBarButtonItem(title: "Last", style: .plain, target: self, action: #selector(lastButtonPressed))
+		let lastButton = UIBarButtonItem(
+			title: "Last",
+			style: .plain,
+			target: self,
+			action: #selector(lastButtonPressed)
+		)
 		lastButton.isEnabled = lastDate != nil
 		decrementByThirtyButton = barButton(
 			title: "-30",
 			quickPress: #selector(quickPressDecrementByThirty),
-			longPress: #selector(longPressDecrementByThirty))
+			longPress: #selector(longPressDecrementByThirty)
+		)
 		let fixedSpace = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
 		fixedSpace.width = CGFloat(10)
 		toolbar.setItems([
@@ -102,37 +109,40 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 			barButton(
 				title: "-15",
 				quickPress: #selector(quickPressDecrementByFifteen),
-				longPress: #selector(longPressDecrementByFifteen)),
+				longPress: #selector(longPressDecrementByFifteen)
+			),
 			UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
 			barButton(
 				title: "+15",
 				quickPress: #selector(quickPressIncrementByFifteen),
-				longPress: #selector(longPressIncrementByFifteen)),
+				longPress: #selector(longPressIncrementByFifteen)
+			),
 			fixedSpace,
 			barButton(
 				title: "+30",
 				quickPress: #selector(quickPressIncrementByThirty),
-				longPress: #selector(longPressIncrementByThirty)),
+				longPress: #selector(longPressIncrementByThirty)
+			),
 			UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
 			UIBarButtonItem(title: nowButtonTitle, style: .plain, target: self, action: #selector(nowButtonPressed)),
 		], animated: false)
 	}
 
-	public final override func viewDidAppear(_ animated: Bool) {
+	override public final func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		if !DependencyInjector.get(UserDefaultsUtil.self).bool(forKey: .selectDateViewInstructionsShown) {
 			coachMarksController.start(in: .window(over: self))
 		}
 	}
 
-	public final override func viewWillDisappear(_ animated: Bool) {
+	override public final func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		coachMarksController.stop(immediately: true)
 	}
 
 	// MARK: - Actions
 
-	@IBAction final func lastButtonPressed(_ sender: Any) {
+	@IBAction final func lastButtonPressed(_: Any) {
 		if let date = lastDate {
 			datePicker.date = date
 			limitDateToStartOfMinute = false
@@ -173,16 +183,16 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 		showChooseTimeUnitActionSheet(amountToAdd: 30)
 	}
 
-	@IBAction final func nowButtonPressed(_ sender: Any) {
+	@IBAction final func nowButtonPressed(_: Any) {
 		datePicker.date = Date()
 		limitDateToStartOfMinute = false
 	}
 
-	@IBAction func datePickerValueChanged(_ sender: Any) {
+	@IBAction func datePickerValueChanged(_: Any) {
 		limitDateToStartOfMinute = true
 	}
 
-	@IBAction final func acceptButtonPressed(_ sender: Any) {
+	@IBAction final func acceptButtonPressed(_: Any) {
 		var date = datePicker.date
 		if datePickerMode == .date {
 			date = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: date)

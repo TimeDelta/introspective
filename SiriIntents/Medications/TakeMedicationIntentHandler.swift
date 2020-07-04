@@ -15,25 +15,30 @@ import Persistence
 import Samples
 
 public final class TakeMedicationIntentHandler: NSObject, TakeMedicationIntentHandling {
-
 	private typealias Me = TakeMedicationIntentHandler
 
 	private static let log = Log()
 
-	public func resolveMedications(for intent: TakeMedicationIntent, with completion: @escaping ([INStringResolutionResult]) -> Void) {
+	public func resolveMedications(
+		for intent: TakeMedicationIntent,
+		with completion: @escaping ([INStringResolutionResult]) -> Void
+	) {
 		Me.log.info("Resolving medication names")
 		guard let medicationNames = intent.medications else {
 			completion([INStringResolutionResult.needsValue()])
 			return
 		}
-		completion(medicationNames.map{ n in INStringResolutionResult.success(with: n) })
+		completion(medicationNames.map { n in INStringResolutionResult.success(with: n) })
 	}
 
-	public func provideMedicationsOptions(for intent: TakeMedicationIntent, with completion: @escaping ([String]?, Error?) -> Void) {
+	public func provideMedicationsOptions(
+		for _: TakeMedicationIntent,
+		with completion: @escaping ([String]?, Error?) -> Void
+	) {
 		Me.log.info("Providing valid medication names")
 		do {
 			let medications = try DependencyInjector.get(Database.self).query(Medication.fetchRequest())
-			completion(medications.map{ medication in medication.name }, nil)
+			completion(medications.map { medication in medication.name }, nil)
 		} catch {
 			completion(nil, error)
 		}
@@ -58,7 +63,10 @@ public final class TakeMedicationIntentHandler: NSObject, TakeMedicationIntentHa
 			}
 			completion(TakeMedicationIntentResponse.success(medications: medicationNames))
 		} catch {
-			Me.log.error("Failed to retrieve MedicationDefinition for TakeMedicationIntentHandler: %@", errorInfo(error))
+			Me.log.error(
+				"Failed to retrieve MedicationDefinition for TakeMedicationIntentHandler: %@",
+				errorInfo(error)
+			)
 		}
 	}
 }

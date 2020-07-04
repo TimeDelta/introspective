@@ -10,8 +10,7 @@ import Foundation
 
 import Common
 
-public protocol Attributed: class, CustomStringConvertible, CustomDebugStringConvertible {
-
+public protocol Attributed: AnyObject, CustomStringConvertible, CustomDebugStringConvertible {
 	var attributedName: String { get }
 	var attributes: [Attribute] { get }
 
@@ -23,8 +22,7 @@ public protocol Attributed: class, CustomStringConvertible, CustomDebugStringCon
 }
 
 public extension Attributed {
-
-	var debugDescription: String { return description }
+	var debugDescription: String { description }
 
 	func attributeValuesAreValid() -> Bool {
 		for attribute in attributes {
@@ -37,7 +35,8 @@ public extension Attributed {
 					"Failed to get value of %@ from %@ while validating attribute values: %@",
 					attribute.name,
 					attributedName,
-					errorInfo(error))
+					errorInfo(error)
+				)
 				return false
 			}
 		}

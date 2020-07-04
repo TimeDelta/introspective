@@ -10,16 +10,14 @@ import Foundation
 
 import Common
 
-public protocol SelectOneAttribute: SelectAttribute {
-}
+public protocol SelectOneAttribute: SelectAttribute {}
 
 open class TypedSelectOneAttribute<Type>: AttributeBase<Type>, SelectOneAttribute {
-
 	// MARK: - Instance Variables
 
 	private final let _typedPossibleValues: [Type]?
 	private final let possibleValuesFunction: (() -> [Type])?
-	public final var possibleValues: [Any] { return typedPossibleValues }
+	public final var possibleValues: [Any] { typedPossibleValues }
 	public final var typedPossibleValues: [Type] {
 		if let _typedPossibleValues = _typedPossibleValues {
 			return _typedPossibleValues
@@ -30,9 +28,10 @@ open class TypedSelectOneAttribute<Type>: AttributeBase<Type>, SelectOneAttribut
 		log.error("Unable to determine possible values for multiselect attribute")
 		return []
 	}
+
 	private final let _typeName: String
-	public final override var typeName: String {
-		return _typeName
+	override public final var typeName: String {
+		_typeName
 	}
 
 	public final let areEqual: (Type, Type) -> Bool
@@ -52,14 +51,20 @@ open class TypedSelectOneAttribute<Type>: AttributeBase<Type>, SelectOneAttribut
 		optional: Bool = false,
 		possibleValues: [Type] = [Type](),
 		possibleValueToString: @escaping (Type) -> String,
-		areEqual: @escaping (Type, Type) -> Bool)
-	{
+		areEqual: @escaping (Type, Type) -> Bool
+	) {
 		_typedPossibleValues = possibleValues
 		possibleValuesFunction = nil
 		self.possibleValueToString = possibleValueToString
 		self.areEqual = areEqual
 		_typeName = typeName
-		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName, optional: optional)
+		super.init(
+			name: name,
+			pluralName: pluralName,
+			description: description,
+			variableName: variableName,
+			optional: optional
+		)
 	}
 
 	public init(
@@ -71,14 +76,20 @@ open class TypedSelectOneAttribute<Type>: AttributeBase<Type>, SelectOneAttribut
 		optional: Bool = false,
 		possibleValues: @escaping () -> [Type],
 		possibleValueToString: @escaping (Type) -> String,
-		areEqual: @escaping (Type, Type) -> Bool)
-	{
+		areEqual: @escaping (Type, Type) -> Bool
+	) {
 		_typedPossibleValues = nil
 		possibleValuesFunction = possibleValues
 		self.possibleValueToString = possibleValueToString
 		self.areEqual = areEqual
 		_typeName = typeName
-		super.init( name: name, pluralName: pluralName, description: description, variableName: variableName, optional: optional)
+		super.init(
+			name: name,
+			pluralName: pluralName,
+			description: description,
+			variableName: variableName,
+			optional: optional
+		)
 	}
 
 	// MARK: - Select Attribute Functions
@@ -91,14 +102,14 @@ open class TypedSelectOneAttribute<Type>: AttributeBase<Type>, SelectOneAttribut
 
 	// MARK: - Attribute Functions
 
-	public final override func isValid(value: Any?) -> Bool {
+	override public final func isValid(value: Any?) -> Bool {
 		if let nonNilValue = value {
 			return indexOf(possibleValue: nonNilValue) != nil
 		}
 		return optional
 	}
 
-	public final override func convertToDisplayableString(from value: Any?) throws -> String {
+	override public final func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
 		if !optional && value == nil { throw UnsupportedValueError(attribute: self, is: nil) }
 		guard let castedValue = value as? Type else {
@@ -109,8 +120,8 @@ open class TypedSelectOneAttribute<Type>: AttributeBase<Type>, SelectOneAttribut
 
 	// MARK: - Select One Attribute Functions
 
-	public final override func typedValuesAreEqual(_ first: Type, _ second: Type) -> Bool {
-		return areEqual(first, second)
+	override public final func typedValuesAreEqual(_ first: Type, _ second: Type) -> Bool {
+		areEqual(first, second)
 	}
 
 	// MARK: - Equality
@@ -123,7 +134,6 @@ open class TypedSelectOneAttribute<Type>: AttributeBase<Type>, SelectOneAttribut
 }
 
 public class TypedEquatableSelectOneAttribute<Type: Equatable>: TypedSelectOneAttribute<Type> {
-
 	public init(
 		name: String,
 		typeName: String,
@@ -132,8 +142,8 @@ public class TypedEquatableSelectOneAttribute<Type: Equatable>: TypedSelectOneAt
 		variableName: String? = nil,
 		optional: Bool = false,
 		possibleValues: [Type] = [Type](),
-		possibleValueToString: @escaping (Type) -> String)
-	{
+		possibleValueToString: @escaping (Type) -> String
+	) {
 		super.init(
 			name: name,
 			typeName: typeName,
@@ -143,6 +153,7 @@ public class TypedEquatableSelectOneAttribute<Type: Equatable>: TypedSelectOneAt
 			optional: optional,
 			possibleValues: possibleValues,
 			possibleValueToString: possibleValueToString,
-			areEqual: { $0 == $1 })
+			areEqual: { $0 == $1 }
+		)
 	}
 }

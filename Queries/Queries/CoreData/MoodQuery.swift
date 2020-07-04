@@ -10,9 +10,7 @@ import Foundation
 
 import Samples
 
-//sourcery: AutoMockable
-public protocol MoodQuery: Query {
-}
+// sourcery: AutoMockable
+public protocol MoodQuery: Query {}
 
-public final class MoodQueryImpl: CoreDataQuery<MoodImpl>, MoodQuery {
-}
+public final class MoodQueryImpl: CoreDataQuery<MoodImpl>, MoodQuery {}

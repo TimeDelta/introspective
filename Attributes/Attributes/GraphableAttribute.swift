@@ -9,6 +9,5 @@
 import Foundation
 
 public protocol GraphableAttribute: Attribute {
-
 	func graphableValueFor(_ value: Any) throws -> Double
 }

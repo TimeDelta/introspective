@@ -6,21 +6,19 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
 import UIExtensions
+import UIKit
 
 public protocol ActivityNoteTableViewCell: UITableViewCell {
-
 	var notificationToSendOnChange: Notification.Name! { get set }
 	var note: String? { get set }
 	var autoFocus: Bool! { get set }
 }
 
 public final class ActivityNoteTableViewCellImpl: UITableViewCell, ActivityNoteTableViewCell {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var noteView: UITextView! {
+	@IBOutlet final var noteView: UITextView! {
 		didSet { updateUI() }
 	}
 
@@ -33,9 +31,11 @@ public final class ActivityNoteTableViewCellImpl: UITableViewCell, ActivityNoteT
 			updateUI()
 		}
 	}
+
 	public final var autoFocus: Bool! {
 		didSet { updateUI() }
 	}
+
 	/// to avoid triggering it every time the containing table view is reloaded
 	private final var autoFocusTriggered: Bool = false
 
@@ -59,7 +59,6 @@ public final class ActivityNoteTableViewCellImpl: UITableViewCell, ActivityNoteT
 // MARK: - UITextViewDelegate
 
 extension ActivityNoteTableViewCellImpl: UITextViewDelegate {
-
 	public final func textViewDidChange(_ textView: UITextView) {
 		DispatchQueue.main.async {
 			NotificationCenter.default.post(
@@ -67,7 +66,8 @@ extension ActivityNoteTableViewCellImpl: UITextViewDelegate {
 				object: self,
 				userInfo: self.info([
 					.text: textView.text,
-				]))
+				])
+			)
 		}
 	}
 }

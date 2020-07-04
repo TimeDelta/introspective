@@ -6,9 +6,9 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
-import Presentr
 import CoreData
+import Presentr
+import UIKit
 
 import Common
 import DependencyInjection
@@ -16,7 +16,6 @@ import Persistence
 import Samples
 
 public protocol EditActivityTableViewController: UITableViewController {
-
 	var notificationToSendOnAccept: Notification.Name! { get set }
 	var userInfoKey: UserInfoKey { get set }
 
@@ -28,7 +27,6 @@ public protocol EditActivityTableViewController: UITableViewController {
 }
 
 public final class EditActivityTableViewControllerImpl: UITableViewController, EditActivityTableViewController {
-
 	// MARK: - Static Variables
 
 	private typealias Me = EditActivityTableViewControllerImpl
@@ -43,7 +41,8 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 	private static let presenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .full,
 		height: .fluid(percentage: 0.4),
-		center: .bottomCenter)
+		center: .bottomCenter
+	)
 
 	static let activityDefinitionChanged = Notification.Name("activityDefinitionChanged")
 	static let startDateChanged = Notification.Name("activityStartDateChanged")
@@ -63,13 +62,14 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 			startDate = activity.start
 			endDate = activity.end
 			note = activity.note
-			tagNames = Set(activity.tagsArray().map{ $0.name })
+			tagNames = Set(activity.tagsArray().map { $0.name })
 		}
 	}
+
 	public final var autoFocusNote = false
 
 	/// - Note: This will be overwritten if `activity` is set after this is
-	public final var definition: ActivityDefinition? = nil { didSet { validate() } }
+	public final var definition: ActivityDefinition? { didSet { validate() } }
 	final var startDate: Date = Date() { didSet { validate() } }
 	final var endDate: Date? { didSet { validate() } }
 	final var note: String?
@@ -81,7 +81,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 
 		extendedLayoutIncludesOpaqueBars = true
@@ -90,7 +90,8 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 			title: "Save",
 			style: .done,
 			target: self,
-			action: #selector(saveButtonPressed))
+			action: #selector(saveButtonPressed)
+		)
 		navigationItem.rightBarButtonItem = saveButton
 
 		observe(selector: #selector(activityDefinitionChanged), name: Me.activityDefinitionChanged)
@@ -117,18 +118,21 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 
 	// MARK: - Table view data source
 
-	public final override func numberOfSections(in tableView: UITableView) -> Int {
-		return 3
+	override public final func numberOfSections(in _: UITableView) -> Int {
+		3
 	}
 
-	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override public final func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if section == 0 {
 			return 4
 		}
 		return 1
 	}
 
-	public final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override public final func tableView(
+		_ tableView: UITableView,
+		cellForRowAt indexPath: IndexPath
+	) -> UITableViewCell {
 		let cell: UITableViewCell
 		if indexPath == Me.definitionIndex {
 			cell = tableView.dequeueReusableCell(withIdentifier: "activity", for: indexPath)
@@ -138,7 +142,8 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 			cell.accessibilityHint = "Tap this to change this instance to another activity definition"
 		} else if indexPath == Me.startIndex {
 			cell = tableView.dequeueReusableCell(withIdentifier: "start", for: indexPath)
-			let startDateText = DependencyInjector.get(CalendarUtil.self).string(for: startDate, dateStyle: .medium, timeStyle: .medium)
+			let startDateText = DependencyInjector.get(CalendarUtil.self)
+				.string(for: startDate, dateStyle: .medium, timeStyle: .medium)
 			cell.detailTextLabel?.text = startDateText
 			cell.detailTextLabel?.accessibilityValue = cell.detailTextLabel?.text
 			cell.detailTextLabel?.accessibilityLabel = "start date"
@@ -178,7 +183,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 		return cell
 	}
 
-	public final override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+	override public final func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		if indexPath == Me.noteIndex || indexPath == Me.tagsIndex {
 			return 131
 		}
@@ -187,7 +192,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 
 	// MARK: - Table view delegate
 
-	public final override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+	override public final func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section == Me.noteIndex.section {
 			return "Note"
 		}
@@ -197,9 +202,12 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 		return nil
 	}
 
-	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	override public final func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath == Me.definitionIndex {
-			let controller = viewController(named: "chooseActivityDefinition", fromStoryboard: "Util") as! ChooseActivityDefinitionViewController
+			let controller = viewController(
+				named: "chooseActivityDefinition",
+				fromStoryboard: "Util"
+			) as! ChooseActivityDefinitionViewController
 			controller.selectedDefinition = definition
 			controller.notificationToSendOnAccept = Me.activityDefinitionChanged
 			customPresentViewController(Me.presenter, viewController: controller, animated: false)
@@ -216,7 +224,10 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 			controller.lastDate = (try? DependencyInjector.get(ActivityDAO.self).getMostRecentActivityEndDate()) ?? nil
 			customPresentViewController(Me.presenter, viewController: controller, animated: false)
 		} else if indexPath == Me.durationIndex {
-			let controller = viewController(named: "durationChooser", fromStoryboard: "Util") as! SelectDurationViewController
+			let controller = viewController(
+				named: "durationChooser",
+				fromStoryboard: "Util"
+			) as! SelectDurationViewController
 			controller.notificationToSendOnAccept = Me.durationChanged
 			if endDate != nil {
 				controller.initialDuration = Duration(start: startDate, end: endDate)
@@ -224,7 +235,8 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 			let presenter = DependencyInjector.get(UiUtil.self).customPresenter(
 				width: .custom(size: 300),
 				height: .custom(size: 200),
-				center: .center)
+				center: .center
+			)
 			customPresentViewController(presenter, viewController: controller, animated: false)
 		}
 		tableView.deselectRow(at: indexPath, animated: false)
@@ -260,7 +272,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 	}
 
 	@objc private final func noteChanged(notification: Notification) {
-		self.note = value(for: .text, from: notification)
+		note = value(for: .text, from: notification)
 	}
 
 	@objc private final func tagsChanged(notification: Notification) {
@@ -271,7 +283,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 
 	// MARK: - Actions
 
-	@objc final func saveButtonPressed(_ sender: Any) {
+	@objc final func saveButtonPressed(_: Any) {
 		do {
 			let transaction = DependencyInjector.get(Database.self).transaction()
 
@@ -297,7 +309,8 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 					object: self,
 					userInfo: self.info([
 						self.userInfoKey: activity,
-					]))
+					])
+				)
 			}
 			navigationController?.popViewController(animated: false)
 		} catch {
@@ -327,7 +340,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 		let fetchRequest: NSFetchRequest<Tag> = Tag.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
 		let tags = try transaction.query(fetchRequest)
-		if tags.count > 0 {
+		if !tags.isEmpty {
 			return tags[0]
 		}
 		return nil
@@ -338,6 +351,6 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 	}
 
 	private final func endDateIsBeforeStartDate() -> Bool {
-		return endDate?.isBeforeDate(startDate, granularity: .second) ?? false
+		endDate?.isBeforeDate(startDate, granularity: .second) ?? false
 	}
 }

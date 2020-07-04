@@ -6,8 +6,8 @@
 //  Copyright © 2020 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import CoreData
+import Foundation
 import Intents
 
 import Common
@@ -16,18 +16,17 @@ import Persistence
 import Samples
 
 public class ActivityIntentHandler<IntentType: INIntent>: IntentHandler {
-
 	private typealias Me = ActivityIntentHandler
 
 	private let log = Log()
 
-	public func provideActivityNameOptions(for intent: IntentType, with completion: @escaping ([String]?, Error?) -> Void) {
+	public func provideActivityNameOptions(for _: IntentType, with completion: @escaping ([String]?, Error?) -> Void) {
 		log.info("Providing valid activity names")
 		do {
 			let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
 			fetchRequest.sortDescriptors = [NSSortDescriptor(key: "recordScreenIndex", ascending: true)]
 			let definitions = try DependencyInjector.get(Database.self).query(fetchRequest)
-			completion(definitions.map{ definition in definition.name }, nil)
+			completion(definitions.map { definition in definition.name }, nil)
 		} catch {
 			completion(nil, error)
 		}

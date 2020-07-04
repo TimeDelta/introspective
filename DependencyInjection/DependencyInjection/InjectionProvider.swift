@@ -10,7 +10,6 @@ import Foundation
 
 // sourcery: AutoMockable
 public protocol InjectionProvider {
-
 	/// This lets the [DependencyInjector](x-source-tag://DependencyInjector) know for what types this
 	/// InjectionProvider is responsible.
 	var types: [Any.Type] { get }

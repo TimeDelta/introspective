@@ -6,14 +6,13 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 internal class FunctionalTestDatabase: DatabaseImpl {
-
 	private final let persistentContainer: NSPersistentContainer
 
-	public override init(_ objectModel: NSManagedObjectModel) {
+	override public init(_ objectModel: NSManagedObjectModel) {
 		let description = NSPersistentStoreDescription()
 		description.type = NSInMemoryStoreType
 		description.shouldAddStoreAsynchronously = false // make it simpler for tests
@@ -25,7 +24,7 @@ internal class FunctionalTestDatabase: DatabaseImpl {
 		persistentContainer = SharedPersistentContainer(name: "Introspective", managedObjectModel: objectModel)
 
 		persistentContainer.persistentStoreDescriptions = [description]
-		persistentContainer.loadPersistentStores { (description, error) in
+		persistentContainer.loadPersistentStores { description, error in
 			precondition(description.type == NSInMemoryStoreType)
 			if let error = error {
 				fatalError("Failed to create an in-memory coordinator \(error)")

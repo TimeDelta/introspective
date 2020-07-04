@@ -12,7 +12,6 @@ import Attributes
 import Common
 
 public final class MultiSelectAttributeValueSelectTableViewController: UITableViewController {
-
 	// MARK: - Instance Variables
 
 	public final var multiSelectAttribute: MultiSelectAttribute!
@@ -26,7 +25,7 @@ public final class MultiSelectAttributeValueSelectTableViewController: UITableVi
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 
 		filteredValues = multiSelectAttribute.possibleValues
@@ -49,15 +48,15 @@ public final class MultiSelectAttributeValueSelectTableViewController: UITableVi
 
 	// MARK: - TableViewDataSource
 
-	public final override func numberOfSections(in tableView: UITableView) -> Int {
-		return 1
+	override public final func numberOfSections(in _: UITableView) -> Int {
+		1
 	}
 
-	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return filteredValues.count
+	override public final func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+		filteredValues.count
 	}
 
-	public final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override public final func tableView(_: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = UITableViewCell()
 		let value = filteredValues[indexPath.row]
 		var displayValue: String
@@ -73,12 +72,15 @@ public final class MultiSelectAttributeValueSelectTableViewController: UITableVi
 
 	// MARK: - TableViewDelegate
 
-	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	override public final func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
 		selectedValues.append(filteredValues[indexPath.row])
 	}
 
-	public final override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-		if let indexToRemove = multiSelectAttribute.indexOf(possibleValue: filteredValues[indexPath.row], in: selectedValues) {
+	override public final func tableView(_: UITableView, didDeselectRowAt indexPath: IndexPath) {
+		if let indexToRemove = multiSelectAttribute.indexOf(
+			possibleValue: filteredValues[indexPath.row],
+			in: selectedValues
+		) {
 			selectedValues.remove(at: indexToRemove)
 		} else {
 			log.error("Did not find value to remove from selection in selected values")
@@ -100,20 +102,23 @@ public final class MultiSelectAttributeValueSelectTableViewController: UITableVi
 // MARK: - UISearchResultsUpdating
 
 extension MultiSelectAttributeValueSelectTableViewController: UISearchResultsUpdating {
-
 	public func updateSearchResults(for searchController: UISearchController) {
 		let searchText = searchController.searchBar.text!.localizedLowercase
 		filteredValues = multiSelectAttribute.possibleValues
 		if !searchText.isEmpty {
-			filteredValues = filteredValues.filter({ value in
+			filteredValues = filteredValues.filter { value in
 				do {
 					let stringValue = try self.multiSelectAttribute.convertPossibleValueToDisplayableString(value)
 					return stringValue.localizedLowercase.contains(searchText)
 				} catch {
-					log.error("Failed to convert '$@' to displayable value: %@", String(describing: value), errorInfo(error))
+					log.error(
+						"Failed to convert '$@' to displayable value: %@",
+						String(describing: value),
+						errorInfo(error)
+					)
 					return false
 				}
-			})
+			}
 		}
 		tableView.reloadData()
 		selectRowsForValues(selectedValues)

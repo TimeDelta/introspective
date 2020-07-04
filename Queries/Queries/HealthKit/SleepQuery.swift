@@ -11,12 +11,11 @@ import HealthKit
 
 import Samples
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol SleepQuery: Query {}
 
 public final class SleepQueryImpl: HealthKitQuery<Sleep>, SleepQuery {
-
-	final override func initFromHKSample(_ hkSample: HKSample) -> Sleep {
+	override final func initFromHKSample(_ hkSample: HKSample) -> Sleep {
 		precondition(hkSample is HKCategorySample, "Wrong type of health kit sample for sleep")
 		return Sleep(hkSample as! HKCategorySample)
 	}

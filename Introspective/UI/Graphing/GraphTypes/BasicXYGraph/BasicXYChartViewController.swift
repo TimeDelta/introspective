@@ -6,9 +6,9 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
 import AAInfographics
 import SwiftDate
+import UIKit
 
 import Common
 import DependencyInjection
@@ -16,30 +16,29 @@ import Queries
 import UIExtensions
 
 public protocol BasicXYChartViewController: UIViewController {
-
 	var queries: [Query]? { get set }
-	var dataSeries: [Dictionary<String, Any>]! { get set }
+	var dataSeries: [[String: Any]]! { get set }
 	var displayXAxisValueLabels: Bool { get set }
 	var chartType: AAChartType! { get set }
 	var categories: [String]? { get set }
 }
 
 public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChartViewController {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var activityIndicator: UIActivityIndicatorView!
-	@IBOutlet weak final var chartViewOutline: UIView!
+	@IBOutlet final var activityIndicator: UIActivityIndicatorView!
+	@IBOutlet final var chartViewOutline: UIView!
 
 	// MARK: - Instance Variables
 
 	public final var queries: [Query]?
-	public final var dataSeries: [Dictionary<String, Any>]! {
+	public final var dataSeries: [[String: Any]]! {
 		didSet {
-			dataSeries = dataSeries ?? [Dictionary<String, Any>]()
+			dataSeries = dataSeries ?? [[String: Any]]()
 			updateChartData()
 		}
 	}
+
 	public final var displayXAxisValueLabels: Bool = false
 	public final var chartType: AAChartType!
 	public final var categories: [String]?
@@ -51,7 +50,7 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 
 		chartModel = chartModel.chartType(chartType)
@@ -62,7 +61,7 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 		finishedSetup = true
 	}
 
-	public final override func viewDidLayoutSubviews() {
+	override public final func viewDidLayoutSubviews() {
 		chartView = AAChartView()
 		chartView.frame = chartViewOutline.frame
 		chartView.contentHeight = chartViewOutline.frame.size.height
@@ -70,14 +69,14 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 		view.insertSubview(chartView, at: 0)
 	}
 
-	public final override func showError(
+	override public final func showError(
 		title: String,
 		message: String? = "Sorry for the inconvenience.",
 		error: Error? = nil,
 		tryAgain: (() -> Void)? = nil,
 		onDismiss originalOnDismiss: ((UIAlertAction) -> Void)? = nil,
-		onDonePresenting: (() -> Void)? = nil)
-	{
+		onDonePresenting: (() -> Void)? = nil
+	) {
 		doneWaiting()
 		let onDismiss: ((UIAlertAction) -> Void) = { action in
 			if let originalOnDismiss = originalOnDismiss {
@@ -91,7 +90,8 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 			error: error,
 			tryAgain: tryAgain,
 			onDismiss: onDismiss,
-			onDonePresenting: onDonePresenting)
+			onDonePresenting: onDonePresenting
+		)
 	}
 
 	// MARK: - Button Actions
@@ -102,7 +102,7 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 				query.stop()
 			}
 		}
-		self.navigationController?.popViewController(animated: false)
+		navigationController?.popViewController(animated: false)
 	}
 
 	// MARK: - Helper Functions

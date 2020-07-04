@@ -6,21 +6,19 @@
 //  Copyright © 2019 Bryan Nova. All rights reserved.
 //
 
-import Foundation
-import CSV
 import CoreData
+import CSV
+import Foundation
 
 import Common
 import DataExport
 import DependencyInjection
 import Persistence
 
-//sourcery: AutoMockable
-public protocol MedicationExporter: Exporter {
-}
+// sourcery: AutoMockable
+public protocol MedicationExporter: Exporter {}
 
 public final class MedicationExporterImpl: BaseExporter, MedicationExporter {
-
 	// MARK: - Instance Variables
 
 	private final var doses = [Exportable]()
@@ -38,15 +36,17 @@ public final class MedicationExporterImpl: BaseExporter, MedicationExporter {
 			for: .documentDirectory,
 			in: .userDomainMask,
 			appropriateFor: nil,
-			create: false)
+			create: false
+		)
 		super.init(
 			dataTypePluralName: "Medications",
-			url: DependencyInjector.get(ExporterUtil.self).urlOfExportFile(for: MedicationDose.self, in: directory))
+			url: DependencyInjector.get(ExporterUtil.self).urlOfExportFile(for: MedicationDose.self, in: directory)
+		)
 	}
 
 	// MARK: - Functions
 
-	public final override func exportData() throws {
+	override public final func exportData() throws {
 		guard !isCancelled else { return }
 		guard !(started && isPaused) else {
 			throw GenericError("Tried to start a new medications export with an exporter that is already in use.")
@@ -56,7 +56,7 @@ public final class MedicationExporterImpl: BaseExporter, MedicationExporter {
 
 		try getDoses()
 
-		guard doses.count > 0 else {
+		guard !doses.isEmpty else {
 			throw GenericDisplayableError(title: "Nothing to export")
 		}
 
@@ -68,12 +68,12 @@ public final class MedicationExporterImpl: BaseExporter, MedicationExporter {
 		try exportRemaining()
 	}
 
-	public final override func cancel() {
+	override public final func cancel() {
 		isCancelled = true
 		doses = [] // release memory for doses
 	}
 
-	public final override func resume() throws {
+	override public final func resume() throws {
 		isPaused = false
 		try exportRemaining()
 	}

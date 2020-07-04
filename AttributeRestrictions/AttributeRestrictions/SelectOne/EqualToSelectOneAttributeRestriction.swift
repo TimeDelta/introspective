@@ -12,7 +12,6 @@ import Attributes
 import Common
 
 public final class EqualToSelectOneAttributeRestriction: EqualToAttributeRestriction {
-
 	// MARK: - Instance Variables
 
 	private final var selectOneAttribute: SelectOneAttribute
@@ -29,7 +28,8 @@ public final class EqualToSelectOneAttributeRestriction: EqualToAttributeRestric
 			valueAttribute: valueAttribute,
 			areEqual: {
 				try valueAttribute.valuesAreEqual($0, $1)
-			})
+			}
+		)
 	}
 
 	public required convenience init(restrictedAttribute: Attribute) {
@@ -40,26 +40,28 @@ public final class EqualToSelectOneAttributeRestriction: EqualToAttributeRestric
 
 	// MARK: - Attribute Restriction Functions
 
-	public override func copy() -> AttributeRestriction {
-		return EqualToSelectOneAttributeRestriction(
+	override public func copy() -> AttributeRestriction {
+		EqualToSelectOneAttributeRestriction(
 			restrictedAttribute: restrictedAttribute,
 			value: value as Any,
-			valueAttribute: valueAttribute as! SelectOneAttribute)
+			valueAttribute: valueAttribute as! SelectOneAttribute
+		)
 	}
 
 	// MARK: - Boolean Expression Functions
 
-	public override func predicate() -> NSPredicate? {
+	override public func predicate() -> NSPredicate? {
 		#warning("can use TypedSelectOneAttribute<Type> to return predicate for certain cases")
 		return nil
 	}
 
 	// MARK: - Other
 
-	public final override func restrictedAttributeWasSet() {
+	override public final func restrictedAttributeWasSet() {
 		selectOneAttribute = restrictedAttribute as! SelectOneAttribute
 		do {
-			let index = try selectOneAttribute.possibleValues.firstIndex{ try selectOneAttribute.valuesAreEqual($0, value) }
+			let index = try selectOneAttribute.possibleValues
+				.firstIndex { try selectOneAttribute.valuesAreEqual($0, value) }
 			if index == nil {
 				value = selectOneAttribute.possibleValues[0]
 			}
@@ -70,17 +72,20 @@ public final class EqualToSelectOneAttributeRestriction: EqualToAttributeRestric
 
 	// MARK: - Equality
 
-	public static func ==(lhs: EqualToSelectOneAttributeRestriction, rhs: EqualToSelectOneAttributeRestriction) -> Bool {
-		return lhs.equalTo(rhs)
+	public static func == (
+		lhs: EqualToSelectOneAttributeRestriction,
+		rhs: EqualToSelectOneAttributeRestriction
+	) -> Bool {
+		lhs.equalTo(rhs)
 	}
 
-	public final override func equalTo(_ otherAttributed: Attributed) -> Bool {
+	override public final func equalTo(_ otherAttributed: Attributed) -> Bool {
 		if !(otherAttributed is EqualToSelectOneAttributeRestriction) { return false }
 		let other = otherAttributed as! EqualToSelectOneAttributeRestriction
 		return equalTo(other)
 	}
 
-	public final override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	override public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is EqualToSelectOneAttributeRestriction) { return false }
 		let other = otherRestriction as! EqualToSelectOneAttributeRestriction
 		return equalTo(other)

@@ -11,7 +11,6 @@ import Foundation
 import Common
 
 public final class AndExpression: BooleanExpression {
-
 	// MARK: - Display Information
 
 	public final var description: String {
@@ -42,7 +41,7 @@ public final class AndExpression: BooleanExpression {
 	}
 
 	public final func copy() -> BooleanExpression {
-		return AndExpression(expression1.copy(), expression2.copy())
+		AndExpression(expression1.copy(), expression2.copy())
 	}
 
 	public final func equalTo(_ other: BooleanExpression) -> Bool {

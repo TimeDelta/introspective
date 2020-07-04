@@ -6,20 +6,20 @@
 //  Copyright © 2020 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import CoreData
 import CSV
+import Foundation
 
 import Common
 import DependencyInjection
 import Persistence
 import Samples
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol IntrospectiveMedicationImporter: MedicationImporter {}
 
-public final class IntrospectiveMedicationImporterImpl: NSManagedObject, IntrospectiveMedicationImporter, CoreDataObject {
-
+public final class IntrospectiveMedicationImporterImpl: NSManagedObject, IntrospectiveMedicationImporter,
+	CoreDataObject {
 	// MARK: - Static Variables
 
 	public typealias Me = IntrospectiveMedicationImporterImpl
@@ -144,28 +144,30 @@ public final class IntrospectiveMedicationImporterImpl: NSManagedObject, Introsp
 		let medicationsWithCurrentName: [Medication]
 		do {
 			medicationsWithCurrentName = try transaction.query(medicationsWithCurrentNameFetchRequest)
-			if medicationsWithCurrentName.count == 0 {
+			if medicationsWithCurrentName.isEmpty {
 				return nil
 			} else if medicationsWithCurrentName.count == 1 {
 				return medicationsWithCurrentName[0]
 			} else {
 				throw AmbiguousUpdateToExistingDataError(
-					"Update requested for '\(name)' but found \(medicationsWithCurrentName.count) medications with that name.")
+					"Update requested for '\(name)' but found \(medicationsWithCurrentName.count) medications with that name."
+				)
 			}
 		} catch {
 			log.error("Failed to check for existing medications: %@", errorInfo(error))
 			throw GenericDisplayableError(
 				title: "Data Access Error",
-				description: "Unable to check for existing medications named \(name).")
+				description: "Unable to check for existing medications named \(name)."
+			)
 		}
 	}
 
 	private final func shouldImport(_ date: Date) -> Bool {
-		return !importOnlyNewData || // user doesn't care about data duplication -> import everything
-			lastImport == nil || (   // never imported before -> import everything
+		!importOnlyNewData || // user doesn't care about data duplication -> import everything
+			lastImport == nil || ( // never imported before -> import everything
 				importOnlyNewData &&
-				lastImport != nil &&
-				date.isAfterDate(lastImport!, granularity: .nanosecond)
+					lastImport != nil &&
+					date.isAfterDate(lastImport!, granularity: .nanosecond)
 			)
 	}
 
@@ -183,12 +185,14 @@ public final class IntrospectiveMedicationImporterImpl: NSManagedObject, Introsp
 
 	private final func getAllMedications(using transaction: Transaction) throws -> Set<Medication> {
 		let medicationsInTransaction = Set(try transaction.query(Medication.fetchRequest()))
-		let medicationsInMainContext = Set(try DependencyInjector.get(Database.self)
-			.query(Medication.fetchRequest()))
-			.filter({
-				let id = $0.objectID
-				return !medicationsInTransaction.contains(where: { med in med.objectID == id})
-			})
+		let medicationsInMainContext = Set(
+			try DependencyInjector.get(Database.self)
+				.query(Medication.fetchRequest())
+		)
+		.filter {
+			let id = $0.objectID
+			return !medicationsInTransaction.contains(where: { med in med.objectID == id })
+		}
 		return medicationsInTransaction.union(medicationsInMainContext)
 	}
 
@@ -204,7 +208,8 @@ public final class IntrospectiveMedicationImporterImpl: NSManagedObject, Introsp
 			log.error("Failed to create new medication")
 			throw GenericDisplayableError(
 				title: "Unable to create new medication",
-				description: "Failed to create new medication.")
+				description: "Failed to create new medication."
+			)
 		}
 
 		medication.name = try getName()
@@ -236,7 +241,8 @@ public final class IntrospectiveMedicationImporterImpl: NSManagedObject, Introsp
 			log.error("Failed to create new dose")
 			throw GenericDisplayableError(
 				title: "Unable to create new dose",
-				description: "Failed to create new dose.")
+				description: "Failed to create new dose."
+			)
 		}
 
 		dose.medication = try childTransaction.pull(savedObject: medication)
@@ -261,7 +267,8 @@ public final class IntrospectiveMedicationImporterImpl: NSManagedObject, Introsp
 		guard let dateText = csv[MedicationDose.timestampColumn] else {
 			throw MissingRequiredFieldError(MedicationDose.timestampColumn, recordNumber: recordNumber)
 		}
-		if let date = DependencyInjector.get(CalendarUtil.self).date(from: dateText, dateStyle: .full, timeStyle: .full) {
+		if let date = DependencyInjector.get(CalendarUtil.self)
+			.date(from: dateText, dateStyle: .full, timeStyle: .full) {
 			return date
 		}
 		throw InvalidFileFormatError("Invalid format for \(MedicationDose.timestampColumn) for record \(recordNumber).")
@@ -279,7 +286,8 @@ public final class IntrospectiveMedicationImporterImpl: NSManagedObject, Introsp
 
 	private final func getStartedOnDate() throws -> Date? {
 		if let dateText = csv[Medication.startedOnColumn] {
-			if let date = DependencyInjector.get(CalendarUtil.self).date(from: dateText, dateStyle: .full, timeStyle: .full) {
+			if let date = DependencyInjector.get(CalendarUtil.self)
+				.date(from: dateText, dateStyle: .full, timeStyle: .full) {
 				return date
 			}
 			throw InvalidFileFormatError("Invalid format for \(Medication.startedOnColumn) for record \(recordNumber).")
@@ -290,7 +298,9 @@ public final class IntrospectiveMedicationImporterImpl: NSManagedObject, Introsp
 	private final func getRecordScreenIndex(using transaction: Transaction) throws -> Int16 {
 		if let recordScreenIndexString = csv[Medication.recordScreenIndexColumn] {
 			guard let index = Int16(recordScreenIndexString) else {
-				throw InvalidFileFormatError("Record screen index for record \(recordNumber) is not a valid number: \(recordScreenIndexString)")
+				throw InvalidFileFormatError(
+					"Record screen index for record \(recordNumber) is not a valid number: \(recordScreenIndexString)"
+				)
 			}
 			return index
 		}
@@ -315,9 +325,8 @@ public final class IntrospectiveMedicationImporterImpl: NSManagedObject, Introsp
 // MARK: - CoreData Stuff
 
 public extension IntrospectiveMedicationImporterImpl {
-
 	@nonobjc class func fetchRequest() -> NSFetchRequest<IntrospectiveMedicationImporterImpl> {
-		return NSFetchRequest<IntrospectiveMedicationImporterImpl>(entityName: "IntrospectiveMedicationImporter")
+		NSFetchRequest<IntrospectiveMedicationImporterImpl>(entityName: "IntrospectiveMedicationImporter")
 	}
 
 	@NSManaged var lastImport: Date?

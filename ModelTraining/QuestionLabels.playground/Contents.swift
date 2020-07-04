@@ -20,7 +20,7 @@ func getData(from: URL) throws -> [(tokens: [MLWordTagger.Token], labels: [Strin
 			for token in tokensOnly.split(separator: " ") {
 				tokens.append(String(token))
 			}
-			if tokens.count == 0 {
+			if tokens.isEmpty {
 				throw Errors.EmptyTokenList
 			}
 		} else if line.contains("labels:") {
@@ -30,7 +30,7 @@ func getData(from: URL) throws -> [(tokens: [MLWordTagger.Token], labels: [Strin
 				labels.append(String(label))
 			}
 
-			if labels.count == 0 {
+			if labels.isEmpty {
 				throw Errors.EmptyLabelList
 			}
 
@@ -46,7 +46,8 @@ func getData(from: URL) throws -> [(tokens: [MLWordTagger.Token], labels: [Strin
 	return data
 }
 
-let questionLabelsDataFileUrl = URL(fileURLWithPath: "/Users/bryannova/development/Introspective/ModelTraining/questionLabelsTrainingData.txt")
+let questionLabelsDataFileUrl =
+	URL(fileURLWithPath: "/Users/bryannova/development/Introspective/ModelTraining/questionLabelsTrainingData.txt")
 let data = try getData(from: questionLabelsDataFileUrl)
 
 print("Finished getting training data: " + String(data.count))

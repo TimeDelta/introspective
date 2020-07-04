@@ -9,7 +9,6 @@
 import Foundation
 
 public enum UserInfoKey: StringLiteralType, Hashable, CustomStringConvertible {
-
 	case activity = "activity"
 	case activityDefinition = "activityDefinition"
 	case activityDefinitionAutoNote = "activityDefinitionAutoNote"
@@ -55,6 +54,6 @@ public enum UserInfoKey: StringLiteralType, Hashable, CustomStringConvertible {
 	case y = "y"
 
 	public var description: String {
-		return rawValue
+		rawValue
 	}
 }

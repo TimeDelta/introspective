@@ -6,8 +6,8 @@
 //  Copyright © 2019 Bryan Nova. All rights reserved.
 //
 
-import UIKit
 import Presentr
+import UIKit
 
 import Common
 import DependencyInjection
@@ -16,27 +16,28 @@ import Samples
 import Settings
 
 public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
-
 	// MARK: - Static Variables
 
 	private typealias Me = RecordDiscreteMoodTableViewCell
-	private static let notePresenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(width: .custom(size: 300), height: .custom(size: 200), center: .topCenter)
-	private static let ratingPresenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(width: .custom(size: 300), height: .custom(size: 70), center: .topCenter)
+	private static let notePresenter: Presentr = DependencyInjector.get(UiUtil.self)
+		.customPresenter(width: .custom(size: 300), height: .custom(size: 200), center: .topCenter)
+	private static let ratingPresenter: Presentr = DependencyInjector.get(UiUtil.self)
+		.customPresenter(width: .custom(size: 300), height: .custom(size: 70), center: .topCenter)
 
 	private static let ratingChanged = Notification.Name("moodRatingChanged")
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var doneButton: UIButton!
-	@IBOutlet weak final var addNoteButton: UIButton!
-	@IBOutlet weak final var scrollView: UIScrollView!
-	@IBOutlet weak final var moodContentView: UIView!
-	@IBOutlet weak final var feedbackLabel: UILabel!
+	@IBOutlet final var doneButton: UIButton!
+	@IBOutlet final var addNoteButton: UIButton!
+	@IBOutlet final var scrollView: UIScrollView!
+	@IBOutlet final var moodContentView: UIView!
+	@IBOutlet final var feedbackLabel: UILabel!
 
 	// MARK: - Instance Variables
 
 	/// This is not made private solely for testing purposes
-	final var note: String? = nil
+	final var note: String?
 	private final var rating: Int = Int(DependencyInjector.get(Settings.self).maxMood)
 	private final var ratingButtons = [UIButton]()
 
@@ -46,7 +47,7 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 
 	// MARK: - UIView Overrides
 
-	public final override func awakeFromNib() {
+	override public final func awakeFromNib() {
 		super.awakeFromNib()
 		reset()
 		observe(selector: #selector(noteSaved), name: MoodNoteViewController.noteSavedNotification)
@@ -54,7 +55,7 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 		observe(selector: #selector(resetAndUpdateUI), name: MoodUiUtilImpl.maxRatingChanged)
 	}
 
-	public final override func layoutSubviews() {
+	override public final func layoutSubviews() {
 		super.layoutSubviews()
 		updateUI()
 	}
@@ -75,7 +76,7 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 
 	// MARK: - Actions
 
-	@IBAction final func doneButtonPressed(_ sender: Any) {
+	@IBAction final func doneButtonPressed(_: Any) {
 		do {
 			let transaction = DependencyInjector.get(Database.self).transaction()
 			let mood = try DependencyInjector.get(SampleFactory.self).mood(using: transaction)
@@ -90,14 +91,16 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 			feedbackLabel.text = DependencyInjector.get(MoodUiUtil.self).feedbackMessage(
 				for: Double(rating),
 				min: mood.minRating,
-				max: mood.maxRating)
+				max: mood.maxRating
+			)
 			feedbackLabel.isHidden = false
 			Timer.scheduledTimer(
 				timeInterval: 5,
 				target: self,
 				selector: #selector(hideFeedbackLabel),
 				userInfo: nil,
-				repeats: false)
+				repeats: false
+			)
 
 			reset()
 			updateUI()
@@ -109,11 +112,12 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 				userInfo: info([
 					.title: "Failed to save mood rating",
 					.error: error,
-				]))
+				])
+			)
 		}
 	}
 
-	@IBAction final func presentMoodNoteController(_ sender: Any) {
+	@IBAction final func presentMoodNoteController(_: Any) {
 		let controller: MoodNoteViewController = viewController(named: "moodNote", fromStoryboard: "RecordData")
 		controller.note = note ?? ""
 		NotificationCenter.default.post(
@@ -122,7 +126,8 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 			userInfo: info([
 				.controller: controller,
 				.presenter: Me.notePresenter,
-			]))
+			])
+		)
 	}
 
 	@objc private final func moodRatingButtonPressed(_ button: UIButton) {
@@ -167,7 +172,7 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 
 		let min = DependencyInjector.get(Settings.self).minMood
 		let max = DependencyInjector.get(Settings.self).maxMood
-		var lastView: UIView? = nil
+		var lastView: UIView?
 		for i in Int(min) ... Int(max) {
 			let ratingButton = createButtonForRating(i)
 			ratingButtons.append(ratingButton)
@@ -195,7 +200,8 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 		let max = DependencyInjector.get(Settings.self).maxMood
 		let button = UIButton(type: .custom)
 		button.addTarget(self, action: #selector(moodRatingButtonPressed), for: .touchUpInside)
-		button.backgroundColor = DependencyInjector.get(MoodUiUtil.self).colorForMood(rating: Double(rating), minRating: min, maxRating: max)
+		button.backgroundColor = DependencyInjector.get(MoodUiUtil.self)
+			.colorForMood(rating: Double(rating), minRating: min, maxRating: max)
 		let titleColor = button.backgroundColor?.highContrast()
 		button.setTitleColor(titleColor, for: .normal)
 		button.setTitle("\(rating)", for: .normal)
@@ -209,7 +215,8 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 		if let lastView = lastView {
 			ratingButton.leadingAnchor.constraint(
 				equalTo: lastView.trailingAnchor,
-				constant: spacingBetweenRatingButtons).isActive = true
+				constant: spacingBetweenRatingButtons
+			).isActive = true
 		} else {
 			ratingButton.leadingAnchor.constraint(equalTo: moodContentView.leadingAnchor).isActive = true
 		}
@@ -252,7 +259,7 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 	}
 
 	private final func thisConstraint(_ constraint: NSLayoutConstraint, involves item: UIView) -> Bool {
-		return constraint.firstItem?.accessibilityIdentifier == item.accessibilityIdentifier ||
+		constraint.firstItem?.accessibilityIdentifier == item.accessibilityIdentifier ||
 			constraint.secondItem?.accessibilityIdentifier == item.accessibilityIdentifier
 	}
 
@@ -264,7 +271,10 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 
 	private final func getBaseWidth() -> CGFloat {
 		let minWidth: CGFloat = 30
-		let numberOfMoods = CGFloat(DependencyInjector.get(Settings.self).maxMood - DependencyInjector.get(Settings.self).minMood + 1)
+		let numberOfMoods = CGFloat(
+			DependencyInjector.get(Settings.self).maxMood - DependencyInjector
+				.get(Settings.self).minMood + 1
+		)
 		// not -1 because need to account for one mood always being selected, which adds 1 spacing
 		let totalSpacingRequired = spacingBetweenRatingButtons * numberOfMoods
 		let proportionalWidth = (scrollView.frame.width - totalSpacingRequired) / numberOfMoods

@@ -9,7 +9,6 @@
 import UIKit
 
 public class AttributeValueTypeViewController: UIViewController {
-
 	public final var notificationToSendOnValueInvalid: Notification.Name!
 	public final var notificationToSendOnValueValid: Notification.Name!
 

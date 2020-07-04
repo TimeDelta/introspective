@@ -13,14 +13,13 @@ import DataExport
 import DependencyInjection
 
 public final class ActiveExportTableViewCell: UITableViewCell {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var cancelButton: UIButton!
-	@IBOutlet weak final var descriptionLabel: UILabel!
-	@IBOutlet weak final var progressView: UIProgressView!
-	@IBOutlet weak final var percentLabel: UILabel!
-	@IBOutlet weak final var toolbar: UIToolbar!
+	@IBOutlet final var cancelButton: UIButton!
+	@IBOutlet final var descriptionLabel: UILabel!
+	@IBOutlet final var progressView: UIProgressView!
+	@IBOutlet final var percentLabel: UILabel!
+	@IBOutlet final var toolbar: UIToolbar!
 
 	// MARK: - Instance Variables
 
@@ -40,7 +39,7 @@ public final class ActiveExportTableViewCell: UITableViewCell {
 
 	// MARK: - UITableViewCell Overrides
 
-	public final override func prepareForReuse() {
+	override public final func prepareForReuse() {
 		DependencyInjector.get(UiUtil.self).setButton(cancelButton, enabled: true, hidden: false)
 		toolbar.isHidden = true
 		if let exporter = exporter {
@@ -50,12 +49,13 @@ public final class ActiveExportTableViewCell: UITableViewCell {
 
 	// MARK: - Actions
 
-	@IBAction final func cancelExport(_ sender: Any) {
+	@IBAction final func cancelExport(_: Any) {
 		DependencyInjector.get(UiUtil.self).setButton(cancelButton, enabled: false, hidden: false)
 		let alert = UIAlertController(
 			title: "Cancel \(descriptionLabel.text!) export?",
 			message: nil,
-			preferredStyle: .alert)
+			preferredStyle: .alert
+		)
 		alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 			self.timer?.invalidate()
 			self.post(.cancelBackgroundTask, userInfo: [.backgroundTaskId: String(self.backgroundTaskId.rawValue)])
@@ -66,13 +66,13 @@ public final class ActiveExportTableViewCell: UITableViewCell {
 		post(.presentView, userInfo: [.controller: alert])
 	}
 
-	@IBAction final func share(_ sender: Any) {
+	@IBAction final func share(_: Any) {
 		post(.shareExportFile, userInfo: [.backgroundTaskId: backgroundTaskId])
 	}
 
 	// MARK: - Received Notifications
 
-	@objc private final func exportFinished(notification: Notification) {
+	@objc private final func exportFinished(notification _: Notification) {
 		DependencyInjector.get(UiUtil.self).setButton(cancelButton, enabled: false, hidden: false)
 		toolbar.isHidden = false
 	}
@@ -101,6 +101,7 @@ public final class ActiveExportTableViewCell: UITableViewCell {
 			target: self,
 			selector: #selector(updateProgress),
 			userInfo: nil,
-			repeats: true)
+			repeats: true
+		)
 	}
 }

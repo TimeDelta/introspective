@@ -13,32 +13,33 @@ import Settings
 import UIExtensions
 
 public final class ActivityAutoIgnoreTableViewCell: ActivitySettingTableViewCell {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var toggleSwitch: UISwitch! {
+	@IBOutlet final var toggleSwitch: UISwitch! {
 		didSet { resetToggleSwitch() }
 	}
-	@IBOutlet weak final var label1: UILabel!
-	@IBOutlet weak final var numberOfSecondsTextField: UITextField! {
+
+	@IBOutlet final var label1: UILabel!
+	@IBOutlet final var numberOfSecondsTextField: UITextField! {
 		didSet { resetTextField() }
 	}
-	@IBOutlet weak final var label2: UILabel!
+
+	@IBOutlet final var label2: UILabel!
 
 	// MARK: - Actions
 
-	@IBAction final func switchToggled(_ sender: Any) {
+	@IBAction final func switchToggled(_: Any) {
 		updateUiPerToggleSwitch()
 		sendValueChangedNotification()
 	}
 
-	@IBAction final func numberOfSecondsChanged(_ sender: Any) {
+	@IBAction final func numberOfSecondsChanged(_: Any) {
 		if numberOfSecondsIsValid() {
 			sendValueChangedNotification()
 		}
 	}
 
-	@IBAction final func finishedEditingNumberOfSeconds(_ sender: Any) {
+	@IBAction final func finishedEditingNumberOfSeconds(_: Any) {
 		if !numberOfSecondsIsValid() {
 			numberOfSecondsTextField.text = "1"
 		}
@@ -46,7 +47,7 @@ public final class ActivityAutoIgnoreTableViewCell: ActivitySettingTableViewCell
 
 	// MARK: - Other Functions
 
-	public final override func reset() {
+	override public final func reset() {
 		resetToggleSwitch()
 		resetTextField()
 	}
@@ -65,7 +66,8 @@ public final class ActivityAutoIgnoreTableViewCell: ActivitySettingTableViewCell
 			userInfo: info([
 				.autoIgnoreEnabled: toggleSwitch.isOn,
 				.autoIgnoreSeconds: Int(numberOfSecondsTextField.text!)!,
-			]))
+			])
+		)
 	}
 
 	private final func updateUiPerToggleSwitch() {

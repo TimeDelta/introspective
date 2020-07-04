@@ -15,20 +15,20 @@ import DependencyInjection
 import Samples
 
 public class HealthKitDataTestUtil {
-
 	private typealias Me = HealthKitDataTestUtil
 
 	private static let healthStore = HKHealthStore()
 	private static let readPermissions: Set<HKObjectType> = {
 		var allPermissions = Set<HKObjectType>()
-		for permissions in DependencyInjector.get(SampleFactory.self).healthKitTypes().map({ return $0.readPermissions }) {
+		for permissions in DependencyInjector.get(SampleFactory.self).healthKitTypes().map({ $0.readPermissions }) {
 			allPermissions = allPermissions.union(permissions)
 		}
 		return allPermissions
 	}()
+
 	private static let writePermissions: Set<HKSampleType> = {
 		var allPermissions = Set<HKSampleType>()
-		for permissions in DependencyInjector.get(SampleFactory.self).healthKitTypes().map({ return $0.writePermissions }) {
+		for permissions in DependencyInjector.get(SampleFactory.self).healthKitTypes().map({ $0.writePermissions }) {
 			allPermissions = allPermissions.union(permissions)
 		}
 		return allPermissions
@@ -39,7 +39,7 @@ public class HealthKitDataTestUtil {
 	public static func ensureAuthorized() {
 		let group = DispatchGroup()
 		group.enter()
-		Me.healthStore.requestAuthorization(toShare: Me.writePermissions, read: Me.readPermissions) { (_, error) in
+		Me.healthStore.requestAuthorization(toShare: Me.writePermissions, read: Me.readPermissions) { _, error in
 			if error != nil { fatalError("Failed to authorize HealthKit access: " + error!.localizedDescription) }
 			group.leave()
 		}
@@ -47,11 +47,11 @@ public class HealthKitDataTestUtil {
 	}
 
 	public static func save<SampleType: HealthKitSample>(_ samples: [SampleType]) {
-		guard samples.count > 0 else {
+		guard !samples.isEmpty else {
 			log.error("Tried to save empty array of %@", SampleType.name)
 			return
 		}
-		let allSamples = samples.map({ $0.hkSample() })
+		let allSamples = samples.map { $0.hkSample() }
 		let group = DispatchGroup()
 		group.enter()
 		Me.healthStore.save(allSamples) { _, error in
@@ -80,9 +80,11 @@ public class HealthKitDataTestUtil {
 				predicate: nil,
 				limit: Int(HKObjectQueryNoLimit),
 				sortDescriptors: nil,
-				resultsHandler: queryCallback))
+				resultsHandler: queryCallback
+			)
+		)
 		group.wait()
-		if allSamples.count > 0 {
+		if !allSamples.isEmpty {
 			group = DispatchGroup()
 			group.enter()
 			Me.healthStore.delete(allSamples) { _, error in

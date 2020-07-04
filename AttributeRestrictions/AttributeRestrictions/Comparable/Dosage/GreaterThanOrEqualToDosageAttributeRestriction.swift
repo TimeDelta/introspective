@@ -11,8 +11,9 @@ import Foundation
 import Attributes
 import Common
 
-public final class GreaterThanOrEqualToDosageAttributeRestriction: TypedGreaterThanOrEqualToAttributeRestrictionBase<Dosage> {
-
+public final class GreaterThanOrEqualToDosageAttributeRestriction: TypedGreaterThanOrEqualToAttributeRestrictionBase<
+	Dosage
+> {
 	private typealias Me = GreaterThanOrEqualToDosageAttributeRestriction
 	public static let valueAttribute = DosageAttribute(name: "Target Dosage", pluralName: "Target Dosages")
 
@@ -24,9 +25,9 @@ public final class GreaterThanOrEqualToDosageAttributeRestriction: TypedGreaterT
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
 
-	public override func copy() -> AttributeRestriction {
-		return GreaterThanOrEqualToDosageAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
+	override public func copy() -> AttributeRestriction {
+		GreaterThanOrEqualToDosageAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
 	}
 
-	public override func predicate() -> NSPredicate? { return nil }
+	override public func predicate() -> NSPredicate? { nil }
 }

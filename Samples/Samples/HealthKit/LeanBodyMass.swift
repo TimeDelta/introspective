@@ -14,7 +14,6 @@ import Common
 import DependencyInjection
 
 public final class LeanBodyMass: HealthKitQuantitySample {
-
 	private typealias Me = LeanBodyMass
 
 	// MARK: - HealthKit Stuff
@@ -25,7 +24,7 @@ public final class LeanBodyMass: HealthKitQuantitySample {
 	public static var writePermissions: Set<HKSampleType> = Set([sampleType])
 	public static var unit: HKUnit = HKUnit(from: .pound)
 	public final var unitString: String {
-		return Me.unit.unitString
+		Me.unit.unitString
 	}
 
 	public static func initUnits() {
@@ -39,11 +38,15 @@ public final class LeanBodyMass: HealthKitQuantitySample {
 
 	// MARK: - Attributes
 
-	public static let leanBodyMass = DoubleAttribute(name: "Lean body mass", pluralName: "Lean body masses", variableName: HKPredicateKeyPathQuantity)
+	public static let leanBodyMass = DoubleAttribute(
+		name: "Lean body mass",
+		pluralName: "Lean body masses",
+		variableName: HKPredicateKeyPathQuantity
+	)
 	public static let attributes: [Attribute] = [CommonSampleAttributes.healthKitTimestamp, leanBodyMass]
 	public static let defaultDependentAttribute: Attribute = leanBodyMass
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp
-	public final var attributes: [Attribute] { return Me.attributes }
+	public final var attributes: [Attribute] { Me.attributes }
 
 	// MARK: - Instance Variables
 
@@ -74,19 +77,20 @@ public final class LeanBodyMass: HealthKitQuantitySample {
 			quantity: quantity,
 			start: timestamp,
 			end: timestamp,
-			metadata: [HKMetadataKeyTimeZone : TimeZone.autoupdatingCurrent.identifier])
+			metadata: [HKMetadataKeyTimeZone: TimeZone.autoupdatingCurrent.identifier]
+		)
 	}
 
 	// MARK: - HealthKitQuantitySample Functions
 
 	public func quantityValue() -> Double {
-		return leanBodyMass
+		leanBodyMass
 	}
 
 	// MARK: - Sample Functions
 
 	public final func dates() -> [DateType: Date] {
-		return [.start: timestamp]
+		[.start: timestamp]
 	}
 
 	// MARK: - Attributed Functions
@@ -123,9 +127,8 @@ public final class LeanBodyMass: HealthKitQuantitySample {
 // MARK: - Equatable
 
 extension LeanBodyMass: Equatable {
-
-	public static func ==(lhs: LeanBodyMass, rhs: LeanBodyMass) -> Bool {
-		return lhs.equalTo(rhs)
+	public static func == (lhs: LeanBodyMass, rhs: LeanBodyMass) -> Bool {
+		lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
@@ -141,15 +144,14 @@ extension LeanBodyMass: Equatable {
 	}
 
 	public final func equalTo(_ other: LeanBodyMass) -> Bool {
-		return timestamp == other.timestamp && leanBodyMass == other.leanBodyMass
+		timestamp == other.timestamp && leanBodyMass == other.leanBodyMass
 	}
 }
 
 // MARK: - Debug
 
 extension LeanBodyMass: CustomDebugStringConvertible {
-
 	public final var debugDescription: String {
-		return "LeanBodyMass of \(leanBodyMass) at " + DependencyInjector.get(CalendarUtil.self).string(for: timestamp)
+		"LeanBodyMass of \(leanBodyMass) at " + DependencyInjector.get(CalendarUtil.self).string(for: timestamp)
 	}
 }

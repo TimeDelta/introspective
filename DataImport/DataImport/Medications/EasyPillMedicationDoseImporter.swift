@@ -6,19 +6,18 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 import Common
 import DependencyInjection
 import Persistence
 import Samples
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol EasyPillMedicationDoseImporter: MedicationImporter {}
 
 public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPillMedicationDoseImporter, CoreDataObject {
-
 	// MARK: - Static Variables
 
 	public static let entityName = "EasyPillMedicationDoseImporter"
@@ -89,7 +88,7 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 		}
 		isPaused = false
 		do {
-			while lines.count > 0 {
+			while !lines.isEmpty {
 				let line = lines.removeFirst()
 				guard !isPaused && !isCancelled else { return }
 				try processLine(line, latestDate: &latestDate, using: mainTransaction)
@@ -111,7 +110,12 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 		var medicationName = try getColumn(0, from: parts, errorMessage: "Record \(recordNumber) is empty.")
 		var currentIndex = 1
 
-		let date = try parseDate(from: parts, startingAt: &currentIndex, recordNumber: recordNumber, medicationName: &medicationName)
+		let date = try parseDate(
+			from: parts,
+			startingAt: &currentIndex,
+			recordNumber: recordNumber,
+			medicationName: &medicationName
+		)
 
 		if latestDate == nil { latestDate = date }
 		if date.isAfterDate(latestDate, granularity: .nanosecond) {
@@ -127,19 +131,33 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 		return parts[index]
 	}
 
-	private final func parseDate(from parts: [String], startingAt currentIndex: inout Int, recordNumber: Int, medicationName: inout String) throws -> Date {
+	private final func parseDate(
+		from parts: [String],
+		startingAt currentIndex: inout Int,
+		recordNumber: Int,
+		medicationName: inout String
+	) throws -> Date {
 		var nextColumnText = ""
-		var date: Date? = nil
+		var date: Date?
 		while date == nil {
-			nextColumnText = try getColumn(currentIndex, from: parts, errorMessage: "No date found for record \(recordNumber).")
+			nextColumnText = try getColumn(
+				currentIndex,
+				from: parts,
+				errorMessage: "No date found for record \(recordNumber)."
+			)
 			date = DependencyInjector.get(CalendarUtil.self).date(from: nextColumnText, format: "M/d/yy")
 			if date == nil {
 				medicationName += "," + nextColumnText
 			}
 			currentIndex += 1
 		}
-		let timeText = try getColumn(currentIndex, from: parts, errorMessage: "No time found for record \(recordNumber).")
-		date = DependencyInjector.get(CalendarUtil.self).date(from: nextColumnText + " " + timeText, format: "M/d/yy HH:mm")
+		let timeText = try getColumn(
+			currentIndex,
+			from: parts,
+			errorMessage: "No time found for record \(recordNumber)."
+		)
+		date = DependencyInjector.get(CalendarUtil.self)
+			.date(from: nextColumnText + " " + timeText, format: "M/d/yy HH:mm")
 
 		guard let timestamp = date else {
 			throw InvalidFileFormatError("For record \(recordNumber), expected time but found '\(timeText)'")
@@ -147,13 +165,18 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 		return timestamp
 	}
 
-	private final func storeDose(for medicationName: String, withDate date: Date, using transaction: Transaction) throws {
+	private final func storeDose(
+		for medicationName: String,
+		withDate date: Date,
+		using transaction: Transaction
+	) throws {
 		let childTransaction = transaction.childTransaction()
 		let medicationsWithName = try medicationsNamed(medicationName, using: childTransaction)
-		if medicationsWithName.count == 0 {
+		if medicationsWithName.isEmpty {
 			throw GenericDisplayableError(
 				title: "Medication does not exist",
-				description: "No medications named '\(medicationName)' exist.")
+				description: "No medications named '\(medicationName)' exist."
+			)
 		}
 
 		do {
@@ -167,14 +190,19 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 			try childTransaction.commit()
 		} catch {
 			log.error("Failed to create and modify medication dose: %@", errorInfo(error))
-			let dateText = DependencyInjector.get(CalendarUtil.self).string(for: date, dateStyle: .medium, timeStyle: .short)
+			let dateText = DependencyInjector.get(CalendarUtil.self)
+				.string(for: date, dateStyle: .medium, timeStyle: .short)
 			throw GenericDisplayableError(
 				title: "Could not save dose",
-				description: "Dose of \(medicationName) taken on \(dateText)")
+				description: "Dose of \(medicationName) taken on \(dateText)"
+			)
 		}
 	}
 
-	private final func medicationsNamed(_ medicationName: String, using transaction: Transaction) throws -> [Medication] {
+	private final func medicationsNamed(
+		_ medicationName: String,
+		using transaction: Transaction
+	) throws -> [Medication] {
 		let medicationsWithNameFetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
 		medicationsWithNameFetchRequest.predicate = NSPredicate(format: "%K ==[cd] %@", "name", medicationName)
 		do {
@@ -183,16 +211,17 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 			log.error("Failed to check for existing medications named '%@': %@", medicationName, errorInfo(error))
 			throw GenericDisplayableError(
 				title: "Data Access Error",
-				description: "Unable to check for medication named \(medicationName).")
+				description: "Unable to check for medication named \(medicationName)."
+			)
 		}
 	}
 
 	private final func shouldImport(_ date: Date) -> Bool {
-		return !importOnlyNewData || // user doesn't care about data duplication -> import everything
-			lastImport == nil || (   // never imported before -> import everything
+		!importOnlyNewData || // user doesn't care about data duplication -> import everything
+			lastImport == nil || ( // never imported before -> import everything
 				importOnlyNewData &&
-				lastImport != nil &&
-				date.isAfterDate(lastImport!, granularity: .nanosecond)
+					lastImport != nil &&
+					date.isAfterDate(lastImport!, granularity: .nanosecond)
 			)
 	}
 }

@@ -13,17 +13,16 @@ import Common
 import DependencyInjection
 
 public protocol ChooseAttributesToGraphTableViewController: UITableViewController {
-
 	var notificationToSendWhenFinished: NotificationName! { get set }
 	var allowedAttributes: [Attribute]! { get set }
 	var selectedAttributes: [Attribute]! { get set }
 }
 
-final class ChooseAttributesToGraphTableViewControllerImpl: UITableViewController, ChooseAttributesToGraphTableViewController {
-
+final class ChooseAttributesToGraphTableViewControllerImpl: UITableViewController,
+	ChooseAttributesToGraphTableViewController {
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var addButton: UIBarButtonItem!
+	@IBOutlet final var addButton: UIBarButtonItem!
 
 	// MARK: - Instance Variables
 
@@ -31,6 +30,7 @@ final class ChooseAttributesToGraphTableViewControllerImpl: UITableViewControlle
 	public final var allowedAttributes: [Attribute]! {
 		didSet { allowedAttributes = allowedAttributes ?? [Attribute]() }
 	}
+
 	public final var selectedAttributes: [Attribute]! {
 		didSet { selectedAttributes = selectedAttributes ?? [Attribute]() }
 	}
@@ -39,13 +39,17 @@ final class ChooseAttributesToGraphTableViewControllerImpl: UITableViewControlle
 
 	// MARK: - UIViewController Overrides
 
-	final override func viewDidLoad() {
+	override final func viewDidLoad() {
 		super.viewDidLoad()
 		if selectedAttributes.count == allowedAttributes.count {
 			addButton.isEnabled = false
 		}
-		if allowedAttributes.count == 0 {
-			let alert = UIAlertController(title: "No graphable attributes", message: "There are no graphable attributes on the chosen data type.", preferredStyle: .alert)
+		if allowedAttributes.isEmpty {
+			let alert = UIAlertController(
+				title: "No graphable attributes",
+				message: "There are no graphable attributes on the chosen data type.",
+				preferredStyle: .alert
+			)
 			alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
 				self.syncPost(self.notificationToSendWhenFinished, userInfo: [:])
 				self.navigationController!.popViewController(animated: false)
@@ -62,11 +66,11 @@ final class ChooseAttributesToGraphTableViewControllerImpl: UITableViewControlle
 
 	// MARK: - TableView Data Source
 
-	final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return selectedAttributes.count
+	override final func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+		selectedAttributes.count
 	}
 
-	final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override final func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 		cell.textLabel?.text = selectedAttributes[indexPath.row].name.localizedCapitalized
 		return cell
@@ -74,27 +78,34 @@ final class ChooseAttributesToGraphTableViewControllerImpl: UITableViewControlle
 
 	// MARK: - TableView Delegate
 
-	final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	override final func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
 		editIndex = indexPath.row
 		let controller: ChooseAttributeViewController = viewController(named: "chooseAttribute", fromStoryboard: "Util")
 		controller.notificationToSendOnAccept = .attributeChosen
 		controller.selectedAttribute = selectedAttributes[editIndex]
-		var unselectedAttributes = allowedAttributes.filter{ attribute in
+		var unselectedAttributes = allowedAttributes.filter { attribute in
 			!selectedAttributes.contains(where: { $0.equalTo(attribute) })
 		}
 		unselectedAttributes.append(selectedAttributes[editIndex])
 		controller.attributes = unselectedAttributes
-		customPresentViewController(DependencyInjector.get(UiUtil.self).defaultPresenter, viewController: controller, animated: false)
+		customPresentViewController(
+			DependencyInjector.get(UiUtil.self).defaultPresenter,
+			viewController: controller,
+			animated: false
+		)
 	}
 
 	// MARK: - TableView Editing
 
-	final override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+	override final func tableView(_: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		selectedAttributes.swapAt(fromIndexPath.row, to.row)
 	}
 
-	final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-		let delete = UITableViewRowAction(style: .destructive, title: "🗑️") { (_, indexPath) in
+	override final func tableView(
+		_ tableView: UITableView,
+		editActionsForRowAt indexPath: IndexPath
+	) -> [UITableViewRowAction]? {
+		let delete = UITableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
 			self.selectedAttributes.remove(at: indexPath.row)
 			self.addButton.isEnabled = true
 			tableView.deleteRows(at: [indexPath], with: .fade)
@@ -105,7 +116,7 @@ final class ChooseAttributesToGraphTableViewControllerImpl: UITableViewControlle
 
 	// MARK: - Button Actions
 
-	@IBAction final func addButtonPressed(_ sender: Any) {
+	@IBAction final func addButtonPressed(_: Any) {
 		if let attribute = firstUnselectedAttribute() {
 			selectedAttributes.append(attribute)
 		}
@@ -115,23 +126,24 @@ final class ChooseAttributesToGraphTableViewControllerImpl: UITableViewControlle
 		tableView.reloadData()
 	}
 
-	@IBAction final func clearButtonPressed(_ sender: Any) {
+	@IBAction final func clearButtonPressed(_: Any) {
 		var indexPaths = [IndexPath]()
 		for i in 0 ..< selectedAttributes.count {
 			indexPaths.append(IndexPath(row: i, section: 0))
 		}
 		selectedAttributes = []
-		self.addButton.isEnabled = true
+		addButton.isEnabled = true
 		tableView.deleteRows(at: indexPaths, with: .fade)
 		tableView.reloadData()
 	}
 
-	@IBAction final func doneButtonPressed(_ sender: Any) {
+	@IBAction final func doneButtonPressed(_: Any) {
 		syncPost(
 			notificationToSendWhenFinished,
 			userInfo: [
 				.attributes: selectedAttributes,
-			])
+			]
+		)
 		navigationController!.popViewController(animated: false)
 	}
 

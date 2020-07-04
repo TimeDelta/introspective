@@ -13,11 +13,10 @@ import DependencyInjection
 import Settings
 
 public final class DiscreteRatingTableViewCell: UITableViewCell {
-
 	// MARK: - IBOutlet
 
-	@IBOutlet weak final var scrollView: UIScrollView!
-	@IBOutlet weak final var moodContentView: UIView!
+	@IBOutlet final var scrollView: UIScrollView!
+	@IBOutlet final var moodContentView: UIView!
 
 	// MARK: - Instance Variables
 
@@ -32,7 +31,7 @@ public final class DiscreteRatingTableViewCell: UITableViewCell {
 
 	// MARK: - UIView Overrides
 
-	public final override func layoutSubviews() {
+	override public final func layoutSubviews() {
 		super.layoutSubviews()
 		updateUI()
 	}
@@ -64,7 +63,7 @@ public final class DiscreteRatingTableViewCell: UITableViewCell {
 	private final func updateUI() {
 		removeExistingMoodButtons()
 
-		var lastView: UIView? = nil
+		var lastView: UIView?
 		for i in minRating ... maxRating {
 			let ratingButton = createButtonForRating(i)
 			ratingButtons.append(ratingButton)
@@ -92,7 +91,8 @@ public final class DiscreteRatingTableViewCell: UITableViewCell {
 		let max = Double(maxRating)
 		let button = UIButton(type: .custom)
 		button.addTarget(self, action: #selector(moodRatingButtonPressed), for: .touchUpInside)
-		button.backgroundColor = DependencyInjector.get(MoodUiUtil.self).colorForMood(rating: Double(rating), minRating: min, maxRating: max)
+		button.backgroundColor = DependencyInjector.get(MoodUiUtil.self)
+			.colorForMood(rating: Double(rating), minRating: min, maxRating: max)
 		let titleColor = button.backgroundColor?.highContrast()
 		button.setTitleColor(titleColor, for: .normal)
 		button.setTitle("\(rating)", for: .normal)
@@ -106,7 +106,8 @@ public final class DiscreteRatingTableViewCell: UITableViewCell {
 		if let lastView = lastView {
 			ratingButton.leadingAnchor.constraint(
 				equalTo: lastView.trailingAnchor,
-				constant: spacingBetweenRatingButtons).isActive = true
+				constant: spacingBetweenRatingButtons
+			).isActive = true
 		} else {
 			ratingButton.leadingAnchor.constraint(equalTo: moodContentView.leadingAnchor).isActive = true
 		}
@@ -149,7 +150,7 @@ public final class DiscreteRatingTableViewCell: UITableViewCell {
 	}
 
 	private final func thisConstraint(_ constraint: NSLayoutConstraint, involves item: UIView) -> Bool {
-		return constraint.firstItem?.accessibilityIdentifier == item.accessibilityIdentifier ||
+		constraint.firstItem?.accessibilityIdentifier == item.accessibilityIdentifier ||
 			constraint.secondItem?.accessibilityIdentifier == item.accessibilityIdentifier
 	}
 
@@ -161,7 +162,10 @@ public final class DiscreteRatingTableViewCell: UITableViewCell {
 
 	private final func getBaseWidth() -> CGFloat {
 		let minWidth: CGFloat = 30
-		let numberOfMoods = CGFloat(DependencyInjector.get(Settings.self).maxMood - DependencyInjector.get(Settings.self).minMood + 1)
+		let numberOfMoods = CGFloat(
+			DependencyInjector.get(Settings.self).maxMood - DependencyInjector
+				.get(Settings.self).minMood + 1
+		)
 		// not -1 because need to account for one mood always being selected, which adds 1 spacing
 		let totalSpacingRequired = spacingBetweenRatingButtons * numberOfMoods
 		let proportionalWidth = (scrollView.frame.width - totalSpacingRequired) / numberOfMoods

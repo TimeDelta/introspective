@@ -9,11 +9,10 @@
 import UIKit
 
 public final class CoachMarkInfo {
-
 	public final var hintText: String
 	public final var nextText: String
 	public final var useArrow: Bool
-	public final var view: UIView? { return viewMethod() }
+	public final var view: UIView? { viewMethod() }
 	public final var setup: (() -> Void)?
 
 	private final var viewMethod: () -> UIView?
@@ -22,13 +21,13 @@ public final class CoachMarkInfo {
 		hint: String,
 		next: String = "Next",
 		useArrow: Bool,
-		view: @escaping () -> UIView? = { return nil },
-		setup: (() -> Void)? = nil)
-	{
-		self.hintText = hint
-		self.nextText = next
+		view: @escaping () -> UIView? = { nil },
+		setup: (() -> Void)? = nil
+	) {
+		hintText = hint
+		nextText = next
 		self.useArrow = useArrow
-		self.viewMethod = view
+		viewMethod = view
 		self.setup = setup
 	}
 }

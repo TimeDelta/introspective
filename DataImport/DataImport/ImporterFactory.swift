@@ -11,30 +11,31 @@ import Foundation
 import DependencyInjection
 import Persistence
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol ImporterFactory {
-
 	// MARK: Moods
+
 	func wellnessMoodImporter() throws -> WellnessMoodImporter
 	func introspectiveMoodImporter() throws -> IntrospectiveMoodImporter
 
 	// MARK: Medications
+
 	func easyPillMedicationImporter() throws -> EasyPillMedicationImporter
 	func easyPillMedicationDoseImporter() throws -> EasyPillMedicationDoseImporter
 	func introspectiveMedicationImporter() throws -> IntrospectiveMedicationImporter
 
 	// MARK: Activities
+
 	func aTrackerActivityImporter() throws -> ATrackerActivityImporter
 	func introspectiveActivityImporter() throws -> IntrospectiveActivityImporter
 }
 
 public final class ImporterFactoryImpl: ImporterFactory {
-
 	// MARK: - Moods
 
 	public final func wellnessMoodImporter() throws -> WellnessMoodImporter {
 		let importers = try DependencyInjector.get(Database.self).query(WellnessMoodImporterImpl.fetchRequest())
-		if importers.count > 0 {
+		if !importers.isEmpty {
 			return importers[0]
 		}
 
@@ -48,7 +49,7 @@ public final class ImporterFactoryImpl: ImporterFactory {
 
 	public final func introspectiveMoodImporter() throws -> IntrospectiveMoodImporter {
 		let importers = try DependencyInjector.get(Database.self).query(IntrospectiveMoodImporterImpl.fetchRequest())
-		if importers.count > 0 {
+		if !importers.isEmpty {
 			return importers[0]
 		}
 
@@ -64,7 +65,7 @@ public final class ImporterFactoryImpl: ImporterFactory {
 
 	public final func easyPillMedicationImporter() throws -> EasyPillMedicationImporter {
 		let importers = try DependencyInjector.get(Database.self).query(EasyPillMedicationImporterImpl.fetchRequest())
-		if importers.count > 0 {
+		if !importers.isEmpty {
 			return importers[0]
 		}
 
@@ -77,8 +78,9 @@ public final class ImporterFactoryImpl: ImporterFactory {
 	}
 
 	public final func easyPillMedicationDoseImporter() throws -> EasyPillMedicationDoseImporter {
-		let importers = try DependencyInjector.get(Database.self).query(EasyPillMedicationDoseImporterImpl.fetchRequest())
-		if importers.count > 0 {
+		let importers = try DependencyInjector.get(Database.self)
+			.query(EasyPillMedicationDoseImporterImpl.fetchRequest())
+		if !importers.isEmpty {
 			return importers[0]
 		}
 
@@ -91,13 +93,15 @@ public final class ImporterFactoryImpl: ImporterFactory {
 	}
 
 	public final func introspectiveMedicationImporter() throws -> IntrospectiveMedicationImporter {
-		let importers = try DependencyInjector.get(Database.self).query(IntrospectiveMedicationImporterImpl.fetchRequest())
-		if importers.count > 0 {
+		let importers = try DependencyInjector.get(Database.self)
+			.query(IntrospectiveMedicationImporterImpl.fetchRequest())
+		if !importers.isEmpty {
 			return importers[0]
 		}
 
 		let transaction = DependencyInjector.get(Database.self).transaction()
-		let importer: IntrospectiveMedicationImporterImpl = try transaction.new(IntrospectiveMedicationImporterImpl.self)
+		let importer: IntrospectiveMedicationImporterImpl = try transaction
+			.new(IntrospectiveMedicationImporterImpl.self)
 		try transaction.commit()
 		// must pull from main database context or context will go out of scope and get deleted,
 		// causing CoreData to be unable to fulfill a fault
@@ -108,7 +112,7 @@ public final class ImporterFactoryImpl: ImporterFactory {
 
 	public final func aTrackerActivityImporter() throws -> ATrackerActivityImporter {
 		let importers = try DependencyInjector.get(Database.self).query(ATrackerActivityImporterImpl.fetchRequest())
-		if importers.count > 0 {
+		if !importers.isEmpty {
 			return importers[0]
 		}
 
@@ -121,8 +125,9 @@ public final class ImporterFactoryImpl: ImporterFactory {
 	}
 
 	public final func introspectiveActivityImporter() throws -> IntrospectiveActivityImporter {
-		let importers = try DependencyInjector.get(Database.self).query(IntrospectiveActivityImporterImpl.fetchRequest())
-		if importers.count > 0 {
+		let importers = try DependencyInjector.get(Database.self)
+			.query(IntrospectiveActivityImporterImpl.fetchRequest())
+		if !importers.isEmpty {
 			return importers[0]
 		}
 

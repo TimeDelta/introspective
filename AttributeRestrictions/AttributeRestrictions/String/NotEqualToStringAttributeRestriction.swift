@@ -11,7 +11,6 @@ import Foundation
 import Attributes
 
 public final class NotEqualToStringAttributeRestriction: TypedNotEqualToAttributeRestrictionBase<String> {
-
 	private typealias Me = NotEqualToStringAttributeRestriction
 
 	// MARK: - Attributes
@@ -35,11 +34,11 @@ public final class NotEqualToStringAttributeRestriction: TypedNotEqualToAttribut
 
 	// MARK: - Attribute Restriction Functions
 
-	public override func copy() -> AttributeRestriction {
-		return NotEqualToStringAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! String)
+	override public func copy() -> AttributeRestriction {
+		NotEqualToStringAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! String)
 	}
 
-	public override func predicate() -> NSPredicate? {
+	override public func predicate() -> NSPredicate? {
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		return NSPredicate(format: "%K !=[cd] %@", variableName, value as! String)
 	}

@@ -13,11 +13,10 @@ import DependencyInjection
 import Samples
 
 class SexualActivityTableViewCell: UITableViewCell {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var valueLabel: UILabel!
-	@IBOutlet weak final var timestampLabel: UILabel!
+	@IBOutlet final var valueLabel: UILabel!
+	@IBOutlet final var timestampLabel: UILabel!
 
 	// MARK: - Instance Variables
 
@@ -30,7 +29,8 @@ class SexualActivityTableViewCell: UITableViewCell {
 			timestampLabel.text = DependencyInjector.get(CalendarUtil.self).string(
 				for: sample.timestamp,
 				dateStyle: .medium,
-				timeStyle: .short)
+				timeStyle: .short
+			)
 
 			setConstraints()
 		}
@@ -65,10 +65,14 @@ class SexualActivityTableViewCell: UITableViewCell {
 		timestampHeightConstraint.isActive = true
 		let bufferConstraint = timestampLabel.leadingAnchor.constraint(
 			greaterThanOrEqualToSystemSpacingAfter: valueLabel.trailingAnchor,
-			multiplier: 1)
+			multiplier: 1
+		)
 		bufferConstraint.priority = .required
 		bufferConstraint.isActive = true
-		let trailingConstraint = timestampLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5)
+		let trailingConstraint = timestampLabel.trailingAnchor.constraint(
+			equalTo: contentView.trailingAnchor,
+			constant: -5
+		)
 		trailingConstraint.priority = .required
 		trailingConstraint.isActive = true
 		timestampLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5).isActive = true
@@ -81,7 +85,8 @@ class SexualActivityTableViewCell: UITableViewCell {
 		let size = label.systemLayoutSizeFitting(
 			UIView.layoutFittingCompressedSize,
 			withHorizontalFittingPriority: .defaultHigh,
-			verticalFittingPriority: .init(1))
+			verticalFittingPriority: .init(1)
+		)
 		label.frame.size = size
 	}
 }

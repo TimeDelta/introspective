@@ -7,13 +7,12 @@
 //
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 public extension EasyPillMedicationImporterImpl {
-
 	@nonobjc class func fetchRequest() -> NSFetchRequest<EasyPillMedicationImporterImpl> {
-		return NSFetchRequest<EasyPillMedicationImporterImpl>(entityName: "EasyPillMedicationImporter")
+		NSFetchRequest<EasyPillMedicationImporterImpl>(entityName: "EasyPillMedicationImporter")
 	}
 
 	@NSManaged var lastImport: Date?

@@ -12,7 +12,6 @@ import Common
 import DependencyInjection
 
 public protocol ChooseRecentTimePeriodViewController: UIViewController {
-
 	/// Set the initial number of time units
 	var initialNumTimeUnits: Int? { get set }
 	/// Set the initial time unit
@@ -20,7 +19,6 @@ public protocol ChooseRecentTimePeriodViewController: UIViewController {
 }
 
 public final class ChooseRecentTimePeriodViewControllerImpl: UIViewController, ChooseRecentTimePeriodViewController {
-
 	// MARK: - Static Variables
 
 	private typealias Me = ChooseRecentTimePeriodViewControllerImpl
@@ -36,12 +34,12 @@ public final class ChooseRecentTimePeriodViewControllerImpl: UIViewController, C
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var sortByLabel: UILabel!
+	@IBOutlet final var sortByLabel: UILabel!
 
-	@IBOutlet weak final var numTimeUnitsField: UITextField!
-	@IBOutlet weak final var timeUnitPicker: UIPickerView!
+	@IBOutlet final var numTimeUnitsField: UITextField!
+	@IBOutlet final var timeUnitPicker: UIPickerView!
 
-	@IBOutlet weak final var sortButton: UIButton!
+	@IBOutlet final var sortButton: UIButton!
 
 	// MARK: - Instance Variables
 
@@ -52,7 +50,7 @@ public final class ChooseRecentTimePeriodViewControllerImpl: UIViewController, C
 
 	// MARK: - UIViewController Overloads
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		timeUnitPicker.delegate = self
 
 		if let initialNumTimeUnits = initialNumTimeUnits {
@@ -82,11 +80,12 @@ public final class ChooseRecentTimePeriodViewControllerImpl: UIViewController, C
 			userInfo: [
 				UserInfoKey.number: numTimeUnits,
 				UserInfoKey.calendarComponent: chosenTimeUnit,
-			])
+			]
+		)
 		dismiss(animated: false, completion: nil)
 	}
 
-	@IBAction final func numTimeUnitsChanged(_ sender: Any) {
+	@IBAction final func numTimeUnitsChanged(_: Any) {
 		validate()
 	}
 
@@ -103,7 +102,7 @@ public final class ChooseRecentTimePeriodViewControllerImpl: UIViewController, C
 	}
 
 	private final func validate() {
-		if (numberIsValid()) {
+		if numberIsValid() {
 			if #available(iOS 13.0, *) {
 				sortByLabel.textColor = .label
 			} else {
@@ -120,21 +119,19 @@ public final class ChooseRecentTimePeriodViewControllerImpl: UIViewController, C
 // MARK: - UIPickerViewDelegate
 
 extension ChooseRecentTimePeriodViewControllerImpl: UIPickerViewDelegate {
-
-	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return Me.supportedTimeUnits[row].description.localizedCapitalized
+	public final func pickerView(_: UIPickerView, titleForRow row: Int, forComponent _: Int) -> String? {
+		Me.supportedTimeUnits[row].description.localizedCapitalized
 	}
 }
 
 // MARK: - UIPickerViewDataSource
 
 extension ChooseRecentTimePeriodViewControllerImpl: UIPickerViewDataSource {
-
-	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
-		return 1
+	public final func numberOfComponents(in _: UIPickerView) -> Int {
+		1
 	}
 
-	public final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return Me.supportedTimeUnits.count
+	public final func pickerView(_: UIPickerView, numberOfRowsInComponent _: Int) -> Int {
+		Me.supportedTimeUnits.count
 	}
 }

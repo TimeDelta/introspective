@@ -13,17 +13,17 @@ import Common
 import UIExtensions
 
 final class AttributedChooserViewController: UIViewController {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var valuePicker: UIPickerView! {
+	@IBOutlet final var valuePicker: UIPickerView! {
 		didSet {
 			guard let valuePicker = valuePicker else { return }
 			valuePicker.accessibilityIdentifier = pickerAccessibilityIdentifier
 		}
 	}
-	@IBOutlet weak final var scrollView: UIScrollView!
-	@IBOutlet weak final var scrollContentView: UIView!
+
+	@IBOutlet final var scrollView: UIScrollView!
+	@IBOutlet final var scrollContentView: UIView!
 
 	// MARK: - Instance Variables
 
@@ -35,6 +35,7 @@ final class AttributedChooserViewController: UIViewController {
 			initialSetDone = true
 		}
 	}
+
 	public final var notificationToSendWhenAccepted: Notification.Name!
 	public final var notificationToSendOnValueChange: Notification.Name?
 	public final var pickerAccessibilityIdentifier: String? {
@@ -43,6 +44,7 @@ final class AttributedChooserViewController: UIViewController {
 			valuePicker.accessibilityIdentifier = pickerAccessibilityIdentifier
 		}
 	}
+
 	public final var saveButtonAccessibilityIdentifier: String?
 
 	private final var attributeViewControllers: [AttributeViewController]!
@@ -55,7 +57,7 @@ final class AttributedChooserViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	final override func viewDidLoad() {
+	override final func viewDidLoad() {
 		super.viewDidLoad()
 
 		view.translatesAutoresizingMaskIntoConstraints = false
@@ -74,16 +76,19 @@ final class AttributedChooserViewController: UIViewController {
 		NotificationCenter.default.removeObserver(self)
 	}
 
-	public final override func reloadInputViews() {
+	override public final func reloadInputViews() {
 		super.reloadInputViews()
 		valuePicker.reloadAllComponents()
 		resetScrollView()
 		populateScrollView()
 	}
 
-	public final override func didMove(toParent newParent: UIViewController?) {
+	override public final func didMove(toParent newParent: UIViewController?) {
 		let viewForConstraint: UIView! = newParent?.view ?? view
-		let contentViewWidthConstraint = valuePicker.heightAnchor.constraint(equalTo: viewForConstraint.heightAnchor, multiplier: CGFloat(0.27))
+		let contentViewWidthConstraint = valuePicker.heightAnchor.constraint(
+			equalTo: viewForConstraint.heightAnchor,
+			multiplier: CGFloat(0.27)
+		)
 		contentViewWidthConstraint.priority = .required
 		contentViewWidthConstraint.isActive = true
 	}
@@ -121,7 +126,8 @@ final class AttributedChooserViewController: UIViewController {
 					attribute.name,
 					currentValue.attributedName,
 					String(describing: attributeValue),
-					errorInfo(error))
+					errorInfo(error)
+				)
 				showError(title: "Failed to set \(attribute.name)", error: error)
 			}
 		}
@@ -130,7 +136,8 @@ final class AttributedChooserViewController: UIViewController {
 			object: self,
 			userInfo: info([
 				.attributed: currentValue,
-			]))
+			])
+		)
 	}
 
 	// MARK: - Helper Functions
@@ -159,7 +166,8 @@ final class AttributedChooserViewController: UIViewController {
 					object: self,
 					userInfo: self.info([
 						.attributed: self.currentValue,
-					]))
+					])
+				)
 			}
 		}
 	}
@@ -188,7 +196,8 @@ final class AttributedChooserViewController: UIViewController {
 				getVerticalConstraintForAttributeControllerView(
 					controller.view,
 					lastView: previousView,
-					isFirstView: &isFirstView),
+					isFirstView: &isFirstView
+				),
 			])
 			previousView = controller.view
 		}
@@ -196,7 +205,10 @@ final class AttributedChooserViewController: UIViewController {
 	}
 
 	private final func prepareControllerForAttribute(_ attribute: Attribute) -> AttributeViewController {
-		let controller: AttributeViewController = viewController(named: "attributeView", fromStoryboard: "AttributeList")
+		let controller: AttributeViewController = viewController(
+			named: "attributeView",
+			fromStoryboard: "AttributeList"
+		)
 		controller.attribute = attribute
 		do {
 			controller.attributeValue = try currentValue.value(of: attribute)
@@ -221,7 +233,7 @@ final class AttributedChooserViewController: UIViewController {
 			acceptButton.setTitleColor(.white, for: .normal)
 			acceptButton.setTitleColor(.black, for: .disabled)
 		}
-		
+
 		acceptButton.setTitle("Save", for: .normal)
 		updateAcceptButtonStatus()
 		acceptButton.translatesAutoresizingMaskIntoConstraints = false
@@ -232,7 +244,10 @@ final class AttributedChooserViewController: UIViewController {
 		if let lastView = lastView {
 			topConstraint = acceptButton.topAnchor.constraint(equalTo: lastView.bottomAnchor, constant: verticalSpacing)
 		} else {
-			topConstraint = acceptButton.topAnchor.constraint(equalTo: scrollContentView.topAnchor, constant: verticalSpacing)
+			topConstraint = acceptButton.topAnchor.constraint(
+				equalTo: scrollContentView.topAnchor,
+				constant: verticalSpacing
+			)
 		}
 		NSLayoutConstraint.activate([
 			heightConstraintFor(acceptButton, height: CGFloat(30)),
@@ -255,17 +270,23 @@ final class AttributedChooserViewController: UIViewController {
 
 	// MARK: Constraint Helper Functions
 
-	private final func getVerticalConstraintForAttributeControllerView(_ view: UIView, lastView: UIView!, isFirstView: inout Bool)
-	-> NSLayoutConstraint {
+	private final func getVerticalConstraintForAttributeControllerView(
+		_ view: UIView,
+		lastView: UIView!,
+		isFirstView: inout Bool
+	)
+		-> NSLayoutConstraint {
 		if isFirstView {
 			isFirstView = false
 			return view.topAnchor.constraint(
 				equalTo: scrollContentView.topAnchor,
-				constant: verticalSpacing)
+				constant: verticalSpacing
+			)
 		} else {
 			return view.topAnchor.constraint(
 				equalTo: lastView.bottomAnchor,
-				constant: verticalSpacing)
+				constant: verticalSpacing
+			)
 		}
 	}
 
@@ -285,25 +306,23 @@ final class AttributedChooserViewController: UIViewController {
 // MARK: - UIPickerViewDataSource
 
 extension AttributedChooserViewController: UIPickerViewDataSource {
-
-	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
-		return 1
+	public final func numberOfComponents(in _: UIPickerView) -> Int {
+		1
 	}
 
-	public final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return possibleValues.count
+	public final func pickerView(_: UIPickerView, numberOfRowsInComponent _: Int) -> Int {
+		possibleValues.count
 	}
 }
 
 // MARK: - UIPickerViewDelegate
 
 extension AttributedChooserViewController: UIPickerViewDelegate {
-
-	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return possibleValues[row].attributedName
+	public final func pickerView(_: UIPickerView, titleForRow row: Int, forComponent _: Int) -> String? {
+		possibleValues[row].attributedName
 	}
 
-	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+	public final func pickerView(_: UIPickerView, didSelectRow row: Int, inComponent _: Int) {
 		let newValue = possibleValues[row]
 		for attribute in newValue.attributes {
 			if currentValue.attributes.contains(where: { $0.equalTo(attribute) }) {
@@ -316,7 +335,8 @@ extension AttributedChooserViewController: UIPickerViewDelegate {
 						attribute.name,
 						currentValue.attributedName,
 						newValue.attributedName,
-						errorInfo(error))
+						errorInfo(error)
+					)
 					// ignore and move on
 				}
 			}

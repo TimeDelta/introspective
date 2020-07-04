@@ -8,9 +8,8 @@
 
 import Foundation
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol Exporter {
-
 	var dataTypePluralName: String { get }
 	var isPaused: Bool { get }
 	var isCancelled: Bool { get }
@@ -33,8 +32,8 @@ public extension Exporter {
 	func equalTo(_ other: Exporter) -> Bool {
 		guard type(of: self) == type(of: other) else { return false }
 		return withUnsafePointer(to: self) { me in
-			return withUnsafePointer(to: other) { them in
-				return me == them
+			withUnsafePointer(to: other) { them in
+				me == them
 			}
 		}
 	}

@@ -11,12 +11,11 @@ import UIKit
 import SampleGroupInformation
 
 final class SampleGroupInformationTableViewCell: UITableViewCell {
-
 	public final var sampleGroupInformation: SampleGroupInformation! { didSet { updateText() } }
 
 	public final var value: String! { didSet { updateText() } }
 
-	@IBOutlet weak final var keyValueLabel: UILabel!
+	@IBOutlet final var keyValueLabel: UILabel!
 
 	private final func updateText() {
 		if value == nil || sampleGroupInformation == nil { return }

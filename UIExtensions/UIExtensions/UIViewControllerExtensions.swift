@@ -6,16 +6,15 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
-import Presentr
 import Instructions
+import Presentr
+import UIKit
 import UserNotifications
 
 import Common
 import DependencyInjection
 
 public extension UIViewController {
-
 	final func observe(selector: Selector, name: NotificationName, object: Any? = nil) {
 		NotificationCenter.default.addObserver(self, selector: selector, name: name.toName(), object: object)
 	}
@@ -35,8 +34,8 @@ public extension UIViewController {
 		error: Error? = nil,
 		tryAgain: (() -> Void)? = nil,
 		onDismiss: ((UIAlertAction) -> Void)? = nil,
-		onDonePresenting: (() -> Void)? = nil)
-	{
+		onDonePresenting: (() -> Void)? = nil
+	) {
 		var realTitle = title
 		var realMessage = message
 		if let error = error as? DisplayableError {
@@ -49,7 +48,7 @@ public extension UIViewController {
 		let alert = UIAlertController(title: realTitle, message: realMessage, preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: onDismiss))
 		if let tryAgain = tryAgain {
-			alert.addAction(UIAlertAction(title: "Try Again", style: .default){ _ in
+			alert.addAction(UIAlertAction(title: "Try Again", style: .default) { _ in
 				tryAgain()
 			})
 		}
@@ -57,7 +56,10 @@ public extension UIViewController {
 	}
 
 	final func hideKeyboardOnTapNonTextInput() {
-		let tapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+		let tapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(
+			target: self,
+			action: #selector(dismissKeyboard)
+		)
 		tapRecognizer.cancelsTouchesInView = false
 		view.addGestureRecognizer(tapRecognizer)
 	}
@@ -78,19 +80,23 @@ public extension UIViewController {
 	/// - Parameter keyIsOptional: If true, no error will be logged if the specified key does not exist in the user info.
 	/// - Note: Automatically logs when key is missing, wrong type or the notification does not have any user info.
 	func value<Type>(for key: UserInfoKey, from notification: Notification, keyIsOptional: Bool = false) -> Type? {
-		return DependencyInjector.get(UiUtil.self).value(for: key, from: notification, keyIsOptional: keyIsOptional)
+		DependencyInjector.get(UiUtil.self).value(for: key, from: notification, keyIsOptional: keyIsOptional)
 	}
 
 	/// This is just a pass-through method that will return the input. It is solely for syntactic
 	/// sugar so that you don't have to type out "UserInfoKey." everywhere.
 	final func info(_ info: [UserInfoKey: Any]) -> [AnyHashable: Any] {
-		return DependencyInjector.get(UiUtil.self).info(info)
+		DependencyInjector.get(UiUtil.self).info(info)
 	}
 
 	/// - Parameter storyboardName: If not provided, will attempt to pull the controller from same storyboard as this controller.
-	final func viewController<Type: UIViewController>(named controllerName: String, fromStoryboard storyboardName: String? = nil) -> Type {
+	final func viewController<Type: UIViewController>(
+		named controllerName: String,
+		fromStoryboard storyboardName: String? = nil
+	) -> Type {
 		if let storyboardName = storyboardName {
-			return DependencyInjector.get(UiUtil.self).controller(named: controllerName, from: storyboardName, as: Type.self)
+			return DependencyInjector.get(UiUtil.self)
+				.controller(named: controllerName, from: storyboardName, as: Type.self)
 		}
 		return DependencyInjector.get(UiUtil.self).controller(named: controllerName, from: storyboard!, as: Type.self)
 	}
@@ -111,16 +117,27 @@ public extension UIViewController {
 		DependencyInjector.get(NotificationUtil.self).post(name, object: object, userInfo: userInfo, qos: nil)
 	}
 
-	final func present(_ viewController: UIViewController, using presenter: Presentr, animated: Bool = false, completion: (() -> Void)? = nil) {
-		DependencyInjector.get(UiUtil.self).present(viewController, on: self, using: presenter, animated: animated, completion: completion)
+	final func present(
+		_ viewController: UIViewController,
+		using presenter: Presentr,
+		animated: Bool = false,
+		completion: (() -> Void)? = nil
+	) {
+		DependencyInjector.get(UiUtil.self)
+			.present(viewController, on: self, using: presenter, animated: animated, completion: completion)
 	}
 
-	final func presentView(_ viewController: UIViewController, animated: Bool = false, completion: (() -> Void)? = nil) {
+	final func presentView(
+		_ viewController: UIViewController,
+		animated: Bool = false,
+		completion: (() -> Void)? = nil
+	) {
 		DependencyInjector.get(UiUtil.self).present(self, viewController, animated: animated, completion: completion)
 	}
 
 	final func pushToNavigationController(_ controller: UIViewController, animated: Bool = false) {
-		DependencyInjector.get(UiUtil.self).push(controller: controller, toNavigationController: navigationController, animated: animated)
+		DependencyInjector.get(UiUtil.self)
+			.push(controller: controller, toNavigationController: navigationController, animated: animated)
 	}
 
 	final func popFromNavigationController(animated: Bool = false) {
@@ -135,12 +152,13 @@ public extension UIViewController {
 	}
 
 	final func defaultCoachMarkSkipViewConstraints() -> [CoachMarkSkipViewConstraint] {
-		return [
+		[
 			HorizontallyCenteredCoachMarkSkipViewConstraint(),
 			GenericCoachMarkSkipViewConstraint(
 				skipViewAttribute: .bottom,
 				relatedBy: .equal,
-				parentViewAttribute: .bottomMargin),
+				parentViewAttribute: .bottomMargin
+			),
 		]
 	}
 
@@ -148,13 +166,14 @@ public extension UIViewController {
 		withContent content: UNMutableNotificationContent,
 		id: String,
 		repeats: Bool = false,
-		interval: TimeInterval = 1)
-	{
-		DependencyInjector.get(UiUtil.self).sendUserNotification(withContent: content, id: id, repeats: repeats, interval: interval)
+		interval: TimeInterval = 1
+	) {
+		DependencyInjector.get(UiUtil.self)
+			.sendUserNotification(withContent: content, id: id, repeats: repeats, interval: interval)
 	}
 
 	final func barButton(title: String, action: Selector) -> UIBarButtonItem {
-		return UIBarButtonItem(title: title, style: .plain, target: self, action: action)
+		UIBarButtonItem(title: title, style: .plain, target: self, action: action)
 	}
 
 	final func barButton(title: String, quickPress: Selector, longPress: Selector) -> UIBarButtonItem {
@@ -162,7 +181,7 @@ public extension UIViewController {
 		let button = UIButton(type: .custom)
 		button.setTitle(title, for: .normal)
 		// same color as normal button text
-		button.setTitleColor(UIColor(red: 47/255, green: 124/255, blue: 246/255, alpha: 1), for: .normal)
+		button.setTitleColor(UIColor(red: 47 / 255, green: 124 / 255, blue: 246 / 255, alpha: 1), for: .normal)
 		button.addTarget(self, action: quickPress, for: .touchUpInside)
 		button.addGestureRecognizer(longPressRecognizer)
 		return UIBarButtonItem(customView: button)

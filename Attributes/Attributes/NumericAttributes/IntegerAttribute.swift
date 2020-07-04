@@ -11,13 +11,12 @@ import Foundation
 import Common
 
 public final class IntegerAttribute: AttributeBase<Int>, NumericAttribute {
-
-	public final override var typeName: String {
-		return "Integer Number"
+	override public final var typeName: String {
+		"Integer Number"
 	}
 
 	public final func isValid(value: String) -> Bool {
-		return (optional && value == "") || Int(value) != nil
+		(optional && value == "") || Int(value) != nil
 	}
 
 	public final func errorMessageFor(invalidValue: String) -> String {
@@ -27,8 +26,8 @@ public final class IntegerAttribute: AttributeBase<Int>, NumericAttribute {
 		return "\(invalidValue) is not an integer"
 	}
 
-	public final override func isValid(value: Any?) -> Bool {
-		return (value == nil && optional) || value as? Int != nil
+	override public final func isValid(value: Any?) -> Bool {
+		(value == nil && optional) || value as? Int != nil
 	}
 
 	public final func convertToValue(from strValue: String) throws -> Any? {
@@ -39,7 +38,7 @@ public final class IntegerAttribute: AttributeBase<Int>, NumericAttribute {
 		return intValue
 	}
 
-	public final override func convertToDisplayableString(from value: Any?) throws -> String {
+	override public final func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
 		guard let nonNilValue = value else {
 			throw UnsupportedValueError(attribute: self, is: nil)
@@ -50,8 +49,8 @@ public final class IntegerAttribute: AttributeBase<Int>, NumericAttribute {
 		return String(castedValue)
 	}
 
-	public final override func typedValuesAreEqual(_ first: Int, _ second: Int) -> Bool {
-		return first == second
+	override public final func typedValuesAreEqual(_ first: Int, _ second: Int) -> Bool {
+		first == second
 	}
 
 	public final func graphableValueFor(_ value: Any) throws -> Double {

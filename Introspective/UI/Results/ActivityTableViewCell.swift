@@ -13,13 +13,12 @@ import DependencyInjection
 import Samples
 
 public final class ActivityTableViewCell: UITableViewCell {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var nameLabel: UILabel!
-	@IBOutlet weak final var timestampsLabel: UILabel!
-	@IBOutlet weak final var durationLabel: UILabel!
-	@IBOutlet weak final var noteLabel: UILabel!
+	@IBOutlet final var nameLabel: UILabel!
+	@IBOutlet final var timestampsLabel: UILabel!
+	@IBOutlet final var durationLabel: UILabel!
+	@IBOutlet final var noteLabel: UILabel!
 
 	// MARK: - Instance Variables
 
@@ -27,9 +26,11 @@ public final class ActivityTableViewCell: UITableViewCell {
 		didSet {
 			nameLabel.text = activity.definition.name
 
-			timestampsLabel.text = DependencyInjector.get(CalendarUtil.self).string(for: activity.start, dateStyle: .short, timeStyle: .medium) + " - "
+			timestampsLabel.text = DependencyInjector.get(CalendarUtil.self)
+				.string(for: activity.start, dateStyle: .short, timeStyle: .medium) + " - "
 			if let endDate = activity.end {
-				timestampsLabel.text! += DependencyInjector.get(CalendarUtil.self).string(for: endDate, dateStyle: .short, timeStyle: .medium)
+				timestampsLabel.text! += DependencyInjector.get(CalendarUtil.self)
+					.string(for: endDate, dateStyle: .short, timeStyle: .medium)
 			}
 
 			durationLabel.text = activity.duration.description

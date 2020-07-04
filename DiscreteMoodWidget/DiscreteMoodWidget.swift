@@ -6,8 +6,8 @@
 //  Copyright © 2019 Bryan Nova. All rights reserved.
 //
 
-import UIKit
 import NotificationCenter
+import UIKit
 import UserNotifications
 
 import Common
@@ -20,13 +20,12 @@ import SwiftDate
 import UIExtensions
 
 public class DiscreteMoodWidget: UIViewController {
-
 	private typealias Me = DiscreteMoodWidget
 	private static let moodRatingButtonPressed = Notification.Name("moodRatingButtonPressed")
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var moodButtonsView: UICollectionView!
+	@IBOutlet final var moodButtonsView: UICollectionView!
 
 	// MARK: - Instance Variables
 
@@ -34,7 +33,7 @@ public class DiscreteMoodWidget: UIViewController {
 
 	// MARK: - UIView Overrides
 
-	public override func viewDidLoad() {
+	override public func viewDidLoad() {
 		super.viewDidLoad()
 		DependencyInjector.register(CommonInjectionProvider())
 		DependencyInjector.register(PersistenceInjectionProvider(ObjectModelContainer.objectModel))
@@ -64,10 +63,19 @@ public class DiscreteMoodWidget: UIViewController {
 				mood.setSource(.introspective)
 				try transaction.commit()
 				moodButtonsView.isHidden = true
-				Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(resetState), userInfo: nil, repeats: true)
+				Timer.scheduledTimer(
+					timeInterval: 5,
+					target: self,
+					selector: #selector(resetState),
+					userInfo: nil,
+					repeats: true
+				)
 			} catch {
 				let content = UNMutableNotificationContent()
-				content.title = NSString.localizedUserNotificationString(forKey: "Failed to record mood", arguments: nil)
+				content.title = NSString.localizedUserNotificationString(
+					forKey: "Failed to record mood",
+					arguments: nil
+				)
 				var message = ""
 				if let displayableError = error as? DisplayableError {
 					message = displayableError.displayableTitle + "."
@@ -99,8 +107,7 @@ public class DiscreteMoodWidget: UIViewController {
 // MARK: - NCWidgetProviding
 
 extension DiscreteMoodWidget: NCWidgetProviding {
-
-	public func widgetPerformUpdate(completionHandler: (@escaping (NCUpdateResult) -> Void)) {
+	public func widgetPerformUpdate(completionHandler: @escaping (NCUpdateResult) -> Void) {
 		// Perform any setup necessary in order to update the view.
 		// If an error is encountered, use NCUpdateResult.Failed
 		// If there's no update required, use NCUpdateResult.NoData
@@ -114,7 +121,10 @@ extension DiscreteMoodWidget: NCWidgetProviding {
 		}
 	}
 
-	public func widgetActiveDisplayModeDidChange(_ activeDisplayMode: NCWidgetDisplayMode, withMaximumSize maxSize: CGSize) {
+	public func widgetActiveDisplayModeDidChange(
+		_ activeDisplayMode: NCWidgetDisplayMode,
+		withMaximumSize maxSize: CGSize
+	) {
 		if activeDisplayMode == .compact {
 			preferredContentSize = CGSize(width: maxSize.width, height: 110)
 		} else {
@@ -127,17 +137,15 @@ extension DiscreteMoodWidget: NCWidgetProviding {
 // MARK: - UICollectionViewDataSource
 
 extension DiscreteMoodWidget: UICollectionViewDataSource {
-
-	public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return numberOfMoodRatings()
+	public func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
+		numberOfMoodRatings()
 	}
 }
 
 // MARK: - UICollectionViewDelegate
 
 extension DiscreteMoodWidget: UICollectionViewDelegate {
-
-	public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+	public func collectionView(_: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = moodButtonsView.dequeueReusableCell(withReuseIdentifier: "mood rating", for: indexPath)
 		let moodRatingCell = cell as! MoodRatingCollectionViewCell
 		let min = Int(DependencyInjector.get(Settings.self).minMood)

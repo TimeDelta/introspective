@@ -13,16 +13,19 @@ import Common
 import Samples
 
 public class TypedLessThanAttributeRestrictionBase<ValueType: Comparable>: AnyAttributeRestriction, Equatable {
-
 	// MARK: - Display Information
 
-	public final override var attributedName: String { return "Less than" }
-	public final override var description: String {
+	override public final var attributedName: String { "Less than" }
+	override public final var description: String {
 		do {
 			let valueText = try restrictedAttribute.convertToDisplayableString(from: value)
 			return restrictedAttribute.name + " < " + valueText
 		} catch {
-			log.error("Could not convert current value (%@) to displayable string: %@", String(describing: value), errorInfo(error))
+			log.error(
+				"Could not convert current value (%@) to displayable string: %@",
+				String(describing: value),
+				errorInfo(error)
+			)
 			return restrictedAttribute.name + " < ?"
 		}
 	}
@@ -42,19 +45,19 @@ public class TypedLessThanAttributeRestrictionBase<ValueType: Comparable>: AnyAt
 		super.init(restrictedAttribute: restrictedAttribute, attributes: [valueAttribute])
 	}
 
-	public required init(restrictedAttribute: Attribute) {
+	public required init(restrictedAttribute _: Attribute) {
 		// can't do anything to initialize value member variable
 		fatalError("This should never be called because this is an abstract base class")
 	}
 
 	// MARK: - Attribute Functions
 
-	public final override func value(of attribute: Attribute) throws -> Any? {
+	override public final func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(valueAttribute) { return value }
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
-	public final override func set(attribute: Attribute, to value: Any?) throws {
+	override public final func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(valueAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
@@ -66,7 +69,7 @@ public class TypedLessThanAttributeRestrictionBase<ValueType: Comparable>: AnyAt
 
 	// MARK: - Attribute Restriction Functions
 
-	public final override func samplePasses(_ sample: Sample) throws -> Bool {
+	override public final func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
 		if sampleValue == nil { return false }
 		guard let castedValue = sampleValue as? ValueType else {
@@ -75,17 +78,21 @@ public class TypedLessThanAttributeRestrictionBase<ValueType: Comparable>: AnyAt
 		return castedValue < value
 	}
 
-	public override func copy() -> AttributeRestriction {
-		return TypedLessThanAttributeRestrictionBase<ValueType>(
+	override public func copy() -> AttributeRestriction {
+		TypedLessThanAttributeRestrictionBase<ValueType>(
 			restrictedAttribute: restrictedAttribute,
 			value: value,
-			valueAttribute: valueAttribute)
+			valueAttribute: valueAttribute
+		)
 	}
 
 	// MARK: - Equality
 
-	public static func ==(lhs: TypedLessThanAttributeRestrictionBase, rhs: TypedLessThanAttributeRestrictionBase) -> Bool {
-		return lhs.equalTo(rhs)
+	public static func == (
+		lhs: TypedLessThanAttributeRestrictionBase,
+		rhs: TypedLessThanAttributeRestrictionBase
+	) -> Bool {
+		lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
@@ -94,13 +101,13 @@ public class TypedLessThanAttributeRestrictionBase<ValueType: Comparable>: AnyAt
 		return equalTo(other)
 	}
 
-	public final override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	override public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is TypedLessThanAttributeRestrictionBase) { return false }
 		let other = otherRestriction as! TypedLessThanAttributeRestrictionBase
 		return equalTo(other)
 	}
 
 	public final func equalTo(_ other: TypedLessThanAttributeRestrictionBase) -> Bool {
-		return restrictedAttribute.equalTo(other.restrictedAttribute) && value == other.value
+		restrictedAttribute.equalTo(other.restrictedAttribute) && value == other.value
 	}
 }

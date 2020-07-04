@@ -18,21 +18,20 @@ public protocol SampleQuery: Query {
 
 	var mostRecentEntryOnly: Bool { get set }
 
-	func runQuery(callback: @escaping (SampleQueryResult<SampleType>?, Error?) -> ())
+	func runQuery(callback: @escaping (SampleQueryResult<SampleType>?, Error?) -> Void)
 }
 
 public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
-
 	public final var expression: BooleanExpression?
 	public final var mostRecentEntryOnly: Bool
 	public final var subQuery: (matcher: SubQueryMatcher, query: Query)?
 
 	final var stopped = false
 
-	private final var callback: ((SampleQueryResult<SampleType>?, Error?) -> ())!
+	private final var callback: ((SampleQueryResult<SampleType>?, Error?) -> Void)!
 
-	private final var subQueryCallbackParameters: (result: QueryResult?, error: Error?)? = nil
-	private final var queryCallbackParameters: (result: SampleQueryResult<SampleType>?, error: Error?)? = nil
+	private final var subQueryCallbackParameters: (result: QueryResult?, error: Error?)?
+	private final var queryCallbackParameters: (result: SampleQueryResult<SampleType>?, error: Error?)?
 
 	private final let log = Log()
 
@@ -42,7 +41,7 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 	}
 
 	public required init(parts: [BooleanExpressionPart]) throws {
-		if parts.count > 0 {
+		if !parts.isEmpty {
 			expression = try DependencyInjector.get(BooleanExpressionParser.self).parse(parts)
 		} else {
 			expression = nil
@@ -50,7 +49,7 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 		mostRecentEntryOnly = false
 	}
 
-	public final func runQuery(callback: @escaping (SampleQueryResult<SampleType>?, Error?) -> ()) {
+	public final func runQuery(callback: @escaping (SampleQueryResult<SampleType>?, Error?) -> Void) {
 		self.callback = callback
 		subQuery?.query.runQuery(callback: { (result: QueryResult?, error: Error?) in
 			self.subQueryCallbackParameters = (result, error)
@@ -61,7 +60,7 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 		run()
 	}
 
-	public final func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
+	public final func runQuery(callback: @escaping (QueryResult?, Error?) -> Void) {
 		runQuery { (result: SampleQueryResult<SampleType>?, error: Error?) in
 			callback(result, error)
 		}
@@ -125,7 +124,8 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 		let querySamples = queryResult.typedSamples
 		let subQuerySamples = subQueryCallbackParameters!.result!.samples
 
-		let filteredSamples: [SampleType] = try subQuery!.matcher.getSamples(from: querySamples, matching: subQuerySamples)
+		let filteredSamples: [SampleType] = try subQuery!.matcher
+			.getSamples(from: querySamples, matching: subQuerySamples)
 		let filteredResult = SampleQueryResult<SampleType>(filteredSamples)
 
 		return filteredResult

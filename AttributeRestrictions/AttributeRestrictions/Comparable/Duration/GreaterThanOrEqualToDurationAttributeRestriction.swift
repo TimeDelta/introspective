@@ -11,8 +11,9 @@ import Foundation
 import Attributes
 import Common
 
-public final class GreaterThanOrEqualToDurationAttributeRestriction: TypedGreaterThanOrEqualToAttributeRestrictionBase<Duration> {
-
+public final class GreaterThanOrEqualToDurationAttributeRestriction: TypedGreaterThanOrEqualToAttributeRestrictionBase<
+	Duration
+> {
 	private typealias Me = GreaterThanOrEqualToDurationAttributeRestriction
 	public static let valueAttribute = DurationAttribute(name: "Target Duration", pluralName: "Target Durations")
 
@@ -24,9 +25,9 @@ public final class GreaterThanOrEqualToDurationAttributeRestriction: TypedGreate
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
 
-	public override func copy() -> AttributeRestriction {
-		return GreaterThanOrEqualToDurationAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
+	override public func copy() -> AttributeRestriction {
+		GreaterThanOrEqualToDurationAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
 	}
 
-	public override func predicate() -> NSPredicate? { return nil }
+	override public func predicate() -> NSPredicate? { nil }
 }

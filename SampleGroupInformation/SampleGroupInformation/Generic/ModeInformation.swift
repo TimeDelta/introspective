@@ -13,11 +13,10 @@ import Common
 import Samples
 
 public final class ModeInformation: AnyInformation {
-
 	// MARK: - Display Information
 
-	public final override var name: String { return "Mode" }
-	public final override var description: String { return attribute.name.localizedLowercase + " " + name }
+	override public final var name: String { "Mode" }
+	override public final var description: String { attribute.name.localizedLowercase + " " + name }
 
 	// MARK: - Instance Variables
 
@@ -32,25 +31,25 @@ public final class ModeInformation: AnyInformation {
 
 	// MARK: Information Functions
 
-	public final override func compute(forSamples samples: [Sample]) throws -> String {
-		return try compute(samples, graphable: false)
+	override public final func compute(forSamples samples: [Sample]) throws -> String {
+		try compute(samples, graphable: false)
 	}
 
-	public final override func computeGraphable(forSamples samples: [Sample]) throws -> String {
-		return try compute(samples, graphable: true)
+	override public final func computeGraphable(forSamples samples: [Sample]) throws -> String {
+		try compute(samples, graphable: true)
 	}
 
 	// MARK: - Equality
 
-	public final override func equalTo(_ other: SampleGroupInformation) -> Bool {
-		return other is ModeInformation && attribute.equalTo(other.attribute)
+	override public final func equalTo(_ other: SampleGroupInformation) -> Bool {
+		other is ModeInformation && attribute.equalTo(other.attribute)
 	}
 
 	// MARK: - Helper Functions
 
 	private final func compute(_ samples: [Sample], graphable: Bool) throws -> String {
-		let filteredSamples = try filterSamples(samples, as: Optional<Any>.self)
-		if filteredSamples.count == 0 {
+		let filteredSamples = try filterSamples(samples, as: Any?.self)
+		if filteredSamples.isEmpty {
 			if graphable {
 				throw GenericDisplayableError(title: noSamplesMessage)
 			}
@@ -61,7 +60,7 @@ public final class ModeInformation: AnyInformation {
 
 		var modeValue: String = ""
 		var modeCount: Int = 0
-		while valueCounts.count > 0 {
+		while !valueCounts.isEmpty {
 			if let (value, count) = valueCounts.popFirst() {
 				if count > modeCount {
 					modeValue = value

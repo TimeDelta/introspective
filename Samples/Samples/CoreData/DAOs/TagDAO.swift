@@ -6,22 +6,20 @@
 //  Copyright © 2020 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 import Common
 import DependencyInjection
 import Persistence
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol TagDAO {
-
 	func getTag(named name: String) throws -> Tag?
 	func getOrCreateTag(named name: String) throws -> Tag
 }
 
 public final class TagDAOImpl: TagDAO {
-
 	private typealias Me = TagDAOImpl
 
 	private static let log = Log()
@@ -30,7 +28,7 @@ public final class TagDAOImpl: TagDAO {
 		let fetchRequest: NSFetchRequest<Tag> = Tag.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
 		let matchingTags = try DependencyInjector.get(Database.self).query(fetchRequest)
-		if matchingTags.count == 0 {
+		if matchingTags.isEmpty {
 			return nil
 		}
 		if matchingTags.count == 1 {

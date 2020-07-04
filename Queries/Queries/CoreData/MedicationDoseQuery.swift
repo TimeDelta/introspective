@@ -10,9 +10,7 @@ import Foundation
 
 import Samples
 
-//sourcery: AutoMockable
-public protocol MedicationDoseQuery: Query {
-}
+// sourcery: AutoMockable
+public protocol MedicationDoseQuery: Query {}
 
-public final class MedicationDoseQueryImpl: CoreDataQuery<MedicationDose>, MedicationDoseQuery {
-}
+public final class MedicationDoseQueryImpl: CoreDataQuery<MedicationDose>, MedicationDoseQuery {}

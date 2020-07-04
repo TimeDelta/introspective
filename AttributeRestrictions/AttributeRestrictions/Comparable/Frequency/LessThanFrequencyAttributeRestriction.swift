@@ -12,7 +12,6 @@ import Attributes
 import Common
 
 public final class LessThanFrequencyAttributeRestriction: TypedLessThanAttributeRestrictionBase<Frequency> {
-
 	private typealias Me = LessThanFrequencyAttributeRestriction
 	public static let valueAttribute = FrequencyAttribute(name: "Target Frequency", pluralName: "Target Frequencies")
 
@@ -24,9 +23,9 @@ public final class LessThanFrequencyAttributeRestriction: TypedLessThanAttribute
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
 
-	public override func copy() -> AttributeRestriction {
-		return LessThanFrequencyAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
+	override public func copy() -> AttributeRestriction {
+		LessThanFrequencyAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
 	}
 
-	public override func predicate() -> NSPredicate? { return nil }
+	override public func predicate() -> NSPredicate? { nil }
 }

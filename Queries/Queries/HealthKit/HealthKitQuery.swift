@@ -14,17 +14,16 @@ import DependencyInjection
 import Samples
 
 public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<SampleType> {
-
-	private final var stopFunction: (() -> ())?
+	private final var stopFunction: (() -> Void)?
 	private final var finishedQuery: Bool = false
 	private final let log = Log()
 
-	func initFromHKSample(_ hkSample: HKSample) -> SampleType {
+	func initFromHKSample(_: HKSample) -> SampleType {
 		fatalError("Must override")
 	}
 
-	final override func run() {
-		DependencyInjector.get(HealthKitUtil.self).getAuthorization() {
+	override final func run() {
+		DependencyInjector.get(HealthKitUtil.self).getAuthorization {
 			(error: Error?) in
 
 			if error != nil {
@@ -38,11 +37,12 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 			self.stopFunction = DependencyInjector.get(HealthKitUtil.self).getSamples(
 				for: SampleType.self,
 				predicate: nil,
-				callback: self.processQueryResults)
+				callback: self.processQueryResults
+			)
 		}
 	}
 
-	public final override func stop() {
+	override public final func stop() {
 		super.stop()
 		DispatchQueue.global(qos: .background).async {
 			while self.stopFunction == nil {}
@@ -59,32 +59,32 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 		return try expression.evaluate([.sample: sample])
 	}
 
-	private final func processQueryResults(originalSamples: Array<HKSample>?, error: Error?) {
+	private final func processQueryResults(originalSamples: [HKSample]?, error: Error?) {
 		if error != nil {
-			self.queryDone(nil, error)
+			queryDone(nil, error)
 			return
 		}
-		if originalSamples == nil || originalSamples!.count == 0 {
-			self.queryDone(nil, NoHealthKitSamplesFoundQueryError(sampleType: SampleType.self))
+		if originalSamples == nil || originalSamples!.isEmpty {
+			queryDone(nil, NoHealthKitSamplesFoundQueryError(sampleType: SampleType.self))
 			return
 		}
 
-		let mappedSamples = originalSamples!.map({ self.initFromHKSample($0)})
+		let mappedSamples = originalSamples!.map { self.initFromHKSample($0) }
 		do {
-			let filteredSamples = try mappedSamples.filter(self.samplePassesFilters)
+			let filteredSamples = try mappedSamples.filter(samplePassesFilters)
 
-			if !self.stopped {
-				if filteredSamples.count == 0 {
-					self.queryDone(nil, NoHealthKitSamplesFoundQueryError(sampleType: SampleType.self))
+			if !stopped {
+				if filteredSamples.isEmpty {
+					queryDone(nil, NoHealthKitSamplesFoundQueryError(sampleType: SampleType.self))
 					return
 				}
 
 				let result = SampleQueryResult<SampleType>(filteredSamples)
-				self.finishedQuery = true
-				self.queryDone(result, nil)
+				finishedQuery = true
+				queryDone(result, nil)
 			}
 		} catch {
-			self.queryDone(nil, error)
+			queryDone(nil, error)
 		}
 	}
 }

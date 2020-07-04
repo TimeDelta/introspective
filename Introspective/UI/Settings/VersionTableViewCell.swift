@@ -11,7 +11,6 @@ import UIKit
 import Common
 
 class VersionTableViewCell: UITableViewCell {
-
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		textLabel?.text = "Version: " + versionString() + " (tap to copy)"

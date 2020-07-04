@@ -9,22 +9,19 @@
 import Foundation
 import Instructions
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol CoachMarkFactory {
-
 	func controller() -> CoachMarksControllerProtocol
 }
 
 public final class CoachMarkFactoryImpl: CoachMarkFactory {
-
 	public final func controller() -> CoachMarksControllerProtocol {
-		return CoachMarksController()
+		CoachMarksController()
 	}
 }
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol CoachMarksControllerProtocol {
-
 	/// Implement the data source protocol and supply
 	/// the coach marks to display.
 	var dataSource: CoachMarksControllerDataSource? { get set }

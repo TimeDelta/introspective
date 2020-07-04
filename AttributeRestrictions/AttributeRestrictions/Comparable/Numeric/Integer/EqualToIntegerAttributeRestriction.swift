@@ -10,8 +10,8 @@ import Foundation
 
 import Attributes
 
-public final class EqualToIntegerAttributeRestriction: TypedEqualToAttributeRestrictionBase<Int>, IntegerAttributeRestriction {
-
+public final class EqualToIntegerAttributeRestriction: TypedEqualToAttributeRestrictionBase<Int>,
+	IntegerAttributeRestriction {
 	private typealias Me = EqualToIntegerAttributeRestriction
 	public static let valueAttribute = IntegerAttribute(name: "Value", pluralName: "Values")
 
@@ -23,11 +23,11 @@ public final class EqualToIntegerAttributeRestriction: TypedEqualToAttributeRest
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
 
-	public override func copy() -> AttributeRestriction {
-		return EqualToIntegerAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! Int)
+	override public func copy() -> AttributeRestriction {
+		EqualToIntegerAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! Int)
 	}
 
-	public override func predicate() -> NSPredicate? {
+	override public func predicate() -> NSPredicate? {
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		return NSPredicate(format: "%K == %d", variableName, value as! Int)
 	}

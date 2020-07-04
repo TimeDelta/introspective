@@ -16,7 +16,6 @@ import Notifications
 import Samples
 
 public final class ExportDataTableViewController: UITableViewController {
-
 	// MARK: - Static Variables
 
 	private typealias Me = ExportDataTableViewController
@@ -39,7 +38,8 @@ public final class ExportDataTableViewController: UITableViewController {
 	private static var backgroundExportOrder = [UIBackgroundTaskIdentifier]()
 	private static let backgroundExportsAccessQueue = DispatchQueue(
 		label: "backgroundExports access",
-		attributes: .concurrent)
+		attributes: .concurrent
+	)
 	private static var _backgroundExports = [UIBackgroundTaskIdentifier: Exporter]()
 	public static func backgroundExports<Type>(_ code: ([UIBackgroundTaskIdentifier: Exporter]) -> Type) -> Type {
 		var result: Type?
@@ -49,6 +49,7 @@ public final class ExportDataTableViewController: UITableViewController {
 		}
 		return result!
 	}
+
 	/// This is necessary because can't reference the local variable with
 	/// the returned id from its expiration handler otherwise compiler will
 	/// complain about referencing a variable in its definition.
@@ -64,7 +65,7 @@ public final class ExportDataTableViewController: UITableViewController {
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		observe(selector: #selector(extendTime), name: .extendBackgroundTaskTime)
 		observe(selector: #selector(cancelBackgroundExport), name: .cancelBackgroundTask)
 		observe(selector: #selector(shareExportFile), name: .shareExportFile)
@@ -72,36 +73,42 @@ public final class ExportDataTableViewController: UITableViewController {
 
 	// MARK: - Table View Data Source
 
-	public final override func numberOfSections(in tableView: UITableView) -> Int {
+	override public final func numberOfSections(in _: UITableView) -> Int {
 		if Me.backgroundExports({ $0.count }) > 0 {
 			return 2
 		}
 		return 1
 	}
 
-	public final override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+	override public final func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section == Me.dataTypeSection {
 			return "Data Types"
 		}
 		return "Active Exports"
 	}
 
-	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override public final func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if section == Me.activeExportsSection {
-			return Me.backgroundExports({ $0.count })
+			return Me.backgroundExports { $0.count }
 		}
 		return Me.sampleTypes.count
 	}
 
-	public final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override public final func tableView(
+		_ tableView: UITableView,
+		cellForRowAt indexPath: IndexPath
+	) -> UITableViewCell {
 		if indexPath.section == Me.dataTypeSection {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "dataType", for: indexPath)
 			cell.textLabel?.text = Me.sampleTypes[indexPath.row].name.localizedCapitalized
 			return cell
 		}
-		let cell = tableView.dequeueReusableCell(withIdentifier: "activeExport", for: indexPath) as! ActiveExportTableViewCell
+		let cell = tableView.dequeueReusableCell(
+			withIdentifier: "activeExport",
+			for: indexPath
+		) as! ActiveExportTableViewCell
 		cell.backgroundTaskId = Me.backgroundExportOrder[indexPath.row]
-		cell.exporter = Me.backgroundExports({ $0[cell.backgroundTaskId] })
+		cell.exporter = Me.backgroundExports { $0[cell.backgroundTaskId] }
 		// need to do this or will double subscribe and receive event twice, causing app to crash
 		DependencyInjector.get(UiUtil.self).stopObserving(self, name: .presentView, object: cell.exporter)
 		observe(selector: #selector(presentViewFrom), name: .presentView, object: cell.exporter)
@@ -110,14 +117,14 @@ public final class ExportDataTableViewController: UITableViewController {
 
 	// MARK: - Table View Delegate
 
-	public final override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+	override public final func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		if indexPath.section == Me.dataTypeSection {
 			return 44
 		}
 		return 75
 	}
 
-	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	override public final func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		guard indexPath.section == Me.dataTypeSection else { // selecting an active export does nothing
 			tableView.deselectRow(at: indexPath, animated: false)
 			return
@@ -128,7 +135,11 @@ public final class ExportDataTableViewController: UITableViewController {
 			runExportInBackground(exporter)
 
 			let taskDescription = "Exporting " + exporter.dataTypePluralName
-			let alert = UIAlertController(title: taskDescription, message: "This may take a while. You can do something else and, if enabled, you will receive a notification when done.", preferredStyle: .alert)
+			let alert = UIAlertController(
+				title: taskDescription,
+				message: "This may take a while. You can do something else and, if enabled, you will receive a notification when done.",
+				preferredStyle: .alert
+			)
 			alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
 			presentView(alert)
 		} catch {
@@ -206,7 +217,10 @@ public final class ExportDataTableViewController: UITableViewController {
 				self?.log.info("Background task to export %@ expired", dataType)
 				exporter.pause()
 				guard let taskId = Me.taskIds[uuid] else {
-					self?.log.error("Missing background task id. App might be killed by iOS due to inability to end background task.")
+					self?.log
+						.error(
+							"Missing background task id. App might be killed by iOS due to inability to end background task."
+						)
 					return
 				}
 				self?.sendExtendTimeNotification(for: taskId)
@@ -249,7 +263,7 @@ public final class ExportDataTableViewController: UITableViewController {
 			Me._backgroundExports[backgroundTask] = nil
 		}
 		Me.backgroundExportOrder.removeAll(where: { $0 == backgroundTask })
-		self.endBackgroundTask(id: backgroundTask)
+		endBackgroundTask(id: backgroundTask)
 		DispatchQueue.main.async { self.tableView.reloadData() }
 	}
 
@@ -280,20 +294,21 @@ public final class ExportDataTableViewController: UITableViewController {
 		content.title = NSString.localizedUserNotificationString(forKey: "Finished exporting", arguments: nil)
 		content.body = NSString.localizedUserNotificationString(
 			forKey: "Finished exporting %@",
-			arguments: [ exporter.dataTypePluralName.localizedLowercase ])
+			arguments: [exporter.dataTypePluralName.localizedLowercase]
+		)
 		content.sound = UNNotificationSound.default
-		switch(exporter) {
-			case is ActivityExporter:
-				content.categoryIdentifier = UserNotificationDelegate.finishedExportingActivities.identifier
-				break
-			case is MedicationExporter:
-				content.categoryIdentifier = UserNotificationDelegate.finishedExportingMedications.identifier
-				break
-			case is MoodExporter:
-				content.categoryIdentifier = UserNotificationDelegate.finishedExportingMoods.identifier
-				break
-			default:
-				log.error("Forgot a type of exporter for notifications: %@", String(describing: exporter))
+		switch exporter {
+		case is ActivityExporter:
+			content.categoryIdentifier = UserNotificationDelegate.finishedExportingActivities.identifier
+			break
+		case is MedicationExporter:
+			content.categoryIdentifier = UserNotificationDelegate.finishedExportingMedications.identifier
+			break
+		case is MoodExporter:
+			content.categoryIdentifier = UserNotificationDelegate.finishedExportingMoods.identifier
+			break
+		default:
+			log.error("Forgot a type of exporter for notifications: %@", String(describing: exporter))
 		}
 		sendUserNotification(withContent: content, id: "FinishedExport")
 	}
@@ -307,8 +322,12 @@ public final class ExportDataTableViewController: UITableViewController {
 		let content = UNMutableNotificationContent()
 		content.title = NSString.localizedUserNotificationString(
 			forKey: "Long running %@ export",
-			arguments: [exporter.dataTypePluralName])
-		content.body = NSString.localizedUserNotificationString(forKey: "Would you like to continue the export?", arguments: nil)
+			arguments: [exporter.dataTypePluralName]
+		)
+		content.body = NSString.localizedUserNotificationString(
+			forKey: "Would you like to continue the export?",
+			arguments: nil
+		)
 		content.sound = UNNotificationSound.default
 		content.categoryIdentifier = UserNotificationDelegate.timeExpired.identifier
 		// can't use normal UserInfoKey : Any. Must be String : String
@@ -324,7 +343,8 @@ public final class ExportDataTableViewController: UITableViewController {
 		let content = UNMutableNotificationContent()
 		content.title = NSString.localizedUserNotificationString(
 			forKey: "Failed to export %@",
-			arguments: [ dataType ])
+			arguments: [dataType]
+		)
 		var message = ""
 		if let displayableError = error as? DisplayableError {
 			message = displayableError.displayableTitle + "."

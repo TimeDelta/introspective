@@ -15,12 +15,11 @@ import SampleGroupInformation
 import Samples
 
 final class SelectAttributeOrInformationViewController: UIViewController {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var typeSelectSegmentedControl: UISegmentedControl!
-	@IBOutlet weak final var attributePicker: UIPickerView!
-	@IBOutlet weak final var informationPicker: UIPickerView!
+	@IBOutlet final var typeSelectSegmentedControl: UISegmentedControl!
+	@IBOutlet final var attributePicker: UIPickerView!
+	@IBOutlet final var informationPicker: UIPickerView!
 
 	// MARK: - Instance Variables
 
@@ -65,7 +64,7 @@ final class SelectAttributeOrInformationViewController: UIViewController {
 
 	// MARK: - Actions
 
-	@IBAction func selectedTypeChanged(_ sender: Any) {
+	@IBAction func selectedTypeChanged(_: Any) {
 		let index = typeSelectSegmentedControl.selectedSegmentIndex
 		if index == 0 {
 			set(informationPicker, enabled: false)
@@ -76,9 +75,9 @@ final class SelectAttributeOrInformationViewController: UIViewController {
 		}
 	}
 
-	@IBAction func acceptButtonPressed(_ sender: Any) {
+	@IBAction func acceptButtonPressed(_: Any) {
 		let index = typeSelectSegmentedControl.selectedSegmentIndex
-		var userInfo: [AnyHashable: Any]? = nil
+		var userInfo: [AnyHashable: Any]?
 		if index == 0 {
 			userInfo = info([.attribute: attribute])
 		} else if index == 1 {
@@ -97,19 +96,19 @@ final class SelectAttributeOrInformationViewController: UIViewController {
 	}
 
 	private final func getApplicableInformationTypesForSelectedAttribute() -> [SampleGroupInformation.Type] {
-		return DependencyInjector.get(SampleGroupInformationFactory.self).getApplicableInformationTypes(forAttribute: attribute)
+		DependencyInjector.get(SampleGroupInformationFactory.self)
+			.getApplicableInformationTypes(forAttribute: attribute)
 	}
 }
 
 // MARK: - UIPickerViewDataSource
 
 extension SelectAttributeOrInformationViewController: UIPickerViewDataSource {
-
-	public func numberOfComponents(in pickerView: UIPickerView) -> Int {
-		return 1
+	public func numberOfComponents(in _: UIPickerView) -> Int {
+		1
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+	public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent _: Int) -> Int {
 		if pickerView == attributePicker {
 			return sampleType.attributes.count
 		}
@@ -124,8 +123,7 @@ extension SelectAttributeOrInformationViewController: UIPickerViewDataSource {
 // MARK: - UIPickerViewDelegate
 
 extension SelectAttributeOrInformationViewController: UIPickerViewDelegate {
-
-	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent _: Int) -> String? {
 		if pickerView == attributePicker {
 			return sampleType.attributes[row].name.localizedCapitalized
 		}
@@ -136,7 +134,7 @@ extension SelectAttributeOrInformationViewController: UIPickerViewDelegate {
 		return nil
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+	public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent _: Int) {
 		if pickerView == attributePicker {
 			attribute = sampleType.attributes[row]
 			informationPicker.reloadAllComponents()

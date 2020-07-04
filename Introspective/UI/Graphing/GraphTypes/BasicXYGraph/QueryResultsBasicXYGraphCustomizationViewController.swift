@@ -6,10 +6,10 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
-import Presentr
 import AAInfographics
 import os
+import Presentr
+import UIKit
 
 import Attributes
 import Common
@@ -18,8 +18,8 @@ import SampleGroupers
 import SampleGroupInformation
 import Samples
 
-final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTypeSetupViewController, QueryResultsGraphCustomizationViewController {
-
+final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTypeSetupViewController,
+	QueryResultsGraphCustomizationViewController {
 	// MARK: - Static Variables
 
 	private typealias Me = QueryResultsBasicXYGraphCustomizationViewController
@@ -27,17 +27,18 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	private static let presenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
-		center: .center)
+		center: .center
+	)
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var clearSeriesGrouperButton: UIButton!
-	@IBOutlet weak final var chooseSeriesGrouperButton: UIButton!
-	@IBOutlet weak final var clearPointGrouperButton: UIButton!
-	@IBOutlet weak final var choosePointGrouperButton: UIButton!
-	@IBOutlet weak final var xAxisButton: UIButton!
-	@IBOutlet weak final var yAxisButton: UIButton!
-	@IBOutlet weak final var showGraphButton: UIButton!
+	@IBOutlet final var clearSeriesGrouperButton: UIButton!
+	@IBOutlet final var chooseSeriesGrouperButton: UIButton!
+	@IBOutlet final var clearPointGrouperButton: UIButton!
+	@IBOutlet final var choosePointGrouperButton: UIButton!
+	@IBOutlet final var xAxisButton: UIButton!
+	@IBOutlet final var yAxisButton: UIButton!
+	@IBOutlet final var showGraphButton: UIButton!
 
 	// MARK: - Instance Variables
 
@@ -55,19 +56,25 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	private final var seriesGrouper: SampleGrouper? {
 		didSet { seriesGrouperSet() }
 	}
+
 	/// need to reset y-axis if going between nil and some or vice-versa for pointGrouper
 	private final var pointGrouperWasNil = true
 	private final var pointGrouper: SampleGrouper? {
 		didSet { pointGrouperSet() }
 	}
+
 	private final var chartController: BasicXYChartViewController!
 
 	private final let log = Log()
-	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "QueryResultsBasicXYGraphCustomizationViewController"))
+	private final let signpost =
+		Signpost(log: OSLog(
+			subsystem: Bundle.main.bundleIdentifier!,
+			category: "QueryResultsBasicXYGraphCustomizationViewController"
+		))
 
 	// MARK: - UIViewController Overrides
 
-	final override func viewDidLoad() {
+	override final func viewDidLoad() {
 		super.viewDidLoad()
 
 		NotificationCenter.default.removeObserver(self)
@@ -86,41 +93,47 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 
 	// MARK: - Button Actions
 
-	@IBAction final func seriesGroupingInfoButtonPressed(_ sender: Any) {
+	@IBAction final func seriesGroupingInfoButtonPressed(_: Any) {
 		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")
-		controller.descriptionText = "This allows you to optionally group things into different data series. Each data series is drawn in its own color on the generated graph."
+		controller
+			.descriptionText =
+			"This allows you to optionally group things into different data series. Each data series is drawn in its own color on the generated graph."
 		present(controller, using: Me.presenter)
 	}
 
-	@IBAction final func chooseSeriesGroupingButtonPressed(_ sender: Any) {
+	@IBAction final func chooseSeriesGroupingButtonPressed(_: Any) {
 		showGrouperEditController(
 			grouper: seriesGrouper,
 			notificationToSendOnAccept: .seriesGrouperEdited,
-			grouperName: "Series Grouping")
+			grouperName: "Series Grouping"
+		)
 	}
 
-	@IBAction final func clearSeriesGroupingButtonPressed(_ sender: Any) {
+	@IBAction final func clearSeriesGroupingButtonPressed(_: Any) {
 		seriesGrouper = nil
 	}
 
-	@IBAction final func pointGroupingInfoButtonPressed(_ sender: Any) {
+	@IBAction final func pointGroupingInfoButtonPressed(_: Any) {
 		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")
-		controller.descriptionText = "This allows grouping multiple samples into a single point based on group value (i.e. same day of week or same group name for advanced grouping)."
+		controller
+			.descriptionText =
+			"This allows grouping multiple samples into a single point based on group value (i.e. same day of week or same group name for advanced grouping)."
 		present(controller, using: Me.presenter)
 	}
 
-	@IBAction final func choosePointGroupingButtonPressed(_ sender: Any) {
+	@IBAction final func choosePointGroupingButtonPressed(_: Any) {
 		showGrouperEditController(
 			grouper: pointGrouper,
 			notificationToSendOnAccept: .pointGrouperEdited,
-			grouperName: "Point Grouping")
+			grouperName: "Point Grouping"
+		)
 	}
 
-	@IBAction final func clearPointGroupingButtonPressed(_ sender: Any) {
+	@IBAction final func clearPointGroupingButtonPressed(_: Any) {
 		pointGrouper = nil
 	}
 
-	@IBAction func editXAxis(_ sender: Any) {
+	@IBAction func editXAxis(_: Any) {
 		let controller = viewController(named: "xAxisSetup") as! XAxisSetupViewController
 		controller.attributes = samples[0].attributes
 		controller.selectedAttribute = xAxis?.attribute
@@ -131,11 +144,11 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 		realNavigationController?.pushViewController(controller, animated: false)
 	}
 
-	@IBAction func editYAxis(_ sender: Any) {
+	@IBAction func editYAxis(_: Any) {
 		if pointGrouper == nil {
 			let controller = viewController(named: "chooseAttributes") as! ChooseAttributesToGraphTableViewController
-			controller.allowedAttributes = samples[0].attributes.filter{ $0 is GraphableAttribute }
-			controller.selectedAttributes = yAxis?.map{ $0.attribute! }
+			controller.allowedAttributes = samples[0].attributes.filter { $0 is GraphableAttribute }
+			controller.selectedAttributes = yAxis?.map { $0.attribute! }
 			controller.notificationToSendWhenFinished = .yAxisInformationChanged
 			realNavigationController?.pushViewController(controller, animated: false)
 		} else {
@@ -143,14 +156,14 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 			controller.attributes = type(of: samples[0]).attributes
 			controller.limitToNumericInformation = true
 			if let yAxis = yAxis {
-				controller.chosenInformation = yAxis.map{ $0.information! }
+				controller.chosenInformation = yAxis.map { $0.information! }
 			}
 			controller.notificationToSendWhenFinished = .yAxisInformationChanged
 			realNavigationController?.pushViewController(controller, animated: false)
 		}
 	}
 
-	@IBAction final func showGraph(_ sender: Any) {
+	@IBAction final func showGraph(_: Any) {
 		chartController = (viewController(named: "BasicXYChartViewController") as! BasicXYChartViewController)
 		chartController.chartType = chartType
 		DispatchQueue.global(qos: .userInitiated).async {
@@ -196,7 +209,11 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 		if let attribute: Attribute? = value(for: .attribute, from: notification, keyIsOptional: true) {
 			usePointGroupValueForXAxis = false
 			xAxis = SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation(attribute: attribute)
-		} else if let information: SampleGroupInformation = value(for: .information, from: notification, keyIsOptional: true) {
+		} else if let information: SampleGroupInformation = value(
+			for: .information,
+			from: notification,
+			keyIsOptional: true
+		) {
 			usePointGroupValueForXAxis = false
 			xAxis = SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation(information: information)
 		} else if let usePointGroupValue: Bool = value(for: .usePointGroupValue, from: notification) {
@@ -209,9 +226,13 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 
 	@objc private final func yAxisChanged(notification: Notification) {
 		if let attributes: [Attribute] = value(for: .attributes, from: notification, keyIsOptional: true) {
-			yAxis = attributes.map{ SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation(attribute: $0) }
-		} else if let information: [SampleGroupInformation] = value(for: .information, from: notification, keyIsOptional: true) {
-			yAxis = information.map{ SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation(information: $0) }
+			yAxis = attributes.map { SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation(attribute: $0) }
+		} else if let information: [SampleGroupInformation] = value(
+			for: .information,
+			from: notification,
+			keyIsOptional: true
+		) {
+			yAxis = information.map { SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation(information: $0) }
 		} else {
 			yAxis = nil
 		}
@@ -223,7 +244,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 		showGraphButton.isEnabled =
 			(
 				(xAxis != nil && (xAxis.attribute != nil || xAxis.information != nil)) ||
-				usePointGroupValueForXAxis
+					usePointGroupValueForXAxis
 			) &&
 			yAxis != nil &&
 			!yAxis.isEmpty
@@ -240,7 +261,8 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 			pointGrouper: pointGrouper,
 			xAxis: xAxis,
 			yAxis: yAxis,
-			usePointGroupValueForXAxis: usePointGroupValueForXAxis)
+			usePointGroupValueForXAxis: usePointGroupValueForXAxis
+		)
 
 		// leave this outside of DispatchQueue.main.async because it can take a while
 		let allData = try dataGenerator.generateData(samples: samples)
@@ -253,9 +275,12 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	private final func showGrouperEditController(
 		grouper: SampleGrouper?,
 		notificationToSendOnAccept: NotificationName,
-		grouperName: String)
-	{
-		let controller = viewController(named: "chooseGrouper", fromStoryboard: "Util") as! GroupingChooserTableViewController
+		grouperName: String
+	) {
+		let controller = viewController(
+			named: "chooseGrouper",
+			fromStoryboard: "Util"
+		) as! GroupingChooserTableViewController
 		controller.sampleType = type(of: samples[0])
 		controller.currentGrouper = grouper?.copy()
 		controller.notificationToSendOnAccept = notificationToSendOnAccept

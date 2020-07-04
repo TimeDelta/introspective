@@ -6,8 +6,8 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
 import os
+import UIKit
 
 import AttributeRestrictions
 import Attributes
@@ -15,13 +15,12 @@ import DependencyInjection
 import Samples
 
 public protocol EditAttributeRestrictionViewController: UIViewController {
-
 	var sampleType: Sample.Type! { get set }
 	var attributeRestriction: AttributeRestriction? { get set }
 }
 
-public final class EditAttributeRestrictionViewControllerImpl: UIViewController, EditAttributeRestrictionViewController {
-
+public final class EditAttributeRestrictionViewControllerImpl: UIViewController,
+	EditAttributeRestrictionViewController {
 	// MARK: - Static Variables
 
 	private typealias Me = EditAttributeRestrictionViewControllerImpl
@@ -30,8 +29,8 @@ public final class EditAttributeRestrictionViewControllerImpl: UIViewController,
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var attributedChooserSubView: UIView!
-	@IBOutlet weak final var attributePicker: UIPickerView!
+	@IBOutlet final var attributedChooserSubView: UIView!
+	@IBOutlet final var attributePicker: UIPickerView!
 
 	// MARK: - Instance Variables
 
@@ -41,7 +40,7 @@ public final class EditAttributeRestrictionViewControllerImpl: UIViewController,
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		attributePicker.delegate = self
 		attributePicker.dataSource = self
 
@@ -68,13 +67,16 @@ public final class EditAttributeRestrictionViewControllerImpl: UIViewController,
 	}
 
 	@objc private final func valueChanged(notification: Notification) {
-		self.attributeRestriction = value(for: .attributed, from: notification)
+		attributeRestriction = value(for: .attributed, from: notification)
 	}
 
 	// MARK: - Helper Functions
 
 	private final func createAndInstallAttributedChooserViewController() {
-		attributedChooserViewController = viewController(named: "attributedChooserViewController", fromStoryboard: "AttributeList")
+		attributedChooserViewController = viewController(
+			named: "attributedChooserViewController",
+			fromStoryboard: "AttributeList"
+		)
 		updateAttributedChooserViewValues()
 		attributedChooserViewController.notificationToSendWhenAccepted = Me.doneEditing
 		attributedChooserViewController.notificationToSendOnValueChange = Me.valueChanged
@@ -86,7 +88,8 @@ public final class EditAttributeRestrictionViewControllerImpl: UIViewController,
 		attributedChooserViewController.didMove(toParent: self)
 		NSLayoutConstraint.activate([
 			attributedChooserViewController.view.topAnchor.constraint(equalTo: attributedChooserSubView.topAnchor),
-			attributedChooserViewController.view.bottomAnchor.constraint(equalTo: attributedChooserSubView.bottomAnchor),
+			attributedChooserViewController.view.bottomAnchor
+				.constraint(equalTo: attributedChooserSubView.bottomAnchor),
 			attributedChooserViewController.view.leftAnchor.constraint(equalTo: attributedChooserSubView.leftAnchor),
 			attributedChooserViewController.view.rightAnchor.constraint(equalTo: attributedChooserSubView.rightAnchor),
 		])
@@ -95,9 +98,10 @@ public final class EditAttributeRestrictionViewControllerImpl: UIViewController,
 	private final func updateAttributedChooserViewValues() {
 		let selectedAttribute = currentlySelectedAttribute()
 		var applicableAttributeRestrictionTypes: [AttributeRestriction.Type] = []
-		applicableAttributeRestrictionTypes = DependencyInjector.get(AttributeRestrictionFactory.self).typesFor(selectedAttribute)
+		applicableAttributeRestrictionTypes = DependencyInjector.get(AttributeRestrictionFactory.self)
+			.typesFor(selectedAttribute)
 		let possibleValues = applicableAttributeRestrictionTypes.map { type in
-			return type.init(restrictedAttribute: selectedAttribute)
+			type.init(restrictedAttribute: selectedAttribute)
 		}
 		if attributeRestrictionMatchesAttribute() {
 			attributeRestriction?.restrictedAttribute = selectedAttribute
@@ -106,18 +110,19 @@ public final class EditAttributeRestrictionViewControllerImpl: UIViewController,
 			attributedChooserViewController.currentValue = possibleValues[0]
 		}
 		attributedChooserViewController.possibleValues = possibleValues
-		if attributedChooserSubView.subviews.count > 0 {
+		if !attributedChooserSubView.subviews.isEmpty {
 			attributedChooserViewController.reloadInputViews()
 		}
 	}
 
 	private final func currentlySelectedAttribute() -> Attribute {
-		return sampleType.attributes[attributePicker.selectedRow(inComponent: 0)]
+		sampleType.attributes[attributePicker.selectedRow(inComponent: 0)]
 	}
 
 	private final func attributeRestrictionMatchesAttribute() -> Bool {
-		return attributeRestriction != nil &&
-			DependencyInjector.get(AttributeRestrictionFactory.self).typesFor(currentlySelectedAttribute()).contains(where: {
+		attributeRestriction != nil &&
+			DependencyInjector.get(AttributeRestrictionFactory.self).typesFor(currentlySelectedAttribute())
+			.contains(where: {
 				$0 == type(of: attributeRestriction!)
 			})
 	}
@@ -136,7 +141,8 @@ public final class EditAttributeRestrictionViewControllerImpl: UIViewController,
 	private final func setPickerHeightConstraint() {
 		let heightConstraint = attributePicker.heightAnchor.constraint(
 			equalTo: view.heightAnchor,
-			multiplier: CGFloat(0.27))
+			multiplier: CGFloat(0.27)
+		)
 		heightConstraint.priority = .required
 		heightConstraint.isActive = true
 	}
@@ -145,25 +151,23 @@ public final class EditAttributeRestrictionViewControllerImpl: UIViewController,
 // MARK: - UIPickerViewDataSource
 
 extension EditAttributeRestrictionViewControllerImpl: UIPickerViewDataSource {
-
-	public func numberOfComponents(in pickerView: UIPickerView) -> Int {
-		return 1
+	public func numberOfComponents(in _: UIPickerView) -> Int {
+		1
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return sampleType.attributes.count
+	public func pickerView(_: UIPickerView, numberOfRowsInComponent _: Int) -> Int {
+		sampleType.attributes.count
 	}
 }
 
 // MARK: - UIPickerViewDelegate
 
 extension EditAttributeRestrictionViewControllerImpl: UIPickerViewDelegate {
-
-	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return sampleType.attributes[row].name
+	public func pickerView(_: UIPickerView, titleForRow row: Int, forComponent _: Int) -> String? {
+		sampleType.attributes[row].name
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+	public func pickerView(_: UIPickerView, didSelectRow _: Int, inComponent _: Int) {
 		updateAttributedChooserViewValues()
 	}
 }

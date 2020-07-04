@@ -7,14 +7,12 @@
 //
 //
 
-import Foundation
 import CoreData
-
+import Foundation
 
 public extension ActivityDefinition {
-
 	@nonobjc class func fetchRequest() -> NSFetchRequest<ActivityDefinition> {
-		return NSFetchRequest<ActivityDefinition>(entityName: "ActivityDefinition")
+		NSFetchRequest<ActivityDefinition>(entityName: "ActivityDefinition")
 	}
 
 	@NSManaged var name: String
@@ -27,8 +25,8 @@ public extension ActivityDefinition {
 }
 
 // MARK: Generated accessors for tags
-public extension ActivityDefinition {
 
+public extension ActivityDefinition {
 	@objc(addTagsObject:)
 	@NSManaged func addToTags(_ value: Tag)
 
@@ -43,8 +41,8 @@ public extension ActivityDefinition {
 }
 
 // MARK: Generated accessors for activities
-public extension ActivityDefinition {
 
+public extension ActivityDefinition {
 	@objc(addActivitiesObject:)
 	@NSManaged func addToActivities(_ value: Activity)
 

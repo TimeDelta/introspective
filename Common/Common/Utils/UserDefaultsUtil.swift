@@ -8,9 +8,8 @@
 
 import Foundation
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol UserDefaultsUtil {
-
 	func resetInstructionPrompts()
 
 	func setUserDefault<ValueType>(_ value: ValueType, forKey key: UserDefaultKey)
@@ -19,7 +18,6 @@ public protocol UserDefaultsUtil {
 }
 
 public final class UserDefaultsUtilImpl: UserDefaultsUtil {
-
 	public final func resetInstructionPrompts() {
 		setUserDefault(false, forKey: .queryViewInstructionsShown)
 		setUserDefault(false, forKey: .recordActivitiesInstructionsShown)
@@ -32,6 +30,6 @@ public final class UserDefaultsUtilImpl: UserDefaultsUtil {
 	}
 
 	public final func bool(forKey key: UserDefaultKey) -> Bool {
-		return UserDefaults().bool(forKey: key.rawValue)
+		UserDefaults().bool(forKey: key.rawValue)
 	}
 }

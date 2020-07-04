@@ -18,10 +18,9 @@ public protocol ChooseSampleGrouperTypeViewController: UIViewController {
 }
 
 public final class ChooseSampleGrouperTypeViewControllerImpl: UIViewController, ChooseSampleGrouperTypeViewController {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var picker: UIPickerView!
+	@IBOutlet final var picker: UIPickerView!
 
 	// MARK: - Instance Variables
 
@@ -32,7 +31,7 @@ public final class ChooseSampleGrouperTypeViewControllerImpl: UIViewController, 
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 		picker.dataSource = self
 		picker.delegate = self
@@ -42,7 +41,7 @@ public final class ChooseSampleGrouperTypeViewControllerImpl: UIViewController, 
 			} else {
 				log.error("Could not find index for specified component")
 			}
-		} else if grouperTypes.count > 0 {
+		} else if !grouperTypes.isEmpty {
 			selectedGrouperType = grouperTypes[0]
 		} else {
 			log.error("No groupers passed")
@@ -52,8 +51,8 @@ public final class ChooseSampleGrouperTypeViewControllerImpl: UIViewController, 
 
 	// MARK: - Button Actions
 
-	@IBAction final func userPressedAccept(_ sender: Any) {
-		syncPost(.grouperTypeChanged, userInfo: [ .sampleGrouper: selectedGrouperType as Any ])
+	@IBAction final func userPressedAccept(_: Any) {
+		syncPost(.grouperTypeChanged, userInfo: [.sampleGrouper: selectedGrouperType as Any])
 		dismiss(animated: false, completion: nil)
 	}
 }
@@ -61,25 +60,23 @@ public final class ChooseSampleGrouperTypeViewControllerImpl: UIViewController, 
 // MARK: - UIPickerViewDataSource
 
 extension ChooseSampleGrouperTypeViewControllerImpl: UIPickerViewDataSource {
-
-	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
-		return 1
+	public final func numberOfComponents(in _: UIPickerView) -> Int {
+		1
 	}
 
-	public final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return grouperTypes.count
+	public final func pickerView(_: UIPickerView, numberOfRowsInComponent _: Int) -> Int {
+		grouperTypes.count
 	}
 }
 
 // MARK: - UIPickerViewDelegate
 
 extension ChooseSampleGrouperTypeViewControllerImpl: UIPickerViewDelegate {
-
-	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return grouperTypes[row].userVisibleDescription.localizedCapitalized
+	public final func pickerView(_: UIPickerView, titleForRow row: Int, forComponent _: Int) -> String? {
+		grouperTypes[row].userVisibleDescription.localizedCapitalized
 	}
 
-	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+	public final func pickerView(_: UIPickerView, didSelectRow row: Int, inComponent _: Int) {
 		selectedGrouperType = grouperTypes[row]
 	}
 }

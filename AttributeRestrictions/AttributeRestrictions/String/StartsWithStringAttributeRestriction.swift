@@ -11,8 +11,8 @@ import Foundation
 import Attributes
 import Samples
 
-public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, Equatable {
-
+public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction,
+	Equatable {
 	private typealias Me = StartsWithStringAttributeRestriction
 
 	// MARK: - Attributes
@@ -24,9 +24,9 @@ public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction
 
 	// MARK: - Display Information
 
-	public final override var attributedName: String { return "Starts with" }
-	public final override var description: String {
-		return restrictedAttribute.name.localizedCapitalized + " starts with '" + prefix + "'"
+	override public final var attributedName: String { "Starts with" }
+	override public final var description: String {
+		restrictedAttribute.name.localizedCapitalized + " starts with '" + prefix + "'"
 	}
 
 	// MARK: - Instance Variables
@@ -48,12 +48,12 @@ public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction
 
 	// MARK: - Attributed Functions
 
-	public final override func value(of attribute: Attribute) throws -> Any? {
+	override public final func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(Me.prefixAttribute) { return prefix }
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
-	public final override func set(attribute: Attribute, to value: Any?) throws {
+	override public final func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(Me.prefixAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
@@ -65,7 +65,7 @@ public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction
 
 	// MARK: - Attribute Restriction Functions
 
-	public final override func samplePasses(_ sample: Sample) throws -> Bool {
+	override public final func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
 		if sampleValue == nil { return prefix.isEmpty }
 		guard let value = sampleValue as? String else {
@@ -74,19 +74,22 @@ public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction
 		return value.localizedLowercase.starts(with: prefix)
 	}
 
-	public override func copy() -> AttributeRestriction {
-		return StartsWithStringAttributeRestriction(restrictedAttribute: restrictedAttribute, prefix: prefix)
+	override public func copy() -> AttributeRestriction {
+		StartsWithStringAttributeRestriction(restrictedAttribute: restrictedAttribute, prefix: prefix)
 	}
 
-	public override func predicate() -> NSPredicate? {
+	override public func predicate() -> NSPredicate? {
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		return NSPredicate(format: "%K BEGINSWITH[cd] %@", variableName, prefix)
 	}
 
 	// MARK: - Equality
 
-	public static func ==(lhs: StartsWithStringAttributeRestriction, rhs: StartsWithStringAttributeRestriction) -> Bool {
-		return lhs.equalTo(rhs)
+	public static func == (
+		lhs: StartsWithStringAttributeRestriction,
+		rhs: StartsWithStringAttributeRestriction
+	) -> Bool {
+		lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
@@ -95,14 +98,13 @@ public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction
 		return equalTo(other)
 	}
 
-	public final override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	override public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is StartsWithStringAttributeRestriction) { return false }
 		let other = otherRestriction as! StartsWithStringAttributeRestriction
 		return equalTo(other)
 	}
 
 	public final func equalTo(_ other: StartsWithStringAttributeRestriction) -> Bool {
-		return restrictedAttribute.equalTo(other.restrictedAttribute) && prefix == other.prefix
+		restrictedAttribute.equalTo(other.restrictedAttribute) && prefix == other.prefix
 	}
 }
-

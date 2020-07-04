@@ -9,15 +9,13 @@
 import Foundation
 
 public protocol TextAttributeDelegate {
-
 	func isValid(value: String?) -> Bool
 	func errorMessageFor(invalidValue: String?) -> String
 }
 
 public final class TextAttribute: AttributeBase<String>, ComparableAttribute {
-
-	public final override var typeName: String {
-		return "Text"
+	override public final var typeName: String {
+		"Text"
 	}
 
 	private final let delegate: TextAttributeDelegate?
@@ -28,13 +26,19 @@ public final class TextAttribute: AttributeBase<String>, ComparableAttribute {
 		description: String? = nil,
 		variableName: String? = nil,
 		optional: Bool = false,
-		delegate: TextAttributeDelegate? = nil)
-	{
+		delegate: TextAttributeDelegate? = nil
+	) {
 		self.delegate = delegate
-		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName, optional: optional)
+		super.init(
+			name: name,
+			pluralName: pluralName,
+			description: description,
+			variableName: variableName,
+			optional: optional
+		)
 	}
 
-	public final override func isValid(value: Any?) -> Bool {
+	override public final func isValid(value: Any?) -> Bool {
 		if value == nil {
 			return optional
 		}
@@ -54,7 +58,7 @@ public final class TextAttribute: AttributeBase<String>, ComparableAttribute {
 		return delegate?.errorMessageFor(invalidValue: invalidValue) ?? ""
 	}
 
-	public final override func convertToDisplayableString(from value: Any?) throws -> String {
+	override public final func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
 		if !optional && value == nil { throw UnsupportedValueError(attribute: self, is: nil) }
 		guard let castedValue = value as? String else {
@@ -63,7 +67,7 @@ public final class TextAttribute: AttributeBase<String>, ComparableAttribute {
 		return castedValue
 	}
 
-	public final override func typedValuesAreEqual(_ first: String, _ second: String) -> Bool {
-		return first == second
+	override public final func typedValuesAreEqual(_ first: String, _ second: String) -> Bool {
+		first == second
 	}
 }

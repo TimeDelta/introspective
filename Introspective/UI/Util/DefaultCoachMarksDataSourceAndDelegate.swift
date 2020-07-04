@@ -13,11 +13,10 @@ import Common
 import DependencyInjection
 import UIExtensions
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol CoachMarksDataSourceAndDelegate: CoachMarksControllerDataSource, CoachMarksControllerDelegate {}
 
 public final class DefaultCoachMarksDataSourceAndDelegate: CoachMarksDataSourceAndDelegate {
-
 	private final let coachMarksInfo: [CoachMarkInfo]
 	private final let instructionsShownKey: UserDefaultKey
 	private final let cleanup: (() -> Void)?
@@ -29,8 +28,8 @@ public final class DefaultCoachMarksDataSourceAndDelegate: CoachMarksDataSourceA
 		_ coachMarksInfo: [CoachMarkInfo],
 		instructionsShownKey: UserDefaultKey,
 		cleanup: (() -> Void)? = nil,
-		skipViewLayoutConstraints: [CoachMarkSkipViewConstraint]? = nil)
-	{
+		skipViewLayoutConstraints: [CoachMarkSkipViewConstraint]? = nil
+	) {
 		self.coachMarksInfo = coachMarksInfo
 		self.instructionsShownKey = instructionsShownKey
 		self.cleanup = cleanup
@@ -42,11 +41,13 @@ public final class DefaultCoachMarksDataSourceAndDelegate: CoachMarksDataSourceA
 	public final func coachMarksController(
 		_ coachMarksController: CoachMarksController,
 		coachMarkViewsAt index: Int,
-		madeFrom coachMark: CoachMark)
-	-> (bodyView: CoachMarkBodyView, arrowView: CoachMarkArrowView?) {
+		madeFrom coachMark: CoachMark
+	)
+		-> (bodyView: CoachMarkBodyView, arrowView: CoachMarkArrowView?) {
 		let coachViews = coachMarksController.helper.makeDefaultCoachViews(
 			withArrow: coachMarksInfo[index].useArrow,
-			arrowOrientation: coachMark.arrowOrientation)
+			arrowOrientation: coachMark.arrowOrientation
+		)
 
 		coachViews.bodyView.hintLabel.text = coachMarksInfo[index].hintText
 		coachViews.bodyView.nextLabel.text = coachMarksInfo[index].nextText
@@ -54,7 +55,10 @@ public final class DefaultCoachMarksDataSourceAndDelegate: CoachMarksDataSourceA
 		return (bodyView: coachViews.bodyView, arrowView: coachViews.arrowView)
 	}
 
-	public final func coachMarksController(_ coachMarksController: CoachMarksController, coachMarkAt index: Int) -> CoachMark {
+	public final func coachMarksController(
+		_ coachMarksController: CoachMarksController,
+		coachMarkAt index: Int
+	) -> CoachMark {
 		if let runSetup = coachMarksInfo[index].setup {
 			runSetup()
 		}
@@ -64,20 +68,24 @@ public final class DefaultCoachMarksDataSourceAndDelegate: CoachMarksDataSourceA
 		return coachMarksController.helper.makeCoachMark(for: coachMarksInfo[index].view)
 	}
 
-	public final func numberOfCoachMarks(for coachMarksController: CoachMarksController) -> Int {
-		return coachMarksInfo.count
+	public final func numberOfCoachMarks(for _: CoachMarksController) -> Int {
+		coachMarksInfo.count
 	}
 
-	public final func coachMarksController(_ coachMarksController: CoachMarksController, constraintsForSkipView skipView: UIView, inParent parentView: UIView) -> [NSLayoutConstraint]? {
+	public final func coachMarksController(
+		_: CoachMarksController,
+		constraintsForSkipView skipView: UIView,
+		inParent parentView: UIView
+	) -> [NSLayoutConstraint]? {
 		if let skipViewLayoutConstraints = skipViewLayoutConstraints {
-			return skipViewLayoutConstraints.map({ $0.constraint(skipView: skipView, parentView: parentView) })
+			return skipViewLayoutConstraints.map { $0.constraint(skipView: skipView, parentView: parentView) }
 		}
 		return nil
 	}
 
 	// MARK: - CoachMarksControllerDelegate
 
-	public final func coachMarksController(_ coachMarksController: CoachMarksController, didEndShowingBySkipping skipped: Bool) {
+	public final func coachMarksController(_: CoachMarksController, didEndShowingBySkipping skipped: Bool) {
 		if skipped {
 			DependencyInjector.get(UserDefaultsUtil.self).setUserDefault(true, forKey: instructionsShownKey)
 		}

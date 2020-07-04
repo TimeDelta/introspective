@@ -9,10 +9,9 @@
 import UIKit
 
 public final class DescriptionViewController: UIViewController {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var descriptionTextView: UITextView!
+	@IBOutlet final var descriptionTextView: UITextView!
 
 	// MARK: - Member Variables
 
@@ -20,7 +19,7 @@ public final class DescriptionViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 		descriptionTextView.text = descriptionText
 	}

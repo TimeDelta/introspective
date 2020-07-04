@@ -11,12 +11,11 @@ import HealthKit
 
 import Samples
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol RestingHeartRateQuery: Query {}
 
 public class RestingHeartRateQueryImpl: HealthKitQuery<RestingHeartRate>, RestingHeartRateQuery {
-
-	final override func initFromHKSample(_ hkSample: HKSample) -> RestingHeartRate {
+	override final func initFromHKSample(_ hkSample: HKSample) -> RestingHeartRate {
 		precondition(hkSample is HKQuantitySample, "Wrong type of health kit sample for resting heart rate")
 		return RestingHeartRate(hkSample as! HKQuantitySample)
 	}

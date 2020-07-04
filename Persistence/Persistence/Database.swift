@@ -6,22 +6,25 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import CoreData
+import Foundation
 import NotificationBannerSwift
 import os
 
 import Common
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol Database {
-
 	/// - Note: `Transaction` objects are only needed for modifications to the database.
 	func transaction() -> Transaction
 
 	func refreshContext()
 
-	func fetchedResultsController<Type: NSManagedObject>(type: Type.Type, sortDescriptors: [NSSortDescriptor], cacheName: String?) -> NSFetchedResultsController<Type>
+	func fetchedResultsController<Type: NSManagedObject>(
+		type: Type.Type,
+		sortDescriptors: [NSSortDescriptor],
+		cacheName: String?
+	) -> NSFetchedResultsController<Type>
 	func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type]
 	func count<Type: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<Type>) throws -> Int
 	/// Need to call this for any newly objects created after transaction is committed
@@ -38,13 +41,16 @@ public protocol Database {
 }
 
 public extension Database {
-	func fetchedResultsController<Type: NSManagedObject>(type: Type.Type, sortDescriptors: [NSSortDescriptor], cacheName: String? = nil) -> NSFetchedResultsController<Type> {
-		return fetchedResultsController(type: type, sortDescriptors: sortDescriptors, cacheName: cacheName)
+	func fetchedResultsController<Type: NSManagedObject>(
+		type: Type.Type,
+		sortDescriptors: [NSSortDescriptor],
+		cacheName: String? = nil
+	) -> NSFetchedResultsController<Type> {
+		fetchedResultsController(type: type, sortDescriptors: sortDescriptors, cacheName: cacheName)
 	}
 }
 
 internal class DatabaseImpl: Database {
-
 	private final var persistentContainer: NSPersistentContainer
 	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Database"))
 	private final let log = Log()
@@ -56,16 +62,16 @@ internal class DatabaseImpl: Database {
 	public init(_ objectModel: NSManagedObjectModel) {
 		persistentContainer = {
 			let container = SharedPersistentContainer(name: "Introspective", managedObjectModel: objectModel)
-			container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+			container.loadPersistentStores(completionHandler: { _, error in
 				if let error = error {
 					/*
-					Typical reasons for an error here include:
-					* The parent directory does not exist, cannot be created, or disallows writing.
-					* The persistent store is not accessible, due to permissions or data protection when the device is locked.
-					* The device is out of space.
-					* The store could not be migrated to the current model version.
-					Check the error message to determine what the actual problem was.
-					*/
+					 Typical reasons for an error here include:
+					 * The parent directory does not exist, cannot be created, or disallows writing.
+					 * The persistent store is not accessible, due to permissions or data protection when the device is locked.
+					 * The device is out of space.
+					 * The store could not be migrated to the current model version.
+					 Check the error message to determine what the actual problem was.
+					 */
 					Log().fault("Unresolved error while loading persistent stores: %@", errorInfo(error))
 					NotificationBanner(
 						title: "Failed to load saved data",
@@ -84,8 +90,9 @@ internal class DatabaseImpl: Database {
 	public final func fetchedResultsController<Type: NSManagedObject>(
 		type: Type.Type,
 		sortDescriptors: [NSSortDescriptor],
-		cacheName: String? = nil)
-	-> NSFetchedResultsController<Type> {
+		cacheName: String? = nil
+	)
+		-> NSFetchedResultsController<Type> {
 		let fetchRequest = type.fetchRequest() as! NSFetchRequest<Type>
 		fetchRequest.sortDescriptors = sortDescriptors
 		fetchRequest.shouldRefreshRefetchedObjects = true
@@ -93,7 +100,8 @@ internal class DatabaseImpl: Database {
 			fetchRequest: fetchRequest,
 			managedObjectContext: persistentContainer.viewContext,
 			sectionNameKeyPath: nil,
-			cacheName: cacheName)
+			cacheName: cacheName
+		)
 	}
 
 	public final func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type] {
@@ -133,7 +141,10 @@ internal class DatabaseImpl: Database {
 		}
 	}
 
-	public final func pull<Type: NSManagedObject>(savedObject: Type, fromSameContextAs otherObject: NSManagedObject) throws -> Type {
+	public final func pull<Type: NSManagedObject>(
+		savedObject: Type,
+		fromSameContextAs otherObject: NSManagedObject
+	) throws -> Type {
 		signpost.begin(name: "Pull", idObject: savedObject)
 		do {
 			guard let context = otherObject.managedObjectContext else {
@@ -148,7 +159,10 @@ internal class DatabaseImpl: Database {
 		}
 	}
 
-	public final func pull<Type: NSManagedObject>(savedObject: Type, fromContext context: NSManagedObjectContext) throws -> Type {
+	public final func pull<Type: NSManagedObject>(
+		savedObject: Type,
+		fromContext context: NSManagedObjectContext
+	) throws -> Type {
 		let savedObjectInGivenContext = context.object(with: savedObject.objectID)
 		return try getObject(savedObjectInGivenContext, as: Type.self)
 	}
@@ -168,7 +182,11 @@ internal class DatabaseImpl: Database {
 
 	public final func deleteEverything() throws {
 		for store in persistentContainer.persistentStoreCoordinator.persistentStores {
-			try persistentContainer.persistentStoreCoordinator.destroyPersistentStore(at: store.url!, ofType: NSSQLiteStoreType, options: nil)
+			try persistentContainer.persistentStoreCoordinator.destroyPersistentStore(
+				at: store.url!,
+				ofType: NSSQLiteStoreType,
+				options: nil
+			)
 		}
 	}
 

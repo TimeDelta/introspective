@@ -6,13 +6,12 @@
 //  Copyright © 2019 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import CSV
+import Foundation
 
 import Common
 
 open class BaseExporter: Exporter {
-
 	// MARK: - Instance Variables
 
 	public let dataTypePluralName: String
@@ -70,7 +69,7 @@ open class BaseExporter: Exporter {
 	public final func export(objects: inout [Exportable], using csv: CSVWriter, headerWritten: inout Bool) throws {
 		try writeHeader(for: objects, using: csv, headerWritten: &headerWritten)
 
-		while objects.count > 0 {
+		while !objects.isEmpty {
 			guard !isPaused && !isCancelled else { return }
 			if pauseOnRecord == recordsCompleted {
 				pause()
@@ -85,7 +84,7 @@ open class BaseExporter: Exporter {
 	}
 
 	public final func writeHeader(for objects: [Exportable], using csv: CSVWriter, headerWritten: inout Bool) throws {
-		if !headerWritten && !isPaused && objects.count > 0 {
+		if !headerWritten && !isPaused && !objects.isEmpty {
 			try type(of: objects[0]).exportHeaderRow(to: csv)
 			csv.beginNewRow()
 			headerWritten = true

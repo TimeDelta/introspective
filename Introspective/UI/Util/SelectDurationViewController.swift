@@ -12,19 +12,17 @@ import Common
 import UIExtensions
 
 public protocol SelectDurationViewController: UIViewController {
-
 	var initialDuration: Duration? { get set }
 	var notificationToSendOnAccept: Notification.Name! { get set }
 }
 
 public class SelectDurationViewControllerImpl: UIViewController, SelectDurationViewController {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var daysTextField: UITextField!
-	@IBOutlet weak final var hoursTextField: UITextField!
-	@IBOutlet weak final var minutesTextField: UITextField!
-	@IBOutlet weak final var secondsTextField: UITextField!
+	@IBOutlet final var daysTextField: UITextField!
+	@IBOutlet final var hoursTextField: UITextField!
+	@IBOutlet final var minutesTextField: UITextField!
+	@IBOutlet final var secondsTextField: UITextField!
 
 	// MARK: - Instance Variables
 
@@ -33,7 +31,7 @@ public class SelectDurationViewControllerImpl: UIViewController, SelectDurationV
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 
 		guard let duration = initialDuration else { return }
@@ -55,7 +53,7 @@ public class SelectDurationViewControllerImpl: UIViewController, SelectDurationV
 
 	// MARK: - Actions
 
-	@IBAction final func saveButtonPressed(_ sender: Any) {
+	@IBAction final func saveButtonPressed(_: Any) {
 		var units = [Calendar.Component: Int]()
 		if let days = Int(daysTextField.text ?? "0") {
 			units[.day] = days
@@ -74,8 +72,9 @@ public class SelectDurationViewControllerImpl: UIViewController, SelectDurationV
 			notificationToSendOnAccept,
 			object: self,
 			userInfo: [
-				.duration: duration
-			])
+				.duration: duration,
+			]
+		)
 		dismiss(animated: false, completion: nil)
 	}
 }

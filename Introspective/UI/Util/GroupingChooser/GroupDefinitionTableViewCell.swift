@@ -11,11 +11,10 @@ import UIKit
 import SampleGroupers
 
 public final class GroupDefinitionTableViewCell: UITableViewCell {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var nameLabel: UILabel!
-	@IBOutlet weak final var descriptionLabel: UILabel!
+	@IBOutlet final var nameLabel: UILabel!
+	@IBOutlet final var descriptionLabel: UILabel!
 
 	// MARK: - Instance Variables
 

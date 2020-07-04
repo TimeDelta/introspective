@@ -6,13 +6,12 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
 import AAInfographics
+import UIKit
 
 import Common
 
 public class BasicXYGraphTypeSetupViewController: GraphTypeSetupViewController {
-
 	public final var chartType: AAChartType! { didSet { chartTypeSet() } }
 
 	private final let log = Log()

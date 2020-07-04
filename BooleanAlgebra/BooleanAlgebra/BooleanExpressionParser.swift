@@ -19,37 +19,35 @@ public enum BooleanExpressionType {
 	case or
 }
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol BooleanExpressionParser {
-
 	func parse(_ parts: [BooleanExpressionPart]) throws -> BooleanExpression
 }
 
 internal final class BooleanExpressionParserImpl: BooleanExpressionParser {
-
 	public final func parse(_ parts: [BooleanExpressionPart]) throws -> BooleanExpression {
-		guard parts.count > 0 else {
+		guard !parts.isEmpty else {
 			throw GenericError("Nothing to parse")
 		}
 		var stack = [BooleanExpression]()
 		for part in parts {
-			switch (part.type) {
-				case .and:
-					try parseAnd(&stack)
-					break
-				case .or:
-					try parseOr(&stack)
-					break
-				case .groupStart:
-					let group = BooleanExpressionGroup()
-					stack.append(group)
-					break
-				case .groupEnd:
-					try parseGroupEnd(&stack)
-					break
-				case .expression:
-					try parseExpression(&stack, part.expression)
-					break
+			switch part.type {
+			case .and:
+				try parseAnd(&stack)
+				break
+			case .or:
+				try parseOr(&stack)
+				break
+			case .groupStart:
+				let group = BooleanExpressionGroup()
+				stack.append(group)
+				break
+			case .groupEnd:
+				try parseGroupEnd(&stack)
+				break
+			case .expression:
+				try parseExpression(&stack, part.expression)
+				break
 			}
 		}
 		if stack.count > 1 {
@@ -107,7 +105,7 @@ internal final class BooleanExpressionParserImpl: BooleanExpressionParser {
 			} else {
 				throw GenericError("Expected AND or OR but received \(current.description)")
 			}
-			guard stack.count > 0 else {
+			guard !stack.isEmpty else {
 				throw GenericError("Empty stack while parsing group end")
 			}
 			current = stack.removeLast()

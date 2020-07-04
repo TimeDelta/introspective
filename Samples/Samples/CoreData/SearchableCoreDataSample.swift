@@ -8,5 +8,4 @@
 
 import Foundation
 
-public protocol SearchableCoreDataSample: CoreDataSample, SearchableSample {
-}
+public protocol SearchableCoreDataSample: CoreDataSample, SearchableSample {}

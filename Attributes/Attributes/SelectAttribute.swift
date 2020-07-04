@@ -9,7 +9,6 @@
 import Foundation
 
 public protocol SelectAttribute: Attribute {
-
 	var possibleValues: [Any] { get }
 
 	/// - Parameter values: If `nil`, return the index within the `possibleValues` array, otherwise return the index within `values`.
@@ -17,9 +16,8 @@ public protocol SelectAttribute: Attribute {
 }
 
 public extension SelectAttribute {
-
 	/// - Parameter values: If `nil`, return the index within the `possibleValues` array, otherwise return the index within `values`.
 	func indexOf(possibleValue: Any, in values: [Any]? = nil) -> Int? {
-		return indexOf(possibleValue: possibleValue, in: values)
+		indexOf(possibleValue: possibleValue, in: values)
 	}
 }

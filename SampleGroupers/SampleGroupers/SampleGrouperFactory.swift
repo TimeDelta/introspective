@@ -12,7 +12,7 @@ import Attributes
 import Common
 import Samples
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol SampleGrouperFactory {
 	func typesFor(sampleType: Sample.Type) -> [SampleGrouper.Type]
 	func typesFor(attributes: [Attribute]) -> [SampleGrouper.Type]
@@ -22,7 +22,6 @@ public protocol SampleGrouperFactory {
 }
 
 public final class SampleGrouperFactoryImpl: SampleGrouperFactory {
-
 	private typealias Me = SampleGrouperFactoryImpl
 
 	private static let dateTypes: [SampleGrouper.Type] = [
@@ -31,7 +30,7 @@ public final class SampleGrouperFactoryImpl: SampleGrouperFactory {
 	]
 
 	private static let dayOfWeekTypes: [SampleGrouper.Type] = [
-		DayOfWeekSampleGrouper.self
+		DayOfWeekSampleGrouper.self,
 	]
 
 	private static let tagTypes: [SampleGrouper.Type] = [
@@ -46,24 +45,24 @@ public final class SampleGrouperFactoryImpl: SampleGrouperFactory {
 	private final let log = Log()
 
 	public final func typesFor(sampleType: Sample.Type) -> [SampleGrouper.Type] {
-		return typesFor(attributes: sampleType.attributes)
+		typesFor(attributes: sampleType.attributes)
 	}
 
 	public final func typesFor(attributes: [Attribute]) -> [SampleGrouper.Type] {
 		var types = [SampleGrouper.Type]()
 		var addedSoFar = Set<String>()
 		for attribute in attributes {
-			switch (attribute) {
-				case is DateAttribute:
-					addEverythingNotAdded(to: &types, from: Me.dateTypes, addedSoFar: &addedSoFar)
-					break
-				case is DayOfWeekAttribute:
-					addEverythingNotAdded(to: &types, from: Me.dayOfWeekTypes, addedSoFar: &addedSoFar)
-					break
-				case is TagAttribute, is TagsAttribute:
-					addEverythingNotAdded(to: &types, from: Me.tagTypes, addedSoFar: &addedSoFar)
-					break
-				default: log.error("Missing attribute type: %@", attribute.typeName)
+			switch attribute {
+			case is DateAttribute:
+				addEverythingNotAdded(to: &types, from: Me.dateTypes, addedSoFar: &addedSoFar)
+				break
+			case is DayOfWeekAttribute:
+				addEverythingNotAdded(to: &types, from: Me.dayOfWeekTypes, addedSoFar: &addedSoFar)
+				break
+			case is TagAttribute, is TagsAttribute:
+				addEverythingNotAdded(to: &types, from: Me.tagTypes, addedSoFar: &addedSoFar)
+				break
+			default: log.error("Missing attribute type: %@", attribute.typeName)
 			}
 		}
 		addEverythingNotAdded(to: &types, from: Me.genericTypes, addedSoFar: &addedSoFar)
@@ -71,22 +70,22 @@ public final class SampleGrouperFactoryImpl: SampleGrouperFactory {
 	}
 
 	public final func groupersFor(sampleType: Sample.Type) -> [SampleGrouper] {
-		return typesFor(sampleType: sampleType).map{ $0.init(sampleType: sampleType) }
+		typesFor(sampleType: sampleType).map { $0.init(sampleType: sampleType) }
 	}
 
 	public final func groupersFor(attributes: [Attribute]) -> [SampleGrouper] {
-		return typesFor(attributes: attributes).map{ $0.init(attributes: attributes) }
+		typesFor(attributes: attributes).map { $0.init(attributes: attributes) }
 	}
 
 	public final func groupDefinition(_ sampleType: Sample.Type) -> GroupDefinition {
-		return GroupDefinitionImpl(sampleType)
+		GroupDefinitionImpl(sampleType)
 	}
 
 	private final func addEverythingNotAdded(
 		to types: inout [SampleGrouper.Type],
 		from toAdd: [SampleGrouper.Type],
-		addedSoFar: inout Set<String>)
-	{
+		addedSoFar: inout Set<String>
+	) {
 		for type in toAdd {
 			if !addedSoFar.contains(type.userVisibleDescription) {
 				types.append(type)

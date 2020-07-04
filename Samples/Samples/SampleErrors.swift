@@ -11,7 +11,6 @@ import Foundation
 import Common
 
 public final class UnknownSampleTypeError: GenericError {
-
 	public init(_ sampleType: Sample.Type) {
 		super.init("Unknown sample type: \(sampleType.name)")
 	}

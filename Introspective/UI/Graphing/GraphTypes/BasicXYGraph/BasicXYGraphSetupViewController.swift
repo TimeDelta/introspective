@@ -6,13 +6,12 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
 import AAInfographics
+import UIKit
 
 import Common
 
 final class BasicXYGraphSetupViewController: BasicXYGraphTypeSetupViewController {
-
 	// MARK: - Static Variables
 
 	private typealias Me = BasicXYGraphSetupViewController
@@ -21,8 +20,8 @@ final class BasicXYGraphSetupViewController: BasicXYGraphTypeSetupViewController
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var numberOfDataTypesSegmentedControl: UISegmentedControl!
-	@IBOutlet weak final var subView: UIView!
+	@IBOutlet final var numberOfDataTypesSegmentedControl: UISegmentedControl!
+	@IBOutlet final var subView: UIView!
 
 	// MARK: - Instance Variables
 
@@ -32,45 +31,47 @@ final class BasicXYGraphSetupViewController: BasicXYGraphTypeSetupViewController
 
 	// MARK: - UIViewController Overrides
 
-	final override func viewDidLoad() {
+	override final func viewDidLoad() {
 		super.viewDidLoad()
 		updateSubView(sender: self)
 	}
 
 	// MARK: - BasicXYGraphTypeSetupViewController Overrides
 
-	final override func chartTypeSet() {
+	override final func chartTypeSet() {
 		subViewController?.chartType = chartType
 	}
 
 	// MARK: - Actions
 
-	@IBAction final func updateSubView(sender: Any) {
+	@IBAction final func updateSubView(sender _: Any) {
 		subViewController?.view.removeFromSuperview()
 		subViewController?.removeFromParent()
-		switch (numberOfDataTypesSegmentedControl.selectedSegmentIndex) {
-			case Me.singleDataType:
-				let controller: SingleSampleTypeBasicXYGraphCustomizationViewController = viewController(named: "singleSampleTypeSetup")
-				controller.realNavigationController = realNavigationController
-				controller.chartType = chartType
-				controller.view.frame = subView.frame
-				controller.view.addConstraints(subView.constraints)
-				subViewController = controller
-				view.addSubview(controller.view)
-				addChild(controller)
-				break
-			case Me.multipleDataTypes:
-				let controller: MultipleSampleTypeBasicXYGraphCustomizationViewController = viewController(named: "multipleSampleTypeSetup")
-				controller.realNavigationController = realNavigationController
-				controller.chartType = chartType
-				controller.view.frame = subView.frame
-				controller.view.addConstraints(subView.constraints)
-				subViewController = controller
-				view.addSubview(controller.view)
-				addChild(controller)
-				break
-			default:
-				log.error("Unknown segmented control index: %d", numberOfDataTypesSegmentedControl.selectedSegmentIndex)
+		switch numberOfDataTypesSegmentedControl.selectedSegmentIndex {
+		case Me.singleDataType:
+			let controller: SingleSampleTypeBasicXYGraphCustomizationViewController =
+				viewController(named: "singleSampleTypeSetup")
+			controller.realNavigationController = realNavigationController
+			controller.chartType = chartType
+			controller.view.frame = subView.frame
+			controller.view.addConstraints(subView.constraints)
+			subViewController = controller
+			view.addSubview(controller.view)
+			addChild(controller)
+			break
+		case Me.multipleDataTypes:
+			let controller: MultipleSampleTypeBasicXYGraphCustomizationViewController =
+				viewController(named: "multipleSampleTypeSetup")
+			controller.realNavigationController = realNavigationController
+			controller.chartType = chartType
+			controller.view.frame = subView.frame
+			controller.view.addConstraints(subView.constraints)
+			subViewController = controller
+			view.addSubview(controller.view)
+			addChild(controller)
+			break
+		default:
+			log.error("Unknown segmented control index: %d", numberOfDataTypesSegmentedControl.selectedSegmentIndex)
 		}
 	}
 }

@@ -9,7 +9,6 @@
 import UIKit
 
 public extension UIScrollView {
-
 	enum ScrollDirection {
 		case top
 		case right
@@ -19,14 +18,14 @@ public extension UIScrollView {
 		func contentOffsetWith(_ scrollView: UIScrollView, startOfVisibleAreaY: CGFloat? = nil) -> CGPoint {
 			var contentOffset = CGPoint.zero
 			switch self {
-				case .top:
-					contentOffset = CGPoint(x: 0, y: -scrollView.contentInset.top)
-				case .right:
-					contentOffset = CGPoint(x: scrollView.contentSize.width - scrollView.bounds.size.width, y: 0)
-				case .bottom:
-					contentOffset = CGPoint(x: 0, y: scrollView.contentSize.height - scrollView.bounds.size.height)
-				case .left:
-					contentOffset = CGPoint(x: -scrollView.contentInset.left, y: 0)
+			case .top:
+				contentOffset = CGPoint(x: 0, y: -scrollView.contentInset.top)
+			case .right:
+				contentOffset = CGPoint(x: scrollView.contentSize.width - scrollView.bounds.size.width, y: 0)
+			case .bottom:
+				contentOffset = CGPoint(x: 0, y: scrollView.contentSize.height - scrollView.bounds.size.height)
+			case .left:
+				contentOffset = CGPoint(x: -scrollView.contentInset.left, y: 0)
 			}
 			if let startOfVisibleAreaY = startOfVisibleAreaY {
 				return CGPoint(x: contentOffset.x, y: contentOffset.y - startOfVisibleAreaY)
@@ -36,9 +35,10 @@ public extension UIScrollView {
 	}
 
 	func scrollTo(direction: ScrollDirection, startOfVisibleAreaY: CGFloat? = nil, animated: Bool = true) {
-		self.setContentOffset(
+		setContentOffset(
 			direction.contentOffsetWith(self, startOfVisibleAreaY: startOfVisibleAreaY),
-			animated: animated)
+			animated: animated
+		)
 	}
 
 	/// Scroll to a specific view so that it's top is at the top of the scrollview
@@ -51,13 +51,15 @@ public extension UIScrollView {
 				y -= startOfVisibleAreaY
 			}
 			// Scroll to a rectangle starting at the Y of your subview, with a height of the scrollview
-			self.scrollRectToVisible(
+			scrollRectToVisible(
 				CGRect(
 					x: 0,
 					y: y,
 					width: 1,
-					height: self.frame.height),
-				animated: animated)
+					height: frame.height
+				),
+				animated: animated
+			)
 		}
 	}
 }

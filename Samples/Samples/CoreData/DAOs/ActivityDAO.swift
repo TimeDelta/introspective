@@ -6,17 +6,16 @@
 //  Copyright © 2019 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 import Common
 import DependencyInjection
 import Persistence
 import Settings
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol ActivityDAO {
-
 	func getMostRecentActivityEndDate() throws -> Date?
 	func getMostRecentActivity(_ activityDefinition: ActivityDefinition) throws -> Activity?
 	func getMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) throws -> Activity?
@@ -62,16 +61,15 @@ public protocol ActivityDAO {
 }
 
 extension ActivityDAO {
-
 	/// - Parameter end: If provided, use this as the stop date / time.
 	/// - Returns: Whether or not the activity was ignored
 	public func autoIgnoreIfAppropriate(_ activity: Activity, end: Date = Date()) -> Bool {
-		return autoIgnoreIfAppropriate(activity, end: end)
+		autoIgnoreIfAppropriate(activity, end: end)
 	}
 
 	@discardableResult
 	public func startActivity(_ definition: ActivityDefinition, withNote note: String? = nil) throws -> Activity {
-		return try startActivity(definition, withNote: note)
+		try startActivity(definition, withNote: note)
 	}
 
 	public func createDefinition(
@@ -82,14 +80,16 @@ extension ActivityDAO {
 		autoNote: Bool? = nil,
 		using transaction: Transaction? = nil
 	) throws -> ActivityDefinition {
-		return try createDefinition(
+		try createDefinition(
 			name: name,
 			description: description,
 			source: source,
 			recordScreenIndex: recordScreenIndex,
 			autoNote: autoNote,
-			using: transaction)
+			using: transaction
+		)
 	}
+
 	@discardableResult
 	public func createActivity(
 		definition: ActivityDefinition,
@@ -100,19 +100,19 @@ extension ActivityDAO {
 		extraTags: [Tag] = [],
 		using transaction: Transaction? = nil
 	) throws -> Activity {
-		return try createActivity(
+		try createActivity(
 			definition: definition,
 			startDate: startDate,
 			source: source,
 			endDate: endDate,
 			note: note,
 			extraTags: extraTags,
-			using: transaction)
+			using: transaction
+		)
 	}
 }
 
 public class ActivityDAOImpl: ActivityDAO {
-
 	private final let log = Log()
 
 	// MARK: - Getters
@@ -122,7 +122,7 @@ public class ActivityDAOImpl: ActivityDAO {
 		fetchRequest.predicate = NSPredicate(format: "endDate != nil")
 		fetchRequest.sortDescriptors = [NSSortDescriptor(key: "endDate", ascending: false)]
 		let activities = try DependencyInjector.get(Database.self).query(fetchRequest)
-		if activities.count > 0 {
+		if !activities.isEmpty {
 			return activities[0].end
 		}
 		return nil
@@ -134,13 +134,14 @@ public class ActivityDAOImpl: ActivityDAO {
 		fetchRequest.predicate = NSPredicate(format: "definition.name == %@", activityDefinition.name)
 		fetchRequest.sortDescriptors = [NSSortDescriptor(key: keyName, ascending: false)]
 		let activities = try DependencyInjector.get(Database.self).query(fetchRequest)
-		if activities.count > 0 {
+		if !activities.isEmpty {
 			return activities[0]
 		}
 		return nil
 	}
 
-	public final func getMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) throws -> Activity? {
+	public final func getMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) throws
+		-> Activity? {
 		let endDateVariableName = CommonSampleAttributes.endDate.variableName!
 		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
 		fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
@@ -149,7 +150,7 @@ public class ActivityDAOImpl: ActivityDAO {
 		])
 		let incompleteActivities = try DependencyInjector.get(Database.self).query(fetchRequest)
 
-		if incompleteActivities.count > 0 {
+		if !incompleteActivities.isEmpty {
 			let sortedIncompleteActivities = incompleteActivities.sorted(by: { $0.start > $1.start })
 			return sortedIncompleteActivities[0]
 		}
@@ -160,7 +161,7 @@ public class ActivityDAOImpl: ActivityDAO {
 		let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
 		let results = try DependencyInjector.get(Database.self).query(fetchRequest)
-		return results.count > 0
+		return !results.isEmpty
 	}
 
 	/// Get the activity definition with the specified name (if it exists).
@@ -170,13 +171,17 @@ public class ActivityDAOImpl: ActivityDAO {
 		let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
 		let results = try DependencyInjector.get(Database.self).query(fetchRequest)
-		if results.count == 0 {
+		if results.isEmpty {
 			return nil
 		}
 		if results.count == 1 {
 			return results[0]
 		}
-		let errorMessage = String(format: "Found %d activity definitions with the same name: %{private}@", results.count, name)
+		let errorMessage = String(
+			format: "Found %d activity definitions with the same name: %{private}@",
+			results.count,
+			name
+		)
 		throw GenericError(errorMessage)
 	}
 
@@ -185,7 +190,8 @@ public class ActivityDAOImpl: ActivityDAO {
 		let transaction = DependencyInjector.get(Database.self).transaction()
 		let activity = try transaction.new(Activity.self)
 		activity.setSource(.introspective)
-		let definition = try DependencyInjector.get(Database.self).pull(savedObject: definition, fromSameContextAs: activity)
+		let definition = try DependencyInjector.get(Database.self)
+			.pull(savedObject: definition, fromSameContextAs: activity)
 		activity.definition = definition
 		activity.start = Date()
 		activity.note = note
@@ -195,26 +201,27 @@ public class ActivityDAOImpl: ActivityDAO {
 	}
 
 	@discardableResult
-	public final func stopMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) throws -> Activity {
-		let endDateVariableName = CommonSampleAttributes.endDate.variableName!
-		let incompleteActivities = activityDefinition.activities.filtered(
-			using: NSPredicate(format: "%K == nil", endDateVariableName)
-		) as! Set<Activity>
+	public final func stopMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) throws
+		-> Activity {
+			let endDateVariableName = CommonSampleAttributes.endDate.variableName!
+			let incompleteActivities = activityDefinition.activities.filtered(
+				using: NSPredicate(format: "%K == nil", endDateVariableName)
+			) as! Set<Activity>
 
-		if incompleteActivities.count > 0 {
-			let sortedIncompleteActivities = incompleteActivities.sorted(by: { $0.start > $1.start })
-			let transaction = DependencyInjector.get(Database.self).transaction()
-			let activity = try transaction.pull(savedObject: sortedIncompleteActivities[0])
-			let now = Date()
-			if !autoIgnoreIfAppropriate(activity, end: now) {
-				activity.end = now
-				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+			if !incompleteActivities.isEmpty {
+				let sortedIncompleteActivities = incompleteActivities.sorted(by: { $0.start > $1.start })
+				let transaction = DependencyInjector.get(Database.self).transaction()
+				let activity = try transaction.pull(savedObject: sortedIncompleteActivities[0])
+				let now = Date()
+				if !autoIgnoreIfAppropriate(activity, end: now) {
+					activity.end = now
+					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+				}
+				return try DependencyInjector.get(Database.self).pull(savedObject: activity)
 			}
-			return try DependencyInjector.get(Database.self).pull(savedObject: activity)
+			let message = String(format: "Activity named %{private}@ is not currently active", activityDefinition.name)
+			throw GenericDisplayableError(title: message)
 		}
-		let message = String(format: "Activity named %{private}@ is not currently active", activityDefinition.name)
-		throw GenericDisplayableError(title: message)
-	}
 
 	@discardableResult
 	public final func stopMostRecentlyStartedIncompleteActivity() throws -> Activity {
@@ -227,7 +234,7 @@ public class ActivityDAOImpl: ActivityDAO {
 
 		let transaction = DependencyInjector.get(Database.self).transaction()
 		let activities = try transaction.query(fetchRequest)
-		if activities.count == 0 {
+		if activities.isEmpty {
 			throw GenericDisplayableError(title: "No activities currently running")
 		}
 		let now = Date()
@@ -286,7 +293,7 @@ public class ActivityDAOImpl: ActivityDAO {
 	public final func createDefinition(
 		name: String,
 		description: String?,
-		source: Sources.ActivitySourceNum,
+		source _: Sources.ActivitySourceNum,
 		recordScreenIndex: Int16?,
 		autoNote: Bool?,
 		using transaction: Transaction?
@@ -300,7 +307,8 @@ public class ActivityDAOImpl: ActivityDAO {
 		if let recordScreenIndex = recordScreenIndex {
 			activityDefinition.recordScreenIndex = recordScreenIndex
 		} else {
-			let numDefinitions = try DependencyInjector.get(Database.self).query(ActivityDefinition.fetchRequest()).count
+			let numDefinitions = try DependencyInjector.get(Database.self).query(ActivityDefinition.fetchRequest())
+				.count
 			activityDefinition.recordScreenIndex = Int16(numDefinitions)
 		}
 

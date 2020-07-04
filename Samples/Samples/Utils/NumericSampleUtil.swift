@@ -12,7 +12,7 @@ import HealthKit
 import Attributes
 import DependencyInjection
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol NumericSampleUtil {
 	func average(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?)
 		throws -> [(date: Date?, value: Double)]
@@ -22,40 +22,62 @@ public protocol NumericSampleUtil {
 		throws -> [(date: Date?, value: Int)]
 	// these all need the "as: Type.Type" parameter because there's a bug with SwitfyMocky
 	// see https://github.com/MakeAWishFoundation/SwiftyMocky/issues/163 for more info
-	func max<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type)
+	func max<Type: Comparable>(
+		for attribute: Attribute,
+		over samples: [Sample],
+		per aggregationUnit: Calendar.Component?,
+		as: Type.Type
+	)
 		throws -> [(date: Date?, value: Type)]
 	func max<Type: Comparable>(for attribute: Attribute, over samples: [Sample], as: Type.Type)
 		throws -> Type
-	func min<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type)
+	func min<Type: Comparable>(
+		for attribute: Attribute,
+		over samples: [Sample],
+		per aggregationUnit: Calendar.Component?,
+		as: Type.Type
+	)
 		throws -> [(date: Date?, value: Type)]
 	func min<Type: Comparable>(for attribute: Attribute, over samples: [Sample], as: Type.Type)
 		throws -> Type
-	func sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type)
+	func sum<Type: Numeric>(
+		for attribute: Attribute,
+		over samples: [Sample],
+		per aggregationUnit: Calendar.Component?,
+		as: Type.Type
+	)
 		throws -> [(date: Date?, value: Type)]
 	func sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample], as: Type.Type)
 		throws -> Type
 }
 
 public extension NumericSampleUtil {
-	func count(over samples: [Sample], per aggregationUnit: Calendar.Component? = nil) throws -> [(date: Date?, value: Int)] {
-		return try count(over: samples, per: aggregationUnit)
+	func count(
+		over samples: [Sample],
+		per aggregationUnit: Calendar.Component? = nil
+	) throws -> [(date: Date?, value: Int)] {
+		try count(over: samples, per: aggregationUnit)
 	}
 }
 
 public final class NumericSampleUtilImpl: NumericSampleUtil {
-
 	/// - Note: It is the caller's job to make sure that the specified attribute can be cast to a `Double`
 	/// - Precondition: The provided samples array is not empty.
-	public final func average(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?)
-	throws -> [(date: Date?, value: Double)] {
-		precondition(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+	public final func average(
+		for attribute: Attribute,
+		over samples: [Sample],
+		per aggregationUnit: Calendar.Component?
+	)
+		throws -> [(date: Date?, value: Double)] {
+		precondition(!samples.isEmpty, "Precondition violated: provided samples array must not be empty")
 
 		if aggregationUnit == nil {
 			return [(date: nil, value: try average(for: attribute, over: samples))]
 		}
 
 		var sampleAggregationAverages = [(date: Date?, value: Double)]()
-		for (aggregationDate, samples) in try DependencyInjector.get(SampleUtil.self).sort(samples: samples, by: aggregationUnit!) {
+		for (aggregationDate, samples) in try DependencyInjector.get(SampleUtil.self)
+			.sort(samples: samples, by: aggregationUnit!) {
 			sampleAggregationAverages.append((date: aggregationDate, value: try average(for: attribute, over: samples)))
 		}
 		return sampleAggregationAverages
@@ -64,7 +86,7 @@ public final class NumericSampleUtilImpl: NumericSampleUtil {
 	/// - Note: It is the caller's job to make sure that the specified attribute can be cast to a `Double`
 	/// - Precondition: The provided samples array is not empty.
 	public final func average(for attribute: Attribute, over samples: [Sample]) throws -> Double {
-		precondition(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+		precondition(!samples.isEmpty, "Precondition violated: provided samples array must not be empty")
 
 		var average: Double = 0.0
 		var totalNonNilSamples = 0.0
@@ -84,15 +106,19 @@ public final class NumericSampleUtilImpl: NumericSampleUtil {
 	}
 
 	/// - Precondition: The provided samples array is not empty.
-	public final func count(over samples: [Sample], per aggregationUnit: Calendar.Component? = nil) throws -> [(date: Date?, value: Int)] {
-		precondition(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+	public final func count(
+		over samples: [Sample],
+		per aggregationUnit: Calendar.Component? = nil
+	) throws -> [(date: Date?, value: Int)] {
+		precondition(!samples.isEmpty, "Precondition violated: provided samples array must not be empty")
 
 		if aggregationUnit == nil {
 			return [(date: nil, value: samples.count)]
 		}
 
 		var sampleAggregationCounts = [(date: Date?, value: Int)]()
-		for (aggregationDate, samples) in try DependencyInjector.get(SampleUtil.self).sort(samples: samples, by: aggregationUnit!) {
+		for (aggregationDate, samples) in try DependencyInjector.get(SampleUtil.self)
+			.sort(samples: samples, by: aggregationUnit!) {
 			sampleAggregationCounts.append((date: aggregationDate, value: samples.count))
 		}
 		return sampleAggregationCounts
@@ -100,25 +126,36 @@ public final class NumericSampleUtilImpl: NumericSampleUtil {
 
 	/// - Note: It is the caller's job to make sure that the specified attribute can be cast to the specified type.
 	/// - Precondition: The provided samples array is not empty.
-	public final func max<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type)
-	throws -> [(date: Date?, value: Type)] {
-		precondition(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+	public final func max<Type: Comparable>(
+		for attribute: Attribute,
+		over samples: [Sample],
+		per aggregationUnit: Calendar.Component?,
+		as _: Type.Type
+	)
+		throws -> [(date: Date?, value: Type)] {
+		precondition(!samples.isEmpty, "Precondition violated: provided samples array must not be empty")
 
 		if aggregationUnit == nil {
 			return [(date: nil, value: try max(for: attribute, over: samples, as: Type.self))]
 		}
 
 		var sampleAggregationMaxs = [(date: Date?, value: Type)]()
-		for (aggregationDate, samples) in try DependencyInjector.get(SampleUtil.self).sort(samples: samples, by: aggregationUnit!) {
-			sampleAggregationMaxs.append((date: aggregationDate, value: try max(for: attribute, over: samples, as: Type.self)))
+		for (aggregationDate, samples) in try DependencyInjector.get(SampleUtil.self)
+			.sort(samples: samples, by: aggregationUnit!) {
+			sampleAggregationMaxs
+				.append((date: aggregationDate, value: try max(for: attribute, over: samples, as: Type.self)))
 		}
 		return sampleAggregationMaxs
 	}
 
 	/// - Note: It is the caller's job to make sure that the specified attribute can be cast to the specified type.
 	/// - Precondition: The provided samples array is not empty.
-	public final func max<Type: Comparable>(for attribute: Attribute, over samples: [Sample], as: Type.Type) throws -> Type {
-		precondition(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+	public final func max<Type: Comparable>(
+		for attribute: Attribute,
+		over samples: [Sample],
+		as _: Type.Type
+	) throws -> Type {
+		precondition(!samples.isEmpty, "Precondition violated: provided samples array must not be empty")
 
 		return try samples.max(by: { (sample1: Sample, sample2: Sample) -> Bool in
 			let value1 = try sample1.value(of: attribute)
@@ -135,25 +172,36 @@ public final class NumericSampleUtilImpl: NumericSampleUtil {
 
 	/// - Note: It is the caller's job to make sure that the specified attribute can be cast to the specified type.
 	/// - Precondition: The provided samples array is not empty.
-	public final func min<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type)
-	throws -> [(date: Date?, value: Type)] {
-		precondition(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+	public final func min<Type: Comparable>(
+		for attribute: Attribute,
+		over samples: [Sample],
+		per aggregationUnit: Calendar.Component?,
+		as _: Type.Type
+	)
+		throws -> [(date: Date?, value: Type)] {
+		precondition(!samples.isEmpty, "Precondition violated: provided samples array must not be empty")
 
 		if aggregationUnit == nil {
 			return [(date: nil, value: try min(for: attribute, over: samples, as: Type.self))]
 		}
 
 		var sampleAggregationMins = [(date: Date?, value: Type)]()
-		for (aggregationDate, samples) in try DependencyInjector.get(SampleUtil.self).sort(samples: samples, by: aggregationUnit!) {
-			sampleAggregationMins.append((date: aggregationDate, value: try min(for: attribute, over: samples, as: Type.self)))
+		for (aggregationDate, samples) in try DependencyInjector.get(SampleUtil.self)
+			.sort(samples: samples, by: aggregationUnit!) {
+			sampleAggregationMins
+				.append((date: aggregationDate, value: try min(for: attribute, over: samples, as: Type.self)))
 		}
 		return sampleAggregationMins
 	}
 
 	/// - Note: It is the caller's job to make sure that the specified attribute can be cast to the specified type.
 	/// - Precondition: The provided samples array is not empty.
-	public final func min<Type: Comparable>(for attribute: Attribute, over samples: [Sample], as: Type.Type) throws -> Type {
-		precondition(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+	public final func min<Type: Comparable>(
+		for attribute: Attribute,
+		over samples: [Sample],
+		as _: Type.Type
+	) throws -> Type {
+		precondition(!samples.isEmpty, "Precondition violated: provided samples array must not be empty")
 
 		return try samples.min(by: { (sample1: Sample, sample2: Sample) -> Bool in
 			let value1 = try sample1.value(of: attribute)
@@ -170,25 +218,36 @@ public final class NumericSampleUtilImpl: NumericSampleUtil {
 
 	/// - Note: It is the caller's job to make sure that the specified attribute can be cast to the specified type.
 	/// - Precondition: The provided samples array is not empty.
-	public final func sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type)
-	throws -> [(date: Date?, value: Type)] {
-		precondition(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+	public final func sum<Type: Numeric>(
+		for attribute: Attribute,
+		over samples: [Sample],
+		per aggregationUnit: Calendar.Component?,
+		as _: Type.Type
+	)
+		throws -> [(date: Date?, value: Type)] {
+		precondition(!samples.isEmpty, "Precondition violated: provided samples array must not be empty")
 
 		if aggregationUnit == nil {
 			return [(date: nil, value: try sum(for: attribute, over: samples, as: Type.self))]
 		}
 
 		var sampleAggregationSums = [(date: Date?, value: Type)]()
-		for (aggregationDate, samples) in try DependencyInjector.get(SampleUtil.self).sort(samples: samples, by: aggregationUnit!) {
-			sampleAggregationSums.append((date: aggregationDate, value: try sum(for: attribute, over: samples, as: Type.self)))
+		for (aggregationDate, samples) in try DependencyInjector.get(SampleUtil.self)
+			.sort(samples: samples, by: aggregationUnit!) {
+			sampleAggregationSums
+				.append((date: aggregationDate, value: try sum(for: attribute, over: samples, as: Type.self)))
 		}
 		return sampleAggregationSums
 	}
 
 	/// - Note: It is the caller's job to make sure that the specified attribute can be cast to the specified type.
 	/// - Precondition: The provided samples array is not empty.
-	public final func sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample], as: Type.Type) throws -> Type {
-		precondition(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+	public final func sum<Type: Numeric>(
+		for attribute: Attribute,
+		over samples: [Sample],
+		as _: Type.Type
+	) throws -> Type {
+		precondition(!samples.isEmpty, "Precondition violated: provided samples array must not be empty")
 
 		var sum: Type = 0
 		for sample in samples {

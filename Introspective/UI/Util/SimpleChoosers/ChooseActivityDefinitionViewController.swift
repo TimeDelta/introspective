@@ -6,8 +6,8 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
 import CoreData
+import UIKit
 
 import Common
 import DependencyInjection
@@ -16,17 +16,16 @@ import Samples
 import UIExtensions
 
 public protocol ChooseActivityDefinitionViewController: UIViewController {
-
 	var notificationToSendOnAccept: Notification.Name! { get set }
 	var availableDefinitions: [ActivityDefinition]! { get set }
 	var selectedDefinition: ActivityDefinition? { get set }
 }
 
-public final class ChooseActivityDefinitionViewControllerImpl: UIViewController, ChooseActivityDefinitionViewController {
-
+public final class ChooseActivityDefinitionViewControllerImpl: UIViewController,
+	ChooseActivityDefinitionViewController {
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var picker: UIPickerView!
+	@IBOutlet final var picker: UIPickerView!
 
 	// MARK: - Instance Variables
 
@@ -39,7 +38,7 @@ public final class ChooseActivityDefinitionViewControllerImpl: UIViewController,
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 		picker.dataSource = self
 		picker.delegate = self
@@ -54,7 +53,7 @@ public final class ChooseActivityDefinitionViewControllerImpl: UIViewController,
 				parent?.showError(title: "Failed to load activities", error: error)
 				dismiss(animated: false, completion: nil)
 			}
-		} else if availableDefinitions.count == 0 {
+		} else if availableDefinitions.isEmpty {
 			parent?.showError(title: "No activities from which to choose")
 			dismiss(animated: false, completion: nil)
 		}
@@ -70,14 +69,15 @@ public final class ChooseActivityDefinitionViewControllerImpl: UIViewController,
 
 	// MARK: - Actions
 
-	@IBAction final func saveButtonPressed(_ sender: Any) {
+	@IBAction final func saveButtonPressed(_: Any) {
 		DispatchQueue.main.async {
 			NotificationCenter.default.post(
 				name: self.notificationToSendOnAccept,
 				object: self,
 				userInfo: self.info([
 					.activityDefinition: self.selectedDefinition!,
-				]))
+				])
+			)
 		}
 		dismiss(animated: false, completion: nil)
 	}
@@ -86,25 +86,23 @@ public final class ChooseActivityDefinitionViewControllerImpl: UIViewController,
 // MARK: - UIPickerViewDataSource
 
 extension ChooseActivityDefinitionViewControllerImpl: UIPickerViewDataSource {
-
-	public func numberOfComponents(in pickerView: UIPickerView) -> Int {
-		return 1
+	public func numberOfComponents(in _: UIPickerView) -> Int {
+		1
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return availableDefinitions.count
+	public func pickerView(_: UIPickerView, numberOfRowsInComponent _: Int) -> Int {
+		availableDefinitions.count
 	}
 }
 
 // MARK: - UIPickerViewDelegate
 
 extension ChooseActivityDefinitionViewControllerImpl: UIPickerViewDelegate {
-
-	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return availableDefinitions[row].name
+	public final func pickerView(_: UIPickerView, titleForRow row: Int, forComponent _: Int) -> String? {
+		availableDefinitions[row].name
 	}
 
-	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+	public final func pickerView(_: UIPickerView, didSelectRow row: Int, inComponent _: Int) {
 		selectedDefinition = availableDefinitions[row]
 	}
 }

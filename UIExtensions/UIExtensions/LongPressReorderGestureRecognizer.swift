@@ -9,12 +9,12 @@
 import UIKit
 
 public final class LongPressReorderGestureRecognizer: UILongPressGestureRecognizer {
-
 	// MARK: - Instance Variables
 
 	private final var tableView: UITableView {
-		return tableViewController().tableView
+		tableViewController().tableView
 	}
+
 	private final let tableViewController: () -> UITableViewController
 	private final let allowReorder: ((IndexPath, IndexPath?) -> Bool)?
 
@@ -25,8 +25,8 @@ public final class LongPressReorderGestureRecognizer: UILongPressGestureRecogniz
 
 	public init(
 		_ tableViewController: @escaping () -> UITableViewController,
-		allowReorder: ((IndexPath, IndexPath?) -> Bool)? = nil)
-	{
+		allowReorder: ((IndexPath, IndexPath?) -> Bool)? = nil
+	) {
 		self.tableViewController = tableViewController
 		self.allowReorder = allowReorder
 
@@ -36,57 +36,58 @@ public final class LongPressReorderGestureRecognizer: UILongPressGestureRecogniz
 
 	// MARK: - Actions
 
-	@objc private final func longPressGestureRecognized(gestureRecognizer: UIGestureRecognizer) {
+	@objc private final func longPressGestureRecognized(gestureRecognizer _: UIGestureRecognizer) {
 		let locationInView = location(in: tableView)
 		let indexPath = tableView.indexPathForRow(at: locationInView)
 
 		switch state {
-			case .began:
-				guard let indexPath = indexPath else { return }
-				initialIndexPath = indexPath
-				if let allowReorder = allowReorder {
-					guard allowReorder(initialIndexPath, indexPath) else { return }
-				}
-				guard let cell = tableView.cellForRow(at: indexPath) else { return }
-				cellSnapshot = snapshotOfCell(inputView: cell)
-				var center = cell.center
-				cellSnapshot!.center = center
-				cellSnapshot!.alpha = 0.0
-				tableView.addSubview(cellSnapshot!)
+		case .began:
+			guard let indexPath = indexPath else { return }
+			initialIndexPath = indexPath
+			if let allowReorder = allowReorder {
+				guard allowReorder(initialIndexPath, indexPath) else { return }
+			}
+			guard let cell = tableView.cellForRow(at: indexPath) else { return }
+			cellSnapshot = snapshotOfCell(inputView: cell)
+			var center = cell.center
+			cellSnapshot!.center = center
+			cellSnapshot!.alpha = 0.0
+			tableView.addSubview(cellSnapshot!)
 
-				UIView.animate(
-					withDuration: 0.25,
-					animations: {
-						center.y = locationInView.y
-						self.cellSnapshot!.center = center
-						self.cellSnapshot!.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
-						self.cellSnapshot!.alpha = 0.5
-						cell.alpha = 0.0
-					},
-					completion: { finished in
-						if finished { cell.isHidden = true }
-					})
-				break
-			case .changed:
-				var center = cellSnapshot!.center
-				center.y = locationInView.y
-				cellSnapshot!.center = center
-				break
-			case .ended:
-				guard let indexPath = indexPath else { return }
-				if indexPath != initialIndexPath {
-					tableViewController().tableView(tableView, moveRowAt: initialIndexPath, to: indexPath)
-					initialIndexPath = indexPath
+			UIView.animate(
+				withDuration: 0.25,
+				animations: {
+					center.y = locationInView.y
+					self.cellSnapshot!.center = center
+					self.cellSnapshot!.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
+					self.cellSnapshot!.alpha = 0.5
+					cell.alpha = 0.0
+				},
+				completion: { finished in
+					if finished { cell.isHidden = true }
 				}
-				if let allowReorder = allowReorder {
-					guard allowReorder(initialIndexPath, indexPath) else { return }
-				}
-				self.initialIndexPath = nil
-				self.cellSnapshot!.removeFromSuperview()
-				self.cellSnapshot = nil
-				break
-			default:
-				break
+			)
+			break
+		case .changed:
+			var center = cellSnapshot!.center
+			center.y = locationInView.y
+			cellSnapshot!.center = center
+			break
+		case .ended:
+			guard let indexPath = indexPath else { return }
+			if indexPath != initialIndexPath {
+				tableViewController().tableView(tableView, moveRowAt: initialIndexPath, to: indexPath)
+				initialIndexPath = indexPath
+			}
+			if let allowReorder = allowReorder {
+				guard allowReorder(initialIndexPath, indexPath) else { return }
+			}
+			initialIndexPath = nil
+			cellSnapshot!.removeFromSuperview()
+			cellSnapshot = nil
+			break
+		default:
+			break
 		}
 	}
 
@@ -97,7 +98,7 @@ public final class LongPressReorderGestureRecognizer: UILongPressGestureRecogniz
 		inputView.layer.render(in: UIGraphicsGetCurrentContext()!)
 		let image = UIGraphicsGetImageFromCurrentImageContext()! as UIImage
 		UIGraphicsEndImageContext()
-		let cellSnapshot : UIView = UIImageView(image: image)
+		let cellSnapshot: UIView = UIImageView(image: image)
 		cellSnapshot.layer.masksToBounds = false
 		cellSnapshot.layer.cornerRadius = 0.0
 		cellSnapshot.layer.shadowOffset = CGSize(width: -5.0, height: 0.0)

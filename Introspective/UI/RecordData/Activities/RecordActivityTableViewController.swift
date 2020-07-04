@@ -6,11 +6,11 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
-import Instructions
 import CoreData
-import Presentr
+import Instructions
 import os
+import Presentr
+import UIKit
 
 import AttributeRestrictions
 import Common
@@ -22,7 +22,6 @@ import Settings
 import UIExtensions
 
 public final class RecordActivityTableViewController: UITableViewController {
-
 	// MARK: - Static Variables
 
 	private typealias Me = RecordActivityTableViewController
@@ -35,7 +34,8 @@ public final class RecordActivityTableViewController: UITableViewController {
 	private static let presenter = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .full,
 		height: .custom(size: 300),
-		center: .topCenter)
+		center: .topCenter
+	)
 
 	// MARK: - Instance Variables
 
@@ -62,11 +62,13 @@ public final class RecordActivityTableViewController: UITableViewController {
 		CoachMarkInfo(
 			hint: "Tap the + button to create new activities. You can also type the name of a new activity in the search bar and long press the + button to quickly create and start it.",
 			useArrow: true,
-			view: { return self.navigationItem.rightBarButtonItems?[0].value(forKey: "view") as? UIView }),
+			view: { self.navigationItem.rightBarButtonItems?[0].value(forKey: "view") as? UIView }
+		),
 		CoachMarkInfo(
 			hint: "You can filter on the name of an activity, its description or its tags.",
 			useArrow: true,
-			view: { return self.searchController.searchBar }),
+			view: { self.searchController.searchBar }
+		),
 		CoachMarkInfo(
 			hint: "This is the name of the activity.",
 			useArrow: true,
@@ -75,85 +77,98 @@ public final class RecordActivityTableViewController: UITableViewController {
 				return exampleActivityCell.nameLabel
 			},
 			setup: {
-				if self.tableView.visibleCells.count == 0 {
+				if self.tableView.visibleCells.isEmpty {
 					self.searchController.searchBar.text = Me.exampleActivityName
 					self.quickCreateAndStart()
 				}
-			}),
+			}
+		),
 		CoachMarkInfo(
 			hint: "If an activity is currently running, meaning it was started and has not yet been stopped, it will have a progress indicator here.",
 			useArrow: true,
 			view: {
 				let exampleActivityCell = self.tableView.visibleCells[0] as! RecordActivityDefinitionTableViewCell
 				return exampleActivityCell.progressIndicator
-			}),
+			}
+		),
 		CoachMarkInfo(
 			hint: "All running activities will be bubbled to the top of the list",
 			useArrow: true,
-			view: { return self.tableView.visibleCells[0] },
+			view: { self.tableView.visibleCells[0] },
 			setup: {
 				let cell = self.tableView.visibleCells[0] as! RecordActivityDefinitionTableViewCell
 				if !cell.running {
 					self.searchController.searchBar.text = Me.exampleActivityName
 					self.quickCreateAndStart()
 				}
-			}),
+			}
+		),
 		CoachMarkInfo(
 			hint: "To start or stop an activity, simply tap it.",
 			useArrow: true,
-			view: { return self.tableView.visibleCells[0] }),
+			view: { self.tableView.visibleCells[0] }
+		),
 		CoachMarkInfo(
 			hint: "You can also stop all activities by tapping this button.",
 			useArrow: true,
-			view: { return self.navigationItem.rightBarButtonItems?[1].value(forKey: "view") as? UIView }),
+			view: { self.navigationItem.rightBarButtonItems?[1].value(forKey: "view") as? UIView }
+		),
 		CoachMarkInfo(
 			hint: "This is the total amount of time spent on this activity today.",
 			useArrow: true,
 			view: {
 				let exampleActivityCell = self.tableView.visibleCells[0] as! RecordActivityDefinitionTableViewCell
 				return exampleActivityCell.totalDurationTodayLabel
-			}),
+			}
+		),
 		CoachMarkInfo(
 			hint: "This is the duration of the most recent time this activity was done.",
 			useArrow: true,
 			view: {
 				let exampleActivityCell = self.tableView.visibleCells[0] as! RecordActivityDefinitionTableViewCell
 				return exampleActivityCell.currentInstanceDurationLabel
-			}),
+			}
+		),
 		CoachMarkInfo(
 			hint: "This is the start and end timestamps for the most recent instance of this activity.",
 			useArrow: true,
 			view: {
 				let exampleActivityCell = self.tableView.visibleCells[0] as! RecordActivityDefinitionTableViewCell
 				return exampleActivityCell.mostRecentTimeLabel
-			}),
+			}
+		),
 		CoachMarkInfo(
 			hint: "Swipe left for actions related to individual instances of this activity. Swipe right for actions related to all instances of this activity.",
 			useArrow: true,
-			view: { return self.tableView.visibleCells[0] }),
+			view: { self.tableView.visibleCells[0] }
+		),
 		CoachMarkInfo(
 			hint: "Long press on an activity to reorder it.",
 			useArrow: true,
-			view: { return self.tableView.visibleCells[0] }),
+			view: { self.tableView.visibleCells[0] }
+		),
 	]
 
-	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Activity Display"))
+	private final let signpost =
+		Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Activity Display"))
 	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 
 		let addButton = barButton(
 			title: "+",
 			quickPress: #selector(quickPressAddButton),
-			longPress: #selector(longPressAddButton))
+			longPress: #selector(longPressAddButton)
+		)
 		let stopAllButton = UIBarButtonItem(
 			title: "■",
 			style: .plain,
 			target: self,
-			action: #selector(stopAllButtonPressed))
+			action: #selector(stopAllButtonPressed)
+		)
 		let sortButton = barButton(title: "⇅", action: #selector(sortButtonPressed))
 		navigationItem.rightBarButtonItems = [addButton, stopAllButton, sortButton]
 
@@ -178,20 +193,21 @@ public final class RecordActivityTableViewController: UITableViewController {
 			coachMarksInfo,
 			instructionsShownKey: .recordActivitiesInstructionsShown,
 			cleanup: deleteExampleActivity,
-			skipViewLayoutConstraints: defaultCoachMarkSkipViewConstraints())
+			skipViewLayoutConstraints: defaultCoachMarkSkipViewConstraints()
+		)
 		coachMarksController.dataSource = coachMarksDataSourceAndDelegate
 		coachMarksController.delegate = coachMarksDataSourceAndDelegate
 		coachMarksController.skipView = defaultSkipInstructionsView()
 	}
 
-	public final override func viewDidAppear(_ animated: Bool) {
+	override public final func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		if !DependencyInjector.get(UserDefaultsUtil.self).bool(forKey: .recordActivitiesInstructionsShown) {
 			coachMarksController.start(in: .window(over: self))
 		}
 	}
 
-	public final override func viewWillDisappear(_ animated: Bool) {
+	override public final func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		coachMarksController.stop(immediately: true)
 	}
@@ -202,14 +218,14 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	// MARK: - TableView Data Source
 
-	public final override func numberOfSections(in tableView: UITableView) -> Int {
+	override public final func numberOfSections(in _: UITableView) -> Int {
 		if !finishedLoading {
 			return 1
 		}
 		return 2
 	}
 
-	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override public final func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if !finishedLoading {
 			return 1
 		}
@@ -228,24 +244,30 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	// MARK: - TableView Delegate
 
-	public final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override public final func tableView(
+		_ tableView: UITableView,
+		cellForRowAt indexPath: IndexPath
+	) -> UITableViewCell {
 		if !finishedLoading {
 			return tableView.dequeueReusableCell(withIdentifier: "waiting", for: indexPath)
 		}
 
-		let cell = tableView.dequeueReusableCell(withIdentifier: "activity", for: indexPath) as! RecordActivityDefinitionTableViewCell
+		let cell = tableView.dequeueReusableCell(
+			withIdentifier: "activity",
+			for: indexPath
+		) as! RecordActivityDefinitionTableViewCell
 		cell.activityDefinition = definition(at: indexPath)
 		return cell
 	}
 
-	public final override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+	override public final func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
 		if !finishedLoading {
 			return 44
 		}
 		return 57
 	}
 
-	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	override public final func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
 		guard finishedLoading else { return }
 		let activityDefinition = definition(at: indexPath)
 		guard let cell = visibleCellFor(indexPath) else {
@@ -266,11 +288,11 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	// MARK: - TableView Reordering
 
-	public final override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-		return indexPath.section == 1
+	override public final func tableView(_: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+		indexPath.section == 1
 	}
 
-	public final override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+	override public final func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		let definitionsFromIndex = Int(definition(at: fromIndexPath).recordScreenIndex)
 		let definitionsToIndex = Int(definition(at: to).recordScreenIndex)
 		do {
@@ -308,7 +330,10 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	// MARK: - Swipe Actions
 
-	public final override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+	override public final func tableView(
+		_: UITableView,
+		leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath
+	) -> UISwipeActionsConfiguration? {
 		let activityDefinition = definition(at: indexPath)
 
 		var actions = [
@@ -321,11 +346,14 @@ public final class RecordActivityTableViewController: UITableViewController {
 		return UISwipeActionsConfiguration(actions: actions)
 	}
 
-	public final override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+	override public final func tableView(
+		_: UITableView,
+		trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath
+	) -> UISwipeActionsConfiguration? {
 		let activityDefinition = definition(at: indexPath)
 
 		var actions = [UIContextualAction]()
-		if let activity = self.getMostRecentActivity(activityDefinition) {
+		if let activity = getMostRecentActivity(activityDefinition) {
 			actions.append(getDeleteActivityActionFor(activity))
 			actions.append(getEditLastActionFor(activity))
 		}
@@ -337,10 +365,13 @@ public final class RecordActivityTableViewController: UITableViewController {
 	private final func getViewHistoryActionFor(_ definition: ActivityDefinition) -> UIContextualAction {
 		let action = DependencyInjector.get(UiUtil.self).contextualAction(style: .normal, title: "History") { _, _, _ in
 			let query = DependencyInjector.get(QueryFactory.self).activityQuery()
-			query.expression = EqualToStringAttributeRestriction(restrictedAttribute: Activity.nameAttribute, value: definition.name)
+			query.expression = EqualToStringAttributeRestriction(
+				restrictedAttribute: Activity.nameAttribute,
+				value: definition.name
+			)
 			let controller = self.viewController(named: "results", fromStoryboard: "Results") as! ResultsViewController
 			controller.query = query
-			query.runQuery{ result, error in
+			query.runQuery { result, error in
 				if error != nil {
 					DispatchQueue.main.async {
 						controller.showError(title: "Failed to run query", error: error)
@@ -359,34 +390,37 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func getDeleteActivityActionFor(_ activity: Activity) -> UIContextualAction {
-		let deleteAction = DependencyInjector.get(UiUtil.self).contextualAction(style: .destructive, title: "🗑️ Last") { _, _, _ in
-			let timeText = self.getTimeTextFor(activity)
-			let alert = UIAlertController(
-				title: "Are you sure you want to delete '\(activity.definition.name)'?",
-				message: "This will only delete the most recent instance \(timeText).",
-				preferredStyle: .alert)
-			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
-				do {
-					let transaction = DependencyInjector.get(Database.self).transaction()
-					try transaction.delete(activity)
-					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-					self.loadActivitiyDefinitions()
-				} catch {
-					self.log.error("Failed to delete activity: %@", errorInfo(error))
-					self.showError(title: "Failed to delete activity instance", error: error)
-				}
-			})
-			alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-			self.present(alert, animated: false, completion: nil)
-		}
+		let deleteAction = DependencyInjector.get(UiUtil.self)
+			.contextualAction(style: .destructive, title: "🗑️ Last") { _, _, _ in
+				let timeText = self.getTimeTextFor(activity)
+				let alert = UIAlertController(
+					title: "Are you sure you want to delete '\(activity.definition.name)'?",
+					message: "This will only delete the most recent instance \(timeText).",
+					preferredStyle: .alert
+				)
+				alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
+					do {
+						let transaction = DependencyInjector.get(Database.self).transaction()
+						try transaction.delete(activity)
+						try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+						self.loadActivitiyDefinitions()
+					} catch {
+						self.log.error("Failed to delete activity: %@", errorInfo(error))
+						self.showError(title: "Failed to delete activity instance", error: error)
+					}
+				})
+				alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+				self.present(alert, animated: false, completion: nil)
+			}
 		deleteAction.accessibilityLabel = "delete most recent \(activity.definition.name)"
 		return deleteAction
 	}
 
 	private final func getEditLastActionFor(_ activity: Activity) -> UIContextualAction {
-		let editLast = DependencyInjector.get(UiUtil.self).contextualAction(style: .normal, title: "✎ Last") { _, _, _ in
-			self.showEditScreenForActivity(activity)
-		}
+		let editLast = DependencyInjector.get(UiUtil.self)
+			.contextualAction(style: .normal, title: "✎ Last") { _, _, _ in
+				self.showEditScreenForActivity(activity)
+			}
 		editLast.backgroundColor = .orange
 		return editLast
 	}
@@ -403,12 +437,16 @@ public final class RecordActivityTableViewController: UITableViewController {
 		return addNew
 	}
 
-	private final func getDeleteActivityDefinitionActionFor(_ activityDefinition: ActivityDefinition, at indexPath: IndexPath) -> UIContextualAction {
-		return DependencyInjector.get(UiUtil.self).contextualAction(style: .destructive, title: "🗑️ All") { _, _, _ in
+	private final func getDeleteActivityDefinitionActionFor(
+		_ activityDefinition: ActivityDefinition,
+		at _: IndexPath
+	) -> UIContextualAction {
+		DependencyInjector.get(UiUtil.self).contextualAction(style: .destructive, title: "🗑️ All") { _, _, _ in
 			let alert = UIAlertController(
 				title: "Are you sure you want to delete \(activityDefinition.name)?",
 				message: "This will delete all history for this activity.",
-				preferredStyle: .alert)
+				preferredStyle: .alert
+			)
 			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 				do {
 					let transaction = DependencyInjector.get(Database.self).transaction()
@@ -425,15 +463,20 @@ public final class RecordActivityTableViewController: UITableViewController {
 		}
 	}
 
-	private final func getEditActivityDefinitionActionFor(_ activityDefinition: ActivityDefinition, at indexPath: IndexPath) -> UIContextualAction {
-		let editDefinitionAction = DependencyInjector.get(UiUtil.self).contextualAction(style: .normal, title: "✎ All") { _, _, _ in
-			self.definitionEditIndex = indexPath
-			let controller: EditActivityDefinitionTableViewController = self.viewController(named: "editActivityDefinition")
-			controller.activityDefinition = activityDefinition
-			controller.notificationToSendOnAccept = Me.activityDefinitionEdited
+	private final func getEditActivityDefinitionActionFor(
+		_ activityDefinition: ActivityDefinition,
+		at indexPath: IndexPath
+	) -> UIContextualAction {
+		let editDefinitionAction = DependencyInjector.get(UiUtil.self)
+			.contextualAction(style: .normal, title: "✎ All") { _, _, _ in
+				self.definitionEditIndex = indexPath
+				let controller: EditActivityDefinitionTableViewController = self
+					.viewController(named: "editActivityDefinition")
+				controller.activityDefinition = activityDefinition
+				controller.notificationToSendOnAccept = Me.activityDefinitionEdited
 
-			self.navigationController?.pushViewController(controller, animated: false)
-		}
+				self.navigationController?.pushViewController(controller, animated: false)
+			}
 		editDefinitionAction.backgroundColor = .orange
 		editDefinitionAction.accessibilityLabel = "edit \(activityDefinition.name)"
 		return editDefinitionAction
@@ -457,20 +500,24 @@ public final class RecordActivityTableViewController: UITableViewController {
 				showError(
 					title: "Failed to save activity",
 					error: error,
-					tryAgain: { self.activityDefinitionCreated(notification: notification) })
+					tryAgain: { self.activityDefinitionCreated(notification: notification) }
+				)
 			}
 		}
 	}
 
-	@objc private final func activityEditedOrCreated(notification: Notification) {
+	@objc private final func activityEditedOrCreated(notification _: Notification) {
 		loadActivitiyDefinitions()
 	}
 
-	@objc private final func activityDefinitionEdited(notification: Notification) {
+	@objc private final func activityDefinitionEdited(notification _: Notification) {
 		if let indexPath = definitionEditIndex {
 			tableView.reloadRows(at: [indexPath], with: .automatic)
 		} else {
-			log.error("Failed to find activity definition in original set. Resorting to reload of activity definitions.")
+			log
+				.error(
+					"Failed to find activity definition in original set. Resorting to reload of activity definitions."
+				)
 			loadActivitiyDefinitions()
 		}
 	}
@@ -491,7 +538,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 				])
 				counts[definition.name] = try transaction.count(recentActivities)
 			}
-			let sortedDefinitions = try allDefinitions.sorted{ (definition1, definition2) throws -> Bool in
+			let sortedDefinitions = try allDefinitions.sorted { (definition1, definition2) throws -> Bool in
 				if counts[definition1.name]! > counts[definition2.name]! {
 					return true
 				}
@@ -510,10 +557,10 @@ public final class RecordActivityTableViewController: UITableViewController {
 			}
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 
-			self.currentSort = nil
-			self.loadActivitiyDefinitions()
+			currentSort = nil
+			loadActivitiyDefinitions()
 		} catch {
-			self.showError(title: "Failed to sort by recent count. Sorry for thee inconvenience.")
+			showError(title: "Failed to sort by recent count. Sorry for thee inconvenience.")
 		}
 	}
 
@@ -539,7 +586,8 @@ public final class RecordActivityTableViewController: UITableViewController {
 				title: "Failed to stop activities",
 				message: "Something went wrong while trying to stop all activities. Sorry for the inconvenience.",
 				error: error,
-				tryAgain: { self.stopAllButtonPressed(sender) })
+				tryAgain: { self.stopAllButtonPressed(sender) }
+			)
 		}
 	}
 
@@ -552,45 +600,50 @@ public final class RecordActivityTableViewController: UITableViewController {
 		actionsController.addAction(DependencyInjector.get(UiUtil.self).alertAction(
 			title: "Cancel",
 			style: .cancel,
-			handler: nil))
+			handler: nil
+		))
 		present(actionsController, animated: false, completion: nil)
 	}
 
 	private final func getSortAlphabeticallyAction() -> UIAlertAction {
-		return DependencyInjector.get(UiUtil.self).alertAction(
+		DependencyInjector.get(UiUtil.self).alertAction(
 			title: "Sort Alphabetically",
 			style: .default,
 			handler: { _ in
 				self.currentSort = NSSortDescriptor(key: "name", ascending: true)
 				self.loadActivitiyDefinitions()
-			})
+			}
+		)
 	}
 
 	private final func getSortZetabeticallyAction() -> UIAlertAction {
-		return DependencyInjector.get(UiUtil.self).alertAction(
+		DependencyInjector.get(UiUtil.self).alertAction(
 			title: "Sort Zetabetically",
 			style: .default,
 			handler: { _ in
 				self.currentSort = NSSortDescriptor(key: "name", ascending: false)
 				self.loadActivitiyDefinitions()
-			})
+			}
+		)
 	}
 
 	private final func getManualSortAction() -> UIAlertAction {
-		return DependencyInjector.get(UiUtil.self).alertAction(
+		DependencyInjector.get(UiUtil.self).alertAction(
 			title: "Manual Sort",
 			style: .default,
 			handler: { _ in
 				self.currentSort = nil
 				self.loadActivitiyDefinitions()
-			})
+			}
+		)
 	}
 
 	private final func getSortByRecentCountAction() -> UIAlertAction {
-		return DependencyInjector.get(UiUtil.self).alertAction(
+		DependencyInjector.get(UiUtil.self).alertAction(
 			title: "Permanent Sort by Recent Count",
 			style: .default,
-			handler: { _ in self.presentSortByRecentCountOptions() })
+			handler: { _ in self.presentSortByRecentCountOptions() }
+		)
 	}
 
 	// MARK: - Helper Functions
@@ -603,17 +656,18 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func loadActivitiyDefinitions() {
-		self.resetFetchedResultsControllers()
-		self.finishedLoading = true
-		self.tableView.reloadData()
+		resetFetchedResultsControllers()
+		finishedLoading = true
+		tableView.reloadData()
 	}
 
 	private final func getSearchTextPredicate(_ searchText: String) -> NSPredicate {
-		return NSPredicate(
+		NSPredicate(
 			format: "name CONTAINS[cd] %@ OR activityDescription CONTAINS[cd] %@ OR SUBQUERY(tags, $tag, $tag.name CONTAINS[cd] %@) .@count > 0",
 			searchText,
 			searchText,
-			searchText)
+			searchText
+		)
 	}
 
 	private final func quickCreateAndStart() {
@@ -633,12 +687,16 @@ public final class RecordActivityTableViewController: UITableViewController {
 				showError(
 					title: "Failed to create and start",
 					message: "Something went wrong while trying to save this activity. Sorry for the inconvenience.",
-					error: error)
+					error: error
+				)
 			}
 		}
 	}
 
-	private final func startActivity(for activityDefinition: ActivityDefinition, cell: RecordActivityDefinitionTableViewCell) {
+	private final func startActivity(
+		for activityDefinition: ActivityDefinition,
+		cell: RecordActivityDefinitionTableViewCell
+	) {
 		do {
 			try DependencyInjector.get(ActivityDAO.self).startActivity(activityDefinition)
 			// just calling updateUiElements here doesn't display the progress indicator for some reason
@@ -674,14 +732,16 @@ public final class RecordActivityTableViewController: UITableViewController {
 		if startsToday {
 			timeText = TimeOfDay(activity.start).toString()
 		} else {
-			timeText = DependencyInjector.get(CalendarUtil.self).string(for: activity.start, dateStyle: .short, timeStyle: .short)
+			timeText = DependencyInjector.get(CalendarUtil.self)
+				.string(for: activity.start, dateStyle: .short, timeStyle: .short)
 		}
 		if let endDate = activity.end {
 			let endDateText: String
 			if startsToday {
 				endDateText = TimeOfDay(endDate).toString()
 			} else {
-				endDateText = DependencyInjector.get(CalendarUtil.self).string(for: endDate, dateStyle: .short, timeStyle: .short)
+				endDateText = DependencyInjector.get(CalendarUtil.self)
+					.string(for: endDate, dateStyle: .short, timeStyle: .short)
 			}
 			return "from " + timeText + " to " + endDateText
 		} else {
@@ -705,7 +765,8 @@ public final class RecordActivityTableViewController: UITableViewController {
 		pushToNavigationController(controller, animated: false)
 	}
 
-	private final func getMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) -> Activity? {
+	private final func getMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition)
+		-> Activity? {
 		do {
 			return try DependencyInjector.get(ActivityDAO.self)
 				.getMostRecentlyStartedIncompleteActivity(for: activityDefinition)
@@ -726,11 +787,11 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func getSearchText() -> String {
-		return searchController.searchBar.text!
+		searchController.searchBar.text!
 	}
 
 	private final func activityDefinitionWithNameExists(_ name: String) throws -> Bool {
-		return try DependencyInjector.get(ActivityDAO.self).activityDefinitionWithNameExists(name)
+		try DependencyInjector.get(ActivityDAO.self).activityDefinitionWithNameExists(name)
 	}
 
 	private final func deleteExampleActivity() {
@@ -759,7 +820,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final func visibleCellFor(_ indexPath: IndexPath) -> RecordActivityDefinitionTableViewCell? {
 		let targetDefinition = definition(at: indexPath)
-		let cells = tableView.visibleCells.map{ $0 as! RecordActivityDefinitionTableViewCell }
+		let cells = tableView.visibleCells.map { $0 as! RecordActivityDefinitionTableViewCell }
 		for cell in cells {
 			if cell.activityDefinition.equalTo(targetDefinition) {
 				return cell
@@ -781,13 +842,15 @@ public final class RecordActivityTableViewController: UITableViewController {
 			activeActivitiesFetchedResultsController = DependencyInjector.get(Database.self).fetchedResultsController(
 				type: ActivityDefinition.self,
 				sortDescriptors: [currentSort ?? defaultSort],
-				cacheName: "activeDefinitions")
+				cacheName: "activeDefinitions"
+			)
 			let fetchRequest = activeActivitiesFetchedResultsController.fetchRequest
 
-			let isActivePredicate = NSPredicate(format: "SUBQUERY(activities, $activity, $activity.endDate == nil) .@count > 0")
+			let isActivePredicate =
+				NSPredicate(format: "SUBQUERY(activities, $activity, $activity.endDate == nil) .@count > 0")
 			fetchRequest.predicate = isActivePredicate
 
-			let searchText: String = self.getSearchText()
+			let searchText: String = getSearchText()
 			if !searchText.isEmpty {
 				fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
 					isActivePredicate,
@@ -803,7 +866,8 @@ public final class RecordActivityTableViewController: UITableViewController {
 				title: "Failed to retrieve activities",
 				message: "Something went wrong while trying to retrieve the list of your activities. Sorry for the inconvenience.",
 				error: error,
-				tryAgain: loadActivitiyDefinitions)
+				tryAgain: loadActivitiyDefinitions
+			)
 		}
 	}
 
@@ -813,13 +877,15 @@ public final class RecordActivityTableViewController: UITableViewController {
 			inactiveActivitiesFetchedResultsController = DependencyInjector.get(Database.self).fetchedResultsController(
 				type: ActivityDefinition.self,
 				sortDescriptors: [currentSort ?? defaultSort],
-				cacheName: "definitions")
+				cacheName: "definitions"
+			)
 			let fetchRequest = inactiveActivitiesFetchedResultsController.fetchRequest
 
-			let isInactivePredicate = NSPredicate(format: "SUBQUERY(activities, $activity, $activity.endDate == nil) .@count == 0")
+			let isInactivePredicate =
+				NSPredicate(format: "SUBQUERY(activities, $activity, $activity.endDate == nil) .@count == 0")
 			fetchRequest.predicate = isInactivePredicate
 
-			let searchText: String = self.getSearchText()
+			let searchText: String = getSearchText()
 			if !searchText.isEmpty {
 				fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
 					isInactivePredicate,
@@ -835,7 +901,8 @@ public final class RecordActivityTableViewController: UITableViewController {
 				title: "Failed to retrieve activities",
 				message: "Something went wrong while trying to retrieve the list of your activities. Sorry for the inconvenience.",
 				error: error,
-				tryAgain: loadActivitiyDefinitions)
+				tryAgain: loadActivitiyDefinitions
+			)
 		}
 	}
 
@@ -844,7 +911,8 @@ public final class RecordActivityTableViewController: UITableViewController {
 		let controller = DependencyInjector.get(Database.self).fetchedResultsController(
 			type: ActivityDefinition.self,
 			sortDescriptors: [currentSort ?? defaultSort],
-			cacheName: "definitions")
+			cacheName: "definitions"
+		)
 		try controller.performFetch()
 		signpost.end(name: "getting all fetched results controller")
 		return controller
@@ -854,7 +922,6 @@ public final class RecordActivityTableViewController: UITableViewController {
 // MARK: - UISearchResultsUpdating
 
 extension RecordActivityTableViewController: UISearchResultsUpdating {
-
 	/// This is used to provide a hook into setting the search text for testing. For some reason
 	/// passing searchController into resetFetchedResultsControllers() directly from
 	/// updateSearchResults() to use it instead results in localSearchController.searchBar being
@@ -863,7 +930,7 @@ extension RecordActivityTableViewController: UISearchResultsUpdating {
 		searchController.searchBar.text = text
 	}
 
-	public func updateSearchResults(for searchController: UISearchController) {
+	public func updateSearchResults(for _: UISearchController) {
 		loadActivitiyDefinitions()
 	}
 }

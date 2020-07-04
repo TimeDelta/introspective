@@ -6,11 +6,11 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
 import CalendarKit
-import HealthKit
 import CoreData
+import HealthKit
 import SwiftDate
+import UIKit
 
 import Common
 import DependencyInjection
@@ -19,32 +19,38 @@ import SampleGroupInformation
 import Samples
 
 public final class UnifiedDayViewController: DayViewController {
-
-	private final var stopQueryFunctions = [()->()]()
+	private final var stopQueryFunctions = [() -> Void]()
 
 	private final let log = Log()
 	private final let healthKitUtil = DependencyInjector.get(HealthKitUtil.self)
 
 	// MARK: - DayViewController Overrides
 
-	public override func eventsForDate(_ date: Date) -> [EventDescriptor] {
+	override public func eventsForDate(_ date: Date) -> [EventDescriptor] {
 		var descriptors = [EventDescriptor]()
 		descriptors.append(contentsOf: getSleepEventDescriptorsForDate(date))
 		descriptors.append(contentsOf: getActivityEventDescriptorsForDate(date))
 		return descriptors
 	}
 
-	public override func dayViewDidSelectEventView(_ eventView: EventView) {
-		let actionSheet = UIAlertController(title: "What would you like to know?", message: nil, preferredStyle: .actionSheet)
-		actionSheet.addAction(UIAlertAction(title: "What was my average heart rate during this time?", style: .default) { _ in
-			self.calculateAndDisplay(.discreteAverage, for: HeartRate.self, during: eventView)
-		})
-		actionSheet.addAction(UIAlertAction(title: "What was my maximum heart rate during this time?", style: .default) { _ in
-			self.calculateAndDisplay(.discreteMax, for: HeartRate.self, during: eventView)
-		})
-		actionSheet.addAction(UIAlertAction(title: "What was my minimum heart rate during this time?", style: .default) { _ in
-			self.calculateAndDisplay(.discreteMin, for: HeartRate.self, during: eventView)
-		})
+	override public func dayViewDidSelectEventView(_ eventView: EventView) {
+		let actionSheet = UIAlertController(
+			title: "What would you like to know?",
+			message: nil,
+			preferredStyle: .actionSheet
+		)
+		actionSheet
+			.addAction(UIAlertAction(title: "What was my average heart rate during this time?", style: .default) { _ in
+				self.calculateAndDisplay(.discreteAverage, for: HeartRate.self, during: eventView)
+			})
+		actionSheet
+			.addAction(UIAlertAction(title: "What was my maximum heart rate during this time?", style: .default) { _ in
+				self.calculateAndDisplay(.discreteMax, for: HeartRate.self, during: eventView)
+			})
+		actionSheet
+			.addAction(UIAlertAction(title: "What was my minimum heart rate during this time?", style: .default) { _ in
+				self.calculateAndDisplay(.discreteMin, for: HeartRate.self, during: eventView)
+			})
 
 		actionSheet.addAction(UIAlertAction(title: "What was my average mood during this time?", style: .default) { _ in
 			self.calculateAndDisplayForMood(AverageInformation(MoodImpl.rating), during: eventView)
@@ -69,10 +75,11 @@ public final class UnifiedDayViewController: DayViewController {
 		let fetchRequest: NSFetchRequest<MoodImpl> = MoodImpl.fetchRequest()
 		fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
 			NSPredicate(format: "timestamp > %@", startDate as NSDate),
-			NSPredicate(format: "timestamp < %@", endDate as NSDate)])
+			NSPredicate(format: "timestamp < %@", endDate as NSDate),
+		])
 		do {
 			let moods = try DependencyInjector.get(Database.self).query(fetchRequest)
-			if moods.count == 0 {
+			if moods.isEmpty {
 				showError(title: "You have no mood ratings during this time period")
 				return
 			}
@@ -84,7 +91,11 @@ public final class UnifiedDayViewController: DayViewController {
 		}
 	}
 
-	private final func calculateAndDisplay(_ operation: HKStatisticsOptions, for type: HealthKitQuantitySample.Type, during eventView: EventView) {
+	private final func calculateAndDisplay(
+		_ operation: HKStatisticsOptions,
+		for type: HealthKitQuantitySample.Type,
+		during eventView: EventView
+	) {
 		let (startDate, endDate) = getStartAndEndDatesFrom(eventView)
 		healthKitUtil.calculate(operation, type, from: startDate, to: endDate) { value, error in
 			let operationName: String = self.getOperationName(for: operation)
@@ -93,26 +104,38 @@ public final class UnifiedDayViewController: DayViewController {
 		}
 	}
 
-	private final func display(_ description: String, _ value: String?, _ error: Error?, _ startDate: Date, _ endDate: Date) {
+	private final func display(
+		_ description: String,
+		_ value: String?,
+		_ error: Error?,
+		_ startDate: Date,
+		_ endDate: Date
+	) {
 		guard error == nil && value != nil else {
 			if let error = error {
 				log.error("Failed to calculate %@: %@", description, errorInfo(error))
 			} else {
 				log.error("Failed to calculate %@ but no error was returned", description)
 			}
-			self.showError(title: "Could not calculate \(description)")
+			showError(title: "Could not calculate \(description)")
 			return
 		}
-		let startDateText = DependencyInjector.get(CalendarUtil.self).string(for: startDate, dateStyle: .none, timeStyle: .short)
-		let endDateText = DependencyInjector.get(CalendarUtil.self).string(for: endDate, dateStyle: .none, timeStyle: .short)
+		let startDateText = DependencyInjector.get(CalendarUtil.self)
+			.string(for: startDate, dateStyle: .none, timeStyle: .short)
+		let endDateText = DependencyInjector.get(CalendarUtil.self)
+			.string(for: endDate, dateStyle: .none, timeStyle: .short)
 		let message = "Your \(description) from \(startDateText) to \(endDateText) was \(value!)"
-		let alert = UIAlertController(title: "\(description.localizedCapitalized)", message: message, preferredStyle: .alert)
+		let alert = UIAlertController(
+			title: "\(description.localizedCapitalized)",
+			message: message,
+			preferredStyle: .alert
+		)
 		alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
-		self.present(alert, animated: false, completion: nil)
+		present(alert, animated: false, completion: nil)
 	}
 
 	private final func getActivityEventDescriptorsForDate(_ date: Date) -> [EventDescriptor] {
-		return getActivitiesForDate(date).map { activity in
+		getActivitiesForDate(date).map { activity in
 			let event = Event()
 			event.startDate = activity.start
 			event.endDate = activity.end ?? Date()
@@ -133,7 +156,8 @@ public final class UnifiedDayViewController: DayViewController {
 			startDateKey, startOfDate as NSDate,
 			startDateKey, endOfDate as NSDate,
 			endDateKey, startOfDate as NSDate,
-			endDateKey, endOfDate as NSDate)
+			endDateKey, endOfDate as NSDate
+		)
 		do {
 			return try DependencyInjector.get(Database.self).query(fetchRequest)
 		} catch {
@@ -144,7 +168,7 @@ public final class UnifiedDayViewController: DayViewController {
 	}
 
 	private final func getSleepEventDescriptorsForDate(_ date: Date) -> [EventDescriptor] {
-		return getSleepSamplesForDate(date).map { sleep in
+		getSleepSamplesForDate(date).map { sleep in
 			let event = Event()
 			event.startDate = sleep.startDate
 			event.endDate = sleep.endDate
@@ -155,18 +179,22 @@ public final class UnifiedDayViewController: DayViewController {
 	}
 
 	private final func getSleepSamplesForDate(_ date: Date) -> [Sleep] {
-		return getHealthKitSamplesFor(date, initSample: { (s: HKCategorySample) in return Sleep(s) }).filter{ $0.state == .asleep }
+		getHealthKitSamplesFor(date, initSample: { (s: HKCategorySample) in Sleep(s) }).filter { $0.state == .asleep }
 	}
 
 	private final func getHeartRateSamples(from fromDate: Date, to toDate: Date) -> [HeartRate] {
-		return getHealthKitSamplesFor(fromDate, to: toDate, initSample: { (s: HKQuantitySample) in return HeartRate(s) })
+		getHealthKitSamplesFor(fromDate, to: toDate, initSample: { (s: HKQuantitySample) in HeartRate(s) })
 	}
 
-	private final func getHealthKitSamplesFor<Type: HealthKitSample, HKType: HKSample>(_ fromDate: Date, to toDate: Date? = nil, initSample: @escaping (HKType) -> Type) -> [Type] {
+	private final func getHealthKitSamplesFor<Type: HealthKitSample, HKType: HKSample>(
+		_ fromDate: Date,
+		to toDate: Date? = nil,
+		initSample: @escaping (HKType) -> Type
+	) -> [Type] {
 		var typeSamples = [Type]()
-		var errorMessage: String? = nil
+		var errorMessage: String?
 		let group = DispatchGroup()
-		let callback = { (samples: Array<HKSample>?, error: Error?) in
+		let callback = { (samples: [HKSample]?, error: Error?) in
 			if let error = error {
 				errorMessage = "Could not retrieve sleep data."
 				self.log.error("Failed to retrieve sleep samples: %@", errorInfo(error))
@@ -174,7 +202,7 @@ public final class UnifiedDayViewController: DayViewController {
 				return
 			}
 			if let samples = samples {
-				typeSamples.append(contentsOf: samples.map{ initSample($0 as! HKType) })
+				typeSamples.append(contentsOf: samples.map { initSample($0 as! HKType) })
 			} else {
 				errorMessage = "Could not retrieve sleep data."
 				self.log.error("Both samples and error variables are nil")
@@ -188,7 +216,8 @@ public final class UnifiedDayViewController: DayViewController {
 			stopQueryFunctions.append(healthKitUtil.getSamples(for: Type.self, to: fromDate, callback: callback))
 		} else {
 			group.enter()
-			stopQueryFunctions.append(healthKitUtil.getSamples(for: Type.self, from: fromDate, to: toDate, callback: callback))
+			stopQueryFunctions
+				.append(healthKitUtil.getSamples(for: Type.self, from: fromDate, to: toDate, callback: callback))
 		}
 		group.wait()
 		if let errorMessage = errorMessage {
@@ -199,8 +228,10 @@ public final class UnifiedDayViewController: DayViewController {
 	}
 
 	private final func getTimeTextFor(_ event: Event) -> String {
-		let startText = DependencyInjector.get(CalendarUtil.self).string(for: event.startDate, dateStyle: .none, timeStyle: .short)
-		let endText = DependencyInjector.get(CalendarUtil.self).string(for: event.endDate, dateStyle: .none, timeStyle: .short)
+		let startText = DependencyInjector.get(CalendarUtil.self)
+			.string(for: event.startDate, dateStyle: .none, timeStyle: .short)
+		let endText = DependencyInjector.get(CalendarUtil.self)
+			.string(for: event.endDate, dateStyle: .none, timeStyle: .short)
 		let duration = Duration(start: event.startDate, end: event.endDate)
 		return startText + " - " + endText + " (\(duration.description)))"
 	}
@@ -210,14 +241,14 @@ public final class UnifiedDayViewController: DayViewController {
 	}
 
 	private final func getOperationName(for operation: HKStatisticsOptions) -> String {
-		switch (operation) {
-			case .cumulativeSum: return "sum"
-			case .discreteAverage: return "average"
-			case .discreteMax: return "maximum"
-			case .discreteMin: return "minimum"
-			default:
-				log.error("Unsupported operation type passed")
-				return ""
+		switch operation {
+		case .cumulativeSum: return "sum"
+		case .discreteAverage: return "average"
+		case .discreteMax: return "maximum"
+		case .discreteMin: return "minimum"
+		default:
+			log.error("Unsupported operation type passed")
+			return ""
 		}
 	}
 }

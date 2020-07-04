@@ -7,9 +7,9 @@
 //
 //
 
-import Foundation
 import CoreData
 import CSV
+import Foundation
 
 import Attributes
 import Common
@@ -17,7 +17,6 @@ import DependencyInjection
 import Persistence
 
 public final class MedicationDose: NSManagedObject, CoreDataSample, SearchableSample {
-
 	private typealias Me = MedicationDose
 
 	// MARK: - CoreData Stuff
@@ -37,9 +36,15 @@ public final class MedicationDose: NSManagedObject, CoreDataSample, SearchableSa
 		name: "Source",
 		typeName: "Medication Source",
 		pluralName: "Sources",
-		possibleValues: Sources.MedicationSourceNum.values.map{ $0.description },
-		possibleValueToString: { $0 })
-	public static let attributes: [Attribute] = [CommonSampleAttributes.timestamp, nameAttribute, dosage, sourceAttribute]
+		possibleValues: Sources.MedicationSourceNum.values.map { $0.description },
+		possibleValueToString: { $0 }
+	)
+	public static let attributes: [Attribute] = [
+		CommonSampleAttributes.timestamp,
+		nameAttribute,
+		dosage,
+		sourceAttribute,
+	]
 	public static let defaultDependentAttribute: Attribute = dosage
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.timestamp
 	public final let attributes: [Attribute] = Me.attributes
@@ -47,17 +52,18 @@ public final class MedicationDose: NSManagedObject, CoreDataSample, SearchableSa
 	// MARK: - Searching
 
 	public func matchesSearchString(_ searchString: String) -> Bool {
-		return medication.name.localizedCaseInsensitiveContains(searchString) ||
+		medication.name.localizedCaseInsensitiveContains(searchString) ||
 			(medication.notes?.localizedCaseInsensitiveContains(searchString) ?? false)
 	}
 
 	// MARK: - Instance Variables
 
 	public final let attributedName: String = Me.name
-	public final override var description: String { return Me.description }
+	override public final var description: String { Me.description }
 	public final var date: Date {
 		get {
-			return DependencyInjector.get(CoreDataSampleUtil.self).convertTimeZoneIfApplicable(for: timestamp, timeZoneId: timestampTimeZoneId)
+			DependencyInjector.get(CoreDataSampleUtil.self)
+				.convertTimeZoneIfApplicable(for: timestamp, timeZoneId: timestampTimeZoneId)
 		}
 		set {
 			timestamp = newValue
@@ -66,10 +72,11 @@ public final class MedicationDose: NSManagedObject, CoreDataSample, SearchableSa
 			}
 		}
 	}
+
 	public final var timeZone: TimeZone? {
 		get {
 			if let timeZoneId = timestampTimeZoneId {
-				return TimeZone.init(identifier: timeZoneId)
+				return TimeZone(identifier: timeZoneId)
 			}
 			return nil
 		}
@@ -79,7 +86,7 @@ public final class MedicationDose: NSManagedObject, CoreDataSample, SearchableSa
 	// MARK: - Sample Functions
 
 	public final func dates() -> [DateType: Date] {
-		return [.start: date]
+		[.start: date]
 	}
 
 	// MARK: - Export
@@ -92,7 +99,7 @@ public final class MedicationDose: NSManagedObject, CoreDataSample, SearchableSa
 	public static let sourceColumn = "Instance Source"
 
 	public static func exportHeaderRow(to csv: CSVWriter) throws {
-		var columns =  Medication.exportColumns
+		var columns = Medication.exportColumns
 		columns.append(dosageColumn)
 		columns.append(timestampColumn)
 		columns.append(timeZoneColumn)
@@ -106,7 +113,8 @@ public final class MedicationDose: NSManagedObject, CoreDataSample, SearchableSa
 		let dose = dosage?.description ?? ""
 		try csv.write(field: dose, quoted: true)
 
-		let timestampText = DependencyInjector.get(CalendarUtil.self).string(for: timestamp, dateStyle: .full, timeStyle: .full)
+		let timestampText = DependencyInjector.get(CalendarUtil.self)
+			.string(for: timestamp, dateStyle: .full, timeStyle: .full)
 		try csv.write(field: timestampText, quoted: true)
 
 		let timeZone = timestampTimeZoneId ?? ""
@@ -119,7 +127,7 @@ public final class MedicationDose: NSManagedObject, CoreDataSample, SearchableSa
 	// MARK: - Other
 
 	public final func getSource() -> Sources.MedicationSourceNum {
-		return Sources.resolveMedicationSource(source)
+		Sources.resolveMedicationSource(source)
 	}
 
 	public final func setSource(_ source: Sources.MedicationSourceNum) {
@@ -156,13 +164,18 @@ public final class MedicationDose: NSManagedObject, CoreDataSample, SearchableSa
 			}
 
 			let fetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
-			fetchRequest.predicate = NSPredicate(format: "%K == %@", Medication.nameAttribute.variableName!, castedValue)
+			fetchRequest.predicate = NSPredicate(
+				format: "%K == %@",
+				Medication.nameAttribute.variableName!,
+				castedValue
+			)
 			let matchingMedications = try transaction.query(fetchRequest)
-			if matchingMedications.count == 0 {
+			if matchingMedications.isEmpty {
 				throw UnsupportedValueError(attribute: attribute, of: self, is: value)
 			}
 
-			medication = try DependencyInjector.get(Database.self).pull(savedObject: matchingMedications[0], fromSameContextAs: self)
+			medication = try DependencyInjector.get(Database.self)
+				.pull(savedObject: matchingMedications[0], fromSameContextAs: self)
 			return
 		}
 		if attribute.equalTo(Me.dosage) {
@@ -202,14 +215,14 @@ public final class MedicationDose: NSManagedObject, CoreDataSample, SearchableSa
 	}
 
 	public final func equalTo(_ other: MedicationDose) -> Bool {
-		return medication.equalTo(other.medication) &&
+		medication.equalTo(other.medication) &&
 			dosage == other.dosage &&
 			date == other.date
 	}
 
 	// MARK: - Debug
 
-	public final override var debugDescription: String {
+	override public final var debugDescription: String {
 		let dosageText = dosage?.description ?? "nil"
 		let timestampText = try! CommonSampleAttributes.timestamp.convertToDisplayableString(from: timestamp)
 		return "Dose of '\(medication.name)' (\(dosageText)) taken on \(timestampText)"
@@ -219,9 +232,8 @@ public final class MedicationDose: NSManagedObject, CoreDataSample, SearchableSa
 // MARK: - CoreData
 
 public extension MedicationDose {
-
 	@nonobjc class func fetchRequest() -> NSFetchRequest<MedicationDose> {
-		return NSFetchRequest<MedicationDose>(entityName: "MedicationDose")
+		NSFetchRequest<MedicationDose>(entityName: "MedicationDose")
 	}
 
 	@NSManaged fileprivate var timestamp: Date

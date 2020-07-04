@@ -15,7 +15,6 @@ import SampleGroupers
 import Samples
 
 public protocol GroupingChooserTableViewController: UITableViewController {
-
 	var sampleType: Sample.Type! { get set }
 	var currentGrouper: SampleGrouper! { get set }
 	var limitToAttributes: [Attribute]? { get set }
@@ -24,11 +23,10 @@ public protocol GroupingChooserTableViewController: UITableViewController {
 }
 
 public final class GroupingChooserTableViewControllerImpl: UITableViewController, GroupingChooserTableViewController {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var addButton: UIBarButtonItem!
-	@IBOutlet weak final var doneButton: UIBarButtonItem!
+	@IBOutlet final var addButton: UIBarButtonItem!
+	@IBOutlet final var doneButton: UIBarButtonItem!
 
 	// MARK: - Instance Variables
 
@@ -46,15 +44,16 @@ public final class GroupingChooserTableViewControllerImpl: UITableViewController
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 
 		if let limitToAttributes = limitToAttributes {
-			availableGroupers = DependencyInjector.get(SampleGrouperFactory.self).groupersFor(attributes: limitToAttributes)
+			availableGroupers = DependencyInjector.get(SampleGrouperFactory.self)
+				.groupersFor(attributes: limitToAttributes)
 		} else {
 			availableGroupers = DependencyInjector.get(SampleGrouperFactory.self).groupersFor(sampleType: sampleType)
 		}
-		guard availableGroupers.count > 0 else {
+		guard !availableGroupers.isEmpty else {
 			showNoAvailableGroupersError()
 			popFromNavigationController()
 			return
@@ -76,14 +75,14 @@ public final class GroupingChooserTableViewControllerImpl: UITableViewController
 
 	// MARK: - Table View Data Source
 
-	public final override func numberOfSections(in tableView: UITableView) -> Int {
+	override public final func numberOfSections(in _: UITableView) -> Int {
 		if currentGrouper is AdvancedSampleGrouper {
 			return 2
 		}
 		return 1
 	}
 
-	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override public final func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if section == 0 {
 			return 1
 		}
@@ -91,20 +90,24 @@ public final class GroupingChooserTableViewControllerImpl: UITableViewController
 			log.error(
 				"Asked for number of rows in section %d but current grouper is not advanced grouper: %s",
 				section,
-				String(describing: type(of: currentGrouper)))
+				String(describing: type(of: currentGrouper))
+			)
 			return 0
 		}
 		return advancedGrouper.groupDefinitions.count
 	}
 
-	public final override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+	override public final func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section == 0 { return nil }
 		if section == 1 { return "Group Definitions" }
 		log.error("Unknown section number: %d", section)
 		return nil
 	}
 
-	public final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override public final func tableView(
+		_ tableView: UITableView,
+		cellForRowAt indexPath: IndexPath
+	) -> UITableViewCell {
 		if indexPath.section == 0 {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "basic", for: indexPath)
 			if currentGrouper is AdvancedSampleGrouper {
@@ -118,18 +121,22 @@ public final class GroupingChooserTableViewControllerImpl: UITableViewController
 		guard let advancedGrouper = currentGrouper as? AdvancedSampleGrouper else {
 			log.error(
 				"Current grouper is not advanced grouper: %s",
-				String(describing: type(of: currentGrouper)))
+				String(describing: type(of: currentGrouper))
+			)
 			return UITableViewCell()
 		}
 
-		let cell = tableView.dequeueReusableCell(withIdentifier: "groupDefinition", for: indexPath) as! GroupDefinitionTableViewCell
+		let cell = tableView.dequeueReusableCell(
+			withIdentifier: "groupDefinition",
+			for: indexPath
+		) as! GroupDefinitionTableViewCell
 		cell.groupDefinition = advancedGrouper.groupDefinitions[indexPath.row]
 		return cell
 	}
 
 	// MARK: - Table View Delegate
 
-	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	override public final func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath.section == 0 {
 			showSelectGrouperView()
 		} else {
@@ -137,7 +144,10 @@ public final class GroupingChooserTableViewControllerImpl: UITableViewController
 		}
 	}
 
-	public final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+	override public final func tableView(
+		_ tableView: UITableView,
+		editActionsForRowAt indexPath: IndexPath
+	) -> [UITableViewRowAction]? {
 		guard indexPath.section == 1 else { return [] }
 		guard let advancedGrouper = currentGrouper as? AdvancedSampleGrouper else { return nil }
 		let delete = UITableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
@@ -151,12 +161,12 @@ public final class GroupingChooserTableViewControllerImpl: UITableViewController
 
 	// MARK: - Button Actions
 
-	@IBAction final func doneButtonPressed(_ sender: Any) {
+	@IBAction final func doneButtonPressed(_: Any) {
 		syncPost(notificationToSendOnAccept, userInfo: [.sampleGrouper: currentGrouper])
 		popFromNavigationController()
 	}
 
-	@IBAction final func addButtonPressed(_ sender: Any) {
+	@IBAction final func addButtonPressed(_: Any) {
 		guard let advancedGrouper = currentGrouper as? AdvancedSampleGrouper else {
 			log.error("Add button pressed when current grouper not AdvancedSampleGrouper")
 			return

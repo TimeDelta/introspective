@@ -6,8 +6,8 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
 import Presentr
+import UIKit
 
 import Common
 import DependencyInjection
@@ -15,7 +15,6 @@ import Persistence
 import Samples
 
 public final class RecordMedicationTableViewCell: UITableViewCell {
-
 	// MARK: - Static Variables
 
 	private typealias Me = RecordMedicationTableViewCell
@@ -25,9 +24,9 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var medicationNameLabel: UILabel!
-	@IBOutlet weak final var lastTakenOnDateButton: UIButton!
-	@IBOutlet weak final var takeButton: UIButton!
+	@IBOutlet final var medicationNameLabel: UILabel!
+	@IBOutlet final var lastTakenOnDateButton: UIButton!
+	@IBOutlet final var takeButton: UIButton!
 
 	// MARK: - Instance Variables
 
@@ -42,6 +41,7 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 			observe(selector: #selector(doseCreated), name: uniqueNotificationNameForMedication)
 		}
 	}
+
 	private final var uniqueNotificationNameForMedication: Notification.Name!
 	private final var dateThatTakenButtonWasPressed: Date?
 
@@ -67,7 +67,7 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 
 	// MARK: - Button Actions
 
-	@IBAction final func takeButtonPressed(_ sender: Any, forEvent event: UIEvent) {
+	@IBAction final func takeButtonPressed(_: Any, forEvent event: UIEvent) {
 		if let touch = event.allTouches?.first {
 			if touch.tapCount == 1 { // tap
 				quickTakeMedication()
@@ -77,19 +77,21 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 					userInfo: [
 						.notificationName: uniqueNotificationNameForMedication,
 						.medication: medication,
-					])
+					]
+				)
 			}
 		} else {
 			quickTakeMedication()
 		}
 	}
 
-	@IBAction final func lastTakenButtonPressed(_ sender: Any) {
+	@IBAction final func lastTakenButtonPressed(_: Any) {
 		post(
 			Me.shouldPresentDosesView,
 			userInfo: [
 				.medication: medication,
-			])
+			]
+		)
 	}
 
 	// MARK: - Helper Functions
@@ -101,7 +103,8 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 			if let dosage = mostRecentDose.dosage {
 				lastTakenText += dosage.description + " on "
 			}
-			lastTakenText += DependencyInjector.get(CalendarUtil.self).string(for: mostRecentDose.date, dateStyle: .medium, timeStyle: .short)
+			lastTakenText += DependencyInjector.get(CalendarUtil.self)
+				.string(for: mostRecentDose.date, dateStyle: .medium, timeStyle: .short)
 			DependencyInjector.get(UiUtil.self).setButton(lastTakenOnDateButton, enabled: true, hidden: false)
 		} else {
 			DependencyInjector.get(UiUtil.self).setButton(lastTakenOnDateButton, enabled: false, hidden: false)
@@ -155,6 +158,7 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 			userInfo: [
 				.title: title,
 				.message: message,
-			])
+			]
+		)
 	}
 }

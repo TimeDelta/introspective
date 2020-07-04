@@ -13,7 +13,6 @@ import DependencyInjection
 import Settings
 
 public final class ActivitySettingsTableViewController: UITableViewController {
-
 	// MARK: - Static Variables
 
 	private typealias Me = ActivitySettingsTableViewController
@@ -21,7 +20,8 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 	private static let descriptionPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
-		center: .center)
+		center: .center
+	)
 
 	private static let changeNotifications = [
 		Notification.Name("autoIgnoreChanged"),
@@ -44,8 +44,13 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
-		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Reset", style: .plain, target: self, action: #selector(reset))
+	override public final func viewDidLoad() {
+		navigationItem.rightBarButtonItem = UIBarButtonItem(
+			title: "Reset",
+			style: .plain,
+			target: self,
+			action: #selector(reset)
+		)
 
 		DependencyInjector.get(UiUtil.self).setBackButton(for: self, title: "Settings", action: #selector(done))
 		observe(selector: #selector(autoIgnoreChanged), name: Me.changeNotifications[0])
@@ -57,27 +62,33 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 
 	// MARK: - Table view data source
 
-	public final override func numberOfSections(in tableView: UITableView) -> Int {
-		return 1
+	override public final func numberOfSections(in _: UITableView) -> Int {
+		1
 	}
 
-	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return 1
+	override public final func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+		1
 	}
 
-	public final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: Me.identifiers[indexPath.row], for: indexPath) as! ActivitySettingTableViewCell
+	override public final func tableView(
+		_ tableView: UITableView,
+		cellForRowAt indexPath: IndexPath
+	) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(
+			withIdentifier: Me.identifiers[indexPath.row],
+			for: indexPath
+		) as! ActivitySettingTableViewCell
 		cell.changeNotification = Me.changeNotifications[indexPath.row]
 		return cell
 	}
 
-	public final override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		return Me.cellHeights[indexPath.row]
+	override public final func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+		Me.cellHeights[indexPath.row]
 	}
 
 	// MARK: - Table view delegate
 
-	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	override public final func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: false)
 	}
 
@@ -94,16 +105,18 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 
 	// MARK: - Actions
 
-	@objc private final func reset(_ sender: Any) {
+	@objc private final func reset(_: Any) {
 		DependencyInjector.get(Settings.self).reset()
 		for cell in tableView.visibleCells as! [ActivitySettingTableViewCell] {
 			cell.reset()
 		}
 	}
 
-	@IBAction final func informationButtonPressed(_ sender: Any) {
+	@IBAction final func informationButtonPressed(_: Any) {
 		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")
-		controller.descriptionText = "If an activity is completed before this many seconds have passed, it will not be saved. This only applies when tapping to stop a running activity on the record screen (including the stop all button)."
+		controller
+			.descriptionText =
+			"If an activity is completed before this many seconds have passed, it will not be saved. This only applies when tapping to stop a running activity on the record screen (including the stop all button)."
 		customPresentViewController(Me.descriptionPresenter, viewController: controller, animated: false)
 	}
 
@@ -120,7 +133,7 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 	@objc private final func saveAndGoBackToSettings() {
 		do {
 			try retryOnFail({ try DependencyInjector.get(Settings.self).save() }, maxRetries: 2)
-			self.navigationController?.popViewController(animated: false)
+			navigationController?.popViewController(animated: false)
 		} catch {
 			log.error("Failed to save activity settings: %@", errorInfo(error))
 			showError(title: "Failed to save settins", error: error, tryAgain: saveAndGoBackToSettings)

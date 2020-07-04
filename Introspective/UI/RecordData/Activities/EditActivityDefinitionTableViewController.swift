@@ -6,10 +6,10 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
+import CoreData
+import Presentr
 import UIKit
 import WSTagsField
-import Presentr
-import CoreData
 
 import Common
 import DependencyInjection
@@ -17,7 +17,6 @@ import Persistence
 import Samples
 
 public final class EditActivityDefinitionTableViewController: UITableViewController {
-
 	// MARK: - Static Variables
 
 	private typealias Me = EditActivityDefinitionTableViewController
@@ -43,7 +42,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 		didSet {
 			guard let activityDefinition = activityDefinition else { return }
 			activityDescription = activityDefinition.activityDescription
-			tagNames = Set(activityDefinition.tagsArray().map{ $0.name })
+			tagNames = Set(activityDefinition.tagsArray().map { $0.name })
 			autoNote = activityDefinition.autoNote
 		}
 	}
@@ -59,7 +58,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 
 	// MARK: - UIViewController Overrides
 
-	public override func viewDidLoad() {
+	override public func viewDidLoad() {
 		super.viewDidLoad()
 
 		extendedLayoutIncludesOpaqueBars = true
@@ -75,7 +74,8 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 			title: "Save",
 			style: .done,
 			target: self,
-			action: #selector(saveButtonPressed))
+			action: #selector(saveButtonPressed)
+		)
 		saveButton.isEnabled = !name.isEmpty
 		navigationItem.rightBarButtonItem = saveButton!
 
@@ -95,37 +95,52 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 
 	// MARK: - Table view data source
 
-	public final override func numberOfSections(in tableView: UITableView) -> Int {
-		return 3
+	override public final func numberOfSections(in _: UITableView) -> Int {
+		3
 	}
 
-	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override public final func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if section == 0 {
 			return 2
 		}
 		return 1
 	}
 
-	public final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override public final func tableView(
+		_ tableView: UITableView,
+		cellForRowAt indexPath: IndexPath
+	) -> UITableViewCell {
 		if indexPath == Me.nameIndex {
-			let cell = tableView.dequeueReusableCell(withIdentifier: "name", for: indexPath) as! ActivityDefinitionNameTableViewCell
+			let cell = tableView.dequeueReusableCell(
+				withIdentifier: "name",
+				for: indexPath
+			) as! ActivityDefinitionNameTableViewCell
 			cell.initialName = name
 			cell.notificationToSendOnNameChange = Me.nameChanged
 			cell.notificationToSendOnInvalidName = Me.invalid
 			return cell
 		} else if indexPath == Me.autoNoteIndex {
-			let cell = tableView.dequeueReusableCell(withIdentifier: "autoNote", for: indexPath) as! ActivityDefinitionAutoNoteTableViewCell
+			let cell = tableView.dequeueReusableCell(
+				withIdentifier: "autoNote",
+				for: indexPath
+			) as! ActivityDefinitionAutoNoteTableViewCell
 			cell.autoNote = autoNote
 			cell.notificationToSendOnChange = Me.autoNoteChanged
 			cell.notificationToSendForPopup = Me.showPopup
 			return cell
 		} else if indexPath == Me.descriptionIndex {
-			let cell = tableView.dequeueReusableCell(withIdentifier: "description", for: indexPath) as! ActivityDefinitionDescriptionTableViewCell
+			let cell = tableView.dequeueReusableCell(
+				withIdentifier: "description",
+				for: indexPath
+			) as! ActivityDefinitionDescriptionTableViewCell
 			cell.activityDescription = activityDescription
 			cell.notificationToSendOnChange = Me.descriptionChanged
 			return cell
 		} else if indexPath == Me.tagsIndex {
-			let cell = tableView.dequeueReusableCell(withIdentifier: "tags", for: indexPath) as! ActivityDefinitionTagsTableViewCell
+			let cell = tableView.dequeueReusableCell(
+				withIdentifier: "tags",
+				for: indexPath
+			) as! ActivityDefinitionTagsTableViewCell
 			cell.tagNames = tagNames
 			cell.notificationToSendOnChange = Me.tagsChanged
 			return cell
@@ -134,7 +149,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 		return UITableViewCell()
 	}
 
-	public final override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+	override public final func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		if indexPath == Me.descriptionIndex || indexPath == Me.tagsIndex {
 			return 131
 		}
@@ -143,7 +158,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 
 	// MARK: - Table view delegate
 
-	public final override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+	override public final func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section == 1 {
 			return "Description"
 		}
@@ -153,7 +168,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 		return nil
 	}
 
-	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	override public final func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: false) // selecting a cell should not change the UI
 	}
 
@@ -166,12 +181,12 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 		}
 	}
 
-	@objc private final func invalid(notification: Notification) {
+	@objc private final func invalid(notification _: Notification) {
 		saveButton.isEnabled = false
 	}
 
 	@objc private final func descriptionChanged(notification: Notification) {
-		self.activityDescription = value(for: .text, from: notification)
+		activityDescription = value(for: .text, from: notification)
 	}
 
 	@objc private final func tagsChanged(notification: Notification) {
@@ -189,15 +204,14 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 	@objc private final func showPopup(notification: Notification) {
 		if
 			let controller: UIViewController = value(for: .controller, from: notification),
-			let presenter: Presentr = value(for: .presenter, from: notification)
-		{
+			let presenter: Presentr = value(for: .presenter, from: notification) {
 			customPresentViewController(presenter, viewController: controller, animated: false)
 		}
 	}
 
 	// MARK: - Actions
 
-	@objc private final func saveButtonPressed(_ sender: Any) {
+	@objc private final func saveButtonPressed(_: Any) {
 		do {
 			let transaction = DependencyInjector.get(Database.self).transaction()
 
@@ -209,7 +223,11 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 			} else {
 				activityDefinition = try transaction.new(ActivityDefinition.self)
 				activityDefinition.setSource(.introspective)
-				activityDefinition.recordScreenIndex = Int16(try DependencyInjector.get(Database.self).query(ActivityDefinition.fetchRequest()).count)
+				activityDefinition
+					.recordScreenIndex = Int16(
+						try DependencyInjector.get(Database.self)
+							.query(ActivityDefinition.fetchRequest()).count
+					)
 			}
 
 			activityDefinition.name = name
@@ -226,7 +244,8 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 					object: self,
 					userInfo: self.info([
 						.activityDefinition: activityDefinition,
-					]))
+					])
+				)
 			}
 			navigationController?.popViewController(animated: false)
 		} catch {
@@ -234,13 +253,17 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 			showError(
 				title: "Failed to save activity",
 				message: "Something went wrong while trying to save this activity. Sorry for the inconvenience.",
-				error: error)
+				error: error
+			)
 		}
 	}
 
 	// MARK: - Helper Functions
 
-	private final func updateTagsForActivityDefinition(_ activityDefinition: inout ActivityDefinition, using transaction: Transaction) throws {
+	private final func updateTagsForActivityDefinition(
+		_ activityDefinition: inout ActivityDefinition,
+		using transaction: Transaction
+	) throws {
 		var allTags = [Tag]()
 		for tagName in tagNames {
 			var tag: Tag! = try findTagWithName(tagName, using: transaction)
@@ -257,7 +280,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 		let fetchRequest: NSFetchRequest<Tag> = Tag.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
 		let tags = try transaction.query(fetchRequest)
-		if tags.count > 0 {
+		if !tags.isEmpty {
 			return tags[0]
 		}
 		return nil

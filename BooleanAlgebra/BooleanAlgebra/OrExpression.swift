@@ -11,7 +11,6 @@ import Foundation
 import Common
 
 public final class OrExpression: BooleanExpression {
-
 	// MARK: - Display Information
 
 	public final var description: String {
@@ -42,7 +41,7 @@ public final class OrExpression: BooleanExpression {
 	}
 
 	public final func copy() -> BooleanExpression {
-		return OrExpression(expression1.copy(), expression2.copy())
+		OrExpression(expression1.copy(), expression2.copy())
 	}
 
 	public final func equalTo(_ other: BooleanExpression) -> Bool {

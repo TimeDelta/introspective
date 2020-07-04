@@ -15,7 +15,6 @@ import Samples
 import Settings
 
 public final class AfterDateAndTimeAttributeRestriction: DateAttributeRestriction, Equatable {
-
 	// MARK: - Static Variables
 
 	private typealias Me = AfterDateAndTimeAttributeRestriction
@@ -26,8 +25,8 @@ public final class AfterDateAndTimeAttributeRestriction: DateAttributeRestrictio
 
 	// MARK: - Display Information
 
-	public final override var attributedName: String { return "After date and time" }
-	public final override var description: String {
+	override public final var attributedName: String { "After date and time" }
+	override public final var description: String {
 		do {
 			let dateText = try Me.dateAttribute.convertToDisplayableString(from: date)
 			return "After " + dateText
@@ -58,14 +57,14 @@ public final class AfterDateAndTimeAttributeRestriction: DateAttributeRestrictio
 
 	// MARK: - Attribute Functions
 
-	public final override func value(of attribute: Attribute) throws -> Any? {
+	override public final func value(of attribute: Attribute) throws -> Any? {
 		if !attribute.equalTo(Me.dateAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
 		return date
 	}
 
-	public final override func set(attribute: Attribute, to value: Any?) throws {
+	override public final func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(Me.dateAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
@@ -77,7 +76,7 @@ public final class AfterDateAndTimeAttributeRestriction: DateAttributeRestrictio
 
 	// MARK: - Attribute Restriction Functions
 
-	public final override func samplePasses(_ sample: Sample) throws -> Bool {
+	override public final func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
 		if sampleValue == nil { return false }
 		guard let sampleDate = sampleValue as? Date else {
@@ -86,13 +85,13 @@ public final class AfterDateAndTimeAttributeRestriction: DateAttributeRestrictio
 		return sampleDate.isAfterDate(date, granularity: .nanosecond)
 	}
 
-	public override func copy() -> AttributeRestriction {
-		return AfterDateAndTimeAttributeRestriction(restrictedAttribute: restrictedAttribute, date: date)
+	override public func copy() -> AttributeRestriction {
+		AfterDateAndTimeAttributeRestriction(restrictedAttribute: restrictedAttribute, date: date)
 	}
 
 	// MARK: - Boolean Expression Functions
 
-	public override func predicate() -> NSPredicate? {
+	override public func predicate() -> NSPredicate? {
 		guard !DependencyInjector.get(Settings.self).convertTimeZones else { return nil }
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		return NSPredicate(format: "%K > %@", variableName, date as NSDate)
@@ -100,8 +99,11 @@ public final class AfterDateAndTimeAttributeRestriction: DateAttributeRestrictio
 
 	// MARK: - Equality
 
-	public static func ==(lhs: AfterDateAndTimeAttributeRestriction, rhs: AfterDateAndTimeAttributeRestriction) -> Bool {
-		return lhs.equalTo(rhs)
+	public static func == (
+		lhs: AfterDateAndTimeAttributeRestriction,
+		rhs: AfterDateAndTimeAttributeRestriction
+	) -> Bool {
+		lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
@@ -110,13 +112,13 @@ public final class AfterDateAndTimeAttributeRestriction: DateAttributeRestrictio
 		return equalTo(other)
 	}
 
-	public final override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	override public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is AfterDateAndTimeAttributeRestriction) { return false }
 		let other = otherRestriction as! AfterDateAndTimeAttributeRestriction
 		return equalTo(other)
 	}
 
 	public final func equalTo(_ other: AfterDateAndTimeAttributeRestriction) -> Bool {
-		return restrictedAttribute.equalTo(other.restrictedAttribute) && date == other.date
+		restrictedAttribute.equalTo(other.restrictedAttribute) && date == other.date
 	}
 }

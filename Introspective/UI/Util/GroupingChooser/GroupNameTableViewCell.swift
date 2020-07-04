@@ -9,10 +9,9 @@
 import UIKit
 
 public final class GroupNameTableViewCell: UITableViewCell {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var textField: UITextField!
+	@IBOutlet final var textField: UITextField!
 
 	// MARK: - Instance Variables
 
@@ -25,7 +24,7 @@ public final class GroupNameTableViewCell: UITableViewCell {
 
 	// MARK: - Actions
 
-	@IBAction final func nameChanged(_ sender: Any) {
+	@IBAction final func nameChanged(_: Any) {
 		syncPost(.groupNameEdited, object: self, userInfo: [.text: textField.text ?? ""])
 	}
 }

@@ -14,7 +14,6 @@ import DependencyInjection
 import Samples
 
 public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable {
-
 	private typealias Me = InSameCalendarUnitSubQueryMatcher
 
 	// MARK: - Attributes
@@ -71,15 +70,17 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 
 	public final func getSamples<QuerySampleType: Sample>(
 		from querySamples: [QuerySampleType],
-		matching subQuerySamples: [Sample])
-	throws -> [QuerySampleType] {
-		if subQuerySamples.count == 0 { return [] }
+		matching subQuerySamples: [Sample]
+	)
+		throws -> [QuerySampleType] {
+		if subQuerySamples.isEmpty { return [] }
 
 		var matchingSamples = [QuerySampleType]()
 
 		var applicableSubQuerySamples = subQuerySamples
 		if mostRecentOnly {
-			applicableSubQuerySamples = DependencyInjector.get(SampleUtil.self).sort(samples: subQuerySamples, by: .start, in: .orderedDescending)
+			applicableSubQuerySamples = DependencyInjector.get(SampleUtil.self)
+				.sort(samples: subQuerySamples, by: .start, in: .orderedDescending)
 			applicableSubQuerySamples = [applicableSubQuerySamples[0]]
 		}
 
@@ -87,19 +88,21 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 		let aggregatedSubQuerySamplesByStartDate = try DependencyInjector.get(SampleUtil.self).aggregate(
 			samples: applicableSubQuerySamples,
 			by: timeUnit,
-			for: startDateAttribute)
+			for: startDateAttribute
+		)
 		for currentSample in querySamples {
-			let startAggregationDate = DependencyInjector.get(CalendarUtil.self).start(of: timeUnit, in: currentSample.dates()[.start]!)
+			let startAggregationDate = DependencyInjector.get(CalendarUtil.self)
+				.start(of: timeUnit, in: currentSample.dates()[.start]!)
 			if aggregatedSubQuerySamplesByStartDate[startAggregationDate] != nil {
 				matchingSamples.append(currentSample)
 			} else if
 				let endDate = currentSample.dates()[.end],
-				let endDateAttribute = getEndDateAttribute(for: currentSample)
-			{
+				let endDateAttribute = getEndDateAttribute(for: currentSample) {
 				let aggregatedSubQuerySamplesByEndDate = try DependencyInjector.get(SampleUtil.self).aggregate(
 					samples: applicableSubQuerySamples,
 					by: timeUnit,
-					for: endDateAttribute)
+					for: endDateAttribute
+				)
 
 				let endAggregationDate = DependencyInjector.get(CalendarUtil.self).start(of: timeUnit, in: endDate)
 				if aggregatedSubQuerySamplesByEndDate[endAggregationDate] != nil {
@@ -140,8 +143,8 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 
 	// MARK: - Equality
 
-	public static func ==(lhs: InSameCalendarUnitSubQueryMatcher, rhs: InSameCalendarUnitSubQueryMatcher) -> Bool {
-		return lhs.equalTo(rhs)
+	public static func == (lhs: InSameCalendarUnitSubQueryMatcher, rhs: InSameCalendarUnitSubQueryMatcher) -> Bool {
+		lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
@@ -157,13 +160,13 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 	}
 
 	public final func equalTo(_ other: InSameCalendarUnitSubQueryMatcher) -> Bool {
-		return timeUnit == other.timeUnit && mostRecentOnly == other.mostRecentOnly
+		timeUnit == other.timeUnit && mostRecentOnly == other.mostRecentOnly
 	}
 
 	// MARK: - Helper Functions
 
 	private final func sample(_ sample: Sample, has attribute: Attribute) -> Bool {
-		return sample.attributes.filter{ $0.equalTo(attribute) }.count > 0
+		!sample.attributes.filter { $0.equalTo(attribute) }.isEmpty
 	}
 
 	private final func getStartDateAttribute(for _sample: Sample) -> Attribute {

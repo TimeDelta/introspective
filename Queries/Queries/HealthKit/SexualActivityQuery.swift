@@ -11,12 +11,11 @@ import HealthKit
 
 import Samples
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol SexualActivityQuery: Query {}
 
 public final class SexualActivityQueryImpl: HealthKitQuery<SexualActivity>, SexualActivityQuery {
-
-	final override func initFromHKSample(_ hkSample: HKSample) -> SexualActivity {
+	override final func initFromHKSample(_ hkSample: HKSample) -> SexualActivity {
 		precondition(hkSample is HKCategorySample, "Wrong type of health kit sample for sexual activity")
 		return SexualActivity(hkSample as! HKCategorySample)
 	}

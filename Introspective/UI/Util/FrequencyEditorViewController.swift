@@ -12,7 +12,6 @@ import Common
 import DependencyInjection
 
 public final class FrequencyEditorViewController: UIViewController {
-
 	// MARK: - Static Variables
 
 	private typealias Me = FrequencyEditorViewController
@@ -28,8 +27,8 @@ public final class FrequencyEditorViewController: UIViewController {
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var amountTextField: UITextField!
-	@IBOutlet weak final var timeUnitPicker: UIPickerView!
+	@IBOutlet final var amountTextField: UITextField!
+	@IBOutlet final var timeUnitPicker: UIPickerView!
 
 	// MARK: - Instance Variables
 
@@ -40,7 +39,7 @@ public final class FrequencyEditorViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 
 		timeUnitPicker.dataSource = self
@@ -58,8 +57,8 @@ public final class FrequencyEditorViewController: UIViewController {
 
 	// MARK: - Button Actions
 
-	@IBAction final func saveButtonPressed(_ sender: Any) {
-		var frequency: Frequency? = nil
+	@IBAction final func saveButtonPressed(_: Any) {
+		var frequency: Frequency?
 		if let times = amountTextField?.text {
 			if !times.isEmpty && DependencyInjector.get(StringUtil.self).isNumber(times) {
 				let timeUnit = Me.timeUnits[timeUnitPicker.selectedRow(inComponent: 0)]
@@ -72,7 +71,8 @@ public final class FrequencyEditorViewController: UIViewController {
 				object: self,
 				userInfo: self.info([
 					.frequency: frequency as Any,
-				]))
+				])
+			)
 		}
 		dismiss(animated: false, completion: nil)
 	}
@@ -81,21 +81,19 @@ public final class FrequencyEditorViewController: UIViewController {
 // MARK: - UIPickerViewDataSource
 
 extension FrequencyEditorViewController: UIPickerViewDataSource {
-
-	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
-		return 1
+	public final func numberOfComponents(in _: UIPickerView) -> Int {
+		1
 	}
 
-	public final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return Me.timeUnits.count
+	public final func pickerView(_: UIPickerView, numberOfRowsInComponent _: Int) -> Int {
+		Me.timeUnits.count
 	}
 }
 
 // MARK: - UIPickerViewDelegate
 
 extension FrequencyEditorViewController: UIPickerViewDelegate {
-
-	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return Me.timeUnits[row].description.localizedCapitalized
+	public final func pickerView(_: UIPickerView, titleForRow row: Int, forComponent _: Int) -> String? {
+		Me.timeUnits[row].description.localizedCapitalized
 	}
 }

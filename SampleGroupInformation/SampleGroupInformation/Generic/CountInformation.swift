@@ -13,11 +13,10 @@ import DependencyInjection
 import Samples
 
 public final class CountInformation: AnyInformation {
-
 	// MARK: - Display Information
 
-	public final override var name: String { return "Count" }
-	public final override var description: String { return name }
+	override public final var name: String { "Count" }
+	override public final var description: String { name }
 
 	// MARK: - Initializers
 
@@ -27,18 +26,19 @@ public final class CountInformation: AnyInformation {
 
 	// MARK: - Information Functions
 
-	public final override func compute(forSamples samples: [Sample]) -> String {
-		let filteredSamples = DependencyInjector.get(SampleUtil.self).getOnly(samples: samples, from: startDate, to: endDate)
+	override public final func compute(forSamples samples: [Sample]) -> String {
+		let filteredSamples = DependencyInjector.get(SampleUtil.self)
+			.getOnly(samples: samples, from: startDate, to: endDate)
 		return String(filteredSamples.count)
 	}
 
-	public final override func computeGraphable(forSamples samples: [Sample]) -> String {
-		return compute(forSamples: samples)
+	override public final func computeGraphable(forSamples samples: [Sample]) -> String {
+		compute(forSamples: samples)
 	}
 
 	// MARK: - Equality
 
-	public final override func equalTo(_ other: SampleGroupInformation) -> Bool {
-		return other is CountInformation && attribute.equalTo(other.attribute)
+	override public final func equalTo(_ other: SampleGroupInformation) -> Bool {
+		other is CountInformation && attribute.equalTo(other.attribute)
 	}
 }

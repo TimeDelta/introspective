@@ -12,17 +12,15 @@ import Common
 import Samples
 
 public protocol QueryError: DisplayableError {
-
 	var sampleType: Sample.Type { get }
 
 	init(sampleType: Sample.Type)
 }
 
 public class NoSamplesFoundQueryError: QueryError {
-
 	public final let sampleType: Sample.Type
 	public final let displayableTitle: String
-	public var displayableDescription: String? { return "" }
+	public var displayableDescription: String? { "" }
 	public final var localizedDescription: String {
 		var text = displayableTitle
 		if let description = displayableDescription {
@@ -33,14 +31,13 @@ public class NoSamplesFoundQueryError: QueryError {
 
 	public required init(sampleType: Sample.Type) {
 		self.sampleType = sampleType
-		displayableTitle =  "No \(sampleType.name.lowercased()) entries found."
+		displayableTitle = "No \(sampleType.name.lowercased()) entries found."
 	}
 }
 
 public final class NoHealthKitSamplesFoundQueryError: NoSamplesFoundQueryError {
-
-	public final override var displayableDescription: String? {
-		return "Are you sure you authorized this app to read \(sampleType.name.lowercased()) data?"
+	override public final var displayableDescription: String? {
+		"Are you sure you authorized this app to read \(sampleType.name.lowercased()) data?"
 	}
 
 	public required init(sampleType: Sample.Type) {

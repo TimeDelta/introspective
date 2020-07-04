@@ -6,13 +6,13 @@
 //  Copyright © 2019 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 public class SharedPersistentContainer: NSPersistentContainer {
-
 	override open class func defaultDirectoryURL() -> URL {
-		let storeURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.Introspective")?.appendingPathComponent("Introspective.sqlite")
+		let storeURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.Introspective")?
+			.appendingPathComponent("Introspective.sqlite")
 		return storeURL!
 	}
 }

@@ -14,13 +14,16 @@ import DependencyInjection
 import Persistence
 import Samples
 
-public final class StopLastStartedActivityIntentHandler: ActivityIntentHandler<StopLastStartedActivityIntent>, StopLastStartedActivityIntentHandling {
-
+public final class StopLastStartedActivityIntentHandler: ActivityIntentHandler<StopLastStartedActivityIntent>,
+	StopLastStartedActivityIntentHandling {
 	private typealias Me = StopLastStartedActivityIntentHandler
 
 	private static let log = Log()
 
-	public func handle(intent: StopLastStartedActivityIntent, completion: @escaping (StopLastStartedActivityIntentResponse) -> Void) {
+	public func handle(
+		intent _: StopLastStartedActivityIntent,
+		completion: @escaping (StopLastStartedActivityIntentResponse) -> Void
+	) {
 		Me.log.info("Handling StopLastStartedActivityIntent")
 		do {
 			let activity = try DependencyInjector.get(ActivityDAO.self).stopMostRecentlyStartedIncompleteActivity()

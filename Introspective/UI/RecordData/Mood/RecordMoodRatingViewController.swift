@@ -13,10 +13,9 @@ import DependencyInjection
 import Settings
 
 public final class RecordMoodRatingViewController: UIViewController {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var ratingTextField: UITextField!
+	@IBOutlet final var ratingTextField: UITextField!
 
 	// MARK: - Instance Variables
 
@@ -25,17 +24,18 @@ public final class RecordMoodRatingViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 
 		ratingTextField.text = String(rating)
-		DependencyInjector.get(UiUtil.self).addSaveButtonToKeyboardFor(ratingTextField, target: self, action: #selector(saveClicked))
+		DependencyInjector.get(UiUtil.self)
+			.addSaveButtonToKeyboardFor(ratingTextField, target: self, action: #selector(saveClicked))
 		ratingTextField.becomeFirstResponder()
 	}
 
 	// MARK: - Actions
 
-	@IBAction final func textFieldValueChanged(_ sender: Any) {
+	@IBAction final func textFieldValueChanged(_: Any) {
 		let ratingText = ratingTextField.text!
 		let minRating = DependencyInjector.get(Settings.self).minMood
 		let maxRating = DependencyInjector.get(Settings.self).maxMood
@@ -53,14 +53,15 @@ public final class RecordMoodRatingViewController: UIViewController {
 		}
 	}
 
-	@objc private final func saveClicked(_ sender: Any) {
+	@objc private final func saveClicked(_: Any) {
 		DispatchQueue.main.async {
 			NotificationCenter.default.post(
 				name: self.notificationToSendOnAccept,
 				object: self,
 				userInfo: self.info([
 					.number: self.rating,
-				]))
+				])
+			)
 		}
 		dismiss(animated: false)
 	}

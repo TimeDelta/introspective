@@ -13,10 +13,9 @@ import Common
 import DependencyInjection
 
 public final class DateOrTimeAttributeValueViewController: AttributeValueTypeViewController {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var datePicker: UIDatePicker!
+	@IBOutlet final var datePicker: UIDatePicker!
 
 	// MARK: - Instance Variables
 
@@ -27,7 +26,7 @@ public final class DateOrTimeAttributeValueViewController: AttributeValueTypeVie
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 
 		if dateAttribute != nil {
@@ -58,7 +57,7 @@ public final class DateOrTimeAttributeValueViewController: AttributeValueTypeVie
 
 	// MARK: - Actions
 
-	@IBAction final func dateValueChanged(_ sender: Any) {
+	@IBAction final func dateValueChanged(_: Any) {
 		if timeOfDayAttribute != nil {
 			currentValue = TimeOfDay(datePicker.date)
 		} else if dateAttribute.includeTime {

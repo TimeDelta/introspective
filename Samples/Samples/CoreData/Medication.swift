@@ -7,9 +7,9 @@
 //
 //
 
-import Foundation
 import CoreData
 import CSV
+import Foundation
 
 import Attributes
 import Common
@@ -18,7 +18,6 @@ import DependencyInjection
 import Persistence
 
 public final class Medication: NSManagedObject, CoreDataObject, Attributed, Exportable {
-
 	private typealias Me = Medication
 
 	// MARK: - CoreData Stuff
@@ -28,24 +27,34 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed, Expo
 	// MARK: - Attributes
 
 	public static let nameAttribute = TextAttribute(name: "Name", pluralName: "Names", variableName: "name")
-	public static let dosage = DosageAttribute(description: "You can set this if you have a common dosage that you usually take for this medication. When marking this medication as taken, this will be used as the default value for dosage but can still be overriden. Changing this value will not affect the dosage of any existing records.", optional: true)
-	public static let frequency = FrequencyAttribute(description: "How frequently you are supposed to take this medication.")
-	public static let startedOn = DateOnlyAttribute(name: "Started On", description: "When did you start this medication?", variableName: "startedOn", optional: true)
+	public static let dosage = DosageAttribute(
+		description: "You can set this if you have a common dosage that you usually take for this medication. When marking this medication as taken, this will be used as the default value for dosage but can still be overriden. Changing this value will not affect the dosage of any existing records.",
+		optional: true
+	)
+	public static let frequency =
+		FrequencyAttribute(description: "How frequently you are supposed to take this medication.")
+	public static let startedOn = DateOnlyAttribute(
+		name: "Started On",
+		description: "When did you start this medication?",
+		variableName: "startedOn",
+		optional: true
+	)
 	public static let notes = TextAttribute(name: "Notes", variableName: "notes", optional: true)
 	public static let sourceAttribute = TypedEquatableSelectOneAttribute<String>(
 		name: "Source",
 		typeName: "Medication Source",
 		pluralName: "Sources",
-		possibleValues: Sources.MedicationSourceNum.values.map{ $0.description },
-		possibleValueToString: { $0 })
+		possibleValues: Sources.MedicationSourceNum.values.map { $0.description },
+		possibleValueToString: { $0 }
+	)
 	public static let attributes: [Attribute] = [nameAttribute, dosage, frequency, startedOn, notes, sourceAttribute]
 	public final let attributes: [Attribute] = Me.attributes
 
 	// MARK: - Instance Variables
 
 	public final let attributedName: String = "Medication"
-	public final override var description: String {
-		return "A substance used for medical treatment, especially a medicine or drug."
+	override public final var description: String {
+		"A substance used for medical treatment, especially a medicine or drug."
 	}
 
 	public final var startedOn: Date? {
@@ -53,7 +62,8 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed, Expo
 			if let storedStartedOn = storedStartedOn {
 				return DependencyInjector.get(CoreDataSampleUtil.self).convertTimeZoneIfApplicable(
 					for: storedStartedOn,
-					timeZoneId: startedOnTimeZoneId)
+					timeZoneId: startedOnTimeZoneId
+				)
 			}
 			return nil
 		}
@@ -68,7 +78,7 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed, Expo
 	public final var startedOnTimeZone: TimeZone? {
 		get {
 			if let timeZoneId = startedOnTimeZoneId {
-				return TimeZone.init(identifier: timeZoneId)
+				return TimeZone(identifier: timeZoneId)
 			}
 			return nil
 		}
@@ -113,7 +123,8 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed, Expo
 		try csv.write(field: frequencyText, quoted: true)
 
 		if let startedOn = startedOn {
-			let timestampText = DependencyInjector.get(CalendarUtil.self).string(for: startedOn, dateStyle: .full, timeStyle: .full)
+			let timestampText = DependencyInjector.get(CalendarUtil.self)
+				.string(for: startedOn, dateStyle: .full, timeStyle: .full)
 			try csv.write(field: timestampText, quoted: true)
 		} else {
 			try csv.write(field: "", quoted: true)
@@ -197,11 +208,11 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed, Expo
 	// MARK: - Other
 
 	public final func sortedDoses(ascending: Bool) -> [MedicationDose] {
-		return doses.sortedArray(using: [NSSortDescriptor(key: "timestamp", ascending: ascending)]) as! [MedicationDose]
+		doses.sortedArray(using: [NSSortDescriptor(key: "timestamp", ascending: ascending)]) as! [MedicationDose]
 	}
 
 	public final func getSource() -> Sources.MedicationSourceNum {
-		return Sources.resolveMedicationSource(source)
+		Sources.resolveMedicationSource(source)
 	}
 
 	public final func setSource(_ source: Sources.MedicationSourceNum) {
@@ -213,7 +224,7 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed, Expo
 
 	public final func getStartedOnTimeZone() -> TimeZone? {
 		if let timeZoneId = startedOnTimeZoneId {
-			return TimeZone.init(identifier: timeZoneId)
+			return TimeZone(identifier: timeZoneId)
 		}
 		return nil
 	}
@@ -227,7 +238,7 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed, Expo
 	}
 
 	public final func equalTo(_ other: Medication) -> Bool {
-		return name == other.name &&
+		name == other.name &&
 			dosage == other.dosage &&
 			frequency == other.frequency &&
 			startedOn == other.startedOn &&
@@ -236,7 +247,7 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed, Expo
 
 	// MARK: - Debug
 
-	public final override var debugDescription: String {
+	override public final var debugDescription: String {
 		let dosageText = dosage?.description ?? "nil"
 		let frequencyText = frequency?.description ?? "As needed"
 		let startedOnText = startedOn == nil ? "nil" : try! Me.startedOn.convertToDisplayableString(from: startedOn!)
@@ -248,9 +259,8 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed, Expo
 // MARK: - CoreData stored properties
 
 public extension Medication {
-
 	@nonobjc class func fetchRequest() -> NSFetchRequest<Medication> {
-		return NSFetchRequest<Medication>(entityName: "Medication")
+		NSFetchRequest<Medication>(entityName: "Medication")
 	}
 
 	@NSManaged var name: String
@@ -267,7 +277,6 @@ public extension Medication {
 // MARK: - Generated accessors for doses
 
 public extension Medication {
-
 	@objc(insertObject:inDosesAtIndex:)
 	@NSManaged func insertIntoDoses(_ value: MedicationDose, at idx: Int)
 

@@ -12,7 +12,6 @@ import Attributes
 import Samples
 
 public protocol SubQueryMatcher: Attributed {
-
 	var mostRecentOnly: Bool { get set }
 
 	init()
@@ -23,7 +22,6 @@ public protocol SubQueryMatcher: Attributed {
 }
 
 public extension SubQueryMatcher {
-
 	func equalTo(_ otherMatcher: SubQueryMatcher) -> Bool {
 		if type(of: self) != type(of: otherMatcher) { return false }
 		if mostRecentOnly != otherMatcher.mostRecentOnly { return false }
@@ -32,6 +30,8 @@ public extension SubQueryMatcher {
 }
 
 public class CommonSubQueryMatcherAttributes {
-
-	public static let mostRecentOnly = BooleanAttribute(name: "Most recent only", description: "Use only the most recent entry that matches the given restrictions.")
+	public static let mostRecentOnly = BooleanAttribute(
+		name: "Most recent only",
+		description: "Use only the most recent entry that matches the given restrictions."
+	)
 }

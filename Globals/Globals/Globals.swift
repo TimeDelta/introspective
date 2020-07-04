@@ -9,7 +9,6 @@
 import Foundation
 
 public final class Globals {
-
 	public static var testing = false
 	public static var functionalTesting = false
 	public static var uiTesting = false

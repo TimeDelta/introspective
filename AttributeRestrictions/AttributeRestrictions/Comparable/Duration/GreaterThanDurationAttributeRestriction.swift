@@ -12,7 +12,6 @@ import Attributes
 import Common
 
 public final class GreaterThanDurationAttributeRestriction: TypedGreaterThanAttributeRestrictionBase<Duration> {
-
 	private typealias Me = GreaterThanDurationAttributeRestriction
 	public static let valueAttribute = DurationAttribute(name: "Target Duration", pluralName: "Target Durations")
 
@@ -24,9 +23,9 @@ public final class GreaterThanDurationAttributeRestriction: TypedGreaterThanAttr
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
 
-	public override func copy() -> AttributeRestriction {
-		return GreaterThanDurationAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
+	override public func copy() -> AttributeRestriction {
+		GreaterThanDurationAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
 	}
 
-	public override func predicate() -> NSPredicate? { return nil }
+	override public func predicate() -> NSPredicate? { nil }
 }

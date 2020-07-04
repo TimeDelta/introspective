@@ -10,8 +10,10 @@ import Foundation
 
 import Attributes
 
-public final class GreaterThanOrEqualToDoubleAttributeRestriction: TypedGreaterThanOrEqualToAttributeRestrictionBase<Double>, DoubleAttributeRestriction {
-
+public final class GreaterThanOrEqualToDoubleAttributeRestriction: TypedGreaterThanOrEqualToAttributeRestrictionBase<
+	Double
+>,
+	DoubleAttributeRestriction {
 	private typealias Me = GreaterThanOrEqualToDoubleAttributeRestriction
 	public static let valueAttribute = DoubleAttribute(name: "Value", pluralName: "Values")
 
@@ -23,11 +25,11 @@ public final class GreaterThanOrEqualToDoubleAttributeRestriction: TypedGreaterT
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
 
-	public override func copy() -> AttributeRestriction {
-		return GreaterThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
+	override public func copy() -> AttributeRestriction {
+		GreaterThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
 	}
 
-	public override func predicate() -> NSPredicate? {
+	override public func predicate() -> NSPredicate? {
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		return NSPredicate(format: "%K >= %f", variableName, value)
 	}

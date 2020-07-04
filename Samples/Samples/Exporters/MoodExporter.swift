@@ -6,20 +6,18 @@
 //  Copyright © 2019 Bryan Nova. All rights reserved.
 //
 
-import Foundation
-import CSV
 import CoreData
+import CSV
+import Foundation
 
 import Common
 import DataExport
 import DependencyInjection
 import Persistence
 
-public protocol MoodExporter: Exporter {
-}
+public protocol MoodExporter: Exporter {}
 
 public final class MoodExporterImpl: BaseExporter, MoodExporter {
-
 	// MARK: - Instance Variables
 
 	private final var moods = [Exportable]()
@@ -35,15 +33,17 @@ public final class MoodExporterImpl: BaseExporter, MoodExporter {
 			for: .documentDirectory,
 			in: .userDomainMask,
 			appropriateFor: nil,
-			create: false)
+			create: false
+		)
 		super.init(
 			dataTypePluralName: "Moods",
-			url: DependencyInjector.get(ExporterUtil.self).urlOfExportFile(for: MoodImpl.self, in: directory))
+			url: DependencyInjector.get(ExporterUtil.self).urlOfExportFile(for: MoodImpl.self, in: directory)
+		)
 	}
 
 	// MARK: - Functions
 
-	public final override func exportData() throws {
+	override public final func exportData() throws {
 		guard !isCancelled else { return }
 		guard !(started && isPaused) else {
 			throw GenericError("Tried to start a new moods export with an exporter that is already in use.")
@@ -53,7 +53,7 @@ public final class MoodExporterImpl: BaseExporter, MoodExporter {
 
 		try getMoods()
 
-		guard moods.count > 0 else {
+		guard !moods.isEmpty else {
 			throw GenericDisplayableError(title: "Nothing to export")
 		}
 
@@ -65,13 +65,13 @@ public final class MoodExporterImpl: BaseExporter, MoodExporter {
 		try exportRemaining()
 	}
 
-	public final override func cancel() {
+	override public final func cancel() {
 		isCancelled = true
 		// release memory for moods
 		moods = []
 	}
 
-	public final override func resume() throws {
+	override public final func resume() throws {
 		isPaused = false
 		try exportRemaining()
 	}

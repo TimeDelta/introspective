@@ -9,6 +9,5 @@
 import Foundation
 
 public protocol CoreDataObject {
-
 	static var entityName: String { get }
 }

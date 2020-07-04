@@ -6,11 +6,11 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
-import Presentr
-import Instructions
 import CoreData
+import Instructions
 import os
+import Presentr
+import UIKit
 
 import Common
 import DependencyInjection
@@ -19,7 +19,6 @@ import Samples
 import UIExtensions
 
 public final class RecordMedicationTableViewController: UITableViewController {
-
 	// MARK: - Static Variables
 
 	private typealias Me = RecordMedicationTableViewController
@@ -30,11 +29,13 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	private static let setDosePresenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 250),
-		center: .center)
+		center: .center
+	)
 	private static let presenter = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .full,
 		height: .custom(size: 300),
-		center: .topCenter)
+		center: .topCenter
+	)
 
 	private static let exampleMedicationName = "Example Medication"
 
@@ -47,6 +48,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 			tableView.reloadData()
 		}
 	}
+
 	private final var fetchedResultsController: NSFetchedResultsController<Medication>!
 
 	private final var currentSort: NSSortDescriptor?
@@ -58,7 +60,8 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		CoachMarkInfo(
 			hint: "Tap the + button to create new medications. You can also type the name of a new medication in the search bar and long press the + button to quickly create and mark it as taken.",
 			useArrow: true,
-			view: { return self.navigationItem.rightBarButtonItem?.value(forKey: "view") as? UIView }),
+			view: { self.navigationItem.rightBarButtonItem?.value(forKey: "view") as? UIView }
+		),
 		CoachMarkInfo(
 			hint: "This is the name of the medication. Tap it to edit the medication.",
 			useArrow: true,
@@ -67,43 +70,49 @@ public final class RecordMedicationTableViewController: UITableViewController {
 				return exampleMedicationCell.medicationNameLabel
 			},
 			setup: {
-				if self.tableView.visibleCells.count == 0 {
+				if self.tableView.visibleCells.isEmpty {
 					self.searchController.searchBar.text = Me.exampleMedicationName
 					self.quickCreateAndTake()
 				}
-			}),
+			}
+		),
 		CoachMarkInfo(
 			hint: "Press this button to quickly mark this medication as taken. Long pressing allows setting the dosage and date / time that it was taken.",
 			useArrow: true,
 			view: {
 				let exampleMedicationCell = self.tableView.visibleCells[0] as! RecordMedicationTableViewCell
 				return exampleMedicationCell.takeButton
-			}),
+			}
+		),
 		CoachMarkInfo(
 			hint: "This displays the most recent date and time that this medication was taken. Tap to display the full history for this medication.",
 			useArrow: true,
 			view: {
 				let exampleMedicationCell = self.tableView.visibleCells[0] as! RecordMedicationTableViewCell
 				return exampleMedicationCell.lastTakenOnDateButton
-			}),
+			}
+		),
 		CoachMarkInfo(
 			hint: "Long press on an activity to reorder it.",
 			useArrow: true,
-			view: { return self.tableView.visibleCells[0]}),
+			view: { self.tableView.visibleCells[0] }
+		),
 	]
 
 	private final let log = Log()
-	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Medication Display"))
+	private final let signpost =
+		Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Medication Display"))
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 
 		let addButton = barButton(
 			title: "+",
 			quickPress: #selector(quickPressAddButton),
-			longPress: #selector(longPressAddButton))
+			longPress: #selector(longPressAddButton)
+		)
 		let sortButton = barButton(title: "⇅", action: #selector(sortButtonPressed))
 		navigationItem.rightBarButtonItems = [addButton, sortButton]
 
@@ -118,29 +127,36 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		loadMedications()
 
 		observe(selector: #selector(medicationCreated), name: Me.medicationCreated)
-		observe(selector: #selector(presentSetDoseView), name: RecordMedicationTableViewCell.shouldPresentMedicationDoseView)
+		observe(
+			selector: #selector(presentSetDoseView),
+			name: RecordMedicationTableViewCell.shouldPresentMedicationDoseView
+		)
 		observe(selector: #selector(errorOccurred), name: RecordMedicationTableViewCell.errorOccurred)
-		observe(selector: #selector(presentMedicationDosesTableView), name: RecordMedicationTableViewCell.shouldPresentDosesView)
+		observe(
+			selector: #selector(presentMedicationDosesTableView),
+			name: RecordMedicationTableViewCell.shouldPresentDosesView
+		)
 		observe(selector: #selector(medicationEdited), name: Me.medicationEdited)
 
 		coachMarksDataSourceAndDelegate = DefaultCoachMarksDataSourceAndDelegate(
 			coachMarksInfo,
 			instructionsShownKey: .recordMedicationsInstructionsShown,
 			cleanup: deleteExampleMedication,
-			skipViewLayoutConstraints: defaultCoachMarkSkipViewConstraints())
+			skipViewLayoutConstraints: defaultCoachMarkSkipViewConstraints()
+		)
 		coachMarksController.dataSource = coachMarksDataSourceAndDelegate
 		coachMarksController.delegate = coachMarksDataSourceAndDelegate
 		coachMarksController.skipView = defaultSkipInstructionsView()
 	}
 
-	public final override func viewDidAppear(_ animated: Bool) {
+	override public final func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		if !DependencyInjector.get(UserDefaultsUtil.self).bool(forKey: .recordMedicationsInstructionsShown) {
 			coachMarksController.start(in: .window(over: self))
 		}
 	}
 
-	public final override func viewWillDisappear(_ animated: Bool) {
+	override public final func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		coachMarksController.stop(immediately: true)
 	}
@@ -151,11 +167,11 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 	// MARK: - UITableViewDataSource
 
-	public final override func numberOfSections(in tableView: UITableView) -> Int {
-		return 1
+	override public final func numberOfSections(in _: UITableView) -> Int {
+		1
 	}
 
-	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override public final func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
 		if !finishedLoading {
 			return 1
 		}
@@ -166,16 +182,22 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		return 0
 	}
 
-	public final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override public final func tableView(
+		_ tableView: UITableView,
+		cellForRowAt indexPath: IndexPath
+	) -> UITableViewCell {
 		if !finishedLoading {
 			return tableView.dequeueReusableCell(withIdentifier: "waiting", for: indexPath)
 		}
-		let cell = tableView.dequeueReusableCell(withIdentifier: "recordMedication", for: indexPath) as! RecordMedicationTableViewCell
+		let cell = tableView.dequeueReusableCell(
+			withIdentifier: "recordMedication",
+			for: indexPath
+		) as! RecordMedicationTableViewCell
 		cell.medication = fetchedResultsController.object(at: indexPath)
 		return cell
 	}
 
-	public final override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+	override public final func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
 		if !finishedLoading {
 			return 44
 		}
@@ -184,7 +206,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 	// MARK: - UITableViewDelegate
 
-	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	override public final func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
 		guard finishedLoading else { return }
 		let controller: EditMedicationViewController = viewController(named: "editMedication")
 		controller.notificationToSendOnAccept = Me.medicationEdited
@@ -194,13 +216,17 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 	// MARK: - Table view editing
 
-	public final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-		let delete = UITableViewRowAction(style: .destructive, title: "🗑️") { (_, indexPath) in
+	override public final func tableView(
+		_: UITableView,
+		editActionsForRowAt indexPath: IndexPath
+	) -> [UITableViewRowAction]? {
+		let delete = UITableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
 			let medication = self.fetchedResultsController.object(at: indexPath)
 			let alert = UIAlertController(
 				title: "Are you sure you want to delete \(medication.name)?",
 				message: "This will delete all history for this activity.",
-				preferredStyle: .alert)
+				preferredStyle: .alert
+			)
 			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 				do {
 					let transaction = DependencyInjector.get(Database.self).transaction()
@@ -219,7 +245,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		return [delete]
 	}
 
-	public final override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+	override public final func tableView(_: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		let medicationsFromIndex = Int(fetchedResultsController.object(at: fromIndexPath).recordScreenIndex)
 		let medicationsToIndex = Int(fetchedResultsController.object(at: to).recordScreenIndex)
 		let searchText = getSearchText()
@@ -259,19 +285,18 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 	// MARK: - Received Notifications
 
-	@objc private final func medicationCreated(notification: Notification) {
+	@objc private final func medicationCreated(notification _: Notification) {
 		loadMedications()
 	}
 
-	@objc private final func medicationEdited(notification: Notification) {
+	@objc private final func medicationEdited(notification _: Notification) {
 		loadMedications()
 	}
 
 	@objc private final func presentSetDoseView(notification: Notification) {
 		if
 			let notificationToSend: Notification.Name = value(for: .notificationName, from: notification),
-			let medication: Medication = value(for: .medication, from: notification)
-		{
+			let medication: Medication = value(for: .medication, from: notification) {
 			let controller = viewController(named: "medicationDoseEditor") as! MedicationDoseEditorViewController
 			controller.notificationToSendOnAccept = notificationToSend
 			controller.medication = medication
@@ -316,56 +341,62 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		actionsController.addAction(DependencyInjector.get(UiUtil.self).alertAction(
 			title: "Cancel",
 			style: .cancel,
-			handler: nil))
+			handler: nil
+		))
 		present(actionsController, animated: false, completion: nil)
 	}
 
 	private final func getSortAlphabeticallyAction() -> UIAlertAction {
-		return DependencyInjector.get(UiUtil.self).alertAction(
+		DependencyInjector.get(UiUtil.self).alertAction(
 			title: "Sort Alphabetically",
 			style: .default,
 			handler: { _ in
 				self.currentSort = NSSortDescriptor(key: "name", ascending: true)
 				self.loadMedications()
-			})
+			}
+		)
 	}
 
 	private final func getSortZetabeticallyAction() -> UIAlertAction {
-		return DependencyInjector.get(UiUtil.self).alertAction(
+		DependencyInjector.get(UiUtil.self).alertAction(
 			title: "Sort Zetabetically",
 			style: .default,
 			handler: { _ in
 				self.currentSort = NSSortDescriptor(key: "name", ascending: false)
 				self.loadMedications()
-			})
+			}
+		)
 	}
 
 	private final func getUseDefaultSortAction() -> UIAlertAction {
-		return DependencyInjector.get(UiUtil.self).alertAction(
+		DependencyInjector.get(UiUtil.self).alertAction(
 			title: "Use Default Sort Order",
 			style: .default,
 			handler: { _ in
 				self.currentSort = nil
 				self.loadMedications()
-			})
+			}
+		)
 	}
 
 	private final func getEditDefaultSortAction() -> UIAlertAction {
-		return DependencyInjector.get(UiUtil.self).alertAction(
+		DependencyInjector.get(UiUtil.self).alertAction(
 			title: isEditing ? "Done Editing Default Sort Order" : "Edit Default Sort Order",
 			style: .default,
 			handler: { _ in
 				self.currentSort = nil
-				let _ = self.editButtonItem.target?.perform(self.editButtonItem.action)
+				_ = self.editButtonItem.target?.perform(self.editButtonItem.action)
 				self.loadMedications()
-			})
+			}
+		)
 	}
 
 	private final func getSortByRecentCountAction() -> UIAlertAction {
-		return DependencyInjector.get(UiUtil.self).alertAction(
+		DependencyInjector.get(UiUtil.self).alertAction(
 			title: "Permanent Sort by Recent Count",
 			style: .default,
-			handler: { _ in self.presentSortByRecentCountOptions() })
+			handler: { _ in self.presentSortByRecentCountOptions() }
+		)
 	}
 
 	// MARK: - Helper Functions
@@ -389,14 +420,16 @@ public final class RecordMedicationTableViewController: UITableViewController {
 			fetchedResultsController = DependencyInjector.get(Database.self).fetchedResultsController(
 				type: Medication.self,
 				sortDescriptors: [currentSort ?? defaultSort],
-				cacheName: "medications")
+				cacheName: "medications"
+			)
 			let fetchRequest = fetchedResultsController.fetchRequest
 			let searchText: String = getSearchText()
 			if !searchText.isEmpty {
 				fetchRequest.predicate = NSPredicate(
 					format: "name CONTAINS[cd] %@ OR (notes != nil AND notes CONTAINS[cd] %@)",
 					searchText,
-					searchText)
+					searchText
+				)
 			}
 			try fetchedResultsController.performFetch()
 			signpost.end(name: "resetting fetched results controller")
@@ -406,7 +439,8 @@ public final class RecordMedicationTableViewController: UITableViewController {
 				title: "Failed to retrieve activities",
 				message: "Something went wrong while trying to retrieve the list of your activities. Sorry for the inconvenience.",
 				error: error,
-				tryAgain: loadMedications)
+				tryAgain: loadMedications
+			)
 		}
 	}
 
@@ -423,7 +457,11 @@ public final class RecordMedicationTableViewController: UITableViewController {
 				let medication = try transaction.new(Medication.self)
 				medication.name = searchText
 				medication.setSource(.introspective)
-				medication.recordScreenIndex = Int16(try DependencyInjector.get(Database.self).query(Medication.fetchRequest()).count)
+				medication
+					.recordScreenIndex = Int16(
+						try DependencyInjector.get(Database.self)
+							.query(Medication.fetchRequest()).count
+					)
 				let dose = try transaction.new(MedicationDose.self)
 				dose.medication = medication
 				dose.date = Date()
@@ -436,7 +474,8 @@ public final class RecordMedicationTableViewController: UITableViewController {
 				showError(
 					title: "Failed to create and start",
 					message: "Something went wrong while trying to save this medication. Sorry for the inconvenience.",
-					error: error)
+					error: error
+				)
 			}
 		}
 	}
@@ -445,11 +484,11 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		let fetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
 		let results = try DependencyInjector.get(Database.self).query(fetchRequest)
-		return results.count > 0
+		return !results.isEmpty
 	}
 
 	private final func getSearchText() -> String {
-		return searchController.searchBar.text!
+		searchController.searchBar.text!
 	}
 
 	private final func showMedicationCreationScreen() {
@@ -479,7 +518,6 @@ public final class RecordMedicationTableViewController: UITableViewController {
 // MARK: - UISearchResultsUpdating
 
 extension RecordMedicationTableViewController: UISearchResultsUpdating {
-
 	/// This is used to provide a hook into setting the search text for testing. For some reason
 	/// passing searchController into resetFetchedResultsController() directly from
 	/// updateSearchResults() to use it instead results in localSearchController.searchBar being
@@ -488,7 +526,7 @@ extension RecordMedicationTableViewController: UISearchResultsUpdating {
 		searchController.searchBar.text = text
 	}
 
-	public func updateSearchResults(for searchController: UISearchController) {
+	public func updateSearchResults(for _: UISearchController) {
 		resetFetchedResultsController()
 		tableView.reloadData()
 	}

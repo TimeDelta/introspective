@@ -9,6 +9,5 @@
 import UIKit
 
 public class GraphTypeSetupViewController: UIViewController {
-
 	public final var realNavigationController: UINavigationController!
 }

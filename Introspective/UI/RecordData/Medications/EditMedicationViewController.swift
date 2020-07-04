@@ -6,9 +6,9 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
-import Presentr
 import CoreData
+import Presentr
+import UIKit
 
 import Common
 import DependencyInjection
@@ -16,7 +16,6 @@ import Persistence
 import Samples
 
 public final class EditMedicationViewController: UIViewController {
-
 	// MARK: - Static Variables
 
 	private typealias Me = EditMedicationViewController
@@ -25,35 +24,38 @@ public final class EditMedicationViewController: UIViewController {
 	private static let frequencyPresenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 250),
 		height: .custom(size: 250),
-		center: .topCenter)
+		center: .topCenter
+	)
 	private static let startedOnPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
-		center: .center)
+		center: .center
+	)
 	private static let descriptionPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
-		center: .center)
+		center: .center
+	)
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var nameLabel: UILabel!
-	@IBOutlet weak final var nameTextField: UITextField!
+	@IBOutlet final var nameLabel: UILabel!
+	@IBOutlet final var nameTextField: UITextField!
 
-	@IBOutlet weak final var frequencyButton: UIButton!
-	@IBOutlet weak final var resetFrequencyButton: UIButton!
+	@IBOutlet final var frequencyButton: UIButton!
+	@IBOutlet final var resetFrequencyButton: UIButton!
 
-	@IBOutlet weak final var startedOnButton: UIButton!
-	@IBOutlet weak final var resetStartedOnButton: UIButton!
+	@IBOutlet final var startedOnButton: UIButton!
+	@IBOutlet final var resetStartedOnButton: UIButton!
 
-	@IBOutlet weak final var dosageLabel: UILabel!
-	@IBOutlet weak final var dosageTextField: UITextField!
+	@IBOutlet final var dosageLabel: UILabel!
+	@IBOutlet final var dosageTextField: UITextField!
 
-	@IBOutlet weak final var notesLabel: UILabel!
-	@IBOutlet weak final var notesTextView: UITextView!
+	@IBOutlet final var notesLabel: UILabel!
+	@IBOutlet final var notesTextView: UITextView!
 
-	@IBOutlet weak final var scrollView: UIScrollView!
-	@IBOutlet weak final var scrollContentView: UIView!
+	@IBOutlet final var scrollView: UIScrollView!
+	@IBOutlet final var scrollContentView: UIView!
 
 	// MARK: - Instance Variables
 
@@ -70,7 +72,7 @@ public final class EditMedicationViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 
 		extendedLayoutIncludesOpaqueBars = true
@@ -93,7 +95,8 @@ public final class EditMedicationViewController: UIViewController {
 			title: "Save",
 			style: .done,
 			target: self,
-			action: #selector(saveButtonPressed))
+			action: #selector(saveButtonPressed)
+		)
 		navigationItem.rightBarButtonItem = saveButton
 
 		validate()
@@ -140,53 +143,53 @@ public final class EditMedicationViewController: UIViewController {
 		updateStartedOnDateButtonTitle()
 	}
 
-	@objc private final func keyboardWillHide(notification: Notification) {
+	@objc private final func keyboardWillHide(notification _: Notification) {
 		scrollView.contentSize = scrollContentView.frame.size
 	}
 
 	// MARK: - Button Actions
 
-	@IBAction final func frequencyDescriptionButtonPressed(_ sender: Any) {
-		let controller: DescriptionViewController = viewController(named:"description", fromStoryboard: "Util")
+	@IBAction final func frequencyDescriptionButtonPressed(_: Any) {
+		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")
 		controller.descriptionText = Medication.frequency.extendedDescription ?? "No description"
 		customPresentViewController(Me.descriptionPresenter, viewController: controller, animated: false)
 	}
 
-	@IBAction final func frequencyButtonPressed(_ sender: Any) {
+	@IBAction final func frequencyButtonPressed(_: Any) {
 		let controller: FrequencyEditorViewController = viewController(named: "chooseFrequency", fromStoryboard: "Util")
 		controller.initialFrequency = medication?.frequency
 		controller.notificationToSendOnAccept = Me.frequencyChanged
 		customPresentViewController(Me.frequencyPresenter, viewController: controller, animated: false)
 	}
 
-	@IBAction final func resetFrequencyButtonPressed(_ sender: Any) {
+	@IBAction final func resetFrequencyButtonPressed(_: Any) {
 		frequency = nil
 		updateFrequencyButtonTitle()
 		DependencyInjector.get(UiUtil.self).setButton(resetFrequencyButton, enabled: false, hidden: true)
 	}
 
-	@IBAction final func startedOnDescriptionButtonPressed(_ sender: Any) {
-		let controller: DescriptionViewController = viewController(named:"description", fromStoryboard: "Util")
+	@IBAction final func startedOnDescriptionButtonPressed(_: Any) {
+		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")
 		controller.descriptionText = Medication.startedOn.extendedDescription ?? "No description"
 		customPresentViewController(Me.descriptionPresenter, viewController: controller, animated: false)
 	}
 
-	@IBAction final func startedOnButtonPressed(_ sender: Any) {
-		let controller = viewController(named:"datePicker", fromStoryboard: "Util") as! SelectDateViewController
+	@IBAction final func startedOnButtonPressed(_: Any) {
+		let controller = viewController(named: "datePicker", fromStoryboard: "Util") as! SelectDateViewController
 		controller.initialDate = startedOnDate
 		controller.notificationToSendOnAccept = Me.startedOnChanged
 		controller.datePickerMode = .date
 		customPresentViewController(Me.startedOnPresenter, viewController: controller, animated: false)
 	}
 
-	@IBAction final func resetStartedOnButtonPressed(_ sender: Any) {
+	@IBAction final func resetStartedOnButtonPressed(_: Any) {
 		startedOnDate = nil
 		updateStartedOnDateButtonTitle()
 		DependencyInjector.get(UiUtil.self).setButton(resetStartedOnButton, enabled: false, hidden: true)
 	}
 
-	@IBAction final func dosageDescriptionButtonPressed(_ sender: Any) {
-		let controller: DescriptionViewController = viewController(named:"description", fromStoryboard: "Util")
+	@IBAction final func dosageDescriptionButtonPressed(_: Any) {
+		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")
 		controller.descriptionText = Medication.dosage.extendedDescription ?? "No description"
 		customPresentViewController(Me.descriptionPresenter, viewController: controller, animated: false)
 	}
@@ -200,7 +203,11 @@ public final class EditMedicationViewController: UIViewController {
 			} else {
 				medication = try transaction.new(Medication.self)
 				medication.setSource(.introspective)
-				medication.recordScreenIndex = Int16(try DependencyInjector.get(Database.self).query(Medication.fetchRequest()).count)
+				medication
+					.recordScreenIndex = Int16(
+						try DependencyInjector.get(Database.self)
+							.query(Medication.fetchRequest()).count
+					)
 			}
 			medication.name = nameTextField.text!
 			medication.frequency = frequency
@@ -218,7 +225,8 @@ public final class EditMedicationViewController: UIViewController {
 				notificationToSendOnAccept,
 				userInfo: [
 					.medication: medication as Any,
-				])
+				]
+			)
 			navigationController?.popViewController(animated: false)
 		} catch {
 			log.error("Failed to save medication: %@", errorInfo(error))
@@ -226,7 +234,7 @@ public final class EditMedicationViewController: UIViewController {
 		}
 	}
 
-	@IBAction final func nameOrDosageValueChanged(_ sender: Any) {
+	@IBAction final func nameOrDosageValueChanged(_: Any) {
 		validate()
 	}
 
@@ -241,7 +249,8 @@ public final class EditMedicationViewController: UIViewController {
 	private final func updateStartedOnDateButtonTitle() {
 		var startedOnText = "Not set"
 		if let date = startedOnDate {
-			startedOnText = DependencyInjector.get(CalendarUtil.self).string(for: date, dateStyle: .long, timeStyle: .none)
+			startedOnText = DependencyInjector.get(CalendarUtil.self)
+				.string(for: date, dateStyle: .long, timeStyle: .none)
 		}
 		startedOnButton.setTitle(startedOnText, for: .normal)
 		startedOnButton.accessibilityValue = startedOnText
@@ -286,7 +295,7 @@ public final class EditMedicationViewController: UIViewController {
 	}
 
 	private final func dosageIsValid() -> Bool {
-		 return dosageTextField.text == nil ||
+		dosageTextField.text == nil ||
 			dosageTextField.text!.isEmpty ||
 			Dosage(dosageTextField.text!) != nil
 	}
@@ -295,8 +304,7 @@ public final class EditMedicationViewController: UIViewController {
 // MARK: - UITextViewDelegate
 
 extension EditMedicationViewController: UITextViewDelegate {
-
-	public func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+	public func textViewShouldBeginEditing(_: UITextView) -> Bool {
 		scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height * 2)
 		scrollView.scrollToView(view: notesLabel, animated: false)
 		return true

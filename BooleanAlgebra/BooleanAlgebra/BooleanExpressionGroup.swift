@@ -11,7 +11,6 @@ import Foundation
 import Common
 
 public final class BooleanExpressionGroup: BooleanExpression {
-
 	// MARK: - Display Information
 
 	public final var description: String {
@@ -34,11 +33,11 @@ public final class BooleanExpressionGroup: BooleanExpression {
 	// MARK: - Functions
 
 	public final func evaluate(_ parameters: [UserInfoKey: Any]?) throws -> Bool {
-		return try subExpression.evaluate(parameters)
+		try subExpression.evaluate(parameters)
 	}
 
 	public final func copy() -> BooleanExpression {
-		return BooleanExpressionGroup(subExpression.copy())
+		BooleanExpressionGroup(subExpression.copy())
 	}
 
 	public final func equalTo(_ other: BooleanExpression) -> Bool {
@@ -54,6 +53,6 @@ public final class BooleanExpressionGroup: BooleanExpression {
 	}
 
 	public final func predicate() -> NSPredicate? {
-		return subExpression.predicate()
+		subExpression.predicate()
 	}
 }

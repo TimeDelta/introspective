@@ -12,11 +12,10 @@ import Attributes
 import UIExtensions
 
 final class SortResultsViewController: UIViewController {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var sortAscendingSwitch: UISwitch!
-	@IBOutlet weak final var chooseAttributeView: UIStackView!
+	@IBOutlet final var sortAscendingSwitch: UISwitch!
+	@IBOutlet final var chooseAttributeView: UIStackView!
 
 	// MARK: - Instance Variables
 
@@ -29,7 +28,7 @@ final class SortResultsViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	final override func viewDidLoad() {
+	override final func viewDidLoad() {
 		super.viewDidLoad()
 		sortAscendingSwitch.isOn = sortOrder == .orderedAscending
 
@@ -50,7 +49,8 @@ final class SortResultsViewController: UIViewController {
 			userInfo: info([
 				.attribute: sortAttribute,
 				.comparisonResult: sortOrder,
-			]))
+			])
+		)
 	}
 
 	// MARK: - Helper Functions

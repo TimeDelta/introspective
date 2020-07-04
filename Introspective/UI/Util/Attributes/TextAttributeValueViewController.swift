@@ -11,11 +11,10 @@ import UIKit
 import Attributes
 
 public final class TextAttributeValueViewController: AttributeValueTypeViewController, UITextViewDelegate {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var textView: UITextView!
-	@IBOutlet weak final var validationLabel: UILabel!
+	@IBOutlet final var textView: UITextView!
+	@IBOutlet final var validationLabel: UILabel!
 
 	// MARK: - Instance Variables
 
@@ -23,14 +22,12 @@ public final class TextAttributeValueViewController: AttributeValueTypeViewContr
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 		textView.delegate = self
 		if let text = currentValue as? String {
 			textView.text = text
-		} else {
-
-		}
+		} else {}
 	}
 
 	// MARK: - Functions

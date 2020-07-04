@@ -6,11 +6,10 @@
 //  Copyright © 2019 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import DependencyInjection
+import Foundation
 
 public class CommonInjectionProvider: InjectionProvider {
-
 	private typealias Me = CommonInjectionProvider
 
 	private static let asyncUtil = AsyncUtilImpl()
@@ -37,33 +36,32 @@ public class CommonInjectionProvider: InjectionProvider {
 		UserDefaultsUtil.self,
 	]
 
-	public init() {
-	}
+	public init() {}
 
 	public func get<Type>(_ type: Type.Type) throws -> Type {
-		switch (type) {
-			case is AsyncUtil.Protocol:
-				return Me.asyncUtil as! Type
-			case is CalendarUtil.Protocol:
-				return Me.calendarUtil as! Type
-			case is IOUtil.Protocol:
-				return Me.ioUtil as! Type
-			case is MoodUiUtil.Protocol:
-				return Me.moodUiUtil as! Type
-			case is NotificationUtil.Protocol:
-				return Me.notificationUtil as! Type
-			case is SearchUtil.Protocol:
-				return Me.searchUtil as! Type
-			case is StringUtil.Protocol:
-				return Me.stringUtil as! Type
-			case is TextNormalizationUtil.Protocol:
-				return Me.textNormalizationUtil as! Type
-			case is UiUtil.Protocol:
-				return Me.uiUtil as! Type
-			case is UserDefaultsUtil.Protocol:
-				return Me.userDefaultsUtil as! Type
-			default:
-				throw GenericError("Unknown type: " + String(describing: type))
+		switch type {
+		case is AsyncUtil.Protocol:
+			return Me.asyncUtil as! Type
+		case is CalendarUtil.Protocol:
+			return Me.calendarUtil as! Type
+		case is IOUtil.Protocol:
+			return Me.ioUtil as! Type
+		case is MoodUiUtil.Protocol:
+			return Me.moodUiUtil as! Type
+		case is NotificationUtil.Protocol:
+			return Me.notificationUtil as! Type
+		case is SearchUtil.Protocol:
+			return Me.searchUtil as! Type
+		case is StringUtil.Protocol:
+			return Me.stringUtil as! Type
+		case is TextNormalizationUtil.Protocol:
+			return Me.textNormalizationUtil as! Type
+		case is UiUtil.Protocol:
+			return Me.uiUtil as! Type
+		case is UserDefaultsUtil.Protocol:
+			return Me.userDefaultsUtil as! Type
+		default:
+			throw GenericError("Unknown type: " + String(describing: type))
 		}
 	}
 }

@@ -7,13 +7,12 @@
 //
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 import Persistence
 
 public class Tag: NSManagedObject, CoreDataObject {
-
 	// MARK: CoreData stuff
 
 	public static let entityName = "Tag"
@@ -21,12 +20,12 @@ public class Tag: NSManagedObject, CoreDataObject {
 	// MARK: - Equality
 
 	public final func equalTo(_ other: Tag) -> Bool {
-		return name.localizedLowercase == other.name.localizedLowercase
+		name.localizedLowercase == other.name.localizedLowercase
 	}
 
 	// MARK: - Other
 
-	public final override var description: String {
-		return "Tag named '\(name)'"
+	override public final var description: String {
+		"Tag named '\(name)'"
 	}
 }

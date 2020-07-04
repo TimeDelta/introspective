@@ -6,9 +6,9 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
-import Presentr
 import Instructions
+import Presentr
+import UIKit
 
 import AttributeRestrictions
 import BooleanAlgebra
@@ -19,7 +19,6 @@ import Samples
 import UIExtensions
 
 public protocol QueryViewController: UITableViewController {
-
 	var finishedButtonTitle: String { get set }
 	var finishedButtonNotification: NotificationName { get set }
 	var topmostSampleType: Sample.Type? { get set }
@@ -27,7 +26,6 @@ public protocol QueryViewController: UITableViewController {
 }
 
 public final class QueryViewControllerImpl: UITableViewController, QueryViewController {
-
 	// MARK: - Structs
 
 	struct SampleTypeInfo {
@@ -38,6 +36,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		init(_ sampleType: Sample.Type) {
 			self.sampleType = sampleType
 		}
+
 		init(_ sampleType: Sample.Type, _ matcher: SubQueryMatcher) {
 			self.sampleType = sampleType
 			self.matcher = matcher
@@ -61,10 +60,10 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var addPartButton: UIBarButtonItem!
-	@IBOutlet weak final var finishedButton: UIBarButtonItem!
-	@IBOutlet weak final var editButton: UIBarButtonItem!
-	@IBOutlet weak final var toolbar: UIToolbar!
+	@IBOutlet final var addPartButton: UIBarButtonItem!
+	@IBOutlet final var finishedButton: UIBarButtonItem!
+	@IBOutlet final var editButton: UIBarButtonItem!
+	@IBOutlet final var toolbar: UIToolbar!
 
 	// MARK: - Instance Variables
 
@@ -88,11 +87,13 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		CoachMarkInfo(
 			hint: "This is the main data type. It determines what type of data will be returned by this query. Tap it to change the main data type.",
 			useArrow: true,
-			view: { return self.tableView.visibleCells[0] }),
+			view: { self.tableView.visibleCells[0] }
+		),
 		CoachMarkInfo(
 			hint: "Press the + button to add more parts to the query.",
 			useArrow: false,
-			view: { return self.toolbar }),
+			view: { self.toolbar }
+		),
 		CoachMarkInfo(
 			hint: "This is an attribute restriction. It allows you to restrict which samples are returned based on their attributes. Tap it to edit.",
 			useArrow: false,
@@ -122,7 +123,8 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 				if !hasAttributeRestriction {
 					self.addOrUpdateAttributeRestrictionFor(nil)
 				}
-			}),
+			}
+		),
 		CoachMarkInfo(
 			hint: "This is the start of a subquery. It allows you to restrict what samples are returned based on other types of data. Tap it to edit.",
 			useArrow: false,
@@ -132,19 +134,25 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 			},
 			setup: {
 				if self.queries.count < 2 {
-					self.queries.append((sampleTypeInfo: SampleTypeInfo(DependencyInjector.get(SampleFactory.self).allTypes()[1]), parts: []))
+					self.queries
+						.append((sampleTypeInfo: SampleTypeInfo(
+							DependencyInjector.get(SampleFactory.self)
+								.allTypes()[1]
+						), parts: []))
 					self.partWasAdded()
 				}
-			}),
+			}
+		),
 		CoachMarkInfo(
 			hint: "Swipe left on any part of the query (except the main data type) to reveal a button that will remove that part of the query.",
 			useArrow: true,
-			view: { return self.tableView.visibleCells[2] })
+			view: { self.tableView.visibleCells[2] }
+		),
 	]
 
 	// MARK: - UIViewController Overloads
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 
 		editButton.target = self
@@ -157,7 +165,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		} else if topmostSampleType != nil {
 			queries = [(sampleTypeInfo: SampleTypeInfo(topmostSampleType!), parts: [])]
 			partWasAdded()
-		} else if queries.count == 0 { // add this condition for testing purposes
+		} else if queries.isEmpty { // add this condition for testing purposes
 			queries = [(sampleTypeInfo: SampleTypeInfo(), parts: [])]
 			partWasAdded()
 		}
@@ -172,20 +180,21 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		coachMarksDataSourceAndDelegate = DefaultCoachMarksDataSourceAndDelegate(
 			coachMarksInfo,
 			instructionsShownKey: .queryViewInstructionsShown,
-			skipViewLayoutConstraints: defaultCoachMarkSkipViewConstraints())
+			skipViewLayoutConstraints: defaultCoachMarkSkipViewConstraints()
+		)
 		coachMarksController.dataSource = coachMarksDataSourceAndDelegate
 		coachMarksController.delegate = coachMarksDataSourceAndDelegate
 		coachMarksController.skipView = defaultSkipInstructionsView()
 	}
 
-	public final override func viewDidAppear(_ animated: Bool) {
+	override public final func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		if !DependencyInjector.get(UserDefaultsUtil.self).bool(forKey: .queryViewInstructionsShown) {
 			coachMarksController.start(in: .window(over: self))
 		}
 	}
 
-	public final override func viewWillDisappear(_ animated: Bool) {
+	override public final func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		coachMarksController.stop(immediately: true)
 	}
@@ -196,15 +205,18 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	// MARK: - Table View Data Source
 
-	public final override func numberOfSections(in tableView: UITableView) -> Int {
-		return queries.count
+	override public final func numberOfSections(in _: UITableView) -> Int {
+		queries.count
 	}
 
-	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return queries[section].parts.count + 1 // need to add 1 for the sample type cell
+	override public final func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
+		queries[section].parts.count + 1 // need to add 1 for the sample type cell
 	}
 
-	public final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override public final func tableView(
+		_ tableView: UITableView,
+		cellForRowAt indexPath: IndexPath
+	) -> UITableViewCell {
 		let query = queries[indexPath.section]
 
 		if indexPath.section == 0 && indexPath.row == 0 {
@@ -218,33 +230,37 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		}
 
 		guard indexPath.row != 0 else {
-			let cell = tableView.dequeueReusableCell(withIdentifier: "Sub Data Type", for: indexPath) as! SubSampleTypeTableViewCell
+			let cell = tableView.dequeueReusableCell(
+				withIdentifier: "Sub Data Type",
+				for: indexPath
+			) as! SubSampleTypeTableViewCell
 			cell.matcher = query.sampleTypeInfo.matcher
 			cell.sampleType = query.sampleTypeInfo.sampleType
 			return cell
 		}
 
 		let part = query.parts[indexPath.row - 1]
-		switch (part.type) {
-			case .expression:
-				if let attributeRestriction = part.expression as? AttributeRestriction {
-					let cell = tableView.dequeueReusableCell(
-						withIdentifier: "Attribute Restriction",
-						for: indexPath) as! AttributeRestrictionTableViewCell
-					cell.attributeRestriction = attributeRestriction
-					cell.indentationLevel = getIndentationLevelFor(indexPath)
-					return cell
-				}
-				log.error("Unknown expression type in query")
-				break
-			case .and:
-				return andCell(for: indexPath)
-			case .or:
-				return orCell(for: indexPath)
-			case .groupStart:
-				return groupStartCell(for: indexPath)
-			case .groupEnd:
-				return groupEndCell(for: indexPath)
+		switch part.type {
+		case .expression:
+			if let attributeRestriction = part.expression as? AttributeRestriction {
+				let cell = tableView.dequeueReusableCell(
+					withIdentifier: "Attribute Restriction",
+					for: indexPath
+				) as! AttributeRestrictionTableViewCell
+				cell.attributeRestriction = attributeRestriction
+				cell.indentationLevel = getIndentationLevelFor(indexPath)
+				return cell
+			}
+			log.error("Unknown expression type in query")
+			break
+		case .and:
+			return andCell(for: indexPath)
+		case .or:
+			return orCell(for: indexPath)
+		case .groupStart:
+			return groupStartCell(for: indexPath)
+		case .groupEnd:
+			return groupEndCell(for: indexPath)
 		}
 		log.error("Forgot a type of cell: %@", String(describing: part))
 		return UITableViewCell()
@@ -252,15 +268,15 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	// MARK: - Table View Delegate
 
-	public final override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-		return indexPath.section != 0 || indexPath.row != 0
+	override public final func tableView(_: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+		indexPath.section != 0 || indexPath.row != 0
 	}
 
-	public final override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-		return indexPath.section != 0 || indexPath.row != 0
+	override public final func tableView(_: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+		indexPath.section != 0 || indexPath.row != 0
 	}
 
-	public final override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+	override public final func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		if let fromPart = getPartFor(fromIndexPath) {
 			guard to.section != 0 || to.row != 0 else {
 				log.debug("User tried to move non-data-type query part to top row of query")
@@ -311,28 +327,35 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		validate()
 	}
 
-	public final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+	override public final func tableView(
+		_ tableView: UITableView,
+		editActionsForRowAt indexPath: IndexPath
+	) -> [UITableViewRowAction]? {
 		guard indexPath.section > 0 || indexPath.row > 0 else { return nil }
-		let delete = DependencyInjector.get(UiUtil.self).tableViewRowAction(style: .destructive, title: "🗑️") { (_, indexPath) in
-			if indexPath.row == 0 {
-				let orphanedParts = self.queries[indexPath.section].parts
-				self.queries.remove(at: indexPath.section)
-				self.queries[indexPath.section - 1].parts.append(contentsOf: orphanedParts)
-				self.updateAttributeRestrictionsForSampleType(at: indexPath.section - 1)
-			} else {
-				// row has + 1 because of data type cell
-				self.queries[indexPath.section].parts.remove(at: indexPath.row - 1)
+		let delete = DependencyInjector.get(UiUtil.self)
+			.tableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
+				if indexPath.row == 0 {
+					let orphanedParts = self.queries[indexPath.section].parts
+					self.queries.remove(at: indexPath.section)
+					self.queries[indexPath.section - 1].parts.append(contentsOf: orphanedParts)
+					self.updateAttributeRestrictionsForSampleType(at: indexPath.section - 1)
+				} else {
+					// row has + 1 because of data type cell
+					self.queries[indexPath.section].parts.remove(at: indexPath.row - 1)
+				}
+				tableView.reloadData()
+				self.validate()
 			}
-			tableView.reloadData()
-			self.validate()
-		}
 
 		return [delete]
 	}
 
-	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	override public final func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath.section == 0 && indexPath.row == 0 {
-			let controller = viewController(named: "chooseSampleType", fromStoryboard: "Util") as! ChooseSampleTypeViewController
+			let controller = viewController(
+				named: "chooseSampleType",
+				fromStoryboard: "Util"
+			) as! ChooseSampleTypeViewController
 			editedSampleTypeSectionIndex = 0
 			controller.selectedSampleType = queries[0].sampleTypeInfo.sampleType
 			controller.notificationToSendOnAccept = .sampleTypeEdited
@@ -347,11 +370,11 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	// MARK: - Button Actions
 
-	@IBAction final func infoButtonPressed(_ sender: Any) {
+	@IBAction final func infoButtonPressed(_: Any) {
 		coachMarksController.start(in: .window(over: self))
 	}
 
-	@IBAction final func finishedButtonPressed(_ sender: Any) {
+	@IBAction final func finishedButtonPressed(_: Any) {
 		guard let query = buildQuery() else {
 			log.error("buildQuery() returned nil")
 			showError(title: "Failed to build query")
@@ -362,7 +385,8 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 				finishedButtonNotification,
 				userInfo: [
 					.query: query,
-				])
+				]
+			)
 			popFromNavigationController()
 		} else {
 			let controller = viewController(named: "results", fromStoryboard: "Results") as! ResultsViewController
@@ -386,18 +410,19 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	@objc private final func editButtonPressed() {
 		editButton.title = isEditing ? "Edit" : "Done"
-		let _ = editButtonItem.target?.perform(editButtonItem.action)
+		_ = editButtonItem.target?.perform(editButtonItem.action)
 	}
 
 	// MARK: - Navigation
 
-	public final override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+	override public final func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.destination is EditAttributeRestrictionViewController {
 			let controller = segue.destination as! EditAttributeRestrictionViewController
 			let source = sender as! UITableViewCell
 			editedAttributeRestrictionIndex = tableView.indexPath(for: source)
 			controller.sampleType = queries[editedAttributeRestrictionIndex.section].sampleTypeInfo.sampleType
-			guard let attributeRestriction = getPartFor(editedAttributeRestrictionIndex)?.expression as? AttributeRestriction else {
+			guard let attributeRestriction = getPartFor(editedAttributeRestrictionIndex)?
+				.expression as? AttributeRestriction else {
 				log.error("Expected attribute restriction for segue but did not get one")
 				return
 			}
@@ -465,15 +490,15 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	}
 
 	private final func bottomMostSampleType() -> Sample.Type {
-		return queries.last!.sampleTypeInfo.sampleType
+		queries.last!.sampleTypeInfo.sampleType
 	}
 
 	private final func bottomMostSampleTypeAbove(_ indexPath: IndexPath) -> Sample.Type {
-		return queries[indexPath.section].sampleTypeInfo.sampleType
+		queries[indexPath.section].sampleTypeInfo.sampleType
 	}
 
 	private final func partWasAdded() {
-		if queries.count > 1 || queries[0].parts.count > 0 {
+		if queries.count > 1 || !queries[0].parts.isEmpty {
 			tableView.reloadData()
 		}
 		validate()
@@ -482,7 +507,8 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	private final func defaultAttributeRestriction(for sampleType: Sample.Type) -> AttributeRestriction {
 		let attribute = sampleType.defaultDependentAttribute
 		let restrictionType = DependencyInjector.get(AttributeRestrictionFactory.self).typesFor(attribute)[0]
-		return DependencyInjector.get(AttributeRestrictionFactory.self).initialize(type: restrictionType, forAttribute: attribute)
+		return DependencyInjector.get(AttributeRestrictionFactory.self)
+			.initialize(type: restrictionType, forAttribute: attribute)
 	}
 
 	private final func getPartFor(_ indexPath: IndexPath) -> BooleanExpressionPart? {
@@ -531,26 +557,27 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 			attributeRestriction.restrictedAttribute = sampleType.attributes[attributeIndex]
 			queries[indexPath.section].parts[indexPath.row - 1].expression = attributeRestriction
 		} else {
-			queries[indexPath.section].parts[indexPath.row - 1].expression = defaultAttributeRestriction(for: sampleType)
+			queries[indexPath.section].parts[indexPath.row - 1]
+				.expression = defaultAttributeRestriction(for: sampleType)
 		}
 	}
 
 	// MARK: Populating the UI from a query
 
 	private final func populateQuery(_ query: Query, _ matcher: SubQueryMatcher? = nil) {
-		switch (query) {
-			case is ActivityQuery: addQuerySampleType(Activity.self, matcher); break
-			case is BloodPressureQuery: addQuerySampleType(BloodPressure.self, matcher); break
-			case is BodyMassIndexQuery: addQuerySampleType(BodyMassIndex.self, matcher); break
-			case is HeartRateQuery: addQuerySampleType(HeartRate.self, matcher); break
-			case is LeanBodyMassQuery: addQuerySampleType(LeanBodyMass.self, matcher); break
-			case is MedicationDoseQuery: addQuerySampleType(MedicationDose.self, matcher); break
-			case is MoodQuery: addQuerySampleType(MoodImpl.self, matcher); break
-			case is RestingHeartRateQuery: addQuerySampleType(RestingHeartRate.self, matcher); break
-			case is SexualActivityQuery: addQuerySampleType(SexualActivity.self, matcher); break
-			case is SleepQuery: addQuerySampleType(Sleep.self, matcher); break
-			case is WeightQuery: addQuerySampleType(Weight.self, matcher); break
-			default: log.error("Forgot query type: %@", String(describing: type(of: query)))
+		switch query {
+		case is ActivityQuery: addQuerySampleType(Activity.self, matcher); break
+		case is BloodPressureQuery: addQuerySampleType(BloodPressure.self, matcher); break
+		case is BodyMassIndexQuery: addQuerySampleType(BodyMassIndex.self, matcher); break
+		case is HeartRateQuery: addQuerySampleType(HeartRate.self, matcher); break
+		case is LeanBodyMassQuery: addQuerySampleType(LeanBodyMass.self, matcher); break
+		case is MedicationDoseQuery: addQuerySampleType(MedicationDose.self, matcher); break
+		case is MoodQuery: addQuerySampleType(MoodImpl.self, matcher); break
+		case is RestingHeartRateQuery: addQuerySampleType(RestingHeartRate.self, matcher); break
+		case is SexualActivityQuery: addQuerySampleType(SexualActivity.self, matcher); break
+		case is SleepQuery: addQuerySampleType(Sleep.self, matcher); break
+		case is WeightQuery: addQuerySampleType(Weight.self, matcher); break
+		default: log.error("Forgot query type: %@", String(describing: type(of: query)))
 		}
 		if let expression = query.expression {
 			populateExpression(expression)
@@ -584,7 +611,8 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 			log.error("Unknown expression type")
 			showError(
 				title: "You found a bug",
-				message: "Please report that you found a bug with expression population.")
+				message: "Please report that you found a bug with expression population."
+			)
 			return
 		}
 	}
@@ -604,7 +632,10 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		var query: Query?
 		for queryInfo in queries {
 			do {
-				let currentQuery = try getQueryFor(sampleType: queryInfo.sampleTypeInfo.sampleType, parts: queryInfo.parts)
+				let currentQuery = try getQueryFor(
+					sampleType: queryInfo.sampleTypeInfo.sampleType,
+					parts: queryInfo.parts
+				)
 				if let query = query {
 					guard let matcher = queryInfo.sampleTypeInfo.matcher else {
 						throw GenericError("No matcher")
@@ -621,19 +652,19 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	}
 
 	private final func getQueryFor(sampleType: Sample.Type, parts: [BooleanExpressionPart]) throws -> Query {
-		switch (sampleType) {
-			case is Activity.Type: return try DependencyInjector.get(QueryFactory.self).activityQuery(parts)
-			case is BloodPressure.Type: return try DependencyInjector.get(QueryFactory.self).bloodPressureQuery(parts)
-			case is BodyMassIndex.Type: return try DependencyInjector.get(QueryFactory.self).bmiQuery(parts)
-			case is HeartRate.Type: return try DependencyInjector.get(QueryFactory.self).heartRateQuery(parts)
-			case is LeanBodyMass.Type: return try DependencyInjector.get(QueryFactory.self).leanBodyMassQuery(parts)
-			case is MedicationDose.Type: return try DependencyInjector.get(QueryFactory.self).medicationDoseQuery(parts)
-			case is MoodImpl.Type: return try DependencyInjector.get(QueryFactory.self).moodQuery(parts)
-			case is RestingHeartRate.Type: return try DependencyInjector.get(QueryFactory.self).restingHeartRateQuery(parts)
-			case is SexualActivity.Type: return try DependencyInjector.get(QueryFactory.self).sexualActivityQuery(parts)
-			case is Sleep.Type: return try DependencyInjector.get(QueryFactory.self).sleepQuery(parts)
-			case is Weight.Type: return try DependencyInjector.get(QueryFactory.self).weightQuery(parts)
-			default: throw GenericError("Unknown sample type: \(sampleType.name)")
+		switch sampleType {
+		case is Activity.Type: return try DependencyInjector.get(QueryFactory.self).activityQuery(parts)
+		case is BloodPressure.Type: return try DependencyInjector.get(QueryFactory.self).bloodPressureQuery(parts)
+		case is BodyMassIndex.Type: return try DependencyInjector.get(QueryFactory.self).bmiQuery(parts)
+		case is HeartRate.Type: return try DependencyInjector.get(QueryFactory.self).heartRateQuery(parts)
+		case is LeanBodyMass.Type: return try DependencyInjector.get(QueryFactory.self).leanBodyMassQuery(parts)
+		case is MedicationDose.Type: return try DependencyInjector.get(QueryFactory.self).medicationDoseQuery(parts)
+		case is MoodImpl.Type: return try DependencyInjector.get(QueryFactory.self).moodQuery(parts)
+		case is RestingHeartRate.Type: return try DependencyInjector.get(QueryFactory.self).restingHeartRateQuery(parts)
+		case is SexualActivity.Type: return try DependencyInjector.get(QueryFactory.self).sexualActivityQuery(parts)
+		case is Sleep.Type: return try DependencyInjector.get(QueryFactory.self).sleepQuery(parts)
+		case is Weight.Type: return try DependencyInjector.get(QueryFactory.self).weightQuery(parts)
+		default: throw GenericError("Unknown sample type: \(sampleType.name)")
 		}
 	}
 
@@ -647,7 +678,8 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		if indexPath != nil {
 			title = "What would you like to change this to?"
 		}
-		let actionSheet = DependencyInjector.get(UiUtil.self).alert(title: title, message: nil, preferredStyle: .actionSheet)
+		let actionSheet = DependencyInjector.get(UiUtil.self)
+			.alert(title: title, message: nil, preferredStyle: .actionSheet)
 		if indexPath == nil {
 			actionSheet.addAction(UIAlertAction(title: "Data Type", style: .default) { _ in
 				self.addSampleType()
@@ -656,34 +688,41 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		actionSheet.addAction(DependencyInjector.get(UiUtil.self).alertAction(
 			title: "Attribute Restriction",
 			style: .default,
-			handler: { _ in self.addOrUpdateAttributeRestrictionFor(indexPath) }))
+			handler: { _ in self.addOrUpdateAttributeRestrictionFor(indexPath) }
+		))
 		actionSheet.addAction(DependencyInjector.get(UiUtil.self).alertAction(
 			title: "And",
 			style: .default,
-			handler: getAddOrEditExpressionPartHandlerFor(.and, indexPath)))
+			handler: getAddOrEditExpressionPartHandlerFor(.and, indexPath)
+		))
 		actionSheet.addAction(DependencyInjector.get(UiUtil.self).alertAction(
 			title: "Or",
 			style: .default,
-			handler: getAddOrEditExpressionPartHandlerFor(.or, indexPath)))
+			handler: getAddOrEditExpressionPartHandlerFor(.or, indexPath)
+		))
 		actionSheet.addAction(DependencyInjector.get(UiUtil.self).alertAction(
 			title: "Condition Group Start",
 			style: .default,
-			handler: getAddOrEditExpressionPartHandlerFor(.groupStart, indexPath)))
+			handler: getAddOrEditExpressionPartHandlerFor(.groupStart, indexPath)
+		))
 		actionSheet.addAction(DependencyInjector.get(UiUtil.self).alertAction(
 			title: "Condition Group End",
 			style: .default,
-			handler: getAddOrEditExpressionPartHandlerFor(.groupEnd, indexPath)))
-		actionSheet.addAction(DependencyInjector.get(UiUtil.self).alertAction(title: "Cancel", style: .cancel, handler: nil))
+			handler: getAddOrEditExpressionPartHandlerFor(.groupEnd, indexPath)
+		))
+		actionSheet
+			.addAction(DependencyInjector.get(UiUtil.self).alertAction(title: "Cancel", style: .cancel, handler: nil))
 		presentView(actionSheet)
 	}
 
 	private final func getAddOrEditExpressionPartHandlerFor(
 		_ expressionType: BooleanExpressionType,
-		_ indexPath: IndexPath?)
-	-> ((UIAlertAction) -> Void) {
+		_ indexPath: IndexPath?
+	)
+		-> ((UIAlertAction) -> Void) {
 		return { _ in
 			if let indexPath = indexPath {
-				self.queries[indexPath.section].parts[indexPath.row - 1] = ((type: expressionType, expression: nil))
+				self.queries[indexPath.section].parts[indexPath.row - 1] = (type: expressionType, expression: nil)
 			} else {
 				self.queries[self.queries.count - 1].parts.append((type: expressionType, expression: nil))
 			}
@@ -742,13 +781,13 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		for i in 0 ..< targetIndex {
 			let part = expressionParts[i]
 			switch part.type {
-				case .groupStart:
-					indentation += 1
-					break
-				case .groupEnd:
-					indentation -= 1
-					break
-				default: break
+			case .groupStart:
+				indentation += 1
+				break
+			case .groupEnd:
+				indentation -= 1
+				break
+			default: break
 			}
 		}
 		let targetExpressionPart = expressionParts[targetIndex]

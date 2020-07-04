@@ -12,13 +12,16 @@ import Common
 import DependencyInjection
 
 public extension UITableViewController {
-
-	final func tableViewCell<Type: UITableViewCell>(withIdentifier identifier: String, for indexPath: IndexPath) -> Type {
-		return DependencyInjector.get(UiUtil.self).tableViewCell(
+	final func tableViewCell<Type: UITableViewCell>(
+		withIdentifier identifier: String,
+		for indexPath: IndexPath
+	) -> Type {
+		DependencyInjector.get(UiUtil.self).tableViewCell(
 			from: tableView,
 			withIdentifier: identifier,
 			for: indexPath,
-			as: Type.self)
+			as: Type.self
+		)
 	}
 
 	final func reorderOnLongPress(allowReorder: ((IndexPath, IndexPath?) -> Bool)? = nil) {

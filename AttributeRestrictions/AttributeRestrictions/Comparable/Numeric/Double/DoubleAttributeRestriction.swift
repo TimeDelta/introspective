@@ -8,5 +8,4 @@
 
 import Foundation
 
-public protocol DoubleAttributeRestriction: AttributeRestriction {
-}
+public protocol DoubleAttributeRestriction: AttributeRestriction {}

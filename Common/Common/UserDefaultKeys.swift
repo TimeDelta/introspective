@@ -9,11 +9,10 @@
 import Foundation
 
 public enum UserDefaultKey: String {
-
 	// MARK: - Instructions
 
-	case queryViewInstructionsShown = "queryViewInstructionsShown"
-	case recordActivitiesInstructionsShown = "recordActivitiesInstructionsShown"
-	case recordMedicationsInstructionsShown = "recordMedicationsInstructionsShown"
-	case selectDateViewInstructionsShown = "selectDateViewInstructionsShown"
+	case queryViewInstructionsShown
+	case recordActivitiesInstructionsShown
+	case recordMedicationsInstructionsShown
+	case selectDateViewInstructionsShown
 }

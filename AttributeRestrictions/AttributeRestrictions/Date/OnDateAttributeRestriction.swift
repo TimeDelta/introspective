@@ -16,7 +16,6 @@ import Samples
 import Settings
 
 public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatable {
-
 	// MARK: - Static Variables
 
 	private typealias Me = OnDateAttributeRestriction
@@ -27,8 +26,8 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatab
 
 	// MARK: - Display Information
 
-	public final override var attributedName: String { return "On a specific date" }
-	public final override var description: String {
+	override public final var attributedName: String { "On a specific date" }
+	override public final var description: String {
 		do {
 			let dateText = try Me.dateAttribute.convertToDisplayableString(from: date)
 			return "On " + dateText
@@ -59,14 +58,14 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatab
 
 	// MARK: - Attribute Functions
 
-	public final override func value(of attribute: Attribute) throws -> Any? {
+	override public final func value(of attribute: Attribute) throws -> Any? {
 		if !attribute.equalTo(Me.dateAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
 		return date
 	}
 
-	public final override func set(attribute: Attribute, to value: Any?) throws {
+	override public final func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(Me.dateAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
@@ -76,9 +75,9 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatab
 		date = castedValue
 	}
 
-	// MARk: - Attribute Restriction Functions
+	// MARK: - Attribute Restriction Functions
 
-	public final override func samplePasses(_ sample: Sample) throws -> Bool {
+	override public final func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
 		if sampleValue == nil { return false }
 		guard let sampleDate = sampleValue as? Date else {
@@ -87,13 +86,13 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatab
 		return DependencyInjector.get(CalendarUtil.self).date(sampleDate, occursOnSame: .day, as: date)
 	}
 
-	public override func copy() -> AttributeRestriction {
-		return OnDateAttributeRestriction(restrictedAttribute: restrictedAttribute, date: date)
+	override public func copy() -> AttributeRestriction {
+		OnDateAttributeRestriction(restrictedAttribute: restrictedAttribute, date: date)
 	}
 
 	// MARK: - Boolean Expression Functions
 
-	public override func predicate() -> NSPredicate? {
+	override public func predicate() -> NSPredicate? {
 		guard !DependencyInjector.get(Settings.self).convertTimeZones else { return nil }
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		let minDate = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: date)
@@ -103,13 +102,14 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatab
 			variableName,
 			minDate as NSDate,
 			variableName,
-			maxDate as NSDate)
+			maxDate as NSDate
+		)
 	}
 
 	// MARK: - Equality
 
-	public static func ==(lhs: OnDateAttributeRestriction, rhs: OnDateAttributeRestriction) -> Bool {
-		return lhs.equalTo(rhs)
+	public static func == (lhs: OnDateAttributeRestriction, rhs: OnDateAttributeRestriction) -> Bool {
+		lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
@@ -118,13 +118,13 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatab
 		return equalTo(other)
 	}
 
-	public final override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	override public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is OnDateAttributeRestriction) { return false }
 		let other = otherRestriction as! OnDateAttributeRestriction
 		return equalTo(other)
 	}
 
 	public final func equalTo(_ other: OnDateAttributeRestriction) -> Bool {
-		return restrictedAttribute.equalTo(other.restrictedAttribute) && date == other.date
+		restrictedAttribute.equalTo(other.restrictedAttribute) && date == other.date
 	}
 }

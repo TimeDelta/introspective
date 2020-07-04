@@ -6,28 +6,27 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
+import CoreData
 import UIKit
 import UserNotifications
-import CoreData
 
 import AttributeRestrictions
 import BooleanAlgebra
 import Common
-import DependencyInjection
 import DataExport
 import DataImport
+import DependencyInjection
 import Globals
 import Notifications
 import Persistence
 import Queries
-import Samples
 import SampleGroupers
 import SampleGroupInformation
+import Samples
 import Settings
 
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
-
 	private typealias Me = AppDelegate
 
 	final var window: UIWindow?
@@ -37,9 +36,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 	private final let log = Log()
 
 	final func application(
-		_ application: UIApplication,
-		willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil)
-	-> Bool {
+		_: UIApplication,
+		willFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]? = nil
+	)
+		-> Bool {
 		Me.registerDependencies()
 
 		userNotificationDelegate = UserNotificationDelegate(window)
@@ -51,7 +51,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		return true
 	}
 
-	final func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+	final func application(
+		_: UIApplication,
+		didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]? = nil
+	) -> Bool {
 		Globals.testing = CommandLine.arguments.contains("--testing")
 		Globals.functionalTesting = CommandLine.arguments.contains("--functional-testing")
 		Globals.uiTesting = CommandLine.arguments.contains("--ui-testing")
@@ -69,26 +72,26 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		return true
 	}
 
-	final func applicationWillResignActive(_ application: UIApplication) {
+	final func applicationWillResignActive(_: UIApplication) {
 		// Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
 		// Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
 	}
 
-	final func applicationDidEnterBackground(_ application: UIApplication) {
+	final func applicationDidEnterBackground(_: UIApplication) {
 		// Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
 		// If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 	}
 
-	final func applicationWillEnterForeground(_ application: UIApplication) {
+	final func applicationWillEnterForeground(_: UIApplication) {
 		// Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
 	}
 
-	final func applicationDidBecomeActive(_ application: UIApplication) {
+	final func applicationDidBecomeActive(_: UIApplication) {
 		// Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 		DependencyInjector.get(Database.self).refreshContext()
 	}
 
-	final func applicationWillTerminate(_ application: UIApplication) {
+	final func applicationWillTerminate(_: UIApplication) {
 		// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 	}
 

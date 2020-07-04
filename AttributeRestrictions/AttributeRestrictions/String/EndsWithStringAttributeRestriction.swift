@@ -12,7 +12,6 @@ import Attributes
 import Samples
 
 public final class EndsWithStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, Equatable {
-
 	private typealias Me = EndsWithStringAttributeRestriction
 
 	// MARK: - Attributes
@@ -24,9 +23,9 @@ public final class EndsWithStringAttributeRestriction: AnyAttributeRestriction, 
 
 	// MARK: - Display Information
 
-	public final override var attributedName: String { return "Ends with" }
-	public final override var description: String {
-		return restrictedAttribute.name.localizedCapitalized + " ends with '" + suffix + "'"
+	override public final var attributedName: String { "Ends with" }
+	override public final var description: String {
+		restrictedAttribute.name.localizedCapitalized + " ends with '" + suffix + "'"
 	}
 
 	// MARK: - Instance Variables
@@ -48,12 +47,12 @@ public final class EndsWithStringAttributeRestriction: AnyAttributeRestriction, 
 
 	// MARK: - Attributed Functions
 
-	public final override func value(of attribute: Attribute) throws -> Any? {
+	override public final func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(Me.suffixAttribute) { return suffix }
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
-	public final override func set(attribute: Attribute, to value: Any?) throws {
+	override public final func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(Me.suffixAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
@@ -65,7 +64,7 @@ public final class EndsWithStringAttributeRestriction: AnyAttributeRestriction, 
 
 	// MARK: - Attribute Restriction Functions
 
-	public final override func samplePasses(_ sample: Sample) throws -> Bool {
+	override public final func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
 		if sampleValue == nil { return suffix.isEmpty }
 		guard let value = sampleValue as? String else {
@@ -74,19 +73,19 @@ public final class EndsWithStringAttributeRestriction: AnyAttributeRestriction, 
 		return value.localizedLowercase.hasSuffix(suffix)
 	}
 
-	public override func copy() -> AttributeRestriction {
-		return EndsWithStringAttributeRestriction(restrictedAttribute: restrictedAttribute, suffix: suffix)
+	override public func copy() -> AttributeRestriction {
+		EndsWithStringAttributeRestriction(restrictedAttribute: restrictedAttribute, suffix: suffix)
 	}
 
-	public override func predicate() -> NSPredicate? {
+	override public func predicate() -> NSPredicate? {
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		return NSPredicate(format: "%K ENDSWITH[cd] %@", variableName, suffix)
 	}
 
 	// MARK: - Equality
 
-	public static func ==(lhs: EndsWithStringAttributeRestriction, rhs: EndsWithStringAttributeRestriction) -> Bool {
-		return lhs.equalTo(rhs)
+	public static func == (lhs: EndsWithStringAttributeRestriction, rhs: EndsWithStringAttributeRestriction) -> Bool {
+		lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
@@ -95,13 +94,13 @@ public final class EndsWithStringAttributeRestriction: AnyAttributeRestriction, 
 		return equalTo(other)
 	}
 
-	public final override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	override public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is EndsWithStringAttributeRestriction) { return false }
 		let other = otherRestriction as! EndsWithStringAttributeRestriction
 		return equalTo(other)
 	}
 
 	public final func equalTo(_ other: EndsWithStringAttributeRestriction) -> Bool {
-		return restrictedAttribute.equalTo(other.restrictedAttribute) && suffix == other.suffix
+		restrictedAttribute.equalTo(other.restrictedAttribute) && suffix == other.suffix
 	}
 }

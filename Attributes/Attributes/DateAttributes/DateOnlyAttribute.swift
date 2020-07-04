@@ -12,9 +12,8 @@ import Common
 import DependencyInjection
 
 public final class DateOnlyAttribute: DateAttributeBase {
-
-	public final override var typeName: String {
-		return "Date"
+	override public final var typeName: String {
+		"Date"
 	}
 
 	public init(
@@ -24,8 +23,8 @@ public final class DateOnlyAttribute: DateAttributeBase {
 		variableName: String? = nil,
 		optional: Bool = false,
 		earliestDate: Date? = nil,
-		latestDate: Date? = nil)
-	{
+		latestDate: Date? = nil
+	) {
 		super.init(
 			name: name,
 			pluralName: pluralName,
@@ -35,10 +34,11 @@ public final class DateOnlyAttribute: DateAttributeBase {
 			includeTime: false,
 			format: "MMMM d, yyyy",
 			earliestDate: earliestDate,
-			latestDate: latestDate)
+			latestDate: latestDate
+		)
 	}
 
-	public final override func typedValuesAreEqual(_ first: Date, _ second: Date) -> Bool {
+	override public final func typedValuesAreEqual(_ first: Date, _ second: Date) -> Bool {
 		let firstDate = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: first)
 		let secondDate = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: second)
 		return firstDate == secondDate

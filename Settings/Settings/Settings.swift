@@ -7,8 +7,8 @@
 //
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 import Common
 import DependencyInjection
@@ -24,9 +24,8 @@ public enum Setting {
 	case convertTimeZones
 }
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol Settings: CoreDataObject {
-
 	// have to do it this way because the dependency injection system does not allow assignment
 	var minMood: Double { get }
 	func setMinMood(_ value: Double)
@@ -56,7 +55,6 @@ public protocol Settings: CoreDataObject {
 }
 
 public final class SettingsImpl: NSManagedObject, Settings {
-
 	// MARK: - Static Variables
 
 	private typealias Me = SettingsImpl
@@ -65,10 +63,12 @@ public final class SettingsImpl: NSManagedObject, Settings {
 	// MARK: - Moods
 
 	// MARK: Min Mood
-	private final var newMinMood: Double? = nil
+
+	private final var newMinMood: Double?
 	public final var minMood: Double {
-		return newMinMood ?? storedMinMood
+		newMinMood ?? storedMinMood
 	}
+
 	public final func setMinMood(_ value: Double) {
 		if value != storedMinMood {
 			newMinMood = value
@@ -76,10 +76,12 @@ public final class SettingsImpl: NSManagedObject, Settings {
 	}
 
 	// MARK: Max Mood
-	private final var newMaxMood: Double? = nil
+
+	private final var newMaxMood: Double?
 	public final var maxMood: Double {
-		return newMaxMood ?? storedMaxMood
+		newMaxMood ?? storedMaxMood
 	}
+
 	public final func setMaxMood(_ value: Double) {
 		if value != storedMaxMood {
 			newMaxMood = value
@@ -87,10 +89,12 @@ public final class SettingsImpl: NSManagedObject, Settings {
 	}
 
 	// MARK: Discrete Moods
-	private final var newDiscreteMoods: Bool? = nil
+
+	private final var newDiscreteMoods: Bool?
 	public final var discreteMoods: Bool {
-		return newDiscreteMoods ?? storedDiscreteMoods
+		newDiscreteMoods ?? storedDiscreteMoods
 	}
+
 	public final func setDiscreteMoods(_ value: Bool) {
 		if value != storedDiscreteMoods {
 			newDiscreteMoods = value
@@ -98,10 +102,12 @@ public final class SettingsImpl: NSManagedObject, Settings {
 	}
 
 	// MARK: Scale Moods On Import
-	private final var newScaleMoodsOnImport: Bool? = nil
+
+	private final var newScaleMoodsOnImport: Bool?
 	public final var scaleMoodsOnImport: Bool {
-		return newScaleMoodsOnImport ?? storedScaleMoodsOnImport
+		newScaleMoodsOnImport ?? storedScaleMoodsOnImport
 	}
+
 	public final func setScaleMoodsOnImport(_ value: Bool) {
 		if value != storedScaleMoodsOnImport {
 			newScaleMoodsOnImport = value
@@ -111,10 +117,12 @@ public final class SettingsImpl: NSManagedObject, Settings {
 	// MARK: - Activities
 
 	// MARK: Auto Ignore Enabled
-	private final var newAutoIgnoreEnabled: Bool? = nil
+
+	private final var newAutoIgnoreEnabled: Bool?
 	public final var autoIgnoreEnabled: Bool {
-		return newAutoIgnoreEnabled ?? storedAutoIgnoreEnabled
+		newAutoIgnoreEnabled ?? storedAutoIgnoreEnabled
 	}
+
 	public final func setAutoIgnoreEnabled(_ value: Bool) {
 		if value != storedAutoIgnoreEnabled {
 			newAutoIgnoreEnabled = value
@@ -122,10 +130,12 @@ public final class SettingsImpl: NSManagedObject, Settings {
 	}
 
 	// MARK: Auto Ignore Seconds
-	private final var newAutoIgnoreSeconds: Int? = nil
+
+	private final var newAutoIgnoreSeconds: Int?
 	public final var autoIgnoreSeconds: Int {
-		return newAutoIgnoreSeconds ?? storedAutoIgnoreSeconds
+		newAutoIgnoreSeconds ?? storedAutoIgnoreSeconds
 	}
+
 	public final func setAutoIgnoreSeconds(_ value: Int) {
 		if value != storedAutoIgnoreSeconds {
 			newAutoIgnoreSeconds = value
@@ -135,10 +145,12 @@ public final class SettingsImpl: NSManagedObject, Settings {
 	// MARK: - General
 
 	// MARK: Convert Time Zones
-	private final var newConvertTimeZones: Bool? = nil
+
+	private final var newConvertTimeZones: Bool?
 	public final var convertTimeZones: Bool {
-		return newConvertTimeZones ?? storedConvertTimeZones
+		newConvertTimeZones ?? storedConvertTimeZones
 	}
+
 	public final func setConvertTimeZones(_ value: Bool) {
 		if value != storedConvertTimeZones {
 			newConvertTimeZones = value
@@ -148,14 +160,14 @@ public final class SettingsImpl: NSManagedObject, Settings {
 	// MARK: - Other Functions
 
 	public final func changed(_ setting: Setting) -> Bool {
-		switch (setting) {
-			case .minMood: return newMinMood != nil
-			case .maxMood: return newMaxMood != nil
-			case .discreteMoods: return newDiscreteMoods != nil
-			case .scaleMoodsOnImport: return newScaleMoodsOnImport != nil
-			case .autoIgnoreEnabled: return newAutoIgnoreEnabled != nil
-			case .autoIgnoreSeconds: return newAutoIgnoreSeconds != nil
-			case .convertTimeZones: return newConvertTimeZones != nil
+		switch setting {
+		case .minMood: return newMinMood != nil
+		case .maxMood: return newMaxMood != nil
+		case .discreteMoods: return newDiscreteMoods != nil
+		case .scaleMoodsOnImport: return newScaleMoodsOnImport != nil
+		case .autoIgnoreEnabled: return newAutoIgnoreEnabled != nil
+		case .autoIgnoreSeconds: return newAutoIgnoreSeconds != nil
+		case .convertTimeZones: return newConvertTimeZones != nil
 		}
 	}
 
@@ -186,9 +198,8 @@ public final class SettingsImpl: NSManagedObject, Settings {
 // MARK: - Stored Values
 
 public extension SettingsImpl {
-
 	@nonobjc class func fetchRequest() -> NSFetchRequest<SettingsImpl> {
-		return NSFetchRequest<SettingsImpl>(entityName: "Settings")
+		NSFetchRequest<SettingsImpl>(entityName: "Settings")
 	}
 
 	@NSManaged fileprivate var storedMinMood: Double

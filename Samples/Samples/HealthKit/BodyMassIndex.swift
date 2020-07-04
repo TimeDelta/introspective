@@ -14,7 +14,6 @@ import Common
 import DependencyInjection
 
 public final class BodyMassIndex: HealthKitQuantitySample {
-
 	private typealias Me = BodyMassIndex
 
 	// MARK: - HealthKit Stuff
@@ -25,7 +24,7 @@ public final class BodyMassIndex: HealthKitQuantitySample {
 	public static let writePermissions: Set<HKSampleType> = Set([sampleType])
 	public static var unit: HKUnit = HKUnit.count()
 	public final var unitString: String {
-		return Me.unit.unitString
+		Me.unit.unitString
 	}
 
 	public static func initUnits() {
@@ -35,7 +34,8 @@ public final class BodyMassIndex: HealthKitQuantitySample {
 	// MARK: - Display Information
 
 	public static let name: String = "Body Mass Index"
-	public static let description: String = "Body Mass Index (BMI) is an indicator of your body fat. It's calculated from your height and weight, and can tell you whether you are underweight, normal, overweight, or obese. It can also help you gauge your risk for diseases that can occur with more body fat."
+	public static let description: String =
+		"Body Mass Index (BMI) is an indicator of your body fat. It's calculated from your height and weight, and can tell you whether you are underweight, normal, overweight, or obese. It can also help you gauge your risk for diseases that can occur with more body fat."
 
 	// MARK: - Attributes
 
@@ -43,7 +43,7 @@ public final class BodyMassIndex: HealthKitQuantitySample {
 	public static let attributes: [Attribute] = [CommonSampleAttributes.healthKitTimestamp, bmi]
 	public static let defaultDependentAttribute: Attribute = bmi
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp
-	public final var attributes: [Attribute] { return Me.attributes }
+	public final var attributes: [Attribute] { Me.attributes }
 
 	// MARK: - Instance Variables
 
@@ -74,19 +74,20 @@ public final class BodyMassIndex: HealthKitQuantitySample {
 			quantity: quantity,
 			start: timestamp,
 			end: timestamp,
-			metadata: [HKMetadataKeyTimeZone : TimeZone.autoupdatingCurrent.identifier])
+			metadata: [HKMetadataKeyTimeZone: TimeZone.autoupdatingCurrent.identifier]
+		)
 	}
 
 	// MARK: - HealthKitQuantitySample Functions
 
 	public func quantityValue() -> Double {
-		return bmi
+		bmi
 	}
 
 	// MARK: - Sample Functions
 
 	public final func dates() -> [DateType: Date] {
-		return [.start: timestamp]
+		[.start: timestamp]
 	}
 
 	// MARK: - Attributed Functions
@@ -123,9 +124,8 @@ public final class BodyMassIndex: HealthKitQuantitySample {
 // MARK: - Equatable
 
 extension BodyMassIndex: Equatable {
-
-	public static func ==(lhs: BodyMassIndex, rhs: BodyMassIndex) -> Bool {
-		return lhs.equalTo(rhs)
+	public static func == (lhs: BodyMassIndex, rhs: BodyMassIndex) -> Bool {
+		lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
@@ -141,15 +141,14 @@ extension BodyMassIndex: Equatable {
 	}
 
 	public final func equalTo(_ other: BodyMassIndex) -> Bool {
-		return timestamp == other.timestamp && bmi == other.bmi
+		timestamp == other.timestamp && bmi == other.bmi
 	}
 }
 
 // MARK: - Debug
 
 extension BodyMassIndex: CustomDebugStringConvertible {
-
 	public final var debugDescription: String {
-		return "BodyMassIndex of \(bmi) at " + DependencyInjector.get(CalendarUtil.self).string(for: timestamp)
+		"BodyMassIndex of \(bmi) at " + DependencyInjector.get(CalendarUtil.self).string(for: timestamp)
 	}
 }

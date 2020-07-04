@@ -6,11 +6,10 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import DependencyInjection
+import Foundation
 
 public extension Date {
-
 	func isToday() -> Bool {
 		let now = Date()
 		let startOfDay = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: now)
@@ -20,11 +19,11 @@ public extension Date {
 	}
 
 	func next(_ dayOfWeek: DayOfWeek) -> Date {
-		return get(.forward, dayOfWeek)
+		get(.forward, dayOfWeek)
 	}
 
 	func previous(_ dayOfWeek: DayOfWeek) -> Date {
-		return get(.backward, dayOfWeek)
+		get(.backward, dayOfWeek)
 	}
 
 	private func get(_ direction: Calendar.SearchDirection, _ dayOfWeek: DayOfWeek) -> Date {
@@ -33,6 +32,11 @@ public extension Date {
 		var nextDateComponent = DateComponents()
 		nextDateComponent.weekday = dayIndex
 
-		return calendar.nextDate(after: self, matching: nextDateComponent, matchingPolicy: .nextTime, direction: direction)!
+		return calendar.nextDate(
+			after: self,
+			matching: nextDateComponent,
+			matchingPolicy: .nextTime,
+			direction: direction
+		)!
 	}
 }

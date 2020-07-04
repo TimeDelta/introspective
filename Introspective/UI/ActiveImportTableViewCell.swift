@@ -13,13 +13,12 @@ import DataImport
 import DependencyInjection
 
 public final class ActiveImportTableViewCell: UITableViewCell {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var cancelButton: UIButton!
-	@IBOutlet weak final var descriptionLabel: UILabel!
-	@IBOutlet weak final var progressView: UIProgressView!
-	@IBOutlet weak final var percentLabel: UILabel!
+	@IBOutlet final var cancelButton: UIButton!
+	@IBOutlet final var descriptionLabel: UILabel!
+	@IBOutlet final var progressView: UIProgressView!
+	@IBOutlet final var percentLabel: UILabel!
 
 	// MARK: - Instance Variables
 
@@ -38,18 +37,19 @@ public final class ActiveImportTableViewCell: UITableViewCell {
 
 	// MARK: - UITableViewCell Overrides
 
-	public final override func prepareForReuse() {
-		DependencyInjector.get(UiUtil.self).setButton(self.cancelButton, enabled: true, hidden: false)
+	override public final func prepareForReuse() {
+		DependencyInjector.get(UiUtil.self).setButton(cancelButton, enabled: true, hidden: false)
 	}
 
 	// MARK: - Actions
 
-	@IBAction final func cancelImport(_ sender: Any) {
+	@IBAction final func cancelImport(_: Any) {
 		DependencyInjector.get(UiUtil.self).setButton(cancelButton, enabled: false, hidden: false)
 		let alert = UIAlertController(
 			title: "Cancel \(descriptionLabel.text!) import?",
 			message: nil,
-			preferredStyle: .alert)
+			preferredStyle: .alert
+		)
 		alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 			self.timer?.invalidate()
 			self.post(.cancelBackgroundTask, userInfo: [.backgroundTaskId: String(self.backgroundTaskId.rawValue)])
@@ -84,6 +84,7 @@ public final class ActiveImportTableViewCell: UITableViewCell {
 			target: self,
 			selector: #selector(updateProgress),
 			userInfo: nil,
-			repeats: true)
+			repeats: true
+		)
 	}
 }

@@ -10,7 +10,6 @@ import Foundation
 
 /// This decouples the name of the source from the storage of the source
 public final class Sources {
-
 	// MARK: - Source Enums
 
 	// ! Only add to the end of this list
@@ -26,9 +25,9 @@ public final class Sources {
 		case aTracker
 
 		public var description: String {
-			switch (self) {
-				case .introspective: return "Introspective"
-				case .aTracker: return "ATracker"
+			switch self {
+			case .introspective: return "Introspective"
+			case .aTracker: return "ATracker"
 			}
 		}
 	}
@@ -46,9 +45,9 @@ public final class Sources {
 		case easyPill
 
 		public var description: String {
-			switch (self) {
-				case .introspective: return "Introspective"
-				case .easyPill: return "EasyPill"
+			switch self {
+			case .introspective: return "Introspective"
+			case .easyPill: return "EasyPill"
 			}
 		}
 	}
@@ -66,9 +65,9 @@ public final class Sources {
 		case wellness
 
 		public var description: String {
-			switch (self) {
-				case .introspective: return "Introspective"
-				case .wellness: return "Wellness"
+			switch self {
+			case .introspective: return "Introspective"
+			case .wellness: return "Wellness"
 			}
 		}
 	}
@@ -78,28 +77,28 @@ public final class Sources {
 	// MARK: From Int
 
 	public static func resolveActivitySource(_ num: Int16) -> ActivitySourceNum {
-		return ActivitySourceNum.values[Int(num)]
+		ActivitySourceNum.values[Int(num)]
 	}
 
 	public static func resolveMedicationSource(_ num: Int16) -> MedicationSourceNum {
-		return MedicationSourceNum.values[Int(num)]
+		MedicationSourceNum.values[Int(num)]
 	}
 
 	public static func resolveMoodSource(_ num: Int16) -> MoodSourceNum {
-		return MoodSourceNum.values[Int(num)]
+		MoodSourceNum.values[Int(num)]
 	}
 
 	// MARK: From String
 
 	public static func resolveActivitySource(_ string: String) -> ActivitySourceNum? {
-		return ActivitySourceNum.values.first(where: { $0.description.localizedLowercase == string.localizedLowercase })
+		ActivitySourceNum.values.first(where: { $0.description.localizedLowercase == string.localizedLowercase })
 	}
 
 	public static func resolveMedicationSource(_ string: String) -> MedicationSourceNum? {
-		return MedicationSourceNum.values.first(where: { $0.description.localizedLowercase == string.localizedLowercase })
+		MedicationSourceNum.values.first(where: { $0.description.localizedLowercase == string.localizedLowercase })
 	}
 
 	public static func resolveMoodSource(_ string: String) -> MoodSourceNum? {
-		return MoodSourceNum.values.first(where: { $0.description.localizedLowercase == string.localizedLowercase })
+		MoodSourceNum.values.first(where: { $0.description.localizedLowercase == string.localizedLowercase })
 	}
 }

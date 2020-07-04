@@ -13,22 +13,22 @@ import Common
 import Samples
 
 public final class BeforeTimeOfDayAttributeRestriction: DateAttributeRestriction, Equatable {
-
 	// MARK: - Static Variables
 
 	private typealias Me = BeforeTimeOfDayAttributeRestriction
 	public static let timeAttribute = TimeOfDayAttribute(
 		name: "Time",
 		pluralName: "Times",
-		description: "The time of day before which a date must occur to pass this restriction")
+		description: "The time of day before which a date must occur to pass this restriction"
+	)
 	public static var attributes: [Attribute] = [
 		timeAttribute,
 	]
 
 	// MARK: - Display Information
 
-	public final override var attributedName: String { return "Before time of day" }
-	public final override var description: String {
+	override public final var attributedName: String { "Before time of day" }
+	override public final var description: String {
 		do {
 			let timeText = try Me.timeAttribute.convertToDisplayableString(from: timeOfDay)
 			return "Before " + timeText
@@ -56,14 +56,14 @@ public final class BeforeTimeOfDayAttributeRestriction: DateAttributeRestriction
 
 	// MARK: - Attribute Functions
 
-	public final override func value(of attribute: Attribute) throws -> Any? {
+	override public final func value(of attribute: Attribute) throws -> Any? {
 		if !attribute.equalTo(Me.timeAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
 		return timeOfDay
 	}
 
-	public final override func set(attribute: Attribute, to value: Any?) throws {
+	override public final func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(Me.timeAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
@@ -75,7 +75,7 @@ public final class BeforeTimeOfDayAttributeRestriction: DateAttributeRestriction
 
 	// MARK: - Attribute Restriction Functions
 
-	public final override func samplePasses(_ sample: Sample) throws -> Bool {
+	override public final func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
 		if sampleValue == nil { return false }
 		guard let sampleDate = sampleValue as? Date else {
@@ -84,20 +84,20 @@ public final class BeforeTimeOfDayAttributeRestriction: DateAttributeRestriction
 		return sampleDate < timeOfDay
 	}
 
-	public override func copy() -> AttributeRestriction {
-		return BeforeTimeOfDayAttributeRestriction(restrictedAttribute: restrictedAttribute, timeOfDay: timeOfDay)
+	override public func copy() -> AttributeRestriction {
+		BeforeTimeOfDayAttributeRestriction(restrictedAttribute: restrictedAttribute, timeOfDay: timeOfDay)
 	}
 
 	// MARK: - Boolean Expression Functions
 
-	public override func predicate() -> NSPredicate? {
-		return nil
+	override public func predicate() -> NSPredicate? {
+		nil
 	}
 
 	// MARK: - Equality
 
-	public static func ==(lhs: BeforeTimeOfDayAttributeRestriction, rhs: BeforeTimeOfDayAttributeRestriction) -> Bool {
-		return lhs.equalTo(rhs)
+	public static func == (lhs: BeforeTimeOfDayAttributeRestriction, rhs: BeforeTimeOfDayAttributeRestriction) -> Bool {
+		lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
@@ -106,13 +106,13 @@ public final class BeforeTimeOfDayAttributeRestriction: DateAttributeRestriction
 		return equalTo(other)
 	}
 
-	public final override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	override public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is BeforeTimeOfDayAttributeRestriction) { return false }
 		let other = otherRestriction as! BeforeTimeOfDayAttributeRestriction
 		return equalTo(other)
 	}
 
 	public final func equalTo(_ other: BeforeTimeOfDayAttributeRestriction) -> Bool {
-		return restrictedAttribute.equalTo(other.restrictedAttribute) && timeOfDay == other.timeOfDay
+		restrictedAttribute.equalTo(other.restrictedAttribute) && timeOfDay == other.timeOfDay
 	}
 }

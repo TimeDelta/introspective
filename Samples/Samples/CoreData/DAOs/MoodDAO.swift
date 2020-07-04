@@ -13,23 +13,20 @@ import DependencyInjection
 import Persistence
 import Settings
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol MoodDAO {
-
 	func createMood(timestamp: Date, rating: Double, note: String?) throws -> Mood
 }
 
 extension MoodDAO {
-
 	public func createMood(timestamp: Date = Date(), rating: Double, note: String? = nil) throws -> Mood {
-		return try createMood(timestamp: timestamp, rating: rating, note: note)
+		try createMood(timestamp: timestamp, rating: rating, note: note)
 	}
 }
 
 public final class MoodDAOImpl: MoodDAO {
-
 	@discardableResult
-	public final func createMood(timestamp: Date, rating: Double, note: String?) throws -> Mood {
+	public final func createMood(timestamp _: Date, rating: Double, note: String?) throws -> Mood {
 		let transaction = DependencyInjector.get(Database.self).transaction()
 		let mood = try DependencyInjector.get(SampleFactory.self).mood(using: transaction)
 		mood.date = Date()

@@ -6,16 +6,15 @@
 //  Copyright © 2019 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import CoreData
+import Foundation
 import os
 
 import Common
 import DependencyInjection
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol Transaction {
-
 	func childTransaction() -> Transaction
 	/// Save all changes done in this transaction.
 	/// - Note: This only needs to be called on the topmost `Transaction`. All child transactions will automatically commit when this transaction commits
@@ -44,7 +43,6 @@ public protocol Transaction {
 }
 
 internal final class TransactionImpl: Transaction {
-
 	// MARK: - Instance Variables
 
 	private final var myContext: NSManagedObjectContext
@@ -57,12 +55,12 @@ internal final class TransactionImpl: Transaction {
 	// MARK: - Initializers
 
 	init(context: NSManagedObjectContext, mainContext: NSManagedObjectContext) {
-		self.myContext = context
+		myContext = context
 		self.mainContext = mainContext
 	}
 
 	private init(context: NSManagedObjectContext) {
-		self.myContext = context
+		myContext = context
 	}
 
 	// MARK: - Transaction Functions
@@ -140,11 +138,11 @@ internal final class TransactionImpl: Transaction {
 	}
 
 	public final func batchUpdate(_ request: NSBatchUpdateRequest) throws -> NSBatchUpdateResult {
-		return try myContext.execute(request) as! NSBatchUpdateResult
+		try myContext.execute(request) as! NSBatchUpdateResult
 	}
 
 	public final func pull<Type: NSManagedObject>(savedObject: Type) throws -> Type {
-		return try DependencyInjector.get(Database.self).pull(savedObject: savedObject, fromContext: myContext)
+		try DependencyInjector.get(Database.self).pull(savedObject: savedObject, fromContext: myContext)
 	}
 
 	// MARK: - Deleting
@@ -160,8 +158,8 @@ internal final class TransactionImpl: Transaction {
 	}
 
 	public final func deleteAll(_ objects: [NSManagedObject]) throws {
-		guard objects.count > 0 else { return }
-		if objects[0].entity.relationshipsByName.count > 0 {
+		guard !objects.isEmpty else { return }
+		if !objects[0].entity.relationshipsByName.isEmpty {
 			try nonBatchDeleteAll(objects, from: myContext)
 		} else {
 			try batchDeleteAll(objects, from: myContext)
@@ -187,14 +185,17 @@ internal final class TransactionImpl: Transaction {
 
 	// MARK: - Helper Functions
 
-	private final func pull<Type: NSManagedObject>(savedObject: Type, fromContext context: NSManagedObjectContext) throws -> Type {
+	private final func pull<Type: NSManagedObject>(
+		savedObject: Type,
+		fromContext context: NSManagedObjectContext
+	) throws -> Type {
 		let savedObjectInSameContext = context.object(with: savedObject.objectID)
 		return try getObject(savedObjectInSameContext, as: Type.self)
 	}
 
 	private final func saveContext(_ context: NSManagedObjectContext) throws {
 		signpost.begin(name: "Save", idObject: context)
-		var errorToThrow: Error? = nil
+		var errorToThrow: Error?
 		context.performAndWait {
 			// NOTE: if getting an error here that this coordinator has no persistent stores,
 			//       probably just pressed "Delete all CoreData" button and need to re-run app
@@ -214,15 +215,15 @@ internal final class TransactionImpl: Transaction {
 
 	private final func nonBatchDeleteAll(_ objects: [NSManagedObject], from context: NSManagedObjectContext) throws {
 		signpost.begin(name: "Non-batch delete all with objects", idObject: objects as AnyObject)
-		try objects.map{ try pull(savedObject: $0) }.forEach{ context.delete($0) }
+		try objects.map { try pull(savedObject: $0) }.forEach { context.delete($0) }
 		signpost.end(name: "Non-batch delete all with objects", idObject: objects as AnyObject)
 	}
 
 	/// - Note: This will throw an error if any of the objects have relationships
 	private final func batchDeleteAll(_ objects: [NSManagedObject], from context: NSManagedObjectContext) throws {
 		signpost.begin(name: "Batch delete all with objects", idObject: objects as AnyObject)
-		let ids = objects.map{ $0.objectID }
-		if ids.count > 0 {
+		let ids = objects.map { $0.objectID }
+		if !ids.isEmpty {
 			let batchDeleteRequest = NSBatchDeleteRequest(objectIDs: ids)
 			do {
 				try context.execute(batchDeleteRequest)

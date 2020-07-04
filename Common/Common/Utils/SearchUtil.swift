@@ -8,18 +8,17 @@
 
 import Foundation
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol SearchUtil {
-	func binarySearch<T:Comparable>(for targetItem: T, in items: Array<T>) -> Int?
-	func binarySearch<T>(for targetItem: T, in items: Array<T>, compare: (T, T) -> ComparisonResult) -> Int?
-	func closestItem<T>(to targetItem: T, in items: Array<T>, distance: (T, T) -> Int) -> T
+	func binarySearch<T: Comparable>(for targetItem: T, in items: [T]) -> Int?
+	func binarySearch<T>(for targetItem: T, in items: [T], compare: (T, T) -> ComparisonResult) -> Int?
+	func closestItem<T>(to targetItem: T, in items: [T], distance: (T, T) -> Int) -> T
 }
 
 public final class SearchUtilImpl: SearchUtil {
-
 	/// - Precondition: input array is sorted in ascending order.
-	public final func binarySearch<T: Comparable>(for targetItem: T, in items: Array<T>) -> Int? {
-		if items.count == 0 {
+	public final func binarySearch<T: Comparable>(for targetItem: T, in items: [T]) -> Int? {
+		if items.isEmpty {
 			return nil
 		}
 
@@ -45,8 +44,8 @@ public final class SearchUtilImpl: SearchUtil {
 	}
 
 	/// - Precondition: input array is sorted in ascending order based on the given compare function.
-	public final func binarySearch<T>(for targetItem: T, in items: Array<T>, compare: (T, T) -> ComparisonResult) -> Int? {
-		if items.count == 0 {
+	public final func binarySearch<T>(for targetItem: T, in items: [T], compare: (T, T) -> ComparisonResult) -> Int? {
+		if items.isEmpty {
 			return nil
 		}
 
@@ -73,11 +72,11 @@ public final class SearchUtilImpl: SearchUtil {
 	}
 
 	/// - Precondition: input array has at least one element.
-	public final func closestItem<T>(to targetItem: T, in items: Array<T>, distance: (T, T) -> Int) -> T {
-		precondition(items.count > 0, "Precondition violated: input array must have at least one element")
+	public final func closestItem<T>(to targetItem: T, in items: [T], distance: (T, T) -> Int) -> T {
+		precondition(!items.isEmpty, "Precondition violated: input array must have at least one element")
 
 		return items.sorted { (item1: T, item2: T) -> Bool in
-			return distance(item1, targetItem) < distance(item2, targetItem)
+			distance(item1, targetItem) < distance(item2, targetItem)
 		}[0]
 	}
 }

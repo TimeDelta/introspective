@@ -14,13 +14,16 @@ import DependencyInjection
 import Persistence
 import Samples
 
-public final class StopAllActivitiesIntentHandler: ActivityIntentHandler<StopAllActivitiesIntent>, StopAllActivitiesIntentHandling {
-
+public final class StopAllActivitiesIntentHandler: ActivityIntentHandler<StopAllActivitiesIntent>,
+	StopAllActivitiesIntentHandling {
 	private typealias Me = StopAllActivitiesIntentHandler
 
 	private static let log = Log()
 
-	public func handle(intent: StopAllActivitiesIntent, completion: @escaping (StopAllActivitiesIntentResponse) -> Void) {
+	public func handle(
+		intent _: StopAllActivitiesIntent,
+		completion: @escaping (StopAllActivitiesIntentResponse) -> Void
+	) {
 		do {
 			try DependencyInjector.get(ActivityDAO.self).stopAllActivities()
 			completion(StopAllActivitiesIntentResponse(code: .success, userActivity: nil))
@@ -34,4 +37,3 @@ public final class StopAllActivitiesIntentHandler: ActivityIntentHandler<StopAll
 		}
 	}
 }
-

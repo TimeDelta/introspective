@@ -13,19 +13,19 @@ import DependencyInjection
 import Settings
 
 public final class GeneralSettingsViewController: UIViewController {
-
-	// MARK - Static Variables
+	// MARK: - Static Variables
 
 	private typealias Me = GeneralSettingsViewController
 
 	private static let descriptionPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
-		center: .center)
+		center: .center
+	)
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var convertTimeZonesSwitch: UISwitch!
+	@IBOutlet final var convertTimeZonesSwitch: UISwitch!
 
 	// MARK: - Member Variables
 
@@ -33,24 +33,30 @@ public final class GeneralSettingsViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 
 		updateUI()
-		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Reset", style: .plain, target: self, action: #selector(reset))
+		navigationItem.rightBarButtonItem = UIBarButtonItem(
+			title: "Reset",
+			style: .plain,
+			target: self,
+			action: #selector(reset)
+		)
 
 		DependencyInjector.get(UiUtil.self).setBackButton(for: self, title: "Settings", action: #selector(done))
 	}
 
 	// MARK: - Actions
 
-	@IBAction final func showConvertTimeZonesDescription(_ sender: Any) {
+	@IBAction final func showConvertTimeZonesDescription(_: Any) {
 		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")
 		let date = Date()
 		let currentTimeZone = TimeZone.autoupdatingCurrent
 		guard let currentTimeZoneName = currentTimeZone.localizedName(
 			for: .generic,
-			locale: Locale.autoupdatingCurrent)
+			locale: Locale.autoupdatingCurrent
+		)
 		else {
 			log.error("Failed to get localized name for current time zone", currentTimeZone.description)
 			return
@@ -61,24 +67,28 @@ public final class GeneralSettingsViewController: UIViewController {
 		}
 		guard let targetTimeZoneName = targetTimeZone.localizedName(
 			for: .generic,
-			locale: Locale.autoupdatingCurrent)
+			locale: Locale.autoupdatingCurrent
+		)
 		else {
 			log.error("Failed to get localized name for current time zone", currentTimeZone.description)
 			return
 		}
 		let recordedTime = TimeOfDay(date)
-		let convertedDate = DependencyInjector.get(CalendarUtil.self).convert(date, from: currentTimeZone, to: targetTimeZone)
+		let convertedDate = DependencyInjector.get(CalendarUtil.self)
+			.convert(date, from: currentTimeZone, to: targetTimeZone)
 		let convertedTime = TimeOfDay(convertedDate)
-		controller.descriptionText = "When time zone information is available for a date, convert it to the original time zone. For example, with this enabled, if you were in \(targetTimeZoneName) on vacation and recorded a heart rate at \(convertedTime.toString()) then came back to \(currentTimeZoneName), it would appear as if it had been recorded at \(convertedTime.toString()). Without this enabled, it will appear to have been recorded at \(recordedTime.toString()). This does not have to be enabled at the time that the data was recorded for this conversion to happen. For data pulled from Apple Health, this information will not always be available as it is up to the source app to record it. Also, any data imported from external sources may not have time zone information recorded. However, any data recorded by this app will contain time zone information."
+		controller
+			.descriptionText =
+			"When time zone information is available for a date, convert it to the original time zone. For example, with this enabled, if you were in \(targetTimeZoneName) on vacation and recorded a heart rate at \(convertedTime.toString()) then came back to \(currentTimeZoneName), it would appear as if it had been recorded at \(convertedTime.toString()). Without this enabled, it will appear to have been recorded at \(recordedTime.toString()). This does not have to be enabled at the time that the data was recorded for this conversion to happen. For data pulled from Apple Health, this information will not always be available as it is up to the source app to record it. Also, any data imported from external sources may not have time zone information recorded. However, any data recorded by this app will contain time zone information."
 		present(controller, using: Me.descriptionPresenter)
 	}
 
-	@objc private final func reset(_ sender: Any) {
+	@objc private final func reset(_: Any) {
 		DependencyInjector.get(Settings.self).reset()
 		updateUI()
 	}
 
-	@objc private final func done(_ sender: Any) {
+	@objc private final func done(_: Any) {
 		DependencyInjector.get(Settings.self).setConvertTimeZones(convertTimeZonesSwitch.isOn)
 		saveAndGoBackToSettings()
 	}
@@ -88,7 +98,7 @@ public final class GeneralSettingsViewController: UIViewController {
 	private final func saveAndGoBackToSettings() {
 		do {
 			try retryOnFail({ try DependencyInjector.get(Settings.self).save() }, maxRetries: 2)
-			self.navigationController?.popViewController(animated: false)
+			navigationController?.popViewController(animated: false)
 		} catch {
 			log.error("Failed to save mood settings: %@", errorInfo(error))
 			showError(title: "Failed to save settings", error: error, tryAgain: saveAndGoBackToSettings)
@@ -102,8 +112,8 @@ public final class GeneralSettingsViewController: UIViewController {
 	private final func getTargetTimeZone(_ currentTimeZone: TimeZone) -> TimeZone? {
 		let currentAbbreviation = currentTimeZone.abbreviation()
 		let currentIsEastern = currentAbbreviation == "EST" || currentAbbreviation == "EDT"
-		let easternTimeZone = TimeZone.init(abbreviation: "EST")
-		let mountainTimeZone = TimeZone.init(abbreviation: "MST")
+		let easternTimeZone = TimeZone(abbreviation: "EST")
+		let mountainTimeZone = TimeZone(abbreviation: "MST")
 		return currentIsEastern ? mountainTimeZone : easternTimeZone
 	}
 }

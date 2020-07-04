@@ -11,9 +11,8 @@ import Foundation
 import Common
 
 public final class DaysOfWeekAttribute: ComparableTypedMultiSelectAttribute<DayOfWeek> {
-
-	public final override var typeName: String {
-		return "Days of the Week"
+	override public final var typeName: String {
+		"Days of the Week"
 	}
 
 	public init(
@@ -21,8 +20,8 @@ public final class DaysOfWeekAttribute: ComparableTypedMultiSelectAttribute<DayO
 		pluralName: String? = "Days of the week",
 		description: String? = nil,
 		variableName: String? = nil,
-		optional: Bool = false)
-	{
+		optional: Bool = false
+	) {
 		super.init(
 			name: name,
 			pluralName: pluralName,
@@ -30,6 +29,7 @@ public final class DaysOfWeekAttribute: ComparableTypedMultiSelectAttribute<DayO
 			variableName: variableName,
 			optional: optional,
 			possibleValues: DayOfWeek.allDays,
-			possibleValueToString: { $0.abbreviation })
+			possibleValueToString: { $0.abbreviation }
+		)
 	}
 }

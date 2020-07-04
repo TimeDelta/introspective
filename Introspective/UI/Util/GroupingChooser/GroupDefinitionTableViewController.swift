@@ -16,11 +16,10 @@ import SampleGroupers
 import Samples
 
 public final class GroupDefinitionTableViewController: UITableViewController {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var addButton: UIBarButtonItem!
-	@IBOutlet weak final var doneButton: UIBarButtonItem!
+	@IBOutlet final var addButton: UIBarButtonItem!
+	@IBOutlet final var doneButton: UIBarButtonItem!
 
 	// MARK: - Instance Variables
 
@@ -51,7 +50,7 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 
 		navigationItem.setRightBarButtonItems([doneButton, addButton], animated: false)
@@ -69,42 +68,48 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 
 	// MARK: - Table View Data Source
 
-	public final override func numberOfSections(in tableView: UITableView) -> Int {
-		return 2
+	override public final func numberOfSections(in _: UITableView) -> Int {
+		2
 	}
 
-	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override public final func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if section == 0 {
 			return 1
 		}
 		return expressionParts.count
 	}
 
-	public final override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+	override public final func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section == 0 { return nil }
 		return "Condition"
 	}
 
-	public final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override public final func tableView(
+		_ tableView: UITableView,
+		cellForRowAt indexPath: IndexPath
+	) -> UITableViewCell {
 		if indexPath.section == 0 {
-			let cell = tableView.dequeueReusableCell(withIdentifier: "groupName", for: indexPath) as! GroupNameTableViewCell
+			let cell = tableView.dequeueReusableCell(
+				withIdentifier: "groupName",
+				for: indexPath
+			) as! GroupNameTableViewCell
 			cell.groupName = groupName
 			return cell
 		}
 
 		let expressionPart = expressionParts[indexPath.row]
-		switch (expressionPart.type) {
-			case .and: return andCell(for: indexPath)
-			case .or: return orCell(for: indexPath)
-			case .groupStart: return groupStartCell(for: indexPath)
-			case .groupEnd: return groupEndCell(for: indexPath)
-			case .expression: return expressionCell(for: indexPath)
+		switch expressionPart.type {
+		case .and: return andCell(for: indexPath)
+		case .or: return orCell(for: indexPath)
+		case .groupStart: return groupStartCell(for: indexPath)
+		case .groupEnd: return groupEndCell(for: indexPath)
+		case .expression: return expressionCell(for: indexPath)
 		}
 	}
 
 	// MARK: - Table View Delegate
 
-	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	override public final func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath.section == 0 {
 			tableView.deselectRow(at: indexPath, animated: false)
 			return
@@ -114,7 +119,10 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 			showExpressionParts(indexPath)
 			return
 		}
-		let controller = viewController(named: "editAttributeRestriction", fromStoryboard: "Query") as! EditAttributeRestrictionViewController
+		let controller = viewController(
+			named: "editAttributeRestriction",
+			fromStoryboard: "Query"
+		) as! EditAttributeRestrictionViewController
 		editedIndex = indexPath.row
 		controller.sampleType = sampleType
 		let expression = expressionParts[indexPath.row].expression
@@ -122,26 +130,30 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 		pushToNavigationController(controller)
 	}
 
-	public final override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+	override public final func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		guard fromIndexPath.section == 1 && to.section == 1 else { return }
 		expressionParts.swapAt(fromIndexPath.row, to.row)
 		validate()
 		tableView.reloadData()
 	}
 
-	public final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+	override public final func tableView(
+		_ tableView: UITableView,
+		editActionsForRowAt indexPath: IndexPath
+	) -> [UITableViewRowAction]? {
 		guard indexPath.section == 1 else { return [] }
-		let delete = DependencyInjector.get(UiUtil.self).tableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
-			self.expressionParts.remove(at: indexPath.row)
-			self.validate()
-			tableView.deleteRows(at: [indexPath], with: .fade)
-			tableView.reloadData()
-		}
+		let delete = DependencyInjector.get(UiUtil.self)
+			.tableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
+				self.expressionParts.remove(at: indexPath.row)
+				self.validate()
+				tableView.deleteRows(at: [indexPath], with: .fade)
+				tableView.reloadData()
+			}
 		return [delete]
 	}
 
-	public final override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-		return indexPath.section == 1
+	override public final func tableView(_: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+		indexPath.section == 1
 	}
 
 	// MARK: - Received Notifications
@@ -166,12 +178,12 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 
 	// MARK: - Actions
 
-	@IBAction final func doneButtonPressed(_ sender: Any) {
+	@IBAction final func doneButtonPressed(_: Any) {
 		syncPost(.groupDefinitionEdited, userInfo: [.groupDefinition: groupDefinition])
 		popFromNavigationController()
 	}
 
-	@IBAction final func addButtonPressed(_ sender: Any) {
+	@IBAction final func addButtonPressed(_: Any) {
 		showExpressionParts()
 	}
 
@@ -185,38 +197,49 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 		if indexPath != nil {
 			title = "What would you like to change this to?"
 		}
-		let actionSheet = DependencyInjector.get(UiUtil.self).alert(title: title, message: nil, preferredStyle: .actionSheet)
+		let actionSheet = DependencyInjector.get(UiUtil.self)
+			.alert(title: title, message: nil, preferredStyle: .actionSheet)
 		actionSheet.addAction(UIAlertAction(title: "Attribute Restriction", style: .default) { _ in
 			self.addOrUpdateAttributeRestrictionFor(indexPath)
 		})
 		actionSheet.addAction(UIAlertAction(title: "And", style: .default, handler: getHandlerFor(.and, indexPath)))
 		actionSheet.addAction(UIAlertAction(title: "Or", style: .default, handler: getHandlerFor(.or, indexPath)))
-		actionSheet.addAction(UIAlertAction(title: "Condition Group Start", style: .default, handler: getHandlerFor(.groupStart, indexPath)))
-		actionSheet.addAction(UIAlertAction(title: "Condition Group End", style: .default, handler: getHandlerFor(.groupEnd, indexPath)))
+		actionSheet
+			.addAction(UIAlertAction(
+				title: "Condition Group Start",
+				style: .default,
+				handler: getHandlerFor(.groupStart, indexPath)
+			))
+		actionSheet
+			.addAction(UIAlertAction(
+				title: "Condition Group End",
+				style: .default,
+				handler: getHandlerFor(.groupEnd, indexPath)
+			))
 		actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
 		presentView(actionSheet)
 	}
 
 	private final func addOrUpdateAttributeRestrictionFor(_ indexPath: IndexPath?) {
-		let restriction = self.getDefaultAttributeRestriction()
+		let restriction = getDefaultAttributeRestriction()
 		guard let expression = restriction else {
-			self.log.error("No restrictions available for sample type: %@", self.sampleType.name)
+			log.error("No restrictions available for sample type: %@", sampleType.name)
 			return
 		}
 		if let indexPath = indexPath {
-			self.expressionParts[indexPath.row] = (type: .expression, expression: expression)
+			expressionParts[indexPath.row] = (type: .expression, expression: expression)
 		} else {
-			self.expressionParts.append((type: .expression, expression: expression))
+			expressionParts.append((type: .expression, expression: expression))
 		}
-		self.validate()
-		self.tableView.reloadData()
+		validate()
+		tableView.reloadData()
 	}
 
 	private final func getHandlerFor(_ expressionType: BooleanExpressionType, _ indexPath: IndexPath?)
-	-> ((UIAlertAction) -> Void) {
+		-> ((UIAlertAction) -> Void) {
 		return { _ in
 			if let indexPath = indexPath {
-				self.expressionParts[indexPath.row] = ((type: expressionType, expression: nil))
+				self.expressionParts[indexPath.row] = (type: expressionType, expression: nil)
 			}
 			self.expressionParts.append((type: expressionType, expression: nil))
 			self.validate()
@@ -230,13 +253,13 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 		for i in 0 ..< targetIndex {
 			let part = expressionParts[i]
 			switch part.type {
-				case .groupStart:
-					indentation += 1
-					break
-				case .groupEnd:
-					indentation -= 1
-					break
-				default: break
+			case .groupStart:
+				indentation += 1
+				break
+			case .groupEnd:
+				indentation -= 1
+				break
+			default: break
 			}
 		}
 		let targetExpressionPart = expressionParts[targetIndex]
@@ -251,8 +274,9 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 		var restriction: AttributeRestriction?
 		for attribute in availableAttributes {
 			let availableRestrictionTypes = DependencyInjector.get(AttributeRestrictionFactory.self).typesFor(attribute)
-			if availableRestrictionTypes.count > 0 {
-				restriction = DependencyInjector.get(AttributeRestrictionFactory.self).initialize(type: availableRestrictionTypes[0], forAttribute: attribute)
+			if !availableRestrictionTypes.isEmpty {
+				restriction = DependencyInjector.get(AttributeRestrictionFactory.self)
+					.initialize(type: availableRestrictionTypes[0], forAttribute: attribute)
 				break
 			}
 		}
@@ -296,7 +320,8 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 	private final func expressionCell(for indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(
 			withIdentifier: "attributeRestriction",
-			for: indexPath) as! AttributeRestrictionTableViewCell
+			for: indexPath
+		) as! AttributeRestrictionTableViewCell
 		let part = expressionParts[indexPath.row]
 		cell.attributeRestriction = part.expression as? AttributeRestriction
 		cell.indentationLevel = getIndentationLevelFor(indexPath)

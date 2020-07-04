@@ -11,12 +11,11 @@ import HealthKit
 
 import Samples
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol BodyMassIndexQuery: Query {}
 
 public final class BodyMassIndexQueryImpl: HealthKitQuery<BodyMassIndex>, BodyMassIndexQuery {
-
-	final override func initFromHKSample(_ hkSample: HKSample) -> BodyMassIndex {
+	override final func initFromHKSample(_ hkSample: HKSample) -> BodyMassIndex {
 		precondition(hkSample is HKQuantitySample, "Wrong type of health kit sample for BMI")
 		return BodyMassIndex(hkSample as! HKQuantitySample)
 	}

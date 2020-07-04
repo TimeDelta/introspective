@@ -11,21 +11,18 @@ import Foundation
 import Common
 
 public final class InvalidFileFormatError: GenericDisplayableError {
-
 	public init(_ specificError: String? = nil) {
 		super.init(title: "Invalid file format", description: specificError)
 	}
 }
 
 public final class AmbiguousUpdateToExistingDataError: GenericDisplayableError {
-
 	public init(_ specificError: String?) {
 		super.init(title: "Ambiguous update requested", description: specificError)
 	}
 }
 
 public final class MissingRequiredFieldError: GenericDisplayableError {
-
 	public init(_ missingFieldName: String, recordNumber: Int) {
 		super.init(
 			title: "Missing \(missingFieldName)",

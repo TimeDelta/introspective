@@ -6,8 +6,8 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
 import CoreData
+import UIKit
 
 import Common
 import DependencyInjection
@@ -16,11 +16,10 @@ import Samples
 import UIExtensions
 
 public final class ActivityDefinitionNameTableViewCell: UITableViewCell {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var nameLabel: UILabel!
-	@IBOutlet weak final var nameTextField: UITextField!
+	@IBOutlet final var nameLabel: UILabel!
+	@IBOutlet final var nameTextField: UITextField!
 
 	// MARK: - Instance Variables
 
@@ -37,7 +36,7 @@ public final class ActivityDefinitionNameTableViewCell: UITableViewCell {
 
 	// MARK: - Actions
 
-	@IBAction final func nameChanged(_ sender: Any) {
+	@IBAction final func nameChanged(_: Any) {
 		if nameTextField.text?.isEmpty ?? true || isDuplicate() {
 			nameLabel.textColor = .red
 			sendInvalidNameNotification()
@@ -61,7 +60,8 @@ public final class ActivityDefinitionNameTableViewCell: UITableViewCell {
 				object: self,
 				userInfo: self.info([
 					.text: self.nameTextField.text ?? "",
-				]))
+				])
+			)
 		}
 	}
 
@@ -78,7 +78,7 @@ public final class ActivityDefinitionNameTableViewCell: UITableViewCell {
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
 		do {
 			let results = try DependencyInjector.get(Database.self).query(fetchRequest)
-			return results.count > 0
+			return !results.isEmpty
 		} catch {
 			log.error("Failed to check for activity name duplication")
 			return true

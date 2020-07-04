@@ -12,7 +12,6 @@ import Common
 import DependencyInjection
 
 public protocol DateRangeViewController: UIViewController {
-
 	var datePickerMode: UIDatePicker.Mode { get set }
 	var initialFromDate: Date? { get set }
 	var minFromDate: Date? { get set }
@@ -24,14 +23,13 @@ public protocol DateRangeViewController: UIViewController {
 }
 
 public final class DateRangeViewControllerImpl: UIViewController, DateRangeViewController {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var enableFromDateSwitch: UISwitch!
-	@IBOutlet weak final var fromDatePicker: UIDatePicker!
-	@IBOutlet weak final var enableToDateSwitch: UISwitch!
-	@IBOutlet weak final var toDatePicker: UIDatePicker!
-	@IBOutlet weak final var saveButton: UIButton!
+	@IBOutlet final var enableFromDateSwitch: UISwitch!
+	@IBOutlet final var fromDatePicker: UIDatePicker!
+	@IBOutlet final var enableToDateSwitch: UISwitch!
+	@IBOutlet final var toDatePicker: UIDatePicker!
+	@IBOutlet final var saveButton: UIButton!
 
 	// MARK: - Instance Variables
 
@@ -46,7 +44,7 @@ public final class DateRangeViewControllerImpl: UIViewController, DateRangeViewC
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 
 		fromDatePicker.datePickerMode = datePickerMode
@@ -79,7 +77,7 @@ public final class DateRangeViewControllerImpl: UIViewController, DateRangeViewC
 
 	// MARK: - Actions
 
-	@IBAction final func saveButtonPressed(_ sender: Any) {
+	@IBAction final func saveButtonPressed(_: Any) {
 		let fromDate: Date? = getFromDate()
 		let toDate: Date? = getToDate()
 		DispatchQueue.main.async {
@@ -89,17 +87,18 @@ public final class DateRangeViewControllerImpl: UIViewController, DateRangeViewC
 				userInfo: self.info([
 					.fromDate: fromDate as Any,
 					.toDate: toDate as Any,
-				]))
+				])
+			)
 		}
 		dismiss(animated: false, completion: nil)
 	}
 
-	@IBAction final func fromDateSwitchToggled(_ sender: Any) {
+	@IBAction final func fromDateSwitchToggled(_: Any) {
 		updateFromDatePickerState()
 		dateChanged()
 	}
 
-	@IBAction final func toDateSwitchToggled(_ sender: Any) {
+	@IBAction final func toDateSwitchToggled(_: Any) {
 		updateToDatePickerState()
 		dateChanged()
 	}
@@ -135,7 +134,7 @@ public final class DateRangeViewControllerImpl: UIViewController, DateRangeViewC
 	}
 
 	private final func getFromDate() -> Date? {
-		var fromDate: Date? = nil
+		var fromDate: Date?
 		if enableFromDateSwitch.isOn {
 			fromDate = fromDatePicker.date
 			if datePickerMode == .date {
@@ -147,7 +146,7 @@ public final class DateRangeViewControllerImpl: UIViewController, DateRangeViewC
 	}
 
 	private final func getToDate() -> Date? {
-		var toDate: Date? = nil
+		var toDate: Date?
 		if enableToDateSwitch.isOn {
 			toDate = toDatePicker.date
 			if datePickerMode == .date {

@@ -14,7 +14,6 @@ import Common
 import Samples
 
 public protocol AttributeRestriction: Attributed, BooleanExpression {
-
 	var restrictedAttribute: Attribute { get set }
 
 	init(restrictedAttribute: Attribute)
@@ -25,45 +24,43 @@ public protocol AttributeRestriction: Attributed, BooleanExpression {
 }
 
 public extension AttributeRestriction {
-
 	func evaluate(_ parameters: [UserInfoKey: Any]?) throws -> Bool {
 		guard let sample = parameters?[.sample] as? Sample else {
-			throw GenericError("Missing sample parameter for evaluation of attribute restriction: \(String(describing: parameters))")
+			throw GenericError(
+				"Missing sample parameter for evaluation of attribute restriction: \(String(describing: parameters))"
+			)
 		}
 		return try samplePasses(sample)
 	}
 
 	// from BooleanExpression
 	func isValid() -> Bool {
-		return attributeValuesAreValid()
+		attributeValuesAreValid()
 	}
 
 	func copy() -> BooleanExpression {
-		return copy() as AttributeRestriction
+		copy() as AttributeRestriction
 	}
 }
 
 public class AnyAttributeRestriction: AttributeRestriction {
-
 	// MARK: - Static Variables
 
 	private typealias Me = AnyAttributeRestriction
-	public static let selectAnAttribute = TextAttribute(name:"Atribute", pluralName: "Attributes")
+	public static let selectAnAttribute = TextAttribute(name: "Atribute", pluralName: "Attributes")
 
 	// MARK: - Instance Variables
 
 	public var attributedName: String {
-		get {
-			log.error("Must override attributedName")
-			return ""
-		}
+		log.error("Must override attributedName")
+		return ""
 	}
+
 	public var description: String {
-		get {
-			log.error("Must override description")
-			return ""
-		}
+		log.error("Must override description")
+		return ""
 	}
+
 	public final var attributes: [Attribute]
 	public final var restrictedAttribute: Attribute {
 		didSet { restrictedAttributeWasSet() }
@@ -74,7 +71,7 @@ public class AnyAttributeRestriction: AttributeRestriction {
 	// MARK: - Initializers
 
 	public init(attributes: [Attribute]) {
-		self.restrictedAttribute = Me.selectAnAttribute
+		restrictedAttribute = Me.selectAnAttribute
 		self.attributes = attributes
 	}
 
@@ -94,9 +91,13 @@ public class AnyAttributeRestriction: AttributeRestriction {
 		log.error("predicate() not overriden")
 		return nil
 	}
-	public func samplePasses(_ sample: Sample) throws -> Bool { throw NotOverriddenError(functionName: "samplePasses") }
-	public func value(of attribute: Attribute) throws -> Any? { throw NotOverriddenError(functionName: "value(of:)") }
-	public func set(attribute: Attribute, to value: Any?) throws { throw NotOverriddenError(functionName: "set(attribute:to:)") }
+
+	public func samplePasses(_: Sample) throws -> Bool { throw NotOverriddenError(functionName: "samplePasses") }
+	public func value(of _: Attribute) throws -> Any? { throw NotOverriddenError(functionName: "value(of:)") }
+	public func set(attribute _: Attribute, to _: Any?) throws {
+		throw NotOverriddenError(functionName: "set(attribute:to:)")
+	}
+
 	public func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		log.error("Must override equalTo()")
 		return type(of: self) == type(of: otherRestriction)

@@ -6,10 +6,10 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
-import Presentr
-import NotificationBannerSwift
 import CoreData
+import NotificationBannerSwift
+import Presentr
+import UIKit
 
 import Attributes
 import Common
@@ -21,14 +21,12 @@ import Samples
 import UIExtensions
 
 public protocol ResultsViewController: UITableViewController {
-
 	var query: Query! { get set }
 	var samples: [Sample]! { get set }
 	var backButtonTitle: String? { get set }
 }
 
 final class ResultsViewControllerImpl: UITableViewController, ResultsViewController {
-
 	// MARK: - Static Variables
 
 	private typealias Me = ResultsViewControllerImpl
@@ -41,6 +39,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		customPresenter.roundCorners = true
 		return customPresenter
 	}()
+
 	private static let setDosePresenter: Presentr = {
 		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 250), center: .center)
 		let customPresenter = Presentr(presentationType: customType)
@@ -51,25 +50,25 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var actionsButton: UIBarButtonItem!
+	@IBOutlet final var actionsButton: UIBarButtonItem!
 
 	// MARK: - Instance Variables
 
 	public final var query: Query!
 	public final var samples: [Sample]! {
 		didSet {
-			guard !self.failed else { return }
-			guard self.samples != nil else { return }
+			guard !failed else { return }
+			guard samples != nil else { return }
 
-			if !self.initialSampleSortDone {
-				guard self.samples.count > 0 else {
-					self.viewIsReady()
+			if !initialSampleSortDone {
+				guard !samples.isEmpty else {
+					viewIsReady()
 					return
 				}
-				self.initialSampleSortDone = true
+				initialSampleSortDone = true
 				DependencyInjector.get(AsyncUtil.self).run(qos: .userInteractive) {
-					let dateAttributes = self.samples[0].attributes.filter{ $0 is DateAttribute }
-					guard dateAttributes.count > 0 else {
+					let dateAttributes = self.samples[0].attributes.filter { $0 is DateAttribute }
+					guard !dateAttributes.isEmpty else {
 						self.viewIsReady()
 						return
 					}
@@ -88,12 +87,14 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			}
 		}
 	}
+
 	private final var filteredSamples: [Sample]! {
 		didSet {
 			recomputeInformation()
 			DispatchQueue.main.async { self.tableView.reloadData() }
 		}
 	}
+
 	private final var initialSampleSortDone = false
 
 	public final var backButtonTitle: String?
@@ -124,7 +125,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	// MARK: - UIViewController Overloads
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		actionsButton.target = self
 		actionsButton.action = #selector(presentActions)
 		actionsButton.accessibilityLabel = "actions button"
@@ -147,7 +148,8 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 		navigationItem.setRightBarButton(actionsButton, animated: false)
 
-		DependencyInjector.get(UiUtil.self).setBackButton(for: self, title: backButtonTitle ?? "Query", action: #selector(done))
+		DependencyInjector.get(UiUtil.self)
+			.setBackButton(for: self, title: backButtonTitle ?? "Query", action: #selector(done))
 
 		extendedLayoutIncludesOpaqueBars = true
 
@@ -164,14 +166,14 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		NotificationCenter.default.removeObserver(self)
 	}
 
-	public final override func showError(
+	override public final func showError(
 		title: String,
 		message: String? = "Sorry for the inconvenience.",
 		error: Error? = nil,
 		tryAgain: (() -> Void)? = nil,
 		onDismiss originalOnDismiss: ((UIAlertAction) -> Void)? = nil,
-		onDonePresenting: (() -> Void)? = nil)
-	{
+		onDonePresenting: (() -> Void)? = nil
+	) {
 		var onDismiss: ((UIAlertAction) -> Void)? = originalOnDismiss
 		if filteredSamples == nil {
 			failed = true
@@ -188,20 +190,21 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			error: error,
 			tryAgain: tryAgain,
 			onDismiss: onDismiss,
-			onDonePresenting: onDonePresenting)
+			onDonePresenting: onDonePresenting
+		)
 	}
 
 	// MARK: - Table View Data Source
 
-	final override func numberOfSections(in tableView: UITableView) -> Int {
-		return 2
+	override final func numberOfSections(in _: UITableView) -> Int {
+		2
 	}
 
-	final override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+	override final func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section == 0 {
 			return "Information"
 		} else if section == 1 {
-			if filteredSamples != nil && filteredSamples.count > 0 {
+			if filteredSamples != nil && !filteredSamples.isEmpty {
 				return filteredSamples[0].attributedName.capitalized
 			}
 			return "Entries"
@@ -211,7 +214,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		}
 	}
 
-	final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override final func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if failed {
 			return 0
 		}
@@ -234,7 +237,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	// MARK: - Table View Delegate
 
-	final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override final func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let row = indexPath.row
 		let section = indexPath.section
 
@@ -246,7 +249,10 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			guard let value = informationValues[row] else {
 				return tableView.dequeueReusableCell(withIdentifier: "waitingCell", for: indexPath)
 			}
-			let cell = (tableView.dequeueReusableCell(withIdentifier: "informationCell", for: indexPath) as! SampleGroupInformationTableViewCell)
+			let cell = (tableView.dequeueReusableCell(
+				withIdentifier: "informationCell",
+				for: indexPath
+			) as! SampleGroupInformationTableViewCell)
 			cell.sampleGroupInformation = information[row]
 			cell.value = value
 			return cell
@@ -254,38 +260,59 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 		if section == 1 {
 			let sample = filteredSamples[row]
-			switch (sample) {
-				case is Activity:
-					let cell = (tableView.dequeueReusableCell(withIdentifier: "activityCell") as! ActivityTableViewCell)
-					cell.activity = (sample as! Activity)
-					return cell
-				case is BloodPressure:
-					let cell = (tableView.dequeueReusableCell(withIdentifier: "bloodPressureCell", for: indexPath) as! BloodPressureTableViewCell)
-					cell.sample = (sample as! BloodPressure)
-					return cell
-				case is HealthKitQuantitySample:
-					let cell = (tableView.dequeueReusableCell(withIdentifier: "healthKitQuantitySampleCell", for: indexPath) as! HealthKitQuantitySampleTableViewCell)
-					cell.sample = (sample as! HealthKitQuantitySample)
-					return cell
-				case is MedicationDose:
-					let cell = tableView.dequeueReusableCell(withIdentifier: "medicationDoseCell", for: indexPath) as! MedicationDoseTableTableViewCell
-					cell.medicationDose = (sample as! MedicationDose)
-					return cell
-				case is Mood:
-					let cell = tableViewCell(withIdentifier: "moodSampleCell", for: indexPath) as! MoodTableViewCell
-					cell.mood = (sample as! Mood)
-					return cell
-				case is SexualActivity:
-					let cell = (tableView.dequeueReusableCell(withIdentifier: "sexualActivityCell", for: indexPath) as! SexualActivityTableViewCell)
-					cell.sample = (sample as! SexualActivity)
-					return cell
-				case is Sleep:
-					let cell = (tableView.dequeueReusableCell(withIdentifier: "sleepCell", for: indexPath) as! SleepTableViewCell)
-					cell.sleep = (sample as! Sleep)
-					return cell
-				default:
-					log.error("Forgot a type of Sample")
-					return UITableViewCell()
+			switch sample {
+			case is Activity:
+				let cell = (tableView.dequeueReusableCell(withIdentifier: "activityCell") as! ActivityTableViewCell)
+				cell.activity = (sample as! Activity)
+				return cell
+			case is BloodPressure:
+				let cell = (
+					tableView
+						.dequeueReusableCell(
+							withIdentifier: "bloodPressureCell",
+							for: indexPath
+						) as! BloodPressureTableViewCell
+				)
+				cell.sample = (sample as! BloodPressure)
+				return cell
+			case is HealthKitQuantitySample:
+				let cell = (tableView.dequeueReusableCell(
+					withIdentifier: "healthKitQuantitySampleCell",
+					for: indexPath
+				) as! HealthKitQuantitySampleTableViewCell)
+				cell.sample = (sample as! HealthKitQuantitySample)
+				return cell
+			case is MedicationDose:
+				let cell = tableView.dequeueReusableCell(
+					withIdentifier: "medicationDoseCell",
+					for: indexPath
+				) as! MedicationDoseTableTableViewCell
+				cell.medicationDose = (sample as! MedicationDose)
+				return cell
+			case is Mood:
+				let cell = tableViewCell(withIdentifier: "moodSampleCell", for: indexPath) as! MoodTableViewCell
+				cell.mood = (sample as! Mood)
+				return cell
+			case is SexualActivity:
+				let cell = (
+					tableView
+						.dequeueReusableCell(
+							withIdentifier: "sexualActivityCell",
+							for: indexPath
+						) as! SexualActivityTableViewCell
+				)
+				cell.sample = (sample as! SexualActivity)
+				return cell
+			case is Sleep:
+				let cell = (
+					tableView
+						.dequeueReusableCell(withIdentifier: "sleepCell", for: indexPath) as! SleepTableViewCell
+				)
+				cell.sleep = (sample as! Sleep)
+				return cell
+			default:
+				log.error("Forgot a type of Sample")
+				return UITableViewCell()
 			}
 		}
 
@@ -293,7 +320,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		return UITableViewCell()
 	}
 
-	final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	override final func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
 		guard finishedLoading && !waiting() else { return }
 		if indexPath.section == 0 {
 			showEditInformationView(indexPath)
@@ -319,56 +346,70 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	// MARK: - TableView Editing
 
-	final override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-		return indexPath.section == 0 || samplesAreDeletable()
+	override final func tableView(_: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+		indexPath.section == 0 || samplesAreDeletable()
 	}
 
-	final override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-		return indexPath.section == 0
+	override final func tableView(_: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+		indexPath.section == 0
 	}
 
-	final override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+	override final func tableView(_: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		guard fromIndexPath.section == 0 && to.section == 0 else { return }
 		information.swapAt(fromIndexPath.row, to.row)
 		informationValues.swapAt(fromIndexPath.row, to.row)
 	}
 
-	final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+	override final func tableView(
+		_ tableView: UITableView,
+		editActionsForRowAt indexPath: IndexPath
+	) -> [UITableViewRowAction]? {
 		if indexPath.section == 0 {
-			return [DependencyInjector.get(UiUtil.self).tableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
-				self.information.remove(at: indexPath.row)
-				self.informationValues.remove(at: indexPath.row)
-				tableView.deleteRows(at: [indexPath], with: .fade)
-			}]
-		}
-		guard let managedSample = self.filteredSamples[indexPath.row] as? CoreDataSample else { return [] }
-		let delete = DependencyInjector.get(UiUtil.self).tableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
-			let alert = UIAlertController(title: "Are you sure you want to delete this?", message: nil, preferredStyle: .alert)
-			alert.addAction(DependencyInjector.get(UiUtil.self).alertAction(title: "Yes", style: .destructive) { _ in
-				let goBackAfterDelete = self.filteredSamples.count == 1
-				do {
-					let transaction = DependencyInjector.get(Database.self).transaction()
-					try retryOnFail({ try transaction.delete(managedSample) }, maxRetries: 2)
-					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-					if goBackAfterDelete {
-						self.navigationController?.popViewController(animated: false)
-					} else {
-						let toRemove = self.filteredSamples.remove(at: indexPath.row)
-						self.samples.removeAll(where: { $0 === toRemove })
+			return [
+				DependencyInjector.get(UiUtil.self)
+					.tableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
+						self.information.remove(at: indexPath.row)
+						self.informationValues.remove(at: indexPath.row)
 						tableView.deleteRows(at: [indexPath], with: .fade)
-						self.recomputeInformation()
-						tableView.reloadData()
-					}
-				} catch {
-					self.log.error("Failed to delete sample: %@", errorInfo(error))
-					self.showError(
-						title: "Failed to delete " + self.filteredSamples[indexPath.row].attributedName.localizedLowercase,
-						error: error)
-				}
-			})
-			alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-			self.present(alert, animated: false, completion: nil)
+					},
+			]
 		}
+		guard let managedSample = filteredSamples[indexPath.row] as? CoreDataSample else { return [] }
+		let delete = DependencyInjector.get(UiUtil.self)
+			.tableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
+				let alert = UIAlertController(
+					title: "Are you sure you want to delete this?",
+					message: nil,
+					preferredStyle: .alert
+				)
+				alert
+					.addAction(DependencyInjector.get(UiUtil.self).alertAction(title: "Yes", style: .destructive) { _ in
+						let goBackAfterDelete = self.filteredSamples.count == 1
+						do {
+							let transaction = DependencyInjector.get(Database.self).transaction()
+							try retryOnFail({ try transaction.delete(managedSample) }, maxRetries: 2)
+							try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+							if goBackAfterDelete {
+								self.navigationController?.popViewController(animated: false)
+							} else {
+								let toRemove = self.filteredSamples.remove(at: indexPath.row)
+								self.samples.removeAll(where: { $0 === toRemove })
+								tableView.deleteRows(at: [indexPath], with: .fade)
+								self.recomputeInformation()
+								tableView.reloadData()
+							}
+						} catch {
+							self.log.error("Failed to delete sample: %@", errorInfo(error))
+							self.showError(
+								title: "Failed to delete " + self.filteredSamples[indexPath.row].attributedName
+									.localizedLowercase,
+								error: error
+							)
+						}
+					})
+				alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+				self.present(alert, animated: false, completion: nil)
+			}
 
 		return [delete]
 	}
@@ -390,9 +431,16 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 							self.tableView.reloadRows(at: [IndexPath(row: editIndex, section: 0)], with: .automatic)
 						}
 					} catch {
-						self.log.error("Failed to compute %@ information: %@", selectedInformation!.name, errorInfo(error))
+						self.log.error(
+							"Failed to compute %@ information: %@",
+							selectedInformation!.name,
+							errorInfo(error)
+						)
 						DispatchQueue.main.async {
-							self.showError(title: "Failed to compute \(selectedInformation!.name) information", error: error)
+							self.showError(
+								title: "Failed to compute \(selectedInformation!.name) information",
+								error: error
+							)
 						}
 					}
 				}
@@ -427,11 +475,15 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	@objc private final func sortSamplesBy(notification: Notification) {
 		guard let attribute: Attribute? = value(for: .attribute, from: notification) else { return }
 		guard let order: ComparisonResult? = value(for: .comparisonResult, from: notification) else { return }
-		self.sortOrder = order
-		self.sortAttribute = attribute
+		sortOrder = order
+		sortAttribute = attribute
 
-		self.sortActionSheet = UIAlertController(title: "Sorting by \(self.sortAttribute!.name)", message: nil, preferredStyle: .actionSheet)
-		self.sortActionSheet?.addAction(UIAlertAction(title: "Cancel", style: .cancel){ _ in
+		sortActionSheet = UIAlertController(
+			title: "Sorting by \(sortAttribute!.name)",
+			message: nil,
+			preferredStyle: .actionSheet
+		)
+		sortActionSheet?.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
 			self.sortTask?.cancel()
 			self.sortTask = nil
 			self.tableView.reloadData()
@@ -440,21 +492,21 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			self.present(self.sortActionSheet!, animated: false, completion: nil)
 
 			self.sortTask = DispatchWorkItem {
-				switch (self.sortAttribute) {
-					case is DoubleAttribute: self.sort(by: Double.self); break
-					case is IntegerAttribute: self.sort(by: Int.self); break
-					case is TextAttribute: self.sort(by: String.self); break
-					case is DateAttribute: self.sort(by: Date.self); break
-					case is DayOfWeekAttribute: self.sort(by: DayOfWeek.self); break
-					case is TimeOfDayAttribute: self.sort(by: TimeOfDay.self); break
-					case is DurationAttribute: self.sort(by: Duration.self); break
-					case is FrequencyAttribute: self.sort(by: Frequency.self); break
-					case is DosageAttribute: self.sort(by: Dosage.self); break
-					default:
-						self.log.error("Unknown sort attribute type: %@", String(describing: type(of: self.sortAttribute)))
+				switch self.sortAttribute {
+				case is DoubleAttribute: self.sort(by: Double.self); break
+				case is IntegerAttribute: self.sort(by: Int.self); break
+				case is TextAttribute: self.sort(by: String.self); break
+				case is DateAttribute: self.sort(by: Date.self); break
+				case is DayOfWeekAttribute: self.sort(by: DayOfWeek.self); break
+				case is TimeOfDayAttribute: self.sort(by: TimeOfDay.self); break
+				case is DurationAttribute: self.sort(by: Duration.self); break
+				case is FrequencyAttribute: self.sort(by: Frequency.self); break
+				case is DosageAttribute: self.sort(by: Dosage.self); break
+				default:
+					self.log.error("Unknown sort attribute type: %@", String(describing: type(of: self.sortAttribute)))
 				}
 				self.sortTask = nil
-				DispatchQueue.main.async{
+				DispatchQueue.main.async {
 					self.sortActionSheet?.dismiss(animated: false, completion: nil)
 					self.sortActionSheet = nil
 					self.tableView.reloadData()
@@ -471,58 +523,68 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		actionsController?.addAction(DependencyInjector.get(UiUtil.self).alertAction(
 			title: "Graph",
 			style: .default,
-			handler: { _ in self.graph() }))
+			handler: { _ in self.graph() }
+		))
 		if samplesAreSortable() {
 			actionsController?.addAction(DependencyInjector.get(UiUtil.self).alertAction(
 				title: "Sort",
 				style: .default,
-				handler: { _ in self.setSampleSort() }))
+				handler: { _ in self.setSampleSort() }
+			))
 		}
-		actionsController?.addAction(DependencyInjector.get(UiUtil.self).alertAction(title: "Add Information", style: .default) { _ in
-			DependencyInjector.get(AsyncUtil.self).run(qos: .userInteractive) { self.addInformation() }
-		})
+		actionsController?
+			.addAction(DependencyInjector.get(UiUtil.self).alertAction(title: "Add Information", style: .default) { _ in
+				DependencyInjector.get(AsyncUtil.self).run(qos: .userInteractive) { self.addInformation() }
+			})
 		if let _ = query {
 			actionsController?.addAction(DependencyInjector.get(UiUtil.self).alertAction(
 				title: "Refresh",
 				style: .default,
 				handler: { _ in
 					self.refreshQuery()
-				}))
+				}
+			))
 		}
 		if samplesAreDeletable() {
 			actionsController?.addAction(DependencyInjector.get(UiUtil.self).alertAction(
 				title: "Delete these " + samples[0].attributedName.localizedLowercase + " entries",
 				style: .default,
-				handler: { _ in self.deleteAllSamples() }))
+				handler: { _ in self.deleteAllSamples() }
+			))
 		}
-		actionsController?.addAction(DependencyInjector.get(UiUtil.self).alertAction(title: "Cancel", style: .cancel, handler: nil))
+		actionsController?
+			.addAction(DependencyInjector.get(UiUtil.self).alertAction(title: "Cancel", style: .cancel, handler: nil))
 		present(actionsController!, animated: false, completion: nil)
 	}
 
 	@objc private final func done() {
 		query.stop()
-		self.navigationController?.popViewController(animated: false)
+		navigationController?.popViewController(animated: false)
 	}
 
 	@objc private final func graph() {
-		let controller: QueryResultsGraphSetupViewController = viewController(named: "queryResultsGraphSetup", fromStoryboard: "GraphSetup")
+		let controller: QueryResultsGraphSetupViewController = viewController(
+			named: "queryResultsGraphSetup",
+			fromStoryboard: "GraphSetup"
+		)
 		controller.samples = samples
 		pushToNavigationController(controller, animated: false)
 	}
 
 	@objc private final func setSampleSort() {
 		sortController = viewController(named: "sortResults")
-		sortController?.attributes = self.sortableAttributes()
-		sortController?.sortAttribute = self.sortAttribute
-		sortController?.sortOrder = self.sortOrder
+		sortController?.attributes = sortableAttributes()
+		sortController?.sortAttribute = sortAttribute
+		sortController?.sortOrder = sortOrder
 		sortController?.notificationToSendOnAccept = Me.sortSamples
-		self.customPresentViewController(Me.sortPresenter, viewController: sortController!, animated: false)
+		customPresentViewController(Me.sortPresenter, viewController: sortController!, animated: false)
 	}
 
 	@objc private final func addInformation() {
 		do {
 			let attribute = type(of: samples[0]).defaultDependentAttribute
-			let applicableTypes = DependencyInjector.get(SampleGroupInformationFactory.self).getApplicableInformationTypes(forAttribute: attribute)
+			let applicableTypes = DependencyInjector.get(SampleGroupInformationFactory.self)
+				.getApplicableInformationTypes(forAttribute: attribute)
 			let newInformation = DependencyInjector.get(SampleGroupInformationFactory.self)
 				.initInformation(applicableTypes[0], attribute)
 			information.append(newInformation)
@@ -534,7 +596,8 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			DispatchQueue.main.async {
 				self.tableView.reloadRows(
 					at: [IndexPath(row: self.information.count - 1, section: 0)],
-					with: .automatic)
+					with: .automatic
+				)
 			}
 		} catch {
 			log.error("Failed to compute information: %@", errorInfo(error))
@@ -547,7 +610,8 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		let alert = UIAlertController(
 			title: "Are you sure you want to delete all of these \(sampleType) records?",
 			message: "This will only delete the ones displayed here.",
-			preferredStyle: .alert)
+			preferredStyle: .alert
+		)
 		alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 			DispatchQueue.global(qos: .userInitiated).async {
 				do {
@@ -566,11 +630,11 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			}
 		})
 		alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-		self.present(alert, animated: false, completion: nil)
+		present(alert, animated: false, completion: nil)
 	}
 
 	private final func refreshQuery() {
-		query?.runQuery { (result, error) in
+		query?.runQuery { result, error in
 			if let error = error {
 				self.log.error("Refresh query failed: %@", errorInfo(error))
 			}
@@ -586,7 +650,10 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		informationEditIndex = indexPath.row
 		let selectedInformation = information[informationEditIndex]
 
-		let controller = viewController(named: "editSampleGroupInformation", fromStoryboard: "Util") as! SelectSampleGroupInformationViewController
+		let controller = viewController(
+			named: "editSampleGroupInformation",
+			fromStoryboard: "Util"
+		) as! SelectSampleGroupInformationViewController
 		controller.notificationToSendWhenFinished = .editedInformation
 		controller.attributes = samples[0].attributes
 		controller.selectedAttribute = selectedInformation.attribute
@@ -602,7 +669,10 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	private final func showEditActivityView(_ indexPath: IndexPath) {
 		lastSelectedRowIndex = indexPath.row
 
-		let controller = viewController(named: "editActivity", fromStoryboard: "RecordData") as! EditActivityTableViewController
+		let controller = viewController(
+			named: "editActivity",
+			fromStoryboard: "RecordData"
+		) as! EditActivityTableViewController
 		guard let activity = filteredSamples[indexPath.row] as? Activity else {
 			log.error("Failed to cast result sample as Activity")
 			return
@@ -640,7 +710,8 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 		let controller = viewController(
 			named: "medicationDoseEditor",
-			fromStoryboard: "RecordData") as! MedicationDoseEditorViewController
+			fromStoryboard: "RecordData"
+		) as! MedicationDoseEditorViewController
 		guard let dose = filteredSamples[indexPath.row] as? MedicationDose else {
 			log.error("Failed to cast result sample as MedicationDose")
 			return
@@ -665,7 +736,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	}
 
 	private final func waiting() -> Bool {
-		return samples == nil
+		samples == nil
 	}
 
 	// leave non-private for testing
@@ -682,11 +753,11 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	}
 
 	private final func samplesAreDeletable() -> Bool {
-		return (samples != nil && samples.count > 0 && samples[0] is CoreDataSample)
+		(samples != nil && !samples.isEmpty && samples[0] is CoreDataSample)
 	}
 
 	private final func samplesAreSortable() -> Bool {
-		return sortableAttributes().count > 0
+		!sortableAttributes().isEmpty
 	}
 
 	private final func disableActionsButton() {
@@ -700,18 +771,18 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	}
 
 	private final func sortableAttributes() -> [Attribute] {
-		return samples[0].attributes.filter() {
-			return self.isSortableAttribute($0)
+		samples[0].attributes.filter {
+			self.isSortableAttribute($0)
 		}
 	}
 
 	private final func isSortableAttribute(_ attribute: Attribute) -> Bool {
-		return attribute is ComparableAttribute
+		attribute is ComparableAttribute
 	}
 
 	private final func sort<Type: Comparable>(by type: Type.Type) {
 		do {
-			samples = try samples.sorted() {
+			samples = try samples.sorted {
 				if self.sortTask == nil || self.sortTask!.isCancelled { return true }
 				let value1 = try $0.value(of: self.sortAttribute!) as? Type
 				let value2 = try $1.value(of: self.sortAttribute!) as? Type
@@ -737,7 +808,6 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 // MARK: - UISearchResultsUpdating
 
 extension ResultsViewControllerImpl: UISearchResultsUpdating {
-
 	/// This is used to provide a hook into setting the search text for testing. For some reason
 	/// passing searchController into resetFetchedResultsControllers() directly from
 	/// updateSearchResults() to use it instead results in localSearchController.searchBar being
@@ -746,7 +816,7 @@ extension ResultsViewControllerImpl: UISearchResultsUpdating {
 		searchController.searchBar.text = text
 	}
 
-	public func updateSearchResults(for searchController: UISearchController) {
+	public func updateSearchResults(for _: UISearchController) {
 		filterSamples()
 	}
 
@@ -756,7 +826,7 @@ extension ResultsViewControllerImpl: UISearchResultsUpdating {
 				filteredSamples = samples
 				return
 			}
-			filteredSamples = samples.filter{ $0.matchesSearchString(searchText) }
+			filteredSamples = samples.filter { $0.matchesSearchString(searchText) }
 		} else {
 			filteredSamples = samples
 		}

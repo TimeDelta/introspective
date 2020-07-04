@@ -12,7 +12,6 @@ import os
 import Attributes
 
 public final class AnySample: Sample {
-
 	public static let name: String = "Custom"
 	public static let defaultDependentAttribute: Attribute = CommonSampleAttributes.timestamp
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.timestamp
@@ -26,7 +25,8 @@ public final class AnySample: Sample {
 	public final var description: String
 
 	public final var debugDescription: String {
-		return "AnySample (\(_dates[.start]?.toString() ?? "nil") - \(_dates[.end]?.toString() ?? "nil") values: " + attributeValues.debugDescription
+		"AnySample (\(_dates[.start]?.toString() ?? "nil") - \(_dates[.end]?.toString() ?? "nil") values: " +
+			attributeValues.debugDescription
 	}
 
 	public final var attributes: [Attribute] {
@@ -40,20 +40,25 @@ public final class AnySample: Sample {
 
 	private final var attributeValues: [String: Any?]
 
-	public init(name: String = "", description: String = "", attributes: [Attribute] = [Attribute](), attributeValues: [String: Any] = [String: Any]()) {
-		self.attributedName = name
+	public init(
+		name: String = "",
+		description: String = "",
+		attributes: [Attribute] = [Attribute](),
+		attributeValues: [String: Any] = [String: Any]()
+	) {
+		attributedName = name
 		self.description = description
 		self.attributes = attributes
 		self.attributeValues = attributeValues
 	}
 
 	public final func set(dates: [DateType: Date]) {
-		self._dates = dates
+		_dates = dates
 		updateAttributeValuesWithDates()
 	}
 
 	public final func dates() -> [DateType: Date] {
-		return _dates
+		_dates
 	}
 
 	public final func value(of attribute: Attribute) throws -> Any? {
@@ -64,7 +69,7 @@ public final class AnySample: Sample {
 	}
 
 	public final func set(attribute: Attribute, to value: Any?) throws {
-		guard let _ = attributes.first(where: { a in return a.name == attribute.name }) else {
+		guard let _ = attributes.first(where: { a in a.name == attribute.name }) else {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
 		attributeValues[attribute.name] = value
@@ -83,6 +88,6 @@ public final class AnySample: Sample {
 	}
 
 	private final func isAttribute(_ attribute: Attribute) -> Bool {
-		return attributes.contains(where: { $0.equalTo(attribute) })
+		attributes.contains(where: { $0.equalTo(attribute) })
 	}
 }

@@ -25,15 +25,15 @@ public protocol ChooseGroupersForXYGraphViewController: UIViewController {
 	var notificationToSendOnAccept: NotificationName! { get set }
 }
 
-public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController, ChooseGroupersForXYGraphViewController {
-
+public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
+	ChooseGroupersForXYGraphViewController {
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var chooseAttributeTypeButton: UIButton!
-	@IBOutlet weak final var chooseGrouperTypeButton: UIButton!
-	@IBOutlet weak final var chooseXGrouperButton: UIButton!
-	@IBOutlet weak final var chooseYGrouperButton: UIButton!
-	@IBOutlet weak final var saveButton: UIButton!
+	@IBOutlet final var chooseAttributeTypeButton: UIButton!
+	@IBOutlet final var chooseGrouperTypeButton: UIButton!
+	@IBOutlet final var chooseXGrouperButton: UIButton!
+	@IBOutlet final var chooseYGrouperButton: UIButton!
+	@IBOutlet final var saveButton: UIButton!
 
 	// MARK: - Instance Variables
 
@@ -41,14 +41,17 @@ public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
 	public final var ySampleType: Sample.Type!
 	public final var navBarTitle: String!
 	public final var xGrouper: SampleGrouper! {
-		didSet { waitUntilLoaded{ self.xGrouperSet() } }
+		didSet { waitUntilLoaded { self.xGrouperSet() } }
 	}
+
 	public final var yGrouper: SampleGrouper! {
-		didSet { waitUntilLoaded{ self.yGrouperSet() } }
+		didSet { waitUntilLoaded { self.yGrouperSet() } }
 	}
+
 	public final var currentAttributeType: String! {
-		didSet { waitUntilLoaded{ self.attributeTypeSet() } }
+		didSet { waitUntilLoaded { self.attributeTypeSet() } }
 	}
+
 	public final var notificationToSendOnAccept: NotificationName!
 
 	private final var xAttributeTypeToAttributes = [String: [Attribute]]()
@@ -57,8 +60,9 @@ public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
 
 	private final var availableGroupers = [SampleGrouper]()
 	private final var chosenGrouperType: SampleGrouper.Type! {
-		didSet { waitUntilLoaded{ self.chosenGrouperTypeSet() } }
+		didSet { waitUntilLoaded { self.chosenGrouperTypeSet() } }
 	}
+
 	/// Leave this as member field because saving an AdvancedSampleGrouper doesn't work otherwise
 	private final var currentGrouperChooser: GroupingChooserTableViewController!
 
@@ -72,7 +76,7 @@ public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 
 		title = navBarTitle
@@ -80,7 +84,7 @@ public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
 		populateXAttributes()
 		populateYAttributes()
 
-		guard commonAttributeTypes.count > 0 else {
+		guard !commonAttributeTypes.isEmpty else {
 			parent?.showError(title: "No Attribute types in common")
 			popFromNavigationController()
 			return
@@ -100,7 +104,7 @@ public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
 
 	// MARK: - Button Actions
 
-	@IBAction final func chooseAttributeTypeButtonPressed(_ sender: Any) {
+	@IBAction final func chooseAttributeTypeButtonPressed(_: Any) {
 		let controller = viewController(named: "chooseText", fromStoryboard: "Util") as! ChooseTextViewController
 		controller.availableChoices = commonAttributeTypes
 		controller.selectedText = currentAttributeType
@@ -108,10 +112,11 @@ public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
 		present(controller, using: DependencyInjector.get(UiUtil.self).defaultPresenter)
 	}
 
-	@IBAction final func chooseGrouperTypeButtonPressed(_ sender: Any) {
+	@IBAction final func chooseGrouperTypeButtonPressed(_: Any) {
 		let controller = viewController(
 			named: "chooseSampleGrouperType",
-			fromStoryboard: "Util") as! ChooseSampleGrouperTypeViewController
+			fromStoryboard: "Util"
+		) as! ChooseSampleGrouperTypeViewController
 		guard let attributes = xAttributeTypeToAttributes[currentAttributeType] else {
 			log.error("No attributes of chosen type found for x-axis")
 			return
@@ -121,7 +126,7 @@ public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
 		present(controller, using: DependencyInjector.get(UiUtil.self).defaultPresenter)
 	}
 
-	@IBAction final func chooseXAxisGrouperButtonPressed(_ sender: Any) {
+	@IBAction final func chooseXAxisGrouperButtonPressed(_: Any) {
 		var grouper = xGrouper
 		if grouper == nil {
 			if let xApplicableAttributes = xAttributeTypeToAttributes[currentAttributeType] {
@@ -137,10 +142,11 @@ public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
 		showGrouperEditController(
 			grouper: currentGrouper,
 			notificationToSendOnAccept: .xGrouperEdited,
-			sampleType: xSampleType)
+			sampleType: xSampleType
+		)
 	}
 
-	@IBAction final func chooseYAxisGrouperButtonPressed(_ sender: Any) {
+	@IBAction final func chooseYAxisGrouperButtonPressed(_: Any) {
 		var grouper = yGrouper
 		if grouper == nil {
 			if let yApplicableAttributes = yAttributeTypeToAttributes[currentAttributeType] {
@@ -156,17 +162,19 @@ public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
 		showGrouperEditController(
 			grouper: currentGrouper,
 			notificationToSendOnAccept: .yGrouperEdited,
-			sampleType: ySampleType)
+			sampleType: ySampleType
+		)
 	}
 
-	@IBAction final func saveButtonPressed(_ sender: Any) {
+	@IBAction final func saveButtonPressed(_: Any) {
 		syncPost(
 			.groupersEdited,
 			userInfo: [
 				.attribute: currentAttributeType,
 				.x: xGrouper,
 				.y: yGrouper,
-			])
+			]
+		)
 		popFromNavigationController()
 	}
 
@@ -245,7 +253,8 @@ public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
 		// go straight to AttributedList controller if not advanced sample grouper to give a
 		// better user experience
 		if grouper is AdvancedSampleGrouper {
-			currentGrouperChooser = (viewController(named: "chooseGrouper", fromStoryboard: "Util") as! GroupingChooserTableViewController)
+			currentGrouperChooser =
+				(viewController(named: "chooseGrouper", fromStoryboard: "Util") as! GroupingChooserTableViewController)
 			currentGrouperChooser.sampleType = sampleType
 			currentGrouperChooser.currentGrouper = grouper
 			currentGrouperChooser.allowUserToChangeGrouperType = false

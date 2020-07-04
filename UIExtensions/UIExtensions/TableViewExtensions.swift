@@ -9,7 +9,6 @@
 import UIKit
 
 public extension UITableView {
-
 	/// - Note: This will still call the `setSelected` method on each `UITableViewCell` after reloading
 	final func reloadAndReapplySelectionState() {
 		let selectedIndexPaths = indexPathsForSelectedRows

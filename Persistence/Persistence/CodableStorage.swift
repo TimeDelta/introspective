@@ -23,9 +23,8 @@ public enum CodableStorageError: Error {
 	case noDataFound
 }
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol CodableStorage {
-
 	func store<T: Encodable>(_ object: T, to directory: StorageDirectory, as fileName: String) throws
 	func retrieve<T: Decodable>(_ fileName: String, from directory: StorageDirectory, as type: T.Type) throws -> T
 	func clear(_ directory: StorageDirectory) throws
@@ -34,7 +33,6 @@ public protocol CodableStorage {
 }
 
 internal final class CodableStorageImpl: CodableStorage {
-
 	private final let log = Log()
 
 	/// Store an encodable struct to the specified directory on disk
@@ -59,7 +57,8 @@ internal final class CodableStorageImpl: CodableStorage {
 				String(describing: object),
 				String(describing: directory),
 				fileName,
-				errorInfo(error))
+				errorInfo(error)
+			)
 			throw error
 		}
 	}
@@ -71,7 +70,11 @@ internal final class CodableStorageImpl: CodableStorage {
 	///   - directory: directory where struct data is stored
 	///   - type: struct type (i.e. Message.self)
 	/// - Returns: decoded struct model(s) of data
-	public final func retrieve<T: Decodable>(_ fileName: String, from directory: StorageDirectory, as type: T.Type) throws -> T {
+	public final func retrieve<T: Decodable>(
+		_ fileName: String,
+		from directory: StorageDirectory,
+		as type: T.Type
+	) throws -> T {
 		let url = getURL(for: directory).appendingPathComponent(fileName, isDirectory: false)
 
 		if !FileManager.default.fileExists(atPath: url.path) {
@@ -92,7 +95,11 @@ internal final class CodableStorageImpl: CodableStorage {
 	/// Remove all files at specified directory
 	public final func clear(_ directory: StorageDirectory) throws {
 		let url = getURL(for: directory)
-		let contents = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: [])
+		let contents = try FileManager.default.contentsOfDirectory(
+			at: url,
+			includingPropertiesForKeys: nil,
+			options: []
+		)
 		for fileUrl in contents {
 			try FileManager.default.removeItem(at: fileUrl)
 		}

@@ -6,8 +6,8 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
 import Presentr
+import UIKit
 
 import Attributes
 import Common
@@ -15,7 +15,6 @@ import DependencyInjection
 import SampleGroupInformation
 
 public protocol XAxisSetupViewController: UIViewController {
-
 	var usePointGroupValue: Bool { get set }
 	var grouped: Bool { get set }
 	var attributes: [Attribute]! { get set }
@@ -25,7 +24,6 @@ public protocol XAxisSetupViewController: UIViewController {
 }
 
 final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewController {
-
 	// MARK: - Static Variables
 
 	private typealias Me = XAxisSetupViewControllerImpl
@@ -40,10 +38,10 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var usePointGroupValueLabel: UILabel!
-	@IBOutlet weak final var usePointGroupValueSwitch: UISwitch!
-	@IBOutlet weak final var attributePicker: UIPickerView!
-	@IBOutlet weak final var informationPicker: UIPickerView!
+	@IBOutlet final var usePointGroupValueLabel: UILabel!
+	@IBOutlet final var usePointGroupValueSwitch: UISwitch!
+	@IBOutlet final var attributePicker: UIPickerView!
+	@IBOutlet final var informationPicker: UIPickerView!
 
 	// MARK: - Instance Variables
 
@@ -59,11 +57,12 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 			let applicableInformationTypes = getApplicableInformationTypesForSelectedAttribute()
 			if let index = applicableInformationTypes.index(where: { $0 == type(of: selectedInformation) }) {
 				selectedInformation = applicableInformationTypes[index].init(selectedAttribute)
-			} else if applicableInformationTypes.count > 0 {
+			} else if !applicableInformationTypes.isEmpty {
 				selectedInformation = applicableInformationTypes[0].init(selectedAttribute)
 			}
 		}
 	}
+
 	public final var selectedInformation: SampleGroupInformation!
 	public final var notificationToSendWhenFinished: NotificationName!
 	private final var finishedLoading = false
@@ -72,7 +71,7 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 
 	// MARK: - UIViewController Overrides
 
-	final override func viewDidLoad() {
+	override final func viewDidLoad() {
 		super.viewDidLoad()
 
 		attributePicker.delegate = self
@@ -100,7 +99,7 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 
 	// MARK: - Button Actions
 
-	@IBAction final func acceptButtonPressed(_ sender: Any) {
+	@IBAction final func acceptButtonPressed(_: Any) {
 		if grouped {
 			sendGroupedAcceptedNotification()
 		} else {
@@ -113,7 +112,7 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 		}
 	}
 
-	@IBAction final func useGroupValueChanged(_ sender: Any) {
+	@IBAction final func useGroupValueChanged(_: Any) {
 		updateDisplay()
 	}
 
@@ -126,7 +125,8 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 			notificationToSendWhenFinished,
 			userInfo: [
 				.attribute: selectedAttribute,
-			])
+			]
+		)
 	}
 
 	private final func sendGroupedAcceptedNotification() {
@@ -134,8 +134,9 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 			syncPost(
 				notificationToSendWhenFinished,
 				userInfo: [
-					.usePointGroupValue: true
-				])
+					.usePointGroupValue: true,
+				]
+			)
 		} else {
 			guard let selectedInformation = selectedInformation else {
 				log.error("Selected information not set")
@@ -145,19 +146,22 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 				notificationToSendWhenFinished,
 				userInfo: [
 					.information: selectedInformation,
-				])
+				]
+			)
 		}
 	}
 
 	// MARK: - Helper Functions
 
 	private final func getApplicableInformationTypesForSelectedAttribute() -> [SampleGroupInformation.Type] {
-		return DependencyInjector.get(SampleGroupInformationFactory.self).getApplicableInformationTypes(forAttribute: selectedAttribute)
+		DependencyInjector.get(SampleGroupInformationFactory.self)
+			.getApplicableInformationTypes(forAttribute: selectedAttribute)
 	}
 
 	private final func indexOfSelectedInformation() -> Int? {
 		if selectedInformation == nil { return nil }
-		return getApplicableInformationTypesForSelectedAttribute().index(where: { $0.init(selectedAttribute).equalTo(selectedInformation!) })
+		return getApplicableInformationTypesForSelectedAttribute()
+			.index(where: { $0.init(selectedAttribute).equalTo(selectedInformation!) })
 	}
 
 	private final func updateDisplay() {
@@ -178,12 +182,11 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 // MARK: - UIPickerViewDataSource
 
 extension XAxisSetupViewControllerImpl: UIPickerViewDataSource {
-
-	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
-		return 1
+	public final func numberOfComponents(in _: UIPickerView) -> Int {
+		1
 	}
 
-	public final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+	public final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent _: Int) -> Int {
 		if pickerView == attributePicker {
 			return attributes.count
 		}
@@ -198,19 +201,19 @@ extension XAxisSetupViewControllerImpl: UIPickerViewDataSource {
 // MARK: - UIPickerViewDelegate
 
 extension XAxisSetupViewControllerImpl: UIPickerViewDelegate {
-
-	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent _: Int) -> String? {
 		if pickerView == attributePicker {
 			return attributes[row].name.localizedCapitalized
 		}
 		if pickerView == informationPicker {
-			return getApplicableInformationTypesForSelectedAttribute()[row].init(selectedAttribute).name.localizedCapitalized
+			return getApplicableInformationTypesForSelectedAttribute()[row].init(selectedAttribute).name
+				.localizedCapitalized
 		}
 		log.error("Unknown UIPickerView when determining row title: '%@'", pickerView.restorationIdentifier ?? "")
 		return nil
 	}
 
-	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent _: Int) {
 		if pickerView == attributePicker {
 			selectedAttribute = attributes[row]
 		}

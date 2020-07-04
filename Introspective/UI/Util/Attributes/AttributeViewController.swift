@@ -6,8 +6,8 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
 import Presentr
+import UIKit
 
 import Attributes
 import Common
@@ -15,26 +15,31 @@ import DependencyInjection
 import UIExtensions
 
 final class AttributeViewController: UIViewController {
-
 	// MARK: - Static Variables
 
 	private typealias Me = AttributeViewController
-	private static let numericPresenter = DependencyInjector.get(UiUtil.self).customPresenter(width: .full, height: .custom(size: 100), center: .topCenter)
-	private static let dosagePresenter = DependencyInjector.get(UiUtil.self).customPresenter(height: .custom(size: 100), center: .topCenter)
-	private static let frequencyPresenter = DependencyInjector.get(UiUtil.self).customPresenter(width: .custom(size: 250), height: .custom(size: 250), center: .topCenter)
-	private static let multiSelectPresenter = DependencyInjector.get(UiUtil.self).customPresenter(width: .full, height: .fluid(percentage: 0.45), center: .topCenter)
-	private static let defaultPresenter = DependencyInjector.get(UiUtil.self).customPresenter(width: .full, height: .custom(size: 200), center: .topCenter)
+	private static let numericPresenter = DependencyInjector.get(UiUtil.self)
+		.customPresenter(width: .full, height: .custom(size: 100), center: .topCenter)
+	private static let dosagePresenter = DependencyInjector.get(UiUtil.self)
+		.customPresenter(height: .custom(size: 100), center: .topCenter)
+	private static let frequencyPresenter = DependencyInjector.get(UiUtil.self)
+		.customPresenter(width: .custom(size: 250), height: .custom(size: 250), center: .topCenter)
+	private static let multiSelectPresenter = DependencyInjector.get(UiUtil.self)
+		.customPresenter(width: .full, height: .fluid(percentage: 0.45), center: .topCenter)
+	private static let defaultPresenter = DependencyInjector.get(UiUtil.self)
+		.customPresenter(width: .full, height: .custom(size: 200), center: .topCenter)
 	private static let descriptionPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
-		center: .center)
+		center: .center
+	)
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var attributeDescriptionButton: UIButton!
-	@IBOutlet weak final var attributeNameLabel: UILabel!
-	@IBOutlet weak final var attributeValueButton: UIButton!
-	@IBOutlet weak final var booleanValueSwitch: UISwitch!
+	@IBOutlet final var attributeDescriptionButton: UIButton!
+	@IBOutlet final var attributeNameLabel: UILabel!
+	@IBOutlet final var attributeValueButton: UIButton!
+	@IBOutlet final var booleanValueSwitch: UISwitch!
 
 	// MARK: - Instance Variables
 
@@ -50,7 +55,7 @@ final class AttributeViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	final override func viewDidLoad() {
+	override final func viewDidLoad() {
 		super.viewDidLoad()
 
 		view.translatesAutoresizingMaskIntoConstraints = false
@@ -74,7 +79,7 @@ final class AttributeViewController: UIViewController {
 		NotificationCenter.default.removeObserver(self)
 	}
 
-	public final override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+	override public final func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
 		if let controller = segue.destination as? AttributeDescriptionViewController {
 			controller.descriptionText = attribute.extendedDescription
 		} else if let controller = segue.destination as? AttributeValueViewController {
@@ -85,13 +90,13 @@ final class AttributeViewController: UIViewController {
 
 	// MARK: - Button Actions
 
-	@IBAction final func descriptionButtonPressed(_ sender: Any) {
+	@IBAction final func descriptionButtonPressed(_: Any) {
 		let controller: AttributeDescriptionViewController = viewController(named: "attributeDescription")
 		controller.descriptionText = attribute.extendedDescription
 		customPresentViewController(Me.descriptionPresenter, viewController: controller, animated: false)
 	}
 
-	@IBAction final func valueButtonPressed(_ sender: Any) {
+	@IBAction final func valueButtonPressed(_: Any) {
 		if attribute is MultiSelectAttribute {
 			showMultiSelectView()
 		} else if attribute is NumericAttribute {
@@ -105,13 +110,14 @@ final class AttributeViewController: UIViewController {
 		}
 	}
 
-	@IBAction final func booleanValueChanged(_ sender: Any) {
+	@IBAction final func booleanValueChanged(_: Any) {
 		attributeValue = booleanValueSwitch.isOn
 		post(
 			notificationToSendOnValueChange,
 			userInfo: [
 				.attributeValue: attributeValue,
-			])
+			]
+		)
 	}
 
 	// MARK: - Received Notifications
@@ -200,7 +206,8 @@ final class AttributeViewController: UIViewController {
 					"Failed to convert %@ as %@ to displayable string: %@",
 					String(describing: attributeValue),
 					attribute.name,
-					errorInfo(error))
+					errorInfo(error)
+				)
 			}
 		}
 
@@ -208,7 +215,8 @@ final class AttributeViewController: UIViewController {
 		let size = attributeValueButton.systemLayoutSizeFitting(
 			UIView.layoutFittingCompressedSize,
 			withHorizontalFittingPriority: .defaultHigh,
-			verticalFittingPriority: .init(1))
+			verticalFittingPriority: .init(1)
+		)
 		attributeValueButton.frame.size = size
 
 		setAccessibility()
@@ -222,7 +230,8 @@ final class AttributeViewController: UIViewController {
 			log.error(
 				"Failed to set accessibility value on %@: %@",
 				attributeValueButton.accessibilityIdentifier!,
-				errorInfo(error))
+				errorInfo(error)
+			)
 		}
 	}
 

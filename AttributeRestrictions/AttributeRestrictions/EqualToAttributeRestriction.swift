@@ -13,16 +13,19 @@ import Common
 import Samples
 
 public class EqualToAttributeRestriction: AnyAttributeRestriction, Equatable {
-
 	// MARK: Instance Variables
 
-	public final override var attributedName: String { return "Equal to" }
-	public final override var description: String {
+	override public final var attributedName: String { "Equal to" }
+	override public final var description: String {
 		do {
 			let valueText = try restrictedAttribute.convertToDisplayableString(from: value)
 			return restrictedAttribute.name + " = " + valueText
 		} catch {
-			log.error("Could not convert current value (%@) to displayable string: %@", String(describing: value), errorInfo(error))
+			log.error(
+				"Could not convert current value (%@) to displayable string: %@",
+				String(describing: value),
+				errorInfo(error)
+			)
 			return restrictedAttribute.name + " = ?"
 		}
 	}
@@ -36,7 +39,12 @@ public class EqualToAttributeRestriction: AnyAttributeRestriction, Equatable {
 
 	// MARK: Initializers
 
-	public init(restrictedAttribute: Attribute, value: Any?, valueAttribute: Attribute, areEqual: @escaping (Any?, Any?) throws -> Bool) {
+	public init(
+		restrictedAttribute: Attribute,
+		value: Any?,
+		valueAttribute: Attribute,
+		areEqual: @escaping (Any?, Any?) throws -> Bool
+	) {
 		self.value = value
 		self.valueAttribute = valueAttribute
 		self.areEqual = areEqual
@@ -45,42 +53,47 @@ public class EqualToAttributeRestriction: AnyAttributeRestriction, Equatable {
 
 	public required init(restrictedAttribute: Attribute) {
 		log.error("This should never be called because this is an abstract base class")
-		self.valueAttribute = restrictedAttribute
-		self.value = nil
-		self.areEqual = { _,_  in true }
+		valueAttribute = restrictedAttribute
+		value = nil
+		areEqual = { _, _ in true }
 		super.init(restrictedAttribute: restrictedAttribute, attributes: [])
 	}
 
 	// MARK: Attributed Functions
 
-	public final override func value(of attribute: Attribute) throws -> Any? {
+	override public final func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(valueAttribute) { return value }
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
-	public override func set(attribute: Attribute, to value: Any?) throws {
+	override public func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(valueAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
-		let _ = try valueAttribute.convertToDisplayableString(from: value)
+		_ = try valueAttribute.convertToDisplayableString(from: value)
 		self.value = value
 	}
 
 	// MARK: Attribute Restriction Functions
 
-	public override func samplePasses(_ sample: Sample) throws -> Bool {
+	override public func samplePasses(_ sample: Sample) throws -> Bool {
 		let actualValue = try sample.value(of: restrictedAttribute)
 		return try areEqual(actualValue, value)
 	}
 
-	public override func copy() -> AttributeRestriction {
-		return EqualToAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: valueAttribute, areEqual: areEqual)
+	override public func copy() -> AttributeRestriction {
+		EqualToAttributeRestriction(
+			restrictedAttribute: restrictedAttribute,
+			value: value,
+			valueAttribute: valueAttribute,
+			areEqual: areEqual
+		)
 	}
 
 	// MARK: Equality
 
-	public static func ==(lhs: EqualToAttributeRestriction, rhs: EqualToAttributeRestriction) -> Bool {
-		return lhs.equalTo(rhs)
+	public static func == (lhs: EqualToAttributeRestriction, rhs: EqualToAttributeRestriction) -> Bool {
+		lhs.equalTo(rhs)
 	}
 
 	public func equalTo(_ otherAttributed: Attributed) -> Bool {
@@ -89,7 +102,7 @@ public class EqualToAttributeRestriction: AnyAttributeRestriction, Equatable {
 		return equalTo(other)
 	}
 
-	public override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	override public func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is EqualToAttributeRestriction) { return false }
 		let other = otherRestriction as! EqualToAttributeRestriction
 		return equalTo(other)
@@ -109,9 +122,8 @@ public class EqualToAttributeRestriction: AnyAttributeRestriction, Equatable {
 // MARK: - TypedEqualToAttributeRestrictionBase
 
 public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualToAttributeRestriction {
-
 	/// for copy purposes
-	final private let typedAreEqual: (ValueType?, ValueType?) -> Bool
+	private final let typedAreEqual: (ValueType?, ValueType?) -> Bool
 
 	// MARK: Initializers
 
@@ -131,8 +143,8 @@ public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualTo
 		restrictedAttribute: Attribute,
 		value: ValueType?,
 		valueAttribute: Attribute,
-		areEqual: @escaping (ValueType?, ValueType?) -> Bool)
-	{
+		areEqual: @escaping (ValueType?, ValueType?) -> Bool
+	) {
 		typedAreEqual = areEqual
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: valueAttribute) {
 			if !($0 is ValueType?) || !($1 is ValueType?) {
@@ -145,18 +157,21 @@ public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualTo
 	}
 
 	public required init(restrictedAttribute: Attribute) {
-		typedAreEqual = { _,_  in true }
+		typedAreEqual = { _, _ in true }
 		super.init(restrictedAttribute: restrictedAttribute)
 		log.error("This should never be called because this is an abstract base class")
 	}
 
 	// MARK: Attributed Functions
 
-	public override func set(attribute: Attribute, to value: Any?) throws {
+	override public func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(valueAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
-		if !((restrictedAttribute.optional && value is ValueType?) || (!restrictedAttribute.optional && value is ValueType)) {
+		if !(
+			(restrictedAttribute.optional && value is ValueType?) ||
+				(!restrictedAttribute.optional && value is ValueType)
+		) {
 			throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 		}
 		let castedValue = value as! ValueType?
@@ -165,11 +180,15 @@ public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualTo
 
 	// MARK: Attribute Restriction Functions
 
-	public override func samplePasses(_ sample: Sample) throws -> Bool {
+	override public func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
 		if sampleValue == nil {
 			if !restrictedAttribute.optional {
-				log.error("Value of non-optional attribute named '%@' in %@ sample is nil", restrictedAttribute.name, sample.attributedName)
+				log.error(
+					"Value of non-optional attribute named '%@' in %@ sample is nil",
+					restrictedAttribute.name,
+					sample.attributedName
+				)
 			}
 			return value == nil || (value is String && (value as! String).isEmpty)
 		}
@@ -180,30 +199,32 @@ public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualTo
 		return try areEqual(castedValue, value)
 	}
 
-	public override func copy() -> AttributeRestriction {
-		return TypedEqualToAttributeRestrictionBase<ValueType>(
+	override public func copy() -> AttributeRestriction {
+		TypedEqualToAttributeRestrictionBase<ValueType>(
 			restrictedAttribute: restrictedAttribute,
 			value: value as? ValueType,
 			valueAttribute: valueAttribute,
-			areEqual: typedAreEqual)
+			areEqual: typedAreEqual
+		)
 	}
 
 	// MARK: Equality
 
-	public static func ==(
+	public static func == (
 		lhs: TypedEqualToAttributeRestrictionBase<ValueType>,
-		rhs: TypedEqualToAttributeRestrictionBase<ValueType>)
-	-> Bool {
-		return lhs.equalTo(rhs)
+		rhs: TypedEqualToAttributeRestrictionBase<ValueType>
+	)
+		-> Bool {
+		lhs.equalTo(rhs)
 	}
 
-	public final override func equalTo(_ otherAttributed: Attributed) -> Bool {
+	override public final func equalTo(_ otherAttributed: Attributed) -> Bool {
 		if !(otherAttributed is TypedEqualToAttributeRestrictionBase) { return false }
 		let other = otherAttributed as! TypedEqualToAttributeRestrictionBase
 		return equalTo(other)
 	}
 
-	public final override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	override public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is TypedEqualToAttributeRestrictionBase) { return false }
 		let other = otherRestriction as! TypedEqualToAttributeRestrictionBase
 		return equalTo(other)
@@ -215,7 +236,7 @@ public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualTo
 			return restrictedAttribute.equalTo(other.restrictedAttribute) && valuesEqual
 		} catch {
 			log.error("Failed to check equality: %@", errorInfo(error))
-			return  false
+			return false
 		}
 	}
 }

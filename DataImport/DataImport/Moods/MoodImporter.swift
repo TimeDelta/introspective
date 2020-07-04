@@ -9,5 +9,4 @@
 import Foundation
 
 /// This is mostly to allow identification of the type of import for user notification purposes
-public protocol MoodImporter: Importer {
-}
+public protocol MoodImporter: Importer {}

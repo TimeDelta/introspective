@@ -13,7 +13,6 @@ import Common
 import UIExtensions
 
 final class AttributeValueViewController: UIViewController {
-
 	// MARK: - Static Variables
 
 	private typealias Me = AttributeValueViewController
@@ -22,8 +21,8 @@ final class AttributeValueViewController: UIViewController {
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var stackView: UIStackView!
-	@IBOutlet weak final var acceptButton: UIButton!
+	@IBOutlet final var stackView: UIStackView!
+	@IBOutlet final var acceptButton: UIButton!
 
 	// MARK: - Instance Variables
 
@@ -37,31 +36,38 @@ final class AttributeValueViewController: UIViewController {
 
 	// MARK: UIViewController Overrides
 
-	final override func viewDidLoad() {
+	override final func viewDidLoad() {
 		super.viewDidLoad()
 
 		if attribute is SelectOneAttribute {
-			let controller = storyboard!.instantiateViewController(withIdentifier: "selectOneAttribute") as! SelectOneAttributeValueViewController
+			let controller = storyboard!
+				.instantiateViewController(
+					withIdentifier: "selectOneAttribute"
+				) as! SelectOneAttributeValueViewController
 			controller.currentValue = attributeValue
 			controller.selectOneAttribute = (attribute as! SelectOneAttribute)
 			subViewController = controller
 		} else if attribute is DateAttribute {
-			let controller = storyboard!.instantiateViewController(withIdentifier: "dateAttribute") as! DateOrTimeAttributeValueViewController
+			let controller = storyboard!
+				.instantiateViewController(withIdentifier: "dateAttribute") as! DateOrTimeAttributeValueViewController
 			controller.dateAttribute = (attribute as! DateAttribute)
 			controller.currentValue = attributeValue
 			subViewController = controller
 		} else if attribute is TimeOfDayAttribute {
-			let controller = storyboard!.instantiateViewController(withIdentifier: "dateAttribute") as! DateOrTimeAttributeValueViewController
+			let controller = storyboard!
+				.instantiateViewController(withIdentifier: "dateAttribute") as! DateOrTimeAttributeValueViewController
 			controller.timeOfDayAttribute = (attribute as! TimeOfDayAttribute)
 			controller.currentValue = attributeValue
 			subViewController = controller
 		} else if attribute is TextAttribute {
-			let controller = storyboard!.instantiateViewController(withIdentifier: "textAttribute") as! TextAttributeValueViewController
+			let controller = storyboard!
+				.instantiateViewController(withIdentifier: "textAttribute") as! TextAttributeValueViewController
 			controller.textAttribute = (attribute as! TextAttribute)
 			controller.currentValue = attributeValue
 			subViewController = controller
 		} else if attribute is DurationAttribute {
-			let controller = storyboard!.instantiateViewController(withIdentifier: "durationAttribute") as! DurationAttributeValueViewController
+			let controller = storyboard!
+				.instantiateViewController(withIdentifier: "durationAttribute") as! DurationAttributeValueViewController
 			controller.currentValue = attributeValue
 			subViewController = controller
 		} else {
@@ -82,13 +88,14 @@ final class AttributeValueViewController: UIViewController {
 
 	// MARK: - Actions
 
-	@IBAction final func saveButtonPressed(_ sender: Any) {
+	@IBAction final func saveButtonPressed(_: Any) {
 		NotificationCenter.default.post(
 			name: notificationToSendOnAccept,
 			object: self,
 			userInfo: info([
 				.attributeValue: subViewController.currentValue,
-			]))
+			])
+		)
 		dismiss(animated: false, completion: nil)
 	}
 

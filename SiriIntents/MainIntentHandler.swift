@@ -15,7 +15,6 @@ import Samples
 import Settings
 
 class MainIntentHandler: INExtension {
-
 	private typealias Me = MainIntentHandler
 
 	private static let log = Log()
@@ -26,33 +25,37 @@ class MainIntentHandler: INExtension {
 			Me.registerDependencies()
 		}
 		switch intent {
-			case is IsWeekdayIntent:
-				return IsWeekdayIntentHandler()
-			case is RecordDecimalMoodIntent:
-				return RecordDecimalMoodIntentHandler()
-			case is RecordIntegerMoodIntent:
-				return RecordIntegerMoodIntentHandler()
-			case is StartActivityFromEndOfLastIntent:
-				return StartActivityFromEndOfLastIntentHandler()
-			case is StartActivitiesIntent:
-				return StartActivitiesIntentHandler()
-			case is StartActivityIntent:
-				return StartActivityIntentHandler()
-			case is StartActivityXAgoIntent:
-				return StartActivityXAgoIntentHandler()
-			case is StopActivitiesIntent:
-				return StopActivitiesIntentHandler()
-			case is StopAllActivitiesIntent:
-				return StopAllActivitiesIntentHandler()
-			case is StopLastStartedActivityIntent:
-				return StopLastStartedActivityIntentHandler()
-			case is TakeMedicationIntent:
-				return TakeMedicationIntentHandler()
-			case is TakeMedicationWithDosageIntent:
-				return TakeMedicationWithDosageIntentHandler()
-			default:
-				Me.log.error("Received unknown intent: %@ (%@)", intent.identifier ?? "no name", intent.intentDescription ?? "no description")
-				return self
+		case is IsWeekdayIntent:
+			return IsWeekdayIntentHandler()
+		case is RecordDecimalMoodIntent:
+			return RecordDecimalMoodIntentHandler()
+		case is RecordIntegerMoodIntent:
+			return RecordIntegerMoodIntentHandler()
+		case is StartActivityFromEndOfLastIntent:
+			return StartActivityFromEndOfLastIntentHandler()
+		case is StartActivitiesIntent:
+			return StartActivitiesIntentHandler()
+		case is StartActivityIntent:
+			return StartActivityIntentHandler()
+		case is StartActivityXAgoIntent:
+			return StartActivityXAgoIntentHandler()
+		case is StopActivitiesIntent:
+			return StopActivitiesIntentHandler()
+		case is StopAllActivitiesIntent:
+			return StopAllActivitiesIntentHandler()
+		case is StopLastStartedActivityIntent:
+			return StopLastStartedActivityIntentHandler()
+		case is TakeMedicationIntent:
+			return TakeMedicationIntentHandler()
+		case is TakeMedicationWithDosageIntent:
+			return TakeMedicationWithDosageIntentHandler()
+		default:
+			Me.log.error(
+				"Received unknown intent: %@ (%@)",
+				intent.identifier ?? "no name",
+				intent.intentDescription ?? "no description"
+			)
+			return self
 		}
 	}
 

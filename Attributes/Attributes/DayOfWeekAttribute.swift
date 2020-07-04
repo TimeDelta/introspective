@@ -11,14 +11,13 @@ import Foundation
 import Common
 
 public final class DayOfWeekAttribute: TypedSelectOneAttribute<DayOfWeek>, ComparableAttribute {
-
 	public init(
 		name: String = "Day of the week",
 		pluralName: String? = "Day of the week",
 		description: String? = nil,
 		variableName: String? = nil,
-		optional: Bool = false)
-	{
+		optional: Bool = false
+	) {
 		super.init(
 			name: name,
 			typeName: "Day of the Week",
@@ -28,6 +27,7 @@ public final class DayOfWeekAttribute: TypedSelectOneAttribute<DayOfWeek>, Compa
 			optional: optional,
 			possibleValues: DayOfWeek.allDays,
 			possibleValueToString: { $0.abbreviation },
-			areEqual: { $0 == $1 })
+			areEqual: { $0 == $1 }
+		)
 	}
 }

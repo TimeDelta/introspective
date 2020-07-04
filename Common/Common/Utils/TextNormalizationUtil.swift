@@ -8,7 +8,7 @@
 
 import Foundation
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol TextNormalizationUtil {
 	func expandContractions(_ text: String) -> String
 	func normalizeNumbers(_ text: String) -> String
@@ -16,7 +16,6 @@ public protocol TextNormalizationUtil {
 }
 
 public final class TextNormalizationUtilImpl: TextNormalizationUtil {
-
 	private typealias Me = TextNormalizationUtilImpl
 
 	private static let contractions = [
@@ -136,23 +135,97 @@ public final class TextNormalizationUtilImpl: TextNormalizationUtil {
 		"you'll've": "you you will have",
 		"you'll": "you you will",
 		"you're": "you are",
-		"you've": "you have"
+		"you've": "you have",
 	]
 
 	private static let punctuationRegex = try! NSRegularExpression(pattern: "[^a-zA-Z0-9]+")
 	private static let decimalEndingReplacementRegex = try! NSRegularExpression(pattern: "\\.?0+$")
 	private static let numberOrderTokenEndingRegex = try! NSRegularExpression(pattern: "(st|nd|rd|th)$")
 
-	private static let numberWordsArray = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety", "hundred", "thousand", "million", "billion", "trillion", "quadrillion", "quintillion"]
+	private static let numberWordsArray = [
+		"one",
+		"two",
+		"three",
+		"four",
+		"five",
+		"six",
+		"seven",
+		"eight",
+		"nine",
+		"ten",
+		"eleven",
+		"twelve",
+		"thirteen",
+		"fourteen",
+		"fifteen",
+		"sixteen",
+		"seventeen",
+		"eighteen",
+		"nineteen",
+		"twenty",
+		"thirty",
+		"forty",
+		"fifty",
+		"sixty",
+		"seventy",
+		"eighty",
+		"ninety",
+		"hundred",
+		"thousand",
+		"million",
+		"billion",
+		"trillion",
+		"quadrillion",
+		"quintillion",
+	]
 	private static let numberWords = Set<String>(numberWordsArray)
-	private static let numberOrderTokensArray = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth", "seventeenth", "eighteenth", "nineteenth", "twentieth", "thirtieth", "fortieth", "fiftieth", "sixtieth", "seventieth", "eightieth", "ninetieth", "hundredth", "thousandth", "millionth", "billionth", "trillionth", "quadrillionth", "quintillionth"]
+	private static let numberOrderTokensArray = [
+		"first",
+		"second",
+		"third",
+		"fourth",
+		"fifth",
+		"sixth",
+		"seventh",
+		"eighth",
+		"ninth",
+		"tenth",
+		"eleventh",
+		"twelfth",
+		"thirteenth",
+		"fourteenth",
+		"fifteenth",
+		"sixteenth",
+		"seventeenth",
+		"eighteenth",
+		"nineteenth",
+		"twentieth",
+		"thirtieth",
+		"fortieth",
+		"fiftieth",
+		"sixtieth",
+		"seventieth",
+		"eightieth",
+		"ninetieth",
+		"hundredth",
+		"thousandth",
+		"millionth",
+		"billionth",
+		"trillionth",
+		"quadrillionth",
+		"quintillionth",
+	]
 	private static let numberOrderTokens = Set<String>(numberOrderTokensArray)
-	private static let hyphenatedNumberWords = Set<String>(["twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety" ])
+	private static let hyphenatedNumberWords =
+		Set<String>(["twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"])
 
 	public final func expandContractions(_ text: String) -> String {
 		var expandedText = text
 		for contractionReplacement in Me.contractions {
-			expandedText = expandedText.replacingOccurrences(of: contractionReplacement.key, with: contractionReplacement.value)
+			expandedText = expandedText.replacingOccurrences(
+				of: contractionReplacement.key,
+				with: contractionReplacement.value
+			)
 		}
 		return expandedText
 	}
@@ -161,9 +234,9 @@ public final class TextNormalizationUtilImpl: TextNormalizationUtil {
 		var previousNumberWordShouldBeHyphenated = false
 		var englishNumber = String()
 		var finalText = text
-		var additionalEnding: String? = nil
+		var additionalEnding: String?
 		let words = finalText.split(whereSeparator: { (char: Character) in
-			return char == " " || char == "-"
+			char == " " || char == "-"
 		})
 		for word in words {
 			let token = String(word)
@@ -180,7 +253,11 @@ public final class TextNormalizationUtilImpl: TextNormalizationUtil {
 				appendAppropriateSeparatorToEnglishNumber(&englishNumber, &previousNumberWordShouldBeHyphenated)
 				englishNumber.append(replacement.lowercased())
 
-				let endingMatch = Me.numberOrderTokenEndingRegex.firstMatch(in: token, options: [], range: NSMakeRange(0, token.count))
+				let endingMatch = Me.numberOrderTokenEndingRegex.firstMatch(
+					in: token,
+					options: [],
+					range: NSMakeRange(0, token.count)
+				)
 				additionalEnding = String(token[Range(endingMatch!.range, in: token)!])
 			} else if !englishNumber.isEmpty {
 				finalText = replaceEnglishNumber(text: finalText, englishNum: englishNumber, additionalEnding)
@@ -196,10 +273,18 @@ public final class TextNormalizationUtilImpl: TextNormalizationUtil {
 	}
 
 	public final func removePunctuation(_ text: String) -> String {
-		return Me.punctuationRegex.stringByReplacingMatches(in: text, options: [], range: NSMakeRange(0, text.count), withTemplate: "")
+		Me.punctuationRegex.stringByReplacingMatches(
+			in: text,
+			options: [],
+			range: NSMakeRange(0, text.count),
+			withTemplate: ""
+		)
 	}
 
-	private func appendAppropriateSeparatorToEnglishNumber(_ englishNumber: inout String, _ previousNumberWordShouldBeHyphenated: inout Bool) {
+	private func appendAppropriateSeparatorToEnglishNumber(
+		_ englishNumber: inout String,
+		_ previousNumberWordShouldBeHyphenated: inout Bool
+	) {
 		if previousNumberWordShouldBeHyphenated {
 			englishNumber.append("-")
 			previousNumberWordShouldBeHyphenated = false
@@ -209,21 +294,36 @@ public final class TextNormalizationUtilImpl: TextNormalizationUtil {
 	}
 
 	private func replaceEnglishNumber(text: String, englishNum: String, _ additionalEnding: String? = nil) -> String {
-		let numberFormatter:NumberFormatter = NumberFormatter()
+		let numberFormatter: NumberFormatter = NumberFormatter()
 		numberFormatter.numberStyle = .spellOut
 
 		var englishNumber = englishNum.trimmingCharacters(in: CharacterSet([" "]))
 		var number = String(numberFormatter.number(from: englishNumber)!.doubleValue)
-		number = Me.decimalEndingReplacementRegex.stringByReplacingMatches(in: number, options: [], range: NSMakeRange(0, number.count), withTemplate: "")
+		number = Me.decimalEndingReplacementRegex.stringByReplacingMatches(
+			in: number,
+			options: [],
+			range: NSMakeRange(0, number.count),
+			withTemplate: ""
+		)
 
 		if additionalEnding != nil {
 			number.append(additionalEnding!)
 		}
 
 		let separatorRegex = try! NSRegularExpression(pattern: "[ \\-]")
-		englishNumber = separatorRegex.stringByReplacingMatches(in: englishNumber, options: [], range: NSMakeRange(0, englishNumber.count), withTemplate: "[ \\-]")
+		englishNumber = separatorRegex.stringByReplacingMatches(
+			in: englishNumber,
+			options: [],
+			range: NSMakeRange(0, englishNumber.count),
+			withTemplate: "[ \\-]"
+		)
 		let englishNumberRegex = try! NSRegularExpression(pattern: englishNumber)
-		return englishNumberRegex.stringByReplacingMatches(in: text, options: [], range: NSMakeRange(0, text.count), withTemplate: number)
+		return englishNumberRegex.stringByReplacingMatches(
+			in: text,
+			options: [],
+			range: NSMakeRange(0, text.count),
+			withTemplate: number
+		)
 	}
 
 	private func convertNumberOrderTokenToEnglishNumberWord(_ token: String) -> String {

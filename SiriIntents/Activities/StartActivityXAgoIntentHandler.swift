@@ -14,8 +14,8 @@ import DependencyInjection
 import Persistence
 import Samples
 
-public final class StartActivityXAgoIntentHandler: ActivityIntentHandler<StartActivityXAgoIntent>, StartActivityXAgoIntentHandling {
-
+public final class StartActivityXAgoIntentHandler: ActivityIntentHandler<StartActivityXAgoIntent>,
+	StartActivityXAgoIntentHandling {
 	private typealias Me = StartActivityXAgoIntentHandler
 
 	private static let supportedTimeUnits: [Calendar.Component] = [
@@ -29,7 +29,10 @@ public final class StartActivityXAgoIntentHandler: ActivityIntentHandler<StartAc
 	]
 	private static let log = Log()
 
-	public func resolveActivityName(for intent: StartActivityXAgoIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
+	public func resolveActivityName(
+		for intent: StartActivityXAgoIntent,
+		with completion: @escaping (INStringResolutionResult) -> Void
+	) {
 		Me.log.info("Resolving activity name")
 		guard let activityName = intent.activityName else {
 			completion(INStringResolutionResult.needsValue())
@@ -38,7 +41,10 @@ public final class StartActivityXAgoIntentHandler: ActivityIntentHandler<StartAc
 		completion(INStringResolutionResult.success(with: activityName))
 	}
 
-	public func resolveNumTimeUnits(for intent: StartActivityXAgoIntent, with completion: @escaping (StartActivityXAgoNumTimeUnitsResolutionResult) -> Void) {
+	public func resolveNumTimeUnits(
+		for intent: StartActivityXAgoIntent,
+		with completion: @escaping (StartActivityXAgoNumTimeUnitsResolutionResult) -> Void
+	) {
 		Me.log.info("Resolving number of time units")
 		guard let num = intent.numTimeUnits as? Int else {
 			completion(StartActivityXAgoNumTimeUnitsResolutionResult.needsValue())
@@ -47,7 +53,10 @@ public final class StartActivityXAgoIntentHandler: ActivityIntentHandler<StartAc
 		completion(StartActivityXAgoNumTimeUnitsResolutionResult.success(with: num))
 	}
 
-	public func resolveTimeUnit(for intent: StartActivityXAgoIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
+	public func resolveTimeUnit(
+		for intent: StartActivityXAgoIntent,
+		with completion: @escaping (INStringResolutionResult) -> Void
+	) {
 		Me.log.info("Resolving time unit")
 		guard let timeUnitString = intent.timeUnit else {
 			completion(INStringResolutionResult.needsValue())
@@ -60,15 +69,24 @@ public final class StartActivityXAgoIntentHandler: ActivityIntentHandler<StartAc
 		completion(INStringResolutionResult.success(with: timeUnitString))
 	}
 
-	public override func provideActivityNameOptions(for intent: StartActivityXAgoIntent, with completion: @escaping ([String]?, Error?) -> Void) {
+	override public func provideActivityNameOptions(
+		for intent: StartActivityXAgoIntent,
+		with completion: @escaping ([String]?, Error?) -> Void
+	) {
 		super.provideActivityNameOptions(for: intent, with: completion)
 	}
 
-	public func provideTimeUnitOptions(for intent: StartActivityXAgoIntent, with completion: @escaping ([String]?, Error?) -> Void) {
-		completion(Me.supportedTimeUnits.map{ t in t.pluralDescription }, nil)
+	public func provideTimeUnitOptions(
+		for _: StartActivityXAgoIntent,
+		with completion: @escaping ([String]?, Error?) -> Void
+	) {
+		completion(Me.supportedTimeUnits.map { t in t.pluralDescription }, nil)
 	}
 
-	public func handle(intent: StartActivityXAgoIntent, completion: @escaping (StartActivityXAgoIntentResponse) -> Void) {
+	public func handle(
+		intent: StartActivityXAgoIntent,
+		completion: @escaping (StartActivityXAgoIntentResponse) -> Void
+	) {
 		Me.log.info("Handling StartActivityXAgoIntent")
 		guard let activityName = intent.activityName else {
 			completion(StartActivityXAgoIntentResponse.failure(error: "You must provide a valid activity name"))
@@ -84,17 +102,23 @@ public final class StartActivityXAgoIntentHandler: ActivityIntentHandler<StartAc
 		}
 
 		do {
-			guard let definition = try DependencyInjector.get(ActivityDAO.self).getDefinitionWith(name: activityName) else {
+			guard let definition = try DependencyInjector.get(ActivityDAO.self).getDefinitionWith(name: activityName)
+			else {
 				Me.log.error("Activity named %{private}@ does not exist.", activityName)
-				completion(StartActivityXAgoIntentResponse.failure(error: "Activity named \"\(activityName)\" does not exist."))
+				completion(
+					StartActivityXAgoIntentResponse
+						.failure(error: "Activity named \"\(activityName)\" does not exist.")
+				)
 				return
 			}
 			let start = try DependencyInjector.get(ActivityDAO.self).getMostRecentActivityEndDate() ?? Date()
-			let activity = try DependencyInjector.get(ActivityDAO.self).createActivity(definition: definition, startDate: start)
+			let activity = try DependencyInjector.get(ActivityDAO.self)
+				.createActivity(definition: definition, startDate: start)
 			completion(StartActivityXAgoIntentResponse.success(
 				activity: ActivityIntentInfo(activity),
 				numTimeUnits: numTimeUnits,
-				timeUnit: timeUnit))
+				timeUnit: timeUnit
+			))
 		} catch {
 			Me.log.error("Failed StartActivityXAgoIntentResponse: %@", errorInfo(error))
 			guard let error = error as? DisplayableError else {

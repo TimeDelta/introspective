@@ -14,11 +14,10 @@ import DependencyInjection
 import Samples
 
 public final class SumInformation: AnyInformation {
-
 	// MARK: - Display Information
 
-	public final override var name: String { get { return "Total" } }
-	public final override var description: String { return name + " " + attribute.name.localizedLowercase }
+	override public final var name: String { "Total" }
+	override public final var description: String { name + " " + attribute.name.localizedLowercase }
 
 	// MARK: - Instance Variables
 
@@ -32,25 +31,31 @@ public final class SumInformation: AnyInformation {
 
 	// MARK: - Information Functions
 
-	public final override func compute(forSamples samples: [Sample]) throws -> String {
+	override public final func compute(forSamples samples: [Sample]) throws -> String {
 		if attribute is DoubleAttribute {
 			let filteredSamples = try filterSamples(samples, as: Double.self)
-			if filteredSamples.count == 0 { return "No samples match filter" }
-			return String(try DependencyInjector.get(NumericSampleUtil.self).sum(for: attribute, over: filteredSamples, as: Double.self))
+			if filteredSamples.isEmpty { return "No samples match filter" }
+			return String(
+				try DependencyInjector.get(NumericSampleUtil.self)
+					.sum(for: attribute, over: filteredSamples, as: Double.self)
+			)
 		}
 		if attribute is IntegerAttribute {
 			let filteredSamples = try filterSamples(samples, as: Int.self)
-			if filteredSamples.count == 0 { return "No samples match filter" }
-			return String(try DependencyInjector.get(NumericSampleUtil.self).sum(for: attribute, over: filteredSamples, as: Int.self))
+			if filteredSamples.isEmpty { return "No samples match filter" }
+			return String(
+				try DependencyInjector.get(NumericSampleUtil.self)
+					.sum(for: attribute, over: filteredSamples, as: Int.self)
+			)
 		}
 		if attribute is DosageAttribute {
 			let filteredSamples = try filterSamples(samples, as: Dosage.self)
-			if filteredSamples.count == 0 { return "No samples match filter" }
+			if filteredSamples.isEmpty { return "No samples match filter" }
 			return try getSumOfDosageAttribute(filteredSamples)
 		}
 		if attribute is DurationAttribute {
 			let filteredSamples = try filterSamples(samples, as: Duration.self)
-			if filteredSamples.count == 0 { return "No samples match filter" }
+			if filteredSamples.isEmpty { return "No samples match filter" }
 			let total = try getSumOfDurationAttribute(filteredSamples)
 			let numHours = total.inUnit(.hour)
 			var additionalText = ""
@@ -64,35 +69,41 @@ public final class SumInformation: AnyInformation {
 			return total.description + additionalText
 		}
 
-		if samples.count == 0 {
+		if samples.isEmpty {
 			throw GenericDisplayableError(title: "No samples found")
 		}
 		throw UnknownAttributeError(attribute: attribute, for: samples[0])
 	}
 
-	public final override func computeGraphable(forSamples samples: [Sample]) throws -> String {
+	override public final func computeGraphable(forSamples samples: [Sample]) throws -> String {
 		if attribute is DoubleAttribute {
 			let filteredSamples = try filterSamples(samples, as: Double.self)
-			if filteredSamples.count == 0 { throw GenericDisplayableError(title: "No samples match filter") }
-			return String(try DependencyInjector.get(NumericSampleUtil.self).sum(for: attribute, over: filteredSamples, as: Double.self))
+			if filteredSamples.isEmpty { throw GenericDisplayableError(title: "No samples match filter") }
+			return String(
+				try DependencyInjector.get(NumericSampleUtil.self)
+					.sum(for: attribute, over: filteredSamples, as: Double.self)
+			)
 		}
 		if attribute is IntegerAttribute {
 			let filteredSamples = try filterSamples(samples, as: Int.self)
-			if filteredSamples.count == 0 { throw GenericDisplayableError(title: "No samples match filter") }
-			return String(try DependencyInjector.get(NumericSampleUtil.self).sum(for: attribute, over: filteredSamples, as: Int.self))
+			if filteredSamples.isEmpty { throw GenericDisplayableError(title: "No samples match filter") }
+			return String(
+				try DependencyInjector.get(NumericSampleUtil.self)
+					.sum(for: attribute, over: filteredSamples, as: Int.self)
+			)
 		}
 		if attribute is DosageAttribute {
 			let filteredSamples = try filterSamples(samples, as: Dosage.self)
-			if filteredSamples.count == 0 { throw GenericDisplayableError(title: "No samples match filter") }
+			if filteredSamples.isEmpty { throw GenericDisplayableError(title: "No samples match filter") }
 			return try getSumOfDosageAttribute(filteredSamples)
 		}
 		if attribute is DurationAttribute {
 			let filteredSamples = try filterSamples(samples, as: Duration.self)
-			if filteredSamples.count == 0 { throw GenericDisplayableError(title: "No samples match filter") }
+			if filteredSamples.isEmpty { throw GenericDisplayableError(title: "No samples match filter") }
 			return String(try getSumOfDurationAttribute(filteredSamples).inUnit(.hour))
 		}
 
-		if samples.count == 0 {
+		if samples.isEmpty {
 			throw GenericDisplayableError(title: "No samples found")
 		}
 		throw UnknownAttributeError(attribute: attribute, for: samples[0])
@@ -100,8 +111,8 @@ public final class SumInformation: AnyInformation {
 
 	// MARK: - Equality
 
-	public final override func equalTo(_ other: SampleGroupInformation) -> Bool {
-		return other is SumInformation && attribute.equalTo(other.attribute)
+	override public final func equalTo(_ other: SampleGroupInformation) -> Bool {
+		other is SumInformation && attribute.equalTo(other.attribute)
 	}
 
 	// MARK: - Dosage Helper Functions
@@ -116,7 +127,7 @@ public final class SumInformation: AnyInformation {
 	}
 
 	private final func getFirstNonNilDosage(from filteredSamples: [Sample]) throws -> Dosage? {
-		var dosage: Dosage? = nil
+		var dosage: Dosage?
 		for sample in filteredSamples {
 			dosage = try sample.value(of: attribute) as? Dosage
 			if dosage != nil {

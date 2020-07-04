@@ -11,9 +11,8 @@ import UIKit
 import Common
 
 public final class ContainerView<T: UIViewController>: UIView {
-
-	unowned final var parentController: UIViewController
-	weak final var currentController: T?
+	final unowned var parentController: UIViewController
+	final weak var currentController: T?
 
 	private final let log = Log()
 
@@ -22,7 +21,7 @@ public final class ContainerView<T: UIViewController>: UIView {
 		super.init(frame: CGRect.zero)
 	}
 
-	public required init?(coder aDecoder: NSCoder) {
+	public required init?(coder _: NSCoder) {
 		log.error("init(coder:) has not been implemented - cannot use with storyboards")
 		return nil
 	}
@@ -37,11 +36,11 @@ public final class ContainerView<T: UIViewController>: UIView {
 		removeCurrentController()
 	}
 
-	private final func setUpViewController(_ targetController: T?, animated: Bool) {
+	private final func setUpViewController(_ targetController: T?, animated _: Bool) {
 		if let controller = targetController {
 			parentController.addChild(controller)
-			controller.view.frame = self.bounds
-			self.addSubview(controller.view)
+			controller.view.frame = bounds
+			addSubview(controller.view)
 			controller.didMove(toParent: parentController)
 		}
 	}

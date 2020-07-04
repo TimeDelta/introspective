@@ -8,9 +8,8 @@
 
 import Foundation
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol Importer {
-
 	var dataTypePluralName: String { get }
 	var sourceName: String { get }
 	/// This will be displayed to the user as the message of the "Import new data only?" prompt
@@ -36,6 +35,6 @@ public protocol Importer {
 
 public extension Importer {
 	func equalTo(_ other: Importer) -> Bool {
-		return type(of: self) == type(of: other) && lastImport == other.lastImport
+		type(of: self) == type(of: other) && lastImport == other.lastImport
 	}
 }

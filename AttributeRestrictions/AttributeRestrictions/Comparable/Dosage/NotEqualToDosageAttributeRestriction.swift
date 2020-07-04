@@ -12,7 +12,6 @@ import Attributes
 import Common
 
 public final class NotEqualToDosageAttributeRestriction: TypedNotEqualToAttributeRestrictionBase<Dosage> {
-
 	private typealias Me = NotEqualToDosageAttributeRestriction
 	public static let valueAttribute = DosageAttribute(name: "Target Dosage", pluralName: "Target Dosages")
 
@@ -24,9 +23,9 @@ public final class NotEqualToDosageAttributeRestriction: TypedNotEqualToAttribut
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
 
-	public override func copy() -> AttributeRestriction {
-		return NotEqualToDosageAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! Dosage)
+	override public func copy() -> AttributeRestriction {
+		NotEqualToDosageAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! Dosage)
 	}
 
-	public override func predicate() -> NSPredicate? { return nil }
+	override public func predicate() -> NSPredicate? { nil }
 }

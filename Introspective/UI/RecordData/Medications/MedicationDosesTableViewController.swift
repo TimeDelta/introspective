@@ -6,9 +6,9 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
 import Presentr
 import SwiftDate
+import UIKit
 
 import Common
 import DependencyInjection
@@ -16,7 +16,6 @@ import Persistence
 import Samples
 
 public final class MedicationDosesTableViewController: UITableViewController {
-
 	// MARK: - Static Variables
 
 	private typealias Me = MedicationDosesTableViewController
@@ -29,8 +28,13 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		customPresenter.roundCorners = true
 		return customPresenter
 	}()
+
 	private static let medicationDosePresenter: Presentr = {
-		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 250), center: .topCenter)
+		let customType = PresentationType.custom(
+			width: .custom(size: 300),
+			height: .custom(size: 250),
+			center: .topCenter
+		)
 		let customPresenter = Presentr(presentationType: customType)
 		customPresenter.dismissTransitionType = .crossDissolve
 		customPresenter.roundCorners = true
@@ -39,9 +43,9 @@ public final class MedicationDosesTableViewController: UITableViewController {
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var previousDateRangeButton: UIBarButtonItem!
-	@IBOutlet weak final var dateRangeButton: UIBarButtonItem!
-	@IBOutlet weak final var nextDateRangeButton: UIBarButtonItem!
+	@IBOutlet final var previousDateRangeButton: UIBarButtonItem!
+	@IBOutlet final var dateRangeButton: UIBarButtonItem!
+	@IBOutlet final var nextDateRangeButton: UIBarButtonItem!
 
 	// MARK: - Instance Variables
 
@@ -51,6 +55,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 			tableView.reloadData()
 		}
 	}
+
 	// leave not private for testing purposes
 	final var filteredDoses = [MedicationDose]()
 	private final var filterStartDate: Date?
@@ -61,14 +66,14 @@ public final class MedicationDosesTableViewController: UITableViewController {
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 
 		extendedLayoutIncludesOpaqueBars = true
 
 		dateRangeButton.accessibilityLabel = "filter dates button"
 
-		navigationItem.rightBarButtonItem = self.editButtonItem
+		navigationItem.rightBarButtonItem = editButtonItem
 		navigationItem.title = medication.name
 
 		observe(selector: #selector(dateRangeSet), name: Me.dateRangeSet)
@@ -81,15 +86,18 @@ public final class MedicationDosesTableViewController: UITableViewController {
 
 	// MARK: - TableViewDataSource
 
-	public final override func numberOfSections(in tableView: UITableView) -> Int {
-		return 1
+	override public final func numberOfSections(in _: UITableView) -> Int {
+		1
 	}
 
-	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return filteredDoses.count
+	override public final func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+		filteredDoses.count
 	}
 
-	public final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override public final func tableView(
+		_ tableView: UITableView,
+		cellForRowAt indexPath: IndexPath
+	) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "dose", for: indexPath)
 		cell.textLabel?.text = getTextForDoseAt(indexPath.row)
 		return cell
@@ -97,33 +105,44 @@ public final class MedicationDosesTableViewController: UITableViewController {
 
 	// MARK: - TableViewDelegate
 
-	public final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+	override public final func tableView(
+		_ tableView: UITableView,
+		editActionsForRowAt indexPath: IndexPath
+	) -> [UITableViewRowAction]? {
 		let dose = filteredDoses[indexPath.row]
-		let delete = DependencyInjector.get(UiUtil.self).tableViewRowAction(style: .destructive, title: "🗑️") { (_, indexPath) in
-			let alert = DependencyInjector.get(UiUtil.self).alert(
-				title: "Are you sure you want to delete this dose?",
-				message: self.getTextForDoseAt(indexPath.row),
-				preferredStyle: .alert)
-			alert.addAction(DependencyInjector.get(UiUtil.self).alertAction(title: "Yes", style: .destructive) { _ in
-				let indexToDelete = self.medication.doses.index(of: dose)
-				let transaction = DependencyInjector.get(Database.self).transaction()
-				do {
-					try retryOnFail({ try transaction.delete(dose) }, maxRetries: 2)
-					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-					self.medication.removeFromDoses(at: indexToDelete)
-					self.resetFilteredDoses()
-					tableView.deleteRows(at: [indexPath], with: .fade)
-					tableView.reloadData()
-				} catch {
-					self.log.error("Failed to delete medication dose: %@", errorInfo(error))
-					self.showError(title: "Failed to delete dose", error: error)
-				}
-			})
-			alert.addAction(DependencyInjector.get(UiUtil.self).alertAction(title: "No", style: .cancel, handler: nil))
-			self.present(alert, animated: false, completion: nil)
-		}
+		let delete = DependencyInjector.get(UiUtil.self)
+			.tableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
+				let alert = DependencyInjector.get(UiUtil.self).alert(
+					title: "Are you sure you want to delete this dose?",
+					message: self.getTextForDoseAt(indexPath.row),
+					preferredStyle: .alert
+				)
+				alert
+					.addAction(DependencyInjector.get(UiUtil.self).alertAction(title: "Yes", style: .destructive) { _ in
+						let indexToDelete = self.medication.doses.index(of: dose)
+						let transaction = DependencyInjector.get(Database.self).transaction()
+						do {
+							try retryOnFail({ try transaction.delete(dose) }, maxRetries: 2)
+							try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+							self.medication.removeFromDoses(at: indexToDelete)
+							self.resetFilteredDoses()
+							tableView.deleteRows(at: [indexPath], with: .fade)
+							tableView.reloadData()
+						} catch {
+							self.log.error("Failed to delete medication dose: %@", errorInfo(error))
+							self.showError(title: "Failed to delete dose", error: error)
+						}
+					})
+				alert
+					.addAction(
+						DependencyInjector.get(UiUtil.self)
+							.alertAction(title: "No", style: .cancel, handler: nil)
+					)
+				self.present(alert, animated: false, completion: nil)
+			}
 		delete.accessibilityLabel = "delete dose button"
-		let dateText = DependencyInjector.get(CalendarUtil.self).string(for: dose.date, dateStyle: .long, timeStyle: .short)
+		let dateText = DependencyInjector.get(CalendarUtil.self)
+			.string(for: dose.date, dateStyle: .long, timeStyle: .short)
 		var dosageText = dose.dosage?.description ?? ""
 		if !dosageText.isEmpty {
 			dosageText += " "
@@ -133,7 +152,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		return [delete]
 	}
 
-	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	override public final func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let controller = viewController(named: "medicationDoseEditor") as! MedicationDoseEditorViewController
 		controller.medicationDose = filteredDoses[indexPath.row]
 		controller.notificationToSendOnAccept = Me.medicationDoseEdited
@@ -172,14 +191,15 @@ public final class MedicationDosesTableViewController: UITableViewController {
 				showError(
 					title: "Failed to save dose of \(medication.name)",
 					error: error,
-					tryAgain: { self.medicationDoseEdited(notification: notification) })
+					tryAgain: { self.medicationDoseEdited(notification: notification) }
+				)
 			}
 		}
 	}
 
 	// MARK: - Actions
 
-	@IBAction final func filterDatesButtonPressed(_ sender: Any) {
+	@IBAction final func filterDatesButtonPressed(_: Any) {
 		let controller = viewController(named: "dateRangeChooser", fromStoryboard: "Util") as! DateRangeViewController
 		controller.initialFromDate = filterStartDate
 		controller.initialToDate = filterEndDate
@@ -188,7 +208,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		customPresentViewController(Me.dateFilterPresenter, viewController: controller, animated: false)
 	}
 
-	@IBAction final func previousDateRangeButtonPressed(_ sender: Any) {
+	@IBAction final func previousDateRangeButtonPressed(_: Any) {
 		if filterStartDate == filterEndDate {
 			filterStartDate = filterStartDate! - 1.days
 			filterEndDate = filterEndDate! - 1.days
@@ -206,7 +226,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		tableView.reloadData()
 	}
 
-	@IBAction final func nextDateRangeButtonPressed(_ sender: Any) {
+	@IBAction final func nextDateRangeButtonPressed(_: Any) {
 		if filterStartDate == filterEndDate {
 			filterStartDate = filterStartDate! + 1.days
 			filterEndDate = filterEndDate! + 1.days
@@ -232,7 +252,8 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		if let dosage = dose.dosage {
 			doseText += dosage.description + " on "
 		}
-		doseText += DependencyInjector.get(CalendarUtil.self).string(for: dose.date, dateStyle: .medium, timeStyle: .short)
+		doseText += DependencyInjector.get(CalendarUtil.self)
+			.string(for: dose.date, dateStyle: .medium, timeStyle: .short)
 		return doseText
 	}
 
@@ -254,7 +275,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 				}
 			}
 			// note: can't use NSFetchedResultsController or predicates because of timezone requirements
-			filteredDoses = filteredDoses.filter({
+			filteredDoses = filteredDoses.filter {
 				if let start = startDate {
 					if start > $0.date {
 						return false
@@ -266,7 +287,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 					}
 				}
 				return true
-			})
+			}
 		}
 	}
 
@@ -276,18 +297,23 @@ public final class MedicationDosesTableViewController: UITableViewController {
 			dateText = "Filter Dates"
 		} else if filterEndDate == filterStartDate {
 			dateText = "On "
-			dateText += DependencyInjector.get(CalendarUtil.self).string(for: filterStartDate!, dateStyle: .medium, timeStyle: .none)
+			dateText += DependencyInjector.get(CalendarUtil.self)
+				.string(for: filterStartDate!, dateStyle: .medium, timeStyle: .none)
 		} else if filterEndDate == nil {
 			dateText = "After "
-			dateText += DependencyInjector.get(CalendarUtil.self).string(for: filterStartDate!, dateStyle: .medium, timeStyle: .none)
+			dateText += DependencyInjector.get(CalendarUtil.self)
+				.string(for: filterStartDate!, dateStyle: .medium, timeStyle: .none)
 		} else if filterStartDate == nil {
 			dateText = "Before "
-			dateText += DependencyInjector.get(CalendarUtil.self).string(for: filterEndDate!, dateStyle: .medium, timeStyle: .none)
+			dateText += DependencyInjector.get(CalendarUtil.self)
+				.string(for: filterEndDate!, dateStyle: .medium, timeStyle: .none)
 		} else {
 			dateText = "From "
-			dateText += DependencyInjector.get(CalendarUtil.self).string(for: filterStartDate!, dateStyle: .short, timeStyle: .none)
+			dateText += DependencyInjector.get(CalendarUtil.self)
+				.string(for: filterStartDate!, dateStyle: .short, timeStyle: .none)
 			dateText += " to "
-			dateText += DependencyInjector.get(CalendarUtil.self).string(for: filterEndDate!, dateStyle: .short, timeStyle: .none)
+			dateText += DependencyInjector.get(CalendarUtil.self)
+				.string(for: filterEndDate!, dateStyle: .short, timeStyle: .none)
 		}
 		dateRangeButton.title = dateText
 		dateRangeButton.accessibilityValue = dateText

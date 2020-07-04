@@ -6,8 +6,8 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
 import Presentr
+import UIKit
 
 import Common
 import DependencyInjection
@@ -16,14 +16,12 @@ import Samples
 import Settings
 
 public protocol EditMoodTableViewController: UITableViewController {
-
 	var notificationToSendOnAccept: Notification.Name! { get set }
 	var userInfoKey: UserInfoKey { get set }
 	var mood: Mood? { get set }
 }
 
 public final class EditMoodTableViewControllerImpl: UITableViewController, EditMoodTableViewController {
-
 	// MARK: - Static Variables
 
 	private typealias Me = EditMoodTableViewControllerImpl
@@ -38,7 +36,8 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 	private static let datePresenter = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .full,
 		height: .fluid(percentage: 0.4),
-		center: .bottomCenter)
+		center: .bottomCenter
+	)
 
 	// MARK: - Instance Variables
 
@@ -59,20 +58,21 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 	private final var rating: Double = 0
 	private final var minRating: Double = DependencyInjector.get(Settings.self).minMood
 	private final var maxRating: Double = DependencyInjector.get(Settings.self).maxMood
-	private final var note: String? = nil
+	private final var note: String?
 
 	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 
 		navigationItem.rightBarButtonItem = UIBarButtonItem(
 			title: "Save",
 			style: .done,
 			target: self,
-			action: #selector(saveButtonPressed))
+			action: #selector(saveButtonPressed)
+		)
 
 		observe(selector: #selector(timestampChanged), name: Me.timestampChanged)
 		observe(selector: #selector(ratingChanged), name: .moodRatingChanged)
@@ -86,28 +86,32 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 
 	// MARK: - Table view data source
 
-	public final override func numberOfSections(in tableView: UITableView) -> Int {
-		return 2
+	override public final func numberOfSections(in _: UITableView) -> Int {
+		2
 	}
 
-	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override public final func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if section == 0 {
 			return 2
 		}
 		return 1
 	}
 
-	public final override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+	override public final func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section == 1 {
 			return "Note"
 		}
 		return nil
 	}
 
-	public final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override public final func tableView(
+		_ tableView: UITableView,
+		cellForRowAt indexPath: IndexPath
+	) -> UITableViewCell {
 		if indexPath == Me.timestampIndex {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "timestamp", for: indexPath)
-			cell.detailTextLabel?.text = DependencyInjector.get(CalendarUtil.self).string(for: timestamp, dateStyle: .medium, timeStyle: .medium)
+			cell.detailTextLabel?.text = DependencyInjector.get(CalendarUtil.self)
+				.string(for: timestamp, dateStyle: .medium, timeStyle: .medium)
 			return cell
 		} else if indexPath == Me.ratingIndex {
 			return getRatingCell(for: indexPath)
@@ -121,7 +125,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 		return UITableViewCell()
 	}
 
-	public final override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+	override public final func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		if indexPath == Me.noteIndex {
 			return 131
 		}
@@ -130,7 +134,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 
 	// MARK: - Table view delegate
 
-	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	override public final func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath == Me.timestampIndex {
 			let controller = viewController(named: "datePicker", fromStoryboard: "Util") as! SelectDateViewController
 			controller.initialDate = timestamp
@@ -155,23 +159,23 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 	}
 
 	@objc private final func noteChanged(notification: Notification) {
-		self.note = value(for: .text, from: notification)
+		note = value(for: .text, from: notification)
 	}
 
-	@objc private final func useDiscreteMoodChanged(notification: Notification) {
+	@objc private final func useDiscreteMoodChanged(notification _: Notification) {
 		tableView.reloadData()
 	}
 
 	// MARK: - Actions
 
-	@objc private final func saveButtonPressed(_ sender: Any) {
+	@objc private final func saveButtonPressed(_: Any) {
 		do {
 			let transaction = DependencyInjector.get(Database.self).transaction()
 			var mood: Mood! = self.mood
 			if let localMood = mood {
 				if let localMood = localMood as? MoodImpl {
 					mood = try transaction.pull(savedObject: localMood)
-				} else {// otherwise mood is a Mock and we're testing
+				} else { // otherwise mood is a Mock and we're testing
 					log.debug("Mood not pulled from transaction")
 				}
 			} else {
@@ -193,7 +197,8 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 					object: self,
 					userInfo: self.info([
 						self.userInfoKey: mood as Any,
-					]))
+					])
+				)
 			}
 			navigationController?.popViewController(animated: false)
 		} catch {
@@ -206,7 +211,10 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 
 	private final func getRatingCell(for indexPath: IndexPath) -> UITableViewCell {
 		if DependencyInjector.get(Settings.self).discreteMoods {
-			let cell = tableView.dequeueReusableCell(withIdentifier: "integerRating", for: indexPath) as! DiscreteRatingTableViewCell
+			let cell = tableView.dequeueReusableCell(
+				withIdentifier: "integerRating",
+				for: indexPath
+			) as! DiscreteRatingTableViewCell
 			cell.rating = Int(rating)
 			cell.minRating = Int(minRating)
 			cell.maxRating = Int(maxRating)

@@ -11,7 +11,6 @@ import UIKit
 import AttributeRestrictions
 
 final class AttributeRestrictionTableViewCell: UITableViewCell {
-
 	public final var attributeRestriction: AttributeRestriction! {
 		didSet {
 			guard let attributeRestriction = attributeRestriction else { return }
@@ -19,13 +18,13 @@ final class AttributeRestrictionTableViewCell: UITableViewCell {
 		}
 	}
 
-	public final override var accessibilityLabel: String? {
-		get { return attributeRestriction?.attributedName }
+	override public final var accessibilityLabel: String? {
+		get { attributeRestriction?.attributedName }
 		set {}
 	}
 
-	public final override var accessibilityValue: String? {
-		get { return attributeRestriction?.description }
+	override public final var accessibilityValue: String? {
+		get { attributeRestriction?.description }
 		set {}
 	}
 }

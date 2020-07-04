@@ -10,9 +10,7 @@ import Foundation
 
 import Samples
 
-//sourcery: AutoMockable
-public protocol ActivityQuery: Query {
-}
+// sourcery: AutoMockable
+public protocol ActivityQuery: Query {}
 
-public final class ActivityQueryImpl: CoreDataQuery<Activity>, ActivityQuery {
-}
+public final class ActivityQueryImpl: CoreDataQuery<Activity>, ActivityQuery {}

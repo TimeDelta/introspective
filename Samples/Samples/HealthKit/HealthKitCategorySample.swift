@@ -10,6 +10,5 @@ import Foundation
 import HealthKit
 
 public protocol HealthKitCategorySample: HealthKitSample {
-
 	static var categoryType: HKCategoryType { get }
 }

@@ -6,10 +6,10 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
-import Presentr
 import AAInfographics
 import os
+import Presentr
+import UIKit
 
 import Attributes
 import Common
@@ -20,60 +20,69 @@ import SampleGroupInformation
 import Samples
 
 final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGraphTypeSetupViewController {
-
 	// MARK: - Static Variables
 
 	private typealias Me = SingleSampleTypeBasicXYGraphCustomizationViewController
 	private static let presenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
-		center: .center)
+		center: .center
+	)
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var sampleTypePicker: UIPickerView!
-	@IBOutlet weak final var clearSeriesGrouperButton: UIButton!
-	@IBOutlet weak final var chooseSeriesGrouperButton: UIButton!
-	@IBOutlet weak final var clearPointGrouperButton: UIButton!
-	@IBOutlet weak final var choosePointGrouperButton: UIButton!
-	@IBOutlet weak final var queryButton: UIButton!
-	@IBOutlet weak final var xAxisButton: UIButton!
-	@IBOutlet weak final var yAxisButton: UIButton!
-	@IBOutlet weak final var showGraphButton: UIButton!
-	@IBOutlet weak final var clearQueryButton: UIButton!
+	@IBOutlet final var sampleTypePicker: UIPickerView!
+	@IBOutlet final var clearSeriesGrouperButton: UIButton!
+	@IBOutlet final var chooseSeriesGrouperButton: UIButton!
+	@IBOutlet final var clearPointGrouperButton: UIButton!
+	@IBOutlet final var choosePointGrouperButton: UIButton!
+	@IBOutlet final var queryButton: UIButton!
+	@IBOutlet final var xAxisButton: UIButton!
+	@IBOutlet final var yAxisButton: UIButton!
+	@IBOutlet final var showGraphButton: UIButton!
+	@IBOutlet final var clearQueryButton: UIButton!
 
 	// MARK: - Instance Variables
 
 	private final var query: Query? {
 		didSet { querySet() }
 	}
+
 	private final var usePointGroupValueForXAxis = false
 	private final var xAxis: SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation? {
 		didSet { xAxisSet() }
 	}
+
 	private final var yAxis: [SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation]! {
 		didSet { yAxisSet() }
 	}
+
 	private final var seriesGrouper: SampleGrouper? {
 		didSet { seriesGrouperSet() }
 	}
+
 	/// need to reset y-axis if going between nil and some or vice-versa for pointGrouper
 	private final var pointGrouperWasNil = true
-	private final var pointGrouper: SampleGrouper? = nil {
+	private final var pointGrouper: SampleGrouper? {
 		didSet { pointGrouperSet() }
 	}
-	private final var oldSampleType: Sample.Type! = nil
+
+	private final var oldSampleType: Sample.Type!
 	private final var sampleType: Sample.Type! {
 		didSet { sampleTypeSet() }
 	}
+
 	private final var chartController: BasicXYChartViewController!
 
-	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "SingleSampleTypeBasicXYGraphCustomizationViewController"))
+	private final let signpost = Signpost(log: OSLog(
+		subsystem: Bundle.main.bundleIdentifier!,
+		category: "SingleSampleTypeBasicXYGraphCustomizationViewController"
+	))
 	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
-	final override func viewDidLoad() {
+	override final func viewDidLoad() {
 		super.viewDidLoad()
 
 		sampleType = DependencyInjector.get(SampleFactory.self).allTypes()[0]
@@ -95,45 +104,51 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 
 	// MARK: - Button Actions
 
-	@IBAction final func seriesGroupingInfoButtonPressed(_ sender: Any) {
+	@IBAction final func seriesGroupingInfoButtonPressed(_: Any) {
 		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")
-		controller.descriptionText = "This allows you to optionally group things into different data series. Each data series is drawn in its own color on the generated graph."
+		controller
+			.descriptionText =
+			"This allows you to optionally group things into different data series. Each data series is drawn in its own color on the generated graph."
 		present(controller, using: Me.presenter)
 	}
 
-	@IBAction final func chooseSeriesGroupingButtonPressed(_ sender: Any) {
+	@IBAction final func chooseSeriesGroupingButtonPressed(_: Any) {
 		showGrouperEditController(
 			grouper: seriesGrouper,
 			notification: .seriesGrouperEdited,
-			grouperName: "Series Grouping")
+			grouperName: "Series Grouping"
+		)
 	}
 
-	@IBAction final func clearSeriesGroupingButtonPressed(_ sender: Any) {
+	@IBAction final func clearSeriesGroupingButtonPressed(_: Any) {
 		seriesGrouper = nil
 	}
 
-	@IBAction final func pointGroupingInfoButtonPressed(_ sender: Any) {
+	@IBAction final func pointGroupingInfoButtonPressed(_: Any) {
 		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")
-		controller.descriptionText = "This allows grouping multiple samples into a single point based on group value (i.e. same day of week or same group name for advanced grouping)."
+		controller
+			.descriptionText =
+			"This allows grouping multiple samples into a single point based on group value (i.e. same day of week or same group name for advanced grouping)."
 		present(controller, using: Me.presenter)
 	}
 
-	@IBAction final func choosePointGroupingButtonPressed(_ sender: Any) {
+	@IBAction final func choosePointGroupingButtonPressed(_: Any) {
 		showGrouperEditController(
 			grouper: pointGrouper,
 			notification: .pointGrouperEdited,
-			grouperName: "Point Grouping")
+			grouperName: "Point Grouping"
+		)
 	}
 
-	@IBAction final func clearPointGroupingButtonPressed(_ sender: Any) {
+	@IBAction final func clearPointGroupingButtonPressed(_: Any) {
 		pointGrouper = nil
 	}
 
-	@IBAction final func clearQueryButtonPressed(_ sender: Any) {
+	@IBAction final func clearQueryButtonPressed(_: Any) {
 		query = nil
 	}
 
-	@IBAction final func chooseQueryButtonPressed(_ sender: Any) {
+	@IBAction final func chooseQueryButtonPressed(_: Any) {
 		let controller = viewController(named: "queryView", fromStoryboard: "Query") as! QueryViewController
 		controller.finishedButtonTitle = "Use Query"
 		controller.topmostSampleType = sampleType
@@ -142,7 +157,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		realNavigationController?.pushViewController(controller, animated: false)
 	}
 
-	@IBAction final func showGraph(_ sender: Any) {
+	@IBAction final func showGraph(_: Any) {
 		do {
 			if query == nil {
 				query = try DependencyInjector.get(QueryFactory.self).queryFor(sampleType)
@@ -160,7 +175,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		}
 	}
 
-	@IBAction final func editXAxis(_ sender: Any) {
+	@IBAction final func editXAxis(_: Any) {
 		let controller = viewController(named: "xAxisSetup") as! XAxisSetupViewController
 		controller.attributes = sampleType.attributes
 		controller.selectedAttribute = xAxis?.attribute
@@ -171,11 +186,11 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		realNavigationController?.pushViewController(controller, animated: false)
 	}
 
-	@IBAction final func editYAxis(_ sender: Any) {
+	@IBAction final func editYAxis(_: Any) {
 		if pointGrouper == nil {
 			let controller = viewController(named: "chooseAttributes") as! ChooseAttributesToGraphTableViewController
-			controller.allowedAttributes = sampleType.attributes.filter{ $0 is GraphableAttribute }
-			controller.selectedAttributes = yAxis?.map{ $0.attribute! }
+			controller.allowedAttributes = sampleType.attributes.filter { $0 is GraphableAttribute }
+			controller.selectedAttributes = yAxis?.map { $0.attribute! }
 			controller.notificationToSendWhenFinished = .yAxisInformationChanged
 			realNavigationController?.pushViewController(controller, animated: false)
 		} else {
@@ -183,7 +198,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 			controller.attributes = sampleType.attributes
 			controller.limitToNumericInformation = true
 			if let yAxis = yAxis {
-				controller.chosenInformation = yAxis.map{ $0.information! }
+				controller.chosenInformation = yAxis.map { $0.information! }
 			}
 			controller.notificationToSendWhenFinished = .yAxisInformationChanged
 			realNavigationController?.pushViewController(controller, animated: false)
@@ -226,7 +241,11 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		if let attribute: Attribute? = value(for: .attribute, from: notification, keyIsOptional: true) {
 			usePointGroupValueForXAxis = false
 			xAxis = SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation(attribute: attribute)
-		} else if let information: SampleGroupInformation? = value(for: .information, from: notification, keyIsOptional: true) {
+		} else if let information: SampleGroupInformation? = value(
+			for: .information,
+			from: notification,
+			keyIsOptional: true
+		) {
 			usePointGroupValueForXAxis = false
 			xAxis = SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation(information: information)
 		} else if let usePointGroupValue: Bool = value(for: .usePointGroupValue, from: notification) {
@@ -239,9 +258,13 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 
 	@objc private final func yAxisChanged(notification: Notification) {
 		if let attributes: [Attribute] = value(for: .attributes, from: notification, keyIsOptional: true) {
-			yAxis = attributes.map{ SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation(attribute: $0) }
-		} else if let information: [SampleGroupInformation] = value(for: .information, from: notification, keyIsOptional: true) {
-			yAxis = information.map{ SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation(information: $0) }
+			yAxis = attributes.map { SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation(attribute: $0) }
+		} else if let information: [SampleGroupInformation] = value(
+			for: .information,
+			from: notification,
+			keyIsOptional: true
+		) {
+			yAxis = information.map { SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation(information: $0) }
 		} else {
 			yAxis = nil
 		}
@@ -265,7 +288,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		signpost.begin(name: "Query")
 		if query == nil { log.error("Query was unexpectedly nil") }
 		query?.resetStoppedState()
-		query?.runQuery { (result, error) in
+		query?.runQuery { result, error in
 			self.signpost.end(name: "Query")
 			if let error = error {
 				self.log.error("Query run failed: %@", errorInfo(error))
@@ -297,7 +320,8 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 			pointGrouper: pointGrouper,
 			xAxis: xAxis,
 			yAxis: yAxis,
-			usePointGroupValueForXAxis: usePointGroupValueForXAxis)
+			usePointGroupValueForXAxis: usePointGroupValueForXAxis
+		)
 
 		// leave this outside of DispatchQueue.main.async because it can take a while
 		let allData = try dataGenerator.generateData(samples: samples)
@@ -310,9 +334,12 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	private final func showGrouperEditController(
 		grouper: SampleGrouper?,
 		notification: NotificationName,
-		grouperName: String)
-	{
-		let controller = viewController(named: "chooseGrouper", fromStoryboard: "Util") as! GroupingChooserTableViewController
+		grouperName: String
+	) {
+		let controller = viewController(
+			named: "chooseGrouper",
+			fromStoryboard: "Util"
+		) as! GroupingChooserTableViewController
 		controller.sampleType = sampleType
 		controller.currentGrouper = grouper?.copy()
 		controller.title = grouperName
@@ -423,25 +450,23 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 // MARK: - UIPickerViewDataSource
 
 extension SingleSampleTypeBasicXYGraphCustomizationViewController: UIPickerViewDataSource {
-
-	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
-		return 1
+	public final func numberOfComponents(in _: UIPickerView) -> Int {
+		1
 	}
 
-	public final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return DependencyInjector.get(SampleFactory.self).allTypes().count
+	public final func pickerView(_: UIPickerView, numberOfRowsInComponent _: Int) -> Int {
+		DependencyInjector.get(SampleFactory.self).allTypes().count
 	}
 }
 
 // MARK: - UIPickerViewDelegate
 
 extension SingleSampleTypeBasicXYGraphCustomizationViewController: UIPickerViewDelegate {
-
-	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return DependencyInjector.get(SampleFactory.self).allTypes()[row].name
+	public final func pickerView(_: UIPickerView, titleForRow row: Int, forComponent _: Int) -> String? {
+		DependencyInjector.get(SampleFactory.self).allTypes()[row].name
 	}
 
-	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+	public final func pickerView(_: UIPickerView, didSelectRow row: Int, inComponent _: Int) {
 		sampleType = DependencyInjector.get(SampleFactory.self).allTypes()[row]
 	}
 }

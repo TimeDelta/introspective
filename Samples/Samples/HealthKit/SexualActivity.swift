@@ -14,7 +14,6 @@ import Common
 import DependencyInjection
 
 public final class SexualActivity: HealthKitCategorySample, SearchableSample {
-
 	private typealias Me = SexualActivity
 
 	public enum Protection: CustomStringConvertible {
@@ -25,10 +24,10 @@ public final class SexualActivity: HealthKitCategorySample, SearchableSample {
 		public static var allValues: [Protection] = [unspecified, notUsed, used]
 
 		public var description: String {
-			switch (self) {
-				case .notUsed: return "Not used"
-				case .used: return "Used"
-				case .unspecified: return "Unspecified"
+			switch self {
+			case .notUsed: return "Not used"
+			case .used: return "Used"
+			case .unspecified: return "Unspecified"
 			}
 		}
 	}
@@ -57,16 +56,17 @@ public final class SexualActivity: HealthKitCategorySample, SearchableSample {
 		variableName: HKMetadataKeySexualActivityProtectionUsed,
 		possibleValues: Protection.allValues,
 		possibleValueToString: { $0.description },
-		areEqual: { $0 == $1 })
+		areEqual: { $0 == $1 }
+	)
 	public static let attributes: [Attribute] = [CommonSampleAttributes.healthKitTimestamp, protectionUsed]
 	public static let defaultDependentAttribute: Attribute = protectionUsed
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp
-	public final var attributes: [Attribute] { return Me.attributes }
+	public final var attributes: [Attribute] { Me.attributes }
 
 	// MARK: - Searching
 
 	public func matchesSearchString(_ searchString: String) -> Bool {
-		return protectionUsed.description.localizedLowercase.starts(with: searchString.localizedLowercase)
+		protectionUsed.description.localizedLowercase.starts(with: searchString.localizedLowercase)
 	}
 
 	// MARK: - Instance Variables
@@ -97,14 +97,14 @@ public final class SexualActivity: HealthKitCategorySample, SearchableSample {
 
 	public func hkSample() -> HKSample {
 		var metadata: [String: Any] = [String: Any]()
-		switch (protectionUsed) {
-			case .unspecified: break
-			case .used:
-				metadata = [HKMetadataKeySexualActivityProtectionUsed: true]
-				break
-			case .notUsed:
-				metadata = [HKMetadataKeySexualActivityProtectionUsed: false]
-				break
+		switch protectionUsed {
+		case .unspecified: break
+		case .used:
+			metadata = [HKMetadataKeySexualActivityProtectionUsed: true]
+			break
+		case .notUsed:
+			metadata = [HKMetadataKeySexualActivityProtectionUsed: false]
+			break
 		}
 		metadata[HKMetadataKeyTimeZone] = TimeZone.autoupdatingCurrent.identifier
 		return HKCategorySample(
@@ -112,13 +112,14 @@ public final class SexualActivity: HealthKitCategorySample, SearchableSample {
 			value: HKCategoryValue.notApplicable.rawValue,
 			start: timestamp,
 			end: timestamp,
-			metadata: metadata)
+			metadata: metadata
+		)
 	}
 
 	// MARK: - Sample Functions
 
 	public final func dates() -> [DateType: Date] {
-		return [.start: timestamp]
+		[.start: timestamp]
 	}
 
 	// MARK: - Attributed Functions
@@ -155,9 +156,8 @@ public final class SexualActivity: HealthKitCategorySample, SearchableSample {
 // MARK: - Equatable
 
 extension SexualActivity: Equatable {
-
-	public static func ==(lhs: SexualActivity, rhs: SexualActivity) -> Bool {
-		return lhs.equalTo(rhs)
+	public static func == (lhs: SexualActivity, rhs: SexualActivity) -> Bool {
+		lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
@@ -173,15 +173,15 @@ extension SexualActivity: Equatable {
 	}
 
 	public final func equalTo(_ other: SexualActivity) -> Bool {
-		return timestamp == other.timestamp && protectionUsed == other.protectionUsed
+		timestamp == other.timestamp && protectionUsed == other.protectionUsed
 	}
 }
 
 // MARK: - Debug
 
 extension SexualActivity: CustomDebugStringConvertible {
-
 	public final var debugDescription: String {
-		return "SexualActivity with protection \(protectionUsed) at " + DependencyInjector.get(CalendarUtil.self).string(for: timestamp)
+		"SexualActivity with protection \(protectionUsed) at " + DependencyInjector.get(CalendarUtil.self)
+			.string(for: timestamp)
 	}
 }

@@ -12,11 +12,10 @@ import Attributes
 import Common
 
 final class ChooseAttributeViewController: UIViewController {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var attributePicker: UIPickerView!
-	@IBOutlet weak final var acceptButton: UIButton!
+	@IBOutlet final var attributePicker: UIPickerView!
+	@IBOutlet final var acceptButton: UIButton!
 
 	// MARK: - Instance Variables
 
@@ -29,7 +28,7 @@ final class ChooseAttributeViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	final override func viewDidLoad() {
+	override final func viewDidLoad() {
 		super.viewDidLoad()
 		attributePicker.dataSource = self
 		attributePicker.delegate = self
@@ -40,7 +39,7 @@ final class ChooseAttributeViewController: UIViewController {
 			} else {
 				log.error("Could not find index for specified component")
 			}
-		} else if attributes.count > 0 {
+		} else if !attributes.isEmpty {
 			selectedAttribute = attributes[0]
 		} else {
 			log.error("No attributes passed")
@@ -49,7 +48,7 @@ final class ChooseAttributeViewController: UIViewController {
 
 	// MARK: - Button Actions
 
-	@IBAction final func userPressedAccept(_ sender: Any) {
+	@IBAction final func userPressedAccept(_: Any) {
 		syncPost(notificationToSendOnAccept, userInfo: [.attribute: selectedAttribute as Any])
 		dismiss(animated: false, completion: nil)
 	}
@@ -58,25 +57,23 @@ final class ChooseAttributeViewController: UIViewController {
 // MARK: - UIPickerViewDataSource
 
 extension ChooseAttributeViewController: UIPickerViewDataSource {
-
-	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
-		return 1
+	public final func numberOfComponents(in _: UIPickerView) -> Int {
+		1
 	}
 
-	public final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return attributes.count
+	public final func pickerView(_: UIPickerView, numberOfRowsInComponent _: Int) -> Int {
+		attributes.count
 	}
 }
 
 // MARK: - UIPickerViewDelegate
 
 extension ChooseAttributeViewController: UIPickerViewDelegate {
-
-	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return attributes[row].name.localizedCapitalized
+	public final func pickerView(_: UIPickerView, titleForRow row: Int, forComponent _: Int) -> String? {
+		attributes[row].name.localizedCapitalized
 	}
 
-	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+	public final func pickerView(_: UIPickerView, didSelectRow row: Int, inComponent _: Int) {
 		selectedAttribute = attributes[row]
 	}
 }

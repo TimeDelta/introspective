@@ -12,7 +12,6 @@ import Attributes
 import Common
 
 public final class LessThanOrEqualToDosageAttributeRestriction: TypedLessThanOrEqualToAttributeRestrictionBase<Dosage> {
-
 	private typealias Me = LessThanOrEqualToDosageAttributeRestriction
 	public static let valueAttribute = DosageAttribute(name: "Target Dosage", pluralName: "Target Dosages")
 
@@ -24,9 +23,9 @@ public final class LessThanOrEqualToDosageAttributeRestriction: TypedLessThanOrE
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
 
-	public override func copy() -> AttributeRestriction {
-		return LessThanOrEqualToDosageAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
+	override public func copy() -> AttributeRestriction {
+		LessThanOrEqualToDosageAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
 	}
 
-	public override func predicate() -> NSPredicate? { return nil }
+	override public func predicate() -> NSPredicate? { nil }
 }

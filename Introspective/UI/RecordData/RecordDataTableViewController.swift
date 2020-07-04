@@ -6,15 +6,14 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
 import Presentr
+import UIKit
 
 import Common
 import DependencyInjection
 import Settings
 
 final class RecordDataTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
-
 	// MARK: - Static Variables
 
 	private typealias Me = RecordDataTableViewController
@@ -44,7 +43,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 
 	// MARK: - UIViewController Overrides
 
-	final override func viewDidLoad() {
+	override final func viewDidLoad() {
 		super.viewDidLoad()
 		observe(selector: #selector(showViewController), name: Me.showViewController)
 		observe(selector: #selector(showErrorMessage), name: Me.showErrorMessage)
@@ -59,36 +58,36 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 
 	// MARK: - Table view data source
 
-	final override func numberOfSections(in tableView: UITableView) -> Int {
-		return 1
+	override final func numberOfSections(in _: UITableView) -> Int {
+		1
 	}
 
-	final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return viewOrder.count
+	override final func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+		viewOrder.count
 	}
 
 	// MARK: - Table view delegate
 
-	final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override final func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let id = getIdFor(indexPath)
 		return tableView.dequeueReusableCell(withIdentifier: id, for: indexPath)
 	}
 
-	final override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+	override final func tableView(_: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		viewOrder.swapAt(fromIndexPath.row, to.row)
 	}
 
-	final override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+	override final func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		let id = getIdFor(indexPath)
 		if let height = viewHeights[id] {
 			return height
 		}
 		log.error("Failed to retrieve height for id: %@", id)
 		// return the largest possible size so that all content is shown
-		return viewHeights.map({ $0.value }).sorted()[0]
+		return viewHeights.map { $0.value }.sorted()[0]
 	}
 
-	final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	override final func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath.row == 1 {
 			navigationController?.pushViewController(viewController(named: "medicationsTable"), animated: false)
 		} else if indexPath.row == 2 {
@@ -100,7 +99,8 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 
 	@objc private final func showViewController(notification: Notification) {
 		if let controller: UIViewController = value(for: .controller, from: notification) {
-			let presenter: Presentr! = value(for: .presenter, from: notification) ?? DependencyInjector.get(UiUtil.self).defaultPresenter
+			let presenter: Presentr! = value(for: .presenter, from: notification) ?? DependencyInjector.get(UiUtil.self)
+				.defaultPresenter
 			customPresentViewController(presenter, viewController: controller, animated: false)
 		}
 	}
@@ -122,7 +122,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		}
 	}
 
-	@objc private final func showRecordActivitiesScreen(notification: Notification) {
+	@objc private final func showRecordActivitiesScreen(notification _: Notification) {
 		let controller: RecordActivityTableViewController = viewController(named: "activitiesTable")
 		if let navigationController = navigationController {
 			navigationController.pushViewController(controller, animated: false)
@@ -131,7 +131,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		}
 	}
 
-	@objc private final func showRecordMedicationsScreen(notification: Notification) {
+	@objc private final func showRecordMedicationsScreen(notification _: Notification) {
 		let controller: RecordMedicationTableViewController = viewController(named: "medicationsTable")
 		if let navigationController = navigationController {
 			navigationController.pushViewController(controller, animated: false)
@@ -140,7 +140,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		}
 	}
 
-	@objc private final func useDiscreteMoodChanged(notification: Notification) {
+	@objc private final func useDiscreteMoodChanged(notification _: Notification) {
 		tableView.reloadData()
 	}
 

@@ -12,7 +12,6 @@ import Attributes
 import Samples
 
 public final class ContainsStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, Equatable {
-
 	private typealias Me = ContainsStringAttributeRestriction
 
 	// MARK: - Attributes
@@ -24,9 +23,9 @@ public final class ContainsStringAttributeRestriction: AnyAttributeRestriction, 
 
 	// MARK: - Display Information
 
-	public final override var attributedName: String { return "Contains" }
-	public final override var description: String {
-		return restrictedAttribute.name.localizedCapitalized + " contains '" + substring + "'"
+	override public final var attributedName: String { "Contains" }
+	override public final var description: String {
+		restrictedAttribute.name.localizedCapitalized + " contains '" + substring + "'"
 	}
 
 	// MARK: - Instance Variables
@@ -46,12 +45,12 @@ public final class ContainsStringAttributeRestriction: AnyAttributeRestriction, 
 
 	// MARK: - Attributed Functions
 
-	public final override func value(of attribute: Attribute) throws -> Any? {
+	override public final func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(Me.substringAttribute) { return substring }
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
-	public final override func set(attribute: Attribute, to value: Any?) throws {
+	override public final func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(Me.substringAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
@@ -63,7 +62,7 @@ public final class ContainsStringAttributeRestriction: AnyAttributeRestriction, 
 
 	// MARK: - Attribute Restriction Functions
 
-	public final override func samplePasses(_ sample: Sample) throws -> Bool {
+	override public final func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
 		if sampleValue == nil { return substring.isEmpty }
 		guard let value = sampleValue as? String else {
@@ -72,19 +71,19 @@ public final class ContainsStringAttributeRestriction: AnyAttributeRestriction, 
 		return value.localizedCaseInsensitiveContains(substring)
 	}
 
-	public override func copy() -> AttributeRestriction {
-		return ContainsStringAttributeRestriction(restrictedAttribute: restrictedAttribute, substring: substring)
+	override public func copy() -> AttributeRestriction {
+		ContainsStringAttributeRestriction(restrictedAttribute: restrictedAttribute, substring: substring)
 	}
 
-	public override func predicate() -> NSPredicate? {
+	override public func predicate() -> NSPredicate? {
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		return NSPredicate(format: "%K CONTAINS[cd] %@", variableName, substring)
 	}
 
 	// MARK: - Equality
 
-	public static func ==(lhs: ContainsStringAttributeRestriction, rhs: ContainsStringAttributeRestriction) -> Bool {
-		return lhs.equalTo(rhs)
+	public static func == (lhs: ContainsStringAttributeRestriction, rhs: ContainsStringAttributeRestriction) -> Bool {
+		lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
@@ -93,13 +92,13 @@ public final class ContainsStringAttributeRestriction: AnyAttributeRestriction, 
 		return equalTo(other)
 	}
 
-	public final override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	override public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is ContainsStringAttributeRestriction) { return false }
 		let other = otherRestriction as! ContainsStringAttributeRestriction
 		return equalTo(other)
 	}
 
 	public final func equalTo(_ other: ContainsStringAttributeRestriction) -> Bool {
-		return restrictedAttribute.equalTo(other.restrictedAttribute) && substring == other.substring
+		restrictedAttribute.equalTo(other.restrictedAttribute) && substring == other.substring
 	}
 }

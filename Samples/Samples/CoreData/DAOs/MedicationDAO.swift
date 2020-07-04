@@ -6,16 +6,15 @@
 //  Copyright © 2020 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 import Common
 import DependencyInjection
 import Persistence
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol MedicationDAO {
-
 	func medicationExists(withName name: String, using transaction: Transaction?) throws -> Bool
 	/// - Returns: The medication with the provided name if it exists. Otherwise, nil.
 	func medicationNamed(_ name: String) throws -> Medication?
@@ -44,9 +43,8 @@ public protocol MedicationDAO {
 }
 
 extension MedicationDAO {
-
 	public func medicationExists(withName name: String, using transaction: Transaction? = nil) throws -> Bool {
-		return try medicationExists(withName: name, using: transaction)
+		try medicationExists(withName: name, using: transaction)
 	}
 
 	@discardableResult
@@ -60,7 +58,7 @@ extension MedicationDAO {
 		recordScreenIndex: Int16? = nil,
 		using transaction: Transaction? = nil
 	) throws -> Medication {
-		return try createMedication(
+		try createMedication(
 			name: name,
 			frequency: frequency,
 			dosage: dosage,
@@ -80,7 +78,7 @@ extension MedicationDAO {
 		source: Sources.MedicationSourceNum = .introspective,
 		using transaction: Transaction? = nil
 	) throws -> MedicationDose {
-		return try createDose(
+		try createDose(
 			medication: medication,
 			dosage: dosage,
 			timestamp: timestamp,
@@ -91,7 +89,6 @@ extension MedicationDAO {
 }
 
 public final class MedicationDAOImpl: MedicationDAO {
-
 	private final let log = Log()
 
 	public final func medicationExists(withName name: String, using transaction: Transaction?) throws -> Bool {
@@ -99,24 +96,25 @@ public final class MedicationDAOImpl: MedicationDAO {
 		let fetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
 		let medicationsWithSameName = try transaction.query(fetchRequest)
-		return medicationsWithSameName.count > 0
+		return !medicationsWithSameName.isEmpty
 	}
 
 	public final func medicationNamed(_ name: String) throws -> Medication? {
 		let fetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
 		let medicationsWithSameName = try DependencyInjector.get(Database.self).query(fetchRequest)
-		guard medicationsWithSameName.count > 0 else { return nil }
+		guard !medicationsWithSameName.isEmpty else { return nil }
 		return medicationsWithSameName[0]
 	}
 
 	@discardableResult
 	public final func takeMedicationUsingDefaultDosage(_ medication: Medication) throws -> MedicationDose {
-		return try createDose(
+		try createDose(
 			medication: medication,
 			dosage: medication.dosage,
 			timestamp: Date(),
-			source: .introspective)
+			source: .introspective
+		)
 	}
 
 	@discardableResult

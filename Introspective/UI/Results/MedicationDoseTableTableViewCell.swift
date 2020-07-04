@@ -13,11 +13,10 @@ import DependencyInjection
 import Samples
 
 public final class MedicationDoseTableTableViewCell: UITableViewCell {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var medicationNameLabel: UILabel!
-	@IBOutlet weak final var doseAndTimestampLabel: UILabel!
+	@IBOutlet final var medicationNameLabel: UILabel!
+	@IBOutlet final var doseAndTimestampLabel: UILabel!
 
 	// MARK: - Instance Variables
 
@@ -30,12 +29,13 @@ public final class MedicationDoseTableTableViewCell: UITableViewCell {
 			if let dosage = medicationDose.dosage {
 				doseText += dosage.description + " on "
 			}
-			doseText += DependencyInjector.get(CalendarUtil.self).string(for: medicationDose.date, dateStyle: .medium, timeStyle: .short)
+			doseText += DependencyInjector.get(CalendarUtil.self)
+				.string(for: medicationDose.date, dateStyle: .medium, timeStyle: .short)
 			doseAndTimestampLabel.text = doseText
 		}
 	}
 
-	public final override func prepareForReuse() {
+	override public final func prepareForReuse() {
 		medicationDose = nil
 		medicationNameLabel.text = nil
 		doseAndTimestampLabel.text = nil

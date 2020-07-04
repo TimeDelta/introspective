@@ -9,7 +9,6 @@
 import Foundation
 
 public final class AttributeFactory {
-
 	public static let allTypes: [Attribute.Type] = [
 		TextAttribute.self,
 		DateOnlyAttribute.self,

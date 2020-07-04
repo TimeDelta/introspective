@@ -12,7 +12,6 @@ import Attributes
 import Common
 
 public final class EqualToFrequencyAttributeRestriction: TypedEqualToAttributeRestrictionBase<Frequency> {
-
 	private typealias Me = EqualToFrequencyAttributeRestriction
 	public static let valueAttribute = FrequencyAttribute(name: "Target Frequency", pluralName: "Target Frequencys")
 
@@ -24,9 +23,9 @@ public final class EqualToFrequencyAttributeRestriction: TypedEqualToAttributeRe
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
 
-	public override func copy() -> AttributeRestriction {
-		return EqualToFrequencyAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! Frequency)
+	override public func copy() -> AttributeRestriction {
+		EqualToFrequencyAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! Frequency)
 	}
 
-	public override func predicate() -> NSPredicate? { return nil }
+	override public func predicate() -> NSPredicate? { nil }
 }

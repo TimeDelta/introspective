@@ -9,12 +9,10 @@
 import UIKit
 
 public protocol CoachMarkSkipViewConstraint {
-
 	func constraint(skipView: UIView, parentView: UIView) -> NSLayoutConstraint
 }
 
 public final class GenericCoachMarkSkipViewConstraint: CoachMarkSkipViewConstraint {
-
 	private final let skipViewAttribute: NSLayoutConstraint.Attribute
 	private final let relatedBy: NSLayoutConstraint.Relation
 	private final let parentViewAttribute: NSLayoutConstraint.Attribute
@@ -26,8 +24,8 @@ public final class GenericCoachMarkSkipViewConstraint: CoachMarkSkipViewConstrai
 		relatedBy: NSLayoutConstraint.Relation,
 		parentViewAttribute: NSLayoutConstraint.Attribute,
 		multiplier: CGFloat = 1.0,
-		constant: CGFloat = 0.0)
-	{
+		constant: CGFloat = 0.0
+	) {
 		self.skipViewAttribute = skipViewAttribute
 		self.relatedBy = relatedBy
 		self.parentViewAttribute = parentViewAttribute
@@ -36,27 +34,28 @@ public final class GenericCoachMarkSkipViewConstraint: CoachMarkSkipViewConstrai
 	}
 
 	public final func constraint(skipView: UIView, parentView: UIView) -> NSLayoutConstraint {
-		return NSLayoutConstraint(
+		NSLayoutConstraint(
 			item: skipView,
 			attribute: skipViewAttribute,
 			relatedBy: relatedBy,
 			toItem: parentView,
 			attribute: parentViewAttribute,
 			multiplier: multiplier,
-			constant: constant)
+			constant: constant
+		)
 	}
 }
 
 public final class HorizontallyCenteredCoachMarkSkipViewConstraint: CoachMarkSkipViewConstraint {
-
 	public final func constraint(skipView: UIView, parentView: UIView) -> NSLayoutConstraint {
-		return NSLayoutConstraint(
+		NSLayoutConstraint(
 			item: skipView,
 			attribute: .centerX,
 			relatedBy: .equal,
 			toItem: parentView,
 			attribute: .centerX,
 			multiplier: 1.0,
-			constant: 0.0)
+			constant: 0.0
+		)
 	}
 }

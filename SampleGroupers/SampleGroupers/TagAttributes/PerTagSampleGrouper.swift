@@ -13,7 +13,6 @@ import Common
 import Samples
 
 public final class PerTagSampleGrouper: SampleGrouper {
-
 	// MARK: - Display Information
 
 	public static var userVisibleDescription: String = "Group By Tag"
@@ -42,7 +41,7 @@ public final class PerTagSampleGrouper: SampleGrouper {
 	}
 
 	public required init(attributes: [Attribute]) {
-		let applicableAttributes = attributes.filter{ $0 is TagAttribute || $0 is TagsAttribute }
+		let applicableAttributes = attributes.filter { $0 is TagAttribute || $0 is TagsAttribute }
 		groupByAttribute = applicableAttributes.first
 		if groupByAttribute == nil {
 			log.error("No tag attributes provided to PerTagSampleGrouper")
@@ -61,7 +60,7 @@ public final class PerTagSampleGrouper: SampleGrouper {
 
 	public final func group(samples: [Sample]) throws -> [(Any, [Sample])] {
 		let groupByAttribute = try getGroupByAttribute(methodName: "group(samples:)")
-		guard samples.count > 0 else { return [] }
+		guard !samples.isEmpty else { return [] }
 		var groups = [(Any, [Sample])]()
 		for sample in samples {
 			let tags = try getTagsForSample(sample, forAttribute: groupByAttribute)
@@ -108,9 +107,10 @@ public final class PerTagSampleGrouper: SampleGrouper {
 	}
 
 	public final func copy() -> SampleGrouper {
-		return PerTagSampleGrouper(
+		PerTagSampleGrouper(
 			groupByAttribute: groupByAttribute,
-			attributeSelectAttribute: attributeSelectAttribute)
+			attributeSelectAttribute: attributeSelectAttribute
+		)
 	}
 
 	// MARK: - Attributed Functions
@@ -172,8 +172,7 @@ public final class PerTagSampleGrouper: SampleGrouper {
 		}
 		if
 			let groupByAttribute = groupByAttribute,
-			let otherGroupByAttribute = sameValueGrouper.groupByAttribute
-		{
+			let otherGroupByAttribute = sameValueGrouper.groupByAttribute {
 			return groupByAttribute.equalTo(otherGroupByAttribute)
 		}
 		return false

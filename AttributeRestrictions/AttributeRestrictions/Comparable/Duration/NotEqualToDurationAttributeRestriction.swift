@@ -12,7 +12,6 @@ import Attributes
 import Common
 
 public final class NotEqualToDurationAttributeRestriction: TypedNotEqualToAttributeRestrictionBase<Duration> {
-
 	private typealias Me = NotEqualToDurationAttributeRestriction
 	public static let valueAttribute = DurationAttribute(name: "Target Duration", pluralName: "Target Durations")
 
@@ -24,9 +23,9 @@ public final class NotEqualToDurationAttributeRestriction: TypedNotEqualToAttrib
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
 
-	public override func copy() -> AttributeRestriction {
-		return NotEqualToDurationAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! Duration)
+	override public func copy() -> AttributeRestriction {
+		NotEqualToDurationAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! Duration)
 	}
 
-	public override func predicate() -> NSPredicate? { return nil }
+	override public func predicate() -> NSPredicate? { nil }
 }

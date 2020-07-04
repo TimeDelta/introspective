@@ -13,14 +13,18 @@ import Attributes
 import Common
 import DependencyInjection
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol SampleUtil {
 	func getOnly(samples: [Sample], from startDate: Date?, to endDate: Date?) -> [Sample]
 	func getOnly<SampleType: Sample>(samples: [SampleType], from startDate: Date?, to endDate: Date?) -> [SampleType]
 	func sample(_ sample: Sample, occursOnOneOf daysOfWeek: Set<DayOfWeek>) -> Bool
 	func aggregate(samples: [Sample], by aggregationUnit: Calendar.Component, for attribute: Attribute)
 		throws -> [Date: [Sample]]
-	func aggregate<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component, for attribute: Attribute)
+	func aggregate<SampleType: Sample>(
+		samples: [SampleType],
+		by aggregationUnit: Calendar.Component,
+		for attribute: Attribute
+	)
 		throws -> [Date: [SampleType]]
 	func sort(samples: [Sample], by aggregationUnit: Calendar.Component)
 		throws -> [(date: Date, samples: [Sample])]
@@ -29,11 +33,21 @@ public protocol SampleUtil {
 	/// - Note: behavior is undefined when passing `ComparisonResult.orderedSame`
 	func sort(samples: [Sample], by dateType: DateType, in order: ComparisonResult) -> [Sample]
 	/// - Note: behavior is undefined when passing `ComparisonResult.orderedSame`
-	func sort<SampleType: Sample>(samples: [SampleType], by dateType: DateType, in order: ComparisonResult) -> [SampleType]
-	func convertOneDateSamplesToTwoDateSamples(_ samples: [Sample], samplesShouldNotBeJoined: (Sample, Sample) -> Bool, joinSamples: ([Sample], Date, Date) -> Sample) -> [Sample]
-	func convertOneDateSamplesToTwoDateSamples<SampleType: Sample>(_ samples: [SampleType], samplesShouldNotBeJoined: (SampleType, SampleType) -> Bool, joinSamples: ([SampleType], Date, Date) -> SampleType) -> [SampleType]
+	func sort<SampleType: Sample>(samples: [SampleType], by dateType: DateType, in order: ComparisonResult)
+		-> [SampleType]
+	func convertOneDateSamplesToTwoDateSamples(
+		_ samples: [Sample],
+		samplesShouldNotBeJoined: (Sample, Sample) -> Bool,
+		joinSamples: ([Sample], Date, Date) -> Sample
+	) -> [Sample]
+	func convertOneDateSamplesToTwoDateSamples<SampleType: Sample>(
+		_ samples: [SampleType],
+		samplesShouldNotBeJoined: (SampleType, SampleType) -> Bool,
+		joinSamples: ([SampleType], Date, Date) -> SampleType
+	) -> [SampleType]
 	/// - Precondition: input array has at least one element.
-	func closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(sample: SampleType1, in samples: [SampleType2]) -> SampleType2
+	func closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(sample: SampleType1, in samples: [SampleType2])
+		-> SampleType2
 	/// - Precondition: input array has at least one element.
 	func closestInTimeTo(sample: Sample, in samples: [Sample]) -> Sample
 	/// Get the shortest distance between two samples in the specified calendar unit.
@@ -44,27 +58,36 @@ public protocol SampleUtil {
 
 public extension SampleUtil {
 	func sort(samples: [Sample], by dateType: DateType, in order: ComparisonResult = .orderedAscending) -> [Sample] {
-		return sort(samples: samples, by: dateType, in: order)
+		sort(samples: samples, by: dateType, in: order)
 	}
-	func sort<SampleType: Sample>(samples: [SampleType], by dateType: DateType, in order: ComparisonResult = .orderedAscending) -> [SampleType] {
-		return sort(samples: samples, by: dateType, in: order)
+
+	func sort<SampleType: Sample>(
+		samples: [SampleType],
+		by dateType: DateType,
+		in order: ComparisonResult = .orderedAscending
+	) -> [SampleType] {
+		sort(samples: samples, by: dateType, in: order)
 	}
+
 	func distance(between sample1: Sample, and sample2: Sample, in unit: Calendar.Component = .nanosecond) -> Int {
-		return distance(between: sample1, and: sample2, in: unit)
+		distance(between: sample1, and: sample2, in: unit)
 	}
 }
 
 public final class SampleUtilImpl: SampleUtil {
-
 	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "SampleUtil"))
 
 	// need this because protocols don't conform to themselves
 	public final func getOnly(samples: [Sample], from startDate: Date?, to endDate: Date?) -> [Sample] {
-		return getOnly(samples, startDate, endDate)
+		getOnly(samples, startDate, endDate)
 	}
 
-	public final func getOnly<SampleType: Sample>(samples: [SampleType], from startDate: Date?, to endDate: Date?) -> [SampleType] {
-		return getOnly(samples, startDate, endDate) as! [SampleType]
+	public final func getOnly<SampleType: Sample>(
+		samples: [SampleType],
+		from startDate: Date?,
+		to endDate: Date?
+	) -> [SampleType] {
+		getOnly(samples, startDate, endDate) as! [SampleType]
 	}
 
 	/// Does the specified `HKSample` have any time overlap with any of the given days of the week?
@@ -86,58 +109,87 @@ public final class SampleUtilImpl: SampleUtil {
 
 	// need this because protocols don't conform to themselves
 	public final func aggregate(samples: [Sample], by aggregationUnit: Calendar.Component, for attribute: Attribute)
-	throws -> [Date: [Sample]] {
-		return try aggregate(samples, aggregationUnit, attribute)
+		throws -> [Date: [Sample]] {
+		try aggregate(samples, aggregationUnit, attribute)
 	}
 
-	public final func aggregate<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component, for attribute: Attribute)
-	throws -> [Date: [SampleType]] {
-		return try aggregate(samples, aggregationUnit, attribute) as! [Date: [SampleType]]
+	public final func aggregate<SampleType: Sample>(
+		samples: [SampleType],
+		by aggregationUnit: Calendar.Component,
+		for attribute: Attribute
+	)
+		throws -> [Date: [SampleType]] {
+		try aggregate(samples, aggregationUnit, attribute) as! [Date: [SampleType]]
 	}
 
 	// need this because for some stupid reason, protocols don't conform to themselves
-	public final func sort(samples: [Sample], by aggregationUnit: Calendar.Component) throws -> [(date: Date, samples: [Sample])] {
-		let samplesByAggregation = try aggregate(samples: samples, by: aggregationUnit, for: CommonSampleAttributes.startDate)
-		let sortedSamplesByAggregation = samplesByAggregation.sorted { (entry1: (key: Date, value: [Sample]), entry2: (key: Date, value: [Sample])) -> Bool in
-			return entry1.key.compare(entry2.key) == ComparisonResult.orderedAscending
-		}
-		return sortedSamplesByAggregation.map({ (entry: (key: Date, value: [Sample])) -> (date: Date, samples: [Sample]) in
-			return (date: entry.key, samples: entry.value)
-		})
+	public final func sort(
+		samples: [Sample],
+		by aggregationUnit: Calendar.Component
+	) throws -> [(date: Date, samples: [Sample])] {
+		let samplesByAggregation = try aggregate(
+			samples: samples,
+			by: aggregationUnit,
+			for: CommonSampleAttributes.startDate
+		)
+		let sortedSamplesByAggregation = samplesByAggregation
+			.sorted { (entry1: (key: Date, value: [Sample]), entry2: (key: Date, value: [Sample])) -> Bool in
+				entry1.key.compare(entry2.key) == ComparisonResult.orderedAscending
+			}
+		return sortedSamplesByAggregation
+			.map { (entry: (key: Date, value: [Sample])) -> (date: Date, samples: [Sample]) in
+				(date: entry.key, samples: entry.value)
+			}
 	}
 
 	public final func sort<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component)
-	throws -> [(date: Date, samples: [SampleType])] {
-		let samplesByAggregation = try aggregate(samples: samples, by: aggregationUnit, for: CommonSampleAttributes.startDate)
-		let sortedSamplesByAggregation = samplesByAggregation.sorted { (entry1: (key: Date, value: [SampleType]), entry2: (key: Date, value: [SampleType])) -> Bool in
-			return entry1.key.compare(entry2.key) == ComparisonResult.orderedAscending
-		}
-		return sortedSamplesByAggregation.map({ (entry: (key: Date, value: [SampleType])) -> (date: Date, samples: [SampleType]) in
-			return (date: entry.key, samples: entry.value)
-		})
+		throws -> [(date: Date, samples: [SampleType])] {
+		let samplesByAggregation = try aggregate(
+			samples: samples,
+			by: aggregationUnit,
+			for: CommonSampleAttributes.startDate
+		)
+		let sortedSamplesByAggregation = samplesByAggregation
+			.sorted { (entry1: (key: Date, value: [SampleType]), entry2: (key: Date, value: [SampleType])) -> Bool in
+				entry1.key.compare(entry2.key) == ComparisonResult.orderedAscending
+			}
+		return sortedSamplesByAggregation
+			.map { (entry: (key: Date, value: [SampleType])) -> (date: Date, samples: [SampleType]) in
+				(date: entry.key, samples: entry.value)
+			}
 	}
 
 	// need this because protocols don't conform to themselves
 	/// - Note: behavior is undefined when passing `ComparisonResult.orderedSame`
-	public final func sort(samples: [Sample], by dateType: DateType, in order: ComparisonResult = .orderedAscending) -> [Sample] {
-		return sort(samples, dateType, order)
+	public final func sort(
+		samples: [Sample],
+		by dateType: DateType,
+		in order: ComparisonResult = .orderedAscending
+	) -> [Sample] {
+		sort(samples, dateType, order)
 	}
 
 	/// - Note: behavior is undefined when passing `ComparisonResult.orderedSame`
-	public final func sort<SampleType: Sample>(samples: [SampleType], by dateType: DateType, in order: ComparisonResult = .orderedAscending) -> [SampleType] {
-		return sort(samples, dateType, order) as! [SampleType]
+	public final func sort<SampleType: Sample>(
+		samples: [SampleType],
+		by dateType: DateType,
+		in order: ComparisonResult = .orderedAscending
+	) -> [SampleType] {
+		sort(samples, dateType, order) as! [SampleType]
 	}
 
 	// need this because protocols don't conform to themselves
 	public final func convertOneDateSamplesToTwoDateSamples(
 		_ samples: [Sample],
 		samplesShouldNotBeJoined: (Sample, Sample) -> Bool,
-		joinSamples: ([Sample], Date, Date) -> Sample)
-	-> [Sample] {
+		joinSamples: ([Sample], Date, Date) -> Sample
+	)
+		-> [Sample] {
 		let sortedSamples = sort(samples: samples, by: .start)
 		var twoDateSamples = [Sample]()
-		var lastSample: Sample? = nil
-		var start: Date = Date() // have to initialize this here to make the compiler happy even though it would still always be initialized before getting used even without this
+		var lastSample: Sample?
+		var start: Date =
+			Date() // have to initialize this here to make the compiler happy even though it would still always be initialized before getting used even without this
 		var end: Date
 		var samplesToJoin = [Sample]()
 		var samplesJoined = false
@@ -156,7 +208,7 @@ public final class SampleUtilImpl: SampleUtil {
 			samplesToJoin.append(sample)
 			lastSample = sample
 		}
-		if sortedSamples.count > 0 && samplesJoined == samplesShouldNotBeJoined(lastSample!, sortedSamples.last!) {
+		if !sortedSamples.isEmpty && samplesJoined == samplesShouldNotBeJoined(lastSample!, sortedSamples.last!) {
 			end = sortedSamples.last!.dates()[.start]!
 			let twoDateSample = joinSamples(samplesToJoin, start, end)
 			twoDateSamples.append(twoDateSample)
@@ -167,12 +219,14 @@ public final class SampleUtilImpl: SampleUtil {
 	public final func convertOneDateSamplesToTwoDateSamples<SampleType: Sample>(
 		_ samples: [SampleType],
 		samplesShouldNotBeJoined: (SampleType, SampleType) -> Bool,
-		joinSamples: ([SampleType], Date, Date) -> SampleType)
-	-> [SampleType] {
+		joinSamples: ([SampleType], Date, Date) -> SampleType
+	)
+		-> [SampleType] {
 		let sortedSamples = sort(samples: samples, by: .start)
 		var twoDateSamples = [SampleType]()
-		var lastSample: SampleType? = nil
-		var start: Date = Date() // have to initialize this here to make the compiler happy even though it would still always be initialized before getting used even without this
+		var lastSample: SampleType?
+		var start: Date =
+			Date() // have to initialize this here to make the compiler happy even though it would still always be initialized before getting used even without this
 		var end: Date
 		var samplesToJoin = [SampleType]()
 		var samplesJoined = false
@@ -191,7 +245,7 @@ public final class SampleUtilImpl: SampleUtil {
 			samplesToJoin.append(sample)
 			lastSample = sample
 		}
-		if sortedSamples.count > 0 && samplesJoined == samplesShouldNotBeJoined(lastSample!, sortedSamples.last!) {
+		if !sortedSamples.isEmpty && samplesJoined == samplesShouldNotBeJoined(lastSample!, sortedSamples.last!) {
 			end = sortedSamples.last!.dates()[.start]!
 			let twoDateSample = joinSamples(samplesToJoin, start, end)
 			twoDateSamples.append(twoDateSample)
@@ -200,24 +254,33 @@ public final class SampleUtilImpl: SampleUtil {
 	}
 
 	/// - Precondition: input array has at least one element.
-	public final func closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(sample: SampleType1, in samples: [SampleType2]) -> SampleType2 {
-		precondition(samples.count > 0, "Precondition violated: input array must have at least one element")
+	public final func closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(
+		sample: SampleType1,
+		in samples: [SampleType2]
+	) -> SampleType2 {
+		precondition(!samples.isEmpty, "Precondition violated: input array must have at least one element")
 
-		return DependencyInjector.get(SearchUtil.self).closestItem(to: sample, in: samples) { (sample1: Sample, sample2: Sample) -> Int in
-			return abs(distance(between: sample1, and: sample2))
-		} as! SampleType2
+		return DependencyInjector.get(SearchUtil.self)
+			.closestItem(to: sample, in: samples) { (sample1: Sample, sample2: Sample) -> Int in
+				abs(distance(between: sample1, and: sample2))
+			} as! SampleType2
 	}
 
 	/// - Precondition: input array has at least one element.
 	public final func closestInTimeTo(sample: Sample, in samples: [Sample]) -> Sample {
-		precondition(samples.count > 0, "Precondition violated: input array must have at least one element")
+		precondition(!samples.isEmpty, "Precondition violated: input array must have at least one element")
 
-		return DependencyInjector.get(SearchUtil.self).closestItem(to: sample, in: samples) { (sample1: Sample, sample2: Sample) -> Int in
-			return abs(distance(between: sample1, and: sample2))
-		}
+		return DependencyInjector.get(SearchUtil.self)
+			.closestItem(to: sample, in: samples) { (sample1: Sample, sample2: Sample) -> Int in
+				abs(distance(between: sample1, and: sample2))
+			}
 	}
 
-	public final func distance(between sample1: Sample, and sample2: Sample, in unit: Calendar.Component = .nanosecond) -> Int {
+	public final func distance(
+		between sample1: Sample,
+		and sample2: Sample,
+		in unit: Calendar.Component = .nanosecond
+	) -> Int {
 		let start1 = sample1.dates()[.start]!
 		let start2 = sample2.dates()[.start]!
 		let end1 = sample1.dates()[.end]
@@ -243,7 +306,7 @@ public final class SampleUtilImpl: SampleUtil {
 		var filteredSamples = samples
 		if let startDate = startDate {
 			filteredSamples = filteredSamples.filter { (sample: Sample) -> Bool in
-				return sample.dates()[.start]!.isAfterDate(startDate, granularity: .nanosecond)
+				sample.dates()[.start]!.isAfterDate(startDate, granularity: .nanosecond)
 			}
 		}
 		if let endDate = endDate {
@@ -258,8 +321,12 @@ public final class SampleUtilImpl: SampleUtil {
 		return filteredSamples
 	}
 
-	private final func aggregate(_ samples: [Sample], _ aggregationUnit: Calendar.Component, _ attribute: Attribute) throws -> [Date: [Sample]] {
-		let samplesWithSpecifiedDateAttribute = try samples.filter{ try $0.value(of: attribute) != nil }
+	private final func aggregate(
+		_ samples: [Sample],
+		_ aggregationUnit: Calendar.Component,
+		_ attribute: Attribute
+	) throws -> [Date: [Sample]] {
+		let samplesWithSpecifiedDateAttribute = try samples.filter { try $0.value(of: attribute) != nil }
 		return try Dictionary(grouping: samplesWithSpecifiedDateAttribute, by: { sample in
 			let value = try sample.value(of: attribute)
 			guard let date = value as? Date else {
@@ -269,8 +336,12 @@ public final class SampleUtilImpl: SampleUtil {
 		})
 	}
 
-	private final func sort(_ samples: [Sample], _ dateType: DateType, _ order: ComparisonResult = .orderedAscending) -> [Sample] {
-		return samples.sorted(by: { (sample1: Sample, sample2: Sample) -> Bool in
+	private final func sort(
+		_ samples: [Sample],
+		_ dateType: DateType,
+		_ order: ComparisonResult = .orderedAscending
+	) -> [Sample] {
+		samples.sorted(by: { (sample1: Sample, sample2: Sample) -> Bool in
 			let date1 = sample1.dates()[dateType]
 			let date2 = sample2.dates()[dateType]
 
@@ -279,6 +350,6 @@ public final class SampleUtilImpl: SampleUtil {
 	}
 
 	private final func distance(_ date1: Date, _ date2: Date, _ unit: Calendar.Component) -> Int {
-		return abs(Calendar.autoupdatingCurrent.dateComponents([unit], from: date1, to: date2).in(unit)!)
+		abs(Calendar.autoupdatingCurrent.dateComponents([unit], from: date1, to: date2).in(unit)!)
 	}
 }

@@ -14,17 +14,16 @@ import Samples
 import UIExtensions
 
 public final class TestDataCreationSampleTypeTableViewCell: UITableViewCell {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var generateDataSwitch: UISwitch!
-	@IBOutlet weak final var sampleTypeNameLabel: UILabel!
+	@IBOutlet final var generateDataSwitch: UISwitch!
+	@IBOutlet final var sampleTypeNameLabel: UILabel!
 
-	@IBOutlet weak final var numberOfDaysLabel: UILabel!
-	@IBOutlet weak final var numberOfDaysTextField: UITextField!
+	@IBOutlet final var numberOfDaysLabel: UILabel!
+	@IBOutlet final var numberOfDaysTextField: UITextField!
 
-	@IBOutlet weak final var samplesPerHourLabel: UILabel!
-	@IBOutlet weak final var samplesPerHourTextField: UITextField!
+	@IBOutlet final var samplesPerHourLabel: UILabel!
+	@IBOutlet final var samplesPerHourTextField: UITextField!
 
 	// MARK: - Member Variables
 
@@ -49,42 +48,49 @@ public final class TestDataCreationSampleTypeTableViewCell: UITableViewCell {
 
 	// MARK: - Actions
 
-	@IBAction final func shouldGenerateChanged(_ sender: Any) {
+	@IBAction final func shouldGenerateChanged(_: Any) {
 		updateHideShowState()
 		post(
 			TestDataGenerationTableViewController.shouldGenerateSampleTypeChanged,
 			userInfo: [
 				.sampleType: sampleType,
 				.shouldGenerate: generateDataSwitch.isOn,
-			])
+			]
+		)
 	}
 
-	@IBAction final func numberOfDaysChanged(_ sender: Any) {
+	@IBAction final func numberOfDaysChanged(_: Any) {
 		guard let numberOfDays = Int(numberOfDaysTextField.text ?? "") else { return }
 		post(
 			TestDataGenerationTableViewController.numberOfDaysChanged,
 			userInfo: [
 				.sampleType: sampleType,
 				.number: numberOfDays,
-			])
+			]
+		)
 	}
 
-	@IBAction final func samplesPerHourChanged(_ sender: Any) {
+	@IBAction final func samplesPerHourChanged(_: Any) {
 		guard let samplesPerHour = Int(samplesPerHourTextField.text ?? "") else { return }
 		post(
 			TestDataGenerationTableViewController.samplesPerHourChanged,
 			userInfo: [
 				.sampleType: sampleType,
 				.number: samplesPerHour,
-			])
+			]
+		)
 	}
 
 	// MARK: - Helper Functions
 
 	private final func updateHideShowState() {
-		DependencyInjector.get(UiUtil.self).setView(numberOfDaysLabel, enabled: generateDataSwitch.isOn, hidden: !generateDataSwitch.isOn)
-		DependencyInjector.get(UiUtil.self).setView(numberOfDaysTextField, enabled: generateDataSwitch.isOn, hidden: !generateDataSwitch.isOn)
-		DependencyInjector.get(UiUtil.self).setView(samplesPerHourLabel, enabled: generateDataSwitch.isOn, hidden: !generateDataSwitch.isOn)
-		DependencyInjector.get(UiUtil.self).setView(samplesPerHourTextField, enabled: generateDataSwitch.isOn, hidden: !generateDataSwitch.isOn)
+		DependencyInjector.get(UiUtil.self)
+			.setView(numberOfDaysLabel, enabled: generateDataSwitch.isOn, hidden: !generateDataSwitch.isOn)
+		DependencyInjector.get(UiUtil.self)
+			.setView(numberOfDaysTextField, enabled: generateDataSwitch.isOn, hidden: !generateDataSwitch.isOn)
+		DependencyInjector.get(UiUtil.self)
+			.setView(samplesPerHourLabel, enabled: generateDataSwitch.isOn, hidden: !generateDataSwitch.isOn)
+		DependencyInjector.get(UiUtil.self)
+			.setView(samplesPerHourTextField, enabled: generateDataSwitch.isOn, hidden: !generateDataSwitch.isOn)
 	}
 }

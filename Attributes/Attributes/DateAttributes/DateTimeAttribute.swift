@@ -11,9 +11,8 @@ import Foundation
 import Common
 
 public final class DateTimeAttribute: DateAttributeBase {
-
-	public final override var typeName: String {
-		return "Date & Time"
+	override public final var typeName: String {
+		"Date & Time"
 	}
 
 	public init(
@@ -24,8 +23,8 @@ public final class DateTimeAttribute: DateAttributeBase {
 		optional: Bool = false,
 		format: String = defaultDateFormat,
 		earliestDate: Date? = nil,
-		latestDate: Date? = nil)
-	{
+		latestDate: Date? = nil
+	) {
 		super.init(
 			name: name,
 			pluralName: pluralName,
@@ -35,10 +34,11 @@ public final class DateTimeAttribute: DateAttributeBase {
 			includeTime: true,
 			format: format,
 			earliestDate: earliestDate,
-			latestDate: latestDate)
+			latestDate: latestDate
+		)
 	}
 
-	public final override func typedValuesAreEqual(_ first: Date, _ second: Date) -> Bool {
-		return first == second
+	override public final func typedValuesAreEqual(_ first: Date, _ second: Date) -> Bool {
+		first == second
 	}
 }

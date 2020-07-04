@@ -8,9 +8,8 @@
 
 import Foundation
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol SubQueryMatcherFactory {
-
 	func withinXCalendarUnitsSubQueryMatcher() -> WithinXCalendarUnitsSubQueryMatcher
 	func inSameCalendarUnitSubQueryMatcher() -> InSameCalendarUnitSubQueryMatcher
 	func sameDatesSubQueryMatcher() -> SameDatesSubQueryMatcher
@@ -19,7 +18,6 @@ public protocol SubQueryMatcherFactory {
 }
 
 public final class SubQueryMatcherFactoryImpl: SubQueryMatcherFactory {
-
 	public static var allMatcherTypes: [SubQueryMatcher.Type] = [
 		WithinXCalendarUnitsSubQueryMatcher.self,
 		InSameCalendarUnitSubQueryMatcher.self,
@@ -29,22 +27,22 @@ public final class SubQueryMatcherFactoryImpl: SubQueryMatcherFactory {
 	]
 
 	public final func withinXCalendarUnitsSubQueryMatcher() -> WithinXCalendarUnitsSubQueryMatcher {
-		return WithinXCalendarUnitsSubQueryMatcher()
+		WithinXCalendarUnitsSubQueryMatcher()
 	}
 
 	public final func inSameCalendarUnitSubQueryMatcher() -> InSameCalendarUnitSubQueryMatcher {
-		return InSameCalendarUnitSubQueryMatcher()
+		InSameCalendarUnitSubQueryMatcher()
 	}
 
 	public final func sameDatesSubQueryMatcher() -> SameDatesSubQueryMatcher {
-		return SameDatesSubQueryMatcher()
+		SameDatesSubQueryMatcher()
 	}
 
 	public final func sameStartDatesSubQueryMatcher() -> SameStartDatesSubQueryMatcher {
-		return SameStartDatesSubQueryMatcher()
+		SameStartDatesSubQueryMatcher()
 	}
 
 	public final func sameEndDatesSubQueryMatcher() -> SameEndDatesSubQueryMatcher {
-		return SameEndDatesSubQueryMatcher()
+		SameEndDatesSubQueryMatcher()
 	}
 }

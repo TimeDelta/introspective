@@ -6,19 +6,18 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 import Common
 import DependencyInjection
 import Persistence
 import Samples
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol EasyPillMedicationImporter: MedicationImporter {}
 
 public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedicationImporter, CoreDataObject {
-
 	// MARK: - Static Variables
 
 	public static let entityName = "EasyPillMedicationImporter"
@@ -27,7 +26,8 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 
 	public final let dataTypePluralName: String = "medications"
 	public final let sourceName: String = "EasyPill"
-	public final let customImportMessage: String? = "This will not import any medications with the name of one that you have already saved."
+	public final let customImportMessage: String? =
+		"This will not import any medications with the name of one that you have already saved."
 
 	public final var importOnlyNewData: Bool = true
 	public final var isPaused: Bool = false
@@ -94,7 +94,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 		isPaused = false
 		do {
 			// note: EasyPill does not allow multi-line notes
-			while lines.count > 0 {
+			while !lines.isEmpty {
 				if pauseOnRecord == recordNumber {
 					pause()
 					pauseOnRecord = nil
@@ -122,16 +122,32 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 		var medicationName = try getColumn(0, from: parts, errorMessage: "Record \(recordNumber) is empty.")
 		var currentIndex = 1
 		if medicationName.isEmpty {
-			let nextColumnText = try getColumn(currentIndex, from: parts, errorMessage: "No name found for record \(recordNumber).")
+			let nextColumnText = try getColumn(
+				currentIndex,
+				from: parts,
+				errorMessage: "No name found for record \(recordNumber)."
+			)
 			medicationName += "," + nextColumnText
 			currentIndex += 1
 		}
 		let originalNotesIndex = currentIndex
-		var notes = try getColumn(currentIndex, from: parts, errorMessage: "Record \(recordNumber) does not have the right number of columns.")
+		var notes = try getColumn(
+			currentIndex,
+			from: parts,
+			errorMessage: "Record \(recordNumber) does not have the right number of columns."
+		)
 		currentIndex += 1
-		var dosageText = try getColumn(currentIndex, from: parts, errorMessage: "Record \(recordNumber) does not have the right number of columns.")
+		var dosageText = try getColumn(
+			currentIndex,
+			from: parts,
+			errorMessage: "Record \(recordNumber) does not have the right number of columns."
+		)
 		let originalFrequencyIndex = currentIndex + 1
-		var frequencyText = try getColumn(originalFrequencyIndex, from: parts, errorMessage: "Record \(recordNumber) does not have the right number of columns.")
+		var frequencyText = try getColumn(
+			originalFrequencyIndex,
+			from: parts,
+			errorMessage: "Record \(recordNumber) does not have the right number of columns."
+		)
 		var additionalColumns = 0
 		while !frequencyTextIsValid(frequencyText) && parts.count > currentIndex + additionalColumns + 1 {
 			additionalColumns += 1
@@ -151,10 +167,14 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 			}
 			dosageText = parts[originalFrequencyIndex + additionalColumns - numberOfFrequencyColumns]
 			let newNotesMaxIndex = originalFrequencyIndex + additionalColumns - numberOfFrequencyColumns - 1
-			notes = parts[originalNotesIndex...newNotesMaxIndex].joined(separator: ",")
+			notes = parts[originalNotesIndex ... newNotesMaxIndex].joined(separator: ",")
 		}
 		currentIndex = originalFrequencyIndex + additionalColumns + 3
-		let startedOnText = try getColumn(currentIndex, from: parts, errorMessage: "Could not get Started On date for record \(recordNumber).")
+		let startedOnText = try getColumn(
+			currentIndex,
+			from: parts,
+			errorMessage: "Could not get Started On date for record \(recordNumber)."
+		)
 		let startedOn = DependencyInjector.get(CalendarUtil.self).date(from: startedOnText, format: "M/d/yy")!
 
 		try storeMedication(
@@ -163,7 +183,8 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 			dosage: Dosage(dosageText),
 			notes: notes,
 			frequencyText: frequencyText,
-			using: transaction)
+			using: transaction
+		)
 	}
 
 	private final func getColumn(_ index: Int, from parts: [String], errorMessage: String? = nil) throws -> String {
@@ -177,22 +198,25 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 		dosage: Dosage?,
 		notes: String,
 		frequencyText: String,
-		using transaction: Transaction)
-	throws {
+		using transaction: Transaction
+	)
+		throws {
 		let childTransaction = transaction.childTransaction()
 		let medicationsWithCurrentNameFetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
 		medicationsWithCurrentNameFetchRequest.predicate = NSPredicate(format: "%K ==[cd] %@", "name", name)
 		let medicationsWithCurrentName: [Medication]
 		do {
-			medicationsWithCurrentName = try DependencyInjector.get(Database.self).query(medicationsWithCurrentNameFetchRequest)
+			medicationsWithCurrentName = try DependencyInjector.get(Database.self)
+				.query(medicationsWithCurrentNameFetchRequest)
 		} catch {
 			log.error("Failed to check for existing medications named '%@': %@", name, errorInfo(error))
 			throw GenericDisplayableError(
 				title: "Data Access Error",
-				description: "Unable to check for existing medications named \(name).")
+				description: "Unable to check for existing medications named \(name)."
+			)
 		}
 
-		if medicationsWithCurrentName.count == 0 {
+		if medicationsWithCurrentName.isEmpty {
 			do {
 				let medication = try childTransaction.new(Medication.self)
 				let allMedications = try getAllMedications(using: childTransaction)
@@ -205,11 +229,13 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 					dosage: dosage,
 					notes: notes,
 					frequencyText: frequencyText,
-					using: childTransaction)
+					using: childTransaction
+				)
 			} catch {
 				throw GenericDisplayableError(
 					title: "Data Write Error",
-					description: "Unable to store new medication named '\(name)'.")
+					description: "Unable to store new medication named '\(name)'."
+				)
 			}
 		} else if medicationsWithCurrentName.count == 1 && !importOnlyNewData {
 			let medication = medicationsWithCurrentName[0]
@@ -220,10 +246,12 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 				dosage: dosage,
 				notes: notes,
 				frequencyText: frequencyText,
-				using: childTransaction)
+				using: childTransaction
+			)
 		} else if !importOnlyNewData {
 			throw AmbiguousUpdateToExistingDataError(
-				"Update requested for '\(name)' but found \(medicationsWithCurrentName.count) medications with that name.")
+				"Update requested for '\(name)' but found \(medicationsWithCurrentName.count) medications with that name."
+			)
 		}
 		try retryOnFail({ try childTransaction.commit() }, maxRetries: 2)
 	}
@@ -235,8 +263,9 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 		dosage: Dosage?,
 		notes: String,
 		frequencyText: String,
-		using transaction: Transaction)
-	throws {
+		using transaction: Transaction
+	)
+		throws {
 		let medication = try transaction.pull(savedObject: medication)
 		medication.name = name
 		medication.dosage = dosage
@@ -284,23 +313,26 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 	}
 
 	private final func frequencyTextIsValid(_ frequencyText: String) -> Bool {
-		return frequencyText == "as needed" ||
+		frequencyText == "as needed" ||
 			frequencyText == "daily" ||
 			frequencyText == "weekly" || (
 				frequencyText.starts(with: "every") && (
 					frequencyText.hasSuffix("hour") ||
-					frequencyText.hasSuffix("hours") ||
-					frequencyText.hasSuffix("days") ||
-					frequencyText.hasSuffix("weeks")))
+						frequencyText.hasSuffix("hours") ||
+						frequencyText.hasSuffix("days") ||
+						frequencyText.hasSuffix("weeks")
+				)
+			)
 	}
 
 	private final func isNumber(_ str: String) -> Bool {
-		return DependencyInjector.get(StringUtil.self).isNumber(str)
+		DependencyInjector.get(StringUtil.self).isNumber(str)
 	}
 
 	private final func correctRecordScreenIndices() throws {
 		let medications = try getAllMedications(using: mainTransaction).sorted(by: {
-			$0.recordScreenIndex < $1.recordScreenIndex || ($0.getSource() == .introspective && $1.getSource() != .introspective)
+			$0.recordScreenIndex < $1
+				.recordScreenIndex || ($0.getSource() == .introspective && $1.getSource() != .introspective)
 		})
 		var index = 0
 		for var medication in medications {
@@ -312,10 +344,11 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 
 	private final func getAllMedications(using transaction: Transaction) throws -> Set<Medication> {
 		let medicationsInTransaction = Set(try transaction.query(Medication.fetchRequest()))
-		let medicationsInMainContext = Set(try DependencyInjector.get(Database.self).query(Medication.fetchRequest())).filter({
-			let id = $0.objectID
-			return !medicationsInTransaction.contains(where: { med in med.objectID == id})
-		})
+		let medicationsInMainContext = Set(try DependencyInjector.get(Database.self).query(Medication.fetchRequest()))
+			.filter {
+				let id = $0.objectID
+				return !medicationsInTransaction.contains(where: { med in med.objectID == id })
+			}
 		return medicationsInTransaction.union(medicationsInMainContext)
 	}
 }

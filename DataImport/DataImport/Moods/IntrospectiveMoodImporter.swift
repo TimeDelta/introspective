@@ -6,9 +6,9 @@
 //  Copyright © 2020 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import CoreData
 import CSV
+import Foundation
 
 import Common
 import DependencyInjection
@@ -16,11 +16,10 @@ import Persistence
 import Samples
 import Settings
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol IntrospectiveMoodImporter: MoodImporter {}
 
 public final class IntrospectiveMoodImporterImpl: NSManagedObject, IntrospectiveMoodImporter, CoreDataObject {
-
 	// MARK: - Static Variables
 
 	private typealias Me = IntrospectiveMoodImporterImpl
@@ -123,7 +122,9 @@ public final class IntrospectiveMoodImporterImpl: NSManagedObject, Introspective
 		}
 		if shouldImport(date) {
 			guard let rating = Double(csv[MoodImpl.ratingColumn] ?? "") else {
-				throw InvalidFileFormatError("Invalid rating for record \(recordNumber): \(csv[MoodImpl.ratingColumn] ?? "")")
+				throw InvalidFileFormatError(
+					"Invalid rating for record \(recordNumber): \(csv[MoodImpl.ratingColumn] ?? "")"
+				)
 			}
 			var note = csv[MoodImpl.noteColumn]
 			if note?.isEmpty ?? false {
@@ -137,8 +138,9 @@ public final class IntrospectiveMoodImporterImpl: NSManagedObject, Introspective
 		withDate date: Date,
 		rating: Double,
 		andNote note: String?,
-		using transaction: Transaction)
-	throws {
+		using transaction: Transaction
+	)
+		throws {
 		let currentMood = try transaction.new(MoodImpl.self)
 
 		guard let minRatingString = csv[MoodImpl.minRatingColumn] else {
@@ -189,22 +191,23 @@ public final class IntrospectiveMoodImporterImpl: NSManagedObject, Introspective
 			let currentLine = csv.currentRow?.joined(separator: ",") ?? ""
 			throw InvalidFileFormatError("No timestamp for record \(recordNumber): \(currentLine)")
 		}
-		guard let date = DependencyInjector.get(CalendarUtil.self).date(from: dateString, dateStyle: .full, timeStyle: .full) else {
+		guard let date = DependencyInjector.get(CalendarUtil.self)
+			.date(from: dateString, dateStyle: .full, timeStyle: .full) else {
 			throw InvalidFileFormatError("Invalid date / time format for record \(recordNumber).")
 		}
 		return date
 	}
 
 	private final func string(_ str: String, matches regex: String) -> Bool {
-		return str.range(of: regex, options: .regularExpression, range: nil, locale: nil) != nil
+		str.range(of: regex, options: .regularExpression, range: nil, locale: nil) != nil
 	}
 
 	private final func shouldImport(_ date: Date) -> Bool {
-		return !importOnlyNewData || // user doesn't care about data duplication -> import everything
-			lastImport == nil || (   // never imported before -> import everything
+		!importOnlyNewData || // user doesn't care about data duplication -> import everything
+			lastImport == nil || ( // never imported before -> import everything
 				importOnlyNewData &&
-				lastImport != nil &&
-				date.isAfterDate(lastImport!, granularity: .nanosecond)
+					lastImport != nil &&
+					date.isAfterDate(lastImport!, granularity: .nanosecond)
 			)
 	}
 }
@@ -212,9 +215,8 @@ public final class IntrospectiveMoodImporterImpl: NSManagedObject, Introspective
 // MARK: - CoreData stuff
 
 public extension IntrospectiveMoodImporterImpl {
-
 	@nonobjc class func fetchRequest() -> NSFetchRequest<IntrospectiveMoodImporterImpl> {
-		return NSFetchRequest<IntrospectiveMoodImporterImpl>(entityName: "IntrospectiveMoodImporter")
+		NSFetchRequest<IntrospectiveMoodImporterImpl>(entityName: "IntrospectiveMoodImporter")
 	}
 
 	@NSManaged var lastImport: Date?

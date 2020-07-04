@@ -1,4 +1,4 @@
- //
+//
 //  Log.swift
 //  Introspective
 //
@@ -6,12 +6,11 @@
 //  Copyright © 2019 Bryan Nova. All rights reserved.
 //
 
+import _SwiftOSOverlayShims
 import Foundation
 import os
-import _SwiftOSOverlayShims
 
 public final class Log {
-
 	// MARK: - Instance Variables
 
 	private final var osLog: OSLog
@@ -55,8 +54,8 @@ public final class Log {
 		_ message: StaticString,
 		dso: UnsafeRawPointer?,
 		type: OSLogType = .default,
-		_ arguments: [CVarArg])
-	{
+		_ arguments: [CVarArg]
+	) {
 		// This crazy mess is because [CVarArg] gets treated as a single CVarArg and repassing a CVarArg... actually passes a [CVarArg]
 		// This was copied from the publicly available Swift source code at https://github.com/apple/swift/blob/master/stdlib/public/Darwin/os/os_log.swift#L41
 		// THIS IS A HACK

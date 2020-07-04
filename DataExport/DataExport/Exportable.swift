@@ -6,12 +6,11 @@
 //  Copyright © 2019 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import CSV
+import Foundation
 
 /// To use the provided export functions, conform to this protocol.
 public protocol Exportable {
-
 	static var exportFileDescription: String { get }
 	static func exportHeaderRow(to csv: CSVWriter) throws
 

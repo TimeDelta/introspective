@@ -14,11 +14,10 @@ import DependencyInjection
 import Samples
 
 public final class AverageInformation: AnyInformation {
-
 	// MARK: - Display Information
 
-	public final override var name: String { return "Average" }
-	public final override var description: String { return name + " " + attribute.name.localizedLowercase }
+	override public final var name: String { "Average" }
+	override public final var description: String { name + " " + attribute.name.localizedLowercase }
 
 	// MARK: - Instance Variables
 
@@ -32,16 +31,22 @@ public final class AverageInformation: AnyInformation {
 
 	// MARK: - Information Functions
 
-	public final override func compute(forSamples samples: [Sample]) throws -> String {
+	override public final func compute(forSamples samples: [Sample]) throws -> String {
 		if attribute is DoubleAttribute {
 			let filteredSamples = try filterSamples(samples, as: Double.self)
-			if filteredSamples.count == 0 { return "No samples matching filter" }
-			return String(try DependencyInjector.get(NumericSampleUtil.self).average(for: attribute, over: filteredSamples))
+			if filteredSamples.isEmpty { return "No samples matching filter" }
+			return String(
+				try DependencyInjector.get(NumericSampleUtil.self)
+					.average(for: attribute, over: filteredSamples)
+			)
 		}
 		if attribute is IntegerAttribute {
 			let filteredSamples = try filterSamples(samples, as: Int.self)
-			if filteredSamples.count == 0 { return "No samples matching filter" }
-			return String(try DependencyInjector.get(NumericSampleUtil.self).average(for: attribute, over: filteredSamples))
+			if filteredSamples.isEmpty { return "No samples matching filter" }
+			return String(
+				try DependencyInjector.get(NumericSampleUtil.self)
+					.average(for: attribute, over: filteredSamples)
+			)
 		}
 		if attribute is DosageAttribute {
 			return try averageDosage(samples)
@@ -54,20 +59,27 @@ public final class AverageInformation: AnyInformation {
 			"Unknown attribute type (%@) for attribute named '%@' of sample type '%@'",
 			String(describing: type(of: attribute)),
 			attribute.name,
-			String(describing: type(of: samples[0])))
+			String(describing: type(of: samples[0]))
+		)
 		return ""
 	}
 
-	public final override func computeGraphable(forSamples samples: [Sample]) throws -> String {
+	override public final func computeGraphable(forSamples samples: [Sample]) throws -> String {
 		if attribute is DoubleAttribute {
 			let filteredSamples = try filterSamples(samples, as: Double.self)
-			if filteredSamples.count == 0 { throw GenericDisplayableError(title: "No samples matching filter") }
-			return String(try DependencyInjector.get(NumericSampleUtil.self).average(for: attribute, over: filteredSamples))
+			if filteredSamples.isEmpty { throw GenericDisplayableError(title: "No samples matching filter") }
+			return String(
+				try DependencyInjector.get(NumericSampleUtil.self)
+					.average(for: attribute, over: filteredSamples)
+			)
 		}
 		if attribute is IntegerAttribute {
 			let filteredSamples = try filterSamples(samples, as: Int.self)
-			if filteredSamples.count == 0 { throw GenericDisplayableError(title: "No samples matching filter") }
-			return String(try DependencyInjector.get(NumericSampleUtil.self).average(for: attribute, over: filteredSamples))
+			if filteredSamples.isEmpty { throw GenericDisplayableError(title: "No samples matching filter") }
+			return String(
+				try DependencyInjector.get(NumericSampleUtil.self)
+					.average(for: attribute, over: filteredSamples)
+			)
 		}
 		if attribute is DosageAttribute {
 			return try averageDosage(samples)
@@ -80,21 +92,22 @@ public final class AverageInformation: AnyInformation {
 			"Unknown attribute type (%@) for attribute named '%@' of sample type '%@'",
 			String(describing: type(of: attribute)),
 			attribute.name,
-			String(describing: type(of: samples[0])))
+			String(describing: type(of: samples[0]))
+		)
 		return ""
 	}
 
 	// MARK: - Equality
 
-	public final override func equalTo(_ other: SampleGroupInformation) -> Bool {
-		return other is AverageInformation && attribute.equalTo(other.attribute)
+	override public final func equalTo(_ other: SampleGroupInformation) -> Bool {
+		other is AverageInformation && attribute.equalTo(other.attribute)
 	}
 
 	// MARK: - Helper Functions
 
 	private final func averageDosage(_ samples: [Sample]) throws -> String {
 		let filteredSamples = try filterSamples(samples, as: Dosage.self)
-		if filteredSamples.count == 0 { return "0" }
+		if filteredSamples.isEmpty { return "0" }
 
 		let sumString = try SumInformation(attribute).compute(forSamples: filteredSamples)
 		if let totalDosage = Dosage(sumString) {
@@ -107,12 +120,12 @@ public final class AverageInformation: AnyInformation {
 	}
 
 	private final func numberOfSamplesWithNonNilDosage(_ samples: [Sample]) throws -> Double {
-		return Double(try samples.filter({ (try $0.value(of: attribute)) as? Dosage != nil }).count)
+		Double(try samples.filter { (try $0.value(of: attribute)) as? Dosage != nil }.count)
 	}
 
 	private final func averageDuration(_ samples: [Sample]) throws -> Duration {
 		let filteredSamples = try filterSamples(samples, as: Duration.self)
-		if filteredSamples.count == 0 { return Duration(0) }
+		if filteredSamples.isEmpty { return Duration(0) }
 
 		var totalDuration = Duration(0)
 		var totalNonNilSamples = 0

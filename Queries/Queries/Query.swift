@@ -10,9 +10,8 @@ import Foundation
 
 import BooleanAlgebra
 
-//sourcery: AutoMockable
-public protocol Query: class {
-
+// sourcery: AutoMockable
+public protocol Query: AnyObject {
 	/// - Throws: If a valid query cannot be made from the provided parts
 	init(parts: [BooleanExpressionPart]) throws
 
@@ -22,7 +21,7 @@ public protocol Query: class {
 	/// The timestamps from the results of the sub-query will be used to limit the results of this query
 	var subQuery: (matcher: SubQueryMatcher, query: Query)? { get set }
 
-	func runQuery(callback: @escaping (QueryResult?, Error?) -> ())
+	func runQuery(callback: @escaping (QueryResult?, Error?) -> Void)
 	func stop()
 	/// This resets the stopped state so that the query can be ran again
 	func resetStoppedState()
@@ -30,7 +29,6 @@ public protocol Query: class {
 }
 
 public extension Query {
-
 	func equalTo(_ otherQuery: Query) -> Bool {
 		if type(of: self) != type(of: otherQuery) { return false }
 		if let myExpression = expression {

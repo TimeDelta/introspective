@@ -10,7 +10,6 @@ import Foundation
 import os
 
 public final class Dosage: NSObject, NSSecureCoding, Codable, Comparable {
-
 	// MARK: - Enums
 
 	private enum CodingKeys: String, CodingKey {
@@ -27,12 +26,12 @@ public final class Dosage: NSObject, NSSecureCoding, Codable, Comparable {
 
 	// MARK: - Comparable
 
-	public static func ==(lhs: Dosage, rhs: Dosage) -> Bool {
-		return lhs.getBaseUnitAmount() == rhs.getBaseUnitAmount()
+	public static func == (lhs: Dosage, rhs: Dosage) -> Bool {
+		lhs.getBaseUnitAmount() == rhs.getBaseUnitAmount()
 	}
 
-	public static func <(lhs: Dosage, rhs: Dosage) -> Bool {
-		return lhs.getBaseUnitAmount() < rhs.getBaseUnitAmount()
+	public static func < (lhs: Dosage, rhs: Dosage) -> Bool {
+		lhs.getBaseUnitAmount() < rhs.getBaseUnitAmount()
 	}
 
 	// MARK: - Instance Variables
@@ -40,7 +39,7 @@ public final class Dosage: NSObject, NSSecureCoding, Codable, Comparable {
 	public final var amount: Double
 	public final var unit: String
 
-	public final override var description: String {
+	override public final var description: String {
 		var amountText = String(amount)
 		if amountText.hasSuffix(".0") {
 			amountText = String(amountText.prefix(amountText.count - 2))
@@ -92,7 +91,7 @@ public final class Dosage: NSObject, NSSecureCoding, Codable, Comparable {
 
 	// MARK: - NSObject Overrides
 
-	public override func isEqual(_ object: Any?) -> Bool {
+	override public func isEqual(_ object: Any?) -> Bool {
 		guard let other = object as? Dosage else { return false }
 		return self == other
 	}
@@ -103,7 +102,7 @@ public final class Dosage: NSObject, NSSecureCoding, Codable, Comparable {
 		if isDeci() { return amount / 10 }
 		if isCenti() { return amount / 100 }
 		if isMilli() { return amount / 1000 }
-		if isMicro() { return amount / 1000000 }
+		if isMicro() { return amount / 1_000_000 }
 		return amount // base unit
 	}
 
@@ -111,7 +110,7 @@ public final class Dosage: NSObject, NSSecureCoding, Codable, Comparable {
 		if isDeci(newUnits) { return getBaseUnitAmount() * 10 }
 		if isCenti(newUnits) { return getBaseUnitAmount() * 100 }
 		if isMilli(newUnits) { return getBaseUnitAmount() * 1000 }
-		if isMicro(newUnits) { return getBaseUnitAmount() * 1000000 }
+		if isMicro(newUnits) { return getBaseUnitAmount() * 1_000_000 }
 		return getBaseUnitAmount() // base unit
 	}
 

@@ -7,9 +7,9 @@
 //
 //
 
-import Foundation
 import CoreData
 import CSV
+import Foundation
 
 import Attributes
 import Common
@@ -17,7 +17,6 @@ import DependencyInjection
 import Persistence
 
 public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
-
 	private typealias Me = Activity
 
 	// MARK: - CoreData Stuff
@@ -31,7 +30,12 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 
 	// MARK: - Attributes
 
-	public static let nameAttribute = TextAttribute(name: "Name", pluralName: "Names", description: "The name of this activity", variableName: "definition.name")
+	public static let nameAttribute = TextAttribute(
+		name: "Name",
+		pluralName: "Names",
+		description: "The name of this activity",
+		variableName: "definition.name"
+	)
 	public static let noteAttribute = TextAttribute(name: "Note", pluralName: "Notes", variableName: "note")
 	public static let tagsAttribute = ActivityTagsAttribute(variableName: "tags")
 	public static let durationAttribute = DurationAttribute()
@@ -39,8 +43,9 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 		name: "Source",
 		typeName: "Activity Source",
 		pluralName: "Sources",
-		possibleValues: Sources.ActivitySourceNum.values.map{ $0.description },
-		possibleValueToString: { $0 })
+		possibleValues: Sources.ActivitySourceNum.values.map { $0.description },
+		possibleValueToString: { $0 }
+	)
 
 	public static let defaultDependentAttribute: Attribute = durationAttribute
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.startDate
@@ -59,7 +64,7 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 	// MARK: - Searching
 
 	public func matchesSearchString(_ searchString: String) -> Bool {
-		return definition.name.localizedCaseInsensitiveContains(searchString) ||
+		definition.name.localizedCaseInsensitiveContains(searchString) ||
 			(note?.localizedCaseInsensitiveContains(searchString) ?? false) ||
 			hasTag(searchString) ||
 			getSource().description.localizedLowercase == searchString.localizedLowercase
@@ -68,15 +73,16 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 	// MARK: - Instance Variables
 
 	public final let attributedName: String = Me.name
-	public final override var description: String {
-		return "What you are doing at a specific point in time."
+	override public final var description: String {
+		"What you are doing at a specific point in time."
 	}
 
 	public final var start: Date {
 		get {
-			return DependencyInjector.get(CoreDataSampleUtil.self).convertTimeZoneIfApplicable(
+			DependencyInjector.get(CoreDataSampleUtil.self).convertTimeZoneIfApplicable(
 				for: startDate,
-				timeZoneId: startDateTimeZoneId)
+				timeZoneId: startDateTimeZoneId
+			)
 		}
 		set {
 			startDate = newValue
@@ -85,18 +91,21 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 			}
 		}
 	}
+
 	public final var end: Date? {
 		get {
 			if let endDate = endDate {
 				return DependencyInjector.get(CoreDataSampleUtil.self).convertTimeZoneIfApplicable(
 					for: endDate,
-					timeZoneId: endDateTimeZoneId)
+					timeZoneId: endDateTimeZoneId
+				)
 			}
 			return nil
 		}
 		set {
 			endDate = newValue
-			if source == Sources.ActivitySourceNum.introspective.rawValue && endDateTimeZoneId == nil && endDate != nil {
+			if source == Sources.ActivitySourceNum.introspective
+				.rawValue && endDateTimeZoneId == nil && endDate != nil {
 				endDateTimeZoneId = DependencyInjector.get(CalendarUtil.self).currentTimeZone().identifier
 			}
 			if endDate == nil {
@@ -104,26 +113,27 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 			}
 		}
 	}
+
 	public final var duration: Duration {
 		// use raw unconverted dates to avoid issues caused by start and end being in
 		// different time zones such as negative durations
-		return Duration(start: startDate, end: endDate)
+		Duration(start: startDate, end: endDate)
 	}
 
-	public final var startDateTimeZone: String? { return startDateTimeZoneId }
-	public final var endDateTimeZone: String? { return endDateTimeZoneId }
+	public final var startDateTimeZone: String? { startDateTimeZoneId }
+	public final var endDateTimeZone: String? { endDateTimeZoneId }
 
 	private final let log = Log()
 
 	// MARK: - Testing Purposes
 
-	public final var storedStartDate: Date { return startDate }
-	public final var storedEndDate: Date? { return endDate }
+	public final var storedStartDate: Date { startDate }
+	public final var storedEndDate: Date? { endDate }
 
 	// MARK: - Sample Functions
 
-	public func dates() -> [DateType : Date] {
-		var dates = [DateType : Date]()
+	public func dates() -> [DateType: Date] {
+		var dates = [DateType: Date]()
 		dates[.start] = start
 		if let end = end {
 			dates[.end] = end
@@ -168,14 +178,16 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 	public final func export(to csv: CSVWriter) throws {
 		try definition.export(to: csv)
 
-		let startText = DependencyInjector.get(CalendarUtil.self).string(for: startDate, dateStyle: .full, timeStyle: .full)
+		let startText = DependencyInjector.get(CalendarUtil.self)
+			.string(for: startDate, dateStyle: .full, timeStyle: .full)
 		try csv.write(field: startText, quoted: true)
 
 		let startTimeZone = startDateTimeZoneId ?? ""
 		try csv.write(field: startTimeZone, quoted: true)
 
 		if let endDate = endDate {
-			let endText = DependencyInjector.get(CalendarUtil.self).string(for: endDate, dateStyle: .full, timeStyle: .full)
+			let endText = DependencyInjector.get(CalendarUtil.self)
+				.string(for: endDate, dateStyle: .full, timeStyle: .full)
 			try csv.write(field: endText, quoted: true)
 		} else {
 			try csv.write(field: "", quoted: true)
@@ -186,7 +198,7 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 
 		try csv.write(field: note ?? "", quoted: true)
 
-		let tags = tagsArray().map{ $0.name }.joined(separator: "|")
+		let tags = tagsArray().map { $0.name }.joined(separator: "|")
 		try csv.write(field: tags, quoted: true)
 
 		let sourceText = Sources.resolveActivitySource(source).description
@@ -231,11 +243,12 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 			let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
 			fetchRequest.predicate = NSPredicate(format: "name == %@", castedValue)
 			let matchingDefinitions = try DependencyInjector.get(Database.self).query(fetchRequest)
-			if matchingDefinitions.count == 0 {
+			if matchingDefinitions.isEmpty {
 				throw UnsupportedValueError(attribute: attribute, of: self, is: value)
 			}
 
-			definition = try DependencyInjector.get(Database.self).pull(savedObject: matchingDefinitions[0], fromSameContextAs: self)
+			definition = try DependencyInjector.get(Database.self)
+				.pull(savedObject: matchingDefinitions[0], fromSameContextAs: self)
 			return
 		}
 		if attribute.equalTo(CommonSampleAttributes.startDate) {
@@ -253,7 +266,8 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 			}
 			endDate = (value as! Date?)
-			if source == Sources.ActivitySourceNum.introspective.rawValue && endDateTimeZoneId == nil && endDate != nil {
+			if source == Sources.ActivitySourceNum.introspective
+				.rawValue && endDateTimeZoneId == nil && endDate != nil {
 				endDateTimeZoneId = DependencyInjector.get(CalendarUtil.self).currentTimeZone().identifier
 			}
 			if endDate == nil {
@@ -293,7 +307,7 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 	// MARK: Source
 
 	public final func getSource() -> Sources.ActivitySourceNum {
-		return Sources.resolveActivitySource(source)
+		Sources.resolveActivitySource(source)
 	}
 
 	public final func setSource(_ source: Sources.ActivitySourceNum) {
@@ -311,7 +325,7 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 	/// - Returns: Only tags directly associated with this `Activity`.
 	///            Does not include tags associated with this activitiy's `ActivityDefinition`.
 	public final func tagsArray() -> [Tag] {
-		return tags.allObjects as! [Tag]
+		tags.allObjects as! [Tag]
 	}
 
 	/// - Note: Only sets tags associated with this `Activity`.
@@ -327,7 +341,7 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 	public final func hasTag(_ targetName: String) -> Bool {
 		if var tags = tags.allObjects as? [Tag] {
 			tags.append(contentsOf: definition.tagsArray())
-			return tags.filter{ t in t.name.localizedLowercase == targetName.localizedLowercase }.count > 0
+			return !tags.filter { t in t.name.localizedLowercase == targetName.localizedLowercase }.isEmpty
 		}
 		log.error("Failed to cast activity tags array")
 		return false
@@ -348,7 +362,7 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 	}
 
 	public final func equalTo(_ other: Activity) -> Bool {
-		return definition.equalTo(other.definition) &&
+		definition.equalTo(other.definition) &&
 			startDate == other.startDate &&
 			endDate == other.endDate &&
 			tagsArray().elementsEqual(other.tagsArray(), by: { $0.equalTo($1) }) &&
@@ -357,7 +371,7 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 
 	// MARK: - Debug
 
-	public final override var debugDescription: String {
+	override public final var debugDescription: String {
 		var timestampText = startDate.debugDescription
 		if let endDate = endDate {
 			timestampText = "from " + timestampText + " to " + endDate.debugDescription
@@ -388,9 +402,8 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 // MARK: - CoreData
 
 public extension Activity {
-
 	@nonobjc class func fetchRequest() -> NSFetchRequest<Activity> {
-		return NSFetchRequest<Activity>(entityName: "Activity")
+		NSFetchRequest<Activity>(entityName: "Activity")
 	}
 
 	@NSManaged fileprivate var startDate: Date

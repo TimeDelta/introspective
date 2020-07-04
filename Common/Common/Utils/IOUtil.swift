@@ -6,10 +6,10 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import CSV
+import Foundation
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol IOUtil {
 	func contentsOf(_ url: URL) throws -> String
 
@@ -18,9 +18,8 @@ public protocol IOUtil {
 }
 
 public final class IOUtilImpl: IOUtil {
-
 	public final func contentsOf(_ url: URL) throws -> String {
-		return try String(contentsOf: url)
+		try String(contentsOf: url)
 	}
 
 	public final func csvReader(url: URL, hasHeaderRow: Bool) throws -> CSVReader {

@@ -6,15 +6,14 @@
 //  Copyright © 2019 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 import Common
 import DependencyInjection
 import Globals
 
 public class PersistenceInjectionProvider: InjectionProvider {
-
 	private typealias Me = PersistenceInjectionProvider
 
 	private static let codableStorage = CodableStorageImpl()
@@ -33,19 +32,19 @@ public class PersistenceInjectionProvider: InjectionProvider {
 
 	public func get<Type>(_ type: Type.Type) throws -> Type {
 		switch type {
-			case is CodableStorage.Protocol:
-				return Me.codableStorage as! Type
-			case is Database.Protocol:
-				if Me.database == nil {
+		case is CodableStorage.Protocol:
+			return Me.codableStorage as! Type
+		case is Database.Protocol:
+			if Me.database == nil {
+				Me.database = DatabaseImpl(objectModel)
+				if Globals.uiTesting {
+					try! Me.database.deleteEverything()
 					Me.database = DatabaseImpl(objectModel)
-					if Globals.uiTesting {
-						try! Me.database.deleteEverything()
-						Me.database = DatabaseImpl(objectModel)
-					}
 				}
-				return Me.database as! Type
-			default:
-				throw GenericError("Unknown type: " + String(describing: type))
+			}
+			return Me.database as! Type
+		default:
+			throw GenericError("Unknown type: " + String(describing: type))
 		}
 	}
 }

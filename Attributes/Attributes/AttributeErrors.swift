@@ -9,7 +9,6 @@
 import Foundation
 
 public class AttributeError: Error {
-
 	fileprivate final let attribute: Attribute
 
 	fileprivate init(_ attribute: Attribute) {
@@ -18,7 +17,6 @@ public class AttributeError: Error {
 }
 
 public final class TypeMismatchError: AttributeError {
-
 	fileprivate final let attributedObject: Attributed?
 	private final var valueType: Any.Type
 	public final var localizedDescription: String {
@@ -36,7 +34,6 @@ public final class TypeMismatchError: AttributeError {
 }
 
 public final class UnsupportedValueError: AttributeError {
-
 	private final let attributedObject: Attributed?
 	private final var value: Any?
 	public final var localizedDescription: String {
@@ -54,10 +51,9 @@ public final class UnsupportedValueError: AttributeError {
 }
 
 public final class UnknownAttributeError: AttributeError {
-
 	private final let attributedObject: Attributed
 	public final var localizedDescription: String {
-		return "'\(attributedObject.attributedName)' does not have an attribute named '\(attribute.name)'"
+		"'\(attributedObject.attributedName)' does not have an attribute named '\(attribute.name)'"
 	}
 
 	public init(attribute: Attribute, for attributedObject: Attributed) {

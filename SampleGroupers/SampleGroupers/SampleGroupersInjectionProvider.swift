@@ -12,7 +12,6 @@ import Common
 import DependencyInjection
 
 public class SampleGroupersInjectionProvider: InjectionProvider {
-
 	private typealias Me = SampleGroupersInjectionProvider
 	private static let sampleGrouperFactory = SampleGrouperFactoryImpl()
 
@@ -20,15 +19,14 @@ public class SampleGroupersInjectionProvider: InjectionProvider {
 		SampleGrouperFactory.self,
 	]
 
-	public init() {
-	}
+	public init() {}
 
 	public func get<Type>(_ type: Type.Type) throws -> Type {
 		switch type {
-			case is SampleGrouperFactory.Protocol:
-				return Me.sampleGrouperFactory as! Type
-			default:
-				throw GenericError("Unknown type: " + String(describing: type))
+		case is SampleGrouperFactory.Protocol:
+			return Me.sampleGrouperFactory as! Type
+		default:
+			throw GenericError("Unknown type: " + String(describing: type))
 		}
 	}
 }

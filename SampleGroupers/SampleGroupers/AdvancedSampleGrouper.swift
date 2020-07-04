@@ -13,13 +13,12 @@ import Common
 import Samples
 
 public final class AdvancedSampleGrouper: SampleGrouper {
-
 	// MARK: - Display Information
 
 	public static var userVisibleDescription: String = "Advanced"
 	public final let attributedName: String = "Advanced"
 	public var description: String {
-		return groupDefinitions.map{ $0.name }.joined(separator: ", ")
+		groupDefinitions.map { $0.name }.joined(separator: ", ")
 	}
 
 	// MARK: - Attributes
@@ -33,8 +32,8 @@ public final class AdvancedSampleGrouper: SampleGrouper {
 	// MARK: - Initializers
 
 	public init() {}
-	public required init(sampleType: Sample.Type) {}
-	public required init(attributes: [Attribute]) {}
+	public required init(sampleType _: Sample.Type) {}
+	public required init(attributes _: [Attribute]) {}
 
 	// MARK: - Grouper Functions
 
@@ -75,11 +74,11 @@ public final class AdvancedSampleGrouper: SampleGrouper {
 	}
 
 	public final func attributeValuesAreValid() -> Bool {
-		return true // has no attributes
+		true // has no attributes
 	}
 
 	public final func isValid() -> Bool {
-		guard groupDefinitions.count > 0 else { return false}
+		guard !groupDefinitions.isEmpty else { return false }
 		for definition in groupDefinitions {
 			if !definition.isValid() {
 				return false
@@ -102,7 +101,7 @@ public final class AdvancedSampleGrouper: SampleGrouper {
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
-	public final func set(attribute: Attribute, to value: Any?) throws {
+	public final func set(attribute: Attribute, to _: Any?) throws {
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 

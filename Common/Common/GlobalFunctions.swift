@@ -14,7 +14,11 @@ public func isOptional<Type>(_ instance: Type) -> Bool {
 	return style == .optional
 }
 
-public func retryOnFail<Type>(_ code: () throws -> Type, maxRetries: Int? = nil, _ firstError: Error? = nil) throws -> Type {
+public func retryOnFail<Type>(
+	_ code: () throws -> Type,
+	maxRetries: Int? = nil,
+	_ firstError: Error? = nil
+) throws -> Type {
 	if let retries = maxRetries {
 		guard retries >= 0 else {
 			guard let error = firstError else {

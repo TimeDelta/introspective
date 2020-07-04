@@ -9,13 +9,11 @@
 import Foundation
 
 public protocol DisplayableError: Error {
-
 	var displayableTitle: String { get }
 	var displayableDescription: String? { get }
 }
 
 open class GenericDisplayableError: GenericError, DisplayableError {
-
 	public final let displayableTitle: String
 	public final let displayableDescription: String?
 
@@ -31,11 +29,10 @@ open class GenericDisplayableError: GenericError, DisplayableError {
 }
 
 open class GenericError: Error {
-
 	private final let callStack: [String]
 	private final let message: String
 	public final var description: String {
-		return message + "\nStack Trace:\n\t" + callStack.joined(separator: "\n\t")
+		message + "\nStack Trace:\n\t" + callStack.joined(separator: "\n\t")
 	}
 
 	public init(_ message: String) {
@@ -45,7 +42,6 @@ open class GenericError: Error {
 }
 
 public final class NotOverriddenError: GenericError {
-
 	public init(functionName: String) {
 		super.init("Must override \(functionName)")
 	}

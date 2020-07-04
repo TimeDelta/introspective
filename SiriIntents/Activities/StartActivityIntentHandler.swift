@@ -15,12 +15,14 @@ import Persistence
 import Samples
 
 public final class StartActivityIntentHandler: ActivityIntentHandler<StartActivityIntent>, StartActivityIntentHandling {
-
 	private typealias Me = StartActivityIntentHandler
 
 	private static let log = Log()
 
-	public func resolveActivityName(for intent: StartActivityIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
+	public func resolveActivityName(
+		for intent: StartActivityIntent,
+		with completion: @escaping (INStringResolutionResult) -> Void
+	) {
 		Me.log.info("Resolving activity name")
 		guard let activityName = intent.activityName else {
 			completion(INStringResolutionResult.needsValue())
@@ -29,11 +31,17 @@ public final class StartActivityIntentHandler: ActivityIntentHandler<StartActivi
 		completion(INStringResolutionResult.success(with: activityName))
 	}
 
-	public override func provideActivityNameOptions(for intent: StartActivityIntent, with completion: @escaping ([String]?, Error?) -> Void) {
+	override public func provideActivityNameOptions(
+		for intent: StartActivityIntent,
+		with completion: @escaping ([String]?, Error?) -> Void
+	) {
 		super.provideActivityNameOptions(for: intent, with: completion)
 	}
 
-	public func resolveStartDate(for intent: StartActivityIntent, with completion: @escaping (INDateComponentsResolutionResult) -> Swift.Void) {
+	public func resolveStartDate(
+		for intent: StartActivityIntent,
+		with completion: @escaping (INDateComponentsResolutionResult) -> Swift.Void
+	) {
 		Me.log.info("Resolving start date")
 		if let startDate = intent.startDate {
 			completion(INDateComponentsResolutionResult.success(with: startDate))
@@ -42,7 +50,10 @@ public final class StartActivityIntentHandler: ActivityIntentHandler<StartActivi
 		}
 	}
 
-	public func resolveNote(for intent: StartActivityIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
+	public func resolveNote(
+		for intent: StartActivityIntent,
+		with completion: @escaping (INStringResolutionResult) -> Void
+	) {
 		Me.log.info("Resolving note")
 		// note is optional
 		guard let note = intent.note else {
@@ -52,10 +63,13 @@ public final class StartActivityIntentHandler: ActivityIntentHandler<StartActivi
 		completion(INStringResolutionResult.success(with: note))
 	}
 
-	public func resolveExtraTags(for intent: StartActivityIntent, with completion: @escaping ([INStringResolutionResult]) -> Swift.Void) {
+	public func resolveExtraTags(
+		for intent: StartActivityIntent,
+		with completion: @escaping ([INStringResolutionResult]) -> Swift.Void
+	) {
 		Me.log.info("Resolving extra tags")
 		if let extraTags = intent.extraTags {
-			completion(extraTags.map{ t in INStringResolutionResult.success(with: t) })
+			completion(extraTags.map { t in INStringResolutionResult.success(with: t) })
 		} else {
 			completion([INStringResolutionResult.notRequired()])
 		}
@@ -69,9 +83,13 @@ public final class StartActivityIntentHandler: ActivityIntentHandler<StartActivi
 		}
 
 		do {
-			guard let definition = try DependencyInjector.get(ActivityDAO.self).getDefinitionWith(name: activityName) else {
+			guard let definition = try DependencyInjector.get(ActivityDAO.self).getDefinitionWith(name: activityName)
+			else {
 				Me.log.error("Activity named %{private}@ does not exist.", activityName)
-				completion(StartActivityIntentResponse.failure(error: "Activity named \"\(activityName)\" does not exist"))
+				completion(
+					StartActivityIntentResponse
+						.failure(error: "Activity named \"\(activityName)\" does not exist")
+				)
 				return
 			}
 			let startDate = intent.startDate?.date ?? Date()
@@ -79,7 +97,8 @@ public final class StartActivityIntentHandler: ActivityIntentHandler<StartActivi
 				definition: definition,
 				startDate: startDate,
 				note: intent.note,
-				extraTags: try parseTags(intent.extraTags ?? []))
+				extraTags: try parseTags(intent.extraTags ?? [])
+			)
 			completion(StartActivityIntentResponse.success(activity: ActivityIntentInfo(activity)))
 		} catch {
 			Me.log.error("Failed StartActivityIntent: %@", errorInfo(error))
@@ -92,6 +111,6 @@ public final class StartActivityIntentHandler: ActivityIntentHandler<StartActivi
 	}
 
 	private func parseTags(_ tagNames: [String]) throws -> [Tag] {
-		return try tagNames.map{ name in try DependencyInjector.get(TagDAO.self).getOrCreateTag(named: name) }
+		try tagNames.map { name in try DependencyInjector.get(TagDAO.self).getOrCreateTag(named: name) }
 	}
 }

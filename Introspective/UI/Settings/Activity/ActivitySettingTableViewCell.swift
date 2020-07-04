@@ -11,7 +11,6 @@ import UIKit
 import Common
 
 public class ActivitySettingTableViewCell: UITableViewCell {
-
 	// MARK: - Instance Variables
 
 	final var changeNotification: Notification.Name!

@@ -11,7 +11,6 @@ import Foundation
 import Common
 
 public protocol BooleanExpression: CustomStringConvertible {
-
 	func evaluate(_ parameters: [UserInfoKey: Any]?) throws -> Bool
 	func isValid() -> Bool
 	/// create and return a deep copy of this object
@@ -22,8 +21,7 @@ public protocol BooleanExpression: CustomStringConvertible {
 }
 
 public extension BooleanExpression {
-
 	func evaluate() throws -> Bool {
-		return try evaluate(nil)
+		try evaluate(nil)
 	}
 }

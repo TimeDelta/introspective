@@ -11,9 +11,8 @@ import HealthKit
 
 import Persistence
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol SampleFactory {
-
 	func allTypes() -> [Sample.Type]
 	func healthKitTypes() -> [HealthKitSample.Type]
 
@@ -26,7 +25,6 @@ public protocol SampleFactory {
 }
 
 public final class SampleFactoryImpl: SampleFactory {
-
 	private typealias Me = SampleFactoryImpl
 	private static let allTypes: [Sample.Type] = [
 		Activity.self,
@@ -53,34 +51,34 @@ public final class SampleFactoryImpl: SampleFactory {
 	]
 
 	public final func allTypes() -> [Sample.Type] {
-		return Me.allTypes
+		Me.allTypes
 	}
 
 	public final func healthKitTypes() -> [HealthKitSample.Type] {
-		return Me.healthKitTypes
+		Me.healthKitTypes
 	}
 
 	public final func activity(using transaction: Transaction) throws -> Activity {
-		return try transaction.new(Activity.self)
+		try transaction.new(Activity.self)
 	}
 
 	public final func heartRate(_ value: Double, _ date: Date) -> HeartRate {
-		return HeartRate(value, date)
+		HeartRate(value, date)
 	}
 
 	public final func heartRate(value: Double) -> HeartRate {
-		return HeartRate(value)
+		HeartRate(value)
 	}
 
 	public final func heartRate(_ sample: HKQuantitySample) -> HeartRate {
-		return HeartRate(sample)
+		HeartRate(sample)
 	}
 
 	public final func medicationDose(using transaction: Transaction) throws -> MedicationDose {
-		return try transaction.new(MedicationDose.self)
+		try transaction.new(MedicationDose.self)
 	}
 
 	public final func mood(using transaction: Transaction) throws -> Mood {
-		return try transaction.new(MoodImpl.self)
+		try transaction.new(MoodImpl.self)
 	}
 }

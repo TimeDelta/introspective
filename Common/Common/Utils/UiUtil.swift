@@ -6,13 +6,12 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
 import Presentr
+import UIKit
 import UserNotifications
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol UiUtil {
-
 	var defaultPresenter: Presentr { get }
 	var hasTopNotch: Bool { get }
 
@@ -20,7 +19,8 @@ public protocol UiUtil {
 	func setView(_ view: UIView, enabled: Bool?, hidden: Bool?)
 	func setButton(_ button: UIButton, enabled: Bool?, hidden: Bool?)
 	@discardableResult
-	func setBackButton(for viewController: UIViewController, title: String, action selector: Selector) -> UIBarButtonItem
+	func setBackButton(for viewController: UIViewController, title: String, action selector: Selector)
+		-> UIBarButtonItem
 	func addSaveButtonToKeyboardFor(_ textView: UITextView, target: Any?, action: Selector?)
 	func addSaveButtonToKeyboardFor(_ textField: UITextField, target: Any?, action: Selector?)
 	/// Retrieve the value for the specified `UserInfoKey` from the given notification.
@@ -31,31 +31,37 @@ public protocol UiUtil {
 	/// sugar so that you don't have to type out "UserInfoKey." everywhere.
 	func info(_ info: [UserInfoKey: Any]) -> [AnyHashable: Any]
 
-	func controller<Type: UIViewController>(named controllerName: String, from storyboardName: String, as: Type.Type) -> Type
-	func controller<Type: UIViewController>(named controllerName: String, from storyboard: UIStoryboard, as: Type.Type) -> Type
+	func controller<Type: UIViewController>(named controllerName: String, from storyboardName: String, as: Type.Type)
+		-> Type
+	func controller<Type: UIViewController>(named controllerName: String, from storyboard: UIStoryboard, as: Type.Type)
+		-> Type
 	func tableViewCell<Type: UITableViewCell>(
 		from tableView: UITableView,
 		withIdentifier identifier: String,
 		for indexPath: IndexPath,
-		as: Type.Type)
-	-> Type
+		as: Type.Type
+	)
+		-> Type
 	func documentPicker(docTypes: [String], in pickerMode: UIDocumentPickerMode) -> UIDocumentPickerViewController
 	func alert(title: String?, message: String?, preferredStyle: UIAlertController.Style) -> UIAlertController
 	func tableViewRowAction(
 		style: UITableViewRowAction.Style,
 		title: String?,
-		handler: @escaping (UITableViewRowAction, IndexPath) -> Void)
-	-> UITableViewRowAction
+		handler: @escaping (UITableViewRowAction, IndexPath) -> Void
+	)
+		-> UITableViewRowAction
 	func alertAction(
 		title: String?,
 		style: UIAlertAction.Style,
-		handler: ((UIAlertAction) -> Void)?)
-	-> UIAlertAction
+		handler: ((UIAlertAction) -> Void)?
+	)
+		-> UIAlertAction
 	func contextualAction(
 		style: UIContextualAction.Style,
 		title: String?,
-		handler: @escaping UIContextualAction.Handler)
-	-> UIContextualAction
+		handler: @escaping UIContextualAction.Handler
+	)
+		-> UIContextualAction
 
 	/// - Note: This is just for testability
 	func stopObserving(_ observer: Any, name: NotificationName?, object: Any?)
@@ -70,7 +76,8 @@ public protocol UiUtil {
 		_ presentingController: UIViewController,
 		_ controllerBeingPresented: UIViewController,
 		animated: Bool,
-		completion: (() -> Void)?)
+		completion: (() -> Void)?
+	)
 	/// Present `viewController` from `presentingController` using `presenter`.
 	/// - Note: This is just for testability
 	func present(
@@ -78,10 +85,15 @@ public protocol UiUtil {
 		on presentingController: UIViewController,
 		using presenter: Presentr,
 		animated: Bool,
-		completion: (() -> Void)?)
+		completion: (() -> Void)?
+	)
 
 	/// - Note: This is just for testability
-	func push(controller: UIViewController, toNavigationController navigationController: UINavigationController?, animated: Bool)
+	func push(
+		controller: UIViewController,
+		toNavigationController navigationController: UINavigationController?,
+		animated: Bool
+	)
 	/// - Note: This is just for testability
 	func popFrom(_ navigationController: UINavigationController?, animated: Bool)
 
@@ -89,13 +101,17 @@ public protocol UiUtil {
 		withContent content: UNMutableNotificationContent,
 		id: String,
 		repeats: Bool,
-		interval: TimeInterval)
+		interval: TimeInterval
+	)
 }
 
 public extension UiUtil {
-
-	func customPresenter(width: ModalSize = .default, height: ModalSize = .default, center: ModalCenterPosition = .center) -> Presentr {
-		return customPresenter(width: width, height: height, center: center)
+	func customPresenter(
+		width: ModalSize = .default,
+		height: ModalSize = .default,
+		center: ModalCenterPosition = .center
+	) -> Presentr {
+		customPresenter(width: width, height: height, center: center)
 	}
 
 	func setView(_ view: UIView, enabled: Bool? = nil, hidden: Bool? = nil) {
@@ -110,7 +126,7 @@ public extension UiUtil {
 	/// - Parameter keyIsOptional: If true, no error will be logged if the specified key does not exist in the user info.
 	/// - Note: Automatically logs when key is missing, wrong type or the notification does not have any user info.
 	func value<Type>(for key: UserInfoKey, from notification: Notification, keyIsOptional: Bool = false) -> Type? {
-		return value(for: key, from: notification, keyIsOptional: keyIsOptional)
+		value(for: key, from: notification, keyIsOptional: keyIsOptional)
 	}
 
 	/// This is mainly for testability
@@ -122,8 +138,8 @@ public extension UiUtil {
 		_ presentingController: UIViewController,
 		_ controllerBeingPresented: UIViewController,
 		animated: Bool = false,
-		completion: (() -> Void)? = nil)
-	{
+		completion: (() -> Void)? = nil
+	) {
 		present(presentingController, controllerBeingPresented, animated: animated, completion: completion)
 	}
 
@@ -131,14 +147,13 @@ public extension UiUtil {
 		withContent content: UNMutableNotificationContent,
 		id: String,
 		repeats: Bool = false,
-		interval: TimeInterval = 1)
-	{
+		interval: TimeInterval = 1
+	) {
 		sendUserNotification(withContent: content, id: id, repeats: repeats, interval: interval)
 	}
 }
 
 public final class UiUtilImpl: UiUtil {
-
 	private final let log = Log()
 
 	public final let defaultPresenter: Presentr = {
@@ -151,7 +166,7 @@ public final class UiUtilImpl: UiUtil {
 	}()
 
 	public final var hasTopNotch: Bool {
-		if #available(iOS 11.0,  *) {
+		if #available(iOS 11.0, *) {
 			return UIApplication.shared.delegate?.window??.safeAreaInsets.top ?? 0 > 20
 		}
 		return false
@@ -176,7 +191,11 @@ public final class UiUtilImpl: UiUtil {
 	}
 
 	@discardableResult
-	public func setBackButton(for viewController: UIViewController, title: String, action selector: Selector) -> UIBarButtonItem {
+	public func setBackButton(
+		for viewController: UIViewController,
+		title: String,
+		action selector: Selector
+	) -> UIBarButtonItem {
 		// Disable the swipe to make sure user presses button
 		viewController.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
 
@@ -206,16 +225,24 @@ public final class UiUtilImpl: UiUtil {
 	/// Retrieve the value for the specified `UserInfoKey` from the given notification.
 	/// - Parameter keyIsOptional: If true, no error will be logged if the specified key does not exist in the user info.
 	/// - Note: Automatically logs when key is missing, wrong type or the notification does not have any user info.
-	public func value<Type>(for key: UserInfoKey, from notification: Notification, keyIsOptional: Bool = false) -> Type? {
+	public func value<Type>(
+		for key: UserInfoKey,
+		from notification: Notification,
+		keyIsOptional: Bool = false
+	) -> Type? {
 		if let userInfo = notification.userInfo {
 			guard userInfo.keys.contains(key) else {
 				if !keyIsOptional {
-					log.error("Missing user info key for '%@' notification: %@", notification.name.rawValue, key.description)
+					log.error(
+						"Missing user info key for '%@' notification: %@",
+						notification.name.rawValue,
+						key.description
+					)
 				}
 				return nil
 			}
 			let value = userInfo[key]
-			if value is Type || value is Optional<Type> {
+			if value is Type || value is Type? {
 				return value as? Type
 			}
 			log.error("Wrong object type for '%@' notification: %@", notification.name.rawValue, key.description)
@@ -228,56 +255,72 @@ public final class UiUtilImpl: UiUtil {
 	/// This is just a pass-through method that will return the input. It is solely for syntactic
 	/// sugar so that you don't have to type out "UserInfoKey." everywhere.
 	public func info(_ info: [UserInfoKey: Any]) -> [AnyHashable: Any] {
-		return info
+		info
 	}
 
-	public func controller<Type: UIViewController>(named controllerName: String, from storyboardName: String, as: Type.Type) -> Type {
-		return UIStoryboard(name: storyboardName, bundle: nil).instantiateViewController(withIdentifier: controllerName) as! Type
+	public func controller<Type: UIViewController>(
+		named controllerName: String,
+		from storyboardName: String,
+		as _: Type.Type
+	) -> Type {
+		UIStoryboard(name: storyboardName, bundle: nil)
+			.instantiateViewController(withIdentifier: controllerName) as! Type
 	}
 
-	public func controller<Type: UIViewController>(named controllerName: String, from storyboard: UIStoryboard, as: Type.Type) -> Type {
-		return storyboard.instantiateViewController(withIdentifier: controllerName) as! Type
+	public func controller<Type: UIViewController>(
+		named controllerName: String,
+		from storyboard: UIStoryboard,
+		as _: Type.Type
+	) -> Type {
+		storyboard.instantiateViewController(withIdentifier: controllerName) as! Type
 	}
 
 	public func tableViewCell<Type: UITableViewCell>(
 		from tableView: UITableView,
 		withIdentifier identifier: String,
 		for indexPath: IndexPath,
-		as: Type.Type)
-	-> Type {
-		return tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! Type
+		as _: Type.Type
+	)
+		-> Type {
+		tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! Type
 	}
 
-	public func documentPicker(docTypes: [String], in pickerMode: UIDocumentPickerMode) -> UIDocumentPickerViewController {
-		return UIDocumentPickerViewController(documentTypes: docTypes, in: pickerMode)
+	public func documentPicker(
+		docTypes: [String],
+		in pickerMode: UIDocumentPickerMode
+	) -> UIDocumentPickerViewController {
+		UIDocumentPickerViewController(documentTypes: docTypes, in: pickerMode)
 	}
 
 	public func alert(title: String?, message: String?, preferredStyle: UIAlertController.Style) -> UIAlertController {
-		return UIAlertController(title: title, message: message, preferredStyle: preferredStyle)
+		UIAlertController(title: title, message: message, preferredStyle: preferredStyle)
 	}
 
 	public func tableViewRowAction(
 		style: UITableViewRowAction.Style,
 		title: String?,
-		handler: @escaping (UITableViewRowAction, IndexPath) -> Void)
-	-> UITableViewRowAction {
-		return UITableViewRowAction(style: style, title: title, handler: handler)
+		handler: @escaping (UITableViewRowAction, IndexPath) -> Void
+	)
+		-> UITableViewRowAction {
+		UITableViewRowAction(style: style, title: title, handler: handler)
 	}
 
 	public func alertAction(
 		title: String?,
 		style: UIAlertAction.Style,
-		handler: ((UIAlertAction) -> Void)?)
-	-> UIAlertAction {
-		return UIAlertAction(title: title, style: style, handler: handler)
+		handler: ((UIAlertAction) -> Void)?
+	)
+		-> UIAlertAction {
+		UIAlertAction(title: title, style: style, handler: handler)
 	}
 
 	public func contextualAction(
 		style: UIContextualAction.Style,
 		title: String?,
-		handler: @escaping UIContextualAction.Handler)
-	-> UIContextualAction {
-		return UIContextualAction(style: style, title: title, handler: handler)
+		handler: @escaping UIContextualAction.Handler
+	)
+		-> UIContextualAction {
+		UIContextualAction(style: style, title: title, handler: handler)
 	}
 
 	public func stopObserving(_ observer: Any, name: NotificationName?, object: Any?) {
@@ -298,8 +341,8 @@ public final class UiUtilImpl: UiUtil {
 		_ presentingController: UIViewController,
 		_ controllerBeingPresented: UIViewController,
 		animated: Bool,
-		completion: (() -> Void)?)
-	{
+		completion: (() -> Void)?
+	) {
 		presentingController.present(controllerBeingPresented, animated: animated, completion: completion)
 	}
 
@@ -308,16 +351,21 @@ public final class UiUtilImpl: UiUtil {
 		on presentingController: UIViewController,
 		using presenter: Presentr,
 		animated: Bool,
-		completion: (() -> Void)?)
-	{
-		presentingController.customPresentViewController(presenter, viewController: viewController, animated: animated, completion: completion)
+		completion: (() -> Void)?
+	) {
+		presentingController.customPresentViewController(
+			presenter,
+			viewController: viewController,
+			animated: animated,
+			completion: completion
+		)
 	}
 
 	public func push(
 		controller: UIViewController,
 		toNavigationController navigationController: UINavigationController?,
-		animated: Bool)
-	{
+		animated: Bool
+	) {
 		navigationController?.pushViewController(controller, animated: animated)
 	}
 
@@ -329,12 +377,12 @@ public final class UiUtilImpl: UiUtil {
 		withContent content: UNMutableNotificationContent,
 		id: String,
 		repeats: Bool,
-		interval: TimeInterval)
-	{
+		interval _: TimeInterval
+	) {
 		let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: repeats)
 		let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
 		Log().debug("Sending user notification: %@", content.title)
-		UNUserNotificationCenter.current().add(request) { (error : Error?) in
+		UNUserNotificationCenter.current().add(request) { (error: Error?) in
 			if let error = error {
 				Log().error("Failed to send user notification (%@): %@", content.title, errorInfo(error))
 			}

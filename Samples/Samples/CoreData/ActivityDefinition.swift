@@ -7,16 +7,15 @@
 //
 //
 
-import Foundation
 import CoreData
 import CSV
+import Foundation
 
 import DataExport
 import DependencyInjection
 import Persistence
 
 public class ActivityDefinition: NSManagedObject, CoreDataObject, Exportable {
-
 	private typealias Me = ActivityDefinition
 
 	// MARK: - CoreData Stuff
@@ -48,7 +47,8 @@ public class ActivityDefinition: NSManagedObject, CoreDataObject, Exportable {
 				autoNoteColumn,
 				recordScreenIndexColumn,
 			],
-			quotedAtIndex: { _ in true })
+			quotedAtIndex: { _ in true }
+		)
 	}
 
 	public func export(to csv: CSVWriter) throws {
@@ -56,7 +56,7 @@ public class ActivityDefinition: NSManagedObject, CoreDataObject, Exportable {
 
 		try csv.write(field: activityDescription ?? "", quoted: true)
 
-		let tagsText = tagsArray().map{ $0.name }.joined(separator: "|")
+		let tagsText = tagsArray().map { $0.name }.joined(separator: "|")
 		try csv.write(field: tagsText, quoted: true)
 
 		let sourceText = Sources.resolveActivitySource(source).description
@@ -70,7 +70,7 @@ public class ActivityDefinition: NSManagedObject, CoreDataObject, Exportable {
 	// MARK: - Other
 
 	public final func getSource() -> Sources.ActivitySourceNum {
-		return Sources.resolveActivitySource(source)
+		Sources.resolveActivitySource(source)
 	}
 
 	public final func setSource(_ source: Sources.ActivitySourceNum) {
@@ -78,7 +78,7 @@ public class ActivityDefinition: NSManagedObject, CoreDataObject, Exportable {
 	}
 
 	public final func tagsArray() -> [Tag] {
-		return tags.allObjects as! [Tag]
+		tags.allObjects as! [Tag]
 	}
 
 	public final func setTags(_ newTags: [Tag]) throws {
@@ -92,14 +92,14 @@ public class ActivityDefinition: NSManagedObject, CoreDataObject, Exportable {
 	// MARK: - Equatable
 
 	public final func equalTo(_ other: ActivityDefinition) -> Bool {
-		return name == other.name &&
+		name == other.name &&
 			activityDescription == other.activityDescription &&
 			tagsArray().elementsEqual(other.tagsArray(), by: { $0.equalTo($1) })
 	}
 
 	// MARK: - Debug
 
-	public final override var debugDescription: String {
+	override public final var debugDescription: String {
 		let descriptionText = activityDescription ?? "nil"
 		var tagsText = ""
 		for tag in tagsArray() {

@@ -13,10 +13,9 @@ import Common
 import Samples
 
 public final class SelectOneAttributeValueViewController: AttributeValueTypeViewController {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var selectOnePicker: UIPickerView!
+	@IBOutlet final var selectOnePicker: UIPickerView!
 
 	// MARK: - Instance Variables
 
@@ -25,7 +24,7 @@ public final class SelectOneAttributeValueViewController: AttributeValueTypeView
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 
 		selectOnePicker.delegate = self
@@ -35,9 +34,9 @@ public final class SelectOneAttributeValueViewController: AttributeValueTypeView
 			selectOnePicker.selectRow(index, inComponent: 0, animated: false)
 		} else {
 			log.debug("currentValue not set for select one attribute on load")
-			guard selectOneAttribute.possibleValues.count > 0 else {
+			guard !selectOneAttribute.possibleValues.isEmpty else {
 				log.info("No possible values for SelectOneAttribute: %@", selectOneAttribute.name)
-				var message: String? = nil
+				var message: String?
 				if selectOneAttribute is TagAttribute {
 					message = "You must first create a tag."
 				}
@@ -45,8 +44,9 @@ public final class SelectOneAttributeValueViewController: AttributeValueTypeView
 					.showError,
 					userInfo: [
 						.title: "No \(selectOneAttribute.pluralName) to choose from",
-						.message: message as Any
-					])
+						.message: message as Any,
+					]
+				)
 				dismiss(animated: false)
 				return
 			}
@@ -58,19 +58,19 @@ public final class SelectOneAttributeValueViewController: AttributeValueTypeView
 // MARK: - UIPickerViewDataSource
 
 extension SelectOneAttributeValueViewController: UIPickerViewDataSource {
-	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
-		return 1
+	public final func numberOfComponents(in _: UIPickerView) -> Int {
+		1
 	}
 
-	public final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return selectOneAttribute.possibleValues.count
+	public final func pickerView(_: UIPickerView, numberOfRowsInComponent _: Int) -> Int {
+		selectOneAttribute.possibleValues.count
 	}
 }
 
 // MARK: - UIPickerViewDelegate
 
 extension SelectOneAttributeValueViewController: UIPickerViewDelegate {
-	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+	public final func pickerView(_: UIPickerView, titleForRow row: Int, forComponent _: Int) -> String? {
 		let value = selectOneAttribute.possibleValues[row]
 		do {
 			return try selectOneAttribute.convertToDisplayableString(from: value)
@@ -79,12 +79,13 @@ extension SelectOneAttributeValueViewController: UIPickerViewDelegate {
 				"Failed to convert value of %@ as %@ to displayable string: %@",
 				String(describing: value),
 				selectOneAttribute.name,
-				errorInfo(error))
+				errorInfo(error)
+			)
 			return String(describing: value)
 		}
 	}
 
-	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+	public final func pickerView(_: UIPickerView, didSelectRow row: Int, inComponent _: Int) {
 		guard row >= 0 && row < selectOneAttribute.possibleValues.count else {
 			log.error("Selected value out of index range for possible values: %d", row)
 			return

@@ -11,7 +11,6 @@ import Foundation
 import Samples
 
 public final class ActivityIntentInfo {
-
 	public final let identifier: String
 	public final let displayString: String
 	public final let startDate: DateComponents

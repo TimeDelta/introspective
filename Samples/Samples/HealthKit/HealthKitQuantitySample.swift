@@ -10,7 +10,6 @@ import Foundation
 import HealthKit
 
 public protocol HealthKitQuantitySample: HealthKitSample {
-
 	static var quantityType: HKQuantityType { get }
 	static var unit: HKUnit { get }
 

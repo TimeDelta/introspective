@@ -11,7 +11,7 @@ import UIKit
 
 import DependencyInjection
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol MoodUiUtil {
 	func valueToString(_ value: Double) -> String
 	func colorForMood(rating: Double, minRating: Double, maxRating: Double) -> UIColor
@@ -19,7 +19,6 @@ public protocol MoodUiUtil {
 }
 
 public final class MoodUiUtilImpl: MoodUiUtil {
-
 	private typealias Me = MoodUiUtilImpl
 
 	private static let lowMoodMessages = [
@@ -49,17 +48,24 @@ public final class MoodUiUtilImpl: MoodUiUtil {
 	}
 
 	public func colorForMood(rating: Double, minRating: Double, maxRating: Double) -> UIColor {
-		return scaledColor(
+		scaledColor(
 			minColor: Me.minRatingColor,
 			maxColor: Me.maxRatingColor,
 			rating: rating,
 			min: minRating,
-			max: maxRating)
+			max: maxRating
+		)
 	}
 
 	// MARK: - Helper Functions
 
-	private func scaledColor(minColor: UIColor, maxColor: UIColor, rating: Double, min: Double, max: Double) -> UIColor {
+	private func scaledColor(
+		minColor: UIColor,
+		maxColor: UIColor,
+		rating: Double,
+		min: Double,
+		max: Double
+	) -> UIColor {
 		var maxRed: CGFloat = 0
 		var maxGreen: CGFloat = 0
 		var maxBlue: CGFloat = 0
@@ -78,18 +84,19 @@ public final class MoodUiUtilImpl: MoodUiUtil {
 			red: (maxRed - minRed) * valueRatio + minRed,
 			green: (maxGreen - minGreen) * valueRatio + minGreen,
 			blue: (maxBlue - minBlue) * valueRatio + minBlue,
-			alpha: (maxAlpha - minAlpha) * valueRatio + minAlpha)
+			alpha: (maxAlpha - minAlpha) * valueRatio + minAlpha
+		)
 	}
 
 	public final func feedbackMessage(for rating: Double, min: Double, max: Double) -> String {
 		let valueString = valueToString(rating)
 		let range = max - min
-		if (rating < 0.33 * range + min) {
-			return String.init(format: Me.lowMoodMessages[Int.random(in: 0 ..< Me.lowMoodMessages.count)], valueString)
+		if rating < 0.33 * range + min {
+			return String(format: Me.lowMoodMessages[Int.random(in: 0 ..< Me.lowMoodMessages.count)], valueString)
 		}
-		if (rating < 0.66 * range + min) {
-			return String.init(format: Me.mediumMoodMessages[Int.random(in: 0 ..< Me.mediumMoodMessages.count)], valueString)
+		if rating < 0.66 * range + min {
+			return String(format: Me.mediumMoodMessages[Int.random(in: 0 ..< Me.mediumMoodMessages.count)], valueString)
 		}
-		return String.init(format: Me.highMoodMessages[Int.random(in: 0 ..< Me.highMoodMessages.count)], valueString)
+		return String(format: Me.highMoodMessages[Int.random(in: 0 ..< Me.highMoodMessages.count)], valueString)
 	}
 }

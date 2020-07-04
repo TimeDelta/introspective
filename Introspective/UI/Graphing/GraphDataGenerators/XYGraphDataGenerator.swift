@@ -6,8 +6,8 @@
 //  Copyright © 2019 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import AAInfographics
+import Foundation
 
 import Common
 import DependencyInjection
@@ -15,10 +15,9 @@ import SampleGroupers
 import SampleGroupInformation
 import Samples
 
-public typealias GraphData = [Dictionary<String, Any>]
+public typealias GraphData = [[String: Any]]
 
 public class XYGraphDataGenerator {
-
 	// MARK: - Instance Variables
 
 	private final var colors = [UIColor]()
@@ -67,21 +66,24 @@ public class XYGraphDataGenerator {
 				signpost?.end(
 					name: "Are all days of week",
 					"Finished checking if %d values are all days of week",
-					values.count)
+					values.count
+				)
 				return false
 			}
 		}
 		signpost?.end(
 			name: "Are all days of week",
 			"Finished checking if %d values are all days of week",
-			values.count)
+			values.count
+		)
 		return true
 	}
 
 	// MARK: - Sorting
 
-	final func getSortedXValues(_ xValues: [(groupValue: Any, sampleValue: String)]) -> [(groupValue: Any, sampleValue: Any)] {
-		let values = xValues.map{ $0.sampleValue }
+	final func getSortedXValues(_ xValues: [(groupValue: Any, sampleValue: String)])
+		-> [(groupValue: Any, sampleValue: Any)] {
+		let values = xValues.map { $0.sampleValue }
 		// if x values are numbers and are not sorted, graph will look very weird
 		if areAllNumbers(values) {
 			return sortXValuesByNumber(xValues)
@@ -90,17 +92,18 @@ public class XYGraphDataGenerator {
 		} else if areAllDaysOfWeek(values) {
 			return sortXValuesByDayOfWeek(xValues)
 		}
-		return xValues.map{ (groupValue: $0.groupValue, sampleValue: $0.sampleValue as Any) }
+		return xValues.map { (groupValue: $0.groupValue, sampleValue: $0.sampleValue as Any) }
 	}
 
 	final func sortXValuesByNumber(_ xValues: [(groupValue: Any, sampleValue: String)])
-	-> [(groupValue: Any, sampleValue: Any)] {
+		-> [(groupValue: Any, sampleValue: Any)] {
 		let sortedXValues: [(groupValue: Any, sampleValue: Any)]
-		let mappedXValues = xValues.map{ (groupValue: $0.groupValue, sampleValue: Double(formatNumber($0.sampleValue))!) }
+		let mappedXValues = xValues
+			.map { (groupValue: $0.groupValue, sampleValue: Double(formatNumber($0.sampleValue))!) }
 		signpost?.begin(name: "Sort x values as numbers", "Number of x values: %d", xValues.count)
-		sortedXValues = mappedXValues.sorted{
+		sortedXValues = mappedXValues.sorted {
 			$0.sampleValue < $1.sampleValue
-		}.map{
+		}.map {
 			(groupValue: $0.groupValue, sampleValue: $0.sampleValue as Any)
 		}
 		signpost?.end(name: "Sort x values as numbers")
@@ -109,12 +112,12 @@ public class XYGraphDataGenerator {
 
 	/// - Precondition: All sample values are valid date strings
 	final func sortXValuesByDate(_ xValues: [(groupValue: Any, sampleValue: String)])
-	-> [(groupValue: Any, sampleValue: Any)] {
+		-> [(groupValue: Any, sampleValue: Any)] {
 		let sortedXValues: [(groupValue: Any, sampleValue: Any)]
 		signpost?.begin(name: "Sort x values as dates", "Number of x values: %d", xValues.count)
-		sortedXValues = xValues.sorted{
+		sortedXValues = xValues.sorted {
 			getDate($0.sampleValue)! < getDate($1.sampleValue)!
-		}.map{
+		}.map {
 			(groupValue: $0.groupValue, sampleValue: $0.sampleValue as Any)
 		}
 		signpost?.end(name: "Sort x values as dates")
@@ -122,14 +125,14 @@ public class XYGraphDataGenerator {
 	}
 
 	final func sortXValuesByDayOfWeek(_ xValues: [(groupValue: Any, sampleValue: String)])
-	-> [(groupValue: Any, sampleValue: Any)] {
+		-> [(groupValue: Any, sampleValue: Any)] {
 		let sortedXValues: [(groupValue: Any, sampleValue: Any)]
 		signpost?.begin(name: "Sort x values as days of week", "Number of x values: %d", xValues.count)
-		sortedXValues = xValues.sorted{
+		sortedXValues = xValues.sorted {
 			let day1 = try! DayOfWeek.fromString($0.sampleValue)
 			let day2 = try! DayOfWeek.fromString($1.sampleValue)
 			return day1 < day2
-		}.map{
+		}.map {
 			(groupValue: $0.groupValue, sampleValue: $0.sampleValue as Any)
 		}
 		signpost?.end(name: "Sort x values as days of week")
@@ -143,33 +146,37 @@ public class XYGraphDataGenerator {
 		fromGroups groups: [(Any, [Sample])],
 		groupedBy grouper: SampleGrouper,
 		withGroupName groupName: String?,
-		sortedXValues: [(groupValue: Any, sampleValue: Any)])
-	throws -> GraphData {
-		var graphData = GraphData()
-		if colors.count == 0 {
-			populateColors(yInformation.count)
-		}
-		for yInformation in yInformation {
-			var seriesData = [[Any]]()
-			let yValues = try transform(sampleGroups: groups, information: yInformation)
-			for (xGroupValue, xSampleValue) in sortedXValues { // loop over x values so that series data is already sorted
-				if let yValueIndex = index(ofValue: xGroupValue, in: yValues, groupedBy: grouper) {
-					let yValue = yValues[yValueIndex].sampleValue
-					seriesData.append([xSampleValue, Double(formatNumber(yValue))!])
+		sortedXValues: [(groupValue: Any, sampleValue: Any)]
+	)
+		throws -> GraphData {
+			var graphData = GraphData()
+			if colors.isEmpty {
+				populateColors(yInformation.count)
+			}
+			for yInformation in yInformation {
+				var seriesData = [[Any]]()
+				let yValues = try transform(sampleGroups: groups, information: yInformation)
+				for (xGroupValue, xSampleValue) in sortedXValues {
+					// loop over x values so that series data is already sorted
+					if let yValueIndex = index(ofValue: xGroupValue, in: yValues, groupedBy: grouper) {
+						let yValue = yValues[yValueIndex].sampleValue
+						seriesData.append([xSampleValue, Double(formatNumber(yValue))!])
+					}
 				}
+				var name = yInformation.description.localizedCapitalized
+				if let groupName = groupName {
+					name = "\(groupName): \(name)"
+				}
+				graphData.append(
+					AASeriesElement()
+						.name(name)
+						.data(seriesData)
+						.color(getNextColor())
+						.toDic()!
+				)
 			}
-			var name = yInformation.description.localizedCapitalized
-			if let groupName = groupName {
-				name = "\(groupName): \(name)"
-			}
-			graphData.append(AASeriesElement()
-				.name(name)
-				.data(seriesData)
-				.color(getNextColor())
-				.toDic()!)
+			return graphData
 		}
-		return graphData
-	}
 
 	final func formatNumber(_ value: String) -> String {
 		var copiedValue = value
@@ -182,11 +189,11 @@ public class XYGraphDataGenerator {
 	}
 
 	final func getDate(_ value: String) -> Date? {
-		return DependencyInjector.get(CalendarUtil.self).date(from: value)
+		DependencyInjector.get(CalendarUtil.self).date(from: value)
 	}
 
 	final func transform(sampleGroups: [(Any, [Sample])], information: SampleGroupInformation)
-	throws -> [(groupValue: Any, sampleValue: String)] {
+		throws -> [(groupValue: Any, sampleValue: String)] {
 		signpost?.begin(name: "Transform", "Number of sample groups: %d", sampleGroups.count)
 		var values = [(groupValue: Any, sampleValue: String)]()
 		for (groupValue, samples) in sampleGroups {
@@ -200,9 +207,10 @@ public class XYGraphDataGenerator {
 	final func index(
 		ofValue value: Any,
 		in groupValues: [(groupValue: Any, sampleValue: String)],
-		groupedBy grouper: SampleGrouper)
-	-> Int? {
-		return groupValues.index(where: {
+		groupedBy grouper: SampleGrouper
+	)
+		-> Int? {
+		groupValues.index(where: {
 			do {
 				return try grouper.groupValuesAreEqual($0.groupValue, value)
 			} catch {
@@ -210,7 +218,8 @@ public class XYGraphDataGenerator {
 					"Failed to test for value equality between '%@' and '%@': %@",
 					String(describing: $0.groupValue),
 					String(describing: value),
-					errorInfo(error))
+					errorInfo(error)
+				)
 				return false
 			}
 		})
@@ -226,7 +235,7 @@ public class XYGraphDataGenerator {
 	}
 
 	final func getNextColor() -> String {
-		return colorToHex(colors.removeFirst())
+		colorToHex(colors.removeFirst())
 	}
 
 	private final func colorToHex(_ color: UIColor) -> String {

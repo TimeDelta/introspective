@@ -12,7 +12,6 @@ import Common
 import DependencyInjection
 
 final class MoodNoteViewController: UIViewController {
-
 	// MARK: - Static Variables
 
 	private typealias Me = MoodNoteViewController
@@ -20,7 +19,7 @@ final class MoodNoteViewController: UIViewController {
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var textView: UITextView!
+	@IBOutlet final var textView: UITextView!
 
 	// MARK: - Instance Variables
 
@@ -28,13 +27,14 @@ final class MoodNoteViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	final override func viewDidLoad() {
+	override final func viewDidLoad() {
 		super.viewDidLoad()
 		if note != nil {
 			textView.text = note
 		}
 
-		DependencyInjector.get(UiUtil.self).addSaveButtonToKeyboardFor(textView, target: self, action: #selector(saveClicked))
+		DependencyInjector.get(UiUtil.self)
+			.addSaveButtonToKeyboardFor(textView, target: self, action: #selector(saveClicked))
 		textView.becomeFirstResponder()
 	}
 
@@ -46,7 +46,8 @@ final class MoodNoteViewController: UIViewController {
 			object: self,
 			userInfo: info([
 				.text: textView.text,
-			]))
-		self.dismiss(animated: false, completion: nil)
+			])
+		)
+		dismiss(animated: false, completion: nil)
 	}
 }

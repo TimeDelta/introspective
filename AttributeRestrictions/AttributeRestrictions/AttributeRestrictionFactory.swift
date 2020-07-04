@@ -12,14 +12,13 @@ import Attributes
 import Common
 import Samples
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol AttributeRestrictionFactory {
 	func typesFor(_ attribute: Attribute) -> [AttributeRestriction.Type]
 	func initialize(type: AttributeRestriction.Type, forAttribute attribute: Attribute) -> AttributeRestriction
 }
 
 public final class AttributeRestrictionFactoryImpl: AttributeRestrictionFactory {
-
 	private typealias Me = AttributeRestrictionFactoryImpl
 
 	private static let textTypes: [AttributeRestriction.Type] = [
@@ -119,25 +118,28 @@ public final class AttributeRestrictionFactoryImpl: AttributeRestrictionFactory 
 	private final let log = Log()
 
 	public final func typesFor(_ attribute: Attribute) -> [AttributeRestriction.Type] {
-		switch (attribute) {
-			case is TextAttribute: return Me.textTypes
-			case is DoubleAttribute: return Me.doubleTypes
-			case is IntegerAttribute: return Me.integerTypes
-			case is DateAttribute: return Me.dateTypes
-			case is SelectOneAttribute: return Me.selectOneTypes
-			case is DosageAttribute: return Me.dosageTypes
-			case is FrequencyAttribute: return Me.frequencyTypes
-			case is TagAttribute: return Me.tagTypes
-			case is ActivityTagsAttribute: return Me.activityTagsTypes
-			case is TagsAttribute: return Me.tagsTypes
-			case is DurationAttribute: return Me.durationTypes
-			default:
-				log.error("Forgot a type of attribute: %@", String(describing: type(of: attribute)))
-				return []
+		switch attribute {
+		case is TextAttribute: return Me.textTypes
+		case is DoubleAttribute: return Me.doubleTypes
+		case is IntegerAttribute: return Me.integerTypes
+		case is DateAttribute: return Me.dateTypes
+		case is SelectOneAttribute: return Me.selectOneTypes
+		case is DosageAttribute: return Me.dosageTypes
+		case is FrequencyAttribute: return Me.frequencyTypes
+		case is TagAttribute: return Me.tagTypes
+		case is ActivityTagsAttribute: return Me.activityTagsTypes
+		case is TagsAttribute: return Me.tagsTypes
+		case is DurationAttribute: return Me.durationTypes
+		default:
+			log.error("Forgot a type of attribute: %@", String(describing: type(of: attribute)))
+			return []
 		}
 	}
 
-	public final func initialize(type: AttributeRestriction.Type, forAttribute attribute: Attribute) -> AttributeRestriction {
-		return type.init(restrictedAttribute: attribute)
+	public final func initialize(
+		type: AttributeRestriction.Type,
+		forAttribute attribute: Attribute
+	) -> AttributeRestriction {
+		type.init(restrictedAttribute: attribute)
 	}
 }

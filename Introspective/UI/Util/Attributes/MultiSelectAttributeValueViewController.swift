@@ -11,10 +11,9 @@ import UIKit
 import Attributes
 
 public final class MultiSelectAttributeValueViewController: UIViewController {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var subView: UIView!
+	@IBOutlet final var subView: UIView!
 
 	// MARK: - Instance Variables
 
@@ -26,7 +25,7 @@ public final class MultiSelectAttributeValueViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 		createAndInstallSubViewController()
 	}
@@ -40,7 +39,8 @@ public final class MultiSelectAttributeValueViewController: UIViewController {
 				object: self,
 				userInfo: self.info([
 					.attributeValue: self.subViewController.selectedValues,
-				]))
+				])
+			)
 		}
 		dismiss(animated: false, completion: nil)
 	}

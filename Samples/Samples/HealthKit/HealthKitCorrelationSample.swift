@@ -10,6 +10,5 @@ import Foundation
 import HealthKit
 
 public protocol HealthKitCorrelationSample: HealthKitSample {
-
 	static var correlationType: HKCorrelationType { get }
 }

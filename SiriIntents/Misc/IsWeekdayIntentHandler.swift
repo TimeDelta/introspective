@@ -14,8 +14,10 @@ import Common
 import DependencyInjection
 
 public final class IsWeekdayIntentHandler: NSObject, IsWeekdayIntentHandling {
-
-	public func resolveDate(for intent: IsWeekdayIntent, with completion: @escaping (INDateComponentsResolutionResult) -> Void) {
+	public func resolveDate(
+		for intent: IsWeekdayIntent,
+		with completion: @escaping (INDateComponentsResolutionResult) -> Void
+	) {
 		guard let date = intent.date else {
 			completion(INDateComponentsResolutionResult.needsValue())
 			return

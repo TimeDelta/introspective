@@ -11,5 +11,4 @@ import Foundation
 import DataExport
 import Persistence
 
-public protocol CoreDataSample: Sample, CoreDataObject, Exportable {
-}
+public protocol CoreDataSample: Sample, CoreDataObject, Exportable {}

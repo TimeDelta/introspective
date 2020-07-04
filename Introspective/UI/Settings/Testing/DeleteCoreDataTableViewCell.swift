@@ -6,14 +6,13 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import UIKit
 import CoreData
+import UIKit
 
 import DependencyInjection
 import Persistence
 
 public final class DeleteCoreDataTableViewCell: UITableViewCell {
-
 	@IBAction final func deleteCoreDataButtonPressed() {
 		try! DependencyInjector.get(Database.self).deleteEverything()
 	}

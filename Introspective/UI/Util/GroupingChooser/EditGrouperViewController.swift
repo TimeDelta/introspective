@@ -12,7 +12,6 @@ import Common
 import SampleGroupers
 
 public protocol EditGrouperViewController: UIViewController {
-
 	var currentGrouper: SampleGrouper! { get set }
 	var availableGroupers: [SampleGrouper]! { get set }
 	var notificationToSendWhenAccepted: NotificationName! { get set }
@@ -20,7 +19,6 @@ public protocol EditGrouperViewController: UIViewController {
 
 /// Note: doesn't render properly unless wrapping the AtrtributedChooserViewController in this class
 public final class EditGrouperViewControllerImpl: UIViewController, EditGrouperViewController {
-
 	public final var currentGrouper: SampleGrouper!
 	public final var availableGroupers: [SampleGrouper]!
 	public final var notificationToSendWhenAccepted: NotificationName!
@@ -28,7 +26,7 @@ public final class EditGrouperViewControllerImpl: UIViewController, EditGrouperV
 	/// Note: Keep this as a member variable because having it as a local variable causes weird behavior
 	private final var controller: AttributedChooserViewController!
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 
 		let notificationToObserve = Notification.Name(notificationToSendWhenAccepted.toName().rawValue + "_relay")
@@ -36,7 +34,8 @@ public final class EditGrouperViewControllerImpl: UIViewController, EditGrouperV
 
 		controller = viewController(
 			named: "attributedChooserViewController",
-			fromStoryboard: "AttributeList")
+			fromStoryboard: "AttributeList"
+		)
 		controller.currentValue = currentGrouper
 		controller.possibleValues = availableGroupers
 		controller.notificationToSendWhenAccepted = notificationToObserve

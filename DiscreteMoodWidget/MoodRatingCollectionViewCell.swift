@@ -13,10 +13,9 @@ import DependencyInjection
 import Settings
 
 public class MoodRatingCollectionViewCell: UICollectionViewCell {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var ratingButton: UIButton!
+	@IBOutlet final var ratingButton: UIButton!
 
 	// MARK: - Instance Variables
 
@@ -30,23 +29,26 @@ public class MoodRatingCollectionViewCell: UICollectionViewCell {
 			let color = DependencyInjector.get(MoodUiUtil.self).colorForMood(
 				rating: Double(rating),
 				minRating: min,
-				maxRating: max)
+				maxRating: max
+			)
 			ratingButton.backgroundColor = color
 			ratingButton.setTitleColor(color.highContrast(), for: .normal)
 		}
 	}
+
 	public final var notificationToSendOnAccept: Notification.Name!
 
 	// MARK: - Button Actions
 
-	@IBAction func ratingButtonPressed(_ sender: Any) {
+	@IBAction func ratingButtonPressed(_: Any) {
 		DispatchQueue.main.async {
 			NotificationCenter.default.post(
 				name: self.notificationToSendOnAccept,
 				object: self,
 				userInfo: [
 					UserInfoKey.mood: self.rating,
-				])
+				]
+			)
 		}
 	}
 }

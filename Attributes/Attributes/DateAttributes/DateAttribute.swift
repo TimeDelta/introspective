@@ -9,7 +9,6 @@
 import Foundation
 
 public protocol DateAttribute: ComparableAttribute {
-
 	var includeTime: Bool { get }
 	var earliestDate: Date? { get }
 	var latestDate: Date? { get }

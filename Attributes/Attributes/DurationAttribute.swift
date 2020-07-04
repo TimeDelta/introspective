@@ -11,30 +11,35 @@ import Foundation
 import Common
 
 public final class DurationAttribute: AttributeBase<Duration>, ComparableAttribute, GraphableAttribute {
-
-	public final override var typeName: String {
-		return "Duration"
+	override public final var typeName: String {
+		"Duration"
 	}
 
 	// MARK: - Initializers
 
-	public override init(
+	override public init(
 		name: String = "Duration",
 		pluralName: String? = "Durations",
 		description: String? = nil,
 		variableName: String? = nil,
-		optional: Bool = false)
-	{
-		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName, optional: optional)
+		optional: Bool = false
+	) {
+		super.init(
+			name: name,
+			pluralName: pluralName,
+			description: description,
+			variableName: variableName,
+			optional: optional
+		)
 	}
 
 	// MARK: - Attribute Functions
 
-	public final override func isValid(value: Any?) -> Bool {
-		return (value == nil && optional) || value as? Duration != nil
+	override public final func isValid(value: Any?) -> Bool {
+		(value == nil && optional) || value as? Duration != nil
 	}
 
-	public final override func convertToDisplayableString(from value: Any?) throws -> String {
+	override public final func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
 		if !optional && value == nil { throw UnsupportedValueError(attribute: self, is: nil) }
 		guard let castedValue = value as? Duration else {
@@ -43,8 +48,8 @@ public final class DurationAttribute: AttributeBase<Duration>, ComparableAttribu
 		return castedValue.description
 	}
 
-	public final override func typedValuesAreEqual(_ first: Duration, _ second: Duration) -> Bool {
-		return first == second
+	override public final func typedValuesAreEqual(_ first: Duration, _ second: Duration) -> Bool {
+		first == second
 	}
 
 	// MARK: - GraphableAttribute Functions

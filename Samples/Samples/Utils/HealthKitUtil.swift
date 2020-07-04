@@ -15,45 +15,56 @@ import DependencyInjection
 import Globals
 import Settings
 
-//sourcery: AutoMockable
+// sourcery: AutoMockable
 public protocol HealthKitUtil {
-
 	/// This will convert the given date from the time zone in the given `HKSample` to the current time zone
 	/// if the time zone was recorded and the user has convert time zones enabled.
 	func setTimeZoneIfApplicable(for date: inout Date, from sample: HKSample)
-	func calculate(_ calculation: HKStatisticsOptions, _ type: HealthKitQuantitySample.Type, from startDate: Date, to endDate: Date, callback: @escaping (Double?, Error?) -> Void)
+	func calculate(
+		_ calculation: HKStatisticsOptions,
+		_ type: HealthKitQuantitySample.Type,
+		from startDate: Date,
+		to endDate: Date,
+		callback: @escaping (Double?, Error?) -> Void
+	)
 	/// - Returns: A method that can be called to stop the query
-	func getSamples(for type: HealthKitSample.Type, from startDate: Date?, to endDate: Date?, predicate: NSPredicate?, callback: @escaping (Array<HKSample>?, Error?) -> Void) -> (() -> Void)
+	func getSamples(
+		for type: HealthKitSample.Type,
+		from startDate: Date?,
+		to endDate: Date?,
+		predicate: NSPredicate?,
+		callback: @escaping ([HKSample]?, Error?) -> Void
+	) -> (() -> Void)
 	func preferredUnitFor(_ typeId: HKQuantityTypeIdentifier) -> HKUnit?
 	func getAuthorization(callback: @escaping (Error?) -> Void)
 }
 
 public extension HealthKitUtil {
-
 	func getSamples(
 		for type: HealthKitSample.Type,
 		from startDate: Date? = nil,
 		to endDate: Date? = nil,
 		predicate: NSPredicate? = nil,
-		callback: @escaping (Array<HKSample>?, Error?) -> Void)
-	-> (() -> Void) {
+		callback: @escaping ([HKSample]?, Error?) -> Void
+	)
+		-> (() -> Void) {
 		return getSamples(for: type, from: startDate, to: endDate, predicate: predicate, callback: callback)
 	}
 }
 
 public final class HealthKitUtilImpl: HealthKitUtil {
-
 	private typealias Me = HealthKitUtilImpl
 	private static let readPermissions: Set<HKObjectType> = {
 		var allPermissions = Set<HKObjectType>()
-		for permissions in DependencyInjector.get(SampleFactory.self).healthKitTypes().map({ return $0.readPermissions }) {
+		for permissions in DependencyInjector.get(SampleFactory.self).healthKitTypes().map({ $0.readPermissions }) {
 			allPermissions = allPermissions.union(permissions)
 		}
 		return allPermissions
 	}()
+
 	private static let writePermissions: Set<HKSampleType> = {
 		var allPermissions = Set<HKSampleType>()
-		for permissions in DependencyInjector.get(SampleFactory.self).healthKitTypes().map({ return $0.writePermissions }) {
+		for permissions in DependencyInjector.get(SampleFactory.self).healthKitTypes().map({ $0.writePermissions }) {
 			allPermissions = allPermissions.union(permissions)
 		}
 		return allPermissions
@@ -68,7 +79,8 @@ public final class HealthKitUtilImpl: HealthKitUtil {
 		guard DependencyInjector.get(Settings.self).convertTimeZones else { return }
 		if let timeZoneId = sample.metadata?[HKMetadataKeyTimeZone] as? String {
 			if let timeZone = TimeZone(identifier: timeZoneId) {
-				date = DependencyInjector.get(CalendarUtil.self).convert(date, from: timeZone, to: TimeZone.autoupdatingCurrent)
+				date = DependencyInjector.get(CalendarUtil.self)
+					.convert(date, from: timeZone, to: TimeZone.autoupdatingCurrent)
 			}
 		}
 	}
@@ -78,10 +90,14 @@ public final class HealthKitUtilImpl: HealthKitUtil {
 		_ type: HealthKitQuantitySample.Type,
 		from startDate: Date,
 		to endDate: Date,
-		callback: @escaping (Double?, Error?) -> Void)
-	{
+		callback: @escaping (Double?, Error?) -> Void
+	) {
 		let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [])
-		let query = HKStatisticsQuery(quantityType: type.quantityType, quantitySamplePredicate: predicate, options: calculation) { _, result, error in
+		let query = HKStatisticsQuery(
+			quantityType: type.quantityType,
+			quantitySamplePredicate: predicate,
+			options: calculation
+		) { _, result, error in
 			var value: Double?
 			if calculation == .cumulativeSum {
 				value = result?.sumQuantity()?.doubleValue(for: type.unit)
@@ -105,17 +121,19 @@ public final class HealthKitUtilImpl: HealthKitUtil {
 	/// - Returns: A method that can be called to stop the query
 	public func getSamples(
 		for type: HealthKitSample.Type,
-		from startDate: Date?,
-		to endDate: Date?,
+		from _: Date?,
+		to _: Date?,
 		predicate: NSPredicate?,
-		callback: @escaping (Array<HKSample>?, Error?) -> Void)
-	-> (() -> Void) {
+		callback: @escaping ([HKSample]?, Error?) -> Void
+	)
+		-> (() -> Void) {
 		let query = HKSampleQuery(
 			sampleType: type.sampleType,
 			predicate: predicate,
 			limit: Int(HKObjectQueryNoLimit),
 			sortDescriptors: nil,
-			resultsHandler: { callback($1, $2) })
+			resultsHandler: { callback($1, $2) }
+		)
 		healthStore.execute(query)
 		return { self.healthStore.stop(query) }
 	}
@@ -123,9 +141,9 @@ public final class HealthKitUtilImpl: HealthKitUtil {
 	public func preferredUnitFor(_ typeId: HKQuantityTypeIdentifier) -> HKUnit? {
 		let group = DispatchGroup()
 		group.enter()
-		var unit: HKUnit? = nil
+		var unit: HKUnit?
 		// according to Apple documentation, if authorization has not been determined, calling preferredUnits() will throw an error
-		getAuthorization() { error in
+		getAuthorization { error in
 			if let error = error {
 				self.log.error("Failed to check for authorization while getting preferred units: %@", errorInfo(error))
 				group.leave()
@@ -135,9 +153,13 @@ public final class HealthKitUtilImpl: HealthKitUtil {
 				self.log.error("Unable to determine quantity type for type id: %s", typeId.rawValue)
 				return
 			}
-			self.healthStore.preferredUnits(for: Set([quantityType])) { (units, error) in
+			self.healthStore.preferredUnits(for: Set([quantityType])) { units, error in
 				if let error = error {
-					self.log.error("Failed to determine preferred unit for %@: %@", String(describing: typeId), errorInfo(error))
+					self.log.error(
+						"Failed to determine preferred unit for %@: %@",
+						String(describing: typeId),
+						errorInfo(error)
+					)
 				}
 				unit = units[quantityType]
 				group.leave()
@@ -157,13 +179,20 @@ public final class HealthKitUtilImpl: HealthKitUtil {
 				requesting = true
 				log.info("Requesting authorization to HealthKit data")
 				let writePermissions: Set<HKSampleType>? = Globals.testing ? Me.writePermissions : nil
-				healthStore.requestAuthorization(toShare: writePermissions, read: Me.readPermissions) { (success, error) in
-					self.log.info("Finished requesting access to HealthKit data: %@", success ? "Success" : "Failure")
-					if let error = error {
-						self.log.error("Error occurred while trying to request access to HealthKit data: %@", errorInfo(error))
+				healthStore
+					.requestAuthorization(toShare: writePermissions, read: Me.readPermissions) { success, error in
+						self.log.info(
+							"Finished requesting access to HealthKit data: %@",
+							success ? "Success" : "Failure"
+						)
+						if let error = error {
+							self.log.error(
+								"Error occurred while trying to request access to HealthKit data: %@",
+								errorInfo(error)
+							)
+						}
+						callback(error)
 					}
-					callback(error)
-				}
 				break
 			}
 		}

@@ -13,11 +13,10 @@ import Common
 import DependencyInjection
 
 final class NumericAttributeValueViewController: UIViewController {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var textField: UITextField!
-	@IBOutlet weak final var saveButton: UIButton!
+	@IBOutlet final var textField: UITextField!
+	@IBOutlet final var saveButton: UIButton!
 
 	// MARK: - Instance Variables
 
@@ -29,7 +28,7 @@ final class NumericAttributeValueViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	final override func viewDidLoad() {
+	override final func viewDidLoad() {
 		super.viewDidLoad()
 		if currentValue != nil {
 			if numericAttribute is DoubleAttribute {
@@ -44,18 +43,19 @@ final class NumericAttributeValueViewController: UIViewController {
 
 	// MARK: - Actions
 
-	@IBAction final func valueChanged(_ sender: Any) {
+	@IBAction final func valueChanged(_: Any) {
 		validate(value: textField.text)
 	}
 
-	@IBAction final func saveButtonPressed(_ sender: Any) {
+	@IBAction final func saveButtonPressed(_: Any) {
 		DispatchQueue.main.async {
 			NotificationCenter.default.post(
 				name: self.notificationToSendOnAccept,
 				object: self,
 				userInfo: self.info([
 					.attributeValue: self.currentValue,
-				]))
+				])
+			)
 		}
 		dismiss(animated: false, completion: nil)
 	}

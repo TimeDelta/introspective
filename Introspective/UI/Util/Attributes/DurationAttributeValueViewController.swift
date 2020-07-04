@@ -11,17 +11,16 @@ import UIKit
 import Common
 
 public final class DurationAttributeValueViewController: AttributeValueTypeViewController {
-
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var daysTextField: UITextField!
-	@IBOutlet weak final var hoursTextField: UITextField!
-	@IBOutlet weak final var minutesTextField: UITextField!
-	@IBOutlet weak final var secondsTextField: UITextField!
+	@IBOutlet final var daysTextField: UITextField!
+	@IBOutlet final var hoursTextField: UITextField!
+	@IBOutlet final var minutesTextField: UITextField!
+	@IBOutlet final var secondsTextField: UITextField!
 
 	// MARK: - UIViewController Overrides
 
-	public final override func viewDidLoad() {
+	override public final func viewDidLoad() {
 		super.viewDidLoad()
 		valueIsValid()
 
@@ -44,7 +43,7 @@ public final class DurationAttributeValueViewController: AttributeValueTypeViewC
 
 	// MARK: - Actions
 
-	@IBAction final func valueChanged(_ sender: Any) {
+	@IBAction final func valueChanged(_: Any) {
 		var units = [Calendar.Component: Int]()
 		if let days = Int(daysTextField.text ?? "0") {
 			units[.day] = days

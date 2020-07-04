@@ -14,7 +14,6 @@ import DependencyInjection
 import SampleGroupInformation
 
 protocol SelectSampleGroupInformationViewController: UIViewController {
-
 	var attributes: [Attribute]! { get set }
 	var selectedAttribute: Attribute! { get set }
 	var selectedInformation: SampleGroupInformation! { get set }
@@ -24,12 +23,12 @@ protocol SelectSampleGroupInformationViewController: UIViewController {
 	var notificationFilter: Any? { get set }
 }
 
-final class SelectSampleGroupInformationViewControllerImpl: UIViewController, SelectSampleGroupInformationViewController {
-
+final class SelectSampleGroupInformationViewControllerImpl: UIViewController,
+	SelectSampleGroupInformationViewController {
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var attributePicker: UIPickerView!
-	@IBOutlet weak final var informationPicker: UIPickerView!
+	@IBOutlet final var attributePicker: UIPickerView!
+	@IBOutlet final var informationPicker: UIPickerView!
 
 	// MARK: - Instance Variables
 
@@ -44,7 +43,7 @@ final class SelectSampleGroupInformationViewControllerImpl: UIViewController, Se
 
 	// MARK: - UIViewController Overloads
 
-	final override func viewDidLoad() {
+	override final func viewDidLoad() {
 		super.viewDidLoad()
 
 		attributePicker.delegate = self
@@ -71,14 +70,15 @@ final class SelectSampleGroupInformationViewControllerImpl: UIViewController, Se
 		}
 	}
 
-	@IBAction final func acceptButtonPressed(_ sender: Any) {
+	@IBAction final func acceptButtonPressed(_: Any) {
 		DispatchQueue.main.async {
 			self.syncPost(
 				self.notificationToSendWhenFinished,
 				object: self.notificationFilter ?? self,
 				userInfo: [
 					.information: self.selectedInformation,
-				])
+				]
+			)
 		}
 		if let navigationController = navigationController {
 			navigationController.popViewController(animated: false)
@@ -91,15 +91,18 @@ final class SelectSampleGroupInformationViewControllerImpl: UIViewController, Se
 
 	private final func getApplicableInformationTypesForSelectedAttribute() -> [SampleGroupInformation.Type] {
 		if limitToNumericInformation {
-			return DependencyInjector.get(SampleGroupInformationFactory.self).getApplicableNumericInformationTypes(forAttribute: selectedAttribute)
+			return DependencyInjector.get(SampleGroupInformationFactory.self)
+				.getApplicableNumericInformationTypes(forAttribute: selectedAttribute)
 		} else {
-			return DependencyInjector.get(SampleGroupInformationFactory.self).getApplicableInformationTypes(forAttribute: selectedAttribute)
+			return DependencyInjector.get(SampleGroupInformationFactory.self)
+				.getApplicableInformationTypes(forAttribute: selectedAttribute)
 		}
 	}
 
 	private final func indexOfSelectedInformation() -> Int? {
 		if selectedInformation == nil { return nil }
-		let index = getApplicableInformationTypesForSelectedAttribute().index(where: { $0.init(selectedAttribute).equalTo(selectedInformation!) })
+		let index = getApplicableInformationTypesForSelectedAttribute()
+			.index(where: { $0.init(selectedAttribute).equalTo(selectedInformation!) })
 		if index == nil {
 			log.error("Failed to find information in information array")
 		}
@@ -110,12 +113,11 @@ final class SelectSampleGroupInformationViewControllerImpl: UIViewController, Se
 // MARK: - UIPickerViewDataSource
 
 extension SelectSampleGroupInformationViewControllerImpl: UIPickerViewDataSource {
-
-	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
-		return 1
+	public final func numberOfComponents(in _: UIPickerView) -> Int {
+		1
 	}
 
-	public final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+	public final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent _: Int) -> Int {
 		if pickerView == attributePicker {
 			return attributes.count
 		}
@@ -130,19 +132,19 @@ extension SelectSampleGroupInformationViewControllerImpl: UIPickerViewDataSource
 // MARK: - UIPickerViewDelegate
 
 extension SelectSampleGroupInformationViewControllerImpl: UIPickerViewDelegate {
-
-	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent _: Int) -> String? {
 		if pickerView == attributePicker {
 			return attributes[row].name.localizedCapitalized
 		}
 		if pickerView == informationPicker {
-			return getApplicableInformationTypesForSelectedAttribute()[row].init(selectedAttribute).name.localizedCapitalized
+			return getApplicableInformationTypesForSelectedAttribute()[row].init(selectedAttribute).name
+				.localizedCapitalized
 		}
 		log.error("Unknown picker view while attempting to retrieve title for row")
 		return nil
 	}
 
-	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent _: Int) {
 		if pickerView == attributePicker {
 			selectedAttribute = attributes[row]
 			informationPicker.reloadAllComponents()

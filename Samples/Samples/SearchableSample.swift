@@ -9,6 +9,5 @@
 import Foundation
 
 public protocol SearchableSample: Sample {
-
 	func matchesSearchString(_ searchString: String) -> Bool
 }

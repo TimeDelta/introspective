@@ -13,7 +13,6 @@ import Common
 // MARK: - MultiSelectAttribute
 
 public protocol MultiSelectAttribute: SelectAttribute {
-
 	func valueAsArray(_ value: Any) throws -> [Any]
 	func valueFromArray(_ value: [Any]) throws -> Any
 	func convertPossibleValueToDisplayableString(_ value: Any) throws -> String
@@ -22,12 +21,11 @@ public protocol MultiSelectAttribute: SelectAttribute {
 // MARK: - TypedMultiSelectAttribute
 
 open class TypedMultiSelectAttribute<ValueType: Hashable>: AttributeBase<ValueType>, MultiSelectAttribute {
-
 	// MARK: Instance Variables
 
 	private final let _typedPossibleValues: [ValueType]?
 	private final let possibleValuesFunction: (() -> [ValueType])?
-	public final var possibleValues: [Any] { return typedPossibleValues }
+	public final var possibleValues: [Any] { typedPossibleValues }
 	public final var typedPossibleValues: [ValueType] {
 		if let _typedPossibleValues = _typedPossibleValues {
 			return _typedPossibleValues
@@ -52,8 +50,8 @@ open class TypedMultiSelectAttribute<ValueType: Hashable>: AttributeBase<ValueTy
 		variableName: String? = nil,
 		optional: Bool = false,
 		possibleValues: [ValueType] = [ValueType](),
-		possibleValueToString: @escaping (ValueType) -> String)
-	{
+		possibleValueToString: @escaping (ValueType) -> String
+	) {
 		_typedPossibleValues = possibleValues
 		possibleValuesFunction = nil
 		self.possibleValueToString = possibleValueToString
@@ -62,7 +60,8 @@ open class TypedMultiSelectAttribute<ValueType: Hashable>: AttributeBase<ValueTy
 			pluralName: pluralName,
 			description: description,
 			variableName: variableName,
-			optional: optional)
+			optional: optional
+		)
 	}
 
 	public init(
@@ -72,8 +71,8 @@ open class TypedMultiSelectAttribute<ValueType: Hashable>: AttributeBase<ValueTy
 		variableName: String? = nil,
 		optional: Bool = false,
 		possibleValues: @escaping () -> [ValueType],
-		possibleValueToString: @escaping (ValueType) -> String)
-	{
+		possibleValueToString: @escaping (ValueType) -> String
+	) {
 		_typedPossibleValues = nil
 		possibleValuesFunction = possibleValues
 		self.possibleValueToString = possibleValueToString
@@ -82,14 +81,15 @@ open class TypedMultiSelectAttribute<ValueType: Hashable>: AttributeBase<ValueTy
 			pluralName: pluralName,
 			description: description,
 			variableName: variableName,
-			optional: optional)
+			optional: optional
+		)
 	}
 
 	// MARK: MultiSelectAttribute Functions
 
 	public final func valueAsArray(_ value: Any) throws -> [Any] {
 		if let castedValue = value as? Set<ValueType> {
-			return castedValue.map{ $0 }
+			return castedValue.map { $0 }
 		}
 		if let castedValue = value as? [ValueType] {
 			return castedValue
@@ -106,7 +106,7 @@ open class TypedMultiSelectAttribute<ValueType: Hashable>: AttributeBase<ValueTy
 
 	// MARK: SelectAttribute Functions
 
-	public final override func isValid(value: Any?) -> Bool {
+	override public final func isValid(value: Any?) -> Bool {
 		if let nonNilValue = value {
 			if let castedValues = nonNilValue as? [ValueType] {
 				return allValuesArePossible(castedValues)
@@ -118,8 +118,8 @@ open class TypedMultiSelectAttribute<ValueType: Hashable>: AttributeBase<ValueTy
 		return optional
 	}
 
-	private final func allValuesArePossible<C : Collection>(_ values: C) -> Bool where C.Element == ValueType {
-		if values.count == 0 {
+	private final func allValuesArePossible<C: Collection>(_ values: C) -> Bool where C.Element == ValueType {
+		if values.isEmpty {
 			return optional
 		}
 		for currentValue in values {
@@ -147,15 +147,15 @@ open class TypedMultiSelectAttribute<ValueType: Hashable>: AttributeBase<ValueTy
 
 	// MARK: Attribute Functions
 
-	public final override func typedValuesAreEqual(_ first: ValueType, _ second: ValueType) -> Bool {
-		return first == second
+	override public final func typedValuesAreEqual(_ first: ValueType, _ second: ValueType) -> Bool {
+		first == second
 	}
 
-	open override func convertToDisplayableString(from value: Any?) throws -> String {
+	override open func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
 		if !optional && value == nil { throw UnsupportedValueError(attribute: self, is: nil) }
 		if let castedValue = value as? Set<ValueType> {
-			let arrayOfTypes = castedValue.map{ $0 }
+			let arrayOfTypes = castedValue.map { $0 }
 			return convertTypesIntoDisplayString(arrayOfTypes)
 		}
 		if let castedValue = value as? [ValueType] {
@@ -169,7 +169,7 @@ open class TypedMultiSelectAttribute<ValueType: Hashable>: AttributeBase<ValueTy
 
 	fileprivate final func convertTypesIntoDisplayString(_ sortedTypes: [ValueType]) -> String {
 		var text = ""
-		let valueStrings = sortedTypes.map{ possibleValueToString($0) }
+		let valueStrings = sortedTypes.map { possibleValueToString($0) }
 		for index in 0 ..< valueStrings.count {
 			if index > 0 && index < valueStrings.count - 1 {
 				text += ", "
@@ -186,16 +186,15 @@ open class TypedMultiSelectAttribute<ValueType: Hashable>: AttributeBase<ValueTy
 // MARK: - ComparableTypedMultiSelectAttribute
 
 public class ComparableTypedMultiSelectAttribute<Type: Hashable & Comparable>: TypedMultiSelectAttribute<Type> {
-
-	public override init(
+	override public init(
 		name: String,
 		pluralName: String? = nil,
 		description: String? = nil,
 		variableName: String? = nil,
 		optional: Bool = false,
 		possibleValues: [Type] = [Type](),
-		possibleValueToString: @escaping (Type) -> String)
-	{
+		possibleValueToString: @escaping (Type) -> String
+	) {
 		super.init(
 			name: name,
 			pluralName: pluralName,
@@ -203,10 +202,11 @@ public class ComparableTypedMultiSelectAttribute<Type: Hashable & Comparable>: T
 			variableName: variableName,
 			optional: optional,
 			possibleValues: possibleValues,
-			possibleValueToString: possibleValueToString)
+			possibleValueToString: possibleValueToString
+		)
 	}
 
-	public final override func convertToDisplayableString(from value: Any?) throws -> String {
+	override public final func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
 		if !optional && value == nil { throw UnsupportedValueError(attribute: self, is: nil) }
 		if let castedValue = value as? Set<Type> {

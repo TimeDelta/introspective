@@ -12,7 +12,6 @@ import Queries
 import Samples
 
 final class SubSampleTypeTableViewCell: UITableViewCell {
-
 	public final var matcher: SubQueryMatcher! {
 		didSet {
 			guard let matcher = matcher else { return }
@@ -27,15 +26,15 @@ final class SubSampleTypeTableViewCell: UITableViewCell {
 		}
 	}
 
-	@IBOutlet weak final var dataTypeLabel: UILabel!
-	@IBOutlet weak final var subQueryMatcherDescriptionLabel: UILabel!
+	@IBOutlet final var dataTypeLabel: UILabel!
+	@IBOutlet final var subQueryMatcherDescriptionLabel: UILabel!
 
-	public final override var accessibilityLabel: String? {
-		get { return "Data Type" }
+	override public final var accessibilityLabel: String? {
+		get { "Data Type" }
 		set {}
 	}
 
-	public final override var accessibilityValue: String? {
+	override public final var accessibilityValue: String? {
 		get {
 			guard let matcher = matcher, let sampleType = sampleType else { return nil }
 			return matcher.description + " " + sampleType.name

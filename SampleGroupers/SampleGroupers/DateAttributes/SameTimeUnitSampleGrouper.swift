@@ -15,7 +15,6 @@ import DependencyInjection
 import Samples
 
 public final class SameTimeUnitSampleGrouper: SampleGrouper {
-
 	private typealias Me = SameTimeUnitSampleGrouper
 
 	// MARK: - Attributes
@@ -33,7 +32,10 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 		.nanosecond,
 	]
 
-	public static let timeUnitAttribute = CalendarComponentAttribute(description: "Combine all samples within the same time unit", possibleValues: supportedTimeUnits)
+	public static let timeUnitAttribute = CalendarComponentAttribute(
+		description: "Combine all samples within the same time unit",
+		possibleValues: supportedTimeUnits
+	)
 	public final let attributes: [Attribute]
 	public final let attributeSelectAttribute: AttributeSelectAttribute
 
@@ -42,7 +44,7 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 	public static let userVisibleDescription: String = "Same time unit (not across days, etc.)"
 	public final let attributedName = "Same time unit (not across days, etc.)"
 	public final var description: String {
-		return "per " + timeUnit.description.localizedLowercase
+		"per " + timeUnit.description.localizedLowercase
 	}
 
 	// MARK: - Instance Variables
@@ -50,7 +52,8 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 	public final var groupByAttribute: DateAttribute?
 	public final var timeUnit: Calendar.Component = .day
 
-	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "SameTimeUnitSampleGrouper"))
+	private final let signpost =
+		Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "SameTimeUnitSampleGrouper"))
 
 	// MARK: - Initializers
 
@@ -63,7 +66,7 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 	}
 
 	public init(attributes: [Attribute], _ timeUnit: Calendar.Component, _ attribute: DateAttribute? = nil) {
-		let dateAttributesForSampleType = attributes.filter{ $0 is DateAttribute }.map{ $0 as! DateAttribute }
+		let dateAttributesForSampleType = attributes.filter { $0 is DateAttribute }.map { $0 as! DateAttribute }
 		groupByAttribute = attribute ?? dateAttributesForSampleType.first
 		attributeSelectAttribute = AttributeSelectAttribute(attributes: dateAttributesForSampleType)
 		self.attributes = [
@@ -76,8 +79,8 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 	private init(
 		groupByAttribute: DateAttribute?,
 		attributeSelectAttribute: AttributeSelectAttribute,
-		_ timeUnit: Calendar.Component)
-	{
+		_ timeUnit: Calendar.Component
+	) {
 		self.groupByAttribute = groupByAttribute
 		self.attributeSelectAttribute = attributeSelectAttribute
 		attributes = [
@@ -94,13 +97,20 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 			throw GenericError("Called group on SameTimeUnitSampleGrouper before grouper ready")
 		}
 		signpost.begin(name: "Aggregation", "Aggregating %d samples", samples.count)
-		let samplesByTimeUnit = try DependencyInjector.get(SampleUtil.self).aggregate(samples: samples, by: timeUnit, for: attribute)
-		signpost.end(name: "Aggregation", "Aggregated %d samples into %d groups", samples.count, samplesByTimeUnit.count)
+		let samplesByTimeUnit = try DependencyInjector.get(SampleUtil.self)
+			.aggregate(samples: samples, by: timeUnit, for: attribute)
+		signpost.end(
+			name: "Aggregation",
+			"Aggregated %d samples into %d groups",
+			samples.count,
+			samplesByTimeUnit.count
+		)
 
 		signpost.begin(name: "Sort aggregated samples")
-		let sortedSamplesByTimeUnit = samplesByTimeUnit.sorted(by: { (entry1, entry2) in return entry1.key.isBeforeDate(entry2.key, granularity: timeUnit) })
+		let sortedSamplesByTimeUnit = samplesByTimeUnit
+			.sorted(by: { entry1, entry2 in entry1.key.isBeforeDate(entry2.key, granularity: timeUnit) })
 		signpost.end(name: "Sort aggregated samples")
-		return sortedSamplesByTimeUnit.map({ (key, value) in return (key, value) })
+		return sortedSamplesByTimeUnit.map { key, value in (key, value) }
 	}
 
 	public final func groupNameFor(value: Any) throws -> String {
@@ -121,10 +131,11 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 	}
 
 	public final func copy() -> SampleGrouper {
-		return SameTimeUnitSampleGrouper(
+		SameTimeUnitSampleGrouper(
 			groupByAttribute: groupByAttribute,
 			attributeSelectAttribute: attributeSelectAttribute,
-			timeUnit)
+			timeUnit
+		)
 	}
 
 	// MARK: - Attributed Functions
@@ -151,7 +162,7 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 			guard let castedValue = value as? DateAttribute else {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 			}
-			self.groupByAttribute = castedValue
+			groupByAttribute = castedValue
 			return
 		}
 		throw UnknownAttributeError(attribute: attribute, for: self)
@@ -166,8 +177,7 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 			groupByAttributesEqual = true
 		} else if
 			let groupByAttribute = groupByAttribute,
-			let otherGroupByAttribute = sameTimeUnitGrouper.groupByAttribute
-		{
+			let otherGroupByAttribute = sameTimeUnitGrouper.groupByAttribute {
 			groupByAttributesEqual = groupByAttribute.equalTo(otherGroupByAttribute)
 		} else {
 			groupByAttributesEqual = false
