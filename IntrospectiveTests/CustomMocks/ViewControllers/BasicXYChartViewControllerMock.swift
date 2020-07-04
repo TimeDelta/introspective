@@ -35,6 +35,14 @@ class BasicXYChartViewControllerMock: UIViewController, BasicXYChartViewControll
         self.line = line
     }
 
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
 
     public var queries: [Query]? {
 		get {	invocations.append(.p_queries_get); return __p_queries ?? optionalGivenGetterValue(.p_queries_get, "BasicXYChartViewControllerMock - stub value for queries was not defined") }
@@ -43,11 +51,11 @@ class BasicXYChartViewControllerMock: UIViewController, BasicXYChartViewControll
 	private var __p_queries: ([Query])?
 
 
-    public var dataSeries: [Dictionary<String, Any>]! {
+    public var dataSeries: [[String: Any]]! {
 		get {	invocations.append(.p_dataSeries_get); return __p_dataSeries ?? optionalGivenGetterValue(.p_dataSeries_get, "BasicXYChartViewControllerMock - stub value for dataSeries was not defined") }
 		set {	invocations.append(.p_dataSeries_set(.value(newValue))); __p_dataSeries = newValue }
 	}
-	private var __p_dataSeries: ([Dictionary<String, Any>])?
+	private var __p_dataSeries: ([[String: Any]])?
 
 
     public var displayXAxisValueLabels: Bool {
@@ -80,7 +88,7 @@ class BasicXYChartViewControllerMock: UIViewController, BasicXYChartViewControll
         case p_queries_get
 		case p_queries_set(Parameter<[Query]?>)
         case p_dataSeries_get
-		case p_dataSeries_set(Parameter<[Dictionary<String, Any>]?>)
+		case p_dataSeries_set(Parameter<[[String: Any]]?>)
         case p_displayXAxisValueLabels_get
 		case p_displayXAxisValueLabels_set(Parameter<Bool>)
         case p_chartType_get
@@ -93,7 +101,7 @@ class BasicXYChartViewControllerMock: UIViewController, BasicXYChartViewControll
             case (.p_queries_get,.p_queries_get): return true
 			case (.p_queries_set(let left),.p_queries_set(let right)): return Parameter<[Query]?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_dataSeries_get,.p_dataSeries_get): return true
-			case (.p_dataSeries_set(let left),.p_dataSeries_set(let right)): return Parameter<[Dictionary<String, Any>]?>.compare(lhs: left, rhs: right, with: matcher)
+			case (.p_dataSeries_set(let left),.p_dataSeries_set(let right)): return Parameter<[[String: Any]]?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_displayXAxisValueLabels_get,.p_displayXAxisValueLabels_get): return true
 			case (.p_displayXAxisValueLabels_set(let left),.p_displayXAxisValueLabels_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_chartType_get,.p_chartType_get): return true
@@ -131,7 +139,7 @@ class BasicXYChartViewControllerMock: UIViewController, BasicXYChartViewControll
         public static func queries(getter defaultValue: [Query]?...) -> PropertyStub {
             return Given(method: .p_queries_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func dataSeries(getter defaultValue: [Dictionary<String, Any>]?...) -> PropertyStub {
+        public static func dataSeries(getter defaultValue: [[String: Any]]?...) -> PropertyStub {
             return Given(method: .p_dataSeries_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func displayXAxisValueLabels(getter defaultValue: Bool...) -> PropertyStub {
@@ -152,7 +160,7 @@ class BasicXYChartViewControllerMock: UIViewController, BasicXYChartViewControll
         public static var queries: Verify { return Verify(method: .p_queries_get) }
 		public static func queries(set newValue: Parameter<[Query]?>) -> Verify { return Verify(method: .p_queries_set(newValue)) }
         public static var dataSeries: Verify { return Verify(method: .p_dataSeries_get) }
-		public static func dataSeries(set newValue: Parameter<[Dictionary<String, Any>]?>) -> Verify { return Verify(method: .p_dataSeries_set(newValue)) }
+		public static func dataSeries(set newValue: Parameter<[[String: Any]]?>) -> Verify { return Verify(method: .p_dataSeries_set(newValue)) }
         public static var displayXAxisValueLabels: Verify { return Verify(method: .p_displayXAxisValueLabels_get) }
 		public static func displayXAxisValueLabels(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_displayXAxisValueLabels_set(newValue)) }
         public static var chartType: Verify { return Verify(method: .p_chartType_get) }

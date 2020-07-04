@@ -35,6 +35,14 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
         self.line = line
     }
 
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
 
     public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "SampleQueryMock - stub value for mostRecentEntryOnly was not defined") }
@@ -63,15 +71,15 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
 
     public required init(parts: [BooleanExpressionPart]) throws { }
 
-    open func runQuery(callback: @escaping (SampleQueryResult<SampleType>?, Error?) -> ()) {
-        addInvocation(.m_runQuery__callback_callback_1(Parameter<(SampleQueryResult<SampleType>?, Error?) -> ()>.value(`callback`)))
-		let perform = methodPerformValue(.m_runQuery__callback_callback_1(Parameter<(SampleQueryResult<SampleType>?, Error?) -> ()>.value(`callback`))) as? (@escaping (SampleQueryResult<SampleType>?, Error?) -> ()) -> Void
+    open func runQuery(callback: @escaping (SampleQueryResult<SampleType>?, Error?) -> Void) {
+        addInvocation(.m_runQuery__callback_callback_1(Parameter<(SampleQueryResult<SampleType>?, Error?) -> Void>.value(`callback`)))
+		let perform = methodPerformValue(.m_runQuery__callback_callback_1(Parameter<(SampleQueryResult<SampleType>?, Error?) -> Void>.value(`callback`))) as? (@escaping (SampleQueryResult<SampleType>?, Error?) -> Void) -> Void
 		perform?(`callback`)
     }
 
-    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
-        addInvocation(.m_runQuery__callback_callback_2(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
-		let perform = methodPerformValue(.m_runQuery__callback_callback_2(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> Void) {
+        addInvocation(.m_runQuery__callback_callback_2(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`)))
+		let perform = methodPerformValue(.m_runQuery__callback_callback_2(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> Void) -> Void
 		perform?(`callback`)
     }
 
@@ -103,8 +111,8 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
 
 
     fileprivate enum MethodType {
-        case m_runQuery__callback_callback_1(Parameter<(SampleQueryResult<SampleType>?, Error?) -> ()>)
-        case m_runQuery__callback_callback_2(Parameter<(QueryResult?, Error?) -> ()>)
+        case m_runQuery__callback_callback_1(Parameter<(SampleQueryResult<SampleType>?, Error?) -> Void>)
+        case m_runQuery__callback_callback_2(Parameter<(QueryResult?, Error?) -> Void>)
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
@@ -190,8 +198,8 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func runQuery(callback: Parameter<(SampleQueryResult<SampleType>?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback_1(`callback`))}
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback_2(`callback`))}
+        public static func runQuery(callback: Parameter<(SampleQueryResult<SampleType>?, Error?) -> Void>) -> Verify { return Verify(method: .m_runQuery__callback_callback_1(`callback`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>) -> Verify { return Verify(method: .m_runQuery__callback_callback_2(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
@@ -207,10 +215,10 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func runQuery(callback: Parameter<(SampleQueryResult<SampleType>?, Error?) -> ()>, perform: @escaping (@escaping (SampleQueryResult<SampleType>?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(SampleQueryResult<SampleType>?, Error?) -> Void>, perform: @escaping (@escaping (SampleQueryResult<SampleType>?, Error?) -> Void) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback_1(`callback`), performs: perform)
         }
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>, perform: @escaping (@escaping (QueryResult?, Error?) -> Void) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback_2(`callback`), performs: perform)
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {

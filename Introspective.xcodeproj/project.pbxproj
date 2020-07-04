@@ -2780,8 +2780,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D63E90AF276550132DB77384E58E04DA /* Build configuration list for PBXNativeTarget "Introspective" */;
 			buildPhases = (
-				DBD33D6162DA610FB7ABBE212ED872C0 /* Run Script - format code */,
 				75E20E1CC157703ADA5941E98FF972D1 /* [CP] Check Pods Manifest.lock */,
+				53B6D04CF94539A7C5FC64D24E1D151D /* Run Script - format code */,
 				F0FB89F745BB6CFF964B314ECF77BAAF /* Run Script - Create GitVersion.swift */,
 				BF6DA2C10FFDD3FB4515D3A60FA139E2 /* Sources */,
 				C51BB4D038DED40DD32EC47510ABCC76 /* Frameworks */,
@@ -3113,7 +3113,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		DBD33D6162DA610FB7ABBE212ED872C0 /* Run Script - format code */ = {
+		53B6D04CF94539A7C5FC64D24E1D151D /* Run Script - format code */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3129,7 +3129,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nswiftformat --swiftversion `swift --version | awk '{print $4}'` --tabwidth 4 --disable andOperator,redundantFileprivate,redundantExtensionACL,redundantBreak --maxwidth 120 --wraparguments before-first --wrapparameters before-first --wrapcollections before-first --closingparen balanced --commas always --shortoptionals always --indent tab --enable strongOutlets,specifiers,spaceInsideParens,spaceInsideGenerics,sortedImports,anyObjectProtocol,typeSugar,trailingCommas,blankLinesAroundMark,blankLinesAtEndOfScope,blankLinesAtEndOfScope,blankLinesBetweenScopes,consecutiveBlankLines,consecutiveSpaces,duplicateImports,emptyBraces,hoistPatternLet,leadingDelimiters,linebreakAtEndOfFile,linebreaks,redundantGet --linebreaks lf --header ignore `find . -type d -maxdepth 1 -print | egrep -v '^\\.$' | grep -v Pods | egrep -v '.*\\.xc(workspace|odeproj)' | grep -v .git | grep -v Carthage | egrep -v 'Tests$' | tr '\\n' ' '`\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nswiftformat --swiftversion `swift --version | awk '{print $4}'` --tabwidth 4 --disable andOperator,redundantFileprivate,unusedArguments,redundantExtensionACL,redundantBreak --maxwidth 120 --wraparguments before-first --wrapparameters before-first --wrapcollections before-first --closingparen balanced --commas always --shortoptionals always --indent tab --enable strongOutlets,specifiers,spaceInsideParens,spaceInsideGenerics,sortedImports,anyObjectProtocol,typeSugar,trailingCommas,blankLinesAroundMark,blankLinesAtEndOfScope,blankLinesAtEndOfScope,blankLinesBetweenScopes,consecutiveBlankLines,consecutiveSpaces,duplicateImports,emptyBraces,hoistPatternLet,leadingDelimiters,linebreakAtEndOfFile,linebreaks,redundantGet --linebreaks lf --header ignore `find . -type d -maxdepth 1 -print | egrep -v '^\\.$' | grep -v Pods | egrep -v '.*\\.xc(workspace|odeproj)' | grep -v .git | grep -v Carthage | egrep -v 'Tests$' | tr '\\n' ' '`\n";
 		};
 		F0FB89F745BB6CFF964B314ECF77BAAF /* Run Script - Create GitVersion.swift */ = {
 			isa = PBXShellScriptBuildPhase;

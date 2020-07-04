@@ -42,6 +42,14 @@ class MoodMock: Mood, Mock, StaticMock {
         self.file = file
         self.line = line
     }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
     static var matcher: Matcher = Matcher.default
     static var stubbingPolicy: StubbingPolicy = .wrap
     static var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
@@ -50,10 +58,13 @@ class MoodMock: Mood, Mock, StaticMock {
     static private var methodPerformValues: [StaticPerform] = []
     public typealias StaticPropertyStub = StaticGiven
     public typealias StaticMethodStub = StaticGiven
-    public static func clear() {
-        invocations = []
-        methodReturnValues = []
-        methodPerformValues = []
+    
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public static func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -323,16 +334,16 @@ class MoodMock: Mood, Mock, StaticMock {
 		return __value
     }
 
-    open func safeEqualityCheck<Type: Equatable>(_ attribute: Attribute, _ otherSample: Sample, as type: Type.Type) -> Bool {
-        addInvocation(.m_safeEqualityCheck__attribute_otherSampleas_type(Parameter<Attribute>.value(`attribute`), Parameter<Sample>.value(`otherSample`), Parameter<Type.Type>.value(`type`).wrapAsGeneric()))
-		let perform = methodPerformValue(.m_safeEqualityCheck__attribute_otherSampleas_type(Parameter<Attribute>.value(`attribute`), Parameter<Sample>.value(`otherSample`), Parameter<Type.Type>.value(`type`).wrapAsGeneric())) as? (Attribute, Sample, Type.Type) -> Void
-		perform?(`attribute`, `otherSample`, `type`)
+    open func safeEqualityCheck<Type: Equatable>(		_ attribute: Attribute,		_ otherSample: Sample,		as: Type.Type	) -> Bool {
+        addInvocation(.m_safeEqualityCheck__attribute_otherSampleas_as(Parameter<Attribute>.value(`attribute`), Parameter<Sample>.value(`otherSample`), Parameter<Type.Type>.value(`as`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_safeEqualityCheck__attribute_otherSampleas_as(Parameter<Attribute>.value(`attribute`), Parameter<Sample>.value(`otherSample`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())) as? (Attribute, Sample, Type.Type) -> Void
+		perform?(`attribute`, `otherSample`, `as`)
 		var __value: Bool
 		do {
-		    __value = try methodReturnValue(.m_safeEqualityCheck__attribute_otherSampleas_type(Parameter<Attribute>.value(`attribute`), Parameter<Sample>.value(`otherSample`), Parameter<Type.Type>.value(`type`).wrapAsGeneric())).casted()
+		    __value = try methodReturnValue(.m_safeEqualityCheck__attribute_otherSampleas_as(Parameter<Attribute>.value(`attribute`), Parameter<Sample>.value(`otherSample`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for safeEqualityCheck<Type: Equatable>(_ attribute: Attribute, _ otherSample: Sample, as type: Type.Type). Use given")
-			Failure("Stub return value not specified for safeEqualityCheck<Type: Equatable>(_ attribute: Attribute, _ otherSample: Sample, as type: Type.Type). Use given")
+			onFatalFailure("Stub return value not specified for safeEqualityCheck<Type: Equatable>(  _ attribute: Attribute,  _ otherSample: Sample,  as: Type.Type ). Use given")
+			Failure("Stub return value not specified for safeEqualityCheck<Type: Equatable>(  _ attribute: Attribute,  _ otherSample: Sample,  as: Type.Type ). Use given")
 		}
 		return __value
     }
@@ -480,7 +491,7 @@ class MoodMock: Mood, Mock, StaticMock {
         case m_graphableValue__of_attribute(Parameter<Attribute>)
         case m_dates
         case m_equalTo__otherSample(Parameter<Sample>)
-        case m_safeEqualityCheck__attribute_otherSampleas_type(Parameter<Attribute>, Parameter<Sample>, Parameter<GenericAttribute>)
+        case m_safeEqualityCheck__attribute_otherSampleas_as(Parameter<Attribute>, Parameter<Sample>, Parameter<GenericAttribute>)
         case m_matchesSearchString__searchString(Parameter<String>)
         case p_minRating_get
 		case p_minRating_set(Parameter<Double>)
@@ -524,10 +535,10 @@ class MoodMock: Mood, Mock, StaticMock {
             case (.m_equalTo__otherSample(let lhsOthersample), .m_equalTo__otherSample(let rhsOthersample)):
                 guard Parameter.compare(lhs: lhsOthersample, rhs: rhsOthersample, with: matcher) else { return false } 
                 return true 
-            case (.m_safeEqualityCheck__attribute_otherSampleas_type(let lhsAttribute, let lhsOthersample, let lhsType), .m_safeEqualityCheck__attribute_otherSampleas_type(let rhsAttribute, let rhsOthersample, let rhsType)):
+            case (.m_safeEqualityCheck__attribute_otherSampleas_as(let lhsAttribute, let lhsOthersample, let lhsAs), .m_safeEqualityCheck__attribute_otherSampleas_as(let rhsAttribute, let rhsOthersample, let rhsAs)):
                 guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsOthersample, rhs: rhsOthersample, with: matcher) else { return false } 
-                guard Parameter.compare(lhs: lhsType, rhs: rhsType, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsAs, rhs: rhsAs, with: matcher) else { return false } 
                 return true 
             case (.m_matchesSearchString__searchString(let lhsSearchstring), .m_matchesSearchString__searchString(let rhsSearchstring)):
                 guard Parameter.compare(lhs: lhsSearchstring, rhs: rhsSearchstring, with: matcher) else { return false } 
@@ -560,7 +571,7 @@ class MoodMock: Mood, Mock, StaticMock {
             case let .m_graphableValue__of_attribute(p0): return p0.intValue
             case .m_dates: return 0
             case let .m_equalTo__otherSample(p0): return p0.intValue
-            case let .m_safeEqualityCheck__attribute_otherSampleas_type(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_safeEqualityCheck__attribute_otherSampleas_as(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_matchesSearchString__searchString(p0): return p0.intValue
             case .p_minRating_get: return 0
 			case .p_minRating_set(let newValue): return newValue.intValue
@@ -630,8 +641,8 @@ class MoodMock: Mood, Mock, StaticMock {
         public static func equalTo(_ otherSample: Parameter<Sample>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherSample(`otherSample`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func safeEqualityCheck<Type: Equatable>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func safeEqualityCheck<Type: Equatable>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as: Parameter<Type.Type>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_safeEqualityCheck__attribute_otherSampleas_as(`attribute`, `otherSample`, `as`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func matchesSearchString(_ searchString: Parameter<String>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_matchesSearchString__searchString(`searchString`), products: willReturn.map({ StubProduct.return($0 as Any) }))
@@ -664,9 +675,9 @@ class MoodMock: Mood, Mock, StaticMock {
 			willProduce(stubber)
 			return given
         }
-        public static func safeEqualityCheck<Type: Equatable>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func safeEqualityCheck<Type: Equatable>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as: Parameter<Type.Type>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
-			let given: Given = { return Given(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let given: Given = { return Given(method: .m_safeEqualityCheck__attribute_otherSampleas_as(`attribute`, `otherSample`, `as`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
@@ -732,7 +743,7 @@ class MoodMock: Mood, Mock, StaticMock {
         public static func graphableValue(of attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_graphableValue__of_attribute(`attribute`))}
         public static func dates() -> Verify { return Verify(method: .m_dates)}
         public static func equalTo(_ otherSample: Parameter<Sample>) -> Verify { return Verify(method: .m_equalTo__otherSample(`otherSample`))}
-        public static func safeEqualityCheck<Type>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>) -> Verify where Type:Equatable { return Verify(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()))}
+        public static func safeEqualityCheck<Type>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as: Parameter<Type.Type>) -> Verify where Type:Equatable { return Verify(method: .m_safeEqualityCheck__attribute_otherSampleas_as(`attribute`, `otherSample`, `as`.wrapAsGeneric()))}
         public static func matchesSearchString(_ searchString: Parameter<String>) -> Verify { return Verify(method: .m_matchesSearchString__searchString(`searchString`))}
         public static var minRating: Verify { return Verify(method: .p_minRating_get) }
 		public static func minRating(set newValue: Parameter<Double>) -> Verify { return Verify(method: .p_minRating_set(newValue)) }
@@ -780,8 +791,8 @@ class MoodMock: Mood, Mock, StaticMock {
         public static func equalTo(_ otherSample: Parameter<Sample>, perform: @escaping (Sample) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherSample(`otherSample`), performs: perform)
         }
-        public static func safeEqualityCheck<Type>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, perform: @escaping (Attribute, Sample, Type.Type) -> Void) -> Perform where Type:Equatable {
-            return Perform(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), performs: perform)
+        public static func safeEqualityCheck<Type>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as: Parameter<Type.Type>, perform: @escaping (Attribute, Sample, Type.Type) -> Void) -> Perform where Type:Equatable {
+            return Perform(method: .m_safeEqualityCheck__attribute_otherSampleas_as(`attribute`, `otherSample`, `as`.wrapAsGeneric()), performs: perform)
         }
         public static func matchesSearchString(_ searchString: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
             return Perform(method: .m_matchesSearchString__searchString(`searchString`), performs: perform)

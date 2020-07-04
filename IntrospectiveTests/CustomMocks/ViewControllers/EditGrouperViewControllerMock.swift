@@ -36,6 +36,14 @@ class EditGrouperViewControllerMock: UIViewController, EditGrouperViewController
         self.line = line
     }
 
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
 
     public var currentGrouper: SampleGrouper! {
 		get {	invocations.append(.p_currentGrouper_get); return __p_currentGrouper ?? optionalGivenGetterValue(.p_currentGrouper_get, "EditGrouperViewControllerMock - stub value for currentGrouper was not defined") }

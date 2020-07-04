@@ -559,7 +559,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 	func testGivenChartTypeSet_showMeTheGraphButtonPressed_setsChartTypeOnPresentedController() {
 		// given
 		let presentedController = mockXYChartViewController()
-		let expectedChartType: AAChartType = .Spline
+		let expectedChartType: AAChartType = .spline
 		controller.chartType = expectedChartType
 		setXAxisQuery(HeartRateQueryMock())
 		setYAxisQuery(HeartRateQueryMock())

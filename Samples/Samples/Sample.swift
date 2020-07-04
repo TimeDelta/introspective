@@ -95,7 +95,7 @@ public extension Sample {
 	private func safeEqualityCheck<Type: Equatable>(
 		_ attribute: Attribute,
 		_ otherSample: Sample,
-		as _: Type.Type
+		as: Type.Type
 	) -> Bool {
 		do {
 			let myValue = try value(of: attribute)

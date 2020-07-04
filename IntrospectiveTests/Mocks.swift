@@ -1,54 +1,14 @@
-// Generated using Sourcery 0.17.0 — https://github.com/krzysztofzablocki/Sourcery
+// Generated using Sourcery 0.18.0 — https://github.com/krzysztofzablocki/Sourcery
 // DO NOT EDIT
 
 
 
-//swiftlint:disable force_cast
-//swiftlint:disable function_body_length
-//swiftlint:disable line_length
-//swiftlint:disable vertical_whitespace
+// Generated with SwiftyMocky 3.5.0
 
-#if MockyCustom
 import SwiftyMocky
-import HealthKit
-import CoreData
-import Presentr
-import CSV
-import SwiftDate
-import UserNotifications
-import Instructions
-@testable import Introspective
-@testable import AttributeRestrictions
-@testable import Attributes
-@testable import BooleanAlgebra
-@testable import Common
-@testable import DataExport
-@testable import DataImport
-@testable import DependencyInjection
-@testable import Notifications
-@testable import Persistence
-@testable import Queries
-@testable import SampleGroupers
-@testable import SampleGroupInformation
-@testable import Samples
-@testable import Settings
-@testable import UIExtensions
-
-    public final class MockyAssertion {
-        public static var handler: ((Bool, String, StaticString, UInt) -> Void)?
-    }
-
-    func MockyAssert(_ expression: @autoclosure () -> Bool, _ message: @autoclosure () -> String = "Verification failed", file: StaticString = #file, line: UInt = #line) {
-        guard let handler = MockyAssertion.handler else {
-            assert(expression, message, file: file, line: line)
-            return
-        }
-
-        handler(expression(), message(), file, line)
-    }
-#elseif Mocky
-import SwiftyMocky
+#if !MockyCustom
 import XCTest
+#endif
 import HealthKit
 import CoreData
 import Presentr
@@ -72,14 +32,6 @@ import Instructions
 @testable import Samples
 @testable import Settings
 @testable import UIExtensions
-
-    func MockyAssert(_ expression: @autoclosure () -> Bool, _ message: @autoclosure () -> String = "Verification failed", file: StaticString = #file, line: UInt = #line) {
-        XCTAssert(expression(), message(), file: file, line: line)
-    }
-#else
-import Sourcery
-import SourceryRuntime
-#endif
 
 
 
@@ -115,6 +67,7 @@ import SourceryRuntime
 // MARK: - ATrackerActivityImporter
 open class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -138,6 +91,14 @@ open class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var dataTypePluralName: String {
@@ -528,6 +489,7 @@ open class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
 // MARK: - ActivityDAO
 open class ActivityDAOMock: ActivityDAO, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -551,6 +513,14 @@ open class ActivityDAOMock: ActivityDAO, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -1110,6 +1080,7 @@ open class ActivityDAOMock: ActivityDAO, Mock {
 // MARK: - ActivityExporter
 open class ActivityExporterMock: ActivityExporter, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -1133,6 +1104,14 @@ open class ActivityExporterMock: ActivityExporter, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var dataTypePluralName: String {
@@ -1446,6 +1425,7 @@ open class ActivityExporterMock: ActivityExporter, Mock {
 // MARK: - ActivityQuery
 open class ActivityQueryMock: ActivityQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -1469,6 +1449,14 @@ open class ActivityQueryMock: ActivityQuery, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var expression: BooleanExpression? {
@@ -1495,9 +1483,9 @@ open class ActivityQueryMock: ActivityQuery, Mock {
 
     public required init(parts: [BooleanExpressionPart]) throws { }
 
-    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
-        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
-		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> Void) {
+        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`)))
+		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> Void) -> Void
 		perform?(`callback`)
     }
 
@@ -1529,7 +1517,7 @@ open class ActivityQueryMock: ActivityQuery, Mock {
 
 
     fileprivate enum MethodType {
-        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
+        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>)
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
@@ -1611,7 +1599,7 @@ open class ActivityQueryMock: ActivityQuery, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
@@ -1627,7 +1615,7 @@ open class ActivityQueryMock: ActivityQuery, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>, perform: @escaping (@escaping (QueryResult?, Error?) -> Void) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {
@@ -1700,6 +1688,7 @@ open class ActivityQueryMock: ActivityQuery, Mock {
 // MARK: - AsyncUtil
 open class AsyncUtilMock: AsyncUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -1723,6 +1712,14 @@ open class AsyncUtilMock: AsyncUtil, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -1840,6 +1837,7 @@ open class AsyncUtilMock: AsyncUtil, Mock {
 // MARK: - Attribute
 open class AttributeMock: Attribute, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -1863,6 +1861,14 @@ open class AttributeMock: Attribute, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var name: String {
@@ -2206,6 +2212,7 @@ open class AttributeMock: Attribute, Mock {
 // MARK: - AttributeRestrictionFactory
 open class AttributeRestrictionFactoryMock: AttributeRestrictionFactory, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -2229,6 +2236,14 @@ open class AttributeRestrictionFactoryMock: AttributeRestrictionFactory, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -2398,6 +2413,7 @@ open class AttributeRestrictionFactoryMock: AttributeRestrictionFactory, Mock {
 // MARK: - BloodPressureQuery
 open class BloodPressureQueryMock: BloodPressureQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -2421,6 +2437,14 @@ open class BloodPressureQueryMock: BloodPressureQuery, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var expression: BooleanExpression? {
@@ -2447,9 +2471,9 @@ open class BloodPressureQueryMock: BloodPressureQuery, Mock {
 
     public required init(parts: [BooleanExpressionPart]) throws { }
 
-    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
-        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
-		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> Void) {
+        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`)))
+		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> Void) -> Void
 		perform?(`callback`)
     }
 
@@ -2481,7 +2505,7 @@ open class BloodPressureQueryMock: BloodPressureQuery, Mock {
 
 
     fileprivate enum MethodType {
-        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
+        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>)
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
@@ -2563,7 +2587,7 @@ open class BloodPressureQueryMock: BloodPressureQuery, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
@@ -2579,7 +2603,7 @@ open class BloodPressureQueryMock: BloodPressureQuery, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>, perform: @escaping (@escaping (QueryResult?, Error?) -> Void) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {
@@ -2652,6 +2676,7 @@ open class BloodPressureQueryMock: BloodPressureQuery, Mock {
 // MARK: - BodyMassIndexQuery
 open class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -2675,6 +2700,14 @@ open class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var expression: BooleanExpression? {
@@ -2701,9 +2734,9 @@ open class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
 
     public required init(parts: [BooleanExpressionPart]) throws { }
 
-    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
-        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
-		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> Void) {
+        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`)))
+		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> Void) -> Void
 		perform?(`callback`)
     }
 
@@ -2735,7 +2768,7 @@ open class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
 
 
     fileprivate enum MethodType {
-        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
+        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>)
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
@@ -2817,7 +2850,7 @@ open class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
@@ -2833,7 +2866,7 @@ open class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>, perform: @escaping (@escaping (QueryResult?, Error?) -> Void) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {
@@ -2906,6 +2939,7 @@ open class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
 // MARK: - BooleanExpressionParser
 open class BooleanExpressionParserMock: BooleanExpressionParser, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -2929,6 +2963,14 @@ open class BooleanExpressionParserMock: BooleanExpressionParser, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -3068,6 +3110,7 @@ open class BooleanExpressionParserMock: BooleanExpressionParser, Mock {
 // MARK: - CalendarUtil
 open class CalendarUtilMock: CalendarUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -3091,6 +3134,14 @@ open class CalendarUtilMock: CalendarUtil, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -3208,7 +3259,8 @@ open class CalendarUtilMock: CalendarUtil, Mock {
 		return __value
     }
 
-    open func date<CollectionType: Collection>(_ date: Date, isOnOneOf daysOfWeek: CollectionType) -> Bool where CollectionType.Element == DayOfWeek {
+    open func date<CollectionType: Collection>(_ date: Date, isOnOneOf daysOfWeek: CollectionType) -> Bool
+		where CollectionType.Element == DayOfWeek {
         addInvocation(.m_date__dateisOnOneOf_daysOfWeek(Parameter<Date>.value(`date`), Parameter<CollectionType>.value(`daysOfWeek`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_date__dateisOnOneOf_daysOfWeek(Parameter<Date>.value(`date`), Parameter<CollectionType>.value(`daysOfWeek`).wrapAsGeneric())) as? (Date, CollectionType) -> Void
 		perform?(`date`, `daysOfWeek`)
@@ -3447,7 +3499,7 @@ open class CalendarUtilMock: CalendarUtil, Mock {
         public static func compare(_ date1: Parameter<Date?>, _ date2: Parameter<Date?>, willReturn: ComparisonResult...) -> MethodStub {
             return Given(method: .m_compare__date1_date2(`date1`, `date2`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func date<CollectionType: Collection>(_ date: Parameter<Date>, isOnOneOf daysOfWeek: Parameter<CollectionType>, willReturn: Bool...) -> MethodStub {
+        public static func date<CollectionType: Collection>(_ date: Parameter<Date>, isOnOneOf daysOfWeek: Parameter<CollectionType>, willReturn: Bool...) -> MethodStub where CollectionType.Element == DayOfWeek {
             return Given(method: .m_date__dateisOnOneOf_daysOfWeek(`date`, `daysOfWeek`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func date(_ date: Parameter<Date>, isOnA dayOfWeek: Parameter<DayOfWeek>, willReturn: Bool...) -> MethodStub {
@@ -3524,7 +3576,7 @@ open class CalendarUtilMock: CalendarUtil, Mock {
 			willProduce(stubber)
 			return given
         }
-        public static func date<CollectionType: Collection>(_ date: Parameter<Date>, isOnOneOf daysOfWeek: Parameter<CollectionType>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func date<CollectionType: Collection>(_ date: Parameter<Date>, isOnOneOf daysOfWeek: Parameter<CollectionType>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub where CollectionType.Element == DayOfWeek {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_date__dateisOnOneOf_daysOfWeek(`date`, `daysOfWeek`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (Bool).self)
@@ -3708,6 +3760,7 @@ open class CalendarUtilMock: CalendarUtil, Mock {
 // MARK: - CoachMarkFactory
 open class CoachMarkFactoryMock: CoachMarkFactory, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -3731,6 +3784,14 @@ open class CoachMarkFactoryMock: CoachMarkFactory, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -3864,6 +3925,7 @@ open class CoachMarkFactoryMock: CoachMarkFactory, Mock {
 // MARK: - CoachMarksControllerProtocol
 open class CoachMarksControllerProtocolMock: CoachMarksControllerProtocol, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -3887,6 +3949,14 @@ open class CoachMarksControllerProtocolMock: CoachMarksControllerProtocol, Mock 
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var dataSource: CoachMarksControllerDataSource? {
@@ -4183,6 +4253,7 @@ open class CoachMarksControllerProtocolMock: CoachMarksControllerProtocol, Mock 
 // MARK: - CodableStorage
 open class CodableStorageMock: CodableStorage, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -4206,6 +4277,14 @@ open class CodableStorageMock: CodableStorage, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -4481,6 +4560,7 @@ open class CodableStorageMock: CodableStorage, Mock {
 // MARK: - Database
 open class DatabaseMock: Database, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -4504,6 +4584,14 @@ open class DatabaseMock: Database, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -4530,7 +4618,7 @@ open class DatabaseMock: Database, Mock {
 		perform?()
     }
 
-    open func fetchedResultsController<Type: NSManagedObject>(type: Type.Type, sortDescriptors: [NSSortDescriptor], cacheName: String?) -> NSFetchedResultsController<Type> {
+    open func fetchedResultsController<Type: NSManagedObject>(		type: Type.Type,		sortDescriptors: [NSSortDescriptor],		cacheName: String?	) -> NSFetchedResultsController<Type> {
         addInvocation(.m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(Parameter<Type.Type>.value(`type`).wrapAsGeneric(), Parameter<[NSSortDescriptor]>.value(`sortDescriptors`), Parameter<String?>.value(`cacheName`)))
 		let perform = methodPerformValue(.m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(Parameter<Type.Type>.value(`type`).wrapAsGeneric(), Parameter<[NSSortDescriptor]>.value(`sortDescriptors`), Parameter<String?>.value(`cacheName`))) as? (Type.Type, [NSSortDescriptor], String?) -> Void
 		perform?(`type`, `sortDescriptors`, `cacheName`)
@@ -4538,8 +4626,8 @@ open class DatabaseMock: Database, Mock {
 		do {
 		    __value = try methodReturnValue(.m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(Parameter<Type.Type>.value(`type`).wrapAsGeneric(), Parameter<[NSSortDescriptor]>.value(`sortDescriptors`), Parameter<String?>.value(`cacheName`))).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for fetchedResultsController<Type: NSManagedObject>(type: Type.Type, sortDescriptors: [NSSortDescriptor], cacheName: String?). Use given")
-			Failure("Stub return value not specified for fetchedResultsController<Type: NSManagedObject>(type: Type.Type, sortDescriptors: [NSSortDescriptor], cacheName: String?). Use given")
+			onFatalFailure("Stub return value not specified for fetchedResultsController<Type: NSManagedObject>(  type: Type.Type,  sortDescriptors: [NSSortDescriptor],  cacheName: String? ). Use given")
+			Failure("Stub return value not specified for fetchedResultsController<Type: NSManagedObject>(  type: Type.Type,  sortDescriptors: [NSSortDescriptor],  cacheName: String? ). Use given")
 		}
 		return __value
     }
@@ -4910,6 +4998,7 @@ open class DatabaseMock: Database, Mock {
 // MARK: - EasyPillMedicationDoseImporter
 open class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -4933,6 +5022,14 @@ open class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, M
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var dataTypePluralName: String {
@@ -5323,6 +5420,7 @@ open class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, M
 // MARK: - EasyPillMedicationImporter
 open class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -5346,6 +5444,14 @@ open class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var dataTypePluralName: String {
@@ -5736,6 +5842,7 @@ open class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
 // MARK: - Exporter
 open class ExporterMock: Exporter, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -5759,6 +5866,14 @@ open class ExporterMock: Exporter, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var dataTypePluralName: String {
@@ -6072,6 +6187,7 @@ open class ExporterMock: Exporter, Mock {
 // MARK: - ExporterUtil
 open class ExporterUtilMock: ExporterUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -6095,6 +6211,14 @@ open class ExporterUtilMock: ExporterUtil, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -6230,6 +6354,7 @@ open class ExporterUtilMock: ExporterUtil, Mock {
 // MARK: - GroupDefinition
 open class GroupDefinitionMock: GroupDefinition, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -6253,6 +6378,14 @@ open class GroupDefinitionMock: GroupDefinition, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var name: String {
@@ -6568,6 +6701,7 @@ open class GroupDefinitionMock: GroupDefinition, Mock {
 // MARK: - HealthKitUtil
 open class HealthKitUtilMock: HealthKitUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -6593,6 +6727,14 @@ open class HealthKitUtilMock: HealthKitUtil, Mock {
         self.line = line
     }
 
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
 
 
 
@@ -6603,22 +6745,22 @@ open class HealthKitUtilMock: HealthKitUtil, Mock {
 		perform?(&`date`, `sample`)
     }
 
-    open func calculate(_ calculation: HKStatisticsOptions, _ type: HealthKitQuantitySample.Type, from startDate: Date, to endDate: Date, callback: @escaping (Double?, Error?) -> Void) {
+    open func calculate(		_ calculation: HKStatisticsOptions,		_ type: HealthKitQuantitySample.Type,		from startDate: Date,		to endDate: Date,		callback: @escaping (Double?, Error?) -> Void	) {
         addInvocation(.m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(Parameter<HKStatisticsOptions>.value(`calculation`), Parameter<HealthKitQuantitySample.Type>.value(`type`), Parameter<Date>.value(`startDate`), Parameter<Date>.value(`endDate`), Parameter<(Double?, Error?) -> Void>.value(`callback`)))
 		let perform = methodPerformValue(.m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(Parameter<HKStatisticsOptions>.value(`calculation`), Parameter<HealthKitQuantitySample.Type>.value(`type`), Parameter<Date>.value(`startDate`), Parameter<Date>.value(`endDate`), Parameter<(Double?, Error?) -> Void>.value(`callback`))) as? (HKStatisticsOptions, HealthKitQuantitySample.Type, Date, Date, @escaping (Double?, Error?) -> Void) -> Void
 		perform?(`calculation`, `type`, `startDate`, `endDate`, `callback`)
     }
 
-    open func getSamples(for type: HealthKitSample.Type, from startDate: Date?, to endDate: Date?, predicate: NSPredicate?, callback: @escaping (Array<HKSample>?, Error?) -> Void) -> (() -> Void) {
-        addInvocation(.m_getSamples__for_typefrom_startDateto_endDatepredicate_predicatecallback_callback(Parameter<HealthKitSample.Type>.value(`type`), Parameter<Date?>.value(`startDate`), Parameter<Date?>.value(`endDate`), Parameter<NSPredicate?>.value(`predicate`), Parameter<(Array<HKSample>?, Error?) -> Void>.value(`callback`)))
-		let perform = methodPerformValue(.m_getSamples__for_typefrom_startDateto_endDatepredicate_predicatecallback_callback(Parameter<HealthKitSample.Type>.value(`type`), Parameter<Date?>.value(`startDate`), Parameter<Date?>.value(`endDate`), Parameter<NSPredicate?>.value(`predicate`), Parameter<(Array<HKSample>?, Error?) -> Void>.value(`callback`))) as? (HealthKitSample.Type, Date?, Date?, NSPredicate?, @escaping (Array<HKSample>?, Error?) -> Void) -> Void
+    open func getSamples(		for type: HealthKitSample.Type,		from startDate: Date?,		to endDate: Date?,		predicate: NSPredicate?,		callback: @escaping ([HKSample]?, Error?) -> Void	) -> (() -> Void) {
+        addInvocation(.m_getSamples__for_typefrom_startDateto_endDatepredicate_predicatecallback_callback(Parameter<HealthKitSample.Type>.value(`type`), Parameter<Date?>.value(`startDate`), Parameter<Date?>.value(`endDate`), Parameter<NSPredicate?>.value(`predicate`), Parameter<([HKSample]?, Error?) -> Void>.value(`callback`)))
+		let perform = methodPerformValue(.m_getSamples__for_typefrom_startDateto_endDatepredicate_predicatecallback_callback(Parameter<HealthKitSample.Type>.value(`type`), Parameter<Date?>.value(`startDate`), Parameter<Date?>.value(`endDate`), Parameter<NSPredicate?>.value(`predicate`), Parameter<([HKSample]?, Error?) -> Void>.value(`callback`))) as? (HealthKitSample.Type, Date?, Date?, NSPredicate?, @escaping ([HKSample]?, Error?) -> Void) -> Void
 		perform?(`type`, `startDate`, `endDate`, `predicate`, `callback`)
 		var __value: () -> Void
 		do {
-		    __value = try methodReturnValue(.m_getSamples__for_typefrom_startDateto_endDatepredicate_predicatecallback_callback(Parameter<HealthKitSample.Type>.value(`type`), Parameter<Date?>.value(`startDate`), Parameter<Date?>.value(`endDate`), Parameter<NSPredicate?>.value(`predicate`), Parameter<(Array<HKSample>?, Error?) -> Void>.value(`callback`))).casted()
+		    __value = try methodReturnValue(.m_getSamples__for_typefrom_startDateto_endDatepredicate_predicatecallback_callback(Parameter<HealthKitSample.Type>.value(`type`), Parameter<Date?>.value(`startDate`), Parameter<Date?>.value(`endDate`), Parameter<NSPredicate?>.value(`predicate`), Parameter<([HKSample]?, Error?) -> Void>.value(`callback`))).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for getSamples(for type: HealthKitSample.Type, from startDate: Date?, to endDate: Date?, predicate: NSPredicate?, callback: @escaping (Array<HKSample>?, Error?) -> Void). Use given")
-			Failure("Stub return value not specified for getSamples(for type: HealthKitSample.Type, from startDate: Date?, to endDate: Date?, predicate: NSPredicate?, callback: @escaping (Array<HKSample>?, Error?) -> Void). Use given")
+			onFatalFailure("Stub return value not specified for getSamples(  for type: HealthKitSample.Type,  from startDate: Date?,  to endDate: Date?,  predicate: NSPredicate?,  callback: @escaping ([HKSample]?, Error?) -> Void ). Use given")
+			Failure("Stub return value not specified for getSamples(  for type: HealthKitSample.Type,  from startDate: Date?,  to endDate: Date?,  predicate: NSPredicate?,  callback: @escaping ([HKSample]?, Error?) -> Void ). Use given")
 		}
 		return __value
     }
@@ -6646,7 +6788,7 @@ open class HealthKitUtilMock: HealthKitUtil, Mock {
     fileprivate enum MethodType {
         case m_setTimeZoneIfApplicable__for_datefrom_sample(Parameter<Date>, Parameter<HKSample>)
         case m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(Parameter<HKStatisticsOptions>, Parameter<HealthKitQuantitySample.Type>, Parameter<Date>, Parameter<Date>, Parameter<(Double?, Error?) -> Void>)
-        case m_getSamples__for_typefrom_startDateto_endDatepredicate_predicatecallback_callback(Parameter<HealthKitSample.Type>, Parameter<Date?>, Parameter<Date?>, Parameter<NSPredicate?>, Parameter<(Array<HKSample>?, Error?) -> Void>)
+        case m_getSamples__for_typefrom_startDateto_endDatepredicate_predicatecallback_callback(Parameter<HealthKitSample.Type>, Parameter<Date?>, Parameter<Date?>, Parameter<NSPredicate?>, Parameter<([HKSample]?, Error?) -> Void>)
         case m_preferredUnitFor__typeId(Parameter<HKQuantityTypeIdentifier>)
         case m_getAuthorization__callback_callback(Parameter<(Error?) -> Void>)
 
@@ -6700,13 +6842,13 @@ open class HealthKitUtilMock: HealthKitUtil, Mock {
         }
 
 
-        public static func getSamples(for type: Parameter<HealthKitSample.Type>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, predicate: Parameter<NSPredicate?>, callback: Parameter<(Array<HKSample>?, Error?) -> Void>, willReturn: () -> Void...) -> MethodStub {
+        public static func getSamples(for type: Parameter<HealthKitSample.Type>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, predicate: Parameter<NSPredicate?>, callback: Parameter<([HKSample]?, Error?) -> Void>, willReturn: () -> Void...) -> MethodStub {
             return Given(method: .m_getSamples__for_typefrom_startDateto_endDatepredicate_predicatecallback_callback(`type`, `startDate`, `endDate`, `predicate`, `callback`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func preferredUnitFor(_ typeId: Parameter<HKQuantityTypeIdentifier>, willReturn: HKUnit?...) -> MethodStub {
             return Given(method: .m_preferredUnitFor__typeId(`typeId`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func getSamples(for type: Parameter<HealthKitSample.Type>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, predicate: Parameter<NSPredicate?>, callback: Parameter<(Array<HKSample>?, Error?) -> Void>, willProduce: (Stubber<() -> Void>) -> Void) -> MethodStub {
+        public static func getSamples(for type: Parameter<HealthKitSample.Type>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, predicate: Parameter<NSPredicate?>, callback: Parameter<([HKSample]?, Error?) -> Void>, willProduce: (Stubber<() -> Void>) -> Void) -> MethodStub {
             let willReturn: [() -> Void] = []
 			let given: Given = { return Given(method: .m_getSamples__for_typefrom_startDateto_endDatepredicate_predicatecallback_callback(`type`, `startDate`, `endDate`, `predicate`, `callback`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (() -> Void).self)
@@ -6727,7 +6869,7 @@ open class HealthKitUtilMock: HealthKitUtil, Mock {
 
         public static func setTimeZoneIfApplicable(for date: Parameter<Date>, from sample: Parameter<HKSample>) -> Verify { return Verify(method: .m_setTimeZoneIfApplicable__for_datefrom_sample(`date`, `sample`))}
         public static func calculate(_ calculation: Parameter<HKStatisticsOptions>, _ type: Parameter<HealthKitQuantitySample.Type>, from startDate: Parameter<Date>, to endDate: Parameter<Date>, callback: Parameter<(Double?, Error?) -> Void>) -> Verify { return Verify(method: .m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(`calculation`, `type`, `startDate`, `endDate`, `callback`))}
-        public static func getSamples(for type: Parameter<HealthKitSample.Type>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, predicate: Parameter<NSPredicate?>, callback: Parameter<(Array<HKSample>?, Error?) -> Void>) -> Verify { return Verify(method: .m_getSamples__for_typefrom_startDateto_endDatepredicate_predicatecallback_callback(`type`, `startDate`, `endDate`, `predicate`, `callback`))}
+        public static func getSamples(for type: Parameter<HealthKitSample.Type>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, predicate: Parameter<NSPredicate?>, callback: Parameter<([HKSample]?, Error?) -> Void>) -> Verify { return Verify(method: .m_getSamples__for_typefrom_startDateto_endDatepredicate_predicatecallback_callback(`type`, `startDate`, `endDate`, `predicate`, `callback`))}
         public static func preferredUnitFor(_ typeId: Parameter<HKQuantityTypeIdentifier>) -> Verify { return Verify(method: .m_preferredUnitFor__typeId(`typeId`))}
         public static func getAuthorization(callback: Parameter<(Error?) -> Void>) -> Verify { return Verify(method: .m_getAuthorization__callback_callback(`callback`))}
     }
@@ -6742,7 +6884,7 @@ open class HealthKitUtilMock: HealthKitUtil, Mock {
         public static func calculate(_ calculation: Parameter<HKStatisticsOptions>, _ type: Parameter<HealthKitQuantitySample.Type>, from startDate: Parameter<Date>, to endDate: Parameter<Date>, callback: Parameter<(Double?, Error?) -> Void>, perform: @escaping (HKStatisticsOptions, HealthKitQuantitySample.Type, Date, Date, @escaping (Double?, Error?) -> Void) -> Void) -> Perform {
             return Perform(method: .m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(`calculation`, `type`, `startDate`, `endDate`, `callback`), performs: perform)
         }
-        public static func getSamples(for type: Parameter<HealthKitSample.Type>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, predicate: Parameter<NSPredicate?>, callback: Parameter<(Array<HKSample>?, Error?) -> Void>, perform: @escaping (HealthKitSample.Type, Date?, Date?, NSPredicate?, @escaping (Array<HKSample>?, Error?) -> Void) -> Void) -> Perform {
+        public static func getSamples(for type: Parameter<HealthKitSample.Type>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, predicate: Parameter<NSPredicate?>, callback: Parameter<([HKSample]?, Error?) -> Void>, perform: @escaping (HealthKitSample.Type, Date?, Date?, NSPredicate?, @escaping ([HKSample]?, Error?) -> Void) -> Void) -> Perform {
             return Perform(method: .m_getSamples__for_typefrom_startDateto_endDatepredicate_predicatecallback_callback(`type`, `startDate`, `endDate`, `predicate`, `callback`), performs: perform)
         }
         public static func preferredUnitFor(_ typeId: Parameter<HKQuantityTypeIdentifier>, perform: @escaping (HKQuantityTypeIdentifier) -> Void) -> Perform {
@@ -6812,6 +6954,7 @@ open class HealthKitUtilMock: HealthKitUtil, Mock {
 // MARK: - HeartRateQuery
 open class HeartRateQueryMock: HeartRateQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -6835,6 +6978,14 @@ open class HeartRateQueryMock: HeartRateQuery, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var expression: BooleanExpression? {
@@ -6861,9 +7012,9 @@ open class HeartRateQueryMock: HeartRateQuery, Mock {
 
     public required init(parts: [BooleanExpressionPart]) throws { }
 
-    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
-        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
-		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> Void) {
+        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`)))
+		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> Void) -> Void
 		perform?(`callback`)
     }
 
@@ -6895,7 +7046,7 @@ open class HeartRateQueryMock: HeartRateQuery, Mock {
 
 
     fileprivate enum MethodType {
-        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
+        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>)
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
@@ -6977,7 +7128,7 @@ open class HeartRateQueryMock: HeartRateQuery, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
@@ -6993,7 +7144,7 @@ open class HeartRateQueryMock: HeartRateQuery, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>, perform: @escaping (@escaping (QueryResult?, Error?) -> Void) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {
@@ -7066,6 +7217,7 @@ open class HeartRateQueryMock: HeartRateQuery, Mock {
 // MARK: - IOUtil
 open class IOUtilMock: IOUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -7089,6 +7241,14 @@ open class IOUtilMock: IOUtil, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -7306,6 +7466,7 @@ open class IOUtilMock: IOUtil, Mock {
 // MARK: - Importer
 open class ImporterMock: Importer, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -7329,6 +7490,14 @@ open class ImporterMock: Importer, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var dataTypePluralName: String {
@@ -7719,6 +7888,7 @@ open class ImporterMock: Importer, Mock {
 // MARK: - ImporterFactory
 open class ImporterFactoryMock: ImporterFactory, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -7742,6 +7912,14 @@ open class ImporterFactoryMock: ImporterFactory, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -8103,6 +8281,7 @@ open class ImporterFactoryMock: ImporterFactory, Mock {
 // MARK: - InjectionProvider
 open class InjectionProviderMock: InjectionProvider, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -8126,6 +8305,14 @@ open class InjectionProviderMock: InjectionProvider, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var types: [Any.Type] {
@@ -8280,6 +8467,7 @@ open class InjectionProviderMock: InjectionProvider, Mock {
 // MARK: - IntrospectiveActivityImporter
 open class IntrospectiveActivityImporterMock: IntrospectiveActivityImporter, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -8303,6 +8491,14 @@ open class IntrospectiveActivityImporterMock: IntrospectiveActivityImporter, Moc
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var dataTypePluralName: String {
@@ -8693,6 +8889,7 @@ open class IntrospectiveActivityImporterMock: IntrospectiveActivityImporter, Moc
 // MARK: - IntrospectiveMedicationImporter
 open class IntrospectiveMedicationImporterMock: IntrospectiveMedicationImporter, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -8716,6 +8913,14 @@ open class IntrospectiveMedicationImporterMock: IntrospectiveMedicationImporter,
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var dataTypePluralName: String {
@@ -9106,6 +9311,7 @@ open class IntrospectiveMedicationImporterMock: IntrospectiveMedicationImporter,
 // MARK: - IntrospectiveMoodImporter
 open class IntrospectiveMoodImporterMock: IntrospectiveMoodImporter, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -9129,6 +9335,14 @@ open class IntrospectiveMoodImporterMock: IntrospectiveMoodImporter, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var dataTypePluralName: String {
@@ -9519,6 +9733,7 @@ open class IntrospectiveMoodImporterMock: IntrospectiveMoodImporter, Mock {
 // MARK: - LeanBodyMassQuery
 open class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -9542,6 +9757,14 @@ open class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var expression: BooleanExpression? {
@@ -9568,9 +9791,9 @@ open class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
 
     public required init(parts: [BooleanExpressionPart]) throws { }
 
-    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
-        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
-		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> Void) {
+        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`)))
+		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> Void) -> Void
 		perform?(`callback`)
     }
 
@@ -9602,7 +9825,7 @@ open class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
 
 
     fileprivate enum MethodType {
-        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
+        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>)
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
@@ -9684,7 +9907,7 @@ open class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
@@ -9700,7 +9923,7 @@ open class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>, perform: @escaping (@escaping (QueryResult?, Error?) -> Void) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {
@@ -9773,6 +9996,7 @@ open class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
 // MARK: - MedicationDAO
 open class MedicationDAOMock: MedicationDAO, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -9796,6 +10020,14 @@ open class MedicationDAOMock: MedicationDAO, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -10099,6 +10331,7 @@ open class MedicationDAOMock: MedicationDAO, Mock {
 // MARK: - MedicationDoseQuery
 open class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -10122,6 +10355,14 @@ open class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var expression: BooleanExpression? {
@@ -10148,9 +10389,9 @@ open class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
 
     public required init(parts: [BooleanExpressionPart]) throws { }
 
-    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
-        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
-		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> Void) {
+        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`)))
+		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> Void) -> Void
 		perform?(`callback`)
     }
 
@@ -10182,7 +10423,7 @@ open class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
 
 
     fileprivate enum MethodType {
-        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
+        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>)
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
@@ -10264,7 +10505,7 @@ open class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
@@ -10280,7 +10521,7 @@ open class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>, perform: @escaping (@escaping (QueryResult?, Error?) -> Void) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {
@@ -10353,6 +10594,7 @@ open class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
 // MARK: - MedicationExporter
 open class MedicationExporterMock: MedicationExporter, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -10376,6 +10618,14 @@ open class MedicationExporterMock: MedicationExporter, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var dataTypePluralName: String {
@@ -10689,6 +10939,7 @@ open class MedicationExporterMock: MedicationExporter, Mock {
 // MARK: - MoodDAO
 open class MoodDAOMock: MoodDAO, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -10712,6 +10963,14 @@ open class MoodDAOMock: MoodDAO, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -10853,6 +11112,7 @@ open class MoodDAOMock: MoodDAO, Mock {
 // MARK: - MoodQuery
 open class MoodQueryMock: MoodQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -10876,6 +11136,14 @@ open class MoodQueryMock: MoodQuery, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var expression: BooleanExpression? {
@@ -10902,9 +11170,9 @@ open class MoodQueryMock: MoodQuery, Mock {
 
     public required init(parts: [BooleanExpressionPart]) throws { }
 
-    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
-        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
-		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> Void) {
+        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`)))
+		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> Void) -> Void
 		perform?(`callback`)
     }
 
@@ -10936,7 +11204,7 @@ open class MoodQueryMock: MoodQuery, Mock {
 
 
     fileprivate enum MethodType {
-        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
+        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>)
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
@@ -11018,7 +11286,7 @@ open class MoodQueryMock: MoodQuery, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
@@ -11034,7 +11302,7 @@ open class MoodQueryMock: MoodQuery, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>, perform: @escaping (@escaping (QueryResult?, Error?) -> Void) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {
@@ -11107,6 +11375,7 @@ open class MoodQueryMock: MoodQuery, Mock {
 // MARK: - MoodUiUtil
 open class MoodUiUtilMock: MoodUiUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -11130,6 +11399,14 @@ open class MoodUiUtilMock: MoodUiUtil, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -11335,6 +11612,7 @@ open class MoodUiUtilMock: MoodUiUtil, Mock {
 // MARK: - MoodUtil
 open class MoodUtilMock: MoodUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -11358,6 +11636,14 @@ open class MoodUtilMock: MoodUtil, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -11506,6 +11792,7 @@ open class MoodUtilMock: MoodUtil, Mock {
 // MARK: - NotificationUtil
 open class NotificationUtilMock: NotificationUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -11529,6 +11816,14 @@ open class NotificationUtilMock: NotificationUtil, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -11667,6 +11962,7 @@ open class NotificationUtilMock: NotificationUtil, Mock {
 // MARK: - NumericSampleUtil
 open class NumericSampleUtilMock: NumericSampleUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -11690,6 +11986,14 @@ open class NumericSampleUtilMock: NumericSampleUtil, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -11744,7 +12048,7 @@ open class NumericSampleUtilMock: NumericSampleUtil, Mock {
 		return __value
     }
 
-    open func max<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type) throws -> [(date: Date?, value: Type)] {
+    open func max<Type: Comparable>(		for attribute: Attribute,		over samples: [Sample],		per aggregationUnit: Calendar.Component?,		as: Type.Type	) throws -> [(date: Date?, value: Type)] {
         addInvocation(.m_max__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`), Parameter<Type.Type>.value(`as`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_max__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())) as? (Attribute, [Sample], Calendar.Component?, Type.Type) -> Void
 		perform?(`attribute`, `samples`, `aggregationUnit`, `as`)
@@ -11752,8 +12056,8 @@ open class NumericSampleUtilMock: NumericSampleUtil, Mock {
 		do {
 		    __value = try methodReturnValue(.m_max__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())).casted()
 		} catch MockError.notStubed {
-			onFatalFailure("Stub return value not specified for max<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type). Use given")
-			Failure("Stub return value not specified for max<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type). Use given")
+			onFatalFailure("Stub return value not specified for max<Type: Comparable>(  for attribute: Attribute,  over samples: [Sample],  per aggregationUnit: Calendar.Component?,  as: Type.Type ). Use given")
+			Failure("Stub return value not specified for max<Type: Comparable>(  for attribute: Attribute,  over samples: [Sample],  per aggregationUnit: Calendar.Component?,  as: Type.Type ). Use given")
 		} catch {
 		    throw error
 		}
@@ -11776,7 +12080,7 @@ open class NumericSampleUtilMock: NumericSampleUtil, Mock {
 		return __value
     }
 
-    open func min<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type) throws -> [(date: Date?, value: Type)] {
+    open func min<Type: Comparable>(		for attribute: Attribute,		over samples: [Sample],		per aggregationUnit: Calendar.Component?,		as: Type.Type	) throws -> [(date: Date?, value: Type)] {
         addInvocation(.m_min__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`), Parameter<Type.Type>.value(`as`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_min__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())) as? (Attribute, [Sample], Calendar.Component?, Type.Type) -> Void
 		perform?(`attribute`, `samples`, `aggregationUnit`, `as`)
@@ -11784,8 +12088,8 @@ open class NumericSampleUtilMock: NumericSampleUtil, Mock {
 		do {
 		    __value = try methodReturnValue(.m_min__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())).casted()
 		} catch MockError.notStubed {
-			onFatalFailure("Stub return value not specified for min<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type). Use given")
-			Failure("Stub return value not specified for min<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type). Use given")
+			onFatalFailure("Stub return value not specified for min<Type: Comparable>(  for attribute: Attribute,  over samples: [Sample],  per aggregationUnit: Calendar.Component?,  as: Type.Type ). Use given")
+			Failure("Stub return value not specified for min<Type: Comparable>(  for attribute: Attribute,  over samples: [Sample],  per aggregationUnit: Calendar.Component?,  as: Type.Type ). Use given")
 		} catch {
 		    throw error
 		}
@@ -11808,7 +12112,7 @@ open class NumericSampleUtilMock: NumericSampleUtil, Mock {
 		return __value
     }
 
-    open func sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type) throws -> [(date: Date?, value: Type)] {
+    open func sum<Type: Numeric>(		for attribute: Attribute,		over samples: [Sample],		per aggregationUnit: Calendar.Component?,		as: Type.Type	) throws -> [(date: Date?, value: Type)] {
         addInvocation(.m_sum__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`), Parameter<Type.Type>.value(`as`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_sum__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())) as? (Attribute, [Sample], Calendar.Component?, Type.Type) -> Void
 		perform?(`attribute`, `samples`, `aggregationUnit`, `as`)
@@ -11816,8 +12120,8 @@ open class NumericSampleUtilMock: NumericSampleUtil, Mock {
 		do {
 		    __value = try methodReturnValue(.m_sum__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())).casted()
 		} catch MockError.notStubed {
-			onFatalFailure("Stub return value not specified for sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type). Use given")
-			Failure("Stub return value not specified for sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type). Use given")
+			onFatalFailure("Stub return value not specified for sum<Type: Numeric>(  for attribute: Attribute,  over samples: [Sample],  per aggregationUnit: Calendar.Component?,  as: Type.Type ). Use given")
+			Failure("Stub return value not specified for sum<Type: Numeric>(  for attribute: Attribute,  over samples: [Sample],  per aggregationUnit: Calendar.Component?,  as: Type.Type ). Use given")
 		} catch {
 		    throw error
 		}
@@ -12153,6 +12457,7 @@ open class NumericSampleUtilMock: NumericSampleUtil, Mock {
 // MARK: - Query
 open class QueryMock: Query, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -12176,6 +12481,14 @@ open class QueryMock: Query, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var expression: BooleanExpression? {
@@ -12202,9 +12515,9 @@ open class QueryMock: Query, Mock {
 
     public required init(parts: [BooleanExpressionPart]) throws { }
 
-    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
-        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
-		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> Void) {
+        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`)))
+		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> Void) -> Void
 		perform?(`callback`)
     }
 
@@ -12236,7 +12549,7 @@ open class QueryMock: Query, Mock {
 
 
     fileprivate enum MethodType {
-        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
+        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>)
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
@@ -12318,7 +12631,7 @@ open class QueryMock: Query, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
@@ -12334,7 +12647,7 @@ open class QueryMock: Query, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>, perform: @escaping (@escaping (QueryResult?, Error?) -> Void) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {
@@ -12407,6 +12720,7 @@ open class QueryMock: Query, Mock {
 // MARK: - QueryFactory
 open class QueryFactoryMock: QueryFactory, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -12430,6 +12744,14 @@ open class QueryFactoryMock: QueryFactory, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -13340,6 +13662,7 @@ open class QueryFactoryMock: QueryFactory, Mock {
 // MARK: - RestingHeartRateQuery
 open class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -13363,6 +13686,14 @@ open class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var expression: BooleanExpression? {
@@ -13389,9 +13720,9 @@ open class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
 
     public required init(parts: [BooleanExpressionPart]) throws { }
 
-    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
-        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
-		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> Void) {
+        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`)))
+		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> Void) -> Void
 		perform?(`callback`)
     }
 
@@ -13423,7 +13754,7 @@ open class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
 
 
     fileprivate enum MethodType {
-        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
+        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>)
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
@@ -13505,7 +13836,7 @@ open class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
@@ -13521,7 +13852,7 @@ open class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>, perform: @escaping (@escaping (QueryResult?, Error?) -> Void) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {
@@ -13594,6 +13925,7 @@ open class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
 // MARK: - SampleFactory
 open class SampleFactoryMock: SampleFactory, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -13617,6 +13949,14 @@ open class SampleFactoryMock: SampleFactory, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -13997,6 +14337,7 @@ open class SampleFactoryMock: SampleFactory, Mock {
 // MARK: - SampleGroupInformation
 open class SampleGroupInformationMock: SampleGroupInformation, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -14020,6 +14361,14 @@ open class SampleGroupInformationMock: SampleGroupInformation, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var name: String {
@@ -14312,6 +14661,7 @@ open class SampleGroupInformationMock: SampleGroupInformation, Mock {
 // MARK: - SampleGroupInformationFactory
 open class SampleGroupInformationFactoryMock: SampleGroupInformationFactory, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -14335,6 +14685,14 @@ open class SampleGroupInformationFactoryMock: SampleGroupInformationFactory, Moc
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -14369,7 +14727,7 @@ open class SampleGroupInformationFactoryMock: SampleGroupInformationFactory, Moc
 		return __value
     }
 
-    open func initInformation(		_ informationType: SampleGroupInformation.Type,		_ attribute: Attribute) -> SampleGroupInformation {
+    open func initInformation(		_ informationType: SampleGroupInformation.Type,		_ attribute: Attribute	) -> SampleGroupInformation {
         addInvocation(.m_initInformation__informationType_attribute(Parameter<SampleGroupInformation.Type>.value(`informationType`), Parameter<Attribute>.value(`attribute`)))
 		let perform = methodPerformValue(.m_initInformation__informationType_attribute(Parameter<SampleGroupInformation.Type>.value(`informationType`), Parameter<Attribute>.value(`attribute`))) as? (SampleGroupInformation.Type, Attribute) -> Void
 		perform?(`informationType`, `attribute`)
@@ -14377,8 +14735,8 @@ open class SampleGroupInformationFactoryMock: SampleGroupInformationFactory, Moc
 		do {
 		    __value = try methodReturnValue(.m_initInformation__informationType_attribute(Parameter<SampleGroupInformation.Type>.value(`informationType`), Parameter<Attribute>.value(`attribute`))).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for initInformation(  _ informationType: SampleGroupInformation.Type,  _ attribute: Attribute). Use given")
-			Failure("Stub return value not specified for initInformation(  _ informationType: SampleGroupInformation.Type,  _ attribute: Attribute). Use given")
+			onFatalFailure("Stub return value not specified for initInformation(  _ informationType: SampleGroupInformation.Type,  _ attribute: Attribute ). Use given")
+			Failure("Stub return value not specified for initInformation(  _ informationType: SampleGroupInformation.Type,  _ attribute: Attribute ). Use given")
 		}
 		return __value
     }
@@ -14537,6 +14895,7 @@ open class SampleGroupInformationFactoryMock: SampleGroupInformationFactory, Moc
 // MARK: - SampleGrouperFactory
 open class SampleGrouperFactoryMock: SampleGrouperFactory, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -14560,6 +14919,14 @@ open class SampleGrouperFactoryMock: SampleGrouperFactory, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -14827,6 +15194,7 @@ open class SampleGrouperFactoryMock: SampleGrouperFactory, Mock {
 // MARK: - SampleUtil
 open class SampleUtilMock: SampleUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -14850,6 +15218,14 @@ open class SampleUtilMock: SampleUtil, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -14914,7 +15290,7 @@ open class SampleUtilMock: SampleUtil, Mock {
 		return __value
     }
 
-    open func aggregate<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component, for attribute: Attribute) throws -> [Date: [SampleType]] {
+    open func aggregate<SampleType: Sample>(		samples: [SampleType],		by aggregationUnit: Calendar.Component,		for attribute: Attribute	) throws -> [Date: [SampleType]] {
         addInvocation(.m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<Attribute>.value(`attribute`)))
 		let perform = methodPerformValue(.m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<Attribute>.value(`attribute`))) as? ([SampleType], Calendar.Component, Attribute) -> Void
 		perform?(`samples`, `aggregationUnit`, `attribute`)
@@ -14922,8 +15298,8 @@ open class SampleUtilMock: SampleUtil, Mock {
 		do {
 		    __value = try methodReturnValue(.m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<Attribute>.value(`attribute`))).casted()
 		} catch MockError.notStubed {
-			onFatalFailure("Stub return value not specified for aggregate<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component, for attribute: Attribute). Use given")
-			Failure("Stub return value not specified for aggregate<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component, for attribute: Attribute). Use given")
+			onFatalFailure("Stub return value not specified for aggregate<SampleType: Sample>(  samples: [SampleType],  by aggregationUnit: Calendar.Component,  for attribute: Attribute ). Use given")
+			Failure("Stub return value not specified for aggregate<SampleType: Sample>(  samples: [SampleType],  by aggregationUnit: Calendar.Component,  for attribute: Attribute ). Use given")
 		} catch {
 		    throw error
 		}
@@ -14990,7 +15366,7 @@ open class SampleUtilMock: SampleUtil, Mock {
 		return __value
     }
 
-    open func convertOneDateSamplesToTwoDateSamples(_ samples: [Sample], samplesShouldNotBeJoined: (Sample, Sample) -> Bool, joinSamples: ([Sample], Date, Date) -> Sample) -> [Sample] {
+    open func convertOneDateSamplesToTwoDateSamples(		_ samples: [Sample],		samplesShouldNotBeJoined: (Sample, Sample) -> Bool,		joinSamples: ([Sample], Date, Date) -> Sample	) -> [Sample] {
         addInvocation(.m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_1(Parameter<[Sample]>.value(`samples`), Parameter<(Sample, Sample) -> Bool>.any, Parameter<([Sample], Date, Date) -> Sample>.any))
 		let perform = methodPerformValue(.m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_1(Parameter<[Sample]>.value(`samples`), Parameter<(Sample, Sample) -> Bool>.any, Parameter<([Sample], Date, Date) -> Sample>.any)) as? ([Sample], (Sample, Sample) -> Bool, ([Sample], Date, Date) -> Sample) -> Void
 		perform?(`samples`, `samplesShouldNotBeJoined`, `joinSamples`)
@@ -14998,13 +15374,13 @@ open class SampleUtilMock: SampleUtil, Mock {
 		do {
 		    __value = try methodReturnValue(.m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_1(Parameter<[Sample]>.value(`samples`), Parameter<(Sample, Sample) -> Bool>.any, Parameter<([Sample], Date, Date) -> Sample>.any)).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for convertOneDateSamplesToTwoDateSamples(_ samples: [Sample], samplesShouldNotBeJoined: (Sample, Sample) -> Bool, joinSamples: ([Sample], Date, Date) -> Sample). Use given")
-			Failure("Stub return value not specified for convertOneDateSamplesToTwoDateSamples(_ samples: [Sample], samplesShouldNotBeJoined: (Sample, Sample) -> Bool, joinSamples: ([Sample], Date, Date) -> Sample). Use given")
+			onFatalFailure("Stub return value not specified for convertOneDateSamplesToTwoDateSamples(  _ samples: [Sample],  samplesShouldNotBeJoined: (Sample, Sample) -> Bool,  joinSamples: ([Sample], Date, Date) -> Sample ). Use given")
+			Failure("Stub return value not specified for convertOneDateSamplesToTwoDateSamples(  _ samples: [Sample],  samplesShouldNotBeJoined: (Sample, Sample) -> Bool,  joinSamples: ([Sample], Date, Date) -> Sample ). Use given")
 		}
 		return __value
     }
 
-    open func convertOneDateSamplesToTwoDateSamples<SampleType: Sample>(_ samples: [SampleType], samplesShouldNotBeJoined: (SampleType, SampleType) -> Bool, joinSamples: ([SampleType], Date, Date) -> SampleType) -> [SampleType] {
+    open func convertOneDateSamplesToTwoDateSamples<SampleType: Sample>(		_ samples: [SampleType],		samplesShouldNotBeJoined: (SampleType, SampleType) -> Bool,		joinSamples: ([SampleType], Date, Date) -> SampleType	) -> [SampleType] {
         addInvocation(.m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<(SampleType, SampleType) -> Bool>.any.wrapAsGeneric(), Parameter<([SampleType], Date, Date) -> SampleType>.any.wrapAsGeneric()))
 		let perform = methodPerformValue(.m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<(SampleType, SampleType) -> Bool>.any.wrapAsGeneric(), Parameter<([SampleType], Date, Date) -> SampleType>.any.wrapAsGeneric())) as? ([SampleType], (SampleType, SampleType) -> Bool, ([SampleType], Date, Date) -> SampleType) -> Void
 		perform?(`samples`, `samplesShouldNotBeJoined`, `joinSamples`)
@@ -15012,8 +15388,8 @@ open class SampleUtilMock: SampleUtil, Mock {
 		do {
 		    __value = try methodReturnValue(.m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<(SampleType, SampleType) -> Bool>.any.wrapAsGeneric(), Parameter<([SampleType], Date, Date) -> SampleType>.any.wrapAsGeneric())).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for convertOneDateSamplesToTwoDateSamples<SampleType: Sample>(_ samples: [SampleType], samplesShouldNotBeJoined: (SampleType, SampleType) -> Bool, joinSamples: ([SampleType], Date, Date) -> SampleType). Use given")
-			Failure("Stub return value not specified for convertOneDateSamplesToTwoDateSamples<SampleType: Sample>(_ samples: [SampleType], samplesShouldNotBeJoined: (SampleType, SampleType) -> Bool, joinSamples: ([SampleType], Date, Date) -> SampleType). Use given")
+			onFatalFailure("Stub return value not specified for convertOneDateSamplesToTwoDateSamples<SampleType: Sample>(  _ samples: [SampleType],  samplesShouldNotBeJoined: (SampleType, SampleType) -> Bool,  joinSamples: ([SampleType], Date, Date) -> SampleType ). Use given")
+			Failure("Stub return value not specified for convertOneDateSamplesToTwoDateSamples<SampleType: Sample>(  _ samples: [SampleType],  samplesShouldNotBeJoined: (SampleType, SampleType) -> Bool,  joinSamples: ([SampleType], Date, Date) -> SampleType ). Use given")
 		}
 		return __value
     }
@@ -15457,6 +15833,7 @@ open class SampleUtilMock: SampleUtil, Mock {
 // MARK: - SearchUtil
 open class SearchUtilMock: SearchUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -15482,46 +15859,54 @@ open class SearchUtilMock: SearchUtil, Mock {
         self.line = line
     }
 
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
 
 
 
 
-    open func binarySearch<T:Comparable>(for targetItem: T, in items: Array<T>) -> Int? {
-        addInvocation(.m_binarySearch__for_targetItemin_items(Parameter<T>.value(`targetItem`).wrapAsGeneric(), Parameter<Array<T>>.value(`items`).wrapAsGeneric()))
-		let perform = methodPerformValue(.m_binarySearch__for_targetItemin_items(Parameter<T>.value(`targetItem`).wrapAsGeneric(), Parameter<Array<T>>.value(`items`).wrapAsGeneric())) as? (T, Array<T>) -> Void
+
+    open func binarySearch<T: Comparable>(for targetItem: T, in items: [T]) -> Int? {
+        addInvocation(.m_binarySearch__for_targetItemin_items(Parameter<T>.value(`targetItem`).wrapAsGeneric(), Parameter<[T]>.value(`items`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_binarySearch__for_targetItemin_items(Parameter<T>.value(`targetItem`).wrapAsGeneric(), Parameter<[T]>.value(`items`).wrapAsGeneric())) as? (T, [T]) -> Void
 		perform?(`targetItem`, `items`)
 		var __value: Int? = nil
 		do {
-		    __value = try methodReturnValue(.m_binarySearch__for_targetItemin_items(Parameter<T>.value(`targetItem`).wrapAsGeneric(), Parameter<Array<T>>.value(`items`).wrapAsGeneric())).casted()
+		    __value = try methodReturnValue(.m_binarySearch__for_targetItemin_items(Parameter<T>.value(`targetItem`).wrapAsGeneric(), Parameter<[T]>.value(`items`).wrapAsGeneric())).casted()
 		} catch {
 			// do nothing
 		}
 		return __value
     }
 
-    open func binarySearch<T>(for targetItem: T, in items: Array<T>, compare: (T, T) -> ComparisonResult) -> Int? {
-        addInvocation(.m_binarySearch__for_targetItemin_itemscompare_compare(Parameter<T>.value(`targetItem`).wrapAsGeneric(), Parameter<Array<T>>.value(`items`).wrapAsGeneric(), Parameter<(T, T) -> ComparisonResult>.any.wrapAsGeneric()))
-		let perform = methodPerformValue(.m_binarySearch__for_targetItemin_itemscompare_compare(Parameter<T>.value(`targetItem`).wrapAsGeneric(), Parameter<Array<T>>.value(`items`).wrapAsGeneric(), Parameter<(T, T) -> ComparisonResult>.any.wrapAsGeneric())) as? (T, Array<T>, (T, T) -> ComparisonResult) -> Void
+    open func binarySearch<T>(for targetItem: T, in items: [T], compare: (T, T) -> ComparisonResult) -> Int? {
+        addInvocation(.m_binarySearch__for_targetItemin_itemscompare_compare(Parameter<T>.value(`targetItem`).wrapAsGeneric(), Parameter<[T]>.value(`items`).wrapAsGeneric(), Parameter<(T, T) -> ComparisonResult>.any.wrapAsGeneric()))
+		let perform = methodPerformValue(.m_binarySearch__for_targetItemin_itemscompare_compare(Parameter<T>.value(`targetItem`).wrapAsGeneric(), Parameter<[T]>.value(`items`).wrapAsGeneric(), Parameter<(T, T) -> ComparisonResult>.any.wrapAsGeneric())) as? (T, [T], (T, T) -> ComparisonResult) -> Void
 		perform?(`targetItem`, `items`, `compare`)
 		var __value: Int? = nil
 		do {
-		    __value = try methodReturnValue(.m_binarySearch__for_targetItemin_itemscompare_compare(Parameter<T>.value(`targetItem`).wrapAsGeneric(), Parameter<Array<T>>.value(`items`).wrapAsGeneric(), Parameter<(T, T) -> ComparisonResult>.any.wrapAsGeneric())).casted()
+		    __value = try methodReturnValue(.m_binarySearch__for_targetItemin_itemscompare_compare(Parameter<T>.value(`targetItem`).wrapAsGeneric(), Parameter<[T]>.value(`items`).wrapAsGeneric(), Parameter<(T, T) -> ComparisonResult>.any.wrapAsGeneric())).casted()
 		} catch {
 			// do nothing
 		}
 		return __value
     }
 
-    open func closestItem<T>(to targetItem: T, in items: Array<T>, distance: (T, T) -> Int) -> T {
-        addInvocation(.m_closestItem__to_targetItemin_itemsdistance_distance(Parameter<T>.value(`targetItem`).wrapAsGeneric(), Parameter<Array<T>>.value(`items`).wrapAsGeneric(), Parameter<(T, T) -> Int>.any.wrapAsGeneric()))
-		let perform = methodPerformValue(.m_closestItem__to_targetItemin_itemsdistance_distance(Parameter<T>.value(`targetItem`).wrapAsGeneric(), Parameter<Array<T>>.value(`items`).wrapAsGeneric(), Parameter<(T, T) -> Int>.any.wrapAsGeneric())) as? (T, Array<T>, (T, T) -> Int) -> Void
+    open func closestItem<T>(to targetItem: T, in items: [T], distance: (T, T) -> Int) -> T {
+        addInvocation(.m_closestItem__to_targetItemin_itemsdistance_distance(Parameter<T>.value(`targetItem`).wrapAsGeneric(), Parameter<[T]>.value(`items`).wrapAsGeneric(), Parameter<(T, T) -> Int>.any.wrapAsGeneric()))
+		let perform = methodPerformValue(.m_closestItem__to_targetItemin_itemsdistance_distance(Parameter<T>.value(`targetItem`).wrapAsGeneric(), Parameter<[T]>.value(`items`).wrapAsGeneric(), Parameter<(T, T) -> Int>.any.wrapAsGeneric())) as? (T, [T], (T, T) -> Int) -> Void
 		perform?(`targetItem`, `items`, `distance`)
 		var __value: T
 		do {
-		    __value = try methodReturnValue(.m_closestItem__to_targetItemin_itemsdistance_distance(Parameter<T>.value(`targetItem`).wrapAsGeneric(), Parameter<Array<T>>.value(`items`).wrapAsGeneric(), Parameter<(T, T) -> Int>.any.wrapAsGeneric())).casted()
+		    __value = try methodReturnValue(.m_closestItem__to_targetItemin_itemsdistance_distance(Parameter<T>.value(`targetItem`).wrapAsGeneric(), Parameter<[T]>.value(`items`).wrapAsGeneric(), Parameter<(T, T) -> Int>.any.wrapAsGeneric())).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for closestItem<T>(to targetItem: T, in items: Array<T>, distance: (T, T) -> Int). Use given")
-			Failure("Stub return value not specified for closestItem<T>(to targetItem: T, in items: Array<T>, distance: (T, T) -> Int). Use given")
+			onFatalFailure("Stub return value not specified for closestItem<T>(to targetItem: T, in items: [T], distance: (T, T) -> Int). Use given")
+			Failure("Stub return value not specified for closestItem<T>(to targetItem: T, in items: [T], distance: (T, T) -> Int). Use given")
 		}
 		return __value
     }
@@ -15570,30 +15955,30 @@ open class SearchUtilMock: SearchUtil, Mock {
         }
 
 
-        public static func binarySearch<T:Comparable>(for targetItem: Parameter<T>, in items: Parameter<Array<T>>, willReturn: Int?...) -> MethodStub {
+        public static func binarySearch<T: Comparable>(for targetItem: Parameter<T>, in items: Parameter<[T]>, willReturn: Int?...) -> MethodStub {
             return Given(method: .m_binarySearch__for_targetItemin_items(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func binarySearch<T>(for targetItem: Parameter<T>, in items: Parameter<Array<T>>, compare: Parameter<(T, T) -> ComparisonResult>, willReturn: Int?...) -> MethodStub {
+        public static func binarySearch<T>(for targetItem: Parameter<T>, in items: Parameter<[T]>, compare: Parameter<(T, T) -> ComparisonResult>, willReturn: Int?...) -> MethodStub {
             return Given(method: .m_binarySearch__for_targetItemin_itemscompare_compare(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric(), `compare`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func closestItem<T>(to targetItem: Parameter<T>, in items: Parameter<Array<T>>, distance: Parameter<(T, T) -> Int>, willReturn: T...) -> MethodStub {
+        public static func closestItem<T>(to targetItem: Parameter<T>, in items: Parameter<[T]>, distance: Parameter<(T, T) -> Int>, willReturn: T...) -> MethodStub {
             return Given(method: .m_closestItem__to_targetItemin_itemsdistance_distance(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric(), `distance`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func binarySearch<T:Comparable>(for targetItem: Parameter<T>, in items: Parameter<Array<T>>, willProduce: (Stubber<Int?>) -> Void) -> MethodStub {
+        public static func binarySearch<T: Comparable>(for targetItem: Parameter<T>, in items: Parameter<[T]>, willProduce: (Stubber<Int?>) -> Void) -> MethodStub {
             let willReturn: [Int?] = []
 			let given: Given = { return Given(method: .m_binarySearch__for_targetItemin_items(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (Int?).self)
 			willProduce(stubber)
 			return given
         }
-        public static func binarySearch<T>(for targetItem: Parameter<T>, in items: Parameter<Array<T>>, compare: Parameter<(T, T) -> ComparisonResult>, willProduce: (Stubber<Int?>) -> Void) -> MethodStub {
+        public static func binarySearch<T>(for targetItem: Parameter<T>, in items: Parameter<[T]>, compare: Parameter<(T, T) -> ComparisonResult>, willProduce: (Stubber<Int?>) -> Void) -> MethodStub {
             let willReturn: [Int?] = []
 			let given: Given = { return Given(method: .m_binarySearch__for_targetItemin_itemscompare_compare(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric(), `compare`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (Int?).self)
 			willProduce(stubber)
 			return given
         }
-        public static func closestItem<T>(to targetItem: Parameter<T>, in items: Parameter<Array<T>>, distance: Parameter<(T, T) -> Int>, willProduce: (Stubber<T>) -> Void) -> MethodStub {
+        public static func closestItem<T>(to targetItem: Parameter<T>, in items: Parameter<[T]>, distance: Parameter<(T, T) -> Int>, willProduce: (Stubber<T>) -> Void) -> MethodStub {
             let willReturn: [T] = []
 			let given: Given = { return Given(method: .m_closestItem__to_targetItemin_itemsdistance_distance(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric(), `distance`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (T).self)
@@ -15605,22 +15990,22 @@ open class SearchUtilMock: SearchUtil, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func binarySearch<T>(for targetItem: Parameter<T>, in items: Parameter<Array<T>>) -> Verify where T:Comparable { return Verify(method: .m_binarySearch__for_targetItemin_items(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric()))}
-        public static func binarySearch<T>(for targetItem: Parameter<T>, in items: Parameter<Array<T>>, compare: Parameter<(T, T) -> ComparisonResult>) -> Verify { return Verify(method: .m_binarySearch__for_targetItemin_itemscompare_compare(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric(), `compare`.wrapAsGeneric()))}
-        public static func closestItem<T>(to targetItem: Parameter<T>, in items: Parameter<Array<T>>, distance: Parameter<(T, T) -> Int>) -> Verify { return Verify(method: .m_closestItem__to_targetItemin_itemsdistance_distance(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric(), `distance`.wrapAsGeneric()))}
+        public static func binarySearch<T>(for targetItem: Parameter<T>, in items: Parameter<[T]>) -> Verify where T:Comparable { return Verify(method: .m_binarySearch__for_targetItemin_items(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric()))}
+        public static func binarySearch<T>(for targetItem: Parameter<T>, in items: Parameter<[T]>, compare: Parameter<(T, T) -> ComparisonResult>) -> Verify { return Verify(method: .m_binarySearch__for_targetItemin_itemscompare_compare(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric(), `compare`.wrapAsGeneric()))}
+        public static func closestItem<T>(to targetItem: Parameter<T>, in items: Parameter<[T]>, distance: Parameter<(T, T) -> Int>) -> Verify { return Verify(method: .m_closestItem__to_targetItemin_itemsdistance_distance(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric(), `distance`.wrapAsGeneric()))}
     }
 
     public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func binarySearch<T>(for targetItem: Parameter<T>, in items: Parameter<Array<T>>, perform: @escaping (T, Array<T>) -> Void) -> Perform where T:Comparable {
+        public static func binarySearch<T>(for targetItem: Parameter<T>, in items: Parameter<[T]>, perform: @escaping (T, [T]) -> Void) -> Perform where T:Comparable {
             return Perform(method: .m_binarySearch__for_targetItemin_items(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric()), performs: perform)
         }
-        public static func binarySearch<T>(for targetItem: Parameter<T>, in items: Parameter<Array<T>>, compare: Parameter<(T, T) -> ComparisonResult>, perform: @escaping (T, Array<T>, (T, T) -> ComparisonResult) -> Void) -> Perform {
+        public static func binarySearch<T>(for targetItem: Parameter<T>, in items: Parameter<[T]>, compare: Parameter<(T, T) -> ComparisonResult>, perform: @escaping (T, [T], (T, T) -> ComparisonResult) -> Void) -> Perform {
             return Perform(method: .m_binarySearch__for_targetItemin_itemscompare_compare(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric(), `compare`.wrapAsGeneric()), performs: perform)
         }
-        public static func closestItem<T>(to targetItem: Parameter<T>, in items: Parameter<Array<T>>, distance: Parameter<(T, T) -> Int>, perform: @escaping (T, Array<T>, (T, T) -> Int) -> Void) -> Perform {
+        public static func closestItem<T>(to targetItem: Parameter<T>, in items: Parameter<[T]>, distance: Parameter<(T, T) -> Int>, perform: @escaping (T, [T], (T, T) -> Int) -> Void) -> Perform {
             return Perform(method: .m_closestItem__to_targetItemin_itemsdistance_distance(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric(), `distance`.wrapAsGeneric()), performs: perform)
         }
     }
@@ -15684,6 +16069,7 @@ open class SearchUtilMock: SearchUtil, Mock {
 // MARK: - Settings
 open class SettingsMock: Settings, Mock, StaticMock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -15708,6 +16094,14 @@ open class SettingsMock: Settings, Mock, StaticMock {
         self.file = file
         self.line = line
     }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
     static var matcher: Matcher = Matcher.default
     static var stubbingPolicy: StubbingPolicy = .wrap
     static var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
@@ -15716,10 +16110,13 @@ open class SettingsMock: Settings, Mock, StaticMock {
     static private var methodPerformValues: [StaticPerform] = []
     public typealias StaticPropertyStub = StaticGiven
     public typealias StaticMethodStub = StaticGiven
-    public static func clear() {
-        invocations = []
-        methodReturnValues = []
-        methodPerformValues = []
+    
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public static func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var minMood: Double {
@@ -16200,6 +16597,7 @@ open class SettingsMock: Settings, Mock, StaticMock {
 // MARK: - SexualActivityQuery
 open class SexualActivityQueryMock: SexualActivityQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -16223,6 +16621,14 @@ open class SexualActivityQueryMock: SexualActivityQuery, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var expression: BooleanExpression? {
@@ -16249,9 +16655,9 @@ open class SexualActivityQueryMock: SexualActivityQuery, Mock {
 
     public required init(parts: [BooleanExpressionPart]) throws { }
 
-    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
-        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
-		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> Void) {
+        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`)))
+		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> Void) -> Void
 		perform?(`callback`)
     }
 
@@ -16283,7 +16689,7 @@ open class SexualActivityQueryMock: SexualActivityQuery, Mock {
 
 
     fileprivate enum MethodType {
-        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
+        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>)
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
@@ -16365,7 +16771,7 @@ open class SexualActivityQueryMock: SexualActivityQuery, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
@@ -16381,7 +16787,7 @@ open class SexualActivityQueryMock: SexualActivityQuery, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>, perform: @escaping (@escaping (QueryResult?, Error?) -> Void) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {
@@ -16454,6 +16860,7 @@ open class SexualActivityQueryMock: SexualActivityQuery, Mock {
 // MARK: - SleepQuery
 open class SleepQueryMock: SleepQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -16477,6 +16884,14 @@ open class SleepQueryMock: SleepQuery, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var expression: BooleanExpression? {
@@ -16503,9 +16918,9 @@ open class SleepQueryMock: SleepQuery, Mock {
 
     public required init(parts: [BooleanExpressionPart]) throws { }
 
-    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
-        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
-		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> Void) {
+        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`)))
+		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> Void) -> Void
 		perform?(`callback`)
     }
 
@@ -16537,7 +16952,7 @@ open class SleepQueryMock: SleepQuery, Mock {
 
 
     fileprivate enum MethodType {
-        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
+        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>)
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
@@ -16619,7 +17034,7 @@ open class SleepQueryMock: SleepQuery, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
@@ -16635,7 +17050,7 @@ open class SleepQueryMock: SleepQuery, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>, perform: @escaping (@escaping (QueryResult?, Error?) -> Void) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {
@@ -16708,6 +17123,7 @@ open class SleepQueryMock: SleepQuery, Mock {
 // MARK: - StringUtil
 open class StringUtilMock: StringUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -16731,6 +17147,14 @@ open class StringUtilMock: StringUtil, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -16964,6 +17388,7 @@ open class StringUtilMock: StringUtil, Mock {
 // MARK: - SubQueryMatcherFactory
 open class SubQueryMatcherFactoryMock: SubQueryMatcherFactory, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -16987,6 +17412,14 @@ open class SubQueryMatcherFactoryMock: SubQueryMatcherFactory, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -17249,6 +17682,7 @@ open class SubQueryMatcherFactoryMock: SubQueryMatcherFactory, Mock {
 // MARK: - TagDAO
 open class TagDAOMock: TagDAO, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -17272,6 +17706,14 @@ open class TagDAOMock: TagDAO, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -17449,6 +17891,7 @@ open class TagDAOMock: TagDAO, Mock {
 // MARK: - TextNormalizationUtil
 open class TextNormalizationUtilMock: TextNormalizationUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -17472,6 +17915,14 @@ open class TextNormalizationUtilMock: TextNormalizationUtil, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -17673,6 +18124,7 @@ open class TextNormalizationUtilMock: TextNormalizationUtil, Mock {
 // MARK: - Transaction
 open class TransactionMock: Transaction, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -17696,6 +18148,14 @@ open class TransactionMock: Transaction, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -18226,6 +18686,7 @@ open class TransactionMock: Transaction, Mock {
 // MARK: - UiUtil
 open class UiUtilMock: UiUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -18249,6 +18710,14 @@ open class UiUtilMock: UiUtil, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var defaultPresenter: Presentr {
@@ -18376,7 +18845,7 @@ open class UiUtilMock: UiUtil, Mock {
 		return __value
     }
 
-    open func tableViewCell<Type: UITableViewCell>(		from tableView: UITableView,		withIdentifier identifier: String,		for indexPath: IndexPath,		as: Type.Type) -> Type {
+    open func tableViewCell<Type: UITableViewCell>(		from tableView: UITableView,		withIdentifier identifier: String,		for indexPath: IndexPath,		as: Type.Type	) -> Type {
         addInvocation(.m_tableViewCell__from_tableViewwithIdentifier_identifierfor_indexPathas_as(Parameter<UITableView>.value(`tableView`), Parameter<String>.value(`identifier`), Parameter<IndexPath>.value(`indexPath`), Parameter<Type.Type>.value(`as`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_tableViewCell__from_tableViewwithIdentifier_identifierfor_indexPathas_as(Parameter<UITableView>.value(`tableView`), Parameter<String>.value(`identifier`), Parameter<IndexPath>.value(`indexPath`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())) as? (UITableView, String, IndexPath, Type.Type) -> Void
 		perform?(`tableView`, `identifier`, `indexPath`, `as`)
@@ -18384,8 +18853,8 @@ open class UiUtilMock: UiUtil, Mock {
 		do {
 		    __value = try methodReturnValue(.m_tableViewCell__from_tableViewwithIdentifier_identifierfor_indexPathas_as(Parameter<UITableView>.value(`tableView`), Parameter<String>.value(`identifier`), Parameter<IndexPath>.value(`indexPath`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for tableViewCell<Type: UITableViewCell>(  from tableView: UITableView,  withIdentifier identifier: String,  for indexPath: IndexPath,  as: Type.Type). Use given")
-			Failure("Stub return value not specified for tableViewCell<Type: UITableViewCell>(  from tableView: UITableView,  withIdentifier identifier: String,  for indexPath: IndexPath,  as: Type.Type). Use given")
+			onFatalFailure("Stub return value not specified for tableViewCell<Type: UITableViewCell>(  from tableView: UITableView,  withIdentifier identifier: String,  for indexPath: IndexPath,  as: Type.Type ). Use given")
+			Failure("Stub return value not specified for tableViewCell<Type: UITableViewCell>(  from tableView: UITableView,  withIdentifier identifier: String,  for indexPath: IndexPath,  as: Type.Type ). Use given")
 		}
 		return __value
     }
@@ -18418,7 +18887,7 @@ open class UiUtilMock: UiUtil, Mock {
 		return __value
     }
 
-    open func tableViewRowAction(		style: UITableViewRowAction.Style,		title: String?,		handler: @escaping (UITableViewRowAction, IndexPath) -> Void) -> UITableViewRowAction {
+    open func tableViewRowAction(		style: UITableViewRowAction.Style,		title: String?,		handler: @escaping (UITableViewRowAction, IndexPath) -> Void	) -> UITableViewRowAction {
         addInvocation(.m_tableViewRowAction__style_styletitle_titlehandler_handler(Parameter<UITableViewRowAction.Style>.value(`style`), Parameter<String?>.value(`title`), Parameter<(UITableViewRowAction, IndexPath) -> Void>.value(`handler`)))
 		let perform = methodPerformValue(.m_tableViewRowAction__style_styletitle_titlehandler_handler(Parameter<UITableViewRowAction.Style>.value(`style`), Parameter<String?>.value(`title`), Parameter<(UITableViewRowAction, IndexPath) -> Void>.value(`handler`))) as? (UITableViewRowAction.Style, String?, @escaping (UITableViewRowAction, IndexPath) -> Void) -> Void
 		perform?(`style`, `title`, `handler`)
@@ -18426,13 +18895,13 @@ open class UiUtilMock: UiUtil, Mock {
 		do {
 		    __value = try methodReturnValue(.m_tableViewRowAction__style_styletitle_titlehandler_handler(Parameter<UITableViewRowAction.Style>.value(`style`), Parameter<String?>.value(`title`), Parameter<(UITableViewRowAction, IndexPath) -> Void>.value(`handler`))).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for tableViewRowAction(  style: UITableViewRowAction.Style,  title: String?,  handler: @escaping (UITableViewRowAction, IndexPath) -> Void). Use given")
-			Failure("Stub return value not specified for tableViewRowAction(  style: UITableViewRowAction.Style,  title: String?,  handler: @escaping (UITableViewRowAction, IndexPath) -> Void). Use given")
+			onFatalFailure("Stub return value not specified for tableViewRowAction(  style: UITableViewRowAction.Style,  title: String?,  handler: @escaping (UITableViewRowAction, IndexPath) -> Void ). Use given")
+			Failure("Stub return value not specified for tableViewRowAction(  style: UITableViewRowAction.Style,  title: String?,  handler: @escaping (UITableViewRowAction, IndexPath) -> Void ). Use given")
 		}
 		return __value
     }
 
-    open func alertAction(		title: String?,		style: UIAlertAction.Style,		handler: ((UIAlertAction) -> Void)?) -> UIAlertAction {
+    open func alertAction(		title: String?,		style: UIAlertAction.Style,		handler: ((UIAlertAction) -> Void)?	) -> UIAlertAction {
         addInvocation(.m_alertAction__title_titlestyle_stylehandler_handler(Parameter<String?>.value(`title`), Parameter<UIAlertAction.Style>.value(`style`), Parameter<((UIAlertAction) -> Void)?>.value(`handler`)))
 		let perform = methodPerformValue(.m_alertAction__title_titlestyle_stylehandler_handler(Parameter<String?>.value(`title`), Parameter<UIAlertAction.Style>.value(`style`), Parameter<((UIAlertAction) -> Void)?>.value(`handler`))) as? (String?, UIAlertAction.Style, ((UIAlertAction) -> Void)?) -> Void
 		perform?(`title`, `style`, `handler`)
@@ -18440,13 +18909,13 @@ open class UiUtilMock: UiUtil, Mock {
 		do {
 		    __value = try methodReturnValue(.m_alertAction__title_titlestyle_stylehandler_handler(Parameter<String?>.value(`title`), Parameter<UIAlertAction.Style>.value(`style`), Parameter<((UIAlertAction) -> Void)?>.value(`handler`))).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for alertAction(  title: String?,  style: UIAlertAction.Style,  handler: ((UIAlertAction) -> Void)?). Use given")
-			Failure("Stub return value not specified for alertAction(  title: String?,  style: UIAlertAction.Style,  handler: ((UIAlertAction) -> Void)?). Use given")
+			onFatalFailure("Stub return value not specified for alertAction(  title: String?,  style: UIAlertAction.Style,  handler: ((UIAlertAction) -> Void)? ). Use given")
+			Failure("Stub return value not specified for alertAction(  title: String?,  style: UIAlertAction.Style,  handler: ((UIAlertAction) -> Void)? ). Use given")
 		}
 		return __value
     }
 
-    open func contextualAction(		style: UIContextualAction.Style,		title: String?,		handler: @escaping UIContextualAction.Handler) -> UIContextualAction {
+    open func contextualAction(		style: UIContextualAction.Style,		title: String?,		handler: @escaping UIContextualAction.Handler	) -> UIContextualAction {
         addInvocation(.m_contextualAction__style_styletitle_titlehandler_handler(Parameter<UIContextualAction.Style>.value(`style`), Parameter<String?>.value(`title`), Parameter<UIContextualAction.Handler>.value(`handler`)))
 		let perform = methodPerformValue(.m_contextualAction__style_styletitle_titlehandler_handler(Parameter<UIContextualAction.Style>.value(`style`), Parameter<String?>.value(`title`), Parameter<UIContextualAction.Handler>.value(`handler`))) as? (UIContextualAction.Style, String?, @escaping UIContextualAction.Handler) -> Void
 		perform?(`style`, `title`, `handler`)
@@ -18454,8 +18923,8 @@ open class UiUtilMock: UiUtil, Mock {
 		do {
 		    __value = try methodReturnValue(.m_contextualAction__style_styletitle_titlehandler_handler(Parameter<UIContextualAction.Style>.value(`style`), Parameter<String?>.value(`title`), Parameter<UIContextualAction.Handler>.value(`handler`))).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for contextualAction(  style: UIContextualAction.Style,  title: String?,  handler: @escaping UIContextualAction.Handler). Use given")
-			Failure("Stub return value not specified for contextualAction(  style: UIContextualAction.Style,  title: String?,  handler: @escaping UIContextualAction.Handler). Use given")
+			onFatalFailure("Stub return value not specified for contextualAction(  style: UIContextualAction.Style,  title: String?,  handler: @escaping UIContextualAction.Handler ). Use given")
+			Failure("Stub return value not specified for contextualAction(  style: UIContextualAction.Style,  title: String?,  handler: @escaping UIContextualAction.Handler ). Use given")
 		}
 		return __value
     }
@@ -18478,19 +18947,19 @@ open class UiUtilMock: UiUtil, Mock {
 		perform?(`name`, `object`, `userInfo`)
     }
 
-    open func present(		_ presentingController: UIViewController,		_ controllerBeingPresented: UIViewController,		animated: Bool,		completion: (() -> Void)?) {
+    open func present(		_ presentingController: UIViewController,		_ controllerBeingPresented: UIViewController,		animated: Bool,		completion: (() -> Void)?	) {
         addInvocation(.m_present__presentingController_controllerBeingPresentedanimated_animatedcompletion_completion(Parameter<UIViewController>.value(`presentingController`), Parameter<UIViewController>.value(`controllerBeingPresented`), Parameter<Bool>.value(`animated`), Parameter<(() -> Void)?>.value(`completion`)))
 		let perform = methodPerformValue(.m_present__presentingController_controllerBeingPresentedanimated_animatedcompletion_completion(Parameter<UIViewController>.value(`presentingController`), Parameter<UIViewController>.value(`controllerBeingPresented`), Parameter<Bool>.value(`animated`), Parameter<(() -> Void)?>.value(`completion`))) as? (UIViewController, UIViewController, Bool, (() -> Void)?) -> Void
 		perform?(`presentingController`, `controllerBeingPresented`, `animated`, `completion`)
     }
 
-    open func present(		_ viewController: UIViewController,		on presentingController: UIViewController,		using presenter: Presentr,		animated: Bool,		completion: (() -> Void)?) {
+    open func present(		_ viewController: UIViewController,		on presentingController: UIViewController,		using presenter: Presentr,		animated: Bool,		completion: (() -> Void)?	) {
         addInvocation(.m_present__viewControlleron_presentingControllerusing_presenteranimated_animatedcompletion_completion(Parameter<UIViewController>.value(`viewController`), Parameter<UIViewController>.value(`presentingController`), Parameter<Presentr>.value(`presenter`), Parameter<Bool>.value(`animated`), Parameter<(() -> Void)?>.value(`completion`)))
 		let perform = methodPerformValue(.m_present__viewControlleron_presentingControllerusing_presenteranimated_animatedcompletion_completion(Parameter<UIViewController>.value(`viewController`), Parameter<UIViewController>.value(`presentingController`), Parameter<Presentr>.value(`presenter`), Parameter<Bool>.value(`animated`), Parameter<(() -> Void)?>.value(`completion`))) as? (UIViewController, UIViewController, Presentr, Bool, (() -> Void)?) -> Void
 		perform?(`viewController`, `presentingController`, `presenter`, `animated`, `completion`)
     }
 
-    open func push(controller: UIViewController, toNavigationController navigationController: UINavigationController?, animated: Bool) {
+    open func push(		controller: UIViewController,		toNavigationController navigationController: UINavigationController?,		animated: Bool	) {
         addInvocation(.m_push__controller_controllertoNavigationController_navigationControlleranimated_animated(Parameter<UIViewController>.value(`controller`), Parameter<UINavigationController?>.value(`navigationController`), Parameter<Bool>.value(`animated`)))
 		let perform = methodPerformValue(.m_push__controller_controllertoNavigationController_navigationControlleranimated_animated(Parameter<UIViewController>.value(`controller`), Parameter<UINavigationController?>.value(`navigationController`), Parameter<Bool>.value(`animated`))) as? (UIViewController, UINavigationController?, Bool) -> Void
 		perform?(`controller`, `navigationController`, `animated`)
@@ -18502,7 +18971,7 @@ open class UiUtilMock: UiUtil, Mock {
 		perform?(`navigationController`, `animated`)
     }
 
-    open func sendUserNotification(		withContent content: UNMutableNotificationContent,		id: String,		repeats: Bool,		interval: TimeInterval) {
+    open func sendUserNotification(		withContent content: UNMutableNotificationContent,		id: String,		repeats: Bool,		interval: TimeInterval	) {
         addInvocation(.m_sendUserNotification__withContent_contentid_idrepeats_repeatsinterval_interval(Parameter<UNMutableNotificationContent>.value(`content`), Parameter<String>.value(`id`), Parameter<Bool>.value(`repeats`), Parameter<TimeInterval>.value(`interval`)))
 		let perform = methodPerformValue(.m_sendUserNotification__withContent_contentid_idrepeats_repeatsinterval_interval(Parameter<UNMutableNotificationContent>.value(`content`), Parameter<String>.value(`id`), Parameter<Bool>.value(`repeats`), Parameter<TimeInterval>.value(`interval`))) as? (UNMutableNotificationContent, String, Bool, TimeInterval) -> Void
 		perform?(`content`, `id`, `repeats`, `interval`)
@@ -19003,6 +19472,7 @@ open class UiUtilMock: UiUtil, Mock {
 // MARK: - UserDefaultsUtil
 open class UserDefaultsUtilMock: UserDefaultsUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -19026,6 +19496,14 @@ open class UserDefaultsUtilMock: UserDefaultsUtil, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
 
@@ -19191,6 +19669,7 @@ open class UserDefaultsUtilMock: UserDefaultsUtil, Mock {
 // MARK: - WeightQuery
 open class WeightQueryMock: WeightQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -19214,6 +19693,14 @@ open class WeightQueryMock: WeightQuery, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var expression: BooleanExpression? {
@@ -19240,9 +19727,9 @@ open class WeightQueryMock: WeightQuery, Mock {
 
     public required init(parts: [BooleanExpressionPart]) throws { }
 
-    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
-        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
-		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> Void) {
+        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`)))
+		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> Void) -> Void
 		perform?(`callback`)
     }
 
@@ -19274,7 +19761,7 @@ open class WeightQueryMock: WeightQuery, Mock {
 
 
     fileprivate enum MethodType {
-        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
+        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> Void>)
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
@@ -19356,7 +19843,7 @@ open class WeightQueryMock: WeightQuery, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
@@ -19372,7 +19859,7 @@ open class WeightQueryMock: WeightQuery, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> Void>, perform: @escaping (@escaping (QueryResult?, Error?) -> Void) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {
@@ -19445,6 +19932,7 @@ open class WeightQueryMock: WeightQuery, Mock {
 // MARK: - WellnessMoodImporter
 open class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
         self.file = file
@@ -19468,6 +19956,14 @@ open class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
         self.file = file
         self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
     public var dataTypePluralName: String {

@@ -35,6 +35,14 @@ public class ResultsViewControllerMock: UITableViewController, ResultsViewContro
         self.line = line
     }
 
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
 
     public var query: Query! {
 		get {	invocations.append(.p_query_get); return __p_query ?? optionalGivenGetterValue(.p_query_get, "ResultsViewControllerMock - stub value for query was not defined") }

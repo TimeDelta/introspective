@@ -20,7 +20,7 @@ target 'Introspective' do
 
   target 'IntrospectiveTests' do
     inherit! :search_paths
-    pod "SwiftyMocky", '~> 3.2.0'
+    pod "SwiftyMocky"
     pod 'SwiftHamcrest', '~> 2.1.1'
   end
 
