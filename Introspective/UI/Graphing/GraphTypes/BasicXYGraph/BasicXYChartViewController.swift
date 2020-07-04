@@ -46,9 +46,8 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 	private final var finishedSetup: Bool = false
 	private final var chartView: AAChartView!
 	private final var chartModel = AAChartModel()
-		.animationType(.EaseInCubic)
-		.dataLabelEnabled(true)
-		.zoomType(.XY)
+		.animationType(.easeInCubic)
+		.zoomType(.xy)
 
 	// MARK: - UIViewController Overrides
 
@@ -56,6 +55,7 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 		super.viewDidLoad()
 
 		chartModel = chartModel.chartType(chartType)
+		chartModel.dataLabelsEnabled = true
 
 		DependencyInjector.get(UiUtil.self).setBackButton(for: self, title: "Graph Setup", action: #selector(back))
 

@@ -26,9 +26,9 @@ public enum GraphType: CustomStringConvertible {
 
 	public var aaChartType: AAChartType {
 		switch (self) {
-			case .line: return .Spline
-			case .bar: return .Column
-			case .scatter: return .Scatter
+			case .line: return .spline
+			case .bar: return .column
+			case .scatter: return .scatter
 		}
 	}
 }

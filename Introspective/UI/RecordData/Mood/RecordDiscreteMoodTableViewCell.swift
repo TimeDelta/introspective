@@ -267,7 +267,7 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 		let numberOfMoods = CGFloat(DependencyInjector.get(Settings.self).maxMood - DependencyInjector.get(Settings.self).minMood + 1)
 		// not -1 because need to account for one mood always being selected, which adds 1 spacing
 		let totalSpacingRequired = spacingBetweenRatingButtons * numberOfMoods
-		let proportionalWidth = (scrollView.width - totalSpacingRequired) / numberOfMoods
+		let proportionalWidth = (scrollView.frame.width - totalSpacingRequired) / numberOfMoods
 		if proportionalWidth > minWidth {
 			return proportionalWidth
 		}
