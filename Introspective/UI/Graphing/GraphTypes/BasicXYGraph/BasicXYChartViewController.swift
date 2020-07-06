@@ -47,6 +47,8 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 	private final var chartModel = AAChartModel()
 		.animationType(.easeInCubic)
 		.zoomType(.xy)
+		.backgroundColor(AAColor.darkGray)
+		.dataLabelsEnabled(true)
 
 	// MARK: - UIViewController Overrides
 
@@ -54,7 +56,6 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 		super.viewDidLoad()
 
 		chartModel = chartModel.chartType(chartType)
-		chartModel.dataLabelsEnabled = true
 
 		DependencyInjector.get(UiUtil.self).setBackButton(for: self, title: "Graph Setup", action: #selector(back))
 
@@ -117,7 +118,9 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 		if categories != nil {
 			chartModel = chartModel.categories(categories!)
 		}
-		chartView.aa_drawChartWithChartModel(chartModel)
+		let xAxis = AAXAxis().min(0).max(1).linkedTo(0).visible(false)
+		let chartOptions = AAOptionsConstructor.configureChartOptions(chartModel).xAxis(xAxis)
+		chartView.aa_drawChartWithChartOptions(chartOptions)
 	}
 
 	private final func doneWaiting() {

@@ -154,14 +154,28 @@ public class XYGraphDataGenerator {
 				populateColors(yInformation.count)
 			}
 			for yInformation in yInformation {
-				var seriesData = [[Any]]()
+				var seriesData = [Any]()
 				let yValues = try transform(sampleGroups: groups, information: yInformation)
+				var xValueIndex = 0
 				for (xGroupValue, xSampleValue) in sortedXValues {
 					// loop over x values so that series data is already sorted
 					if let yValueIndex = index(ofValue: xGroupValue, in: yValues, groupedBy: grouper) {
 						let yValue = yValues[yValueIndex].sampleValue
-						seriesData.append([xSampleValue, Double(formatNumber(yValue))!])
+						guard let yValueNum = Float(formatNumber(yValue)) else {
+							log.debug("Skipping y-value: %@", String(describing: yValue))
+							xValueIndex += 1
+							continue
+						}
+						let dataLabel = AADataLabels()
+							.x(Float(xValueIndex) / Float(sortedXValues.count))
+							.y(yValueNum)
+						let dataElement = AADataElement()
+							.name(String(describing: xSampleValue))
+							.dataLabels(dataLabel)
+							.y(yValueNum)
+						seriesData.append(dataElement.toDic()!)
 					}
+					xValueIndex += 1
 				}
 				var name = yInformation.description.localizedCapitalized
 				if let groupName = groupName {
@@ -192,13 +206,18 @@ public class XYGraphDataGenerator {
 		DependencyInjector.get(CalendarUtil.self).date(from: value)
 	}
 
+	/// Apply the given SampleGroupInformation to each sample group.
 	final func transform(sampleGroups: [(Any, [Sample])], information: SampleGroupInformation)
 		throws -> [(groupValue: Any, sampleValue: String)] {
 		signpost?.begin(name: "Transform", "Number of sample groups: %d", sampleGroups.count)
 		var values = [(groupValue: Any, sampleValue: String)]()
 		for (groupValue, samples) in sampleGroups {
-			let sampleValue = try information.computeGraphable(forSamples: samples)
-			values.append((groupValue: groupValue, sampleValue: sampleValue))
+			if samples.count == 0 {
+				values.append((groupValue: groupValue, sampleValue: String(describing: groupValue)))
+			} else {
+				let sampleValue = try information.computeGraphable(forSamples: samples)
+				values.append((groupValue: groupValue, sampleValue: sampleValue))
+			}
 		}
 		signpost?.end(name: "Transform", "Finished transforming %d groups", sampleGroups.count)
 		return values

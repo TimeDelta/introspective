@@ -193,7 +193,7 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 		-> [(key: Date, value: [Sample])] {
 		var results = sortedSamplesByTimeUnit
 		let minDate = sortedSamplesByTimeUnit[0].key
-		let maxDate = sortedSamplesByTimeUnit[sortedSamplesByTimeUnit.count].key
+		let maxDate = sortedSamplesByTimeUnit[sortedSamplesByTimeUnit.count - 1].key
 
 		var currentDate = minDate
 		var index = 0
