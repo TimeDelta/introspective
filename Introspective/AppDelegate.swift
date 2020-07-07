@@ -38,8 +38,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 	final func application(
 		_: UIApplication,
 		willFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]? = nil
-	)
-		-> Bool {
+	) -> Bool {
 		Me.registerDependencies()
 
 		userNotificationDelegate = UserNotificationDelegate(window)

@@ -91,8 +91,7 @@ internal class DatabaseImpl: Database {
 		type: Type.Type,
 		sortDescriptors: [NSSortDescriptor],
 		cacheName: String? = nil
-	)
-		-> NSFetchedResultsController<Type> {
+	) -> NSFetchedResultsController<Type> {
 		let fetchRequest = type.fetchRequest() as! NSFetchRequest<Type>
 		fetchRequest.sortDescriptors = sortDescriptors
 		fetchRequest.shouldRefreshRefetchedObjects = true

@@ -265,8 +265,7 @@ public final class Frequency: NSObject, NSSecureCoding, Codable, Comparable {
 		_ left: Double,
 		_ right: Double,
 		_ operation: (Double, Double) -> Double
-	)
-		-> Frequency {
+	) -> Frequency {
 		let frequency = Frequency(operation(left, right), .minute)!
 		do {
 			guard let result = Frequency(try frequency.per(unit), unit) else {

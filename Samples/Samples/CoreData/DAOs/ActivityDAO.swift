@@ -140,8 +140,9 @@ public class ActivityDAOImpl: ActivityDAO {
 		return nil
 	}
 
-	public final func getMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) throws
-		-> Activity? {
+	public final func getMostRecentlyStartedIncompleteActivity(
+		for activityDefinition: ActivityDefinition
+	) throws -> Activity? {
 		let endDateVariableName = CommonSampleAttributes.endDate.variableName!
 		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
 		fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
@@ -201,27 +202,28 @@ public class ActivityDAOImpl: ActivityDAO {
 	}
 
 	@discardableResult
-	public final func stopMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) throws
-		-> Activity {
-			let endDateVariableName = CommonSampleAttributes.endDate.variableName!
-			let incompleteActivities = activityDefinition.activities.filtered(
-				using: NSPredicate(format: "%K == nil", endDateVariableName)
-			) as! Set<Activity>
+	public final func stopMostRecentlyStartedIncompleteActivity(
+		for activityDefinition: ActivityDefinition
+	) throws -> Activity {
+		let endDateVariableName = CommonSampleAttributes.endDate.variableName!
+		let incompleteActivities = activityDefinition.activities.filtered(
+			using: NSPredicate(format: "%K == nil", endDateVariableName)
+		) as! Set<Activity>
 
-			if !incompleteActivities.isEmpty {
-				let sortedIncompleteActivities = incompleteActivities.sorted(by: { $0.start > $1.start })
-				let transaction = DependencyInjector.get(Database.self).transaction()
-				let activity = try transaction.pull(savedObject: sortedIncompleteActivities[0])
-				let now = Date()
-				if !autoIgnoreIfAppropriate(activity, end: now) {
-					activity.end = now
-					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-				}
-				return try DependencyInjector.get(Database.self).pull(savedObject: activity)
+		if !incompleteActivities.isEmpty {
+			let sortedIncompleteActivities = incompleteActivities.sorted(by: { $0.start > $1.start })
+			let transaction = DependencyInjector.get(Database.self).transaction()
+			let activity = try transaction.pull(savedObject: sortedIncompleteActivities[0])
+			let now = Date()
+			if !autoIgnoreIfAppropriate(activity, end: now) {
+				activity.end = now
+				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 			}
-			let message = String(format: "Activity named %@ is not currently active", activityDefinition.name)
-			throw GenericDisplayableError(title: message)
+			return try DependencyInjector.get(Database.self).pull(savedObject: activity)
 		}
+		let message = String(format: "Activity named %@ is not currently active", activityDefinition.name)
+		throw GenericDisplayableError(title: message)
+	}
 
 	@discardableResult
 	public final func stopMostRecentlyStartedIncompleteActivity() throws -> Activity {

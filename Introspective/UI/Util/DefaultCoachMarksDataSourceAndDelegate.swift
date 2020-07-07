@@ -42,8 +42,7 @@ public final class DefaultCoachMarksDataSourceAndDelegate: CoachMarksDataSourceA
 		_ coachMarksController: CoachMarksController,
 		coachMarkViewsAt index: Int,
 		madeFrom coachMark: CoachMark
-	)
-		-> (bodyView: CoachMarkBodyView, arrowView: CoachMarkArrowView?) {
+	) -> (bodyView: CoachMarkBodyView, arrowView: CoachMarkArrowView?) {
 		let coachViews = coachMarksController.helper.makeDefaultCoachViews(
 			withArrow: coachMarksInfo[index].useArrow,
 			arrowOrientation: coachMark.arrowOrientation

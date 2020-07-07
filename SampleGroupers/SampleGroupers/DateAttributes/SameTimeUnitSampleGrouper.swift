@@ -189,8 +189,9 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 
 	// MARK: - Helper Functions
 
-	private final func addMissingTimeUnits(_ sortedSamplesByTimeUnit: [(key: Date, value: [Sample])])
-		-> [(key: Date, value: [Sample])] {
+	private final func addMissingTimeUnits(
+		_ sortedSamplesByTimeUnit: [(key: Date, value: [Sample])]
+	) -> [(key: Date, value: [Sample])] {
 		var results = sortedSamplesByTimeUnit
 		let minDate = sortedSamplesByTimeUnit[0].key
 		let maxDate = sortedSamplesByTimeUnit[sortedSamplesByTimeUnit.count - 1].key

@@ -19,8 +19,11 @@ public protocol UiUtil {
 	func setView(_ view: UIView, enabled: Bool?, hidden: Bool?)
 	func setButton(_ button: UIButton, enabled: Bool?, hidden: Bool?)
 	@discardableResult
-	func setBackButton(for viewController: UIViewController, title: String, action selector: Selector)
-		-> UIBarButtonItem
+	func setBackButton(
+		for viewController: UIViewController,
+		title: String,
+		action selector: Selector
+	) -> UIBarButtonItem
 	func addSaveButtonToKeyboardFor(_ textView: UITextView, target: Any?, action: Selector?)
 	func addSaveButtonToKeyboardFor(_ textField: UITextField, target: Any?, action: Selector?)
 	/// Retrieve the value for the specified `UserInfoKey` from the given notification.
@@ -31,37 +34,39 @@ public protocol UiUtil {
 	/// sugar so that you don't have to type out "UserInfoKey." everywhere.
 	func info(_ info: [UserInfoKey: Any]) -> [AnyHashable: Any]
 
-	func controller<Type: UIViewController>(named controllerName: String, from storyboardName: String, as: Type.Type)
-		-> Type
-	func controller<Type: UIViewController>(named controllerName: String, from storyboard: UIStoryboard, as: Type.Type)
-		-> Type
+	func controller<Type: UIViewController>(
+		named controllerName: String,
+		from storyboardName: String,
+		as: Type.Type
+	) -> Type
+	func controller<Type: UIViewController>(
+		named controllerName: String,
+		from storyboard: UIStoryboard,
+		as: Type.Type
+	) -> Type
 	func tableViewCell<Type: UITableViewCell>(
 		from tableView: UITableView,
 		withIdentifier identifier: String,
 		for indexPath: IndexPath,
 		as: Type.Type
-	)
-		-> Type
+	) -> Type
 	func documentPicker(docTypes: [String], in pickerMode: UIDocumentPickerMode) -> UIDocumentPickerViewController
 	func alert(title: String?, message: String?, preferredStyle: UIAlertController.Style) -> UIAlertController
 	func tableViewRowAction(
 		style: UITableViewRowAction.Style,
 		title: String?,
 		handler: @escaping (UITableViewRowAction, IndexPath) -> Void
-	)
-		-> UITableViewRowAction
+	) -> UITableViewRowAction
 	func alertAction(
 		title: String?,
 		style: UIAlertAction.Style,
 		handler: ((UIAlertAction) -> Void)?
-	)
-		-> UIAlertAction
+	) -> UIAlertAction
 	func contextualAction(
 		style: UIContextualAction.Style,
 		title: String?,
 		handler: @escaping UIContextualAction.Handler
-	)
-		-> UIContextualAction
+	) -> UIContextualAction
 
 	/// - Note: This is just for testability
 	func stopObserving(_ observer: Any, name: NotificationName?, object: Any?)
@@ -280,8 +285,7 @@ public final class UiUtilImpl: UiUtil {
 		withIdentifier identifier: String,
 		for indexPath: IndexPath,
 		as _: Type.Type
-	)
-		-> Type {
+	) -> Type {
 		tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! Type
 	}
 
@@ -300,8 +304,7 @@ public final class UiUtilImpl: UiUtil {
 		style: UITableViewRowAction.Style,
 		title: String?,
 		handler: @escaping (UITableViewRowAction, IndexPath) -> Void
-	)
-		-> UITableViewRowAction {
+	) -> UITableViewRowAction {
 		UITableViewRowAction(style: style, title: title, handler: handler)
 	}
 
@@ -309,8 +312,7 @@ public final class UiUtilImpl: UiUtil {
 		title: String?,
 		style: UIAlertAction.Style,
 		handler: ((UIAlertAction) -> Void)?
-	)
-		-> UIAlertAction {
+	) -> UIAlertAction {
 		UIAlertAction(title: title, style: style, handler: handler)
 	}
 
@@ -318,8 +320,7 @@ public final class UiUtilImpl: UiUtil {
 		style: UIContextualAction.Style,
 		title: String?,
 		handler: @escaping UIContextualAction.Handler
-	)
-		-> UIContextualAction {
+	) -> UIContextualAction {
 		UIContextualAction(style: style, title: title, handler: handler)
 	}
 

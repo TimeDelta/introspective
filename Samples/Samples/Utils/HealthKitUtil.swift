@@ -46,8 +46,7 @@ public extension HealthKitUtil {
 		to endDate: Date? = nil,
 		predicate: NSPredicate? = nil,
 		callback: @escaping ([HKSample]?, Error?) -> Void
-	)
-		-> (() -> Void) {
+	) -> (() -> Void) {
 		return getSamples(for: type, from: startDate, to: endDate, predicate: predicate, callback: callback)
 	}
 }
@@ -125,8 +124,7 @@ public final class HealthKitUtilImpl: HealthKitUtil {
 		to _: Date?,
 		predicate: NSPredicate?,
 		callback: @escaping ([HKSample]?, Error?) -> Void
-	)
-		-> (() -> Void) {
+	) -> (() -> Void) {
 		let query = HKSampleQuery(
 			sampleType: type.sampleType,
 			predicate: predicate,

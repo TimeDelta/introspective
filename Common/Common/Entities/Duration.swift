@@ -58,8 +58,9 @@ public final class Duration: Equatable, Comparable {
 
 	// MARK: - Calculations
 
-	public final func units(_ units: Set<Calendar.Component> = Set([.day, .hour, .minute, .second]))
-		-> [Calendar.Component: Int] {
+	public final func units(
+		_ units: Set<Calendar.Component> = Set([.day, .hour, .minute, .second])
+	) -> [Calendar.Component: Int] {
 		interval.toUnits(units)
 	}
 

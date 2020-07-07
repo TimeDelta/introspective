@@ -46,8 +46,7 @@ public final class SameStartDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 	public final func getSamples<QuerySampleType: Sample>(
 		from querySamples: [QuerySampleType],
 		matching subQuerySamples: [Sample]
-	)
-		-> [QuerySampleType] {
+	) -> [QuerySampleType] {
 		var matchingSamples = [QuerySampleType]()
 
 		var applicableSubQuerySamples = subQuerySamples

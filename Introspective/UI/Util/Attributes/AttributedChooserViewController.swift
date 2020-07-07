@@ -274,8 +274,7 @@ final class AttributedChooserViewController: UIViewController {
 		_ view: UIView,
 		lastView: UIView!,
 		isFirstView: inout Bool
-	)
-		-> NSLayoutConstraint {
+	) -> NSLayoutConstraint {
 		if isFirstView {
 			isFirstView = false
 			return view.topAnchor.constraint(

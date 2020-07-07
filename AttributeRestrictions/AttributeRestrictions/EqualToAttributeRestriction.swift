@@ -213,8 +213,7 @@ public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualTo
 	public static func == (
 		lhs: TypedEqualToAttributeRestrictionBase<ValueType>,
 		rhs: TypedEqualToAttributeRestrictionBase<ValueType>
-	)
-		-> Bool {
+	) -> Bool {
 		lhs.equalTo(rhs)
 	}
 

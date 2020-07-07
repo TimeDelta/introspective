@@ -17,39 +17,55 @@ import DependencyInjection
 public protocol SampleUtil {
 	func getOnly(samples: [Sample], from startDate: Date?, to endDate: Date?) -> [Sample]
 	func getOnly<SampleType: Sample>(samples: [SampleType], from startDate: Date?, to endDate: Date?) -> [SampleType]
+
 	func sample(_ sample: Sample, occursOnOneOf daysOfWeek: Set<DayOfWeek>) -> Bool
-	func aggregate(samples: [Sample], by aggregationUnit: Calendar.Component, for attribute: Attribute)
-		throws -> [Date: [Sample]]
+
+	func aggregate(
+		samples: [Sample],
+		by aggregationUnit: Calendar.Component,
+		for attribute: Attribute
+	) throws -> [Date: [Sample]]
 	func aggregate<SampleType: Sample>(
 		samples: [SampleType],
 		by aggregationUnit: Calendar.Component,
 		for attribute: Attribute
-	)
-		throws -> [Date: [SampleType]]
-	func sort(samples: [Sample], by aggregationUnit: Calendar.Component)
-		throws -> [(date: Date, samples: [Sample])]
-	func sort<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component)
-		throws -> [(date: Date, samples: [SampleType])]
+	) throws -> [Date: [SampleType]]
+
+	func sort(samples: [Sample], by aggregationUnit: Calendar.Component) throws -> [(date: Date, samples: [Sample])]
+	func sort<SampleType: Sample>(
+		samples: [SampleType],
+		by aggregationUnit: Calendar.Component
+	) throws -> [(date: Date, samples: [SampleType])]
 	/// - Note: behavior is undefined when passing `ComparisonResult.orderedSame`
 	func sort(samples: [Sample], by dateType: DateType, in order: ComparisonResult) -> [Sample]
 	/// - Note: behavior is undefined when passing `ComparisonResult.orderedSame`
-	func sort<SampleType: Sample>(samples: [SampleType], by dateType: DateType, in order: ComparisonResult)
-		-> [SampleType]
+	func sort<SampleType: Sample>(
+		samples: [SampleType],
+		by dateType: DateType,
+		in order: ComparisonResult
+	) -> [SampleType]
+
+	/// - Parameter samplesShouldNotBeJoined: This lambda should return `true` if the passed samples should _not_ be joined and `false` otherwise.
 	func convertOneDateSamplesToTwoDateSamples(
 		_ samples: [Sample],
 		samplesShouldNotBeJoined: (Sample, Sample) -> Bool,
 		joinSamples: ([Sample], Date, Date) -> Sample
 	) -> [Sample]
+	/// - Parameter samplesShouldNotBeJoined: This lambda should return `true` if the passed samples should _not_ be joined and `false` otherwise.
 	func convertOneDateSamplesToTwoDateSamples<SampleType: Sample>(
 		_ samples: [SampleType],
 		samplesShouldNotBeJoined: (SampleType, SampleType) -> Bool,
 		joinSamples: ([SampleType], Date, Date) -> SampleType
 	) -> [SampleType]
+
 	/// - Precondition: input array has at least one element.
-	func closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(sample: SampleType1, in samples: [SampleType2])
-		-> SampleType2
+	func closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(
+		sample: SampleType1,
+		in samples: [SampleType2]
+	) -> SampleType2
 	/// - Precondition: input array has at least one element.
 	func closestInTimeTo(sample: Sample, in samples: [Sample]) -> Sample
+
 	/// Get the shortest distance between two samples in the specified calendar unit.
 	/// This will look at the distance between all 4 possible combinations of start and
 	/// end dates for the given samples then choose the lowest interval of time.
@@ -107,9 +123,14 @@ public final class SampleUtilImpl: SampleUtil {
 		return true
 	}
 
+	// MARK: - Aggregation
+
 	// need this because protocols don't conform to themselves
-	public final func aggregate(samples: [Sample], by aggregationUnit: Calendar.Component, for attribute: Attribute)
-		throws -> [Date: [Sample]] {
+	public final func aggregate(
+		samples: [Sample],
+		by aggregationUnit: Calendar.Component,
+		for attribute: Attribute
+	) throws -> [Date: [Sample]] {
 		try aggregate(samples, aggregationUnit, attribute)
 	}
 
@@ -117,10 +138,11 @@ public final class SampleUtilImpl: SampleUtil {
 		samples: [SampleType],
 		by aggregationUnit: Calendar.Component,
 		for attribute: Attribute
-	)
-		throws -> [Date: [SampleType]] {
+	) throws -> [Date: [SampleType]] {
 		try aggregate(samples, aggregationUnit, attribute) as! [Date: [SampleType]]
 	}
+
+	// MARK: - Sorting
 
 	// need this because for some stupid reason, protocols don't conform to themselves
 	public final func sort(
@@ -142,8 +164,10 @@ public final class SampleUtilImpl: SampleUtil {
 			}
 	}
 
-	public final func sort<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component)
-		throws -> [(date: Date, samples: [SampleType])] {
+	public final func sort<SampleType: Sample>(
+		samples: [SampleType],
+		by aggregationUnit: Calendar.Component
+	) throws -> [(date: Date, samples: [SampleType])] {
 		let samplesByAggregation = try aggregate(
 			samples: samples,
 			by: aggregationUnit,
@@ -178,13 +202,14 @@ public final class SampleUtilImpl: SampleUtil {
 		sort(samples, dateType, order) as! [SampleType]
 	}
 
+	// MARK: -
+
 	// need this because protocols don't conform to themselves
 	public final func convertOneDateSamplesToTwoDateSamples(
 		_ samples: [Sample],
 		samplesShouldNotBeJoined: (Sample, Sample) -> Bool,
 		joinSamples: ([Sample], Date, Date) -> Sample
-	)
-		-> [Sample] {
+	) -> [Sample] {
 		let sortedSamples = sort(samples: samples, by: .start)
 		var twoDateSamples = [Sample]()
 		var lastSample: Sample?
@@ -220,8 +245,7 @@ public final class SampleUtilImpl: SampleUtil {
 		_ samples: [SampleType],
 		samplesShouldNotBeJoined: (SampleType, SampleType) -> Bool,
 		joinSamples: ([SampleType], Date, Date) -> SampleType
-	)
-		-> [SampleType] {
+	) -> [SampleType] {
 		let sortedSamples = sort(samples: samples, by: .start)
 		var twoDateSamples = [SampleType]()
 		var lastSample: SampleType?

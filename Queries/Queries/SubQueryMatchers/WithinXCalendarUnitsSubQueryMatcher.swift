@@ -67,8 +67,7 @@ public final class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatab
 	public final func getSamples<QuerySampleType: Sample>(
 		from querySamples: [QuerySampleType],
 		matching subQuerySamples: [Sample]
-	)
-		-> [QuerySampleType] {
+	) -> [QuerySampleType] {
 		if subQuerySamples.isEmpty {
 			return []
 		}

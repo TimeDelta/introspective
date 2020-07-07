@@ -71,8 +71,7 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 	public final func getSamples<QuerySampleType: Sample>(
 		from querySamples: [QuerySampleType],
 		matching subQuerySamples: [Sample]
-	)
-		throws -> [QuerySampleType] {
+	) throws -> [QuerySampleType] {
 		if subQuerySamples.isEmpty { return [] }
 
 		var matchingSamples = [QuerySampleType]()

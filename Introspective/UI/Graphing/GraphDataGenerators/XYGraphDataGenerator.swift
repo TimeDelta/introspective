@@ -81,8 +81,9 @@ public class XYGraphDataGenerator {
 
 	// MARK: - Sorting
 
-	final func getSortedXValues(_ xValues: [(groupValue: Any, sampleValue: String)])
-		-> [(groupValue: Any, sampleValue: Any)] {
+	final func getSortedXValues(
+		_ xValues: [(groupValue: Any, sampleValue: String)]
+	) -> [(groupValue: Any, sampleValue: Any)] {
 		let values = xValues.map { $0.sampleValue }
 		// if x values are numbers and are not sorted, graph will look very weird
 		if areAllNumbers(values) {
@@ -95,8 +96,9 @@ public class XYGraphDataGenerator {
 		return xValues.map { (groupValue: $0.groupValue, sampleValue: $0.sampleValue as Any) }
 	}
 
-	final func sortXValuesByNumber(_ xValues: [(groupValue: Any, sampleValue: String)])
-		-> [(groupValue: Any, sampleValue: Any)] {
+	final func sortXValuesByNumber(
+		_ xValues: [(groupValue: Any, sampleValue: String)]
+	) -> [(groupValue: Any, sampleValue: Any)] {
 		let sortedXValues: [(groupValue: Any, sampleValue: Any)]
 		let mappedXValues = xValues
 			.map { (groupValue: $0.groupValue, sampleValue: Double(formatNumber($0.sampleValue))!) }
@@ -111,8 +113,9 @@ public class XYGraphDataGenerator {
 	}
 
 	/// - Precondition: All sample values are valid date strings
-	final func sortXValuesByDate(_ xValues: [(groupValue: Any, sampleValue: String)])
-		-> [(groupValue: Any, sampleValue: Any)] {
+	final func sortXValuesByDate(
+		_ xValues: [(groupValue: Any, sampleValue: String)]
+	) -> [(groupValue: Any, sampleValue: Any)] {
 		let sortedXValues: [(groupValue: Any, sampleValue: Any)]
 		signpost?.begin(name: "Sort x values as dates", "Number of x values: %d", xValues.count)
 		sortedXValues = xValues.sorted {
@@ -124,8 +127,9 @@ public class XYGraphDataGenerator {
 		return sortedXValues
 	}
 
-	final func sortXValuesByDayOfWeek(_ xValues: [(groupValue: Any, sampleValue: String)])
-		-> [(groupValue: Any, sampleValue: Any)] {
+	final func sortXValuesByDayOfWeek(
+		_ xValues: [(groupValue: Any, sampleValue: String)]
+	) -> [(groupValue: Any, sampleValue: Any)] {
 		let sortedXValues: [(groupValue: Any, sampleValue: Any)]
 		signpost?.begin(name: "Sort x values as days of week", "Number of x values: %d", xValues.count)
 		sortedXValues = xValues.sorted {

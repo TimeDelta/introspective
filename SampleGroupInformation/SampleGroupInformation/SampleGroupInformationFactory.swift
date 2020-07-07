@@ -18,8 +18,7 @@ public protocol SampleGroupInformationFactory {
 	func initInformation(
 		_ informationType: SampleGroupInformation.Type,
 		_ attribute: Attribute
-	)
-		-> SampleGroupInformation
+	) -> SampleGroupInformation
 }
 
 public final class SampleGroupInformationFactoryImpl: SampleGroupInformationFactory {
@@ -40,8 +39,9 @@ public final class SampleGroupInformationFactoryImpl: SampleGroupInformationFact
 		MostRecentDateInformation.self,
 	]
 
-	public final func getApplicableInformationTypes(forAttribute attribute: Attribute)
-		-> [SampleGroupInformation.Type] {
+	public final func getApplicableInformationTypes(
+		forAttribute attribute: Attribute
+	) -> [SampleGroupInformation.Type] {
 		var applicableInformationTypes = [SampleGroupInformation.Type]()
 		if attribute is DoubleAttribute {
 			applicableInformationTypes.append(contentsOf: Me.numericInformationTypes)
@@ -77,8 +77,9 @@ public final class SampleGroupInformationFactoryImpl: SampleGroupInformationFact
 		return applicableInformationTypes
 	}
 
-	public final func getApplicableNumericInformationTypes(forAttribute attribute: Attribute)
-		-> [SampleGroupInformation.Type] {
+	public final func getApplicableNumericInformationTypes(
+		forAttribute attribute: Attribute
+	) -> [SampleGroupInformation.Type] {
 		var applicableInformationTypes = [SampleGroupInformation.Type]()
 		if attribute is DoubleAttribute {
 			applicableInformationTypes.append(contentsOf: Me.numericInformationTypes)
@@ -106,8 +107,7 @@ public final class SampleGroupInformationFactoryImpl: SampleGroupInformationFact
 	public final func initInformation(
 		_ informationType: SampleGroupInformation.Type,
 		_ attribute: Attribute
-	)
-		-> SampleGroupInformation {
+	) -> SampleGroupInformation {
 		informationType.init(attribute)
 	}
 }

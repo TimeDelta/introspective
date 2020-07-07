@@ -247,23 +247,22 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 		named tagName: String,
 		for definition: ActivityDefinition,
 		using transaction: Transaction
-	)
-		throws -> Tag {
-			let tagRequest: NSFetchRequest<Tag> = Tag.fetchRequest()
-			tagRequest.predicate = NSPredicate(format: "name ==[cd] %@", tagName)
-			let matchingTags = try transaction.query(tagRequest)
-			let tag: Tag
-			if !matchingTags.isEmpty {
-				tag = try DependencyInjector.get(Database.self)
-					.pull(savedObject: matchingTags[0], fromSameContextAs: definition)
-			} else {
-				let childTransaction = transaction.childTransaction()
-				tag = try childTransaction.new(Tag.self)
-				tag.name = tagName
-				try retryOnFail({ try childTransaction.commit() }, maxRetries: 2)
-			}
-			return try transaction.pull(savedObject: tag)
+	) throws -> Tag {
+		let tagRequest: NSFetchRequest<Tag> = Tag.fetchRequest()
+		tagRequest.predicate = NSPredicate(format: "name ==[cd] %@", tagName)
+		let matchingTags = try transaction.query(tagRequest)
+		let tag: Tag
+		if !matchingTags.isEmpty {
+			tag = try DependencyInjector.get(Database.self)
+				.pull(savedObject: matchingTags[0], fromSameContextAs: definition)
+		} else {
+			let childTransaction = transaction.childTransaction()
+			tag = try childTransaction.new(Tag.self)
+			tag.name = tagName
+			try retryOnFail({ try childTransaction.commit() }, maxRetries: 2)
 		}
+		return try transaction.pull(savedObject: tag)
+	}
 
 	private final func unfinishedActivity(at startDate: Date, for definition: ActivityDefinition) throws -> Activity? {
 		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
