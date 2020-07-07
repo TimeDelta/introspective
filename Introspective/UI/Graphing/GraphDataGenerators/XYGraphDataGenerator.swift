@@ -81,7 +81,8 @@ public class XYGraphDataGenerator {
 
 	// MARK: - Sorting
 
-	final func getSortedXValues(_ xValues: [(groupValue: Any, sampleValue: String)]) -> [(groupValue: Any, sampleValue: Any)] {
+	final func getSortedXValues(_ xValues: [(groupValue: Any, sampleValue: String)])
+		-> [(groupValue: Any, sampleValue: Any)] {
 		let values = xValues.map { $0.sampleValue }
 		// if x values are numbers and are not sorted, graph will look very weird
 		if areAllNumbers(values) {

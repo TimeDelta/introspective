@@ -245,6 +245,7 @@
 		75E5834894536821228DED5FF926A881 /* ActivityDefinitionNameTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AA1DCF95D6A08D5DE00DAE32A56471 /* ActivityDefinitionNameTableViewCell.swift */; };
 		764148555A6661D891E0723BFE875258 /* QueryScreenUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8AF1BA62CF59F285D331C712F7E7FB2 /* QueryScreenUITests.swift */; };
 		768B8F1173AEDD0A157DC79F83D0AFBC /* AttributedChooserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E58A24B51EF36F76BC8635DA280D57 /* AttributedChooserViewController.swift */; };
+		771041A34B6F16E1A9CBDA78FF6BCCEF /* MedicationDAOFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DBFC5E195B0A25364A62082A004DF2 /* MedicationDAOFunctionalTests.swift */; };
 		7748D9C98A7EF00680F1E80E26A479F3 /* SampleGroupInformationTableViewCellUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512C33704C8FCB7593E08FF2F731EBEB /* SampleGroupInformationTableViewCellUnitTests.swift */; };
 		77AA8DA138798243DC4A989D9AE6889E /* MedicationDoseEditorViewControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E5D2FBBDA9B83DCDEA4F041627DD05 /* MedicationDoseEditorViewControllerMock.swift */; };
 		783654CB2E4DFCE5A0733B0B08716230 /* EditActivityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C8B5AE7A83209B865D6BC8170C1A09A /* EditActivityTableViewController.swift */; };
@@ -258,6 +259,7 @@
 		7DA1D004735DE1EE85255103D981622C /* LessThanFrequencyAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BB71DF076DEBEC1A365787E2D8A383D /* LessThanFrequencyAttributeRestrictionUnitTests.swift */; };
 		7DB57004D2DDDE944DB3351DF027007D /* ActivityDefinitionTagsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674B09FF74E10645BCAE0A9BAF1D94BA /* ActivityDefinitionTagsTableViewCell.swift */; };
 		7E29FF9C028B4B97C0E72AF9B4D1AD58 /* RecordActivityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBA5C806D2CB850992E9E1E60A8E687 /* RecordActivityTableViewController.swift */; };
+		7E8D6E6D3D6969B350DA7BF3B7D7D0D8 /* MedicationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CA81A302F9C78DAAC12DAF59773F70 /* MedicationInfo.swift */; };
 		7F6B5FF4D579389CCBE232EC2D00005A /* StringUtilUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA9A507532B314A179026F6EF6FF569 /* StringUtilUnitTests.swift */; };
 		7F9D36A70BEF759AD899476A4A236711 /* SampleGroupInformation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC895FFB270263B7E591BBBBB535B0D2 /* SampleGroupInformation.framework */; };
 		7FA482E7DD0A87C01B3B24722BC7837E /* AttributeValueTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC626E45A1CA42F75A6370ABDABA45B1 /* AttributeValueTypeViewController.swift */; };
@@ -293,6 +295,7 @@
 		8ED7593663F82ECA368D9237DF98E177 /* AttributeDescriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BFA94B71E96ABEE54B0DB185CCDA36 /* AttributeDescriptionViewController.swift */; };
 		8F725C7268AB2151880C2DFCDFC4040B /* ChooseAttributesToGraphTableViewControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D2F640CB16B922378EAAD18FA8A3CA /* ChooseAttributesToGraphTableViewControllerMock.swift */; };
 		8FEBB0D5C0FC85B31EE7F25186953020 /* ArrayMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D9C87848F666D8CEE3203AA702A72A /* ArrayMatchers.swift */; };
+		901A744A50B1ADFACBD5C0F00AC75FE7 /* MedicationDoseInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AA380E6D97F789C8C9871BFBAC2DB /* MedicationDoseInfo.swift */; };
 		90C1EFAE6284F47DC18431BE6B1028B3 /* MedicationDoseEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132059F129208172D078C8BCA0AEF2BA /* MedicationDoseEditorViewController.swift */; };
 		90E4B47783A398C54F863DB69587978A /* GreaterThanDoubleAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA3FA81CDAC0ECC9A79B3206DD77C51 /* GreaterThanDoubleAttributeRestrictionUnitTests.swift */; };
 		91EEF80CC55487A4B79D859E78C90529 /* SameDatesSubQueryMatcherUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1769D25D6D2474DE946EB14D0D8822EB /* SameDatesSubQueryMatcherUnitTests.swift */; };
@@ -333,9 +336,6 @@
 		A26589F32BFC0527881D20D03E4CB48C /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
 		A2DF8D22C94D6F91A865D337C0730F03 /* DurationUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA96F5DDD263FD0D99095EBADBA4AACC /* DurationUnitTests.swift */; };
-		771041A34B6F16E1A9CBDA78FF6BCCEF /* MedicationDAOFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DBFC5E195B0A25364A62082A004DF2 /* MedicationDAOFunctionalTests.swift */; };
-		7E8D6E6D3D6969B350DA7BF3B7D7D0D8 /* MedicationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CA81A302F9C78DAAC12DAF59773F70 /* MedicationInfo.swift */; };
-		901A744A50B1ADFACBD5C0F00AC75FE7 /* MedicationDoseInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AA380E6D97F789C8C9871BFBAC2DB /* MedicationDoseInfo.swift */; };
 		A307D44D6721A760E637CEAE90AFED42 /* BloodPressureTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F312D49748BD5F763B6D8463E6112C45 /* BloodPressureTableViewCell.swift */; };
 		A34600A18766AE66F0324FF5AB10E114 /* GraphType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */; };
 		A4A958FBC360353B84DBFD1E49D8602C /* MiscMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99DEF55FA04C46F3921A7305BB937620 /* MiscMatchers.swift */; };
@@ -656,6 +656,7 @@
 		268FC5A5036F640D145D1D0354898669 /* Pods-DiscreteMoodWidget.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DiscreteMoodWidget.release.xcconfig"; path = "Pods/Target Support Files/Pods-DiscreteMoodWidget/Pods-DiscreteMoodWidget.release.xcconfig"; sourceTree = "<group>"; };
 		26C97BF6CF453B537F96A406D52D8713 /* SelectAttributeOrInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectAttributeOrInformationViewController.swift; sourceTree = "<group>"; };
 		2763BD3734CEB18405B1CE4963F5E012 /* Pods_IntrospectiveTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_IntrospectiveTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		27CA81A302F9C78DAAC12DAF59773F70 /* MedicationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationInfo.swift; sourceTree = "<group>"; };
 		27D7733A69855DB72184BBCEB84FC22D /* SubQueryMatcherMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubQueryMatcherMatchers.swift; sourceTree = "<group>"; };
 		287A32D410A26F74A82A65C685055875 /* MoodExporterFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodExporterFunctionalTest.swift; sourceTree = "<group>"; };
 		28E324370F11F9B9AB9B97193F8F26D8 /* MultiSelectAttributeValueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiSelectAttributeValueViewController.swift; sourceTree = "<group>"; };
@@ -703,6 +704,7 @@
 		3C5A62E50B4EB82E2EEA8B669EDA7751 /* DurationAttributeValueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationAttributeValueViewController.swift; sourceTree = "<group>"; };
 		3E41B485EDAE311FB0EEBEB834E0F375 /* TextAttributeValueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAttributeValueViewController.swift; sourceTree = "<group>"; };
 		3E50DED083FFB132103568F46659DC53 /* Settings.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Settings.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3F0AA380E6D97F789C8C9871BFBAC2DB /* MedicationDoseInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDoseInfo.swift; sourceTree = "<group>"; };
 		3F55E87E5BCE597BFE8ACB6B1850C7FE /* SampleMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleMock.swift; sourceTree = "<group>"; };
 		3FB6E7430A6E227C82E0BBD7B3D85FB5 /* Queries.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Queries.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		40005151FE33A8425DA81E6F18682C3E /* MedicationExporterFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationExporterFunctionalTests.swift; sourceTree = "<group>"; };
@@ -911,9 +913,6 @@
 		A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		A2505FFD3F0233815468AA6A0A4B96FE /* CoreDataSampleMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSampleMock.swift; sourceTree = "<group>"; };
-		E3DBFC5E195B0A25364A62082A004DF2 /* MedicationDAOFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDAOFunctionalTests.swift; sourceTree = "<group>"; };
-		27CA81A302F9C78DAAC12DAF59773F70 /* MedicationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationInfo.swift; sourceTree = "<group>"; };
-		3F0AA380E6D97F789C8C9871BFBAC2DB /* MedicationDoseInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDoseInfo.swift; sourceTree = "<group>"; };
 		A455D3386BC23DDD4E8C89EF40475474 /* LessThanDoubleAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanDoubleAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A4CBB7B41499754C5234A1BC949DD2AC /* EditAttributeRestrictionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewController.swift; sourceTree = "<group>"; };
 		A64E0788E27B3B4FE185D06F3F454E46 /* ChooseSampleGrouperTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseSampleGrouperTypeViewController.swift; sourceTree = "<group>"; };
@@ -1032,6 +1031,7 @@
 		E2B7EADC414E7602ACFDC20A2A80D09E /* DosageUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DosageUnitTests.swift; sourceTree = "<group>"; };
 		E399F0A5F95193DF1DC17989EE29EB77 /* EqualToSelectOneAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToSelectOneAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		E3D0D80E7E86D4500CCF74A48C82EDD7 /* SubSampleTypeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubSampleTypeTableViewCell.swift; sourceTree = "<group>"; };
+		E3DBFC5E195B0A25364A62082A004DF2 /* MedicationDAOFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDAOFunctionalTests.swift; sourceTree = "<group>"; };
 		E3E9A087EDBCB2B5660525E3422324E6 /* ActivityQueryFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityQueryFunctionalTests.swift; sourceTree = "<group>"; };
 		E4178BC066D97C3EC749CF6502E6E3E0 /* StopAllActivitiesIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopAllActivitiesIntentHandler.swift; sourceTree = "<group>"; };
 		E4E5D2FBBDA9B83DCDEA4F041627DD05 /* MedicationDoseEditorViewControllerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDoseEditorViewControllerMock.swift; sourceTree = "<group>"; };
@@ -2866,7 +2866,7 @@
 			buildConfigurationList = D63E90AF276550132DB77384E58E04DA /* Build configuration list for PBXNativeTarget "Introspective" */;
 			buildPhases = (
 				75E20E1CC157703ADA5941E98FF972D1 /* [CP] Check Pods Manifest.lock */,
-				71144499CC72EA7C4977758F97CF6DC8 /* Run Script - format code */,
+				5C892A1694A626CA237B8DDA20F4BFA8 /* Run Script - format code */,
 				F0FB89F745BB6CFF964B314ECF77BAAF /* Run Script - Create GitVersion.swift */,
 				BF6DA2C10FFDD3FB4515D3A60FA139E2 /* Sources */,
 				C51BB4D038DED40DD32EC47510ABCC76 /* Frameworks */,
@@ -3128,7 +3128,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		71144499CC72EA7C4977758F97CF6DC8 /* Run Script - format code */ = {
+		5C892A1694A626CA237B8DDA20F4BFA8 /* Run Script - format code */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3144,7 +3144,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nswiftformat \\\n  --swiftversion `swift --version | awk '{print $4}'` \\\n  --tabwidth 4 \\\n  --maxwidth 120 \\\n  --wraparguments before-first \\\n  --wrapparameters before-first \\\n  --wrapcollections before-first \\\n  --closingparen balanced \\\n  --commas always \\\n  --shortoptionals always \\\n  --indent tab \\\n  --linebreaks lf \\\n  --header ignore \\\n  --specifierorder public,private,static,final,convenience,override \\\n  --disable \\\nandOperator,\\\nredundantBreak,\\\nredundantExtensionACL,\\\nredundantFileprivate,\\\nunusedArguments,\\\n  --enable \\\nblankLinesAroundMark,\\\nblankLinesAtEndOfScope,\\\nblankLinesAtEndOfScope,\\\nblankLinesBetweenScopes,\\\nanyObjectProtocol,\\\nconsecutiveBlankLines,\\\nconsecutiveSpaces,\\\nduplicateImports,\\\nemptyBraces,\\\nhoistPatternLet,\\\nleadingDelimiters,\\\nlinebreakAtEndOfFile,\\\nlinebreaks,\\\nredundantGet,\\\nsortedImports,\\\nspaceAroundBrackets,\\\nspaceAroundGenerics,\\\nspaceAroundOperators,\\\nspaceInsideGenerics,\\\nspaceInsideParens,\\\nspecifiers,\\\nstrongOutlets,\\\ntrailingCommas,\\\ntypeSugar,\\\n  `find . -type d -maxdepth 1 -print | egrep -v '^\\.$' | grep -v Pods | egrep -v '.*\\.xc(workspace|odeproj)' | grep -v .git | grep -v Carthage | egrep -v 'Tests$' | tr '\\n' ' '`\n";
+			shellScript = "${SOURCE_ROOT}/scripts/format-code\n";
 		};
 		75E20E1CC157703ADA5941E98FF972D1 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

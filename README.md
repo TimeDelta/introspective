@@ -2,7 +2,15 @@
 
 
 ## Getting Started
-### Setting up Git pre-commit hook (optional)
+### Code Formatting
+Code formatting is done via [SwiftFormat](https://github.com/nicklockwood/SwiftFormat). You _must_ install this for the build to work because all non-test code is automatically formatted during the build process.
+#### Links
+- [Enabled Code Formatting Rules](config/enabled-code-format-rules.txt)
+- [Disabled Code Formatting Rules](config/disabled-code-format-rules.txt)
+- [Code Formatting Script](scripts/format-code)
+
+
+### Setting up Git pre-commit hook (optional for build but needed to contribute)
 1. If you are using a Mac, you will need to download [this file](https://github.com/TimeDelta/dotfiles/blob/master/compile/realpath.c), compile it and add it to your PATH.
 1. You will also need to download [this Python script](https://github.com/TimeDelta/dotfiles/blob/master/osx_bin/xunique) and add it to your PATH.
 1. In terminal, navigate to the root clone directory and run `cd .git/hooks`

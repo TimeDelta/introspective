@@ -1,0 +1,28 @@
+# This file is used to specify which code formatting rules are disabled. Each
+# rule name should be on a spearate line. Empty lines and lines that start with
+# "#" will be ignored
+
+anyObjectProtocol
+blankLinesAroundMark
+blankLinesAtEndOfScope
+blankLinesAtEndOfScope
+blankLinesBetweenScopes
+consecutiveBlankLines
+consecutiveSpaces
+duplicateImports
+emptyBraces
+hoistPatternLet
+leadingDelimiters
+linebreakAtEndOfFile
+linebreaks
+redundantGet
+sortedImports
+spaceAroundBrackets
+spaceAroundGenerics
+spaceAroundOperators
+spaceInsideGenerics
+spaceInsideParens
+specifiers
+strongOutlets
+trailingCommas
+typeSugar

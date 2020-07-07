@@ -1,0 +1,39 @@
+#!/bin/sh
+set -e
+
+if ! which swiftformat > /dev/null; then
+  echo "ERROR: You have to install SwiftFormat first."
+  echo "This is easy to do using HomeBrew: brew install swiftformat"
+  echo "Don't have HomeBrew? No problem. Just run the following: "
+  echo '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"'
+  exit 1
+fi
+
+get_rules_list() {
+  cat "${SOURCE_ROOT}/config/${1}-code-format-rules.txt" | egrep -v '^$' | egrep -v '^#' | tr '\n' ','
+}
+
+swiftformat \
+  --swiftversion `swift --version | awk '{print $4}'` \
+  --tabwidth 4 \
+  --maxwidth 120 \
+  --wraparguments before-first \
+  --wrapparameters before-first \
+  --wrapcollections before-first \
+  --closingparen balanced \
+  --commas always \
+  --shortoptionals always \
+  --indent tab \
+  --linebreaks lf \
+  --header ignore \
+  --specifierorder public,private,static,final,convenience,override \
+  --disable `get_rules_list disabled` \
+  --enable `get_rules_list enabled` \
+  `find . -type d -maxdepth 1 -print \
+    | egrep -v '^\.$' \
+    | grep -v Pods \
+    | egrep -v '.*\.xc(workspace|odeproj)' \
+    | grep -v .git \
+    | grep -v Carthage \
+    | egrep -v 'Tests$' \
+    | tr '\n' ' '`
