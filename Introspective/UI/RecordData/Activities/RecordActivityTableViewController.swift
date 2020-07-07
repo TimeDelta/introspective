@@ -765,8 +765,9 @@ public final class RecordActivityTableViewController: UITableViewController {
 		pushToNavigationController(controller, animated: false)
 	}
 
-	private final func getMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition)
-		-> Activity? {
+	private final func getMostRecentlyStartedIncompleteActivity(
+		for activityDefinition: ActivityDefinition
+	) -> Activity? {
 		do {
 			return try DependencyInjector.get(ActivityDAO.self)
 				.getMostRecentlyStartedIncompleteActivity(for: activityDefinition)

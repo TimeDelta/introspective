@@ -148,23 +148,21 @@ public final class SingleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator {
 		groups: [(Any, [Sample])],
 		groupedBy grouper: SampleGrouper,
 		as groupName: String? = nil
-	)
-		throws
-		-> GraphData {
-			let xValues: [(groupValue: Any, sampleValue: String)]
-			if usePointGroupValueForXAxis {
-				xValues = try groups.map { (groupValue: $0.0, sampleValue: try grouper.groupNameFor(value: $0.0)) }
-			} else {
-				xValues = try transform(sampleGroups: groups, information: xAxis.information!)
-			}
-			let sortedXValues = getSortedXValues(xValues)
-
-			return try getSeriesDataForYInformation(
-				yAxis.map { $0.information! },
-				fromGroups: groups,
-				groupedBy: grouper,
-				withGroupName: groupName,
-				sortedXValues: sortedXValues
-			)
+	) throws -> GraphData {
+		let xValues: [(groupValue: Any, sampleValue: String)]
+		if usePointGroupValueForXAxis {
+			xValues = try groups.map { (groupValue: $0.0, sampleValue: try grouper.groupNameFor(value: $0.0)) }
+		} else {
+			xValues = try transform(sampleGroups: groups, information: xAxis.information!)
 		}
+		let sortedXValues = getSortedXValues(xValues)
+
+		return try getSeriesDataForYInformation(
+			yAxis.map { $0.information! },
+			fromGroups: groups,
+			groupedBy: grouper,
+			withGroupName: groupName,
+			sortedXValues: sortedXValues
+		)
+	}
 }

@@ -81,8 +81,7 @@ public class XYGraphDataGenerator {
 
 	// MARK: - Sorting
 
-	final func getSortedXValues(_ xValues: [(groupValue: Any, sampleValue: String)])
-		-> [(groupValue: Any, sampleValue: Any)] {
+	final func getSortedXValues(_ xValues: [(groupValue: Any, sampleValue: String)]) -> [(groupValue: Any, sampleValue: Any)] {
 		let values = xValues.map { $0.sampleValue }
 		// if x values are numbers and are not sorted, graph will look very weird
 		if areAllNumbers(values) {
@@ -147,50 +146,49 @@ public class XYGraphDataGenerator {
 		groupedBy grouper: SampleGrouper,
 		withGroupName groupName: String?,
 		sortedXValues: [(groupValue: Any, sampleValue: Any)]
-	)
-		throws -> GraphData {
-			var graphData = GraphData()
-			if colors.isEmpty {
-				populateColors(yInformation.count)
-			}
-			for yInformation in yInformation {
-				var seriesData = [Any]()
-				let yValues = try transform(sampleGroups: groups, information: yInformation)
-				var xValueIndex = 0
-				for (xGroupValue, xSampleValue) in sortedXValues {
-					// loop over x values so that series data is already sorted
-					if let yValueIndex = index(ofValue: xGroupValue, in: yValues, groupedBy: grouper) {
-						let yValue = yValues[yValueIndex].sampleValue
-						guard let yValueNum = Float(formatNumber(yValue)) else {
-							log.debug("Skipping y-value: %@", String(describing: yValue))
-							xValueIndex += 1
-							continue
-						}
-						let dataLabel = AADataLabels()
-							.x(Float(xValueIndex) / Float(sortedXValues.count))
-							.y(yValueNum)
-						let dataElement = AADataElement()
-							.name(String(describing: xSampleValue))
-							.dataLabels(dataLabel)
-							.y(yValueNum)
-						seriesData.append(dataElement.toDic()!)
-					}
-					xValueIndex += 1
-				}
-				var name = yInformation.description.localizedCapitalized
-				if let groupName = groupName {
-					name = "\(groupName): \(name)"
-				}
-				graphData.append(
-					AASeriesElement()
-						.name(name)
-						.data(seriesData)
-						.color(getNextColor())
-						.toDic()!
-				)
-			}
-			return graphData
+	) throws -> GraphData {
+		var graphData = GraphData()
+		if colors.isEmpty {
+			populateColors(yInformation.count)
 		}
+		for yInformation in yInformation {
+			var seriesData = [Any]()
+			let yValues = try transform(sampleGroups: groups, information: yInformation)
+			var xValueIndex = 0
+			for (xGroupValue, xSampleValue) in sortedXValues {
+				// loop over x values so that series data is already sorted
+				if let yValueIndex = index(ofValue: xGroupValue, in: yValues, groupedBy: grouper) {
+					let yValue = yValues[yValueIndex].sampleValue
+					guard let yValueNum = Float(formatNumber(yValue)) else {
+						log.debug("Skipping y-value: %@", String(describing: yValue))
+						xValueIndex += 1
+						continue
+					}
+					let dataLabel = AADataLabels()
+						.x(Float(xValueIndex) / Float(sortedXValues.count))
+						.y(yValueNum)
+					let dataElement = AADataElement()
+						.name(String(describing: xSampleValue))
+						.dataLabels(dataLabel)
+						.y(yValueNum)
+					seriesData.append(dataElement.toDic()!)
+				}
+				xValueIndex += 1
+			}
+			var name = yInformation.description.localizedCapitalized
+			if let groupName = groupName {
+				name = "\(groupName): \(name)"
+			}
+			graphData.append(
+				AASeriesElement()
+					.name(name)
+					.data(seriesData)
+					.color(getNextColor())
+					.toDic()!
+			)
+		}
+		return graphData
+	}
 
 	final func formatNumber(_ value: String) -> String {
 		var copiedValue = value
@@ -207,8 +205,10 @@ public class XYGraphDataGenerator {
 	}
 
 	/// Apply the given SampleGroupInformation to each sample group.
-	final func transform(sampleGroups: [(Any, [Sample])], information: SampleGroupInformation)
-		throws -> [(groupValue: Any, sampleValue: String)] {
+	final func transform(
+		sampleGroups: [(Any, [Sample])],
+		information: SampleGroupInformation
+	) throws -> [(groupValue: Any, sampleValue: String)] {
 		signpost?.begin(name: "Transform", "Number of sample groups: %d", sampleGroups.count)
 		var values = [(groupValue: Any, sampleValue: String)]()
 		for (groupValue, samples) in sampleGroups {
@@ -227,8 +227,7 @@ public class XYGraphDataGenerator {
 		ofValue value: Any,
 		in groupValues: [(groupValue: Any, sampleValue: String)],
 		groupedBy grouper: SampleGrouper
-	)
-		-> Int? {
+	) -> Int? {
 		groupValues.index(where: {
 			do {
 				return try grouper.groupValuesAreEqual($0.groupValue, value)

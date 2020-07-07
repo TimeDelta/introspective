@@ -235,8 +235,10 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 		tableView.reloadData()
 	}
 
-	private final func getHandlerFor(_ expressionType: BooleanExpressionType, _ indexPath: IndexPath?)
-		-> ((UIAlertAction) -> Void) {
+	private final func getHandlerFor(
+		_ expressionType: BooleanExpressionType,
+		_ indexPath: IndexPath?
+	) -> ((UIAlertAction) -> Void) {
 		return { _ in
 			if let indexPath = indexPath {
 				self.expressionParts[indexPath.row] = (type: expressionType, expression: nil)

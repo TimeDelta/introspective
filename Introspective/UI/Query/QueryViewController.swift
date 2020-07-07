@@ -718,8 +718,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	private final func getAddOrEditExpressionPartHandlerFor(
 		_ expressionType: BooleanExpressionType,
 		_ indexPath: IndexPath?
-	)
-		-> ((UIAlertAction) -> Void) {
+	) -> ((UIAlertAction) -> Void) {
 		return { _ in
 			if let indexPath = indexPath {
 				self.queries[indexPath.section].parts[indexPath.row - 1] = (type: expressionType, expression: nil)
