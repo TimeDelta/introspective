@@ -3,7 +3,7 @@
 
 ## Getting Started
 ### Code Formatting
-Code formatting is done via [SwiftFormat](https://github.com/nicklockwood/SwiftFormat). You _must_ install this for the build to work because all non-test code is automatically formatted during the build process.
+Code formatting is done via [SwiftFormat](https://github.com/nicklockwood/SwiftFormat). You _**must**_ install this for the build to work because all non-test code is automatically formatted during the build process.
 #### Links
 - [Enabled Code Formatting Rules](config/enabled-code-format-rules.txt)
 - [Disabled Code Formatting Rules](config/disabled-code-format-rules.txt)
