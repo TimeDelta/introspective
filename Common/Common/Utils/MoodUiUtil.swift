@@ -57,6 +57,18 @@ public final class MoodUiUtilImpl: MoodUiUtil {
 		)
 	}
 
+	public final func feedbackMessage(for rating: Double, min: Double, max: Double) -> String {
+		let valueString = valueToString(rating)
+		let range = max - min
+		if rating < 0.33 * range + min {
+			return String(format: Me.lowMoodMessages[Int.random(in: 0 ..< Me.lowMoodMessages.count)], valueString)
+		}
+		if rating < 0.66 * range + min {
+			return String(format: Me.mediumMoodMessages[Int.random(in: 0 ..< Me.mediumMoodMessages.count)], valueString)
+		}
+		return String(format: Me.highMoodMessages[Int.random(in: 0 ..< Me.highMoodMessages.count)], valueString)
+	}
+
 	// MARK: - Helper Functions
 
 	private func scaledColor(
@@ -86,17 +98,5 @@ public final class MoodUiUtilImpl: MoodUiUtil {
 			blue: (maxBlue - minBlue) * valueRatio + minBlue,
 			alpha: (maxAlpha - minAlpha) * valueRatio + minAlpha
 		)
-	}
-
-	public final func feedbackMessage(for rating: Double, min: Double, max: Double) -> String {
-		let valueString = valueToString(rating)
-		let range = max - min
-		if rating < 0.33 * range + min {
-			return String(format: Me.lowMoodMessages[Int.random(in: 0 ..< Me.lowMoodMessages.count)], valueString)
-		}
-		if rating < 0.66 * range + min {
-			return String(format: Me.mediumMoodMessages[Int.random(in: 0 ..< Me.mediumMoodMessages.count)], valueString)
-		}
-		return String(format: Me.highMoodMessages[Int.random(in: 0 ..< Me.highMoodMessages.count)], valueString)
 	}
 }
