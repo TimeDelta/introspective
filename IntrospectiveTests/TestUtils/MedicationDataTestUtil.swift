@@ -16,6 +16,18 @@ import Foundation
 public class MedicationDataTestUtil {
 
 	@discardableResult
+	public static func createMedication(_ info: MedicationInfo) -> Medication {
+		return createMedication(
+			name: info.name,
+			frequency: info.frequency,
+			dosage: info.dosage,
+			startedOn: info.startedOn,
+			note: info.notes,
+			source: info.source,
+			recordScreenIndex: info.recordScreenIndex)
+	}
+
+	@discardableResult
 	public static func createMedication(
 		name: String = "",
 		frequency: Frequency? = nil,

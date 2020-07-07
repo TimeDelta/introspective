@@ -333,6 +333,9 @@
 		A26589F32BFC0527881D20D03E4CB48C /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
 		A2DF8D22C94D6F91A865D337C0730F03 /* DurationUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA96F5DDD263FD0D99095EBADBA4AACC /* DurationUnitTests.swift */; };
+		771041A34B6F16E1A9CBDA78FF6BCCEF /* MedicationDAOFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DBFC5E195B0A25364A62082A004DF2 /* MedicationDAOFunctionalTests.swift */; };
+		7E8D6E6D3D6969B350DA7BF3B7D7D0D8 /* MedicationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CA81A302F9C78DAAC12DAF59773F70 /* MedicationInfo.swift */; };
+		901A744A50B1ADFACBD5C0F00AC75FE7 /* MedicationDoseInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AA380E6D97F789C8C9871BFBAC2DB /* MedicationDoseInfo.swift */; };
 		A307D44D6721A760E637CEAE90AFED42 /* BloodPressureTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F312D49748BD5F763B6D8463E6112C45 /* BloodPressureTableViewCell.swift */; };
 		A34600A18766AE66F0324FF5AB10E114 /* GraphType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */; };
 		A4A958FBC360353B84DBFD1E49D8602C /* MiscMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99DEF55FA04C46F3921A7305BB937620 /* MiscMatchers.swift */; };
@@ -908,6 +911,9 @@
 		A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		A2505FFD3F0233815468AA6A0A4B96FE /* CoreDataSampleMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSampleMock.swift; sourceTree = "<group>"; };
+		E3DBFC5E195B0A25364A62082A004DF2 /* MedicationDAOFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDAOFunctionalTests.swift; sourceTree = "<group>"; };
+		27CA81A302F9C78DAAC12DAF59773F70 /* MedicationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationInfo.swift; sourceTree = "<group>"; };
+		3F0AA380E6D97F789C8C9871BFBAC2DB /* MedicationDoseInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDoseInfo.swift; sourceTree = "<group>"; };
 		A455D3386BC23DDD4E8C89EF40475474 /* LessThanDoubleAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanDoubleAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A4CBB7B41499754C5234A1BC949DD2AC /* EditAttributeRestrictionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewController.swift; sourceTree = "<group>"; };
 		A64E0788E27B3B4FE185D06F3F454E46 /* ChooseSampleGrouperTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseSampleGrouperTypeViewController.swift; sourceTree = "<group>"; };
@@ -2256,6 +2262,8 @@
 			children = (
 				001B77F7312785413AB74ACB9E4810E7 /* MoodInfo.swift */,
 				FCA0632CC41BBCB29867D9485F1E21C0 /* TagInfo.swift */,
+				27CA81A302F9C78DAAC12DAF59773F70 /* MedicationInfo.swift */,
+				3F0AA380E6D97F789C8C9871BFBAC2DB /* MedicationDoseInfo.swift */,
 			);
 			path = Info;
 			sourceTree = "<group>";
@@ -2659,6 +2667,7 @@
 			children = (
 				032BE8D8EFE6AB126DD3B9D733FD52E1 /* MoodDAOFunctionalTests.swift */,
 				B6246632482079F4EF3493DCC7B855F4 /* TagDAOFunctionalTests.swift */,
+				E3DBFC5E195B0A25364A62082A004DF2 /* MedicationDAOFunctionalTests.swift */,
 			);
 			path = DAOs;
 			sourceTree = "<group>";
@@ -3119,24 +3128,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		75E20E1CC157703ADA5941E98FF972D1 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Introspective-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		71144499CC72EA7C4977758F97CF6DC8 /* Run Script - format code */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3154,6 +3145,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nswiftformat \\\n  --swiftversion `swift --version | awk '{print $4}'` \\\n  --tabwidth 4 \\\n  --maxwidth 120 \\\n  --wraparguments before-first \\\n  --wrapparameters before-first \\\n  --wrapcollections before-first \\\n  --closingparen balanced \\\n  --commas always \\\n  --shortoptionals always \\\n  --indent tab \\\n  --linebreaks lf \\\n  --header ignore \\\n  --specifierorder public,private,static,final,convenience,override \\\n  --disable \\\nandOperator,\\\nredundantBreak,\\\nredundantExtensionACL,\\\nredundantFileprivate,\\\nunusedArguments,\\\n  --enable \\\nblankLinesAroundMark,\\\nblankLinesAtEndOfScope,\\\nblankLinesAtEndOfScope,\\\nblankLinesBetweenScopes,\\\nanyObjectProtocol,\\\nconsecutiveBlankLines,\\\nconsecutiveSpaces,\\\nduplicateImports,\\\nemptyBraces,\\\nhoistPatternLet,\\\nleadingDelimiters,\\\nlinebreakAtEndOfFile,\\\nlinebreaks,\\\nredundantGet,\\\nsortedImports,\\\nspaceAroundBrackets,\\\nspaceAroundGenerics,\\\nspaceAroundOperators,\\\nspaceInsideGenerics,\\\nspaceInsideParens,\\\nspecifiers,\\\nstrongOutlets,\\\ntrailingCommas,\\\ntypeSugar,\\\n  `find . -type d -maxdepth 1 -print | egrep -v '^\\.$' | grep -v Pods | egrep -v '.*\\.xc(workspace|odeproj)' | grep -v .git | grep -v Carthage | egrep -v 'Tests$' | tr '\\n' ' '`\n";
+		};
+		75E20E1CC157703ADA5941E98FF972D1 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Introspective-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
 		};
 		9E11D9960C5CD817C14C2053B27B7F04 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3291,6 +3300,7 @@
 				716C91FD5634A2945BCB0A8EB1854CCD /* EqualToStringAttributeRestrictionUnitTests.swift in Sources */,
 				490C0D3FA4D6EE2E8A306EB3AC7EDF9E /* BooleanAttributeUnitTests.swift in Sources */,
 				947D76C01338A96B456DD79BC0317BA9 /* NotEqualToFrequencyAttributeRestrictionUnitTests.swift in Sources */,
+				771041A34B6F16E1A9CBDA78FF6BCCEF /* MedicationDAOFunctionalTests.swift in Sources */,
 				4C041D35499169405D4608BF3946FAD5 /* RestingHeartRateUnitTests.swift in Sources */,
 				72214B609CF1C3C23F86EA27B9F936F5 /* LessThanDosageAttributeRestrictionUnitTests.swift in Sources */,
 				EBC8C805974F8B27D959FA230C916E36 /* DoesNotHaveTagAttributeRestrictionFunctionalTests.swift in Sources */,
@@ -3321,6 +3331,7 @@
 				8F725C7268AB2151880C2DFCDFC4040B /* ChooseAttributesToGraphTableViewControllerMock.swift in Sources */,
 				3BDF4043A894A0BC684CCC6264437B81 /* BooleanExpressionMatchers.swift in Sources */,
 				3A6BF727F319FAB6B1CAC58C8FC4EDBE /* SampleMock.swift in Sources */,
+				901A744A50B1ADFACBD5C0F00AC75FE7 /* MedicationDoseInfo.swift in Sources */,
 				67EB531BEEEFBE9F2ECE521E62C3DCDE /* SubQueryMatcherMock.swift in Sources */,
 				D3E9962EB4589288DBA855C453FB909E /* BooleanExpressionGroupUnitTests.swift in Sources */,
 				D45AF4108F4AD29666B129020C515FA4 /* DayOfWeekSampleGrouperUnitTests.swift in Sources */,
@@ -3540,6 +3551,7 @@
 				E00ED2E47A19A0C9163F3E79A8691601 /* DosageAttributeUnitTests.swift in Sources */,
 				3B9E9B03DB5706B181CEE4548AFFA133 /* UserInfoMatchers.swift in Sources */,
 				562BCB8CDBB1F9BB9E290D74540407D8 /* InSameCalendarUnitSubQueryMatcherUnitTests.swift in Sources */,
+				7E8D6E6D3D6969B350DA7BF3B7D7D0D8 /* MedicationInfo.swift in Sources */,
 				AD1F2D8F380682512CC3B77A3E794665 /* LeanBodyMassQueryFunctionalTests.swift in Sources */,
 				A732AB5D49EAFA3F55AD64C140B95D78 /* TagsAttributeFunctionalTests.swift in Sources */,
 			);
