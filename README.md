@@ -37,10 +37,6 @@ There are 3 different types of tests in this project:
 - [UITest](IntrospectiveUITests/UITest.swift) - Fragile but test the entirety of the stack all at once.
 
 
-### Mocks
-This project uses [SwiftyMocky](https://github.com/MakeAWishFoundation/SwiftyMocky) for mocking. This is why you will sometimes find `//sourcery: AutoMockable` on some protocols. As part of the build process, `rake mock` is ran in a Run Script Build Phase. Running `rake mock` in the root project directory will search for and regenerate any mockable protocols (marked with the previously mentioned comment) and any custom mocks that are in the [CustomMocks directory](IntrospectiveTests/CustomMocks) as defined by the [Rakefile](./Rakefile) and the [SwiftyMocky config generation script](./gen-swifty-mocky-config-files.sh).
-
-
 ### Test Pre-requisites
 Any time you need to run a FunctionalTest class that requires Health App integration on a new simulator, you will first need to:
 1. Run the "Testing" target on the target iPhone simulator
@@ -55,3 +51,7 @@ Any time you need to run a FunctionalTest class that requires Health App integra
 1. Close simulator
 
 All FunctionalTest classes should now run properly on the target simulator.
+
+
+### Mocks
+This project uses [SwiftyMocky](https://github.com/MakeAWishFoundation/SwiftyMocky) for mocking. This is why you will sometimes find `//sourcery: AutoMockable` on some protocols. As part of the build process, `rake mock` is ran in a Run Script Build Phase. Running `rake mock` in the root project directory will search for and regenerate any mockable protocols (marked with the previously mentioned comment) and any custom mocks that are in the [CustomMocks directory](IntrospectiveTests/CustomMocks) as defined by the [Rakefile](./Rakefile) and the [SwiftyMocky config generation script](./gen-swifty-mocky-config-files.sh).
