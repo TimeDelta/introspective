@@ -46,3 +46,26 @@ func hasGroup<ValueType>(
 		return .mismatch("No group for \(valueDescription)")
 	}
 }
+
+func hasGroup<ValueType: Equatable>(forValue expectedGroupValue: ValueType) -> Matcher<Groups> {
+	return hasGroup(forValue: equalTo(expectedGroupValue))
+}
+
+func hasGroup<ValueType>(forValue expectedGroupValueMatcher: Matcher<ValueType>) -> Matcher<Groups> {
+	let valueDescription = expectedGroupValueMatcher.description
+	let description = "Has group for value \(valueDescription)"
+	return Matcher(description) { (actual: Groups) -> MatchResult in
+		// Matcher class cannot accept a throwing function
+		for (groupValue, _) in actual {
+			do {
+				guard let castedGroupValue = groupValue as? ValueType else {
+					throw GenericError("Group value was wrong type: \(String(describing: groupValue))")
+				}
+				return expectedGroupValueMatcher.matches(castedGroupValue)
+			} catch {
+				return .mismatch(errorInfo(error))
+			}
+		}
+		return .mismatch("No group for \(valueDescription)")
+	}
+}

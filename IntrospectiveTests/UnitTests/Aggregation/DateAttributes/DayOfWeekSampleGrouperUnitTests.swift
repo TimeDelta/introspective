@@ -109,7 +109,10 @@ class DayOfWeekSampleGrouperUnitTests: UnitTest {
 		// then
 		assertThat(
 			grouper.attributeSelectAttribute.typedPossibleValues,
-			not(hasItems(equals(attributes[0]), equals(attributes[1]))))
+			not(hasItem(equals(attributes[0]))))
+		assertThat(
+			grouper.attributeSelectAttribute.typedPossibleValues,
+			not(hasItem(equals(attributes[1]))))
 	}
 
 	// MARK: - description

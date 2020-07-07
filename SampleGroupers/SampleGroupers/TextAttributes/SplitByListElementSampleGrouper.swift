@@ -30,7 +30,7 @@ public final class SplitByListElementSampleGrouper: SampleGrouper {
 
 	// MARK: - Instance Variables
 
-	public final var groupByAttribute: Attribute?
+	public final var groupByAttribute: TextAttribute?
 
 	private final let log = Log()
 
@@ -41,14 +41,14 @@ public final class SplitByListElementSampleGrouper: SampleGrouper {
 	}
 
 	public required init(attributes: [Attribute]) {
-		groupByAttribute = attributes.first
 		attributeSelectAttribute = AttributeSelectAttribute(attributes: attributes.filter { a in a is TextAttribute })
+		groupByAttribute = attributeSelectAttribute.typedPossibleValues.first as? TextAttribute
 		self.attributes = [
 			attributeSelectAttribute,
 		]
 	}
 
-	private init(groupByAttribute: Attribute?, attributeSelectAttribute: AttributeSelectAttribute) {
+	private init(groupByAttribute: TextAttribute?, attributeSelectAttribute: AttributeSelectAttribute) {
 		self.groupByAttribute = groupByAttribute
 		self.attributeSelectAttribute = attributeSelectAttribute
 		attributes = [attributeSelectAttribute]
@@ -60,13 +60,28 @@ public final class SplitByListElementSampleGrouper: SampleGrouper {
 		let groupByAttribute = try getGroupByAttribute(methodName: "group(samples:)")
 		guard !samples.isEmpty else { return [] }
 
-		return try getGroupsForNonHashableValues(samples)
+		var groups = [(Any, [Sample])]()
+		for sample in samples {
+			guard let uncastValue = try sample.value(of: groupByAttribute) else { continue }
+			guard let stringValue = uncastValue as? String else { continue }
+			let listElements = splitIntoListElements(stringValue).map { str in str.localizedLowercase }
+			for value in listElements {
+				guard !value.isEmpty else { continue }
+				if let index = try groups.firstIndex(where: { try groupByAttribute.valuesAreEqual($0.0, value) }) {
+					groups[index].1.append(sample)
+				} else {
+					groups.append((value, [sample]))
+				}
+			}
+		}
+
+		return groups
 	}
 
 	public final func groupNameFor(value: Any) throws -> String {
 		let groupByAttribute = try getGroupByAttribute(methodName: "groupNameFor(value:)")
 		let valueString = try groupByAttribute.convertToDisplayableString(from: value)
-		return "\(groupByAttribute.name) = \(valueString)"
+		return "\(groupByAttribute.name) has \(valueString)"
 	}
 
 	public final func groupValuesAreEqual(_ first: Any, _ second: Any) throws -> Bool {
@@ -92,7 +107,7 @@ public final class SplitByListElementSampleGrouper: SampleGrouper {
 
 	public final func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.equalTo(attributeSelectAttribute) {
-			guard let castedValue = value as? Attribute else {
+			guard let castedValue = value as? TextAttribute else {
 				throw TypeMismatchError(attribute: attributeSelectAttribute, of: self, wasA: type(of: value))
 			}
 			groupByAttribute = castedValue
@@ -103,33 +118,11 @@ public final class SplitByListElementSampleGrouper: SampleGrouper {
 
 	// MARK: - Helper Functions
 
-	private final func getGroupsForNonHashableValues(_ samples: [Sample]) throws -> [(Any, [Sample])] {
-		let groupByAttribute = try getGroupByAttribute(methodName: "getGroupsForNonHashableValues()")
-		var groups = [(Any, [Sample])]()
-		for sample in samples {
-			guard let uncastValue = try sample.value(of: groupByAttribute) else { continue }
-			guard let stringValue = uncastValue as? String else { continue }
-			for value in splitIntoListElements(stringValue) {
-				guard !value.isEmpty else { continue }
-				if let index = try groups.firstIndex(where: { try groupByAttribute.valuesAreEqual($0.0, value) }) {
-					groups[index].1.append(sample)
-				} else {
-					groups.append((value, [sample]))
-				}
-			}
-		}
-		return groups
-	}
-
 	private final func getGroupByAttribute(methodName: String) throws -> TextAttribute {
 		guard let groupByAttribute = groupByAttribute else {
 			throw GenericError("Called \(methodName) before groupByAttribute was set")
 		}
-		guard let groupByTextAttribute = groupByAttribute as? TextAttribute else {
-			log.error("User tried to select non-text attribute for SplitByListElementSampleGrouper")
-			throw GenericError("You must select a text attribute")
-		}
-		return groupByTextAttribute
+		return groupByAttribute
 	}
 
 	// MARK: - Equality
@@ -149,14 +142,9 @@ public final class SplitByListElementSampleGrouper: SampleGrouper {
 
 	// MARK: - Helper Functions
 
-	private final func splitIntoListElements(_ stringValue: String) -> [Substring] {
-		var previousChars = ""
-		return stringValue.split { ch in
-			previousChars += String(ch)
-			if previousChars.count > 4 {
-				previousChars.removeFirst()
-			}
-			return ch == "," || ch == "\n" || String(previousChars) == " and"
-		}
+	private final func splitIntoListElements(_ stringValue: String) -> [String] {
+		stringValue.replacingOccurrences(of: " and ", with: ",").split { ch in
+			ch == "," || ch == "\n"
+		}.map { str in String(str).trimmingCharacters(in: CharacterSet.whitespaces) }
 	}
 }
