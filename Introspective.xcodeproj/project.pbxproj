@@ -2857,7 +2857,7 @@
 			buildConfigurationList = D63E90AF276550132DB77384E58E04DA /* Build configuration list for PBXNativeTarget "Introspective" */;
 			buildPhases = (
 				75E20E1CC157703ADA5941E98FF972D1 /* [CP] Check Pods Manifest.lock */,
-				954BECDADA44CFB5D2426A80F93CB887 /* Run Script - format code */,
+				71144499CC72EA7C4977758F97CF6DC8 /* Run Script - format code */,
 				F0FB89F745BB6CFF964B314ECF77BAAF /* Run Script - Create GitVersion.swift */,
 				BF6DA2C10FFDD3FB4515D3A60FA139E2 /* Sources */,
 				C51BB4D038DED40DD32EC47510ABCC76 /* Frameworks */,
@@ -3137,6 +3137,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		71144499CC72EA7C4977758F97CF6DC8 /* Run Script - format code */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script - format code";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nswiftformat \\\n  --swiftversion `swift --version | awk '{print $4}'` \\\n  --tabwidth 4 \\\n  --maxwidth 120 \\\n  --wraparguments before-first \\\n  --wrapparameters before-first \\\n  --wrapcollections before-first \\\n  --closingparen balanced \\\n  --commas always \\\n  --shortoptionals always \\\n  --indent tab \\\n  --linebreaks lf \\\n  --header ignore \\\n  --specifierorder public,private,static,final,convenience,override \\\n  --disable \\\nandOperator,\\\nredundantBreak,\\\nredundantExtensionACL,\\\nredundantFileprivate,\\\nunusedArguments,\\\n  --enable \\\nblankLinesAroundMark,\\\nblankLinesAtEndOfScope,\\\nblankLinesAtEndOfScope,\\\nblankLinesBetweenScopes,\\\nanyObjectProtocol,\\\nconsecutiveBlankLines,\\\nconsecutiveSpaces,\\\nduplicateImports,\\\nemptyBraces,\\\nhoistPatternLet,\\\nleadingDelimiters,\\\nlinebreakAtEndOfFile,\\\nlinebreaks,\\\nredundantGet,\\\nsortedImports,\\\nspaceAroundBrackets,\\\nspaceAroundGenerics,\\\nspaceAroundOperators,\\\nspaceInsideGenerics,\\\nspaceInsideParens,\\\nspecifiers,\\\nstrongOutlets,\\\ntrailingCommas,\\\ntypeSugar,\\\n  `find . -type d -maxdepth 1 -print | egrep -v '^\\.$' | grep -v Pods | egrep -v '.*\\.xc(workspace|odeproj)' | grep -v .git | grep -v Carthage | egrep -v 'Tests$' | tr '\\n' ' '`\n";
+		};
 		9E11D9960C5CD817C14C2053B27B7F04 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3170,24 +3188,6 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Introspective/Pods-Introspective-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
-		};
-		954BECDADA44CFB5D2426A80F93CB887 /* Run Script - format code */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Run Script - format code";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nswiftformat \\\n  --swiftversion `swift --version | awk '{print $4}'` \\\n  --tabwidth 4 \\\n  --maxwidth 120 \\\n  --wraparguments before-first \\\n  --wrapparameters before-first \\\n  --wrapcollections before-first \\\n  --closingparen balanced \\\n  --commas always \\\n  --shortoptionals always \\\n  --indent tab \\\n  --linebreaks lf \\\n  --header ignore \\\n  --specifierorder public,private,static,final,convenience,override \\\n  --disable \\\nandOperator,\\\nredundantBreak,\\\nredundantExtensionACL,\\\nredundantFileprivate,\\\nunusedArguments,\\\n  --enable \\\nblankLinesAroundMark,\\\nblankLinesAtEndOfScope,\\\nblankLinesAtEndOfScope,\\\nblankLinesBetweenScopes,\\\nanyObjectProtocol,\\\nconsecutiveBlankLines,\\\nconsecutiveSpaces,\\\nduplicateImports,\\\nemptyBraces,\\\nhoistPatternLet,\\\nleadingDelimiters,\\\nlinebreakAtEndOfFile,\\\nlinebreaks,\\\nredundantGet,\\\nsortedImports,\\\nspaceAroundOperators,\\\nspaceAroundGenerics,\\\nspaceInsideGenerics,\\\nspaceInsideParens,\\\nspecifiers,\\\nstrongOutlets,\\\ntrailingCommas,\\\ntypeSugar,\\\n  `find . -type d -maxdepth 1 -print | egrep -v '^\\.$' | grep -v Pods | egrep -v '.*\\.xc(workspace|odeproj)' | grep -v .git | grep -v Carthage | egrep -v 'Tests$' | tr '\\n' ' '`\n";
 		};
 		CB9A470863FA06650F751757EBDE58AA /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
