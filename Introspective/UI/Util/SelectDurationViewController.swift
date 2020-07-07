@@ -31,7 +31,7 @@ public class SelectDurationViewControllerImpl: UIViewController, SelectDurationV
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		guard let duration = initialDuration else { return }

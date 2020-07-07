@@ -25,7 +25,7 @@ public class Tag: NSManagedObject, CoreDataObject {
 
 	// MARK: - Other
 
-	override public final var description: String {
+	public final override var description: String {
 		"Tag named '\(name)'"
 	}
 }

@@ -43,7 +43,7 @@ final class SelectSampleGroupInformationViewControllerImpl: UIViewController,
 
 	// MARK: - UIViewController Overloads
 
-	override final func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		attributePicker.delegate = self

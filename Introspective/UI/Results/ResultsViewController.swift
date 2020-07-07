@@ -125,7 +125,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	// MARK: - UIViewController Overloads
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		actionsButton.target = self
 		actionsButton.action = #selector(presentActions)
 		actionsButton.accessibilityLabel = "actions button"
@@ -166,7 +166,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		NotificationCenter.default.removeObserver(self)
 	}
 
-	override public final func showError(
+	public final override func showError(
 		title: String,
 		message: String? = "Sorry for the inconvenience.",
 		error: Error? = nil,
@@ -196,11 +196,11 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	// MARK: - Table View Data Source
 
-	override final func numberOfSections(in _: UITableView) -> Int {
+	final override func numberOfSections(in _: UITableView) -> Int {
 		2
 	}
 
-	override final func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
+	final override func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section == 0 {
 			return "Information"
 		} else if section == 1 {
@@ -214,7 +214,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		}
 	}
 
-	override final func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
+	final override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if failed {
 			return 0
 		}
@@ -237,7 +237,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	// MARK: - Table View Delegate
 
-	override final func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let row = indexPath.row
 		let section = indexPath.section
 
@@ -320,7 +320,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		return UITableViewCell()
 	}
 
-	override final func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
+	final override func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
 		guard finishedLoading && !waiting() else { return }
 		if indexPath.section == 0 {
 			showEditInformationView(indexPath)
@@ -346,21 +346,21 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	// MARK: - TableView Editing
 
-	override final func tableView(_: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+	final override func tableView(_: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
 		indexPath.section == 0 || samplesAreDeletable()
 	}
 
-	override final func tableView(_: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+	final override func tableView(_: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
 		indexPath.section == 0
 	}
 
-	override final func tableView(_: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+	final override func tableView(_: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		guard fromIndexPath.section == 0 && to.section == 0 else { return }
 		information.swapAt(fromIndexPath.row, to.row)
 		informationValues.swapAt(fromIndexPath.row, to.row)
 	}
 
-	override final func tableView(
+	final override func tableView(
 		_ tableView: UITableView,
 		editActionsForRowAt indexPath: IndexPath
 	) -> [UITableViewRowAction]? {

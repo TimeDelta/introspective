@@ -33,7 +33,7 @@ public class DiscreteMoodWidget: UIViewController {
 
 	// MARK: - UIView Overrides
 
-	override public func viewDidLoad() {
+	public override func viewDidLoad() {
 		super.viewDidLoad()
 		DependencyInjector.register(CommonInjectionProvider())
 		DependencyInjector.register(PersistenceInjectionProvider(ObjectModelContainer.objectModel))

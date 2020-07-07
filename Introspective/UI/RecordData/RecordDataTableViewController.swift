@@ -43,7 +43,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 
 	// MARK: - UIViewController Overrides
 
-	override final func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 		observe(selector: #selector(showViewController), name: Me.showViewController)
 		observe(selector: #selector(showErrorMessage), name: Me.showErrorMessage)
@@ -58,26 +58,26 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 
 	// MARK: - Table view data source
 
-	override final func numberOfSections(in _: UITableView) -> Int {
+	final override func numberOfSections(in _: UITableView) -> Int {
 		1
 	}
 
-	override final func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+	final override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
 		viewOrder.count
 	}
 
 	// MARK: - Table view delegate
 
-	override final func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let id = getIdFor(indexPath)
 		return tableView.dequeueReusableCell(withIdentifier: id, for: indexPath)
 	}
 
-	override final func tableView(_: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+	final override func tableView(_: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		viewOrder.swapAt(fromIndexPath.row, to.row)
 	}
 
-	override final func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+	final override func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		let id = getIdFor(indexPath)
 		if let height = viewHeights[id] {
 			return height
@@ -87,7 +87,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		return viewHeights.map { $0.value }.sorted()[0]
 	}
 
-	override final func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
+	final override func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath.row == 1 {
 			navigationController?.pushViewController(viewController(named: "medicationsTable"), animated: false)
 		} else if indexPath.row == 2 {

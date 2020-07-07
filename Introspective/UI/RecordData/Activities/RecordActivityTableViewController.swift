@@ -58,7 +58,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final let coachMarksController = CoachMarksController()
 	private final var coachMarksDataSourceAndDelegate: DefaultCoachMarksDataSourceAndDelegate!
-	private final lazy var coachMarksInfo: [CoachMarkInfo] = [
+	private lazy final var coachMarksInfo: [CoachMarkInfo] = [
 		CoachMarkInfo(
 			hint: "Tap the + button to create new activities. You can also type the name of a new activity in the search bar and long press the + button to quickly create and start it.",
 			useArrow: true,
@@ -155,7 +155,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		let addButton = barButton(
@@ -200,14 +200,14 @@ public final class RecordActivityTableViewController: UITableViewController {
 		coachMarksController.skipView = defaultSkipInstructionsView()
 	}
 
-	override public final func viewDidAppear(_ animated: Bool) {
+	public final override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		if !DependencyInjector.get(UserDefaultsUtil.self).bool(forKey: .recordActivitiesInstructionsShown) {
 			coachMarksController.start(in: .window(over: self))
 		}
 	}
 
-	override public final func viewWillDisappear(_ animated: Bool) {
+	public final override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		coachMarksController.stop(immediately: true)
 	}
@@ -218,14 +218,14 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	// MARK: - TableView Data Source
 
-	override public final func numberOfSections(in _: UITableView) -> Int {
+	public final override func numberOfSections(in _: UITableView) -> Int {
 		if !finishedLoading {
 			return 1
 		}
 		return 2
 	}
 
-	override public final func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
+	public final override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if !finishedLoading {
 			return 1
 		}
@@ -244,7 +244,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	// MARK: - TableView Delegate
 
-	override public final func tableView(
+	public final override func tableView(
 		_ tableView: UITableView,
 		cellForRowAt indexPath: IndexPath
 	) -> UITableViewCell {
@@ -260,14 +260,14 @@ public final class RecordActivityTableViewController: UITableViewController {
 		return cell
 	}
 
-	override public final func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
+	public final override func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
 		if !finishedLoading {
 			return 44
 		}
 		return 57
 	}
 
-	override public final func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
+	public final override func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
 		guard finishedLoading else { return }
 		let activityDefinition = definition(at: indexPath)
 		guard let cell = visibleCellFor(indexPath) else {
@@ -288,11 +288,11 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	// MARK: - TableView Reordering
 
-	override public final func tableView(_: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+	public final override func tableView(_: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
 		indexPath.section == 1
 	}
 
-	override public final func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+	public final override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		let definitionsFromIndex = Int(definition(at: fromIndexPath).recordScreenIndex)
 		let definitionsToIndex = Int(definition(at: to).recordScreenIndex)
 		do {
@@ -330,7 +330,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	// MARK: - Swipe Actions
 
-	override public final func tableView(
+	public final override func tableView(
 		_: UITableView,
 		leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath
 	) -> UISwipeActionsConfiguration? {
@@ -346,7 +346,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		return UISwipeActionsConfiguration(actions: actions)
 	}
 
-	override public final func tableView(
+	public final override func tableView(
 		_: UITableView,
 		trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath
 	) -> UISwipeActionsConfiguration? {

@@ -22,13 +22,13 @@ public class HasTagAttributeRestriction: AnyAttributeRestriction, Equatable {
 
 	// MARK: - Display Information
 
-	override public var attributedName: String { "Tagged with" }
-	override public var description: String { "Tagged with '\(tag.name)'" }
+	public override var attributedName: String { "Tagged with" }
+	public override var description: String { "Tagged with '\(tag.name)'" }
 
 	// MARK: - Instance Variables
 
 	public final var tag: Tag!
-	fileprivate final let log = Log()
+	final fileprivate let log = Log()
 
 	// MARK: - Initializers
 
@@ -43,7 +43,7 @@ public class HasTagAttributeRestriction: AnyAttributeRestriction, Equatable {
 
 	// MARK: - Attribute Restriction Functions
 
-	override public final func samplePasses(_ sample: Sample) throws -> Bool {
+	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		if restrictedAttribute is TagAttribute {
 			if let sampleTag = try sample.value(of: restrictedAttribute) as? Tag {
 				return sampleTag.equalTo(tag)
@@ -63,13 +63,13 @@ public class HasTagAttributeRestriction: AnyAttributeRestriction, Equatable {
 		return false
 	}
 
-	override public func copy() -> AttributeRestriction {
+	public override func copy() -> AttributeRestriction {
 		HasTagAttributeRestriction(restrictedAttribute: restrictedAttribute, tag: tag)
 	}
 
 	// MARK: - Boolean Expression Functions
 
-	override public func predicate() -> NSPredicate? {
+	public override func predicate() -> NSPredicate? {
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		if restrictedAttribute is TagAttribute {
 			return NSPredicate(format: "%K.name ==[cd] %@", variableName, tag.name)
@@ -87,14 +87,14 @@ public class HasTagAttributeRestriction: AnyAttributeRestriction, Equatable {
 
 	// MARK: - Attributed Functions
 
-	override public final func value(of attribute: Attribute) throws -> Any? {
+	public final override func value(of attribute: Attribute) throws -> Any? {
 		if !attribute.equalTo(Me.tagAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
 		return tag
 	}
 
-	override public final func set(attribute: Attribute, to value: Any?) throws {
+	public final override func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(Me.tagAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
@@ -117,7 +117,7 @@ public class HasTagAttributeRestriction: AnyAttributeRestriction, Equatable {
 		return equalTo(other)
 	}
 
-	override public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	public final override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		guard let other = otherRestriction as? HasTagAttributeRestriction else {
 			return false
 		}
@@ -130,7 +130,7 @@ public class HasTagAttributeRestriction: AnyAttributeRestriction, Equatable {
 }
 
 public final class ActivityHasTagAttributeRestriction: HasTagAttributeRestriction {
-	override public func predicate() -> NSPredicate? {
+	public override func predicate() -> NSPredicate? {
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		let activityPredicate = NSPredicate(
 			format: "SUBQUERY(definition.tags, $tag, $tag.name ==[cd] %@) .@count > 0",

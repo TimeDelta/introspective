@@ -15,7 +15,7 @@ import Samples
 public protocol SexualActivityQuery: Query {}
 
 public final class SexualActivityQueryImpl: HealthKitQuery<SexualActivity>, SexualActivityQuery {
-	override final func initFromHKSample(_ hkSample: HKSample) -> SexualActivity {
+	final override func initFromHKSample(_ hkSample: HKSample) -> SexualActivity {
 		precondition(hkSample is HKCategorySample, "Wrong type of health kit sample for sexual activity")
 		return SexualActivity(hkSample as! HKCategorySample)
 	}

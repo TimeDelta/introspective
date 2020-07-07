@@ -56,7 +56,7 @@ public final class Frequency: NSObject, NSSecureCoding, Codable, Comparable {
 	public final var timesPerTimeUnit: Double
 	public final var timeUnit: Calendar.Component
 
-	override public final var description: String {
+	public final override var description: String {
 		var text = String(timesPerTimeUnit)
 		if text.hasSuffix(".0") {
 			text = String(text.prefix(text.count - 2))
@@ -143,7 +143,7 @@ public final class Frequency: NSObject, NSSecureCoding, Codable, Comparable {
 
 	// MARK: - NSObject Overrides
 
-	override public func isEqual(_ object: Any?) -> Bool {
+	public override func isEqual(_ object: Any?) -> Bool {
 		guard let other = object as? Frequency else { return false }
 		return self == other
 	}

@@ -59,7 +59,7 @@ public final class MedicationDose: NSManagedObject, CoreDataSample, SearchableSa
 	// MARK: - Instance Variables
 
 	public final let attributedName: String = Me.name
-	override public final var description: String { Me.description }
+	public final override var description: String { Me.description }
 	public final var date: Date {
 		get {
 			DependencyInjector.get(CoreDataSampleUtil.self)
@@ -222,7 +222,7 @@ public final class MedicationDose: NSManagedObject, CoreDataSample, SearchableSa
 
 	// MARK: - Debug
 
-	override public final var debugDescription: String {
+	public final override var debugDescription: String {
 		let dosageText = dosage?.description ?? "nil"
 		let timestampText = try! CommonSampleAttributes.timestamp.convertToDisplayableString(from: timestamp)
 		return "Dose of '\(medication.name)' (\(dosageText)) taken on \(timestampText)"

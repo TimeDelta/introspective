@@ -31,14 +31,14 @@ final class BasicXYGraphSetupViewController: BasicXYGraphTypeSetupViewController
 
 	// MARK: - UIViewController Overrides
 
-	override final func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 		updateSubView(sender: self)
 	}
 
 	// MARK: - BasicXYGraphTypeSetupViewController Overrides
 
-	override final func chartTypeSet() {
+	final override func chartTypeSet() {
 		subViewController?.chartType = chartType
 	}
 

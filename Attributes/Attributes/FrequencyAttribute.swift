@@ -11,11 +11,11 @@ import Foundation
 import Common
 
 public final class FrequencyAttribute: AttributeBase<Frequency>, ComparableAttribute {
-	override public final var typeName: String {
+	public final override var typeName: String {
 		"Frequency"
 	}
 
-	override public init(
+	public override init(
 		name: String = "Frequency",
 		pluralName: String? = "Frequencies",
 		description: String? = nil,
@@ -31,11 +31,11 @@ public final class FrequencyAttribute: AttributeBase<Frequency>, ComparableAttri
 		)
 	}
 
-	override public final func isValid(value: Any?) -> Bool {
+	public final override func isValid(value: Any?) -> Bool {
 		(value == nil && optional) || value as? Frequency != nil
 	}
 
-	override public final func convertToDisplayableString(from value: Any?) throws -> String {
+	public final override func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
 		if !optional && value == nil { throw UnsupportedValueError(attribute: self, is: nil) }
 		guard let castedValue = value as? Frequency else {
@@ -44,7 +44,7 @@ public final class FrequencyAttribute: AttributeBase<Frequency>, ComparableAttri
 		return castedValue.description
 	}
 
-	override public final func typedValuesAreEqual(_ first: Frequency, _ second: Frequency) -> Bool {
+	public final override func typedValuesAreEqual(_ first: Frequency, _ second: Frequency) -> Bool {
 		first == second
 	}
 }

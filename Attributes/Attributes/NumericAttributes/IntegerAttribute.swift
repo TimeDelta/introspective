@@ -11,7 +11,7 @@ import Foundation
 import Common
 
 public final class IntegerAttribute: AttributeBase<Int>, NumericAttribute {
-	override public final var typeName: String {
+	public final override var typeName: String {
 		"Integer Number"
 	}
 
@@ -26,7 +26,7 @@ public final class IntegerAttribute: AttributeBase<Int>, NumericAttribute {
 		return "\(invalidValue) is not an integer"
 	}
 
-	override public final func isValid(value: Any?) -> Bool {
+	public final override func isValid(value: Any?) -> Bool {
 		(value == nil && optional) || value as? Int != nil
 	}
 
@@ -38,7 +38,7 @@ public final class IntegerAttribute: AttributeBase<Int>, NumericAttribute {
 		return intValue
 	}
 
-	override public final func convertToDisplayableString(from value: Any?) throws -> String {
+	public final override func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
 		guard let nonNilValue = value else {
 			throw UnsupportedValueError(attribute: self, is: nil)
@@ -49,7 +49,7 @@ public final class IntegerAttribute: AttributeBase<Int>, NumericAttribute {
 		return String(castedValue)
 	}
 
-	override public final func typedValuesAreEqual(_ first: Int, _ second: Int) -> Bool {
+	public final override func typedValuesAreEqual(_ first: Int, _ second: Int) -> Bool {
 		first == second
 	}
 

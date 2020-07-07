@@ -25,8 +25,8 @@ public final class BeforeDateAndTimeAttributeRestriction: DateAttributeRestricti
 
 	// MARK: - Display Information
 
-	override public final var attributedName: String { "Before date and time" }
-	override public final var description: String {
+	public final override var attributedName: String { "Before date and time" }
+	public final override var description: String {
 		do {
 			let dateText = try Me.dateAttribute.convertToDisplayableString(from: date)
 			return "Before " + dateText
@@ -57,14 +57,14 @@ public final class BeforeDateAndTimeAttributeRestriction: DateAttributeRestricti
 
 	// MARK: - Attribute Functions
 
-	override public final func value(of attribute: Attribute) throws -> Any? {
+	public final override func value(of attribute: Attribute) throws -> Any? {
 		if !attribute.equalTo(Me.dateAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
 		return date
 	}
 
-	override public final func set(attribute: Attribute, to value: Any?) throws {
+	public final override func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(Me.dateAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
@@ -76,7 +76,7 @@ public final class BeforeDateAndTimeAttributeRestriction: DateAttributeRestricti
 
 	// MARK: - Attribute Restriction Functions
 
-	override public final func samplePasses(_ sample: Sample) throws -> Bool {
+	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
 		if sampleValue == nil { return false }
 		guard let sampleDate = sampleValue as? Date else {
@@ -85,13 +85,13 @@ public final class BeforeDateAndTimeAttributeRestriction: DateAttributeRestricti
 		return sampleDate.isBeforeDate(date, granularity: .nanosecond)
 	}
 
-	override public func copy() -> AttributeRestriction {
+	public override func copy() -> AttributeRestriction {
 		BeforeDateAndTimeAttributeRestriction(restrictedAttribute: restrictedAttribute, date: date)
 	}
 
 	// MARK: - Boolean Expression Functions
 
-	override public func predicate() -> NSPredicate? {
+	public override func predicate() -> NSPredicate? {
 		guard !DependencyInjector.get(Settings.self).convertTimeZones else { return nil }
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		return NSPredicate(format: "%K < %@", variableName, date as NSDate)
@@ -112,7 +112,7 @@ public final class BeforeDateAndTimeAttributeRestriction: DateAttributeRestricti
 		return equalTo(other)
 	}
 
-	override public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	public final override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is BeforeDateAndTimeAttributeRestriction) { return false }
 		let other = otherRestriction as! BeforeDateAndTimeAttributeRestriction
 		return equalTo(other)

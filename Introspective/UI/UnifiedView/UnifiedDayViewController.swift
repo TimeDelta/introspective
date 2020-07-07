@@ -26,14 +26,14 @@ public final class UnifiedDayViewController: DayViewController {
 
 	// MARK: - DayViewController Overrides
 
-	override public func eventsForDate(_ date: Date) -> [EventDescriptor] {
+	public override func eventsForDate(_ date: Date) -> [EventDescriptor] {
 		var descriptors = [EventDescriptor]()
 		descriptors.append(contentsOf: getSleepEventDescriptorsForDate(date))
 		descriptors.append(contentsOf: getActivityEventDescriptorsForDate(date))
 		return descriptors
 	}
 
-	override public func dayViewDidSelectEventView(_ eventView: EventView) {
+	public override func dayViewDidSelectEventView(_ eventView: EventView) {
 		let actionSheet = UIAlertController(
 			title: "What would you like to know?",
 			message: nil,

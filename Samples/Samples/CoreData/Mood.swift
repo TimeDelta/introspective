@@ -84,7 +84,7 @@ public final class MoodImpl: NSManagedObject, Mood {
 	// MARK: - Instance Variables
 
 	public final let attributedName: String = "Mood"
-	override public final var description: String { Me.description }
+	public final override var description: String { Me.description }
 	public final var date: Date {
 		get {
 			DependencyInjector.get(CoreDataSampleUtil.self).convertTimeZoneIfApplicable(
@@ -266,7 +266,7 @@ public final class MoodImpl: NSManagedObject, Mood {
 
 	// MARK: - Debug
 
-	override public final var debugDescription: String {
+	public final override var debugDescription: String {
 		"Mood with rating = \(rating), timestamp = \(timestamp), and note = \(note ?? "nil")"
 	}
 }

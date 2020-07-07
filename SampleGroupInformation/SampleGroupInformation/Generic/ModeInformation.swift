@@ -15,8 +15,8 @@ import Samples
 public final class ModeInformation: AnyInformation {
 	// MARK: - Display Information
 
-	override public final var name: String { "Mode" }
-	override public final var description: String { attribute.name.localizedLowercase + " " + name }
+	public final override var name: String { "Mode" }
+	public final override var description: String { attribute.name.localizedLowercase + " " + name }
 
 	// MARK: - Instance Variables
 
@@ -31,17 +31,17 @@ public final class ModeInformation: AnyInformation {
 
 	// MARK: Information Functions
 
-	override public final func compute(forSamples samples: [Sample]) throws -> String {
+	public final override func compute(forSamples samples: [Sample]) throws -> String {
 		try compute(samples, graphable: false)
 	}
 
-	override public final func computeGraphable(forSamples samples: [Sample]) throws -> String {
+	public final override func computeGraphable(forSamples samples: [Sample]) throws -> String {
 		try compute(samples, graphable: true)
 	}
 
 	// MARK: - Equality
 
-	override public final func equalTo(_ other: SampleGroupInformation) -> Bool {
+	public final override func equalTo(_ other: SampleGroupInformation) -> Bool {
 		other is ModeInformation && attribute.equalTo(other.attribute)
 	}
 

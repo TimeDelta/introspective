@@ -81,7 +81,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		extendedLayoutIncludesOpaqueBars = true
@@ -118,18 +118,18 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 
 	// MARK: - Table view data source
 
-	override public final func numberOfSections(in _: UITableView) -> Int {
+	public final override func numberOfSections(in _: UITableView) -> Int {
 		3
 	}
 
-	override public final func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
+	public final override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if section == 0 {
 			return 4
 		}
 		return 1
 	}
 
-	override public final func tableView(
+	public final override func tableView(
 		_ tableView: UITableView,
 		cellForRowAt indexPath: IndexPath
 	) -> UITableViewCell {
@@ -183,7 +183,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 		return cell
 	}
 
-	override public final func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+	public final override func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		if indexPath == Me.noteIndex || indexPath == Me.tagsIndex {
 			return 131
 		}
@@ -192,7 +192,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 
 	// MARK: - Table view delegate
 
-	override public final func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
+	public final override func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section == Me.noteIndex.section {
 			return "Note"
 		}
@@ -202,7 +202,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 		return nil
 	}
 
-	override public final func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath == Me.definitionIndex {
 			let controller = viewController(
 				named: "chooseActivityDefinition",

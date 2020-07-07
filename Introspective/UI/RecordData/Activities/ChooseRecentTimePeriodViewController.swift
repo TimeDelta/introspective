@@ -50,7 +50,7 @@ public final class ChooseRecentTimePeriodViewControllerImpl: UIViewController, C
 
 	// MARK: - UIViewController Overloads
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		timeUnitPicker.delegate = self
 
 		if let initialNumTimeUnits = initialNumTimeUnits {

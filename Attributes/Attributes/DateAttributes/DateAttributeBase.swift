@@ -42,11 +42,11 @@ public class DateAttributeBase: AttributeBase<Date>, DateAttribute {
 		)
 	}
 
-	override public final func isValid(value: Any?) -> Bool {
+	public final override func isValid(value: Any?) -> Bool {
 		(value == nil && optional) || value as? Date != nil
 	}
 
-	override public final func convertToDisplayableString(from value: Any?) throws -> String {
+	public final override func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
 		if !optional && value == nil { throw UnsupportedValueError(attribute: self, is: nil) }
 		guard let castedValue = value as? Date else {

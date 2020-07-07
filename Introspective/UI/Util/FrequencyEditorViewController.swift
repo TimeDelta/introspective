@@ -39,7 +39,7 @@ public final class FrequencyEditorViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		timeUnitPicker.dataSource = self

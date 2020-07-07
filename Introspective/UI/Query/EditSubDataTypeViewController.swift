@@ -33,7 +33,7 @@ final class EditSubSampleTypeViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	override final func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		dataTypePicker.dataSource = self

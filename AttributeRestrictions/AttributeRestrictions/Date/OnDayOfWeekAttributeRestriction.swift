@@ -24,8 +24,8 @@ public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Eq
 
 	// MARK: - Display Information
 
-	override public final var attributedName: String { "On day(s) of the week" }
-	override public final var description: String {
+	public final override var attributedName: String { "On day(s) of the week" }
+	public final override var description: String {
 		do {
 			let daysOfWeekText = try Me.daysOfWeekAttribute.convertToDisplayableString(from: daysOfWeek)
 			return "On a " + daysOfWeekText
@@ -64,14 +64,14 @@ public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Eq
 
 	// MARK: - Attribute Functions
 
-	override public final func value(of attribute: Attribute) throws -> Any? {
+	public final override func value(of attribute: Attribute) throws -> Any? {
 		if !attribute.equalTo(Me.daysOfWeekAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
 		return daysOfWeek
 	}
 
-	override public final func set(attribute: Attribute, to value: Any?) throws {
+	public final override func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(Me.daysOfWeekAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
@@ -86,7 +86,7 @@ public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Eq
 
 	// MARK: - Attribute Restriction Functions
 
-	override public final func samplePasses(_ sample: Sample) throws -> Bool {
+	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
 		if sampleValue == nil { return false }
 		guard let sampleDate = sampleValue as? Date else {
@@ -95,13 +95,13 @@ public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Eq
 		return DependencyInjector.get(CalendarUtil.self).date(sampleDate, isOnOneOf: daysOfWeek)
 	}
 
-	override public func copy() -> AttributeRestriction {
+	public override func copy() -> AttributeRestriction {
 		OnDayOfWeekAttributeRestriction(restrictedAttribute: restrictedAttribute, daysOfWeek: daysOfWeek)
 	}
 
 	// MARK: - Boolean Expression Functions
 
-	override public func predicate() -> NSPredicate? {
+	public override func predicate() -> NSPredicate? {
 		nil
 	}
 
@@ -117,7 +117,7 @@ public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Eq
 		return equalTo(other)
 	}
 
-	override public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	public final override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is OnDayOfWeekAttributeRestriction) { return false }
 		let other = otherRestriction as! OnDayOfWeekAttributeRestriction
 		return equalTo(other)

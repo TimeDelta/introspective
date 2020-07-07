@@ -22,8 +22,8 @@ public class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestriction, E
 
 	// MARK: - Display Information
 
-	override public var attributedName: String { "Not tagged with one of" }
-	override public var description: String {
+	public override var attributedName: String { "Not tagged with one of" }
+	public override var description: String {
 		if tags.isEmpty {
 			return "Not tagged with one of:"
 		}
@@ -34,7 +34,7 @@ public class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestriction, E
 	// MARK: - Instance Variables
 
 	public final var tags: [Tag]
-	fileprivate final let log = Log()
+	final fileprivate let log = Log()
 
 	// MARK: - Initializers
 
@@ -50,7 +50,7 @@ public class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestriction, E
 
 	// MARK: - Attribute Restriction Functions
 
-	override public final func samplePasses(_ sample: Sample) throws -> Bool {
+	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		if restrictedAttribute is TagAttribute {
 			if let sampleTag = try sample.value(of: restrictedAttribute) as? Tag {
 				return !tags.contains(where: { $0.equalTo(sampleTag) })
@@ -72,13 +72,13 @@ public class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestriction, E
 		return false
 	}
 
-	override public func copy() -> AttributeRestriction {
+	public override func copy() -> AttributeRestriction {
 		DoesNotHaveOneOfTagAttributeRestriction(tags: tags, restrictedAttribute: restrictedAttribute)
 	}
 
 	// MARK: - Boolean Expression Functions
 
-	override public func predicate() -> NSPredicate? {
+	public override func predicate() -> NSPredicate? {
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		if restrictedAttribute is TagAttribute {
 			let predicates = tags.map {
@@ -98,14 +98,14 @@ public class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestriction, E
 
 	// MARK: - Attributed Functions
 
-	override public final func value(of attribute: Attribute) throws -> Any? {
+	public final override func value(of attribute: Attribute) throws -> Any? {
 		if !attribute.equalTo(Me.tagsAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
 		return tags
 	}
 
-	override public final func set(attribute: Attribute, to value: Any?) throws {
+	public final override func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(Me.tagsAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
@@ -135,7 +135,7 @@ public class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestriction, E
 		return equalTo(other)
 	}
 
-	override public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	public final override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		guard let other = otherRestriction as? DoesNotHaveOneOfTagAttributeRestriction else {
 			return false
 		}
@@ -160,7 +160,7 @@ public class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestriction, E
 }
 
 public final class ActivityDoesNotHaveOneOfTagAttributeRestriction: DoesNotHaveOneOfTagAttributeRestriction {
-	override public func predicate() -> NSPredicate? {
+	public override func predicate() -> NSPredicate? {
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		var activityPredicates = tags.map {
 			NSPredicate(format: "SUBQUERY(definition.tags, $tag, $tag.name ==[cd] %@) .@count == 0", $0.name)

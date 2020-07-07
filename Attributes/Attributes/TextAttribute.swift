@@ -14,7 +14,7 @@ public protocol TextAttributeDelegate {
 }
 
 public final class TextAttribute: AttributeBase<String>, ComparableAttribute {
-	override public final var typeName: String {
+	public final override var typeName: String {
 		"Text"
 	}
 
@@ -38,7 +38,7 @@ public final class TextAttribute: AttributeBase<String>, ComparableAttribute {
 		)
 	}
 
-	override public final func isValid(value: Any?) -> Bool {
+	public final override func isValid(value: Any?) -> Bool {
 		if value == nil {
 			return optional
 		}
@@ -58,7 +58,7 @@ public final class TextAttribute: AttributeBase<String>, ComparableAttribute {
 		return delegate?.errorMessageFor(invalidValue: invalidValue) ?? ""
 	}
 
-	override public final func convertToDisplayableString(from value: Any?) throws -> String {
+	public final override func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
 		if !optional && value == nil { throw UnsupportedValueError(attribute: self, is: nil) }
 		guard let castedValue = value as? String else {
@@ -67,7 +67,7 @@ public final class TextAttribute: AttributeBase<String>, ComparableAttribute {
 		return castedValue
 	}
 
-	override public final func typedValuesAreEqual(_ first: String, _ second: String) -> Bool {
+	public final override func typedValuesAreEqual(_ first: String, _ second: String) -> Bool {
 		first == second
 	}
 }

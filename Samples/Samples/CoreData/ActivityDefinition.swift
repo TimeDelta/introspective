@@ -99,7 +99,7 @@ public class ActivityDefinition: NSManagedObject, CoreDataObject, Exportable {
 
 	// MARK: - Debug
 
-	override public final var debugDescription: String {
+	public final override var debugDescription: String {
 		let descriptionText = activityDescription ?? "nil"
 		var tagsText = ""
 		for tag in tagsArray() {

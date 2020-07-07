@@ -40,7 +40,7 @@ public final class EditAttributeRestrictionViewControllerImpl: UIViewController,
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		attributePicker.delegate = self
 		attributePicker.dataSource = self
 

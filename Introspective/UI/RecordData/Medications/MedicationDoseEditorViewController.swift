@@ -41,7 +41,7 @@ public final class MedicationDoseEditorViewControllerImpl: UIViewController, Med
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 		if let medicationDose = medicationDose {
 			dosageTextField.text = medicationDose.dosage?.description

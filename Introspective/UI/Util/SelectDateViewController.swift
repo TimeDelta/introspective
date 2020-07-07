@@ -53,7 +53,7 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 
 	private final var coachMarksController = DependencyInjector.get(CoachMarkFactory.self).controller()
 	private final var coachMarksDataSourceAndDelegate: CoachMarksDataSourceAndDelegate!
-	private final lazy var coachMarksInfo: [CoachMarkInfo] = [
+	private lazy final var coachMarksInfo: [CoachMarkInfo] = [
 		CoachMarkInfo(
 			hint: "Use these buttons to increment / decrement the time by the corresponding number of minutes. You can also long press them to increment / decrement by a time unit of your choosing.",
 			useArrow: true,
@@ -63,7 +63,7 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 		if let date = initialDate {
 			datePicker.setDate(date, animated: false)
@@ -128,14 +128,14 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 		], animated: false)
 	}
 
-	override public final func viewDidAppear(_ animated: Bool) {
+	public final override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		if !DependencyInjector.get(UserDefaultsUtil.self).bool(forKey: .selectDateViewInstructionsShown) {
 			coachMarksController.start(in: .window(over: self))
 		}
 	}
 
-	override public final func viewWillDisappear(_ animated: Bool) {
+	public final override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		coachMarksController.stop(immediately: true)
 	}

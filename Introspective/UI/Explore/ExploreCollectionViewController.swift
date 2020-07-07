@@ -25,7 +25,7 @@ final class ExploreCollectionViewController: UICollectionViewController {
 
 	// MARK: - UIViewController Overrides
 
-	override final func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 		observe(selector: #selector(showResultsScreen), name: .showResultsScreen)
 	}
@@ -36,15 +36,15 @@ final class ExploreCollectionViewController: UICollectionViewController {
 
 	// MARK: - UICollectionViewDataSource
 
-	override final func numberOfSections(in _: UICollectionView) -> Int {
+	final override func numberOfSections(in _: UICollectionView) -> Int {
 		1
 	}
 
-	override final func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
+	final override func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
 		2
 	}
 
-	override final func collectionView(
+	final override func collectionView(
 		_ collectionView: UICollectionView,
 		cellForItemAt indexPath: IndexPath
 	) -> UICollectionViewCell {
@@ -61,11 +61,11 @@ final class ExploreCollectionViewController: UICollectionViewController {
 
 	// MARK: - UICollectionViewDelegate
 
-	override final func collectionView(_: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
+	final override func collectionView(_: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
 		indexPath.row == 1
 	}
 
-	override final func collectionView(
+	final override func collectionView(
 		_: UICollectionView,
 		canPerformAction _: Selector,
 		forItemAt _: IndexPath,
@@ -74,7 +74,7 @@ final class ExploreCollectionViewController: UICollectionViewController {
 		true
 	}
 
-	override final func collectionView(
+	final override func collectionView(
 		_: UICollectionView,
 		performAction _: Selector,
 		forItemAt _: IndexPath,

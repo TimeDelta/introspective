@@ -39,7 +39,7 @@ public final class ActiveExportTableViewCell: UITableViewCell {
 
 	// MARK: - UITableViewCell Overrides
 
-	override public final func prepareForReuse() {
+	public final override func prepareForReuse() {
 		DependencyInjector.get(UiUtil.self).setButton(cancelButton, enabled: true, hidden: false)
 		toolbar.isHidden = true
 		if let exporter = exporter {

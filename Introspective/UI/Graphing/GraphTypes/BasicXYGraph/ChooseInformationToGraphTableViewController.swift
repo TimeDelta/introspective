@@ -34,7 +34,7 @@ final class ChooseInformationToGraphTableViewControllerImpl: UITableViewControll
 
 	// MARK: - UIViewController Overrides
 
-	override final func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 		navigationItem.rightBarButtonItem = editButtonItem
 		observe(selector: #selector(saveEditedInformation), name: .editedInformation)
@@ -42,11 +42,11 @@ final class ChooseInformationToGraphTableViewControllerImpl: UITableViewControll
 
 	// MARK: - TableView Data Source
 
-	override final func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+	final override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
 		chosenInformation.count
 	}
 
-	override final func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 		cell.textLabel?.text = chosenInformation[indexPath.row].description
 		return cell
@@ -54,7 +54,7 @@ final class ChooseInformationToGraphTableViewControllerImpl: UITableViewControll
 
 	// MARK: - TableView Delegate
 
-	override final func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
+	final override func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
 		informationEditIndex = indexPath.row
 		let selectedInformation = chosenInformation[informationEditIndex]
 
@@ -70,7 +70,7 @@ final class ChooseInformationToGraphTableViewControllerImpl: UITableViewControll
 		navigationController!.pushViewController(controller, animated: false)
 	}
 
-	override final func tableView(
+	final override func tableView(
 		_ tableView: UITableView,
 		editActionsForRowAt indexPath: IndexPath
 	) -> [UITableViewRowAction]? {

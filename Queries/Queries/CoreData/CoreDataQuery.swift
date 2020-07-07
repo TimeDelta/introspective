@@ -14,7 +14,7 @@ import Persistence
 import Samples
 
 public class CoreDataQuery<SampleType: NSManagedObject & CoreDataSample>: SampleQueryImpl<SampleType> {
-	override final func run() {
+	final override func run() {
 		let fetchRequest: NSFetchRequest<SampleType> = NSFetchRequest<SampleType>(entityName: SampleType.entityName)
 		fetchRequest.predicate = expression?.predicate()
 
@@ -43,7 +43,7 @@ public class CoreDataQuery<SampleType: NSManagedObject & CoreDataSample>: Sample
 	}
 
 	/// CoreData FetchRequest's cannot be stopped once started
-	override public final func stop() {
+	public final override func stop() {
 		super.stop()
 	}
 }

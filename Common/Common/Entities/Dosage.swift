@@ -39,7 +39,7 @@ public final class Dosage: NSObject, NSSecureCoding, Codable, Comparable {
 	public final var amount: Double
 	public final var unit: String
 
-	override public final var description: String {
+	public final override var description: String {
 		var amountText = String(amount)
 		if amountText.hasSuffix(".0") {
 			amountText = String(amountText.prefix(amountText.count - 2))
@@ -91,7 +91,7 @@ public final class Dosage: NSObject, NSSecureCoding, Codable, Comparable {
 
 	// MARK: - NSObject Overrides
 
-	override public func isEqual(_ object: Any?) -> Bool {
+	public override func isEqual(_ object: Any?) -> Bool {
 		guard let other = object as? Dosage else { return false }
 		return self == other
 	}

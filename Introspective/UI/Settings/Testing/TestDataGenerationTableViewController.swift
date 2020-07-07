@@ -75,7 +75,7 @@ final class TestDataGenerationTableViewController: UITableViewController {
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		generateTestDataButton = UIBarButtonItem(
@@ -97,15 +97,15 @@ final class TestDataGenerationTableViewController: UITableViewController {
 
 	// MARK: - Table View Data Source
 
-	override public final func numberOfSections(in _: UITableView) -> Int {
+	public final override func numberOfSections(in _: UITableView) -> Int {
 		1
 	}
 
-	override public final func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+	public final override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
 		DependencyInjector.get(SampleFactory.self).allTypes().count
 	}
 
-	override public final func tableView(
+	public final override func tableView(
 		_ tableView: UITableView,
 		cellForRowAt indexPath: IndexPath
 	) -> UITableViewCell {
@@ -120,14 +120,14 @@ final class TestDataGenerationTableViewController: UITableViewController {
 
 	// MARK: - Table View Delegate
 
-	override public final func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let sampleType = DependencyInjector.get(SampleFactory.self).allTypes()[indexPath.row]
 		setShouldGenerate(for: sampleType, to: !shouldGenerate(sampleType))
 		tableView.deselectRow(at: indexPath, animated: false)
 		tableView.reloadData()
 	}
 
-	override public final func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+	public final override func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		let sampleType = DependencyInjector.get(SampleFactory.self).allTypes()[indexPath.row]
 		if shouldGenerate(sampleType) {
 			return 139

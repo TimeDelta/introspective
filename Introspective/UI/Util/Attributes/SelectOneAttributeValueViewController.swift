@@ -24,7 +24,7 @@ public final class SelectOneAttributeValueViewController: AttributeValueTypeView
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		selectOnePicker.delegate = self

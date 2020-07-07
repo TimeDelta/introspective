@@ -64,7 +64,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		navigationItem.rightBarButtonItem = UIBarButtonItem(
@@ -86,25 +86,25 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 
 	// MARK: - Table view data source
 
-	override public final func numberOfSections(in _: UITableView) -> Int {
+	public final override func numberOfSections(in _: UITableView) -> Int {
 		2
 	}
 
-	override public final func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
+	public final override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if section == 0 {
 			return 2
 		}
 		return 1
 	}
 
-	override public final func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
+	public final override func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section == 1 {
 			return "Note"
 		}
 		return nil
 	}
 
-	override public final func tableView(
+	public final override func tableView(
 		_ tableView: UITableView,
 		cellForRowAt indexPath: IndexPath
 	) -> UITableViewCell {
@@ -125,7 +125,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 		return UITableViewCell()
 	}
 
-	override public final func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+	public final override func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		if indexPath == Me.noteIndex {
 			return 131
 		}
@@ -134,7 +134,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 
 	// MARK: - Table view delegate
 
-	override public final func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
+	public final override func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath == Me.timestampIndex {
 			let controller = viewController(named: "datePicker", fromStoryboard: "Util") as! SelectDateViewController
 			controller.initialDate = timestamp

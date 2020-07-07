@@ -28,7 +28,7 @@ final class ChooseAttributeViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	override final func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 		attributePicker.dataSource = self
 		attributePicker.delegate = self

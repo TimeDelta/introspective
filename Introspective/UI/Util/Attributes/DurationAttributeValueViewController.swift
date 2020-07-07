@@ -20,7 +20,7 @@ public final class DurationAttributeValueViewController: AttributeValueTypeViewC
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 		valueIsValid()
 

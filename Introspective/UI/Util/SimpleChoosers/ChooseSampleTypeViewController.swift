@@ -31,7 +31,7 @@ final class ChooseSampleTypeViewControllerImpl: UIViewController, ChooseSampleTy
 
 	// MARK: - UIViewController Overrides
 
-	override final func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 		sampleTypePicker.dataSource = self
 		sampleTypePicker.delegate = self

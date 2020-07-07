@@ -23,11 +23,11 @@ public final class EqualToDoubleAttributeRestriction: TypedEqualToAttributeRestr
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
 
-	override public func copy() -> AttributeRestriction {
+	public override func copy() -> AttributeRestriction {
 		EqualToDoubleAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! Double)
 	}
 
-	override public func predicate() -> NSPredicate? {
+	public override func predicate() -> NSPredicate? {
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		return NSPredicate(format: "%K == %f", variableName, value as! Double)
 	}

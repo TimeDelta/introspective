@@ -11,11 +11,11 @@ import Foundation
 import Common
 
 public final class TimeOfDayAttribute: AttributeBase<TimeOfDay>, ComparableAttribute {
-	override public final var typeName: String {
+	public final override var typeName: String {
 		"Time Unit"
 	}
 
-	override public init(
+	public override init(
 		name: String = "Time of day",
 		pluralName: String? = "Times of day",
 		description: String? = nil,
@@ -31,11 +31,11 @@ public final class TimeOfDayAttribute: AttributeBase<TimeOfDay>, ComparableAttri
 		)
 	}
 
-	override public final func isValid(value: Any?) -> Bool {
+	public final override func isValid(value: Any?) -> Bool {
 		(value == nil && optional) || value as? TimeOfDay != nil
 	}
 
-	override public final func convertToDisplayableString(from value: Any?) throws -> String {
+	public final override func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
 		if !optional && value == nil { throw UnsupportedValueError(attribute: self, is: nil) }
 		guard let castedValue = value as? TimeOfDay else {

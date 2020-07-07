@@ -66,7 +66,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		extendedLayoutIncludesOpaqueBars = true
@@ -86,15 +86,15 @@ public final class MedicationDosesTableViewController: UITableViewController {
 
 	// MARK: - TableViewDataSource
 
-	override public final func numberOfSections(in _: UITableView) -> Int {
+	public final override func numberOfSections(in _: UITableView) -> Int {
 		1
 	}
 
-	override public final func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+	public final override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
 		filteredDoses.count
 	}
 
-	override public final func tableView(
+	public final override func tableView(
 		_ tableView: UITableView,
 		cellForRowAt indexPath: IndexPath
 	) -> UITableViewCell {
@@ -105,7 +105,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 
 	// MARK: - TableViewDelegate
 
-	override public final func tableView(
+	public final override func tableView(
 		_ tableView: UITableView,
 		editActionsForRowAt indexPath: IndexPath
 	) -> [UITableViewRowAction]? {
@@ -152,7 +152,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		return [delete]
 	}
 
-	override public final func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let controller = viewController(named: "medicationDoseEditor") as! MedicationDoseEditorViewController
 		controller.medicationDose = filteredDoses[indexPath.row]
 		controller.notificationToSendOnAccept = Me.medicationDoseEdited

@@ -65,7 +65,7 @@ public final class ExportDataTableViewController: UITableViewController {
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		observe(selector: #selector(extendTime), name: .extendBackgroundTaskTime)
 		observe(selector: #selector(cancelBackgroundExport), name: .cancelBackgroundTask)
 		observe(selector: #selector(shareExportFile), name: .shareExportFile)
@@ -73,28 +73,28 @@ public final class ExportDataTableViewController: UITableViewController {
 
 	// MARK: - Table View Data Source
 
-	override public final func numberOfSections(in _: UITableView) -> Int {
+	public final override func numberOfSections(in _: UITableView) -> Int {
 		if Me.backgroundExports({ $0.count }) > 0 {
 			return 2
 		}
 		return 1
 	}
 
-	override public final func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
+	public final override func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section == Me.dataTypeSection {
 			return "Data Types"
 		}
 		return "Active Exports"
 	}
 
-	override public final func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
+	public final override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if section == Me.activeExportsSection {
 			return Me.backgroundExports { $0.count }
 		}
 		return Me.sampleTypes.count
 	}
 
-	override public final func tableView(
+	public final override func tableView(
 		_ tableView: UITableView,
 		cellForRowAt indexPath: IndexPath
 	) -> UITableViewCell {
@@ -117,14 +117,14 @@ public final class ExportDataTableViewController: UITableViewController {
 
 	// MARK: - Table View Delegate
 
-	override public final func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+	public final override func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		if indexPath.section == Me.dataTypeSection {
 			return 44
 		}
 		return 75
 	}
 
-	override public final func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		guard indexPath.section == Me.dataTypeSection else { // selecting an active export does nothing
 			tableView.deselectRow(at: indexPath, animated: false)
 			return

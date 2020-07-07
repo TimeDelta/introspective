@@ -16,8 +16,8 @@ import Samples
 public final class AverageInformation: AnyInformation {
 	// MARK: - Display Information
 
-	override public final var name: String { "Average" }
-	override public final var description: String { name + " " + attribute.name.localizedLowercase }
+	public final override var name: String { "Average" }
+	public final override var description: String { name + " " + attribute.name.localizedLowercase }
 
 	// MARK: - Instance Variables
 
@@ -31,7 +31,7 @@ public final class AverageInformation: AnyInformation {
 
 	// MARK: - Information Functions
 
-	override public final func compute(forSamples samples: [Sample]) throws -> String {
+	public final override func compute(forSamples samples: [Sample]) throws -> String {
 		if attribute is DoubleAttribute {
 			let filteredSamples = try filterSamples(samples, as: Double.self)
 			if filteredSamples.isEmpty { return "No samples matching filter" }
@@ -64,7 +64,7 @@ public final class AverageInformation: AnyInformation {
 		return ""
 	}
 
-	override public final func computeGraphable(forSamples samples: [Sample]) throws -> String {
+	public final override func computeGraphable(forSamples samples: [Sample]) throws -> String {
 		if attribute is DoubleAttribute {
 			let filteredSamples = try filterSamples(samples, as: Double.self)
 			if filteredSamples.isEmpty { throw GenericDisplayableError(title: "No samples matching filter") }
@@ -99,7 +99,7 @@ public final class AverageInformation: AnyInformation {
 
 	// MARK: - Equality
 
-	override public final func equalTo(_ other: SampleGroupInformation) -> Bool {
+	public final override func equalTo(_ other: SampleGroupInformation) -> Bool {
 		other is AverageInformation && attribute.equalTo(other.attribute)
 	}
 

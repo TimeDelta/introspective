@@ -22,7 +22,7 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 		fatalError("Must override")
 	}
 
-	override final func run() {
+	final override func run() {
 		DependencyInjector.get(HealthKitUtil.self).getAuthorization {
 			(error: Error?) in
 
@@ -42,7 +42,7 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 		}
 	}
 
-	override public final func stop() {
+	public final override func stop() {
 		super.stop()
 		DispatchQueue.global(qos: .background).async {
 			while self.stopFunction == nil {}

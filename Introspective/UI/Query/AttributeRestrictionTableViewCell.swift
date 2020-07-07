@@ -18,12 +18,12 @@ final class AttributeRestrictionTableViewCell: UITableViewCell {
 		}
 	}
 
-	override public final var accessibilityLabel: String? {
+	public final override var accessibilityLabel: String? {
 		get { attributeRestriction?.attributedName }
 		set {}
 	}
 
-	override public final var accessibilityValue: String? {
+	public final override var accessibilityValue: String? {
 		get { attributeRestriction?.description }
 		set {}
 	}

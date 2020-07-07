@@ -69,7 +69,7 @@ public final class StartActivityXAgoIntentHandler: ActivityIntentHandler<StartAc
 		completion(INStringResolutionResult.success(with: timeUnitString))
 	}
 
-	override public func provideActivityNameOptions(
+	public override func provideActivityNameOptions(
 		for intent: StartActivityXAgoIntent,
 		with completion: @escaping ([String]?, Error?) -> Void
 	) {

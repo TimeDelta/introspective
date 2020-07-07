@@ -23,9 +23,9 @@ public final class NotEqualToDurationAttributeRestriction: TypedNotEqualToAttrib
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
 
-	override public func copy() -> AttributeRestriction {
+	public override func copy() -> AttributeRestriction {
 		NotEqualToDurationAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! Duration)
 	}
 
-	override public func predicate() -> NSPredicate? { nil }
+	public override func predicate() -> NSPredicate? { nil }
 }

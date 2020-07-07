@@ -47,7 +47,7 @@ public final class ActivityAutoIgnoreTableViewCell: ActivitySettingTableViewCell
 
 	// MARK: - Other Functions
 
-	override public final func reset() {
+	public final override func reset() {
 		resetToggleSwitch()
 		resetTextField()
 	}

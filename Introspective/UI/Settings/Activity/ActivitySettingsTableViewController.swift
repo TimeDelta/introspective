@@ -44,7 +44,7 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		navigationItem.rightBarButtonItem = UIBarButtonItem(
 			title: "Reset",
 			style: .plain,
@@ -62,15 +62,15 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 
 	// MARK: - Table view data source
 
-	override public final func numberOfSections(in _: UITableView) -> Int {
+	public final override func numberOfSections(in _: UITableView) -> Int {
 		1
 	}
 
-	override public final func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+	public final override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
 		1
 	}
 
-	override public final func tableView(
+	public final override func tableView(
 		_ tableView: UITableView,
 		cellForRowAt indexPath: IndexPath
 	) -> UITableViewCell {
@@ -82,13 +82,13 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 		return cell
 	}
 
-	override public final func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+	public final override func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		Me.cellHeights[indexPath.row]
 	}
 
 	// MARK: - Table view delegate
 
-	override public final func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: false)
 	}
 

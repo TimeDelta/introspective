@@ -37,7 +37,7 @@ open class TypedMultiSelectAttribute<ValueType: Hashable>: AttributeBase<ValueTy
 		return []
 	}
 
-	fileprivate final let possibleValueToString: (ValueType) -> String
+	final fileprivate let possibleValueToString: (ValueType) -> String
 
 	private final let log = Log()
 
@@ -106,7 +106,7 @@ open class TypedMultiSelectAttribute<ValueType: Hashable>: AttributeBase<ValueTy
 
 	// MARK: SelectAttribute Functions
 
-	override public final func isValid(value: Any?) -> Bool {
+	public final override func isValid(value: Any?) -> Bool {
 		if let nonNilValue = value {
 			if let castedValues = nonNilValue as? [ValueType] {
 				return allValuesArePossible(castedValues)
@@ -147,11 +147,11 @@ open class TypedMultiSelectAttribute<ValueType: Hashable>: AttributeBase<ValueTy
 
 	// MARK: Attribute Functions
 
-	override public final func typedValuesAreEqual(_ first: ValueType, _ second: ValueType) -> Bool {
+	public final override func typedValuesAreEqual(_ first: ValueType, _ second: ValueType) -> Bool {
 		first == second
 	}
 
-	override open func convertToDisplayableString(from value: Any?) throws -> String {
+	open override func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
 		if !optional && value == nil { throw UnsupportedValueError(attribute: self, is: nil) }
 		if let castedValue = value as? Set<ValueType> {
@@ -167,7 +167,7 @@ open class TypedMultiSelectAttribute<ValueType: Hashable>: AttributeBase<ValueTy
 		throw TypeMismatchError(attribute: self, wasA: type(of: value))
 	}
 
-	fileprivate final func convertTypesIntoDisplayString(_ sortedTypes: [ValueType]) -> String {
+	final fileprivate func convertTypesIntoDisplayString(_ sortedTypes: [ValueType]) -> String {
 		var text = ""
 		let valueStrings = sortedTypes.map { possibleValueToString($0) }
 		for index in 0 ..< valueStrings.count {
@@ -186,7 +186,7 @@ open class TypedMultiSelectAttribute<ValueType: Hashable>: AttributeBase<ValueTy
 // MARK: - ComparableTypedMultiSelectAttribute
 
 public class ComparableTypedMultiSelectAttribute<Type: Hashable & Comparable>: TypedMultiSelectAttribute<Type> {
-	override public init(
+	public override init(
 		name: String,
 		pluralName: String? = nil,
 		description: String? = nil,
@@ -206,7 +206,7 @@ public class ComparableTypedMultiSelectAttribute<Type: Hashable & Comparable>: T
 		)
 	}
 
-	override public final func convertToDisplayableString(from value: Any?) throws -> String {
+	public final override func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
 		if !optional && value == nil { throw UnsupportedValueError(attribute: self, is: nil) }
 		if let castedValue = value as? Set<Type> {

@@ -23,9 +23,9 @@ public final class GreaterThanDurationAttributeRestriction: TypedGreaterThanAttr
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
 
-	override public func copy() -> AttributeRestriction {
+	public override func copy() -> AttributeRestriction {
 		GreaterThanDurationAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
 	}
 
-	override public func predicate() -> NSPredicate? { nil }
+	public override func predicate() -> NSPredicate? { nil }
 }

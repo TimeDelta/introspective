@@ -31,7 +31,7 @@ public final class StartActivityIntentHandler: ActivityIntentHandler<StartActivi
 		completion(INStringResolutionResult.success(with: activityName))
 	}
 
-	override public func provideActivityNameOptions(
+	public override func provideActivityNameOptions(
 		for intent: StartActivityIntent,
 		with completion: @escaping ([String]?, Error?) -> Void
 	) {

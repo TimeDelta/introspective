@@ -31,7 +31,7 @@ public final class DiscreteRatingTableViewCell: UITableViewCell {
 
 	// MARK: - UIView Overrides
 
-	override public final func layoutSubviews() {
+	public final override func layoutSubviews() {
 		super.layoutSubviews()
 		updateUI()
 	}

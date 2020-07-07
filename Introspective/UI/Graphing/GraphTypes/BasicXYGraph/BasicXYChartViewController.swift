@@ -52,7 +52,7 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		chartModel = chartModel.chartType(chartType)
@@ -62,7 +62,7 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 		finishedSetup = true
 	}
 
-	override public final func viewDidLayoutSubviews() {
+	public final override func viewDidLayoutSubviews() {
 		chartView = AAChartView()
 		chartView.frame = chartViewOutline.frame
 		chartView.contentHeight = chartViewOutline.frame.size.height
@@ -70,7 +70,7 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 		view.insertSubview(chartView, at: 0)
 	}
 
-	override public final func showError(
+	public final override func showError(
 		title: String,
 		message: String? = "Sorry for the inconvenience.",
 		error: Error? = nil,

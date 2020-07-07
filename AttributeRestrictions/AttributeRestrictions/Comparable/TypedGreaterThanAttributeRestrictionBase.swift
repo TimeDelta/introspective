@@ -15,8 +15,8 @@ import Samples
 public class TypedGreaterThanAttributeRestrictionBase<ValueType: Comparable>: AnyAttributeRestriction, Equatable {
 	// MARK: - Display Information
 
-	override public final var attributedName: String { "Greater than" }
-	override public final var description: String {
+	public final override var attributedName: String { "Greater than" }
+	public final override var description: String {
 		do {
 			let valueText = try restrictedAttribute.convertToDisplayableString(from: value)
 			return restrictedAttribute.name + " > " + valueText
@@ -52,12 +52,12 @@ public class TypedGreaterThanAttributeRestrictionBase<ValueType: Comparable>: An
 
 	// MARK: - Attribute Functions
 
-	override public final func value(of attribute: Attribute) throws -> Any? {
+	public final override func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(valueAttribute) { return value }
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
-	override public final func set(attribute: Attribute, to value: Any?) throws {
+	public final override func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(valueAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
@@ -69,7 +69,7 @@ public class TypedGreaterThanAttributeRestrictionBase<ValueType: Comparable>: An
 
 	// MARK: - Attribute Restriction Functions
 
-	override public final func samplePasses(_ sample: Sample) throws -> Bool {
+	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
 		if sampleValue == nil { return false }
 		guard let castedValue = sampleValue as? ValueType else {
@@ -78,7 +78,7 @@ public class TypedGreaterThanAttributeRestrictionBase<ValueType: Comparable>: An
 		return castedValue > value
 	}
 
-	override public func copy() -> AttributeRestriction {
+	public override func copy() -> AttributeRestriction {
 		TypedGreaterThanAttributeRestrictionBase<ValueType>(
 			restrictedAttribute: restrictedAttribute,
 			value: value,
@@ -101,7 +101,7 @@ public class TypedGreaterThanAttributeRestrictionBase<ValueType: Comparable>: An
 		return equalTo(other)
 	}
 
-	override public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	public final override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is TypedGreaterThanAttributeRestrictionBase) { return false }
 		let other = otherRestriction as! TypedGreaterThanAttributeRestrictionBase
 		return equalTo(other)

@@ -319,7 +319,7 @@ class MockQuerierFactory: QuerierFactory, Cuckoo.ClassMock {
 	let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
 
 	// ["name": "heartRateQuerier", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "HeartRateQuerier", "isReadOnly": true, "accessibility": "public"]
-	override public var heartRateQuerier: HeartRateQuerier {
+	public override var heartRateQuerier: HeartRateQuerier {
 		cuckoo_manager.getter("heartRateQuerier", superclassCall: super.heartRateQuerier)
 	}
 
@@ -358,7 +358,7 @@ class MockQuerierFactory: QuerierFactory, Cuckoo.ClassMock {
 }
 
 class QuerierFactoryStub: QuerierFactory {
-	override public var heartRateQuerier: HeartRateQuerier {
+	public override var heartRateQuerier: HeartRateQuerier {
 		DefaultValueRegistry.defaultValue(for: HeartRateQuerier.self)
 	}
 }
@@ -384,7 +384,7 @@ class MockQueryFactory: QueryFactory, Cuckoo.ClassMock {
 	let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
 
 	// ["name": "heartRateQuery", "returnSignature": " -> HeartRateQuery", "fullyQualifiedName": "heartRateQuery() -> HeartRateQuery", "parameterSignature": "", "parameterSignatureWithoutNames": "", "inputTypes": "", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "", "call": "", "parameters": [], "returnType": "HeartRateQuery", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-	override public func heartRateQuery() -> HeartRateQuery {
+	public override func heartRateQuery() -> HeartRateQuery {
 		cuckoo_manager.call(
 			"heartRateQuery() -> HeartRateQuery",
 			parameters: (),
@@ -436,7 +436,7 @@ class MockQueryFactory: QueryFactory, Cuckoo.ClassMock {
 }
 
 class QueryFactoryStub: QueryFactory {
-	override public func heartRateQuery() -> HeartRateQuery {
+	public override func heartRateQuery() -> HeartRateQuery {
 		DefaultValueRegistry.defaultValue(for: HeartRateQuery.self)
 	}
 }
@@ -575,7 +575,7 @@ class MockRestrictionParserFactory: RestrictionParserFactory, Cuckoo.ClassMock {
 	let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
 
 	// ["name": "dayOfWeekRestrictionParser", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "DayOfWeekRestrictionParser", "isReadOnly": true, "accessibility": "public"]
-	override public var dayOfWeekRestrictionParser: DayOfWeekRestrictionParser {
+	public override var dayOfWeekRestrictionParser: DayOfWeekRestrictionParser {
 		cuckoo_manager.getter("dayOfWeekRestrictionParser", superclassCall: super.dayOfWeekRestrictionParser)
 	}
 
@@ -617,7 +617,7 @@ class MockRestrictionParserFactory: RestrictionParserFactory, Cuckoo.ClassMock {
 }
 
 class RestrictionParserFactoryStub: RestrictionParserFactory {
-	override public var dayOfWeekRestrictionParser: DayOfWeekRestrictionParser {
+	public override var dayOfWeekRestrictionParser: DayOfWeekRestrictionParser {
 		DefaultValueRegistry.defaultValue(for: DayOfWeekRestrictionParser.self)
 	}
 }
@@ -643,27 +643,27 @@ class MockUtilFactory: UtilFactory, Cuckoo.ClassMock {
 	let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
 
 	// ["name": "calendarUtil", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "CalendarUtil", "isReadOnly": true, "accessibility": "public"]
-	override public var calendarUtil: CalendarUtil {
+	public override var calendarUtil: CalendarUtil {
 		cuckoo_manager.getter("calendarUtil", superclassCall: super.calendarUtil)
 	}
 
 	// ["name": "numericSampleUtil", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "NumericSampleUtil", "isReadOnly": true, "accessibility": "public"]
-	override public var numericSampleUtil: NumericSampleUtil {
+	public override var numericSampleUtil: NumericSampleUtil {
 		cuckoo_manager.getter("numericSampleUtil", superclassCall: super.numericSampleUtil)
 	}
 
 	// ["name": "hkSampleUtil", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "HKSampleUtil", "isReadOnly": true, "accessibility": "public"]
-	override public var hkSampleUtil: HKSampleUtil {
+	public override var hkSampleUtil: HKSampleUtil {
 		cuckoo_manager.getter("hkSampleUtil", superclassCall: super.hkSampleUtil)
 	}
 
 	// ["name": "textNormalizationUtil", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "TextNormalizationUtil", "isReadOnly": true, "accessibility": "public"]
-	override public var textNormalizationUtil: TextNormalizationUtil {
+	public override var textNormalizationUtil: TextNormalizationUtil {
 		cuckoo_manager.getter("textNormalizationUtil", superclassCall: super.textNormalizationUtil)
 	}
 
 	// ["name": "sampleUtil", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "SampleUtil", "isReadOnly": true, "accessibility": "public"]
-	override public var sampleUtil: SampleUtil {
+	public override var sampleUtil: SampleUtil {
 		cuckoo_manager.getter("sampleUtil", superclassCall: super.sampleUtil)
 	}
 
@@ -749,23 +749,23 @@ class MockUtilFactory: UtilFactory, Cuckoo.ClassMock {
 }
 
 class UtilFactoryStub: UtilFactory {
-	override public var calendarUtil: CalendarUtil {
+	public override var calendarUtil: CalendarUtil {
 		DefaultValueRegistry.defaultValue(for: CalendarUtil.self)
 	}
 
-	override public var numericSampleUtil: NumericSampleUtil {
+	public override var numericSampleUtil: NumericSampleUtil {
 		DefaultValueRegistry.defaultValue(for: NumericSampleUtil.self)
 	}
 
-	override public var hkSampleUtil: HKSampleUtil {
+	public override var hkSampleUtil: HKSampleUtil {
 		DefaultValueRegistry.defaultValue(for: HKSampleUtil.self)
 	}
 
-	override public var textNormalizationUtil: TextNormalizationUtil {
+	public override var textNormalizationUtil: TextNormalizationUtil {
 		DefaultValueRegistry.defaultValue(for: TextNormalizationUtil.self)
 	}
 
-	override public var sampleUtil: SampleUtil {
+	public override var sampleUtil: SampleUtil {
 		DefaultValueRegistry.defaultValue(for: SampleUtil.self)
 	}
 }

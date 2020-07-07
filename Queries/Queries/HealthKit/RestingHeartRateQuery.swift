@@ -15,7 +15,7 @@ import Samples
 public protocol RestingHeartRateQuery: Query {}
 
 public class RestingHeartRateQueryImpl: HealthKitQuery<RestingHeartRate>, RestingHeartRateQuery {
-	override final func initFromHKSample(_ hkSample: HKSample) -> RestingHeartRate {
+	final override func initFromHKSample(_ hkSample: HKSample) -> RestingHeartRate {
 		precondition(hkSample is HKQuantitySample, "Wrong type of health kit sample for resting heart rate")
 		return RestingHeartRate(hkSample as! HKQuantitySample)
 	}

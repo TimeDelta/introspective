@@ -47,7 +47,7 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 
 	// MARK: - UIView Overrides
 
-	override public final func awakeFromNib() {
+	public final override func awakeFromNib() {
 		super.awakeFromNib()
 		reset()
 		observe(selector: #selector(noteSaved), name: MoodNoteViewController.noteSavedNotification)
@@ -55,7 +55,7 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 		observe(selector: #selector(resetAndUpdateUI), name: MoodUiUtilImpl.maxRatingChanged)
 	}
 
-	override public final func layoutSubviews() {
+	public final override func layoutSubviews() {
 		super.layoutSubviews()
 		updateUI()
 	}

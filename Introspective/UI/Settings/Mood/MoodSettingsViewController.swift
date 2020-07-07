@@ -38,7 +38,7 @@ final class MoodSettingsViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	override final func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 		updateUI()
 		navigationItem.rightBarButtonItem = UIBarButtonItem(

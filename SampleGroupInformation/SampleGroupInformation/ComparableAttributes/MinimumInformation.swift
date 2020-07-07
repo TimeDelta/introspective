@@ -16,8 +16,8 @@ import Samples
 public final class MinimumInformation<AttributeType: Comparable>: AnyInformation {
 	// MARK: - Display Information
 
-	override public final var name: String { "Minimum" }
-	override public final var description: String { name + " " + attribute.name.localizedLowercase }
+	public final override var name: String { "Minimum" }
+	public final override var description: String { name + " " + attribute.name.localizedLowercase }
 
 	// MARK: - Initializers
 
@@ -27,7 +27,7 @@ public final class MinimumInformation<AttributeType: Comparable>: AnyInformation
 
 	// MARK: Information Functions
 
-	override public final func compute(forSamples samples: [Sample]) throws -> String {
+	public final override func compute(forSamples samples: [Sample]) throws -> String {
 		let filteredSamples = try filterSamples(samples, as: AttributeType.self)
 		if filteredSamples.isEmpty { return "No samples matching filter" }
 		let value = try DependencyInjector.get(NumericSampleUtil.self)
@@ -35,7 +35,7 @@ public final class MinimumInformation<AttributeType: Comparable>: AnyInformation
 		return String(describing: value)
 	}
 
-	override public final func computeGraphable(forSamples samples: [Sample]) throws -> String {
+	public final override func computeGraphable(forSamples samples: [Sample]) throws -> String {
 		let filteredSamples = try filterSamples(samples, as: AttributeType.self)
 		if filteredSamples.isEmpty { throw GenericDisplayableError(title: "No samples matching filter") }
 		let value = try DependencyInjector.get(NumericSampleUtil.self)
@@ -48,7 +48,7 @@ public final class MinimumInformation<AttributeType: Comparable>: AnyInformation
 
 	// MARK: - Equality
 
-	override public final func equalTo(_ other: SampleGroupInformation) -> Bool {
+	public final override func equalTo(_ other: SampleGroupInformation) -> Bool {
 		other is MinimumInformation < AttributeType> && attribute.equalTo(other.attribute)
 	}
 }

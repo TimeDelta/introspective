@@ -24,7 +24,7 @@ public final class RecordMoodRatingViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		ratingTextField.text = String(rating)

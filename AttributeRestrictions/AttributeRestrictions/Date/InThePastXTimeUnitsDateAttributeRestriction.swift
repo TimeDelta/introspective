@@ -42,8 +42,8 @@ public final class InThePastXTimeUnitsDateAttributeRestriction: DateAttributeRes
 
 	// MARK: - Display Information
 
-	override public final var attributedName: String { "In the past <number> <time unit>s" }
-	override public final var description: String {
+	public final override var attributedName: String { "In the past <number> <time unit>s" }
+	public final override var description: String {
 		var text = restrictedAttribute.name + " is in the past \(numberOfTimeUnits) \(timeUnit.description)"
 		if numberOfTimeUnits != 1 {
 			text += "s"
@@ -72,7 +72,7 @@ public final class InThePastXTimeUnitsDateAttributeRestriction: DateAttributeRes
 
 	// MARK: - Attribute Functions
 
-	override public final func value(of attribute: Attribute) throws -> Any? {
+	public final override func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(Me.timeUnitAttribute) {
 			return timeUnit
 		}
@@ -82,7 +82,7 @@ public final class InThePastXTimeUnitsDateAttributeRestriction: DateAttributeRes
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
-	override public final func set(attribute: Attribute, to value: Any?) throws {
+	public final override func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.equalTo(Me.timeUnitAttribute) {
 			guard let castedValue = value as? Calendar.Component else {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
@@ -102,7 +102,7 @@ public final class InThePastXTimeUnitsDateAttributeRestriction: DateAttributeRes
 
 	// MARK: - Attribute Restriction Functions
 
-	override public final func samplePasses(_ sample: Sample) throws -> Bool {
+	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
 		if sampleValue == nil { return false }
 		guard let sampleDate = sampleValue as? Date else {
@@ -114,7 +114,7 @@ public final class InThePastXTimeUnitsDateAttributeRestriction: DateAttributeRes
 			minDate.isBeforeDate(sampleDate, orEqual: true, granularity: .nanosecond)
 	}
 
-	override public func copy() -> AttributeRestriction {
+	public override func copy() -> AttributeRestriction {
 		InThePastXTimeUnitsDateAttributeRestriction(
 			restrictedAttribute: restrictedAttribute,
 			numberOfTimeUnits,
@@ -124,7 +124,7 @@ public final class InThePastXTimeUnitsDateAttributeRestriction: DateAttributeRes
 
 	// MARK: - Boolean Expression Functions
 
-	override public func predicate() -> NSPredicate? {
+	public override func predicate() -> NSPredicate? {
 		guard !DependencyInjector.get(Settings.self).convertTimeZones else { return nil }
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		let now = Date()
@@ -153,7 +153,7 @@ public final class InThePastXTimeUnitsDateAttributeRestriction: DateAttributeRes
 		return equalTo(other)
 	}
 
-	override public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	public final override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is InThePastXTimeUnitsDateAttributeRestriction) { return false }
 		let other = otherRestriction as! InThePastXTimeUnitsDateAttributeRestriction
 		return equalTo(other)

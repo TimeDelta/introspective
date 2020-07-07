@@ -9,7 +9,7 @@
 import UIKit
 
 public final class RecordMoodScrollView: UIScrollView {
-	override public func touchesShouldCancel(in view: UIView) -> Bool {
+	public override func touchesShouldCancel(in view: UIView) -> Bool {
 		if view is UIButton {
 			return false
 		}

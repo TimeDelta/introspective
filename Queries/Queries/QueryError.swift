@@ -36,7 +36,7 @@ public class NoSamplesFoundQueryError: QueryError {
 }
 
 public final class NoHealthKitSamplesFoundQueryError: NoSamplesFoundQueryError {
-	override public final var displayableDescription: String? {
+	public final override var displayableDescription: String? {
 		"Are you sure you authorized this app to read \(sampleType.name.lowercased()) data?"
 	}
 

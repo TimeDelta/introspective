@@ -71,7 +71,7 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 
 	// MARK: - UIViewController Overrides
 
-	override final func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		attributePicker.delegate = self

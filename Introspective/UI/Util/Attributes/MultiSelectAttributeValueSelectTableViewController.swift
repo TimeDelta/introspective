@@ -16,7 +16,7 @@ public final class MultiSelectAttributeValueSelectTableViewController: UITableVi
 
 	public final var multiSelectAttribute: MultiSelectAttribute!
 	public final var initialValue: Any?
-	public private(set) final var selectedValues = [Any]()
+	public final private(set) var selectedValues = [Any]()
 
 	private final let searchController = UISearchController(searchResultsController: nil)
 	private final var filteredValues = [Any]()
@@ -25,7 +25,7 @@ public final class MultiSelectAttributeValueSelectTableViewController: UITableVi
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		filteredValues = multiSelectAttribute.possibleValues
@@ -48,15 +48,15 @@ public final class MultiSelectAttributeValueSelectTableViewController: UITableVi
 
 	// MARK: - TableViewDataSource
 
-	override public final func numberOfSections(in _: UITableView) -> Int {
+	public final override func numberOfSections(in _: UITableView) -> Int {
 		1
 	}
 
-	override public final func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+	public final override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
 		filteredValues.count
 	}
 
-	override public final func tableView(_: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	public final override func tableView(_: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = UITableViewCell()
 		let value = filteredValues[indexPath.row]
 		var displayValue: String
@@ -72,11 +72,11 @@ public final class MultiSelectAttributeValueSelectTableViewController: UITableVi
 
 	// MARK: - TableViewDelegate
 
-	override public final func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
+	public final override func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
 		selectedValues.append(filteredValues[indexPath.row])
 	}
 
-	override public final func tableView(_: UITableView, didDeselectRowAt indexPath: IndexPath) {
+	public final override func tableView(_: UITableView, didDeselectRowAt indexPath: IndexPath) {
 		if let indexToRemove = multiSelectAttribute.indexOf(
 			possibleValue: filteredValues[indexPath.row],
 			in: selectedValues

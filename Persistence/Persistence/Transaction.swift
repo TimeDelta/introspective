@@ -42,7 +42,7 @@ public protocol Transaction {
 	func deleteAll(_ entityName: String) throws
 }
 
-internal final class TransactionImpl: Transaction {
+final internal class TransactionImpl: Transaction {
 	// MARK: - Instance Variables
 
 	private final var myContext: NSManagedObjectContext

@@ -16,8 +16,8 @@ import Samples
 public final class SumInformation: AnyInformation {
 	// MARK: - Display Information
 
-	override public final var name: String { "Total" }
-	override public final var description: String { name + " " + attribute.name.localizedLowercase }
+	public final override var name: String { "Total" }
+	public final override var description: String { name + " " + attribute.name.localizedLowercase }
 
 	// MARK: - Instance Variables
 
@@ -31,7 +31,7 @@ public final class SumInformation: AnyInformation {
 
 	// MARK: - Information Functions
 
-	override public final func compute(forSamples samples: [Sample]) throws -> String {
+	public final override func compute(forSamples samples: [Sample]) throws -> String {
 		if attribute is DoubleAttribute {
 			let filteredSamples = try filterSamples(samples, as: Double.self)
 			if filteredSamples.isEmpty { return "No samples match filter" }
@@ -75,7 +75,7 @@ public final class SumInformation: AnyInformation {
 		throw UnknownAttributeError(attribute: attribute, for: samples[0])
 	}
 
-	override public final func computeGraphable(forSamples samples: [Sample]) throws -> String {
+	public final override func computeGraphable(forSamples samples: [Sample]) throws -> String {
 		if attribute is DoubleAttribute {
 			let filteredSamples = try filterSamples(samples, as: Double.self)
 			if filteredSamples.isEmpty { throw GenericDisplayableError(title: "No samples match filter") }
@@ -111,7 +111,7 @@ public final class SumInformation: AnyInformation {
 
 	// MARK: - Equality
 
-	override public final func equalTo(_ other: SampleGroupInformation) -> Bool {
+	public final override func equalTo(_ other: SampleGroupInformation) -> Bool {
 		other is SumInformation && attribute.equalTo(other.attribute)
 	}
 

@@ -22,7 +22,7 @@ public final class TextAttributeValueViewController: AttributeValueTypeViewContr
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 		textView.delegate = self
 		if let text = currentValue as? String {

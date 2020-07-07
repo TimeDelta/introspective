@@ -44,7 +44,7 @@ public final class GroupingChooserTableViewControllerImpl: UITableViewController
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		if let limitToAttributes = limitToAttributes {
@@ -75,14 +75,14 @@ public final class GroupingChooserTableViewControllerImpl: UITableViewController
 
 	// MARK: - Table View Data Source
 
-	override public final func numberOfSections(in _: UITableView) -> Int {
+	public final override func numberOfSections(in _: UITableView) -> Int {
 		if currentGrouper is AdvancedSampleGrouper {
 			return 2
 		}
 		return 1
 	}
 
-	override public final func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
+	public final override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if section == 0 {
 			return 1
 		}
@@ -97,14 +97,14 @@ public final class GroupingChooserTableViewControllerImpl: UITableViewController
 		return advancedGrouper.groupDefinitions.count
 	}
 
-	override public final func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
+	public final override func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section == 0 { return nil }
 		if section == 1 { return "Group Definitions" }
 		log.error("Unknown section number: %d", section)
 		return nil
 	}
 
-	override public final func tableView(
+	public final override func tableView(
 		_ tableView: UITableView,
 		cellForRowAt indexPath: IndexPath
 	) -> UITableViewCell {
@@ -136,7 +136,7 @@ public final class GroupingChooserTableViewControllerImpl: UITableViewController
 
 	// MARK: - Table View Delegate
 
-	override public final func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
+	public final override func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath.section == 0 {
 			showSelectGrouperView()
 		} else {
@@ -144,7 +144,7 @@ public final class GroupingChooserTableViewControllerImpl: UITableViewController
 		}
 	}
 
-	override public final func tableView(
+	public final override func tableView(
 		_ tableView: UITableView,
 		editActionsForRowAt indexPath: IndexPath
 	) -> [UITableViewRowAction]? {

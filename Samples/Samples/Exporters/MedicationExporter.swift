@@ -46,7 +46,7 @@ public final class MedicationExporterImpl: BaseExporter, MedicationExporter {
 
 	// MARK: - Functions
 
-	override public final func exportData() throws {
+	public final override func exportData() throws {
 		guard !isCancelled else { return }
 		guard !(started && isPaused) else {
 			throw GenericError("Tried to start a new medications export with an exporter that is already in use.")
@@ -68,12 +68,12 @@ public final class MedicationExporterImpl: BaseExporter, MedicationExporter {
 		try exportRemaining()
 	}
 
-	override public final func cancel() {
+	public final override func cancel() {
 		isCancelled = true
 		doses = [] // release memory for doses
 	}
 
-	override public final func resume() throws {
+	public final override func resume() throws {
 		isPaused = false
 		try exportRemaining()
 	}

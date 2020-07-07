@@ -13,7 +13,7 @@ final class AttributeDescriptionViewController: UIViewController {
 
 	@IBOutlet final var descriptionTextView: UITextView!
 
-	override final func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 		descriptionTextView.text = descriptionText
 	}

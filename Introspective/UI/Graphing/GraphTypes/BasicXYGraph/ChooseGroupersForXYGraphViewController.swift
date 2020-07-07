@@ -76,7 +76,7 @@ public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		title = navBarTitle

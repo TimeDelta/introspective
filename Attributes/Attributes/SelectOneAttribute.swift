@@ -30,7 +30,7 @@ open class TypedSelectOneAttribute<Type>: AttributeBase<Type>, SelectOneAttribut
 	}
 
 	private final let _typeName: String
-	override public final var typeName: String {
+	public final override var typeName: String {
 		_typeName
 	}
 
@@ -102,14 +102,14 @@ open class TypedSelectOneAttribute<Type>: AttributeBase<Type>, SelectOneAttribut
 
 	// MARK: - Attribute Functions
 
-	override public final func isValid(value: Any?) -> Bool {
+	public final override func isValid(value: Any?) -> Bool {
 		if let nonNilValue = value {
 			return indexOf(possibleValue: nonNilValue) != nil
 		}
 		return optional
 	}
 
-	override public final func convertToDisplayableString(from value: Any?) throws -> String {
+	public final override func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
 		if !optional && value == nil { throw UnsupportedValueError(attribute: self, is: nil) }
 		guard let castedValue = value as? Type else {
@@ -120,7 +120,7 @@ open class TypedSelectOneAttribute<Type>: AttributeBase<Type>, SelectOneAttribut
 
 	// MARK: - Select One Attribute Functions
 
-	override public final func typedValuesAreEqual(_ first: Type, _ second: Type) -> Bool {
+	public final override func typedValuesAreEqual(_ first: Type, _ second: Type) -> Bool {
 		areEqual(first, second)
 	}
 

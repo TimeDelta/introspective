@@ -44,7 +44,7 @@ public final class DateRangeViewControllerImpl: UIViewController, DateRangeViewC
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		fromDatePicker.datePickerMode = datePickerMode

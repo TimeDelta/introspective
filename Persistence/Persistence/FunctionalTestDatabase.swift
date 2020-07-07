@@ -12,7 +12,7 @@ import Foundation
 internal class FunctionalTestDatabase: DatabaseImpl {
 	private final let persistentContainer: NSPersistentContainer
 
-	override public init(_ objectModel: NSManagedObjectModel) {
+	public override init(_ objectModel: NSManagedObjectModel) {
 		let description = NSPersistentStoreDescription()
 		description.type = NSInMemoryStoreType
 		description.shouldAddStoreAsynchronously = false // make it simpler for tests

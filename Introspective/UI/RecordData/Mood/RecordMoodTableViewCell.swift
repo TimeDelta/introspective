@@ -47,7 +47,7 @@ final class RecordMoodTableViewCell: UITableViewCell {
 
 	// MARK: - UIView Overrides
 
-	override public final func awakeFromNib() {
+	public final override func awakeFromNib() {
 		super.awakeFromNib()
 		reset()
 		updateUI()

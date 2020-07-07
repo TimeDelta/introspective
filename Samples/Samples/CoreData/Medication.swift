@@ -53,7 +53,7 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed, Expo
 	// MARK: - Instance Variables
 
 	public final let attributedName: String = "Medication"
-	override public final var description: String {
+	public final override var description: String {
 		"A substance used for medical treatment, especially a medicine or drug."
 	}
 
@@ -247,7 +247,7 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed, Expo
 
 	// MARK: - Debug
 
-	override public final var debugDescription: String {
+	public final override var debugDescription: String {
 		let dosageText = dosage?.description ?? "nil"
 		let frequencyText = frequency?.description ?? "As needed"
 		let startedOnText = startedOn == nil ? "nil" : try! Me.startedOn.convertToDisplayableString(from: startedOn!)

@@ -48,7 +48,7 @@ public final class ActivityExporterImpl: BaseExporter, ActivityExporter {
 
 	// MARK: - Functions
 
-	override public final func exportData() throws {
+	public final override func exportData() throws {
 		guard !isCancelled else { return }
 		guard !(started && isPaused) else {
 			throw GenericError("Tried to start a new activities export with an exporter that is already in use.")
@@ -70,13 +70,13 @@ public final class ActivityExporterImpl: BaseExporter, ActivityExporter {
 		try exportRemaining()
 	}
 
-	override public final func cancel() {
+	public final override func cancel() {
 		isCancelled = true
 		// release memory for activities
 		activities = []
 	}
 
-	override public final func resume() throws {
+	public final override func resume() throws {
 		isPaused = false
 		try exportRemaining()
 	}

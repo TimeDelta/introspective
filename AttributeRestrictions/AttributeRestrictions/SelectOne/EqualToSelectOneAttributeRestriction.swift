@@ -40,7 +40,7 @@ public final class EqualToSelectOneAttributeRestriction: EqualToAttributeRestric
 
 	// MARK: - Attribute Restriction Functions
 
-	override public func copy() -> AttributeRestriction {
+	public override func copy() -> AttributeRestriction {
 		EqualToSelectOneAttributeRestriction(
 			restrictedAttribute: restrictedAttribute,
 			value: value as Any,
@@ -50,14 +50,14 @@ public final class EqualToSelectOneAttributeRestriction: EqualToAttributeRestric
 
 	// MARK: - Boolean Expression Functions
 
-	override public func predicate() -> NSPredicate? {
+	public override func predicate() -> NSPredicate? {
 		#warning("can use TypedSelectOneAttribute<Type> to return predicate for certain cases")
 		return nil
 	}
 
 	// MARK: - Other
 
-	override public final func restrictedAttributeWasSet() {
+	public final override func restrictedAttributeWasSet() {
 		selectOneAttribute = restrictedAttribute as! SelectOneAttribute
 		do {
 			let index = try selectOneAttribute.possibleValues
@@ -79,13 +79,13 @@ public final class EqualToSelectOneAttributeRestriction: EqualToAttributeRestric
 		lhs.equalTo(rhs)
 	}
 
-	override public final func equalTo(_ otherAttributed: Attributed) -> Bool {
+	public final override func equalTo(_ otherAttributed: Attributed) -> Bool {
 		if !(otherAttributed is EqualToSelectOneAttributeRestriction) { return false }
 		let other = otherAttributed as! EqualToSelectOneAttributeRestriction
 		return equalTo(other)
 	}
 
-	override public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	public final override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is EqualToSelectOneAttributeRestriction) { return false }
 		let other = otherRestriction as! EqualToSelectOneAttributeRestriction
 		return equalTo(other)

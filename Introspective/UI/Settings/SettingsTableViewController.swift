@@ -45,7 +45,7 @@ public final class SettingsTableViewController: UITableViewController {
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		observe(selector: #selector(enableGenerateTestData), name: Me.enableGenerateTestData)
 		observe(selector: #selector(disableGenerateTestData), name: Me.disableGenerateTestData)
 	}
@@ -56,14 +56,14 @@ public final class SettingsTableViewController: UITableViewController {
 
 	// MARK: - Table view data source
 
-	override public final func numberOfSections(in _: UITableView) -> Int {
+	public final override func numberOfSections(in _: UITableView) -> Int {
 		if Globals.testing {
 			return 3
 		}
 		return 2
 	}
 
-	override public final func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
+	public final override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if Globals.testing && section == 0 {
 			return 2
 		}
@@ -71,7 +71,7 @@ public final class SettingsTableViewController: UITableViewController {
 		return Me.identifiers[section].rows.count
 	}
 
-	override public final func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
+	public final override func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if Globals.testing && section == 0 {
 			return "Testing Only"
 		}
@@ -79,7 +79,7 @@ public final class SettingsTableViewController: UITableViewController {
 		return Me.identifiers[section].section
 	}
 
-	override public final func tableView(
+	public final override func tableView(
 		_ tableView: UITableView,
 		cellForRowAt indexPath: IndexPath
 	) -> UITableViewCell {
@@ -97,7 +97,7 @@ public final class SettingsTableViewController: UITableViewController {
 
 	// MARK: - Table view delegate
 
-	override public final func tableView(_ tableView: UITableView, didSelectRowAt _indexPath: IndexPath) {
+	public final override func tableView(_ tableView: UITableView, didSelectRowAt _indexPath: IndexPath) {
 		if indexPath(_indexPath, isNonTestOnlySectionRowNamed: Me.resetInstructionPromptsCellIdentifier) {
 			DependencyInjector.get(UserDefaultsUtil.self).resetInstructionPrompts()
 			tableView.deselectRow(at: _indexPath, animated: false)

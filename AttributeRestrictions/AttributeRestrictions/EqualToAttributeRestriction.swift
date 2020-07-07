@@ -15,8 +15,8 @@ import Samples
 public class EqualToAttributeRestriction: AnyAttributeRestriction, Equatable {
 	// MARK: Instance Variables
 
-	override public final var attributedName: String { "Equal to" }
-	override public final var description: String {
+	public final override var attributedName: String { "Equal to" }
+	public final override var description: String {
 		do {
 			let valueText = try restrictedAttribute.convertToDisplayableString(from: value)
 			return restrictedAttribute.name + " = " + valueText
@@ -33,9 +33,9 @@ public class EqualToAttributeRestriction: AnyAttributeRestriction, Equatable {
 	public final var value: Any?
 	// need this to be visible for EqualToSelectOneAttributeRestriction.copy()
 	final let valueAttribute: Attribute
-	fileprivate final let areEqual: (Any?, Any?) throws -> Bool
+	final fileprivate let areEqual: (Any?, Any?) throws -> Bool
 
-	fileprivate final let log = Log()
+	final fileprivate let log = Log()
 
 	// MARK: Initializers
 
@@ -61,12 +61,12 @@ public class EqualToAttributeRestriction: AnyAttributeRestriction, Equatable {
 
 	// MARK: Attributed Functions
 
-	override public final func value(of attribute: Attribute) throws -> Any? {
+	public final override func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(valueAttribute) { return value }
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
-	override public func set(attribute: Attribute, to value: Any?) throws {
+	public override func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(valueAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
@@ -76,12 +76,12 @@ public class EqualToAttributeRestriction: AnyAttributeRestriction, Equatable {
 
 	// MARK: Attribute Restriction Functions
 
-	override public func samplePasses(_ sample: Sample) throws -> Bool {
+	public override func samplePasses(_ sample: Sample) throws -> Bool {
 		let actualValue = try sample.value(of: restrictedAttribute)
 		return try areEqual(actualValue, value)
 	}
 
-	override public func copy() -> AttributeRestriction {
+	public override func copy() -> AttributeRestriction {
 		EqualToAttributeRestriction(
 			restrictedAttribute: restrictedAttribute,
 			value: value,
@@ -102,7 +102,7 @@ public class EqualToAttributeRestriction: AnyAttributeRestriction, Equatable {
 		return equalTo(other)
 	}
 
-	override public func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	public override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is EqualToAttributeRestriction) { return false }
 		let other = otherRestriction as! EqualToAttributeRestriction
 		return equalTo(other)
@@ -164,7 +164,7 @@ public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualTo
 
 	// MARK: Attributed Functions
 
-	override public func set(attribute: Attribute, to value: Any?) throws {
+	public override func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(valueAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
@@ -180,7 +180,7 @@ public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualTo
 
 	// MARK: Attribute Restriction Functions
 
-	override public func samplePasses(_ sample: Sample) throws -> Bool {
+	public override func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
 		if sampleValue == nil {
 			if !restrictedAttribute.optional {
@@ -199,7 +199,7 @@ public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualTo
 		return try areEqual(castedValue, value)
 	}
 
-	override public func copy() -> AttributeRestriction {
+	public override func copy() -> AttributeRestriction {
 		TypedEqualToAttributeRestrictionBase<ValueType>(
 			restrictedAttribute: restrictedAttribute,
 			value: value as? ValueType,
@@ -218,13 +218,13 @@ public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualTo
 		lhs.equalTo(rhs)
 	}
 
-	override public final func equalTo(_ otherAttributed: Attributed) -> Bool {
+	public final override func equalTo(_ otherAttributed: Attributed) -> Bool {
 		if !(otherAttributed is TypedEqualToAttributeRestrictionBase) { return false }
 		let other = otherAttributed as! TypedEqualToAttributeRestrictionBase
 		return equalTo(other)
 	}
 
-	override public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	public final override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is TypedEqualToAttributeRestrictionBase) { return false }
 		let other = otherRestriction as! TypedEqualToAttributeRestrictionBase
 		return equalTo(other)

@@ -47,7 +47,7 @@ public final class ChooseTextViewControllerImpl: UIViewController, ChooseTextVie
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 		picker.dataSource = self
 		picker.delegate = self

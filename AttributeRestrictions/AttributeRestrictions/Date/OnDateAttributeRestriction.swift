@@ -26,8 +26,8 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatab
 
 	// MARK: - Display Information
 
-	override public final var attributedName: String { "On a specific date" }
-	override public final var description: String {
+	public final override var attributedName: String { "On a specific date" }
+	public final override var description: String {
 		do {
 			let dateText = try Me.dateAttribute.convertToDisplayableString(from: date)
 			return "On " + dateText
@@ -58,14 +58,14 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatab
 
 	// MARK: - Attribute Functions
 
-	override public final func value(of attribute: Attribute) throws -> Any? {
+	public final override func value(of attribute: Attribute) throws -> Any? {
 		if !attribute.equalTo(Me.dateAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
 		return date
 	}
 
-	override public final func set(attribute: Attribute, to value: Any?) throws {
+	public final override func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(Me.dateAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
@@ -77,7 +77,7 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatab
 
 	// MARK: - Attribute Restriction Functions
 
-	override public final func samplePasses(_ sample: Sample) throws -> Bool {
+	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
 		if sampleValue == nil { return false }
 		guard let sampleDate = sampleValue as? Date else {
@@ -86,13 +86,13 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatab
 		return DependencyInjector.get(CalendarUtil.self).date(sampleDate, occursOnSame: .day, as: date)
 	}
 
-	override public func copy() -> AttributeRestriction {
+	public override func copy() -> AttributeRestriction {
 		OnDateAttributeRestriction(restrictedAttribute: restrictedAttribute, date: date)
 	}
 
 	// MARK: - Boolean Expression Functions
 
-	override public func predicate() -> NSPredicate? {
+	public override func predicate() -> NSPredicate? {
 		guard !DependencyInjector.get(Settings.self).convertTimeZones else { return nil }
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		let minDate = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: date)
@@ -118,7 +118,7 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatab
 		return equalTo(other)
 	}
 
-	override public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	public final override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is OnDateAttributeRestriction) { return false }
 		let other = otherRestriction as! OnDateAttributeRestriction
 		return equalTo(other)

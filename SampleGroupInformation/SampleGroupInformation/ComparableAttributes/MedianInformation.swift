@@ -15,8 +15,8 @@ import Samples
 public final class MedianInformation<AttributeType: Comparable>: AnyInformation {
 	// MARK: - Display Information
 
-	override public final var name: String { "Median" }
-	override public final var description: String { name + " " + attribute.name.localizedLowercase }
+	public final override var name: String { "Median" }
+	public final override var description: String { name + " " + attribute.name.localizedLowercase }
 
 	// MARK: - Instance Variables
 
@@ -31,17 +31,17 @@ public final class MedianInformation<AttributeType: Comparable>: AnyInformation 
 
 	// MARK: Information Functions
 
-	override public final func compute(forSamples samples: [Sample]) throws -> String {
+	public final override func compute(forSamples samples: [Sample]) throws -> String {
 		try compute(samples, shouldThrowOnEmptyFilter: false)
 	}
 
-	override public final func computeGraphable(forSamples samples: [Sample]) throws -> String {
+	public final override func computeGraphable(forSamples samples: [Sample]) throws -> String {
 		try compute(samples, shouldThrowOnEmptyFilter: true)
 	}
 
 	// MARK: - Equality
 
-	override public final func equalTo(_ other: SampleGroupInformation) -> Bool {
+	public final override func equalTo(_ other: SampleGroupInformation) -> Bool {
 		other is MedianInformation < AttributeType> && attribute.equalTo(other.attribute)
 	}
 

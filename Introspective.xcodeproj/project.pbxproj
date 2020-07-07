@@ -280,6 +280,7 @@
 		893610D80E807998757D881644AB39F2 /* EditMoodTableViewControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1A4D5DAF327B9717F8592A371CAF93 /* EditMoodTableViewControllerMock.swift */; };
 		8944ECBF0825543CFB034C918C799804 /* ActivityNoteTableViewCellMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689104277F9D94157AC8ECBCF6D7A76D /* ActivityNoteTableViewCellMock.swift */; };
 		8A5BC76AC5ED5D6F546F0C76FEC5D7BC /* UnifiedView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C8061B63660AC44DA4410D2D4E0C353D /* UnifiedView.storyboard */; };
+		8AA1B97BD9DC70368FF632267B5763CF /* SplitByListElementSampleGrouperUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCA6A681A4FDB4CBDDF8AF8D38EB74F3 /* SplitByListElementSampleGrouperUnitTests.swift */; };
 		8AE178371D718F21EDE3CCA3CB3F9CCA /* AttributeErrorsUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDFE962ADECBF1816AD8E27476D4CAB /* AttributeErrorsUnitTests.swift */; };
 		8AFE7F4E753D66B91EA3C7B855DC7107 /* DaysOfWeekAttributeUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F90FC6425F0C9320B7530C921783569 /* DaysOfWeekAttributeUnitTests.swift */; };
 		8BB1E550479EC2C415614A20BE4EDDBE /* AAJSFiles.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6A9C4768001305C9B2B52AFA9E8F4FB6 /* AAJSFiles.bundle */; };
@@ -332,7 +333,6 @@
 		A26589F32BFC0527881D20D03E4CB48C /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
 		A2DF8D22C94D6F91A865D337C0730F03 /* DurationUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA96F5DDD263FD0D99095EBADBA4AACC /* DurationUnitTests.swift */; };
-		8AA1B97BD9DC70368FF632267B5763CF /* SplitByListElementSampleGrouperUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCA6A681A4FDB4CBDDF8AF8D38EB74F3 /* SplitByListElementSampleGrouperUnitTests.swift */; };
 		A307D44D6721A760E637CEAE90AFED42 /* BloodPressureTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F312D49748BD5F763B6D8463E6112C45 /* BloodPressureTableViewCell.swift */; };
 		A34600A18766AE66F0324FF5AB10E114 /* GraphType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */; };
 		A4A958FBC360353B84DBFD1E49D8602C /* MiscMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99DEF55FA04C46F3921A7305BB937620 /* MiscMatchers.swift */; };
@@ -908,7 +908,6 @@
 		A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		A2505FFD3F0233815468AA6A0A4B96FE /* CoreDataSampleMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSampleMock.swift; sourceTree = "<group>"; };
-		CCA6A681A4FDB4CBDDF8AF8D38EB74F3 /* SplitByListElementSampleGrouperUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitByListElementSampleGrouperUnitTests.swift; sourceTree = "<group>"; };
 		A455D3386BC23DDD4E8C89EF40475474 /* LessThanDoubleAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanDoubleAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A4CBB7B41499754C5234A1BC949DD2AC /* EditAttributeRestrictionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewController.swift; sourceTree = "<group>"; };
 		A64E0788E27B3B4FE185D06F3F454E46 /* ChooseSampleGrouperTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseSampleGrouperTypeViewController.swift; sourceTree = "<group>"; };
@@ -985,6 +984,7 @@
 		CA585E50CB6114AECD49F1097D847B21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CAAE274BC7A170EE9671A26A46E7A918 /* BeforeTimeOfDayAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeforeTimeOfDayAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		CB370D6A0B83BE96D32B3DB2BC0B5B7C /* MoodNoteViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoodNoteViewController.swift; sourceTree = "<group>"; };
+		CCA6A681A4FDB4CBDDF8AF8D38EB74F3 /* SplitByListElementSampleGrouperUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitByListElementSampleGrouperUnitTests.swift; sourceTree = "<group>"; };
 		CD0A4D632FA9158F03ADD40EAE8FCCE7 /* IntrospectiveUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IntrospectiveUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD407C2211B353B0FDD369D5FE3DBBFD /* ImportDataTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportDataTableViewController.swift; sourceTree = "<group>"; };
 		CDBC3067A33C516E81A890260DF309B1 /* ActivityHasTagAttributeRestrictionFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityHasTagAttributeRestrictionFunctionalTests.swift; sourceTree = "<group>"; };
@@ -1685,6 +1685,14 @@
 			path = Misc;
 			sourceTree = "<group>";
 		};
+		49ADC7750423814332269A18BA05B5F1 /* TextAttributes */ = {
+			isa = PBXGroup;
+			children = (
+				CCA6A681A4FDB4CBDDF8AF8D38EB74F3 /* SplitByListElementSampleGrouperUnitTests.swift */,
+			);
+			path = TextAttributes;
+			sourceTree = "<group>";
+		};
 		4A7D163E4A622120B17A28057247C9FB /* BooleanAlgebra */ = {
 			isa = PBXGroup;
 			children = (
@@ -2195,14 +2203,6 @@
 				BB3F3239D5DA24E154657AC2EC4C6F16 /* TestDataCreationSampleTypeTableViewCell.swift */,
 			);
 			path = Testing;
-			sourceTree = "<group>";
-		};
-		49ADC7750423814332269A18BA05B5F1 /* TextAttributes */ = {
-			isa = PBXGroup;
-			children = (
-				CCA6A681A4FDB4CBDDF8AF8D38EB74F3 /* SplitByListElementSampleGrouperUnitTests.swift */,
-			);
-			path = TextAttributes;
 			sourceTree = "<group>";
 		};
 		A42A3755C14DFA73187CC83B596D96EF /* RecordData */ = {
@@ -2857,7 +2857,7 @@
 			buildConfigurationList = D63E90AF276550132DB77384E58E04DA /* Build configuration list for PBXNativeTarget "Introspective" */;
 			buildPhases = (
 				75E20E1CC157703ADA5941E98FF972D1 /* [CP] Check Pods Manifest.lock */,
-				53B6D04CF94539A7C5FC64D24E1D151D /* Run Script - format code */,
+				B4060869634B4969820045D10E0DEE19 /* Run Script - format code */,
 				F0FB89F745BB6CFF964B314ECF77BAAF /* Run Script - Create GitVersion.swift */,
 				BF6DA2C10FFDD3FB4515D3A60FA139E2 /* Sources */,
 				C51BB4D038DED40DD32EC47510ABCC76 /* Frameworks */,
@@ -3066,7 +3066,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		53B6D04CF94539A7C5FC64D24E1D151D /* Run Script - format code */ = {
+		B4060869634B4969820045D10E0DEE19 /* Run Script - format code */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3082,7 +3082,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nswiftformat --swiftversion `swift --version | awk '{print $4}'` --tabwidth 4 --disable andOperator,redundantFileprivate,unusedArguments,redundantExtensionACL,redundantBreak --maxwidth 120 --wraparguments before-first --wrapparameters before-first --wrapcollections before-first --closingparen balanced --commas always --shortoptionals always --indent tab --enable strongOutlets,specifiers,spaceInsideParens,spaceInsideGenerics,sortedImports,anyObjectProtocol,typeSugar,trailingCommas,blankLinesAroundMark,blankLinesAtEndOfScope,blankLinesAtEndOfScope,blankLinesBetweenScopes,consecutiveBlankLines,consecutiveSpaces,duplicateImports,emptyBraces,hoistPatternLet,leadingDelimiters,linebreakAtEndOfFile,linebreaks,redundantGet --linebreaks lf --header ignore `find . -type d -maxdepth 1 -print | egrep -v '^\\.$' | grep -v Pods | egrep -v '.*\\.xc(workspace|odeproj)' | grep -v .git | grep -v Carthage | egrep -v 'Tests$' | tr '\\n' ' '`\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nswiftformat \\\n  --swiftversion `swift --version | awk '{print $4}'` \\\n  --tabwidth 4 \\\n  --maxwidth 120 \\\n  --wraparguments before-first \\\n  --wrapparameters before-first \\\n  --wrapcollections before-first \\\n  --closingparen balanced \\\n  --commas always \\\n  --shortoptionals always \\\n  --indent tab \\\n  --linebreaks lf \\\n  --header ignore \\\n  --specifierorder public,private,static,final,convenience,override \\\n  --disable \\\nandOperator,\\\nredundantBreak,\\\nredundantExtensionACL,\\\nredundantFileprivate,\\\nunusedArguments,\\\n  --enable \\\nblankLinesAroundMark,\\\nblankLinesAtEndOfScope,\\\nblankLinesAtEndOfScope,\\\nblankLinesBetweenScopes,\\\nanyObjectProtocol,\\\nconsecutiveBlankLines,\\\nconsecutiveSpaces,\\\nduplicateImports,\\\nemptyBraces,\\\nhoistPatternLet,\\\nleadingDelimiters,\\\nlinebreakAtEndOfFile,\\\nlinebreaks,\\\nredundantGet,\\\nsortedImports,\\\nspaceInsideGenerics,\\\nspaceInsideParens,\\\nspecifiers,\\\nstrongOutlets,\\\ntrailingCommas,\\\ntypeSugar,\\\n  `find . -type d -maxdepth 1 -print | egrep -v '^\\.$' | grep -v Pods | egrep -v '.*\\.xc(workspace|odeproj)' | grep -v .git | grep -v Carthage | egrep -v 'Tests$' | tr '\\n' ' '`\n";
 		};
 		5B623C22BA43232A2D68D8DA95A51BD8 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

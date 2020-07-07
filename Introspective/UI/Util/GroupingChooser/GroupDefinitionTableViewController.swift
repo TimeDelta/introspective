@@ -50,7 +50,7 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		navigationItem.setRightBarButtonItems([doneButton, addButton], animated: false)
@@ -68,23 +68,23 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 
 	// MARK: - Table View Data Source
 
-	override public final func numberOfSections(in _: UITableView) -> Int {
+	public final override func numberOfSections(in _: UITableView) -> Int {
 		2
 	}
 
-	override public final func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
+	public final override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if section == 0 {
 			return 1
 		}
 		return expressionParts.count
 	}
 
-	override public final func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
+	public final override func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section == 0 { return nil }
 		return "Condition"
 	}
 
-	override public final func tableView(
+	public final override func tableView(
 		_ tableView: UITableView,
 		cellForRowAt indexPath: IndexPath
 	) -> UITableViewCell {
@@ -109,7 +109,7 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 
 	// MARK: - Table View Delegate
 
-	override public final func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath.section == 0 {
 			tableView.deselectRow(at: indexPath, animated: false)
 			return
@@ -130,14 +130,14 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 		pushToNavigationController(controller)
 	}
 
-	override public final func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+	public final override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		guard fromIndexPath.section == 1 && to.section == 1 else { return }
 		expressionParts.swapAt(fromIndexPath.row, to.row)
 		validate()
 		tableView.reloadData()
 	}
 
-	override public final func tableView(
+	public final override func tableView(
 		_ tableView: UITableView,
 		editActionsForRowAt indexPath: IndexPath
 	) -> [UITableViewRowAction]? {
@@ -152,7 +152,7 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 		return [delete]
 	}
 
-	override public final func tableView(_: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+	public final override func tableView(_: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
 		indexPath.section == 1
 	}
 

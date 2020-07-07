@@ -36,7 +36,7 @@ final class AttributeValueViewController: UIViewController {
 
 	// MARK: UIViewController Overrides
 
-	override final func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		if attribute is SelectOneAttribute {

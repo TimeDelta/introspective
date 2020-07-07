@@ -32,7 +32,7 @@ public protocol CodableStorage {
 	func fileExists(_ fileName: String, in directory: StorageDirectory) -> Bool
 }
 
-internal final class CodableStorageImpl: CodableStorage {
+final internal class CodableStorageImpl: CodableStorage {
 	private final let log = Log()
 
 	/// Store an encodable struct to the specified directory on disk

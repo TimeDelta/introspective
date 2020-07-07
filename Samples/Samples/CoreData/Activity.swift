@@ -73,7 +73,7 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 	// MARK: - Instance Variables
 
 	public final let attributedName: String = Me.name
-	override public final var description: String {
+	public final override var description: String {
 		"What you are doing at a specific point in time."
 	}
 
@@ -371,7 +371,7 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 
 	// MARK: - Debug
 
-	override public final var debugDescription: String {
+	public final override var debugDescription: String {
 		var timestampText = startDate.debugDescription
 		if let endDate = endDate {
 			timestampText = "from " + timestampText + " to " + endDate.debugDescription

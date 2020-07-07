@@ -97,7 +97,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 
 	// MARK: - UIViewController Overloads
 
-	override final func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		observe(selector: #selector(xAxisQueryChanged), name: .xAxisQueryChanged)

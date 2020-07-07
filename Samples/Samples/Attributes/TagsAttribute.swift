@@ -15,7 +15,7 @@ import DependencyInjection
 import Persistence
 
 public class TagsAttribute: TypedMultiSelectAttribute<Tag> {
-	override public final var typeName: String {
+	public final override var typeName: String {
 		"Tags"
 	}
 

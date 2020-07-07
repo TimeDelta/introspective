@@ -26,7 +26,7 @@ final class ChooseCalendarComponentViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	override final func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 		calendarComponentPicker.dataSource = self
 		calendarComponentPicker.delegate = self

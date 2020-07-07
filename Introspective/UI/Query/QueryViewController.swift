@@ -83,7 +83,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	private final var coachMarksController = DependencyInjector.get(CoachMarkFactory.self).controller()
 	private final var coachMarksDataSourceAndDelegate: DefaultCoachMarksDataSourceAndDelegate!
-	private final lazy var coachMarksInfo: [CoachMarkInfo] = [
+	private lazy final var coachMarksInfo: [CoachMarkInfo] = [
 		CoachMarkInfo(
 			hint: "This is the main data type. It determines what type of data will be returned by this query. Tap it to change the main data type.",
 			useArrow: true,
@@ -152,7 +152,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	// MARK: - UIViewController Overloads
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		editButton.target = self
@@ -187,14 +187,14 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		coachMarksController.skipView = defaultSkipInstructionsView()
 	}
 
-	override public final func viewDidAppear(_ animated: Bool) {
+	public final override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		if !DependencyInjector.get(UserDefaultsUtil.self).bool(forKey: .queryViewInstructionsShown) {
 			coachMarksController.start(in: .window(over: self))
 		}
 	}
 
-	override public final func viewWillDisappear(_ animated: Bool) {
+	public final override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		coachMarksController.stop(immediately: true)
 	}
@@ -205,15 +205,15 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	// MARK: - Table View Data Source
 
-	override public final func numberOfSections(in _: UITableView) -> Int {
+	public final override func numberOfSections(in _: UITableView) -> Int {
 		queries.count
 	}
 
-	override public final func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
+	public final override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
 		queries[section].parts.count + 1 // need to add 1 for the sample type cell
 	}
 
-	override public final func tableView(
+	public final override func tableView(
 		_ tableView: UITableView,
 		cellForRowAt indexPath: IndexPath
 	) -> UITableViewCell {
@@ -268,15 +268,15 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	// MARK: - Table View Delegate
 
-	override public final func tableView(_: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+	public final override func tableView(_: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
 		indexPath.section != 0 || indexPath.row != 0
 	}
 
-	override public final func tableView(_: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+	public final override func tableView(_: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
 		indexPath.section != 0 || indexPath.row != 0
 	}
 
-	override public final func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+	public final override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		if let fromPart = getPartFor(fromIndexPath) {
 			guard to.section != 0 || to.row != 0 else {
 				log.debug("User tried to move non-data-type query part to top row of query")
@@ -327,7 +327,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		validate()
 	}
 
-	override public final func tableView(
+	public final override func tableView(
 		_ tableView: UITableView,
 		editActionsForRowAt indexPath: IndexPath
 	) -> [UITableViewRowAction]? {
@@ -350,7 +350,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		return [delete]
 	}
 
-	override public final func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath.section == 0 && indexPath.row == 0 {
 			let controller = viewController(
 				named: "chooseSampleType",
@@ -415,7 +415,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	// MARK: - Navigation
 
-	override public final func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+	public final override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.destination is EditAttributeRestrictionViewController {
 			let controller = segue.destination as! EditAttributeRestrictionViewController
 			let source = sender as! UITableViewCell

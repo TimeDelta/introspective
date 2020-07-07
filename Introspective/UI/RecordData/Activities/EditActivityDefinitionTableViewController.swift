@@ -58,7 +58,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 
 	// MARK: - UIViewController Overrides
 
-	override public func viewDidLoad() {
+	public override func viewDidLoad() {
 		super.viewDidLoad()
 
 		extendedLayoutIncludesOpaqueBars = true
@@ -95,18 +95,18 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 
 	// MARK: - Table view data source
 
-	override public final func numberOfSections(in _: UITableView) -> Int {
+	public final override func numberOfSections(in _: UITableView) -> Int {
 		3
 	}
 
-	override public final func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
+	public final override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if section == 0 {
 			return 2
 		}
 		return 1
 	}
 
-	override public final func tableView(
+	public final override func tableView(
 		_ tableView: UITableView,
 		cellForRowAt indexPath: IndexPath
 	) -> UITableViewCell {
@@ -149,7 +149,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 		return UITableViewCell()
 	}
 
-	override public final func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+	public final override func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		if indexPath == Me.descriptionIndex || indexPath == Me.tagsIndex {
 			return 131
 		}
@@ -158,7 +158,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 
 	// MARK: - Table view delegate
 
-	override public final func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
+	public final override func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section == 1 {
 			return "Description"
 		}
@@ -168,7 +168,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 		return nil
 	}
 
-	override public final func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: false) // selecting a cell should not change the UI
 	}
 

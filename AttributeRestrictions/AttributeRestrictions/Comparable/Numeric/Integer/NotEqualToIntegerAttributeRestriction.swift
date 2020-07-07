@@ -23,11 +23,11 @@ public final class NotEqualToIntegerAttributeRestriction: TypedNotEqualToAttribu
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
 
-	override public func copy() -> AttributeRestriction {
+	public override func copy() -> AttributeRestriction {
 		NotEqualToIntegerAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! Int)
 	}
 
-	override public func predicate() -> NSPredicate? {
+	public override func predicate() -> NSPredicate? {
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		return NSPredicate(format: "%K != %d", variableName, value as! Int)
 	}

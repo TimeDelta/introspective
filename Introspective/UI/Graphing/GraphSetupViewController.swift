@@ -29,7 +29,7 @@ final class GraphSetupViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	override final func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 		if graphType == nil {
 			graphType = GraphType.allTypes[0]

@@ -12,7 +12,7 @@ import Common
 import DependencyInjection
 
 public final class DateOnlyAttribute: DateAttributeBase {
-	override public final var typeName: String {
+	public final override var typeName: String {
 		"Date"
 	}
 
@@ -38,7 +38,7 @@ public final class DateOnlyAttribute: DateAttributeBase {
 		)
 	}
 
-	override public final func typedValuesAreEqual(_ first: Date, _ second: Date) -> Bool {
+	public final override func typedValuesAreEqual(_ first: Date, _ second: Date) -> Bool {
 		let firstDate = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: first)
 		let secondDate = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: second)
 		return firstDate == secondDate

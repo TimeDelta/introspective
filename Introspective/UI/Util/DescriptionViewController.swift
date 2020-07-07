@@ -19,7 +19,7 @@ public final class DescriptionViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 		descriptionTextView.text = descriptionText
 	}

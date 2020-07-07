@@ -74,7 +74,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 
 	// MARK: - UIViewController Overrides
 
-	override final func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		NotificationCenter.default.removeObserver(self)

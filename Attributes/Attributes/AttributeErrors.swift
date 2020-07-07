@@ -9,7 +9,7 @@
 import Foundation
 
 public class AttributeError: Error {
-	fileprivate final let attribute: Attribute
+	final fileprivate let attribute: Attribute
 
 	fileprivate init(_ attribute: Attribute) {
 		self.attribute = attribute
@@ -17,7 +17,7 @@ public class AttributeError: Error {
 }
 
 public final class TypeMismatchError: AttributeError {
-	fileprivate final let attributedObject: Attributed?
+	final fileprivate let attributedObject: Attributed?
 	private final var valueType: Any.Type
 	public final var localizedDescription: String {
 		if let attributedObject = attributedObject {

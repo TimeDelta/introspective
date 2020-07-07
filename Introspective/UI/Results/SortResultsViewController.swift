@@ -28,7 +28,7 @@ final class SortResultsViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	override final func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 		sortAscendingSwitch.isOn = sortOrder == .orderedAscending
 

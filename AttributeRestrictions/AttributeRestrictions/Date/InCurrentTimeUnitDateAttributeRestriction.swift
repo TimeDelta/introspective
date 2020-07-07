@@ -39,8 +39,8 @@ public final class InCurrentTimeUnitDateAttributeRestriction: DateAttributeRestr
 
 	// MARK: - Display Information
 
-	override public final var attributedName: String { "In current <time unit>" }
-	override public final var description: String {
+	public final override var attributedName: String { "In current <time unit>" }
+	public final override var description: String {
 		restrictedAttribute.name + " is in the current " + timeUnit.description
 	}
 
@@ -63,14 +63,14 @@ public final class InCurrentTimeUnitDateAttributeRestriction: DateAttributeRestr
 
 	// MARK: - Attribute Functions
 
-	override public final func value(of attribute: Attribute) throws -> Any? {
+	public final override func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(Me.timeUnitAttribute) {
 			return timeUnit
 		}
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
-	override public final func set(attribute: Attribute, to value: Any?) throws {
+	public final override func set(attribute: Attribute, to value: Any?) throws {
 		guard attribute.equalTo(Me.timeUnitAttribute) else {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
@@ -82,7 +82,7 @@ public final class InCurrentTimeUnitDateAttributeRestriction: DateAttributeRestr
 
 	// MARK: - Attribute Restriction Functions
 
-	override public final func samplePasses(_ sample: Sample) throws -> Bool {
+	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
 		if sampleValue == nil { return false }
 		guard let sampleDate = sampleValue as? Date else {
@@ -94,13 +94,13 @@ public final class InCurrentTimeUnitDateAttributeRestriction: DateAttributeRestr
 		return minDate <= sampleDate && sampleDate <= maxDate
 	}
 
-	override public func copy() -> AttributeRestriction {
+	public override func copy() -> AttributeRestriction {
 		InCurrentTimeUnitDateAttributeRestriction(restrictedAttribute: restrictedAttribute, timeUnit)
 	}
 
 	// MARK: - Boolean Expression Functions
 
-	override public func predicate() -> NSPredicate? {
+	public override func predicate() -> NSPredicate? {
 		guard !DependencyInjector.get(Settings.self).convertTimeZones else { return nil }
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		let now = Date()
@@ -130,7 +130,7 @@ public final class InCurrentTimeUnitDateAttributeRestriction: DateAttributeRestr
 		return equalTo(other)
 	}
 
-	override public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	public final override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is InCurrentTimeUnitDateAttributeRestriction) { return false }
 		let other = otherRestriction as! InCurrentTimeUnitDateAttributeRestriction
 		return equalTo(other)

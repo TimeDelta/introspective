@@ -11,8 +11,8 @@ import UIKit
 import Common
 
 public final class ContainerView<T: UIViewController>: UIView {
-	final unowned var parentController: UIViewController
-	final weak var currentController: T?
+	unowned final var parentController: UIViewController
+	weak final var currentController: T?
 
 	private final let log = Log()
 

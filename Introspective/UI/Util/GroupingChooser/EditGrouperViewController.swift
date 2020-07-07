@@ -26,7 +26,7 @@ public final class EditGrouperViewControllerImpl: UIViewController, EditGrouperV
 	/// Note: Keep this as a member variable because having it as a local variable causes weird behavior
 	private final var controller: AttributedChooserViewController!
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		let notificationToObserve = Notification.Name(notificationToSendWhenAccepted.toName().rawValue + "_relay")

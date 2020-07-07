@@ -11,7 +11,7 @@ import Foundation
 import Common
 
 public final class DaysOfWeekAttribute: ComparableTypedMultiSelectAttribute<DayOfWeek> {
-	override public final var typeName: String {
+	public final override var typeName: String {
 		"Days of the Week"
 	}
 

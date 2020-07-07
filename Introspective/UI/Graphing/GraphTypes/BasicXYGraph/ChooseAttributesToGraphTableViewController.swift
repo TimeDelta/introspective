@@ -39,7 +39,7 @@ final class ChooseAttributesToGraphTableViewControllerImpl: UITableViewControlle
 
 	// MARK: - UIViewController Overrides
 
-	override final func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 		if selectedAttributes.count == allowedAttributes.count {
 			addButton.isEnabled = false
@@ -66,11 +66,11 @@ final class ChooseAttributesToGraphTableViewControllerImpl: UITableViewControlle
 
 	// MARK: - TableView Data Source
 
-	override final func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+	final override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
 		selectedAttributes.count
 	}
 
-	override final func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 		cell.textLabel?.text = selectedAttributes[indexPath.row].name.localizedCapitalized
 		return cell
@@ -78,7 +78,7 @@ final class ChooseAttributesToGraphTableViewControllerImpl: UITableViewControlle
 
 	// MARK: - TableView Delegate
 
-	override final func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
+	final override func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
 		editIndex = indexPath.row
 		let controller: ChooseAttributeViewController = viewController(named: "chooseAttribute", fromStoryboard: "Util")
 		controller.notificationToSendOnAccept = .attributeChosen
@@ -97,11 +97,11 @@ final class ChooseAttributesToGraphTableViewControllerImpl: UITableViewControlle
 
 	// MARK: - TableView Editing
 
-	override final func tableView(_: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+	final override func tableView(_: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		selectedAttributes.swapAt(fromIndexPath.row, to.row)
 	}
 
-	override final func tableView(
+	final override func tableView(
 		_ tableView: UITableView,
 		editActionsForRowAt indexPath: IndexPath
 	) -> [UITableViewRowAction]? {

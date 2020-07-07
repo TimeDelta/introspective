@@ -56,7 +56,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 	private final let coachMarksController = CoachMarksController()
 	private final var coachMarksDataSourceAndDelegate: DefaultCoachMarksDataSourceAndDelegate!
-	private final lazy var coachMarksInfo: [CoachMarkInfo] = [
+	private lazy final var coachMarksInfo: [CoachMarkInfo] = [
 		CoachMarkInfo(
 			hint: "Tap the + button to create new medications. You can also type the name of a new medication in the search bar and long press the + button to quickly create and mark it as taken.",
 			useArrow: true,
@@ -105,7 +105,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		let addButton = barButton(
@@ -149,14 +149,14 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		coachMarksController.skipView = defaultSkipInstructionsView()
 	}
 
-	override public final func viewDidAppear(_ animated: Bool) {
+	public final override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		if !DependencyInjector.get(UserDefaultsUtil.self).bool(forKey: .recordMedicationsInstructionsShown) {
 			coachMarksController.start(in: .window(over: self))
 		}
 	}
 
-	override public final func viewWillDisappear(_ animated: Bool) {
+	public final override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		coachMarksController.stop(immediately: true)
 	}
@@ -167,11 +167,11 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 	// MARK: - UITableViewDataSource
 
-	override public final func numberOfSections(in _: UITableView) -> Int {
+	public final override func numberOfSections(in _: UITableView) -> Int {
 		1
 	}
 
-	override public final func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+	public final override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
 		if !finishedLoading {
 			return 1
 		}
@@ -182,7 +182,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		return 0
 	}
 
-	override public final func tableView(
+	public final override func tableView(
 		_ tableView: UITableView,
 		cellForRowAt indexPath: IndexPath
 	) -> UITableViewCell {
@@ -197,7 +197,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		return cell
 	}
 
-	override public final func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
+	public final override func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
 		if !finishedLoading {
 			return 44
 		}
@@ -206,7 +206,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 	// MARK: - UITableViewDelegate
 
-	override public final func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
+	public final override func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
 		guard finishedLoading else { return }
 		let controller: EditMedicationViewController = viewController(named: "editMedication")
 		controller.notificationToSendOnAccept = Me.medicationEdited
@@ -216,7 +216,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 	// MARK: - Table view editing
 
-	override public final func tableView(
+	public final override func tableView(
 		_: UITableView,
 		editActionsForRowAt indexPath: IndexPath
 	) -> [UITableViewRowAction]? {
@@ -245,7 +245,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		return [delete]
 	}
 
-	override public final func tableView(_: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+	public final override func tableView(_: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		let medicationsFromIndex = Int(fetchedResultsController.object(at: fromIndexPath).recordScreenIndex)
 		let medicationsToIndex = Int(fetchedResultsController.object(at: to).recordScreenIndex)
 		let searchText = getSearchText()

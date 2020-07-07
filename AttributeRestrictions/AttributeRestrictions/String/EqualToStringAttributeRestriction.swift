@@ -34,11 +34,11 @@ public final class EqualToStringAttributeRestriction: TypedEqualToAttributeRestr
 
 	// MARK: - Attribute Restriction Functions
 
-	override public func copy() -> AttributeRestriction {
+	public override func copy() -> AttributeRestriction {
 		EqualToStringAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! String)
 	}
 
-	override public func predicate() -> NSPredicate? {
+	public override func predicate() -> NSPredicate? {
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		return NSPredicate(format: "%K ==[cd] %@", variableName, value as! String)
 	}

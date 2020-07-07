@@ -11,7 +11,7 @@ import Foundation
 import Common
 
 public final class DateTimeAttribute: DateAttributeBase {
-	override public final var typeName: String {
+	public final override var typeName: String {
 		"Date & Time"
 	}
 
@@ -38,7 +38,7 @@ public final class DateTimeAttribute: DateAttributeBase {
 		)
 	}
 
-	override public final func typedValuesAreEqual(_ first: Date, _ second: Date) -> Bool {
+	public final override func typedValuesAreEqual(_ first: Date, _ second: Date) -> Bool {
 		first == second
 	}
 }

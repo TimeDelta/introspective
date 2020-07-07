@@ -15,7 +15,7 @@ import Samples
 public protocol BloodPressureQuery: Query {}
 
 public final class BloodPressureQueryImpl: HealthKitQuery<BloodPressure>, BloodPressureQuery {
-	override final func initFromHKSample(_ hkSample: HKSample) -> BloodPressure {
+	final override func initFromHKSample(_ hkSample: HKSample) -> BloodPressure {
 		precondition(hkSample is HKCorrelation, "Wrong type of health kit sample for blood pressure")
 		return BloodPressure(hkSample as! HKCorrelation)
 	}

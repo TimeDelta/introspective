@@ -14,8 +14,8 @@ import Samples
 public final class EmptyStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction {
 	// MARK: - Display Information
 
-	override public final var attributedName: String { "Empty" }
-	override public final var description: String {
+	public final override var attributedName: String { "Empty" }
+	public final override var description: String {
 		restrictedAttribute.name.localizedCapitalized + " is empty"
 	}
 
@@ -27,7 +27,7 @@ public final class EmptyStringAttributeRestriction: AnyAttributeRestriction, Str
 
 	// MARK: - Attribute Restriction Functions
 
-	override public final func samplePasses(_ sample: Sample) throws -> Bool {
+	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
 		if sampleValue == nil { return true }
 		guard let value = sampleValue as? String else {
@@ -36,22 +36,22 @@ public final class EmptyStringAttributeRestriction: AnyAttributeRestriction, Str
 		return value.isEmpty
 	}
 
-	override public func copy() -> AttributeRestriction {
+	public override func copy() -> AttributeRestriction {
 		EmptyStringAttributeRestriction(restrictedAttribute: restrictedAttribute)
 	}
 
-	override public func predicate() -> NSPredicate? {
+	public override func predicate() -> NSPredicate? {
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		return NSPredicate(format: "%K.length == 0", variableName)
 	}
 
 	// MARK: - Attributed Functions
 
-	override public final func value(of attribute: Attribute) throws -> Any? {
+	public final override func value(of attribute: Attribute) throws -> Any? {
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
-	override public final func set(attribute: Attribute, to _: Any?) throws {
+	public final override func set(attribute: Attribute, to _: Any?) throws {
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 }

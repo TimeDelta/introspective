@@ -33,7 +33,7 @@ public final class StartActivityFromEndOfLastIntentHandler: ActivityIntentHandle
 		completion(INStringResolutionResult.success(with: activityName))
 	}
 
-	override public func provideActivityNameOptions(
+	public override func provideActivityNameOptions(
 		for intent: StartActivityFromEndOfLastIntent,
 		with completion: @escaping ([String]?, Error?) -> Void
 	) {

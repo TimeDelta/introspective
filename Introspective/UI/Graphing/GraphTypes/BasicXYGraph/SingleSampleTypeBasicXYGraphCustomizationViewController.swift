@@ -82,7 +82,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 
 	// MARK: - UIViewController Overrides
 
-	override final func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		sampleType = DependencyInjector.get(SampleFactory.self).allTypes()[0]

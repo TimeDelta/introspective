@@ -95,7 +95,7 @@ public final class ImportDataTableViewController: UITableViewController {
 
 	// MARK: - UIViewController Overrides
 
-	override public final func viewDidLoad() {
+	public final override func viewDidLoad() {
 		observe(selector: #selector(extendTime), name: .extendBackgroundTaskTime)
 		observe(selector: #selector(cancelBackgroundImport), name: .cancelBackgroundTask)
 	}
@@ -106,28 +106,28 @@ public final class ImportDataTableViewController: UITableViewController {
 
 	// MARK: - Table View Data Source
 
-	override public final func numberOfSections(in _: UITableView) -> Int {
+	public final override func numberOfSections(in _: UITableView) -> Int {
 		if backgroundImports({ $0.count }) > 0 {
 			return 4
 		}
 		return 3
 	}
 
-	override public final func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
+	public final override func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section >= Me.sectionRows.count {
 			return "Active Imports"
 		}
 		return Me.sectionRows[section].section
 	}
 
-	override public final func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
+	public final override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if section >= Me.sectionRows.count {
 			return backgroundImports { $0.count }
 		}
 		return Me.sectionRows[section].rows.count
 	}
 
-	override public final func tableView(
+	public final override func tableView(
 		_ tableView: UITableView,
 		cellForRowAt indexPath: IndexPath
 	) -> UITableViewCell {
@@ -150,14 +150,14 @@ public final class ImportDataTableViewController: UITableViewController {
 
 	// MARK: - Table View Delegate
 
-	override public final func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+	public final override func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		if indexPath.section < Me.sectionRows.count {
 			return 44
 		}
 		return 75
 	}
 
-	override public final func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		guard indexPath.section < Me.sectionRows.count else {
 			tableView.deselectRow(at: indexPath, animated: false)
 			return

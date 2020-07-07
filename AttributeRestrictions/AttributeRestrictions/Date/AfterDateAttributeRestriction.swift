@@ -26,8 +26,8 @@ public final class AfterDateAttributeRestriction: DateAttributeRestriction, Equa
 
 	// MARK: - Display Information
 
-	override public final var attributedName: String { "After date" }
-	override public final var description: String {
+	public final override var attributedName: String { "After date" }
+	public final override var description: String {
 		do {
 			let dateText = try Me.dateAttribute.convertToDisplayableString(from: date)
 			return "After " + dateText
@@ -63,14 +63,14 @@ public final class AfterDateAttributeRestriction: DateAttributeRestriction, Equa
 
 	// MARK: - Attribute Functions
 
-	override public final func value(of attribute: Attribute) throws -> Any? {
+	public final override func value(of attribute: Attribute) throws -> Any? {
 		if !attribute.equalTo(Me.dateAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
 		return date
 	}
 
-	override public final func set(attribute: Attribute, to value: Any?) throws {
+	public final override func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(Me.dateAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
@@ -82,7 +82,7 @@ public final class AfterDateAttributeRestriction: DateAttributeRestriction, Equa
 
 	// MARK: - Attribute Restriction Functions
 
-	override public final func samplePasses(_ sample: Sample) throws -> Bool {
+	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
 		if sampleValue == nil { return false }
 		guard let sampleDate = sampleValue as? Date else {
@@ -91,13 +91,13 @@ public final class AfterDateAttributeRestriction: DateAttributeRestriction, Equa
 		return sampleDate.isAfterDate(date, granularity: .second)
 	}
 
-	override public func copy() -> AttributeRestriction {
+	public override func copy() -> AttributeRestriction {
 		AfterDateAttributeRestriction(restrictedAttribute: restrictedAttribute, date: date)
 	}
 
 	// MARK: - Boolean Expression Functions
 
-	override public func predicate() -> NSPredicate? {
+	public override func predicate() -> NSPredicate? {
 		guard !DependencyInjector.get(Settings.self).convertTimeZones else { return nil }
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		return NSPredicate(format: "%K > %@", variableName, date as NSDate)
@@ -115,7 +115,7 @@ public final class AfterDateAttributeRestriction: DateAttributeRestriction, Equa
 		return equalTo(other)
 	}
 
-	override public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	public final override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is AfterDateAttributeRestriction) { return false }
 		let other = otherRestriction as! AfterDateAttributeRestriction
 		return equalTo(other)

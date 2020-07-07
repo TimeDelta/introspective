@@ -55,7 +55,7 @@ final class AttributeViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	override final func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		view.translatesAutoresizingMaskIntoConstraints = false
@@ -79,7 +79,7 @@ final class AttributeViewController: UIViewController {
 		NotificationCenter.default.removeObserver(self)
 	}
 
-	override public final func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
+	public final override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
 		if let controller = segue.destination as? AttributeDescriptionViewController {
 			controller.descriptionText = attribute.extendedDescription
 		} else if let controller = segue.destination as? AttributeValueViewController {

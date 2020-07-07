@@ -57,7 +57,7 @@ final class AttributedChooserViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	override final func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		view.translatesAutoresizingMaskIntoConstraints = false
@@ -76,14 +76,14 @@ final class AttributedChooserViewController: UIViewController {
 		NotificationCenter.default.removeObserver(self)
 	}
 
-	override public final func reloadInputViews() {
+	public final override func reloadInputViews() {
 		super.reloadInputViews()
 		valuePicker.reloadAllComponents()
 		resetScrollView()
 		populateScrollView()
 	}
 
-	override public final func didMove(toParent newParent: UIViewController?) {
+	public final override func didMove(toParent newParent: UIViewController?) {
 		let viewForConstraint: UIView! = newParent?.view ?? view
 		let contentViewWidthConstraint = valuePicker.heightAnchor.constraint(
 			equalTo: viewForConstraint.heightAnchor,
