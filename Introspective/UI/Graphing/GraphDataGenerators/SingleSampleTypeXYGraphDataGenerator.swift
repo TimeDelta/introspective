@@ -35,7 +35,7 @@ public final class SingleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator {
 	private final let pointGrouper: SampleGrouper?
 	private final let xAxis: AttributeOrInformation!
 	private final let yAxis: [AttributeOrInformation]
-	// leaving this as public only for testing purposes
+	/// leaving this as public only for testing purposes. do not set this from here
 	public final var usePointGroupValueForXAxis: Bool
 
 	private final let signpost =
