@@ -63,11 +63,11 @@ public final class MoodUiUtilImpl: MoodUiUtil {
 		let valueString = valueToString(rating)
 		log.debug("Converted value %f to \"%@\"", rating, valueString)
 		let range = max - min
-		if rating < 0.33 * range + min {
+		if rating <= 0.33 * range + min {
 			log.debug("Using low mood message")
 			return String(format: randomMessage(from: Me.lowMoodMessages), valueString)
 		}
-		if rating < 0.66 * range + min {
+		if rating <= 0.66 * range + min {
 			log.debug("Using medium mood message")
 			return String(format: randomMessage(from: Me.mediumMoodMessages), valueString)
 		}
