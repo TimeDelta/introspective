@@ -6,6 +6,7 @@
 //  Copyright © 2020 Bryan Nova. All rights reserved.
 //
 
+import CoreData
 import Foundation
 import Intents
 
@@ -37,7 +38,9 @@ public final class TakeMedicationIntentHandler: NSObject, TakeMedicationIntentHa
 	) {
 		Me.log.info("Providing valid medication names")
 		do {
-			let medications = try DependencyInjector.get(Database.self).query(Medication.fetchRequest())
+			let fetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
+			fetchRequest.sortDescriptors = [NSSortDescriptor(key: "recordScreenIndex", ascending: true)]
+			let medications = try DependencyInjector.get(Database.self).query(fetchRequest)
 			completion(medications.map { medication in medication.name }, nil)
 		} catch {
 			completion(nil, error)
