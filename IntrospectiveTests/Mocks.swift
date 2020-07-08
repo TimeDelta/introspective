@@ -10977,16 +10977,16 @@ open class MoodDAOMock: MoodDAO, Mock {
 
 
 
-    open func createMood(timestamp: Date, rating: Double, note: String?) throws -> Mood {
-        addInvocation(.m_createMood__timestamp_timestamprating_ratingnote_note(Parameter<Date>.value(`timestamp`), Parameter<Double>.value(`rating`), Parameter<String?>.value(`note`)))
-		let perform = methodPerformValue(.m_createMood__timestamp_timestamprating_ratingnote_note(Parameter<Date>.value(`timestamp`), Parameter<Double>.value(`rating`), Parameter<String?>.value(`note`))) as? (Date, Double, String?) -> Void
-		perform?(`timestamp`, `rating`, `note`)
+    open func createMood(timestamp: Date, rating: Double, min: Double?, max: Double?, note: String?) throws -> Mood {
+        addInvocation(.m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(Parameter<Date>.value(`timestamp`), Parameter<Double>.value(`rating`), Parameter<Double?>.value(`min`), Parameter<Double?>.value(`max`), Parameter<String?>.value(`note`)))
+		let perform = methodPerformValue(.m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(Parameter<Date>.value(`timestamp`), Parameter<Double>.value(`rating`), Parameter<Double?>.value(`min`), Parameter<Double?>.value(`max`), Parameter<String?>.value(`note`))) as? (Date, Double, Double?, Double?, String?) -> Void
+		perform?(`timestamp`, `rating`, `min`, `max`, `note`)
 		var __value: Mood
 		do {
-		    __value = try methodReturnValue(.m_createMood__timestamp_timestamprating_ratingnote_note(Parameter<Date>.value(`timestamp`), Parameter<Double>.value(`rating`), Parameter<String?>.value(`note`))).casted()
+		    __value = try methodReturnValue(.m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(Parameter<Date>.value(`timestamp`), Parameter<Double>.value(`rating`), Parameter<Double?>.value(`min`), Parameter<Double?>.value(`max`), Parameter<String?>.value(`note`))).casted()
 		} catch MockError.notStubed {
-			onFatalFailure("Stub return value not specified for createMood(timestamp: Date, rating: Double, note: String?). Use given")
-			Failure("Stub return value not specified for createMood(timestamp: Date, rating: Double, note: String?). Use given")
+			onFatalFailure("Stub return value not specified for createMood(timestamp: Date, rating: Double, min: Double?, max: Double?, note: String?). Use given")
+			Failure("Stub return value not specified for createMood(timestamp: Date, rating: Double, min: Double?, max: Double?, note: String?). Use given")
 		} catch {
 		    throw error
 		}
@@ -10995,13 +10995,15 @@ open class MoodDAOMock: MoodDAO, Mock {
 
 
     fileprivate enum MethodType {
-        case m_createMood__timestamp_timestamprating_ratingnote_note(Parameter<Date>, Parameter<Double>, Parameter<String?>)
+        case m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(Parameter<Date>, Parameter<Double>, Parameter<Double?>, Parameter<Double?>, Parameter<String?>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
-            case (.m_createMood__timestamp_timestamprating_ratingnote_note(let lhsTimestamp, let lhsRating, let lhsNote), .m_createMood__timestamp_timestamprating_ratingnote_note(let rhsTimestamp, let rhsRating, let rhsNote)):
+            case (.m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(let lhsTimestamp, let lhsRating, let lhsMin, let lhsMax, let lhsNote), .m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(let rhsTimestamp, let rhsRating, let rhsMin, let rhsMax, let rhsNote)):
                 guard Parameter.compare(lhs: lhsTimestamp, rhs: rhsTimestamp, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsRating, rhs: rhsRating, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsMin, rhs: rhsMin, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsMax, rhs: rhsMax, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsNote, rhs: rhsNote, with: matcher) else { return false } 
                 return true 
             }
@@ -11009,7 +11011,7 @@ open class MoodDAOMock: MoodDAO, Mock {
 
         func intValue() -> Int {
             switch self {
-            case let .m_createMood__timestamp_timestamprating_ratingnote_note(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(p0, p1, p2, p3, p4): return p0.intValue + p1.intValue + p2.intValue + p3.intValue + p4.intValue
             }
         }
     }
@@ -11023,15 +11025,15 @@ open class MoodDAOMock: MoodDAO, Mock {
         }
 
 
-        public static func createMood(timestamp: Parameter<Date>, rating: Parameter<Double>, note: Parameter<String?>, willReturn: Mood...) -> MethodStub {
-            return Given(method: .m_createMood__timestamp_timestamprating_ratingnote_note(`timestamp`, `rating`, `note`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func createMood(timestamp: Parameter<Date>, rating: Parameter<Double>, min: Parameter<Double?>, max: Parameter<Double?>, note: Parameter<String?>, willReturn: Mood...) -> MethodStub {
+            return Given(method: .m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(`timestamp`, `rating`, `min`, `max`, `note`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func createMood(timestamp: Parameter<Date>, rating: Parameter<Double>, note: Parameter<String?>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_createMood__timestamp_timestamprating_ratingnote_note(`timestamp`, `rating`, `note`), products: willThrow.map({ StubProduct.throw($0) }))
+        public static func createMood(timestamp: Parameter<Date>, rating: Parameter<Double>, min: Parameter<Double?>, max: Parameter<Double?>, note: Parameter<String?>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(`timestamp`, `rating`, `min`, `max`, `note`), products: willThrow.map({ StubProduct.throw($0) }))
         }
-        public static func createMood(timestamp: Parameter<Date>, rating: Parameter<Double>, note: Parameter<String?>, willProduce: (StubberThrows<Mood>) -> Void) -> MethodStub {
+        public static func createMood(timestamp: Parameter<Date>, rating: Parameter<Double>, min: Parameter<Double?>, max: Parameter<Double?>, note: Parameter<String?>, willProduce: (StubberThrows<Mood>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_createMood__timestamp_timestamprating_ratingnote_note(`timestamp`, `rating`, `note`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let given: Given = { return Given(method: .m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(`timestamp`, `rating`, `min`, `max`, `note`), products: willThrow.map({ StubProduct.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Mood).self)
 			willProduce(stubber)
 			return given
@@ -11041,15 +11043,15 @@ open class MoodDAOMock: MoodDAO, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func createMood(timestamp: Parameter<Date>, rating: Parameter<Double>, note: Parameter<String?>) -> Verify { return Verify(method: .m_createMood__timestamp_timestamprating_ratingnote_note(`timestamp`, `rating`, `note`))}
+        public static func createMood(timestamp: Parameter<Date>, rating: Parameter<Double>, min: Parameter<Double?>, max: Parameter<Double?>, note: Parameter<String?>) -> Verify { return Verify(method: .m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(`timestamp`, `rating`, `min`, `max`, `note`))}
     }
 
     public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func createMood(timestamp: Parameter<Date>, rating: Parameter<Double>, note: Parameter<String?>, perform: @escaping (Date, Double, String?) -> Void) -> Perform {
-            return Perform(method: .m_createMood__timestamp_timestamprating_ratingnote_note(`timestamp`, `rating`, `note`), performs: perform)
+        public static func createMood(timestamp: Parameter<Date>, rating: Parameter<Double>, min: Parameter<Double?>, max: Parameter<Double?>, note: Parameter<String?>, perform: @escaping (Date, Double, Double?, Double?, String?) -> Void) -> Perform {
+            return Perform(method: .m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(`timestamp`, `rating`, `min`, `max`, `note`), performs: perform)
         }
     }
 
@@ -12000,7 +12002,7 @@ open class NumericSampleUtilMock: NumericSampleUtil, Mock {
 
 
 
-    open func average(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?) throws -> [(date: Date?, value: Double)] {
+    open func average(		for attribute: Attribute,		over samples: [Sample],		per aggregationUnit: Calendar.Component?	) throws -> [(date: Date?, value: Double)] {
         addInvocation(.m_average__for_attributeover_samplesper_aggregationUnit(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`)))
 		let perform = methodPerformValue(.m_average__for_attributeover_samplesper_aggregationUnit(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`))) as? (Attribute, [Sample], Calendar.Component?) -> Void
 		perform?(`attribute`, `samples`, `aggregationUnit`)
@@ -12008,8 +12010,8 @@ open class NumericSampleUtilMock: NumericSampleUtil, Mock {
 		do {
 		    __value = try methodReturnValue(.m_average__for_attributeover_samplesper_aggregationUnit(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`))).casted()
 		} catch MockError.notStubed {
-			onFatalFailure("Stub return value not specified for average(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?). Use given")
-			Failure("Stub return value not specified for average(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?). Use given")
+			onFatalFailure("Stub return value not specified for average(  for attribute: Attribute,  over samples: [Sample],  per aggregationUnit: Calendar.Component? ). Use given")
+			Failure("Stub return value not specified for average(  for attribute: Attribute,  over samples: [Sample],  per aggregationUnit: Calendar.Component? ). Use given")
 		} catch {
 		    throw error
 		}
@@ -15274,7 +15276,7 @@ open class SampleUtilMock: SampleUtil, Mock {
 		return __value
     }
 
-    open func aggregate(samples: [Sample], by aggregationUnit: Calendar.Component, for attribute: Attribute) throws -> [Date: [Sample]] {
+    open func aggregate(		samples: [Sample],		by aggregationUnit: Calendar.Component,		for attribute: Attribute	) throws -> [Date: [Sample]] {
         addInvocation(.m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<Attribute>.value(`attribute`)))
 		let perform = methodPerformValue(.m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<Attribute>.value(`attribute`))) as? ([Sample], Calendar.Component, Attribute) -> Void
 		perform?(`samples`, `aggregationUnit`, `attribute`)
@@ -15282,8 +15284,8 @@ open class SampleUtilMock: SampleUtil, Mock {
 		do {
 		    __value = try methodReturnValue(.m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<Attribute>.value(`attribute`))).casted()
 		} catch MockError.notStubed {
-			onFatalFailure("Stub return value not specified for aggregate(samples: [Sample], by aggregationUnit: Calendar.Component, for attribute: Attribute). Use given")
-			Failure("Stub return value not specified for aggregate(samples: [Sample], by aggregationUnit: Calendar.Component, for attribute: Attribute). Use given")
+			onFatalFailure("Stub return value not specified for aggregate(  samples: [Sample],  by aggregationUnit: Calendar.Component,  for attribute: Attribute ). Use given")
+			Failure("Stub return value not specified for aggregate(  samples: [Sample],  by aggregationUnit: Calendar.Component,  for attribute: Attribute ). Use given")
 		} catch {
 		    throw error
 		}
@@ -15322,7 +15324,7 @@ open class SampleUtilMock: SampleUtil, Mock {
 		return __value
     }
 
-    open func sort<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component) throws -> [(date: Date, samples: [SampleType])] {
+    open func sort<SampleType: Sample>(		samples: [SampleType],		by aggregationUnit: Calendar.Component	) throws -> [(date: Date, samples: [SampleType])] {
         addInvocation(.m_sort__samples_samplesby_aggregationUnit_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<Calendar.Component>.value(`aggregationUnit`)))
 		let perform = methodPerformValue(.m_sort__samples_samplesby_aggregationUnit_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<Calendar.Component>.value(`aggregationUnit`))) as? ([SampleType], Calendar.Component) -> Void
 		perform?(`samples`, `aggregationUnit`)
@@ -15330,8 +15332,8 @@ open class SampleUtilMock: SampleUtil, Mock {
 		do {
 		    __value = try methodReturnValue(.m_sort__samples_samplesby_aggregationUnit_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<Calendar.Component>.value(`aggregationUnit`))).casted()
 		} catch MockError.notStubed {
-			onFatalFailure("Stub return value not specified for sort<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component). Use given")
-			Failure("Stub return value not specified for sort<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component). Use given")
+			onFatalFailure("Stub return value not specified for sort<SampleType: Sample>(  samples: [SampleType],  by aggregationUnit: Calendar.Component ). Use given")
+			Failure("Stub return value not specified for sort<SampleType: Sample>(  samples: [SampleType],  by aggregationUnit: Calendar.Component ). Use given")
 		} catch {
 		    throw error
 		}
@@ -15352,7 +15354,7 @@ open class SampleUtilMock: SampleUtil, Mock {
 		return __value
     }
 
-    open func sort<SampleType: Sample>(samples: [SampleType], by dateType: DateType, in order: ComparisonResult) -> [SampleType] {
+    open func sort<SampleType: Sample>(		samples: [SampleType],		by dateType: DateType,		in order: ComparisonResult	) -> [SampleType] {
         addInvocation(.m_sort__samples_samplesby_dateTypein_order_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<DateType>.value(`dateType`), Parameter<ComparisonResult>.value(`order`)))
 		let perform = methodPerformValue(.m_sort__samples_samplesby_dateTypein_order_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<DateType>.value(`dateType`), Parameter<ComparisonResult>.value(`order`))) as? ([SampleType], DateType, ComparisonResult) -> Void
 		perform?(`samples`, `dateType`, `order`)
@@ -15360,8 +15362,8 @@ open class SampleUtilMock: SampleUtil, Mock {
 		do {
 		    __value = try methodReturnValue(.m_sort__samples_samplesby_dateTypein_order_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<DateType>.value(`dateType`), Parameter<ComparisonResult>.value(`order`))).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for sort<SampleType: Sample>(samples: [SampleType], by dateType: DateType, in order: ComparisonResult). Use given")
-			Failure("Stub return value not specified for sort<SampleType: Sample>(samples: [SampleType], by dateType: DateType, in order: ComparisonResult). Use given")
+			onFatalFailure("Stub return value not specified for sort<SampleType: Sample>(  samples: [SampleType],  by dateType: DateType,  in order: ComparisonResult ). Use given")
+			Failure("Stub return value not specified for sort<SampleType: Sample>(  samples: [SampleType],  by dateType: DateType,  in order: ComparisonResult ). Use given")
 		}
 		return __value
     }
@@ -15394,7 +15396,7 @@ open class SampleUtilMock: SampleUtil, Mock {
 		return __value
     }
 
-    open func closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(sample: SampleType1, in samples: [SampleType2]) -> SampleType2 {
+    open func closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(		sample: SampleType1,		in samples: [SampleType2]	) -> SampleType2 {
         addInvocation(.m_closestInTimeTo__sample_samplein_samples_1(Parameter<SampleType1>.value(`sample`).wrapAsGeneric(), Parameter<[SampleType2]>.value(`samples`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_closestInTimeTo__sample_samplein_samples_1(Parameter<SampleType1>.value(`sample`).wrapAsGeneric(), Parameter<[SampleType2]>.value(`samples`).wrapAsGeneric())) as? (SampleType1, [SampleType2]) -> Void
 		perform?(`sample`, `samples`)
@@ -15402,8 +15404,8 @@ open class SampleUtilMock: SampleUtil, Mock {
 		do {
 		    __value = try methodReturnValue(.m_closestInTimeTo__sample_samplein_samples_1(Parameter<SampleType1>.value(`sample`).wrapAsGeneric(), Parameter<[SampleType2]>.value(`samples`).wrapAsGeneric())).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(sample: SampleType1, in samples: [SampleType2]). Use given")
-			Failure("Stub return value not specified for closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(sample: SampleType1, in samples: [SampleType2]). Use given")
+			onFatalFailure("Stub return value not specified for closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(  sample: SampleType1,  in samples: [SampleType2] ). Use given")
+			Failure("Stub return value not specified for closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(  sample: SampleType1,  in samples: [SampleType2] ). Use given")
 		}
 		return __value
     }
@@ -18764,7 +18766,7 @@ open class UiUtilMock: UiUtil, Mock {
 		perform?(`button`, `enabled`, `hidden`)
     }
 
-    open func setBackButton(for viewController: UIViewController, title: String, action selector: Selector) -> UIBarButtonItem {
+    open func setBackButton(		for viewController: UIViewController,		title: String,		action selector: Selector	) -> UIBarButtonItem {
         addInvocation(.m_setBackButton__for_viewControllertitle_titleaction_selector(Parameter<UIViewController>.value(`viewController`), Parameter<String>.value(`title`), Parameter<Selector>.value(`selector`)))
 		let perform = methodPerformValue(.m_setBackButton__for_viewControllertitle_titleaction_selector(Parameter<UIViewController>.value(`viewController`), Parameter<String>.value(`title`), Parameter<Selector>.value(`selector`))) as? (UIViewController, String, Selector) -> Void
 		perform?(`viewController`, `title`, `selector`)
@@ -18772,8 +18774,8 @@ open class UiUtilMock: UiUtil, Mock {
 		do {
 		    __value = try methodReturnValue(.m_setBackButton__for_viewControllertitle_titleaction_selector(Parameter<UIViewController>.value(`viewController`), Parameter<String>.value(`title`), Parameter<Selector>.value(`selector`))).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for setBackButton(for viewController: UIViewController, title: String, action selector: Selector). Use given")
-			Failure("Stub return value not specified for setBackButton(for viewController: UIViewController, title: String, action selector: Selector). Use given")
+			onFatalFailure("Stub return value not specified for setBackButton(  for viewController: UIViewController,  title: String,  action selector: Selector ). Use given")
+			Failure("Stub return value not specified for setBackButton(  for viewController: UIViewController,  title: String,  action selector: Selector ). Use given")
 		}
 		return __value
     }
@@ -18817,7 +18819,7 @@ open class UiUtilMock: UiUtil, Mock {
 		return __value
     }
 
-    open func controller<Type: UIViewController>(named controllerName: String, from storyboardName: String, as: Type.Type) -> Type {
+    open func controller<Type: UIViewController>(		named controllerName: String,		from storyboardName: String,		as: Type.Type	) -> Type {
         addInvocation(.m_controller__named_controllerNamefrom_storyboardNameas_as(Parameter<String>.value(`controllerName`), Parameter<String>.value(`storyboardName`), Parameter<Type.Type>.value(`as`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_controller__named_controllerNamefrom_storyboardNameas_as(Parameter<String>.value(`controllerName`), Parameter<String>.value(`storyboardName`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())) as? (String, String, Type.Type) -> Void
 		perform?(`controllerName`, `storyboardName`, `as`)
@@ -18825,13 +18827,13 @@ open class UiUtilMock: UiUtil, Mock {
 		do {
 		    __value = try methodReturnValue(.m_controller__named_controllerNamefrom_storyboardNameas_as(Parameter<String>.value(`controllerName`), Parameter<String>.value(`storyboardName`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for controller<Type: UIViewController>(named controllerName: String, from storyboardName: String, as: Type.Type). Use given")
-			Failure("Stub return value not specified for controller<Type: UIViewController>(named controllerName: String, from storyboardName: String, as: Type.Type). Use given")
+			onFatalFailure("Stub return value not specified for controller<Type: UIViewController>(  named controllerName: String,  from storyboardName: String,  as: Type.Type ). Use given")
+			Failure("Stub return value not specified for controller<Type: UIViewController>(  named controllerName: String,  from storyboardName: String,  as: Type.Type ). Use given")
 		}
 		return __value
     }
 
-    open func controller<Type: UIViewController>(named controllerName: String, from storyboard: UIStoryboard, as: Type.Type) -> Type {
+    open func controller<Type: UIViewController>(		named controllerName: String,		from storyboard: UIStoryboard,		as: Type.Type	) -> Type {
         addInvocation(.m_controller__named_controllerNamefrom_storyboardas_as(Parameter<String>.value(`controllerName`), Parameter<UIStoryboard>.value(`storyboard`), Parameter<Type.Type>.value(`as`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_controller__named_controllerNamefrom_storyboardas_as(Parameter<String>.value(`controllerName`), Parameter<UIStoryboard>.value(`storyboard`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())) as? (String, UIStoryboard, Type.Type) -> Void
 		perform?(`controllerName`, `storyboard`, `as`)
@@ -18839,8 +18841,8 @@ open class UiUtilMock: UiUtil, Mock {
 		do {
 		    __value = try methodReturnValue(.m_controller__named_controllerNamefrom_storyboardas_as(Parameter<String>.value(`controllerName`), Parameter<UIStoryboard>.value(`storyboard`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for controller<Type: UIViewController>(named controllerName: String, from storyboard: UIStoryboard, as: Type.Type). Use given")
-			Failure("Stub return value not specified for controller<Type: UIViewController>(named controllerName: String, from storyboard: UIStoryboard, as: Type.Type). Use given")
+			onFatalFailure("Stub return value not specified for controller<Type: UIViewController>(  named controllerName: String,  from storyboard: UIStoryboard,  as: Type.Type ). Use given")
+			Failure("Stub return value not specified for controller<Type: UIViewController>(  named controllerName: String,  from storyboard: UIStoryboard,  as: Type.Type ). Use given")
 		}
 		return __value
     }

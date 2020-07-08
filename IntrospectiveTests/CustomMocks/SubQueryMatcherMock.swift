@@ -88,7 +88,7 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
 
     public required init() { }
 
-    open func getSamples<QuerySampleType: Sample>(from querySamples: [QuerySampleType], matching subQuerySamples: [Sample]) throws -> [QuerySampleType] {
+    open func getSamples<QuerySampleType: Sample>(		from querySamples: [QuerySampleType],		matching subQuerySamples: [Sample]	) throws -> [QuerySampleType] {
         addInvocation(.m_getSamples__from_querySamplesmatching_subQuerySamples(Parameter<[QuerySampleType]>.value(`querySamples`).wrapAsGeneric(), Parameter<[Sample]>.value(`subQuerySamples`)))
 		let perform = methodPerformValue(.m_getSamples__from_querySamplesmatching_subQuerySamples(Parameter<[QuerySampleType]>.value(`querySamples`).wrapAsGeneric(), Parameter<[Sample]>.value(`subQuerySamples`))) as? ([QuerySampleType], [Sample]) -> Void
 		perform?(`querySamples`, `subQuerySamples`)
@@ -96,8 +96,8 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
 		do {
 		    __value = try methodReturnValue(.m_getSamples__from_querySamplesmatching_subQuerySamples(Parameter<[QuerySampleType]>.value(`querySamples`).wrapAsGeneric(), Parameter<[Sample]>.value(`subQuerySamples`))).casted()
 		} catch MockError.notStubed {
-			onFatalFailure("Stub return value not specified for getSamples<QuerySampleType: Sample>(from querySamples: [QuerySampleType], matching subQuerySamples: [Sample]). Use given")
-			Failure("Stub return value not specified for getSamples<QuerySampleType: Sample>(from querySamples: [QuerySampleType], matching subQuerySamples: [Sample]). Use given")
+			onFatalFailure("Stub return value not specified for getSamples<QuerySampleType: Sample>(  from querySamples: [QuerySampleType],  matching subQuerySamples: [Sample] ). Use given")
+			Failure("Stub return value not specified for getSamples<QuerySampleType: Sample>(  from querySamples: [QuerySampleType],  matching subQuerySamples: [Sample] ). Use given")
 		} catch {
 		    throw error
 		}

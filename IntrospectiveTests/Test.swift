@@ -90,6 +90,7 @@ class Test: XCTestCase {
 		Matcher.default.register(IOUtil.Protocol.self) { _,_ in true }
 		Matcher.default.register(MedicationDAO.Protocol.self) { _,_ in true }
 		Matcher.default.register(MedicationExporter.Protocol.self) { _,_ in true }
+		Matcher.default.register(MoodDAO.Protocol.self) { _,_ in true }
 		Matcher.default.register(MoodExporter.Protocol.self) { _,_ in true }
 		Matcher.default.register(MoodUiUtil.Protocol.self) { _,_ in true }
 		Matcher.default.register(MoodUtil.Protocol.self) { _,_ in true }

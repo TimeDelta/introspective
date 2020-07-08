@@ -181,16 +181,17 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 		// given
 		let presentedController = mockMedicationDoseEditorViewController()
 		var medication = MedicationDataTestUtil.createMedication()
-		MedicationDataTestUtil.createDose(medication: medication, dosage: Dosage(1, "mg"))
-		let dose2 = MedicationDataTestUtil.createDose(medication: medication, dosage: Dosage(2, "mg"))
+		let dose1 = MedicationDataTestUtil.createDose(medication: medication, dosage: Dosage(1, "mg"))
+		MedicationDataTestUtil.createDose(medication: medication, dosage: Dosage(2, "mg"))
 		medication = try DependencyInjector.get(Database.self).pull(savedObject: medication)
 		controller.medication = medication
 
 		// when
+		// display order: descending order of timestamp
 		controller.tableView(tableView, didSelectRowAt: IndexPath(row: 1, section: 0))
 
 		// then
-		assertThat(presentedController.medicationDose, equals(dose2))
+		assertThat(presentedController.medicationDose, equals(dose1))
 	}
 
 	func test_tableViewDidSelectRowAt_setsCorrectMedicationOnPresentedController() throws {

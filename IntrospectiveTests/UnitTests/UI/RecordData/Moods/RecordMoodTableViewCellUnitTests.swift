@@ -23,7 +23,6 @@ final class RecordMoodTableViewCellUnitTests: UnitTest {
 
 	private var cell: RecordMoodTableViewCell!
 	private var mockMood: MoodMock!
-	private var mockTransaction: TransactionMock!
 
 	override func setUp() {
 		super.setUp()
@@ -32,11 +31,11 @@ final class RecordMoodTableViewCellUnitTests: UnitTest {
 		Given(mockMoodUiUtil, .valueToString(.any, willReturn: ""))
 		Given(mockMoodUiUtil, .feedbackMessage(for: .any, min: .any, max: .any, willReturn: "not nil"))
 
-		mockTransaction = TransactionMock()
-		Given(mockDatabase, .transaction(willReturn: mockTransaction))
-
 		mockMood = MoodMock()
+		Given(mockMoodDAO, .createMood(timestamp: .any, rating: .any, min: .any, max: .any, note: .any, willReturn: mockMood))
 		Given(mockSampleFactory, .mood(using: .any, willReturn: mockMood))
+		Given(mockMood, .minRating(getter: 0))
+		Given(mockMood, .maxRating(getter: 7))
 
 		Given(mockSettings, .minMood(getter: 0.0))
 		Given(mockSettings, .maxMood(getter: 7.0))
@@ -77,15 +76,7 @@ final class RecordMoodTableViewCellUnitTests: UnitTest {
 		cell.doneButtonPressed(self)
 
 		// then
-		XCTAssert(mockMood.note == expectedNote)
-	}
-
-	func testTransactionIsCommitedOnSave() {
-		// when
-		cell.doneButtonPressed(self)
-
-		// then
-		Verify(mockTransaction, .commit())
+		Verify(mockMoodDAO, .createMood(timestamp: .any, rating: .any, min: .any, max: .any, note: .value(expectedNote)))
 	}
 
 	func testAddNoteButtonTitleSetToAddNoteOnSave() {
