@@ -30,8 +30,7 @@ public final class MoodUiUtilImpl: MoodUiUtil {
 		"Got it. You're at a %@",
 	]
 	private static let highMoodMessages = [
-		"Yay! You're feeling pretty good. (%@)",
-		"I'm glad you're feeling well. (%@)",
+		"Yay! You're at a %@. I'm glad you're feeling well.",
 	]
 
 	public static let minRatingChanged = Notification.Name("minimumMoodRatingChanged")
