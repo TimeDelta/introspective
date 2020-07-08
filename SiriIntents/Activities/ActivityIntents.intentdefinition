@@ -1572,7 +1572,7 @@
 						<key>INTypePropertyMetadataFormat</key>
 						<string>Style</string>
 						<key>INTypePropertyMetadataTimeStyle</key>
-						<string>Long</string>
+						<string>Medium</string>
 						<key>INTypePropertyMetadataType</key>
 						<string>DateTime</string>
 					</dict>
@@ -1619,11 +1619,11 @@
 					<key>INTypePropertyMetadata</key>
 					<dict>
 						<key>INTypePropertyMetadataDateStyle</key>
-						<string>Full</string>
+						<string>Short</string>
 						<key>INTypePropertyMetadataFormat</key>
 						<string>Style</string>
 						<key>INTypePropertyMetadataTimeStyle</key>
-						<string>Full</string>
+						<string>Medium</string>
 						<key>INTypePropertyMetadataType</key>
 						<string>DateTime</string>
 					</dict>
