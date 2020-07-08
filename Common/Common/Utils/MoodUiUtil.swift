@@ -41,6 +41,8 @@ public final class MoodUiUtilImpl: MoodUiUtil {
 	public static let minRatingColor = UIColor.black
 	public static let maxRatingColor = UIColor.yellow
 
+	private let log = Log()
+
 	public func valueToString(_ value: Double) -> String {
 		let numFormatter = NumberFormatter()
 		numFormatter.numberStyle = .decimal
@@ -58,18 +60,27 @@ public final class MoodUiUtilImpl: MoodUiUtil {
 	}
 
 	public final func feedbackMessage(for rating: Double, min: Double, max: Double) -> String {
+		log.debug("Getting feedback message for mood record creation (%{private}f). min: %f; max: %f", rating, min, max)
 		let valueString = valueToString(rating)
+		log.debug("Converted value %f to \"%@\"", rating, valueString)
 		let range = max - min
 		if rating < 0.33 * range + min {
-			return String(format: Me.lowMoodMessages[Int.random(in: 0 ..< Me.lowMoodMessages.count)], valueString)
+			log.debug("Using low mood message")
+			return String(format: randomMessage(from: Me.lowMoodMessages), valueString)
 		}
 		if rating < 0.66 * range + min {
-			return String(format: Me.mediumMoodMessages[Int.random(in: 0 ..< Me.mediumMoodMessages.count)], valueString)
+			log.debug("Using medium mood message")
+			return String(format: randomMessage(from: Me.mediumMoodMessages), valueString)
 		}
-		return String(format: Me.highMoodMessages[Int.random(in: 0 ..< Me.highMoodMessages.count)], valueString)
+		log.debug("Using high mood message")
+		return String(format: randomMessage(from: Me.highMoodMessages), valueString)
 	}
 
 	// MARK: - Helper Functions
+
+	private final func randomMessage(from messages: [String]) -> String {
+		messages[Int.random(in: 0 ..< messages.count)]
+	}
 
 	private func scaledColor(
 		minColor: UIColor,

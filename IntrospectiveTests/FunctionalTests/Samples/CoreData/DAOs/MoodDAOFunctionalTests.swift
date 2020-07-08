@@ -19,7 +19,7 @@ class MoodDAOFunctionalTests: FunctionalTest {
 
 	private typealias Me = MoodDAOFunctionalTests
 
-	private static let moodInfo1 = MoodInfo(
+	private static let moodInfo = MoodInfo(
 		timestamp: Date(),
 		timeZone: TimeZone.autoupdatingCurrent,
 		rating: 2,
@@ -38,9 +38,22 @@ class MoodDAOFunctionalTests: FunctionalTest {
 
 	func testGivenValidData_createMood_setsCorrectValuesOnNewMood() throws {
 		// when
-		try dao.createMood(timestamp: Me.moodInfo1.timestamp, rating: Me.moodInfo1.rating, note: Me.moodInfo1.note)
+		try dao.createMood(timestamp: Me.moodInfo.timestamp, rating: Me.moodInfo.rating, note: Me.moodInfo.note)
 
 		// then
-		assertThat(Me.moodInfo1, exists(MoodImpl.self))
+		assertThat(Me.moodInfo, exists(MoodImpl.self))
+	}
+
+	func testGivenNilMinAndMaxValues_createMood_usesCurrentMinAndMaxAsDefaults() throws {
+		// when
+		try dao.createMood(
+			timestamp: Me.moodInfo.timestamp,
+			rating: Me.moodInfo.rating,
+			min: nil,
+			max: nil,
+			note: Me.moodInfo.note)
+
+		// then
+		assertThat(Me.moodInfo, exists(MoodImpl.self))
 	}
 }

@@ -16,8 +16,8 @@ import Samples
 import Settings
 
 public final class RecordIntegerMoodIntentHandler: NSObject, RecordIntegerMoodIntentHandling {
-	@available(iOS 13.0, *)
-	@available(iOSApplicationExtension 13.0, *)
+	private let log = Log()
+
 	public func resolveRating(
 		for intent: RecordIntegerMoodIntent,
 		with completion: @escaping (RecordIntegerMoodRatingResolutionResult) -> Void

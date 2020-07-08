@@ -15,25 +15,37 @@ import Settings
 
 // sourcery: AutoMockable
 public protocol MoodDAO {
-	func createMood(timestamp: Date, rating: Double, note: String?) throws -> Mood
+	func createMood(timestamp: Date, rating: Double, min: Double?, max: Double?, note: String?) throws -> Mood
 }
 
 extension MoodDAO {
-	public func createMood(timestamp: Date = Date(), rating: Double, note: String? = nil) throws -> Mood {
-		try createMood(timestamp: timestamp, rating: rating, note: note)
+	public func createMood(
+		timestamp: Date = Date(),
+		rating: Double,
+		min: Double? = nil,
+		max: Double? = nil,
+		note: String? = nil
+	) throws -> Mood {
+		try createMood(timestamp: timestamp, rating: rating, min: min, max: max, note: note)
 	}
 }
 
 public final class MoodDAOImpl: MoodDAO {
 	@discardableResult
-	public final func createMood(timestamp _: Date, rating: Double, note: String?) throws -> Mood {
+	public final func createMood(
+		timestamp _: Date,
+		rating: Double,
+		min: Double?,
+		max: Double?,
+		note: String?
+	) throws -> Mood {
 		let transaction = DependencyInjector.get(Database.self).transaction()
 		let mood = try DependencyInjector.get(SampleFactory.self).mood(using: transaction)
 		mood.date = Date()
 		mood.rating = rating
 		mood.note = note
-		mood.minRating = DependencyInjector.get(Settings.self).minMood
-		mood.maxRating = DependencyInjector.get(Settings.self).maxMood
+		mood.minRating = min ?? DependencyInjector.get(Settings.self).minMood
+		mood.maxRating = max ?? DependencyInjector.get(Settings.self).maxMood
 		mood.setSource(.introspective)
 		try transaction.commit()
 		return mood
