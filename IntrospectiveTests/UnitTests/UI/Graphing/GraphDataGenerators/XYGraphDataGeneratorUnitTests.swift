@@ -370,10 +370,10 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 		let group2Samples = [SampleCreatorTestUtil.createSample()]
 		let group1Value = "1"
 		let group2Value = "2"
-		let group1SampleValue = 1.2
-		let group2SampleValue = 2.3
-		Given(information, .computeGraphable(forSamples: .value(group1Samples), willReturn: String(group1SampleValue)))
-		Given(information, .computeGraphable(forSamples: .value(group2Samples), willReturn: String(group2SampleValue)))
+		let group1SampleValue = "1.2"
+		let group2SampleValue = "2.3"
+		Given(information, .computeGraphable(forSamples: .value(group1Samples), willReturn: group1SampleValue))
+		Given(information, .computeGraphable(forSamples: .value(group2Samples), willReturn: group2SampleValue))
 		let groups: [(Any, [Sample])] = [
 			(group1Value, group1Samples),
 			(group2Value, group2Samples),
@@ -383,13 +383,11 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 		let transformedValues = try generator.transform(sampleGroups: groups, information: information)
 
 		// then
-		XCTFail("uncomment this when swift compiler error is fixed")
-		#warning("uncomment this when swift compiler error is fixed")
-//		assertThat(
-//			transformedValues,
-//			contains(
-//				has(groupValue: group1Value, sampleValue: group1SampleValue),
-//				has(groupValue: group2Value, sampleValue: group2SampleValue)))
+		assertThat(
+			transformedValues,
+			contains(
+				has(groupValue: group1Value, sampleValue: group1SampleValue),
+				has(groupValue: group2Value, sampleValue: group2SampleValue)))
 	}
 
 	// MARK: - index()
