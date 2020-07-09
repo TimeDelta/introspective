@@ -1,81 +1,81 @@
 Introspective is a new way to explore your health data. It allows you to write custom (easy-to-understand) queries against your data and create custom graphs that can show the relationship between different pieces of your health data.
 
-Main Features:
-
+MAIN FEATURES:
 - Custom queries
-	Explore your data in a unique way by querying for exactly the records in which you're interested. Specify complex conditions on any attribute for any supported data type by combining them using "and", "or", and condition groups (full boolean algebra support with grouping). Even better, you can limit your query further by looking at other data types within the query. For example, you can find all moods that were recorded within a half hour of socializing.
+Explore your data in a unique way by querying for exactly the records in which you're interested. Specify complex conditions on any attribute for any supported data type by combining them using "and", "or", and condition groups (full boolean algebra support with grouping). Even better, you can limit your query further by looking at other data types within the query. For example, you can find all moods that were recorded within a half hour of socializing.
 
 - Custom graphs
-	You can also create custom graphs using queries to specify exactly which data points you want to show. The following types of graph are currently supported:
-		- Line Chart
-		- Bar Chart
-		- Scatter Plot
-	On all x/y coordinate graphs, you can set a query for each axis individually or set a single query for both axes. You can also specify a way to determine what points should be grouped together into a series and whether or not (/ how) to group multiple entries into a single point.
+You can also create custom graphs using queries to specify exactly which data points you want to show. The following types of graph are currently supported:
+	- Line Chart
+	- Bar Chart
+	- Scatter Plot
+On all x/y coordinate graphs, you can set a query for each axis individually or set a single query for both axes. You can also specify a way to determine what points should be grouped together into a series and whether or not (/ how) to group multiple entries into a single point.
 
 
 - Apple Health integration
-	Introspection integrates with a number of data types from the Apple Health app, allowing you to query against them. For a full list of supported data types, see the list below.
+Introspection integrates with a number of data types from the Apple Health app, allowing you to query against them. For a full list of supported data types, see the list below.
 
 - Siri integration (Shortcuts app)
-	- Record mood (decimal)
-	- Record mood (integer)
-	- Start activities
-	- Start activity
-	- Start activity from end of last stopped activity
-	- Start activity [number] [time-units] ago
-	- Stop activities
-	- Stop all activities
-	- Stop last started activity
-	- Take a medication using default dosage
-	- Take a medication with specific dosage
-	- Is [date] a weekday
+  - Record mood (decimal)
+  - Record mood (integer)
+  - Start activities
+  - Start activity
+  - Start activity from end of last stopped activity
+  - Start activity [number] [time-units] ago
+  - Stop activities
+  - Stop all activities
+  - Stop last started activity
+  - Take a medication using default dosage
+  - Take a medication with specific dosage
+  - Is [date] a weekday
 
 - Data import / export
-	- import activity data from "ATracker"
-	- import medication history from "EasyPill"
-	- import moods from "Wellness"
-	- export activities, medications or moods to CSV file
+  - import activity data from "ATracker"
+  - import medication history from "EasyPill"
+  - import moods from "Wellness"
+  - import from Introspective export
+  - export activities, medications or moods to CSV file
 
 
 - Data Types
-	Currently, the following data types are supported (with more to come, guaranteed):
-	? = optional field
-	- Activity (what you're doing and when you're doing it)
-		- Definition (common to all instances of the activity so that you don't have to constantly type everything)
-			- Name
-			- Description ?
-			- Common Tags ?
-			- Source (the name of the app that generated this record - automatically recorded)
-		- Start Time (with time zone)
-		- End Time ? (with time zone)
-		- Additional Tags ? (only appear on this instance of the activity)
-		- Note ?
-		- Source (the name of the app that generated this record - automatically recorded)
-	- Blood Pressure
-	- Body Mass Index
-	- Heart Rate
-	- Lean Body Mass
-	- Medication Dose
-		- Medication Definition (common to all doses of this medication)
-			- Name
-			- Started On ? (when did you start taking this medication)
-			- Frequency ? (how frequently are you supposed to take this medication)
-			- Default Dosage ? (use this dosage every time you quick take this medication)
-			- Notes ? (anything else you want to remember about this medication)
-			- Source (the name of the app that generated this record - automatically recorded)
-		- Timestamp (with time zone)
-		- Dosage ? (how much of this medication you took this time)
-		- Source (the name of the app that generated this record - automatically recorded)
-	- Mood (with customizable scale)
-		- Timestamp (with time zone)
-		- Rating
-		- Note
-		- Source (the name of the app that generated this record - automatically recorded)
-	- Resting Heart Rate
-	- Sexual Activity
-	- Sleep
-	- Weight
+Currently, the following data types are supported (with more to come, guaranteed):
+? = optional field
+- Activity (what you're doing and when you're doing it)
+  - Definition (common to all instances of the activity so that you don't have to constantly type everything)
+    - Name
+    - Description ?
+    - Common Tags ?
+    - Source (the name of the app that generated this record - automatically recorded)
+  - Start Time (with time zone)
+  - End Time ? (with time zone)
+  - Additional Tags ? (only appear on this instance of the activity)
+  - Note ?
+  - Source (the name of the app that generated this record - automatically recorded)
+- Blood Pressure
+- Body Mass Index
+- Heart Rate
+- Lean Body Mass
+- Medication Dose
+  - Medication Definition (common to all doses of this medication)
+    - Name
+    - Started On ? (when did you start taking this medication)
+    - Frequency ? (how frequently are you supposed to take this medication)
+    - Default Dosage ? (use this dosage every time you quick take this medication)
+    - Notes ? (anything else you want to remember about this medication)
+    - Source (the name of the app that generated this record - automatically recorded)
+  - Timestamp (with time zone)
+  - Dosage ? (how much of this medication you took this time)
+  - Source (the name of the app that generated this record - automatically recorded)
+- Mood (with customizable scale)
+  - Timestamp (with time zone)
+  - Rating
+  - Note
+  - Source (the name of the app that generated this record - automatically recorded)
+- Resting Heart Rate
+- Sexual Activity
+- Sleep
+- Weight
 
 
 Privacy Policy:
-From the very beginning of this project, I decided that privacy and security were the number one priorities. As such, any and all of your data NEVER leaves your phone.
+From the very beginning of this project, I decided that privacy and security were the number one priorities. As such, any and all of your data NEVER leaves your phone (unless you export it).
