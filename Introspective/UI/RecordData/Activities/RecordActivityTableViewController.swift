@@ -186,6 +186,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		observe(selector: #selector(activityEditedOrCreated), name: Me.activityEditedOrCreated, object: nil)
 		observe(selector: #selector(activityDefinitionEdited), name: Me.activityDefinitionEdited, object: nil)
 		observe(selector: #selector(sortByRecentCount), name: .timePeriodChosen)
+		observe(selector: #selector(reloadTableViewData), name: UIApplication.willEnterForegroundNotification)
 
 		reorderOnLongPress(allowReorder: { $0.section == 1 && ($1 == nil || $1?.section == 1) })
 
@@ -562,6 +563,10 @@ public final class RecordActivityTableViewController: UITableViewController {
 		} catch {
 			showError(title: "Failed to sort by recent count. Sorry for thee inconvenience.")
 		}
+	}
+
+	@objc private final func reloadTableViewData(notification _: Notification) {
+		loadActivitiyDefinitions()
 	}
 
 	// MARK: - Actions

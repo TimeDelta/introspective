@@ -137,6 +137,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 			name: RecordMedicationTableViewCell.shouldPresentDosesView
 		)
 		observe(selector: #selector(medicationEdited), name: Me.medicationEdited)
+		observe(selector: #selector(reloadTableViewData), name: UIApplication.willEnterForegroundNotification)
 
 		coachMarksDataSourceAndDelegate = DefaultCoachMarksDataSourceAndDelegate(
 			coachMarksInfo,
@@ -317,6 +318,10 @@ public final class RecordMedicationTableViewController: UITableViewController {
 			let message: String? = value(for: .message, from: notification) ?? "Sorry for the inconvenience."
 			showError(title: title, message: message)
 		}
+	}
+
+	@objc private final func reloadTableViewData(notification _: Notification) {
+		loadMedications()
 	}
 
 	// MARK: - Button Actions
