@@ -43,6 +43,7 @@ public final class TakeMedicationIntentHandler: NSObject, TakeMedicationIntentHa
 			let medications = try DependencyInjector.get(Database.self).query(fetchRequest)
 			completion(medications.map { medication in medication.name }, nil)
 		} catch {
+			Me.log.error("Failed to provide valid medication names: %@", errorInfo(error))
 			completion(nil, error)
 		}
 	}
@@ -70,6 +71,7 @@ public final class TakeMedicationIntentHandler: NSObject, TakeMedicationIntentHa
 				"Failed to retrieve MedicationDefinition for TakeMedicationIntentHandler: %@",
 				errorInfo(error)
 			)
+			completion(TakeMedicationIntentResponse.failure(medications: medicationNames))
 		}
 	}
 }
