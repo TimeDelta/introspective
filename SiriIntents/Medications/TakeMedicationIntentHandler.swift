@@ -68,7 +68,7 @@ public final class TakeMedicationIntentHandler: NSObject, TakeMedicationIntentHa
 			completion(TakeMedicationIntentResponse.success(medications: medicationNames))
 		} catch {
 			Me.log.error(
-				"Failed to retrieve MedicationDefinition for TakeMedicationIntentHandler: %@",
+				"Failed to handle TakeMedicationIntentHandler: %@",
 				errorInfo(error)
 			)
 			completion(TakeMedicationIntentResponse.failure(medications: medicationNames))
