@@ -70,7 +70,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	public final var finishedButtonTitle: String = "Run"
 	/// Corresponding notification object will contain the built query as the object
 	public final var finishedButtonNotification: NotificationName = .runQuery
-	/// This will prevent the topmost sample type from being changed by the user
+	/// Setting this will prevent the topmost sample type from being changed by the user
 	public final var topmostSampleType: Sample.Type?
 	public final var initialQuery: Query?
 
@@ -162,8 +162,8 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 		if let query = initialQuery {
 			populateQuery(query)
-		} else if topmostSampleType != nil {
-			queries = [(sampleTypeInfo: SampleTypeInfo(topmostSampleType!), parts: [])]
+		} else if let topmostSampleType = topmostSampleType {
+			queries = [(sampleTypeInfo: SampleTypeInfo(topmostSampleType), parts: [])]
 			partWasAdded()
 		} else if queries.isEmpty { // add this condition for testing purposes
 			queries = [(sampleTypeInfo: SampleTypeInfo(), parts: [])]
@@ -505,7 +505,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	}
 
 	private final func defaultAttributeRestriction(for sampleType: Sample.Type) -> AttributeRestriction {
-		let attribute = sampleType.defaultDependentAttribute
+		let attribute = sampleType.defaultIndependentAttribute
 		let restrictionType = DependencyInjector.get(AttributeRestrictionFactory.self).typesFor(attribute)[0]
 		return DependencyInjector.get(AttributeRestrictionFactory.self)
 			.initialize(type: restrictionType, forAttribute: attribute)
