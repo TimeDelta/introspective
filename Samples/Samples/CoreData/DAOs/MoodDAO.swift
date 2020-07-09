@@ -40,7 +40,7 @@ public final class MoodDAOImpl: MoodDAO {
 		note: String?
 	) throws -> Mood {
 		let transaction = DependencyInjector.get(Database.self).transaction()
-		let mood = try DependencyInjector.get(SampleFactory.self).mood(using: transaction)
+		let mood = try transaction.new(MoodImpl.self)
 		mood.date = Date()
 		mood.rating = rating
 		mood.note = note
@@ -48,6 +48,6 @@ public final class MoodDAOImpl: MoodDAO {
 		mood.maxRating = max ?? DependencyInjector.get(Settings.self).maxMood
 		mood.setSource(.introspective)
 		try transaction.commit()
-		return mood
+		return try DependencyInjector.get(Database.self).pull(savedObject: mood)
 	}
 }
