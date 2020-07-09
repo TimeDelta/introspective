@@ -426,6 +426,12 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		DispatchQueue.main.async {
 			self.chartController.dataSeries = allData
 		}
+
+		signpost.end(
+			name: "Update Chart Data", "Number of samples: (x-axis: %d, y-axis: %d)",
+			xAxisSamples.count,
+			yAxisSamples.count
+		)
 	}
 
 	// MARK: Did Set Functions
