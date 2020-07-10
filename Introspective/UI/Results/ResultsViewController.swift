@@ -411,6 +411,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			self.information.remove(at: indexPath.row)
 			self.informationValues.remove(at: indexPath.row)
 			self.tableView.deleteRows(at: [indexPath], with: .fade)
+			completion(true)
 		}
 	}
 
@@ -449,7 +450,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				style: .cancel,
 				handler: nil
 			))
-			self.presentView(actionSheet)
+			self.presentView(actionSheet, completion: { completion(true) })
 		}
 		action.backgroundColor = .systemBlue
 		return action
@@ -495,7 +496,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 			alert.addAction(yesAction)
 			alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-			self.present(alert, animated: false, completion: nil)
+			self.present(alert, animated: false, completion: { completion(true) })
 		}
 	}
 

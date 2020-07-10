@@ -364,7 +364,10 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func getViewHistoryActionFor(_ definition: ActivityDefinition) -> UIContextualAction {
-		let action = DependencyInjector.get(UiUtil.self).contextualAction(style: .normal, title: "History") { _, _, _ in
+		let action = DependencyInjector.get(UiUtil.self).contextualAction(
+			style: .normal,
+			title: "History"
+		) { _, _, completion in
 			let query = DependencyInjector.get(QueryFactory.self).activityQuery()
 			query.expression = EqualToStringAttributeRestriction(
 				restrictedAttribute: Activity.nameAttribute,
@@ -377,12 +380,14 @@ public final class RecordActivityTableViewController: UITableViewController {
 					DispatchQueue.main.async {
 						controller.showError(title: "Failed to run query", error: error)
 					}
+					completion(false)
 					return
 				}
 				controller.samples = result?.samples
 			}
 			controller.query = query
 			controller.backButtonTitle = "Activities"
+			completion(true)
 			self.pushToNavigationController(controller)
 		}
 		action.accessibilityLabel = "view all history for \(definition.name)"
@@ -391,47 +396,56 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func getDeleteActivityActionFor(_ activity: Activity) -> UIContextualAction {
-		let deleteAction = DependencyInjector.get(UiUtil.self)
-			.contextualAction(style: .destructive, title: "🗑️ Last") { _, _, _ in
-				let timeText = self.getTimeTextFor(activity)
-				let alert = UIAlertController(
-					title: "Are you sure you want to delete '\(activity.definition.name)'?",
-					message: "This will only delete the most recent instance \(timeText).",
-					preferredStyle: .alert
-				)
-				alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
-					do {
-						let transaction = DependencyInjector.get(Database.self).transaction()
-						try transaction.delete(activity)
-						try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-						self.loadActivitiyDefinitions()
-					} catch {
-						self.log.error("Failed to delete activity: %@", errorInfo(error))
-						self.showError(title: "Failed to delete activity instance", error: error)
-					}
-				})
-				alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-				self.present(alert, animated: false, completion: nil)
-			}
+		let deleteAction = DependencyInjector.get(UiUtil.self).contextualAction(
+			style: .destructive,
+			title: "🗑️ Last"
+		) { _, _, completion in
+			let timeText = self.getTimeTextFor(activity)
+			let alert = UIAlertController(
+				title: "Are you sure you want to delete '\(activity.definition.name)'?",
+				message: "This will only delete the most recent instance \(timeText).",
+				preferredStyle: .alert
+			)
+			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
+				do {
+					let transaction = DependencyInjector.get(Database.self).transaction()
+					try transaction.delete(activity)
+					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+					self.loadActivitiyDefinitions()
+				} catch {
+					self.log.error("Failed to delete activity: %@", errorInfo(error))
+					self.showError(title: "Failed to delete activity instance", error: error)
+				}
+			})
+			alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+			self.present(alert, animated: false, completion: { completion(true) })
+		}
 		deleteAction.accessibilityLabel = "delete most recent \(activity.definition.name)"
 		return deleteAction
 	}
 
 	private final func getEditLastActionFor(_ activity: Activity) -> UIContextualAction {
-		let editLast = DependencyInjector.get(UiUtil.self)
-			.contextualAction(style: .normal, title: "✎ Last") { _, _, _ in
-				self.showEditScreenForActivity(activity)
-			}
+		let editLast = DependencyInjector.get(UiUtil.self).contextualAction(
+			style: .normal,
+			title: "✎ Last"
+		) { _, _, completion in
+			completion(true)
+			self.showEditScreenForActivity(activity)
+		}
 		editLast.backgroundColor = .orange
 		return editLast
 	}
 
 	private final func getAddNewActionFor(_ activityDefinition: ActivityDefinition) -> UIContextualAction {
-		let addNew = DependencyInjector.get(UiUtil.self).contextualAction(style: .normal, title: "+") { _, _, _ in
+		let addNew = DependencyInjector.get(UiUtil.self).contextualAction(
+			style: .normal,
+			title: "+"
+		) { _, _, completion in
 			let controller = self.viewController(named: "editActivity") as! EditActivityTableViewController
 			controller.definition = activityDefinition
 			controller.notificationToSendOnAccept = Me.activityEditedOrCreated
 
+			completion(true)
 			self.navigationController?.pushViewController(controller, animated: false)
 		}
 		addNew.backgroundColor = .blue
@@ -442,7 +456,10 @@ public final class RecordActivityTableViewController: UITableViewController {
 		_ activityDefinition: ActivityDefinition,
 		at _: IndexPath
 	) -> UIContextualAction {
-		DependencyInjector.get(UiUtil.self).contextualAction(style: .destructive, title: "🗑️ All") { _, _, _ in
+		DependencyInjector.get(UiUtil.self).contextualAction(
+			style: .destructive,
+			title: "🗑️ All"
+		) { _, _, completion in
 			let alert = UIAlertController(
 				title: "Are you sure you want to delete \(activityDefinition.name)?",
 				message: "This will delete all history for this activity.",
@@ -460,7 +477,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 				}
 			})
 			alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-			self.present(alert, animated: false, completion: nil)
+			self.present(alert, animated: false, completion: { completion(true) })
 		}
 	}
 
@@ -468,16 +485,19 @@ public final class RecordActivityTableViewController: UITableViewController {
 		_ activityDefinition: ActivityDefinition,
 		at indexPath: IndexPath
 	) -> UIContextualAction {
-		let editDefinitionAction = DependencyInjector.get(UiUtil.self)
-			.contextualAction(style: .normal, title: "✎ All") { _, _, _ in
-				self.definitionEditIndex = indexPath
-				let controller: EditActivityDefinitionTableViewController = self
-					.viewController(named: "editActivityDefinition")
-				controller.activityDefinition = activityDefinition
-				controller.notificationToSendOnAccept = Me.activityDefinitionEdited
+		let editDefinitionAction = DependencyInjector.get(UiUtil.self).contextualAction(
+			style: .normal,
+			title: "✎ All"
+		) { _, _, completion in
+			self.definitionEditIndex = indexPath
+			let controller: EditActivityDefinitionTableViewController = self
+				.viewController(named: "editActivityDefinition")
+			controller.activityDefinition = activityDefinition
+			controller.notificationToSendOnAccept = Me.activityDefinitionEdited
 
-				self.navigationController?.pushViewController(controller, animated: false)
-			}
+			completion(true)
+			self.navigationController?.pushViewController(controller, animated: false)
+		}
 		editDefinitionAction.backgroundColor = .orange
 		editDefinitionAction.accessibilityLabel = "edit \(activityDefinition.name)"
 		return editDefinitionAction
