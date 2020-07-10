@@ -12,6 +12,7 @@ import UIKit
 import Common
 import DependencyInjection
 import Persistence
+import Queries
 import Samples
 import Settings
 
@@ -98,6 +99,36 @@ final class RecordMoodTableViewCell: UITableViewCell {
 				.presenter: Me.notePresenter,
 			])
 		)
+	}
+
+	@IBAction final func displayHistory(_: Any) {
+		let controller = viewController(named: "results", fromStoryboard: "Results") as! ResultsViewController
+		controller.backButtonTitle = "Record"
+		let query = DependencyInjector.get(QueryFactory.self).moodQuery()
+		controller.query = query
+		DependencyInjector.get(AsyncUtil.self).run(qos: .userInitiated) {
+			query.runQuery { result, error in
+				if let error = error {
+					DispatchQueue.main.async {
+						self.post(
+							RecordDataTableViewController.showErrorMessage,
+							userInfo: self.info([
+								.title: "Failed to run query",
+								.error: error,
+							])
+						)
+					}
+					return
+				}
+				controller.samples = result?.samples
+				self.post(
+					RecordDataTableViewController.pushToNavigationController,
+					userInfo: self.info([
+						.controller: controller,
+					])
+				)
+			}
+		}
 	}
 
 	@IBAction final func doneButtonPressed(_: Any) {

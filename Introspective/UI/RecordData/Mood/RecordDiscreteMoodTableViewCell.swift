@@ -12,6 +12,7 @@ import UIKit
 import Common
 import DependencyInjection
 import Persistence
+import Queries
 import Samples
 import Settings
 
@@ -127,6 +128,18 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 			userInfo: info([
 				.controller: controller,
 				.presenter: Me.notePresenter,
+			])
+		)
+	}
+
+	@IBAction final func displayHistory(_: Any) {
+		let controller = viewController(named: "results", fromStoryboard: "Results") as! ResultsViewController
+		controller.backButtonTitle = "Record"
+		controller.query = DependencyInjector.get(QueryFactory.self).moodQuery()
+		post(
+			RecordDataTableViewController.pushToNavigationController,
+			userInfo: info([
+				.controller: controller,
 			])
 		)
 	}

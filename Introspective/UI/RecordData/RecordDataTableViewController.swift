@@ -20,6 +20,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 
 	public static let showErrorMessage = Notification.Name("showErrorOnRecordDataScreen")
 	public static let showViewController = Notification.Name("showViewController")
+	public static let pushToNavigationController = Notification.Name("pushToNavigationController")
 
 	private static let moodId = "mood"
 	private static let continuousMoodId = "continuousMood"
@@ -50,6 +51,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		observe(selector: #selector(showRecordActivitiesScreen), name: .showRecordActivitiesScreen)
 		observe(selector: #selector(showRecordMedicationsScreen), name: .showRecordMedicationsScreen)
 		observe(selector: #selector(useDiscreteMoodChanged), name: MoodUiUtilImpl.useDiscreteMoodChanged)
+		observe(selector: #selector(pushToNavigationController), name: Me.pushToNavigationController)
 	}
 
 	deinit {
@@ -99,9 +101,18 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 
 	@objc private final func showViewController(notification: Notification) {
 		if let controller: UIViewController = value(for: .controller, from: notification) {
-			let presenter: Presentr! = value(for: .presenter, from: notification) ?? DependencyInjector.get(UiUtil.self)
-				.defaultPresenter
+			let defaultPresenter = DependencyInjector.get(UiUtil.self).defaultPresenter
+			let presenter: Presentr! = value(for: .presenter, from: notification) ?? defaultPresenter
 			customPresentViewController(presenter, viewController: controller, animated: false)
+		}
+	}
+
+	@objc private final func pushToNavigationController(notification: Notification) {
+		guard let controller: UIViewController = value(for: .controller, from: notification) else { return }
+		if let navigationController = navigationController {
+			navigationController.pushViewController(controller, animated: false)
+		} else {
+			log.error("no navigation controller")
 		}
 	}
 

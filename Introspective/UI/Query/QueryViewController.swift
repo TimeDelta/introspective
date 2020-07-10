@@ -326,7 +326,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		} else {
 			let controller = viewController(named: "results", fromStoryboard: "Results") as! ResultsViewController
 			query.runQuery { (result: QueryResult?, error: Error?) in
-				if error != nil {
+				if let error = error {
 					DispatchQueue.main.async {
 						controller.showError(title: "Failed to run query", error: error)
 					}

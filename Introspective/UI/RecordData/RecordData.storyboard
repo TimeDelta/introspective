@@ -33,12 +33,23 @@
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LbB-hc-tae">
-                                            <rect key="frame" x="16" y="11" width="343" height="34"/>
+                                            <rect key="frame" x="16" y="11" width="278" height="34"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <accessibility key="accessibilityConfiguration" hint="Save this mood rating" identifier="save mood button" label="save mood button"/>
-                                            <state key="normal" title="Save Mood"/>
+                                            <state key="normal" title="Save Mood">
+                                                <color key="titleColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                            </state>
                                             <connections>
                                                 <action selector="doneButtonPressed:" destination="fJm-WJ-Cyf" eventType="touchUpInside" id="sXl-8N-q6d"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1BY-le-hpK">
+                                            <rect key="frame" x="309" y="13" width="50" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="History"/>
+                                            <connections>
+                                                <action selector="displayHistory:" destination="fJm-WJ-Cyf" eventType="touchUpInside" id="a6L-B6-4CD"/>
                                             </connections>
                                         </button>
                                         <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="ymG-KL-FCQ">
@@ -104,15 +115,28 @@
                                                 <action selector="presentMoodNoteController:" destination="VYs-Kk-cJw" eventType="touchUpInside" id="9oI-0e-biN"/>
                                             </connections>
                                         </button>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kQs-XG-QPP">
-                                            <rect key="frame" x="5" y="0.0" width="365" height="34"/>
+                                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kQs-XG-QPP">
+                                            <rect key="frame" x="16" y="0.0" width="278" height="34"/>
+                                            <color key="backgroundColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <accessibility key="accessibilityConfiguration" hint="Save this mood rating" identifier="save mood button" label="save mood button"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="34" id="lXq-iN-0D2"/>
                                             </constraints>
-                                            <state key="normal" title="Save Mood"/>
+                                            <state key="normal" title="Save Mood">
+                                                <color key="titleColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                            </state>
                                             <connections>
                                                 <action selector="doneButtonPressed:" destination="VYs-Kk-cJw" eventType="touchUpInside" id="fER-XS-kBb"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="be2-Dm-8Un">
+                                            <rect key="frame" x="309" y="4" width="50" height="30"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="50" id="I9i-mB-jv3"/>
+                                            </constraints>
+                                            <state key="normal" title="History"/>
+                                            <connections>
+                                                <action selector="displayHistory:" destination="VYs-Kk-cJw" eventType="touchUpInside" id="tpC-uj-c6h"/>
                                             </connections>
                                         </button>
                                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="redraw" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gFO-JW-crE" customClass="RecordMoodScrollView" customModule="UIExtensions">
@@ -136,7 +160,7 @@
                                             </constraints>
                                         </scrollView>
                                         <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qh3-Pz-Qpq">
-                                            <rect key="frame" x="16" y="11" width="343" height="123"/>
+                                            <rect key="frame" x="16" y="0.0" width="343" height="139"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                             <fontDescription key="fontDescription" name="Noteworthy-Bold" family="Noteworthy" pointSize="24"/>
@@ -148,11 +172,12 @@
                                         <constraint firstItem="gFO-JW-crE" firstAttribute="top" secondItem="kQs-XG-QPP" secondAttribute="bottom" constant="8" symbolic="YES" id="99f-Wj-Yk9"/>
                                         <constraint firstItem="kTS-5Q-5j2" firstAttribute="leading" secondItem="9hk-z4-IxR" secondAttribute="leadingMargin" id="G4s-Zp-f4a"/>
                                         <constraint firstItem="kQs-XG-QPP" firstAttribute="top" secondItem="9hk-z4-IxR" secondAttribute="top" id="HCT-fL-SgZ"/>
-                                        <constraint firstItem="kQs-XG-QPP" firstAttribute="leading" secondItem="9hk-z4-IxR" secondAttribute="leading" constant="5" id="LeT-LU-bEF"/>
+                                        <constraint firstItem="kQs-XG-QPP" firstAttribute="leading" secondItem="9hk-z4-IxR" secondAttribute="leading" constant="16" id="LeT-LU-bEF"/>
                                         <constraint firstItem="kTS-5Q-5j2" firstAttribute="bottom" secondItem="9hk-z4-IxR" secondAttribute="bottomMargin" id="bGH-OO-mEV"/>
                                         <constraint firstItem="gFO-JW-crE" firstAttribute="leading" secondItem="9hk-z4-IxR" secondAttribute="leadingMargin" id="cva-Hf-xMX"/>
+                                        <constraint firstAttribute="trailing" secondItem="be2-Dm-8Un" secondAttribute="trailing" constant="16" id="ddJ-Uh-srR"/>
                                         <constraint firstItem="gFO-JW-crE" firstAttribute="trailing" secondItem="9hk-z4-IxR" secondAttribute="trailingMargin" id="hzb-DB-rVg"/>
-                                        <constraint firstAttribute="trailing" secondItem="kQs-XG-QPP" secondAttribute="trailing" constant="5" id="n5o-EW-Qbt"/>
+                                        <constraint firstItem="be2-Dm-8Un" firstAttribute="leading" secondItem="kQs-XG-QPP" secondAttribute="trailing" constant="5" id="n5o-EW-Qbt"/>
                                         <constraint firstItem="kTS-5Q-5j2" firstAttribute="trailing" secondItem="9hk-z4-IxR" secondAttribute="trailingMargin" id="zrH-Yb-yiA"/>
                                     </constraints>
                                 </tableViewCellContentView>
@@ -1028,7 +1053,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <toolbar key="tableHeaderView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="PVx-Hz-nHg">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                            <rect key="frame" x="0.0" y="-93" width="375" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             <items>
                                 <barButtonItem style="plain" systemItem="flexibleSpace" id="bhO-xk-zoo"/>
