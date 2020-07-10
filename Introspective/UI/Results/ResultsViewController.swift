@@ -360,58 +360,85 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		informationValues.swapAt(fromIndexPath.row, to.row)
 	}
 
-	final override func tableView(
+	// MARK: - TableView Swipe Actions
+
+	public final override func tableView(
 		_ tableView: UITableView,
-		editActionsForRowAt indexPath: IndexPath
-	) -> [UITableViewRowAction]? {
-		if indexPath.section == 0 {
-			return [
-				DependencyInjector.get(UiUtil.self)
-					.tableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
-						self.information.remove(at: indexPath.row)
-						self.informationValues.remove(at: indexPath.row)
-						tableView.deleteRows(at: [indexPath], with: .fade)
-					},
+		leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath
+	) -> UISwipeActionsConfiguration? {
+		nil
+	}
+
+	public final override func tableView(
+		_ tableView: UITableView,
+		trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath
+	) -> UISwipeActionsConfiguration? {
+		guard indexPath.section > 0 else {
+			let actions = [
+				getDeleteInformationAction(at: indexPath),
 			]
+			return UISwipeActionsConfiguration(actions: actions)
 		}
-		guard let managedSample = filteredSamples[indexPath.row] as? CoreDataSample else { return [] }
-		let delete = DependencyInjector.get(UiUtil.self)
-			.tableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
-				let alert = UIAlertController(
-					title: "Are you sure you want to delete this?",
-					message: nil,
-					preferredStyle: .alert
-				)
-				alert
-					.addAction(DependencyInjector.get(UiUtil.self).alertAction(title: "Yes", style: .destructive) { _ in
-						let goBackAfterDelete = self.filteredSamples.count == 1
-						do {
-							let transaction = DependencyInjector.get(Database.self).transaction()
-							try retryOnFail({ try transaction.delete(managedSample) }, maxRetries: 2)
-							try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-							if goBackAfterDelete {
-								self.navigationController?.popViewController(animated: false)
-							} else {
-								let toRemove = self.filteredSamples.remove(at: indexPath.row)
-								self.samples.removeAll(where: { $0 === toRemove })
-								tableView.deleteRows(at: [indexPath], with: .fade)
-								self.recomputeInformation()
-								tableView.reloadData()
-							}
-						} catch {
-							self.log.error("Failed to delete sample: %@", errorInfo(error))
-							self.showError(
-								title: "Failed to delete " + self.filteredSamples[indexPath.row].attributedName
-									.localizedLowercase,
-								error: error
-							)
-						}
-					})
-				alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-				self.present(alert, animated: false, completion: nil)
+		var actions = [UIContextualAction]()
+		if let managedSample = filteredSamples[indexPath.row] as? CoreDataSample {
+			actions.append(getDeleteCoreDataSampleAction(for: managedSample, at: indexPath))
+		}
+		return UISwipeActionsConfiguration(actions: actions)
+	}
+
+	private final func getDeleteInformationAction(at indexPath: IndexPath) -> UIContextualAction {
+		DependencyInjector.get(UiUtil.self).contextualAction(
+			style: .destructive,
+			title: "🗑️"
+		) { action, view, completion in
+			self.information.remove(at: indexPath.row)
+			self.informationValues.remove(at: indexPath.row)
+			self.tableView.deleteRows(at: [indexPath], with: .fade)
+		}
+	}
+
+	private final func getDeleteCoreDataSampleAction(
+		for managedSample: CoreDataSample,
+		at indexPath: IndexPath
+	) -> UIContextualAction {
+		DependencyInjector.get(UiUtil.self).contextualAction(
+			style: .destructive,
+			title: "🗑️"
+		) { action, view, completion in
+			let alert = UIAlertController(
+				title: "Are you sure you want to delete this?",
+				message: nil,
+				preferredStyle: .alert
+			)
+			let yesAction = DependencyInjector.get(UiUtil.self).alertAction(title: "Yes", style: .destructive) { _ in
+				let goBackAfterDelete = self.filteredSamples.count == 1
+				do {
+					let transaction = DependencyInjector.get(Database.self).transaction()
+					try retryOnFail({ try transaction.delete(managedSample) }, maxRetries: 2)
+					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+					if goBackAfterDelete {
+						self.navigationController?.popViewController(animated: false)
+					} else {
+						let toRemove = self.filteredSamples.remove(at: indexPath.row)
+						self.samples.removeAll(where: { $0 === toRemove })
+						self.tableView.deleteRows(at: [indexPath], with: .fade)
+						self.recomputeInformation()
+						self.tableView.reloadData()
+					}
+				} catch {
+					self.log.error("Failed to delete sample: %@", errorInfo(error))
+					self.showError(
+						title: "Failed to delete " + self.filteredSamples[indexPath.row].attributedName
+							.localizedLowercase,
+						error: error
+					)
+				}
 			}
 
-		return [delete]
+			alert.addAction(yesAction)
+			alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+			self.present(alert, animated: false, completion: nil)
+		}
 	}
 
 	// MARK: - Received Notifications
