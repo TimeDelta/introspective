@@ -334,6 +334,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 			chooseSeriesGrouperButton.setTitle("Choose series grouping (optional)", for: .normal)
 			DependencyInjector.get(UiUtil.self).setButton(clearSeriesGrouperButton, enabled: false, hidden: true)
 		}
+		chooseSeriesGrouperButton.accessibilityValue = chooseSeriesGrouperButton.currentTitle
 	}
 
 	private final func pointGrouperSet() {
@@ -360,6 +361,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 				xAxis = nil
 			}
 		}
+		choosePointGrouperButton.accessibilityValue = choosePointGrouperButton.currentTitle
 		pointGrouperWasNil = pointGrouper == nil
 	}
 }
