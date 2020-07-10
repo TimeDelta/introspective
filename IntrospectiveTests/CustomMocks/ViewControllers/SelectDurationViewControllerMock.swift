@@ -43,11 +43,11 @@ class SelectDurationViewControllerMock: UIViewController, SelectDurationViewCont
     }
 
 
-    public var initialDuration: Duration? {
+    public var initialDuration: TimeDuration? {
 		get {	invocations.append(.p_initialDuration_get); return __p_initialDuration ?? optionalGivenGetterValue(.p_initialDuration_get, "SelectDurationViewControllerMock - stub value for initialDuration was not defined") }
 		set {	invocations.append(.p_initialDuration_set(.value(newValue))); __p_initialDuration = newValue }
 	}
-	private var __p_initialDuration: (Duration)?
+	private var __p_initialDuration: (TimeDuration)?
 
 
     public var notificationToSendOnAccept: Notification.Name! {
@@ -64,14 +64,14 @@ class SelectDurationViewControllerMock: UIViewController, SelectDurationViewCont
 
     fileprivate enum MethodType {
         case p_initialDuration_get
-		case p_initialDuration_set(Parameter<Duration?>)
+		case p_initialDuration_set(Parameter<TimeDuration?>)
         case p_notificationToSendOnAccept_get
 		case p_notificationToSendOnAccept_set(Parameter<Notification.Name?>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
             case (.p_initialDuration_get,.p_initialDuration_get): return true
-			case (.p_initialDuration_set(let left),.p_initialDuration_set(let right)): return Parameter<Duration?>.compare(lhs: left, rhs: right, with: matcher)
+			case (.p_initialDuration_set(let left),.p_initialDuration_set(let right)): return Parameter<TimeDuration?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_notificationToSendOnAccept_get,.p_notificationToSendOnAccept_get): return true
 			case (.p_notificationToSendOnAccept_set(let left),.p_notificationToSendOnAccept_set(let right)): return Parameter<Notification.Name?>.compare(lhs: left, rhs: right, with: matcher)
             default: return false
@@ -96,7 +96,7 @@ class SelectDurationViewControllerMock: UIViewController, SelectDurationViewCont
             super.init(products)
         }
 
-        public static func initialDuration(getter defaultValue: Duration?...) -> PropertyStub {
+        public static func initialDuration(getter defaultValue: TimeDuration?...) -> PropertyStub {
             return Given(method: .p_initialDuration_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func notificationToSendOnAccept(getter defaultValue: Notification.Name?...) -> PropertyStub {
@@ -109,7 +109,7 @@ class SelectDurationViewControllerMock: UIViewController, SelectDurationViewCont
         fileprivate var method: MethodType
 
         public static var initialDuration: Verify { return Verify(method: .p_initialDuration_get) }
-		public static func initialDuration(set newValue: Parameter<Duration?>) -> Verify { return Verify(method: .p_initialDuration_set(newValue)) }
+		public static func initialDuration(set newValue: Parameter<TimeDuration?>) -> Verify { return Verify(method: .p_initialDuration_set(newValue)) }
         public static var notificationToSendOnAccept: Verify { return Verify(method: .p_notificationToSendOnAccept_get) }
 		public static func notificationToSendOnAccept(set newValue: Parameter<Notification.Name?>) -> Verify { return Verify(method: .p_notificationToSendOnAccept_set(newValue)) }
     }

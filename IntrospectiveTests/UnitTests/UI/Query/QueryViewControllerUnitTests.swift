@@ -2014,15 +2014,15 @@ final class QueryViewControllerUnitTests: UnitTest {
 	}
 
 	private final func mockDefaultAttributeRestrictionFor(_ sampleType: Sample.Type) -> AttributeRestriction {
-		let expectedRestriction = LessThanDoubleAttributeRestriction(restrictedAttribute: sampleType.defaultDependentAttribute)
+		let expectedRestriction = LessThanDoubleAttributeRestriction(restrictedAttribute: sampleType.defaultIndependentAttribute)
 		Given(
 			mockAttributeRestrictionFactory,
-			.typesFor(.value(sampleType.defaultDependentAttribute), willReturn: [AttributeRestrictionMock.self]))
+			.typesFor(.value(sampleType.defaultIndependentAttribute), willReturn: [AttributeRestrictionMock.self]))
 		Given(
 			mockAttributeRestrictionFactory,
 			.initialize(
 				type: .value(AttributeRestrictionMock.self),
-				forAttribute: .value(sampleType.defaultDependentAttribute),
+				forAttribute: .value(sampleType.defaultIndependentAttribute),
 				willReturn: expectedRestriction))
 		return expectedRestriction
 	}

@@ -33,7 +33,7 @@ final class LessThanOrEqualToDurationAttributeRestrictionUnitTests: UnitTest {
 
 	func test_description_containsValue() {
 		// given
-		let value = Duration(2.days + 3.hours)
+		let value = TimeDuration(2.days + 3.hours)
 		restriction.value = value
 
 		// when
@@ -63,11 +63,11 @@ final class LessThanOrEqualToDurationAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenValueAttribute_valueOf_returnsCorrectDuration() {
 		// given
-		let expectedValue = Duration(15)
+		let expectedValue = TimeDuration(15)
 		restriction.value = expectedValue
 
 		// when
-		let actualValue = try! restriction.value(of: Me.valueAttribute) as! Duration
+		let actualValue = try! restriction.value(of: Me.valueAttribute) as! TimeDuration
 
 		// then
 		XCTAssertEqual(actualValue, expectedValue)
@@ -77,7 +77,7 @@ final class LessThanOrEqualToDurationAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenUnknownAttribute_setAttributeTo_throwsUnknownAttributeError() {
 		// when
-		XCTAssertThrowsError(try restriction.set(attribute: Me.restrictedAttribute, to: Duration(15))) { error in
+		XCTAssertThrowsError(try restriction.set(attribute: Me.restrictedAttribute, to: TimeDuration(15))) { error in
 			// then
 			XCTAssert(error is UnknownAttributeError)
 		}
@@ -93,7 +93,7 @@ final class LessThanOrEqualToDurationAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenValueAttributeAndValidValue_setAttributeTo_setsCorrectValue() {
 		// given
-		let expectedValue = Duration(15)
+		let expectedValue = TimeDuration(15)
 
 		// when
 		try! restriction.set(attribute: Me.valueAttribute, to: expectedValue)
@@ -119,7 +119,7 @@ final class LessThanOrEqualToDurationAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleWithValueLessThanRestrictionValue_samplePasses_returnsTrue() {
 		// given
 		let mockSample = SampleMock()
-		let restrictionValue = Duration(15)
+		let restrictionValue = TimeDuration(15)
 		restriction.value = restrictionValue
 		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: restrictionValue - 1))
 
@@ -133,7 +133,7 @@ final class LessThanOrEqualToDurationAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleWithValueEqualToRestrictionValue_samplePasses_returnsTrue() {
 		// given
 		let mockSample = SampleMock()
-		let restrictionValue = Duration(15)
+		let restrictionValue = TimeDuration(15)
 		restriction.value = restrictionValue
 		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: restrictionValue))
 
@@ -147,7 +147,7 @@ final class LessThanOrEqualToDurationAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleWithValueGreaterThanRestrictionValue_samplePasses_returnsFalse() {
 		// given
 		let mockSample = SampleMock()
-		let restrictionValue = Duration(15)
+		let restrictionValue = TimeDuration(15)
 		restriction.value = restrictionValue
 		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: restrictionValue + 1))
 

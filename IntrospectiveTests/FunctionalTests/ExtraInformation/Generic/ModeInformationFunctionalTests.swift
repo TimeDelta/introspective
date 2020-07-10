@@ -82,14 +82,14 @@ class ModeInformationFunctionalTests: FunctionalTest {
 
 	func testGivenDurationAttribute_compute_returnsCorrectValue() throws {
 		// given
-		let modeValue = Duration([.hour: 1])
+		let modeValue = TimeDuration([.hour: 1])
 		let attribute = DurationAttribute(name: "name")
 		let samples = SampleCreatorTestUtil.createSamples(
 			withValues: [
 				modeValue,
-				modeValue - Duration(1.minutes),
+				modeValue - TimeDuration(1.minutes),
 				modeValue,
-				modeValue + Duration(1.minutes)],
+				modeValue + TimeDuration(1.minutes)],
 			for: attribute)
 		let information = ModeInformation(attribute)
 
@@ -168,14 +168,14 @@ class ModeInformationFunctionalTests: FunctionalTest {
 
 	func testGivenDurationAttribute_computeGraphable_returnsCorrectValue() throws {
 		// given
-		let modeValue = Duration([.hour: 1])
+		let modeValue = TimeDuration([.hour: 1])
 		let attribute = DurationAttribute(name: "name")
 		let samples = SampleCreatorTestUtil.createSamples(
 			withValues: [
 				modeValue,
-				modeValue - Duration(1.minutes),
+				modeValue - TimeDuration(1.minutes),
 				modeValue,
-				modeValue + Duration(1.minutes)],
+				modeValue + TimeDuration(1.minutes)],
 			for: attribute)
 		let information = ModeInformation(attribute)
 

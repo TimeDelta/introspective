@@ -47,7 +47,7 @@ final class ATrackerActivityImporterFunctionalTests: ImporterTest {
 		startDate: CalendarUtilImpl().date(from: startDate3Text, format: dateFormat)!,
 		note: "grnjaihfijopsa jkof dsjak\nfhjds ahuifp\newhui")
 
-	private static let headerRow = "Task name, Task description, Start time, End time, Duration,Duration in hours, Note, Tag"
+	private static let headerRow = "Task name, Task description, Start time, End time, TimeDuration,TimeDuration in hours, Note, Tag"
 	private static let activityRow2 = "\"\(activityInfo2.name)\",\"\(activityInfo2.description ?? "")\",\"\(startDate2Text)\",\"\(endDate2Text)\",\"00:42:50\",0.6973508,\"\(activityInfo2.note ?? "")\",\"\(activityInfo2.tags?[0] ?? "")\""
 	public static let validInput = inputFor([activityInfo1, activityInfo2, activityInfo3])
 

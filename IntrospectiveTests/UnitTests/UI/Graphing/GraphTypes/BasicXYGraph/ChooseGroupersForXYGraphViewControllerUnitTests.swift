@@ -794,6 +794,7 @@ final class ChooseGroupersForXYGraphViewControllerUnitTests: UnitTest {
 		static var attributes: [Attribute] = []
 		static var defaultDependentAttribute: Attribute = CommonSampleAttributes.endDate
 		static var defaultIndependentAttribute: Attribute = CommonSampleAttributes.endDate
+		static var dateAttributes = [DateType: DateAttribute]()
 		let attributedName: String = ""
 		let attributes: [Attribute] = []
 		let description: String = ""

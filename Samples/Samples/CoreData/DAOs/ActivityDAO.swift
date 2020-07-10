@@ -274,7 +274,7 @@ public class ActivityDAOImpl: ActivityDAO {
 	public final func autoIgnoreIfAppropriate(_ activity: Activity, end: Date = Date()) -> Bool {
 		if DependencyInjector.get(Settings.self).autoIgnoreEnabled {
 			let minSeconds = DependencyInjector.get(Settings.self).autoIgnoreSeconds
-			if Duration(start: activity.start, end: end).inUnit(.second) < Double(minSeconds) {
+			if TimeDuration(start: activity.start, end: end).inUnit(.second) < Double(minSeconds) {
 				do {
 					let transaction = DependencyInjector.get(Database.self).transaction()
 					// can't really explain this to the user

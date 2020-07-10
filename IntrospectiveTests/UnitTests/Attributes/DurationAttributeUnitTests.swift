@@ -55,7 +55,7 @@ final class DurationAttributeUnitTests: UnitTest {
 
 	func testGivenCorrectValueType_isValid_returnsTrue() {
 		// given
-		let value = Duration(5.days)
+		let value = TimeDuration(5.days)
 		useOptionalAttribute()
 
 		// when
@@ -104,7 +104,7 @@ final class DurationAttributeUnitTests: UnitTest {
 	func testGivenDuration_convertToDisplayableString_returnsCorrectValue() throws {
 		// given
 		useRequiredAttribute()
-		let value = Duration(1.days + 2.hours)
+		let value = TimeDuration(1.days + 2.hours)
 
 		// when
 		let displayableString = try attribute.convertToDisplayableString(from: value)

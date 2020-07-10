@@ -11,15 +11,15 @@ import Foundation
 import Attributes
 import Common
 
-public final class GreaterThanDurationAttributeRestriction: TypedGreaterThanAttributeRestrictionBase<Duration> {
+public final class GreaterThanDurationAttributeRestriction: TypedGreaterThanAttributeRestrictionBase<TimeDuration> {
 	private typealias Me = GreaterThanDurationAttributeRestriction
-	public static let valueAttribute = DurationAttribute(name: "Target Duration", pluralName: "Target Durations")
+	public static let valueAttribute = DurationAttribute(name: "Target TimeDuration", pluralName: "Target Durations")
 
 	public required convenience init(restrictedAttribute: Attribute) {
-		self.init(restrictedAttribute: restrictedAttribute, value: Duration(0))
+		self.init(restrictedAttribute: restrictedAttribute, value: TimeDuration(0))
 	}
 
-	public init(restrictedAttribute: Attribute, value: Duration = Duration(0)) {
+	public init(restrictedAttribute: Attribute, value: TimeDuration = TimeDuration(0)) {
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
 

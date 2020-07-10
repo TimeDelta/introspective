@@ -185,7 +185,7 @@ final class QueryScreenUITests: UITest {
 		app.tables.buttons["Done"].tap()
 
 		// then
-		XCTAssert(app.tables.staticTexts["Duration ≤ 0:00:00"].exists)
+		XCTAssert(app.tables.staticTexts["TimeDuration ≤ 0:00:00"].exists)
 	}
 
 	// MARK: - Deleting Parts
@@ -200,7 +200,7 @@ final class QueryScreenUITests: UITest {
 		app.tables.buttons["🗑️"].tap()
 
 		// then
-		XCTAssert(app.tables.staticTexts["Duration ≤ 0:00:00"].exists)
+		XCTAssert(app.tables.staticTexts["TimeDuration ≤ 0:00:00"].exists)
 	}
 
 	// MARK: - Other

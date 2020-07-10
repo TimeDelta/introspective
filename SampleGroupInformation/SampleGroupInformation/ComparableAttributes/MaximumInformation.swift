@@ -40,8 +40,8 @@ public final class MaximumInformation<AttributeType: Comparable>: AnyInformation
 		if filteredSamples.isEmpty { throw GenericDisplayableError(title: "No samples matching filter") }
 		let value = try DependencyInjector.get(NumericSampleUtil.self)
 			.max(for: attribute, over: filteredSamples, as: AttributeType.self)
-		if value is Duration {
-			return String((value as! Duration).inUnit(.hour))
+		if value is TimeDuration {
+			return String((value as! TimeDuration).inUnit(.hour))
 		}
 		return String(describing: value)
 	}

@@ -16,10 +16,13 @@ public final class AnySample: Sample {
 	public static let defaultDependentAttribute: Attribute = CommonSampleAttributes.timestamp
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.timestamp
 	public static let attributes: [Attribute] = []
+	public static let dateAttributes = [DateType: DateAttribute]()
 
 	private final var _dates: [DateType: Date] = [DateType: Date]() {
 		didSet { updateAttributeValuesWithDates() }
 	}
+
+	private final var _dateAttributes = [DateType: DateAttribute]()
 
 	public final var attributedName: String
 	public final var description: String
@@ -78,12 +81,24 @@ public final class AnySample: Sample {
 	private final func updateAttributeValuesWithDates() {
 		if isAttribute(CommonSampleAttributes.startDate) {
 			attributeValues[CommonSampleAttributes.startDate.name] = _dates[.start]
+			_dateAttributes[.start] = CommonSampleAttributes.startDate
+		} else if isAttribute(CommonSampleAttributes.healthKitStartDate) {
+			attributeValues[CommonSampleAttributes.healthKitStartDate.name] = _dates[.start]
+			_dateAttributes[.start] = CommonSampleAttributes.healthKitStartDate
 		}
 		if isAttribute(CommonSampleAttributes.timestamp) {
 			attributeValues[CommonSampleAttributes.timestamp.name] = _dates[.start]
+			_dateAttributes[.start] = CommonSampleAttributes.timestamp
+		} else if isAttribute(CommonSampleAttributes.healthKitStartDate) {
+			attributeValues[CommonSampleAttributes.healthKitStartDate.name] = _dates[.start]
+			_dateAttributes[.start] = CommonSampleAttributes.healthKitTimestamp
 		}
 		if isAttribute(CommonSampleAttributes.endDate) {
 			attributeValues[CommonSampleAttributes.endDate.name] = _dates[.end]
+			_dateAttributes[.end] = CommonSampleAttributes.endDate
+		} else if isAttribute(CommonSampleAttributes.healthKitEndDate) {
+			attributeValues[CommonSampleAttributes.healthKitEndDate.name] = _dates[.start]
+			_dateAttributes[.start] = CommonSampleAttributes.healthKitEndDate
 		}
 	}
 

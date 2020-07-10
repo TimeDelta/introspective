@@ -466,7 +466,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 	}
 
 	private final func setUpActivityImportFileContents(_ activityNames: [String]) {
-		var input = "Task name, Task description, Start time, End time, Duration,Duration in hours, Note, Tag"
+		var input = "Task name, Task description, Start time, End time, TimeDuration,TimeDuration in hours, Note, Tag"
 		for name in activityNames {
 			input += "\n\"\(name)\",\"\",\"2018-02-07 21:17\",\"2018-02-07 23:14\",\"00:41:50\",0.6973508,\"\",\"\""
 		}

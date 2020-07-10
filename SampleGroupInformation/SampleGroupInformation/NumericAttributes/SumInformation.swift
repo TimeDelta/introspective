@@ -54,7 +54,7 @@ public final class SumInformation: AnyInformation {
 			return try getSumOfDosageAttribute(filteredSamples)
 		}
 		if attribute is DurationAttribute {
-			let filteredSamples = try filterSamples(samples, as: Duration.self)
+			let filteredSamples = try filterSamples(samples, as: TimeDuration.self)
 			if filteredSamples.isEmpty { return "No samples match filter" }
 			let total = try getSumOfDurationAttribute(filteredSamples)
 			let numHours = total.inUnit(.hour)
@@ -98,7 +98,7 @@ public final class SumInformation: AnyInformation {
 			return try getSumOfDosageAttribute(filteredSamples)
 		}
 		if attribute is DurationAttribute {
-			let filteredSamples = try filterSamples(samples, as: Duration.self)
+			let filteredSamples = try filterSamples(samples, as: TimeDuration.self)
 			if filteredSamples.isEmpty { throw GenericDisplayableError(title: "No samples match filter") }
 			return String(try getSumOfDurationAttribute(filteredSamples).inUnit(.hour))
 		}
@@ -149,12 +149,12 @@ public final class SumInformation: AnyInformation {
 		return totalDosage
 	}
 
-	// MARK: - Duration Helper Functions
+	// MARK: - TimeDuration Helper Functions
 
-	private final func getSumOfDurationAttribute(_ filteredSamples: [Sample]) throws -> Duration {
-		var totalDuration = Duration(0)
+	private final func getSumOfDurationAttribute(_ filteredSamples: [Sample]) throws -> TimeDuration {
+		var totalDuration = TimeDuration(0)
 		for sample in filteredSamples {
-			if let duration = try sample.value(of: attribute) as? Duration {
+			if let duration = try sample.value(of: attribute) as? TimeDuration {
 				totalDuration += duration
 			}
 		}

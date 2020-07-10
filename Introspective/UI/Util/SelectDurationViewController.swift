@@ -12,7 +12,7 @@ import Common
 import UIExtensions
 
 public protocol SelectDurationViewController: UIViewController {
-	var initialDuration: Duration? { get set }
+	var initialDuration: TimeDuration? { get set }
 	var notificationToSendOnAccept: Notification.Name! { get set }
 }
 
@@ -26,7 +26,7 @@ public class SelectDurationViewControllerImpl: UIViewController, SelectDurationV
 
 	// MARK: - Instance Variables
 
-	public final var initialDuration: Duration?
+	public final var initialDuration: TimeDuration?
 	public final var notificationToSendOnAccept: Notification.Name!
 
 	// MARK: - UIViewController Overrides
@@ -67,7 +67,7 @@ public class SelectDurationViewControllerImpl: UIViewController, SelectDurationV
 		if let seconds = Int(secondsTextField.text ?? "0") {
 			units[.second] = seconds
 		}
-		let duration = Duration(units)
+		let duration = TimeDuration(units)
 		syncPost(
 			notificationToSendOnAccept,
 			object: self,

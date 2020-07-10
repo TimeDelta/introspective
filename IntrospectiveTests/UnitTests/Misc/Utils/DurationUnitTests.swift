@@ -47,10 +47,10 @@ final class DurationUnitTests: UnitTest {
 		]
 
 		// when
-		let duration = Duration(calendarComponents)
+		let duration = TimeDuration(calendarComponents)
 
 		// then
-		let expectedDuration = Duration(dateComponents)
+		let expectedDuration = TimeDuration(dateComponents)
 		XCTAssertEqual(duration, expectedDuration)
 	}
 
@@ -61,10 +61,10 @@ final class DurationUnitTests: UnitTest {
 		let endDate = startDate + difference
 
 		// when
-		let duration = Duration(start: startDate, end: endDate)
+		let duration = TimeDuration(start: startDate, end: endDate)
 
 		// then
-		let expectedDuration = Duration(difference)
+		let expectedDuration = TimeDuration(difference)
 		XCTAssertEqual(duration, expectedDuration)
 	}
 
@@ -78,7 +78,7 @@ final class DurationUnitTests: UnitTest {
 			region: Region(calendar: Calendars.gregorian, zone: Zones.americaNewYork, locale: Locales.englishUnitedStates))
 
 		// when
-		let duration = Duration(start: startDate.date, end: endDate.date)
+		let duration = TimeDuration(start: startDate.date, end: endDate.date)
 
 		// then
 		assertThat(duration.inUnit(.hour), equalTo(3))
@@ -90,10 +90,10 @@ final class DurationUnitTests: UnitTest {
 		let calendarComponents: [Calendar.Component: Int] = [.calendar: 123, .day: numDays]
 
 		// when
-		let duration = Duration(calendarComponents)
+		let duration = TimeDuration(calendarComponents)
 
 		// then
-		let expectedDuration = Duration(numDays.days)
+		let expectedDuration = TimeDuration(numDays.days)
 		XCTAssertEqual(duration, expectedDuration)
 	}
 
@@ -105,7 +105,7 @@ final class DurationUnitTests: UnitTest {
 		let numHours = 2
 		let numMinutes = 3
 		let numSeconds = 4
-		let duration = Duration(numDays.days + numHours.hours + numMinutes.minutes + numSeconds.seconds)
+		let duration = TimeDuration(numDays.days + numHours.hours + numMinutes.minutes + numSeconds.seconds)
 
 		// when
 		let units = duration.units(Set([.day, .hour, .minute, .second]))
@@ -122,7 +122,7 @@ final class DurationUnitTests: UnitTest {
 	func testGivenLessThan10Seconds_description_returnsCorrectValue() {
 		// given
 		let numSeconds = 9
-		let duration = Duration(numSeconds.seconds)
+		let duration = TimeDuration(numSeconds.seconds)
 
 		// when
 		let description = duration.description
@@ -134,7 +134,7 @@ final class DurationUnitTests: UnitTest {
 	func testGiven10Seconds_description_returnsCorrectValue() {
 		// given
 		let numSeconds = 10
-		let duration = Duration(numSeconds.seconds)
+		let duration = TimeDuration(numSeconds.seconds)
 
 		// when
 		let description = duration.description
@@ -146,7 +146,7 @@ final class DurationUnitTests: UnitTest {
 	func testGivenLessThan1MinuteAndMoreThan10Seconds_description_returnsCorrectValue() {
 		// given
 		let numSeconds = 59
-		let duration = Duration(numSeconds.seconds)
+		let duration = TimeDuration(numSeconds.seconds)
 
 		// when
 		let description = duration.description
@@ -158,7 +158,7 @@ final class DurationUnitTests: UnitTest {
 	func testGivenLessThan10Minutes_description_returnsCorrectValue() {
 		// given
 		let numMinutes = 9
-		let duration = Duration(numMinutes.minutes)
+		let duration = TimeDuration(numMinutes.minutes)
 
 		// when
 		let description = duration.description
@@ -170,7 +170,7 @@ final class DurationUnitTests: UnitTest {
 	func testGiven10Minutes_description_returnsCorrectValue() {
 		// given
 		let numMinutes = 10
-		let duration = Duration(numMinutes.minutes)
+		let duration = TimeDuration(numMinutes.minutes)
 
 		// when
 		let description = duration.description
@@ -182,7 +182,7 @@ final class DurationUnitTests: UnitTest {
 	func testGivenLessThan1HourAndMoreThan10Minutes_description_returnsCorrectValue() {
 		// given
 		let numMinutes = 59
-		let duration = Duration(numMinutes.minutes)
+		let duration = TimeDuration(numMinutes.minutes)
 
 		// when
 		let description = duration.description
@@ -194,7 +194,7 @@ final class DurationUnitTests: UnitTest {
 	func testGivenLessThan10Hours_description_returnsCorrectValue() {
 		// given
 		let numHours = 9
-		let duration = Duration(numHours.hours)
+		let duration = TimeDuration(numHours.hours)
 
 		// when
 		let description = duration.description
@@ -206,7 +206,7 @@ final class DurationUnitTests: UnitTest {
 	func testGiven10Hours_description_returnsCorrectValue() {
 		// given
 		let numHours = 10
-		let duration = Duration(numHours.hours)
+		let duration = TimeDuration(numHours.hours)
 
 		// when
 		let description = duration.description
@@ -218,7 +218,7 @@ final class DurationUnitTests: UnitTest {
 	func testGivenLessThan1DayAndMoreThan10Hours_description_returnsCorrectValue() {
 		// given
 		let numHours = 23
-		let duration = Duration(numHours.hours)
+		let duration = TimeDuration(numHours.hours)
 
 		// when
 		let description = duration.description
@@ -230,7 +230,7 @@ final class DurationUnitTests: UnitTest {
 	func testGivenMoreThan1Day_description_returnsCorrectValue() {
 		// given
 		let numDays = 2
-		let duration = Duration(numDays.days)
+		let duration = TimeDuration(numDays.days)
 
 		// when
 		let description = duration.description
@@ -246,7 +246,7 @@ final class DurationUnitTests: UnitTest {
 		let numHours = 10
 		let numMinutes = 11
 		let numSeconds = 12
-		let duration = Duration(numWeeks.weeks + numDays.days + numHours.hours + numMinutes.minutes + numSeconds.seconds)
+		let duration = TimeDuration(numWeeks.weeks + numDays.days + numHours.hours + numMinutes.minutes + numSeconds.seconds)
 
 		// when
 		let description = duration.description
@@ -265,8 +265,8 @@ final class DurationUnitTests: UnitTest {
 
 	func testGiven4MinutesComparedTo5Minutes_lessThan_returnsTrue() {
 		// given
-		let fourMinutes = Duration(4.minutes)
-		let fiveMinutes = Duration(5.minutes)
+		let fourMinutes = TimeDuration(4.minutes)
+		let fiveMinutes = TimeDuration(5.minutes)
 
 		// when
 		let lessThan = fourMinutes < fiveMinutes
@@ -277,8 +277,8 @@ final class DurationUnitTests: UnitTest {
 
 	func testGiven5MinutesComparedTo4Minutes_lessThan_returnsFalse() {
 		// given
-		let fourMinutes = Duration(4.minutes)
-		let fiveMinutes = Duration(5.minutes)
+		let fourMinutes = TimeDuration(4.minutes)
+		let fiveMinutes = TimeDuration(5.minutes)
 
 		// when
 		let lessThan = fiveMinutes < fourMinutes
@@ -289,7 +289,7 @@ final class DurationUnitTests: UnitTest {
 
 	func testGiven4MinutesComparedTo4Minutes_lessThan_returnsFalse() {
 		// given
-		let fourMinutes = Duration(4.minutes)
+		let fourMinutes = TimeDuration(4.minutes)
 
 		// when
 		let lessThan = fourMinutes < fourMinutes
@@ -300,8 +300,8 @@ final class DurationUnitTests: UnitTest {
 
 	func testGiven1MinuteComparedTo60Seconds_lessThan_returnsFalse() {
 		// given
-		let oneMinute = Duration(1.minutes)
-		let sixtySeconds = Duration(60.seconds)
+		let oneMinute = TimeDuration(1.minutes)
+		let sixtySeconds = TimeDuration(60.seconds)
 
 		// when
 		let lessThan = oneMinute < sixtySeconds
@@ -312,8 +312,8 @@ final class DurationUnitTests: UnitTest {
 
 	func testGiven59SecondsComparedTo1Minute_lessThan_returnsTrue() {
 		// given
-		let oneMinute = Duration(1.minutes)
-		let fiftyNineSeconds = Duration(59.seconds)
+		let oneMinute = TimeDuration(1.minutes)
+		let fiftyNineSeconds = TimeDuration(59.seconds)
 
 		// when
 		let lessThan = fiftyNineSeconds < oneMinute
@@ -326,54 +326,54 @@ final class DurationUnitTests: UnitTest {
 
 	func testGiven10SecondsPlus50Seconds_plus_returnsOneMinute() {
 		// given
-		let tenSeconds = Duration(10.seconds)
+		let tenSeconds = TimeDuration(10.seconds)
 
 		// when
-		let sum = tenSeconds + Duration(50.seconds)
+		let sum = tenSeconds + TimeDuration(50.seconds)
 
 		// then
-		XCTAssertEqual(sum, Duration(1.minutes))
+		XCTAssertEqual(sum, TimeDuration(1.minutes))
 	}
 
 	func testGiven10SecondsPlus50SecondsAsDateComponents_plus_returnsOneMinute() {
 		// given
-		let tenSeconds = Duration(10.seconds)
+		let tenSeconds = TimeDuration(10.seconds)
 
 		// when
 		let sum = tenSeconds + 50.seconds
 
 		// then
-		XCTAssertEqual(sum, Duration(1.minutes))
+		XCTAssertEqual(sum, TimeDuration(1.minutes))
 	}
 
 	func testGiven23SecondsPlus1AsInt_plus_returns24Seconds() {
 		// given
-		let twentyThreeSeconds = Duration(23.seconds)
+		let twentyThreeSeconds = TimeDuration(23.seconds)
 
 		// when
 		let result = twentyThreeSeconds + 1
 
 		// then
-		let expectedDuration = Duration(24.seconds)
+		let expectedDuration = TimeDuration(24.seconds)
 		XCTAssertEqual(result, expectedDuration)
 	}
 
 	func testGiven23SecondsPlus1AsDouble_plus_returns24Seconds() {
 		// given
-		let twentyThreeSeconds = Duration(23.seconds)
+		let twentyThreeSeconds = TimeDuration(23.seconds)
 
 		// when
 		let result = twentyThreeSeconds + 1.0
 
 		// then
-		let expectedDuration = Duration(24.seconds)
+		let expectedDuration = TimeDuration(24.seconds)
 		XCTAssertEqual(result, expectedDuration)
 	}
 
 	func testGivenDatePlusDuration_plus_returnsCorrectValue() {
 		// given
 		let date = Date()
-		let duration = Duration(1.days)
+		let duration = TimeDuration(1.days)
 
 		// when
 		let addedDate = date + duration
@@ -386,47 +386,47 @@ final class DurationUnitTests: UnitTest {
 
 	func testGiven10SecondsPlus50Seconds_plusEquals_assignsOneMinute() {
 		// given
-		var duration = Duration(10.seconds)
+		var duration = TimeDuration(10.seconds)
 
 		// when
-		duration += Duration(50.seconds)
+		duration += TimeDuration(50.seconds)
 
 		// then
-		XCTAssertEqual(duration, Duration(1.minutes))
+		XCTAssertEqual(duration, TimeDuration(1.minutes))
 	}
 
 	func testGiven10SecondsPlus50SecondsAsDateComponents_plusEquals_assignsOneMinute() {
 		// given
-		var duration = Duration(10.seconds)
+		var duration = TimeDuration(10.seconds)
 
 		// when
 		duration += 50.seconds
 
 		// then
-		XCTAssertEqual(duration, Duration(1.minutes))
+		XCTAssertEqual(duration, TimeDuration(1.minutes))
 	}
 
 	func testGiven23SecondsPlus1AsInt_plusEquals_assigns24Seconds() {
 		// given
-		var duration = Duration(23.seconds)
+		var duration = TimeDuration(23.seconds)
 
 		// when
 		duration += 1
 
 		// then
-		let expectedDuration = Duration(24.seconds)
+		let expectedDuration = TimeDuration(24.seconds)
 		XCTAssertEqual(duration, expectedDuration)
 	}
 
 	func testGiven23SecondsMinus1AsDouble_minusEquals_assigns24Seconds() {
 		// given
-		var duration = Duration(23.seconds)
+		var duration = TimeDuration(23.seconds)
 
 		// when
 		duration += 1.0
 
 		// then
-		let expectedDuration = Duration(24.seconds)
+		let expectedDuration = TimeDuration(24.seconds)
 		XCTAssertEqual(duration, expectedDuration)
 	}
 
@@ -434,54 +434,54 @@ final class DurationUnitTests: UnitTest {
 
 	func testGiven5DaysMinus24Hours_minus_returns4Days() {
 		// given
-		let fiveDays = Duration(5.days)
+		let fiveDays = TimeDuration(5.days)
 
 		// when
-		let result = fiveDays - Duration(24.hours)
+		let result = fiveDays - TimeDuration(24.hours)
 
 		// then
-		XCTAssertEqual(result, Duration(4.days))
+		XCTAssertEqual(result, TimeDuration(4.days))
 	}
 
 	func testGiven5DaysMinus24HoursAsDateComponents_minus_returns4Days() {
 		// given
-		let fiveDays = Duration(5.days)
+		let fiveDays = TimeDuration(5.days)
 
 		// when
 		let result = fiveDays - 24.hours
 
 		// then
-		XCTAssertEqual(result, Duration(4.days))
+		XCTAssertEqual(result, TimeDuration(4.days))
 	}
 
 	func testGiven23SecondsMinus1AsInt_minus_returns22Seconds() {
 		// given
-		let twentyThreeSeconds = Duration(23.seconds)
+		let twentyThreeSeconds = TimeDuration(23.seconds)
 
 		// when
 		let result = twentyThreeSeconds - 1
 
 		// then
-		let expectedDuration = Duration(22.seconds)
+		let expectedDuration = TimeDuration(22.seconds)
 		XCTAssertEqual(result, expectedDuration)
 	}
 
 	func testGiven23SecondsMinus1AsDouble_minus_returns22Seconds() {
 		// given
-		let twentyThreeSeconds = Duration(23.seconds)
+		let twentyThreeSeconds = TimeDuration(23.seconds)
 
 		// when
 		let result = twentyThreeSeconds - 1.0
 
 		// then
-		let expectedDuration = Duration(22.seconds)
+		let expectedDuration = TimeDuration(22.seconds)
 		XCTAssertEqual(result, expectedDuration)
 	}
 
 	func testGivenDateMinusDuration_minus_returnsCorrectValue() {
 		// given
 		let date = Date()
-		let duration = Duration(1.days)
+		let duration = TimeDuration(1.days)
 
 		// when
 		let addedDate = date - duration
@@ -494,47 +494,47 @@ final class DurationUnitTests: UnitTest {
 
 	func testGiven5DaysMinus24Hours_minusEquals_assigns4Days() {
 		// given
-		var duration = Duration(5.days)
+		var duration = TimeDuration(5.days)
 
 		// when
-		duration -= Duration(24.hours)
+		duration -= TimeDuration(24.hours)
 
 		// then
-		XCTAssertEqual(duration, Duration(4.days))
+		XCTAssertEqual(duration, TimeDuration(4.days))
 	}
 
 	func testGiven5DaysMinus24HoursAsDateComponents_minusEquals_assigns4Days() {
 		// given
-		var duration = Duration(5.days)
+		var duration = TimeDuration(5.days)
 
 		// when
 		duration -= 24.hours
 
 		// then
-		XCTAssertEqual(duration, Duration(4.days))
+		XCTAssertEqual(duration, TimeDuration(4.days))
 	}
 
 	func testGiven23SecondsMinus1AsInt_minusEquals_assigns22Seconds() {
 		// given
-		var duration = Duration(23.seconds)
+		var duration = TimeDuration(23.seconds)
 
 		// when
 		duration -= 1
 
 		// then
-		let expectedDuration = Duration(22.seconds)
+		let expectedDuration = TimeDuration(22.seconds)
 		XCTAssertEqual(duration, expectedDuration)
 	}
 
 	func testGiven23SecondsMinus1AsDouble_minusEquals_assigns22Seconds() {
 		// given
-		var duration = Duration(23.seconds)
+		var duration = TimeDuration(23.seconds)
 
 		// when
 		duration -= 1.0
 
 		// then
-		let expectedDuration = Duration(22.seconds)
+		let expectedDuration = TimeDuration(22.seconds)
 		XCTAssertEqual(duration, expectedDuration)
 	}
 
@@ -542,29 +542,29 @@ final class DurationUnitTests: UnitTest {
 
 	func testGiven6MinutesTimes4AsInt_multiply_returns24Minutes() {
 		// given
-		let sixMinutes = Duration(6.minutes)
+		let sixMinutes = TimeDuration(6.minutes)
 
 		// when
 		let result = sixMinutes * 4
 
 		// then
-		XCTAssertEqual(result, Duration(24.minutes))
+		XCTAssertEqual(result, TimeDuration(24.minutes))
 	}
 
 	func testGiven6MinutesTimes4AsDouble_multiply_returns24Minutes() {
 		// given
-		let sixMinutes = Duration(6.minutes)
+		let sixMinutes = TimeDuration(6.minutes)
 
 		// when
 		let result = sixMinutes * 4.0
 
 		// then
-		XCTAssertEqual(result, Duration(24.minutes))
+		XCTAssertEqual(result, TimeDuration(24.minutes))
 	}
 
 	func testCommutativeProperty_multiplyByInt() {
 		// given
-		let sixMinutes = Duration(6.minutes)
+		let sixMinutes = TimeDuration(6.minutes)
 
 		// when
 		let order1 = sixMinutes * 2
@@ -576,7 +576,7 @@ final class DurationUnitTests: UnitTest {
 
 	func testCommutativeProperty_multiplyByDouble() {
 		// given
-		let sixMinutes = Duration(6.minutes)
+		let sixMinutes = TimeDuration(6.minutes)
 
 		// when
 		let order1 = sixMinutes * 2.0
@@ -590,32 +590,32 @@ final class DurationUnitTests: UnitTest {
 
 	func testGiven6MinutesTimes4AsInt_multiplyEquals_assigns24Minutes() {
 		// given
-		var duration = Duration(6.minutes)
+		var duration = TimeDuration(6.minutes)
 
 		// when
 		duration *= 4
 
 		// then
-		XCTAssertEqual(duration, Duration(24.minutes))
+		XCTAssertEqual(duration, TimeDuration(24.minutes))
 	}
 
 	func testGiven6MinutesTimes4AsDouble_multiplyEquals_assigns24Minutes() {
 		// given
-		var duration = Duration(6.minutes)
+		var duration = TimeDuration(6.minutes)
 
 		// when
 		duration *= 4.0
 
 		// then
-		XCTAssertEqual(duration, Duration(24.minutes))
+		XCTAssertEqual(duration, TimeDuration(24.minutes))
 	}
 
 	// MARK: - /
 
 	func testGiven10DaysDividedBy5Days_divided_returns2() {
 		// given
-		let tenDays = Duration(10.days)
-		let fiveDays = Duration(5.days)
+		let tenDays = TimeDuration(10.days)
+		let fiveDays = TimeDuration(5.days)
 
 		// when
 		let result = tenDays / fiveDays
@@ -626,7 +626,7 @@ final class DurationUnitTests: UnitTest {
 
 	func testGiven10DaysDividedBy5DaysAsDateComponents_divided_returns2() {
 		// given
-		let tenDays = Duration(10.days)
+		let tenDays = TimeDuration(10.days)
 
 		// when
 		let result = tenDays / 5.days
@@ -637,55 +637,55 @@ final class DurationUnitTests: UnitTest {
 
 	func testGiven10DaysDividedBy2AsInt_divided_returns5Days() {
 		// given
-		let tenDays = Duration(10.days)
+		let tenDays = TimeDuration(10.days)
 
 		// when
 		let result = tenDays / 2
 
 		// then
-		XCTAssertEqual(result, Duration(5.days))
+		XCTAssertEqual(result, TimeDuration(5.days))
 	}
 
 	func testGiven10DaysDividedBy2AsDouble_divided_returns5Days() {
 		// given
-		let tenDays = Duration(10.days)
+		let tenDays = TimeDuration(10.days)
 
 		// when
 		let result = tenDays / 2.0
 
 		// then
-		XCTAssertEqual(result, Duration(5.days))
+		XCTAssertEqual(result, TimeDuration(5.days))
 	}
 
 	// MARK: - /=
 
 	func testGiven10DaysDividedBy2AsInt_dividedEquals_assigns5Days() {
 		// given
-		var duration = Duration(10.days)
+		var duration = TimeDuration(10.days)
 
 		// when
 		duration /= 2
 
 		// then
-		XCTAssertEqual(duration, Duration(5.days))
+		XCTAssertEqual(duration, TimeDuration(5.days))
 	}
 
 	func testGiven10DaysDividedBy2AsDouble_dividedEquals_assigns5Days() {
 		// given
-		var duration = Duration(10.days)
+		var duration = TimeDuration(10.days)
 
 		// when
 		duration /= 2.0
 
 		// then
-		XCTAssertEqual(duration, Duration(5.days))
+		XCTAssertEqual(duration, TimeDuration(5.days))
 	}
 
 	// MARK: - inUnit()
 
 	func testGivenSeconds_inUnit_returnsCorrectValue() {
 		// given
-		let duration = Duration(10.seconds)
+		let duration = TimeDuration(10.seconds)
 
 		// when
 		let valueInHours = duration.inUnit(.second)
@@ -696,7 +696,7 @@ final class DurationUnitTests: UnitTest {
 
 	func testGivenMinutes_inUnit_returnsCorrectValue() {
 		// given
-		let duration = Duration(326.minutes + 30.seconds)
+		let duration = TimeDuration(326.minutes + 30.seconds)
 
 		// when
 		let valueInHours = duration.inUnit(.minute)
@@ -707,7 +707,7 @@ final class DurationUnitTests: UnitTest {
 
 	func testGivenHours_inUnit_returnsCorrectValue() {
 		// given
-		let duration = Duration(2.days + 15.minutes)
+		let duration = TimeDuration(2.days + 15.minutes)
 
 		// when
 		let valueInHours = duration.inUnit(.hour)
@@ -718,7 +718,7 @@ final class DurationUnitTests: UnitTest {
 
 	func testGivenDays_inUnit_returnsCorrectValue() {
 		// given
-		let duration = Duration(2.days + 12.hours)
+		let duration = TimeDuration(2.days + 12.hours)
 
 		// when
 		let valueInHours = duration.inUnit(.day)
@@ -729,7 +729,7 @@ final class DurationUnitTests: UnitTest {
 
 	func testGivenWeeks_inUnit_returnsCorrectValue() {
 		// given
-		let duration = Duration(3.weeks + 3.days + 12.hours)
+		let duration = TimeDuration(3.weeks + 3.days + 12.hours)
 
 		// when
 		let valueInHours = duration.inUnit(.weekOfYear)

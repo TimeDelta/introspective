@@ -113,19 +113,19 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 	}
 
 	private final func updateTotalDurationTodayLabel() {
-		var totalDuration: Duration = Duration(0.hours.timeInterval)
+		var totalDuration: TimeDuration = TimeDuration(0.hours.timeInterval)
 		for activity in getAllActivitiesForToday() {
 			var duration = activity.duration
 			if !activity.start.isToday() {
 				if let endDate = activity.end {
-					duration = Duration(start: Date().start(of: .day), end: endDate)
+					duration = TimeDuration(start: Date().start(of: .day), end: endDate)
 				} else {
-					duration = Duration(start: Date().start(of: .day), end: Date())
+					duration = TimeDuration(start: Date().start(of: .day), end: Date())
 				}
 			}
 			totalDuration += duration
 		}
-		if totalDuration > Duration(0) {
+		if totalDuration > TimeDuration(0) {
 			totalDurationTodayLabel.text = totalDuration.description
 		} else {
 			totalDurationTodayLabel.text = ""

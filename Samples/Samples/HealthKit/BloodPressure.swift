@@ -59,6 +59,9 @@ public final class BloodPressure: HealthKitCorrelationSample {
 	public static let defaultDependentAttribute: Attribute = diastolic
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp
 	public final var attributes: [Attribute] { Me.attributes }
+	public static var dateAttributes: [DateType: DateAttribute] = [
+		.start: CommonSampleAttributes.healthKitTimestamp,
+	]
 
 	// MARK: - Instance Variables
 

@@ -9,9 +9,12 @@
 import CoreData
 import NotificationBannerSwift
 import Presentr
+import SwiftDate
 import UIKit
 
+import AttributeRestrictions
 import Attributes
+import BooleanAlgebra
 import Common
 import DependencyInjection
 import Persistence
@@ -30,29 +33,27 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	// MARK: - Static Variables
 
 	private typealias Me = ResultsViewControllerImpl
+
+	// MARK: Notification Names
+
 	private static let sortSamples = Notification.Name("sortSamplesBy")
 	static let editedSample = Notification.Name("editedSampleFromResultsScreen")
-	private static let sortPresenter: Presentr = {
-		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 245), center: .center)
-		let customPresenter = Presentr(presentationType: customType)
-		customPresenter.dismissTransitionType = .crossDissolve
-		customPresenter.roundCorners = true
-		return customPresenter
-	}()
+	static let choseSearchNearbyDuration = Notification.Name("choseSearchNearbyDuration")
 
-	private static let setDosePresenter: Presentr = {
-		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 250), center: .center)
-		let customPresenter = Presentr(presentationType: customType)
-		customPresenter.dismissTransitionType = .crossDissolve
-		customPresenter.roundCorners = true
-		return customPresenter
-	}()
+	// MARK: Presenters
+
+	private static let sortPresenter: Presentr = DependencyInjector.get(UiUtil.self)
+		.customPresenter(width: .custom(size: 300), height: .custom(size: 245), center: .center)
+	private static let setDosePresenter: Presentr = DependencyInjector.get(UiUtil.self)
+		.customPresenter(width: .custom(size: 300), height: .custom(size: 250), center: .center)
 
 	// MARK: - IBOutlets
 
 	@IBOutlet final var actionsButton: UIBarButtonItem!
 
 	// MARK: - Instance Variables
+
+	public final var backButtonTitle: String?
 
 	public final var query: Query!
 	public final var samples: [Sample]! {
@@ -88,6 +89,29 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		}
 	}
 
+	// public for testing purposes
+	public final var information = [SampleGroupInformation]()
+	private final var informationValues = [String?]()
+
+	// MARK: Editing
+
+	private final var lastSelectedRowIndex: Int!
+	private final var lastSelectedUnfilteredRowIndex: Int!
+	private final var informationEditIndex: Int!
+
+	// MARK: Sorting
+
+	private final var sortAttribute: Attribute?
+	private final var sortOrder: ComparisonResult?
+	private final var sortTask: DispatchWorkItem?
+	private final var sortActionSheet: UIAlertController?
+	private final var sortController: SortResultsViewController?
+	private final var initialSampleSortDone = false
+
+	// MARK: Searching
+
+	private final let searchController = UISearchController(searchResultsController: nil)
+
 	private final var filteredSamples: [Sample]! {
 		didSet {
 			recomputeInformation()
@@ -95,29 +119,18 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		}
 	}
 
-	private final var initialSampleSortDone = false
+	// MARK: Search Nearby
 
-	public final var backButtonTitle: String?
+	private final var selectedSearchNearbySampleDates = [DateType: Date]()
+	private final var selectedSearchNearbySampleType: Sample.Type!
 
-	// public for testing purposes
-	public final var information = [SampleGroupInformation]()
-	private final var informationValues = [String?]()
-	private final var lastSelectedRowIndex: Int!
-	private final var lastSelectedUnfilteredRowIndex: Int!
-	private final var informationEditIndex: Int!
+	// MARK: Other
+
 	private final var finishedLoading = false {
 		didSet { searchController.searchBar.isUserInteractionEnabled = finishedLoading }
 	}
 
 	private final var actionsController: UIAlertController?
-
-	private final var sortAttribute: Attribute?
-	private final var sortOrder: ComparisonResult?
-	private final var sortTask: DispatchWorkItem?
-	private final var sortActionSheet: UIAlertController?
-	private final var sortController: SortResultsViewController?
-
-	private final let searchController = UISearchController(searchResultsController: nil)
 
 	private final var failed = false
 
@@ -145,6 +158,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		observe(selector: #selector(saveEditedInformation), name: .editedInformation, object: self)
 		observe(selector: #selector(sortSamplesBy), name: Me.sortSamples)
 		observe(selector: #selector(editedSample), name: Me.editedSample)
+		observe(selector: #selector(searchNearby), name: Me.choseSearchNearbyDuration)
 
 		navigationItem.setRightBarButton(actionsButton, animated: false)
 
@@ -380,6 +394,9 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			return UISwipeActionsConfiguration(actions: actions)
 		}
 		var actions = [UIContextualAction]()
+		if let searchNearbyAction = getSearchNearbyAction(at: indexPath) {
+			actions.append(searchNearbyAction)
+		}
 		if let managedSample = filteredSamples[indexPath.row] as? CoreDataSample {
 			actions.append(getDeleteCoreDataSampleAction(for: managedSample, at: indexPath))
 		}
@@ -395,6 +412,47 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			self.informationValues.remove(at: indexPath.row)
 			self.tableView.deleteRows(at: [indexPath], with: .fade)
 		}
+	}
+
+	private final func getSearchNearbyAction(at indexPath: IndexPath) -> UIContextualAction? {
+		selectedSearchNearbySampleDates = samples[indexPath.row].dates()
+		guard selectedSearchNearbySampleDates.count > 0 else { return nil }
+
+		let action = DependencyInjector.get(UiUtil.self).contextualAction(
+			style: .normal,
+			title: "🔍 Nearby"
+		) { action, view, completion in
+			let actionSheet = DependencyInjector.get(UiUtil.self).alert(
+				title: "Which data type?",
+				message: "Choose a type of data for which to search.",
+				preferredStyle: .actionSheet
+			)
+			for sampleType in DependencyInjector.get(SampleFactory.self).allTypes() {
+				let dateAttributes = sampleType.attributes.filter { $0 is DateAttribute }
+				guard dateAttributes.count > 0 else { continue }
+				actionSheet.addAction(DependencyInjector.get(UiUtil.self).alertAction(
+					title: sampleType.name,
+					style: .default
+				) { _ in
+					let controller = self.viewController(
+						named: "durationChooser",
+						fromStoryboard: "Util"
+					) as! SelectDurationViewController
+					controller.initialDuration = TimeDuration(30.minutes)
+					controller.notificationToSendOnAccept = Me.choseSearchNearbyDuration
+					self.selectedSearchNearbySampleType = sampleType
+					self.present(controller, using: DependencyInjector.get(UiUtil.self).defaultPresenter)
+				})
+			}
+			actionSheet.addAction(DependencyInjector.get(UiUtil.self).alertAction(
+				title: "Cancel",
+				style: .cancel,
+				handler: nil
+			))
+			self.presentView(actionSheet)
+		}
+		action.backgroundColor = .systemBlue
+		return action
 	}
 
 	private final func getDeleteCoreDataSampleAction(
@@ -526,7 +584,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				case is DateAttribute: self.sort(by: Date.self); break
 				case is DayOfWeekAttribute: self.sort(by: DayOfWeek.self); break
 				case is TimeOfDayAttribute: self.sort(by: TimeOfDay.self); break
-				case is DurationAttribute: self.sort(by: Duration.self); break
+				case is DurationAttribute: self.sort(by: TimeDuration.self); break
 				case is FrequencyAttribute: self.sort(by: Frequency.self); break
 				case is DosageAttribute: self.sort(by: Dosage.self); break
 				default:
@@ -541,6 +599,117 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			}
 			DispatchQueue.global(qos: .userInteractive).async(execute: self.sortTask!)
 		})
+	}
+
+	@objc private final func searchNearby(notification: Notification) {
+		guard let duration: TimeDuration = value(for: .duration, from: notification) else {
+			log.error("Missing duration for searchNearby notification")
+			return
+		}
+		do {
+			var query = try DependencyInjector.get(QueryFactory.self).queryFor(selectedSearchNearbySampleType)
+			let start = selectedSearchNearbySampleDates[.start]
+			let end = selectedSearchNearbySampleDates[.end]
+			if let startDate = start, let endDate = end {
+				try buildNearbyQuery(
+					&query,
+					sampleType: selectedSearchNearbySampleType,
+					startDate: startDate,
+					endDate: endDate,
+					duration: duration
+				)
+			} else if let timestamp = start {
+				try buildNearbyQuery(
+					&query,
+					sampleType: selectedSearchNearbySampleType,
+					timestamp: timestamp,
+					duration: duration
+				)
+			} else {
+				log.error("Sample type has no dates: %@", selectedSearchNearbySampleType.name)
+			}
+			let controller = viewController(named: "results") as! ResultsViewController
+			query.runQuery { (result: QueryResult?, error: Error?) in
+				if let error = error {
+					DispatchQueue.main.async {
+						controller.showError(title: "Failed to run query", error: error)
+					}
+					return
+				}
+				controller.samples = result?.samples
+			}
+			controller.query = query
+			controller.backButtonTitle = "\(samples[0].attributedName) Results"
+			pushToNavigationController(controller)
+		} catch {
+			if let displayableError = error as? DisplayableError {
+				showError(
+					title: displayableError.displayableTitle,
+					message: displayableError.displayableDescription
+				)
+			} else {
+				showError(title: "Failed to generate query")
+			}
+		}
+	}
+
+	/// Build a query to search nearby a sample that has two dates.
+	private final func buildNearbyQuery(
+		_ query: inout Query,
+		sampleType: Sample.Type,
+		startDate: Date,
+		endDate: Date,
+		duration: TimeDuration
+	) throws {
+		let minDate = startDate - duration
+		let maxDate = endDate + duration
+		guard let startAttribute = sampleType.dateAttributes[.start] else {
+			log.error("Missing start attribute for %@", sampleType.name)
+			throw GenericDisplayableError(
+				title: "Unable to search nearby",
+				description: "You found a bug: please report RVCbnq1"
+			)
+		}
+		if let endAttribute = sampleType.dateAttributes[.end] {
+			query.expression = AndExpression(
+				AfterDateAndTimeAttributeRestriction(restrictedAttribute: startAttribute, date: minDate),
+				BeforeDateAndTimeAttributeRestriction(restrictedAttribute: endAttribute, date: maxDate)
+			)
+		} else { // only one attribute on target sample type
+			query.expression = AndExpression(
+				AfterDateAndTimeAttributeRestriction(restrictedAttribute: startAttribute, date: minDate),
+				BeforeDateAndTimeAttributeRestriction(restrictedAttribute: startAttribute, date: maxDate)
+			)
+		}
+	}
+
+	/// Build a query to search nearby a sample that has only one date.
+	private final func buildNearbyQuery(
+		_ query: inout Query,
+		sampleType: Sample.Type,
+		timestamp: Date,
+		duration: TimeDuration
+	) throws {
+		let minDate = timestamp - duration
+		let maxDate = timestamp + duration
+		guard let startAttribute = sampleType.dateAttributes[.start] else {
+			log.error("Missing start attribute for %@", sampleType.name)
+			throw GenericDisplayableError(
+				title: "Unable to search nearby",
+				description: "You found a bug: please report RVCbnq3"
+			)
+		}
+		if let endAttribute = sampleType.dateAttributes[.end] {
+			query.expression = AndExpression(
+				AfterDateAndTimeAttributeRestriction(restrictedAttribute: startAttribute, date: minDate),
+				BeforeDateAndTimeAttributeRestriction(restrictedAttribute: endAttribute, date: maxDate)
+			)
+		} else { // only one attribute on target sample type
+			query.expression = AndExpression(
+				AfterDateAndTimeAttributeRestriction(restrictedAttribute: startAttribute, date: minDate),
+				BeforeDateAndTimeAttributeRestriction(restrictedAttribute: startAttribute, date: maxDate)
+			)
+		}
 	}
 
 	// MARK: - Button Actions

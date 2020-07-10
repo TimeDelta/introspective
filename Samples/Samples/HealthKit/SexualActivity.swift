@@ -62,6 +62,9 @@ public final class SexualActivity: HealthKitCategorySample, SearchableSample {
 	public static let defaultDependentAttribute: Attribute = protectionUsed
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp
 	public final var attributes: [Attribute] { Me.attributes }
+	public static var dateAttributes: [DateType: DateAttribute] = [
+		.start: CommonSampleAttributes.healthKitTimestamp,
+	]
 
 	// MARK: - Searching
 

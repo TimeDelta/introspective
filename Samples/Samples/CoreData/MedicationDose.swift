@@ -48,6 +48,9 @@ public final class MedicationDose: NSManagedObject, CoreDataSample, SearchableSa
 	public static let defaultDependentAttribute: Attribute = dosage
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.timestamp
 	public final let attributes: [Attribute] = Me.attributes
+	public static var dateAttributes: [DateType: DateAttribute] = [
+		.start: CommonSampleAttributes.timestamp,
+	]
 
 	// MARK: - Searching
 

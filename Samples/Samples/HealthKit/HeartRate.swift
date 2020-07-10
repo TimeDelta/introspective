@@ -46,6 +46,9 @@ public final class HeartRate: HealthKitQuantitySample {
 		variableName: HKPredicateKeyPathQuantity
 	)
 	public static let attributes: [Attribute] = [CommonSampleAttributes.healthKitTimestamp, heartRate]
+	public static var dateAttributes: [DateType: DateAttribute] = [
+		.start: CommonSampleAttributes.healthKitTimestamp,
+	]
 	public static let defaultDependentAttribute: Attribute = heartRate
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp
 	public final var attributes: [Attribute] { Me.attributes }

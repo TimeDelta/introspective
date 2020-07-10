@@ -232,7 +232,7 @@ public final class UnifiedDayViewController: DayViewController {
 			.string(for: event.startDate, dateStyle: .none, timeStyle: .short)
 		let endText = DependencyInjector.get(CalendarUtil.self)
 			.string(for: event.endDate, dateStyle: .none, timeStyle: .short)
-		let duration = Duration(start: event.startDate, end: event.endDate)
+		let duration = TimeDuration(start: event.startDate, end: event.endDate)
 		return startText + " - " + endText + " (\(duration.description)))"
 	}
 

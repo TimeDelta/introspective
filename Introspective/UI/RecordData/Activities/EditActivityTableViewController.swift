@@ -157,7 +157,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 		} else if indexPath == Me.durationIndex {
 			cell = tableView.dequeueReusableCell(withIdentifier: "duration", for: indexPath)
 			if let endDate = endDate {
-				cell.detailTextLabel?.text = Duration(start: startDate, end: endDate).description
+				cell.detailTextLabel?.text = TimeDuration(start: startDate, end: endDate).description
 			} else {
 				cell.detailTextLabel?.text = ""
 			}
@@ -230,7 +230,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 			) as! SelectDurationViewController
 			controller.notificationToSendOnAccept = Me.durationChanged
 			if endDate != nil {
-				controller.initialDuration = Duration(start: startDate, end: endDate)
+				controller.initialDuration = TimeDuration(start: startDate, end: endDate)
 			}
 			let presenter = DependencyInjector.get(UiUtil.self).customPresenter(
 				width: .custom(size: 300),
@@ -265,7 +265,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 	}
 
 	@objc private final func durationChanged(notification: Notification) {
-		if let duration: Duration = value(for: .duration, from: notification) {
+		if let duration: TimeDuration = value(for: .duration, from: notification) {
 			endDate = startDate + duration
 			tableView.reloadData()
 		}

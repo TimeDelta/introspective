@@ -424,9 +424,9 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		assertThat(controller.information, contains(equals(information[1]), equals(information[0])))
 	}
 
-	// MARK: - tableViewEditActionsForRowAt()
+	// MARK: - trailingSwipeActionsConfigurationForRowAt()
 
-	func testGivenSection0_tableViewEditActionsForRowAt_returnsActionThatUsingDeletesInformationAtSpecifiedIndex() {
+	func testGivenSection0_trailingSwipeActionsConfigurationForRowAt_returnsActionThatUsingDeletesInformationAtSpecifiedIndex() {
 		// given
 		controller.samples = SampleCreatorTestUtil.createSamples(count: 1)
 		controller.viewDidLoad()
@@ -435,19 +435,19 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		Given(mockNumericSampleUtil, .max(for: .any, over: .any, as: .any, willReturn: 0.0))
 		let information = [AverageInformation(HeartRate.heartRate), MaximumInformation<Double>(HeartRate.heartRate)]
 		setInformation(copyArray(information))
-		Given(mockUiUtil, .tableViewRowAction(style: .any, title: .any, handler: .any, willReturn: UITableViewRowAction()))
+		Given(mockUiUtil, .contextualAction(style: .any, title: .any, handler: .any, willReturn: UIContextualAction()))
 		let indexPath = IndexPath(row: 1, section: 0)
 		tableView.reloadData()
 
 		// when
-		let actions = controller.tableView(tableView, editActionsForRowAt: indexPath)
-		let handlerCaptor = ArgumentCaptor<(UITableViewRowAction, IndexPath) -> Void>()
-		Verify(mockUiUtil, .tableViewRowAction(style: .any, title: .any, handler: handlerCaptor.capture()))
+		let config = controller.tableView(tableView, trailingSwipeActionsConfigurationForRowAt: indexPath)
+		let handlerCaptor = ArgumentCaptor<UIContextualAction.Handler>()
+		Verify(mockUiUtil, .contextualAction(style: .any, title: .any, handler: handlerCaptor.capture()))
 		guard let handler = handlerCaptor.value else {
 			XCTFail("no handler")
 			return
 		}
-		handler(actions?[0] ?? UITableViewRowAction(), indexPath)
+		handler(config?.actions[0] ?? UIContextualAction(), UIView(), {_ in} )
 
 		// then
 		assertThat(
@@ -455,40 +455,42 @@ final class ResultsViewControllerUnitTests: UnitTest {
 			allOf(contains(equals(information[0])), not(contains(equals(information[1])))))
 	}
 
-	func testGivenSection1WithNonDeletableSampleAtGivenIndex_tableViewEditActionsForRowAt_returnsEmptyArray() {
+	func testGivenSection1WithNonDeletableSampleAtGivenIndex_trailingSwipeActionsConfigurationForRowAt_returnsArrayWithoutDeleteAction() {
 		// given
 		controller.samples = SampleCreatorTestUtil.createSamples(count: 1)
 		controller.viewDidLoad()
 
+		Given(mockUiUtil, .contextualAction(style: .any, title: .any, handler: .any, willReturn: UIContextualAction()))
+
 		// when
-		let editActions = controller.tableView(tableView, editActionsForRowAt: IndexPath(row: 0, section: 1))
+		let config = controller.tableView(tableView, trailingSwipeActionsConfigurationForRowAt: IndexPath(row: 0, section: 1))
 
 		// then
-		guard let actions = editActions else {
+		guard let actions = config?.actions else {
 			XCTFail("was nil")
 			return
 		}
-		assertThat(actions, hasCount(0))
+		assertThat(actions, not(hasItem(hasTitle("🗑️"))))
 	}
 
-	func testGivenSection1WithDeletableSampleAtGivenIndex_tableViewEditActionsForRowAt_returnsArrayWithOneAction() {
+	func testGivenSection1WithDeletableSampleAtGivenIndex_trailingSwipeActionsConfigurationForRowAt_returnsArrayWithCorrectNumberOfActions() {
 		// given
-		controller.samples = [CoreDataSampleMock()]
+		controller.samples = [coreDataSampleMock()]
 		controller.viewDidLoad()
-		Given(mockUiUtil, .tableViewRowAction(style: .any, title: .any, handler: .any, willReturn: UITableViewRowAction()))
+		Given(mockUiUtil, .contextualAction(style: .any, title: .any, handler: .any, willReturn: UIContextualAction()))
 
 		// when
-		let editActions = controller.tableView(tableView, editActionsForRowAt: IndexPath(row: 0, section: 1))
+		let config = controller.tableView(tableView, trailingSwipeActionsConfigurationForRowAt: IndexPath(row: 0, section: 1))
 
 		// then
-		guard let actions = editActions else {
+		guard let actions = config?.actions else {
 			XCTFail("was nil")
 			return
 		}
-		assertThat(actions, hasCount(1))
+		assertThat(actions, hasCount(2))
 	}
 
-	func testGivenSection1WithDeletableSampleAtGivenIndex_tableViewEditActionsForRowAt_returnsActionThatDeletesCorrectSample() {
+	func testGivenSection1WithDeletableSampleAtGivenIndex_trailingSwipeActionsConfigurationForRowAt_returnsActionThatDeletesCorrectSample() {
 		// given
 		let transaction = TransactionMock()
 		Given(mockDatabase, .transaction(willReturn: transaction))
@@ -497,19 +499,22 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		controller.viewDidLoad()
 		let indexToDelete = 0
 		let indexPath = IndexPath(row: indexToDelete, section: 1)
-		Given(mockUiUtil, .tableViewRowAction(style: .any, title: .any, handler: .any, willReturn: UITableViewRowAction()))
+		Given(mockUiUtil, .contextualAction(style: .any, title: .any, handler: .any, willReturn: UIContextualAction()))
 		Given(mockUiUtil, .alertAction(title: .any, style: .any, handler: .any, willReturn: UIAlertAction()))
 		tableView.reloadData()
 
 		// when
-		let actions = controller.tableView(tableView, editActionsForRowAt: indexPath)
-		let handlerCaptor = ArgumentCaptor<(UITableViewRowAction, IndexPath) -> Void>()
-		Verify(mockUiUtil, .tableViewRowAction(style: .any, title: .value("🗑️"), handler: handlerCaptor.capture()))
+		guard let config = controller.tableView(tableView, trailingSwipeActionsConfigurationForRowAt: indexPath) else {
+			XCTFail("nil return value")
+			return
+		}
+		let handlerCaptor = ArgumentCaptor<UIContextualAction.Handler>()
+		Verify(mockUiUtil, .contextualAction(style: .any, title: .value("🗑️"), handler: handlerCaptor.capture()))
 		guard let handler = handlerCaptor.value else {
 			XCTFail("no handler")
 			return
 		}
-		handler(actions?[0] ?? UITableViewRowAction(), indexPath)
+		handler(config.actions[0], UIView(), {_ in})
 		let yesHandlerCaptor = ArgumentCaptor<((UIAlertAction) -> Void)?>()
 		Verify(mockUiUtil, .alertAction(title: .value("Yes"), style: .any, handler: yesHandlerCaptor.capture()))
 		guard let yesHandler = yesHandlerCaptor.value as? (UIAlertAction) -> Void else {
@@ -525,7 +530,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		assertThat(deletedObjectCaptor.allValues, not(hasItem(sameObject(samples[abs(indexToDelete - 1)]))))
 	}
 
-	func testGivenSection1WithDeletableSampleAtGivenIndex_tableViewEditActionsForRowAt_returnsActionThatRecomputesInformationOnDelete() {
+	func testGivenSection1WithDeletableSampleAtGivenIndex_trailingSwipeActionsConfigurationForRowAt_returnsActionThatRecomputesInformationOnDelete() {
 		// given
 		let transaction = TransactionMock()
 		Given(mockDatabase, .transaction(willReturn: transaction))
@@ -534,20 +539,20 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		controller.viewDidLoad()
 		let indexToDelete = 0
 		let indexPath = IndexPath(row: indexToDelete, section: 1)
-		Given(mockUiUtil, .tableViewRowAction(style: .any, title: .any, handler: .any, willReturn: UITableViewRowAction()))
+		Given(mockUiUtil, .contextualAction(style: .any, title: .any, handler: .any, willReturn: UIContextualAction()))
 		Given(mockUiUtil, .alertAction(title: .any, style: .any, handler: .any, willReturn: UIAlertAction()))
 		let information = setInformation(count: 2)
 		tableView.reloadData()
 
 		// when
-		let actions = controller.tableView(tableView, editActionsForRowAt: indexPath)
-		let handlerCaptor = ArgumentCaptor<(UITableViewRowAction, IndexPath) -> Void>()
-		Verify(mockUiUtil, .tableViewRowAction(style: .any, title: .value("🗑️"), handler: handlerCaptor.capture()))
+		let config = controller.tableView(tableView, trailingSwipeActionsConfigurationForRowAt: indexPath)
+		let handlerCaptor = ArgumentCaptor<UIContextualAction.Handler>()
+		Verify(mockUiUtil, .contextualAction(style: .any, title: .value("🗑️"), handler: handlerCaptor.capture()))
 		guard let handler = handlerCaptor.value else {
 			XCTFail("no handler")
 			return
 		}
-		handler(actions?[0] ?? UITableViewRowAction(), indexPath)
+		handler(config?.actions[0] ?? UIContextualAction(), UIView(), {_ in})
 		let yesHandlerCaptor = ArgumentCaptor<((UIAlertAction) -> Void)?>()
 		Verify(mockUiUtil, .alertAction(title: .value("Yes"), style: .any, handler: yesHandlerCaptor.capture()))
 		guard let yesHandler = yesHandlerCaptor.value as? (UIAlertAction) -> Void else {
@@ -562,7 +567,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenSection1WithDeletableSampleAtGivenIndexWhileSearching_tableViewEditActionsForRowAt_returnsActionThatDeletesCorrectSample() {
+	func testGivenSection1WithDeletableSampleAtGivenIndexWhileSearching_trailingSwipeActionsConfigurationForRowAt_returnsActionThatDeletesCorrectSample() {
 		// given
 		let transaction = TransactionMock()
 		Given(mockDatabase, .transaction(willReturn: transaction))
@@ -582,19 +587,19 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		controller.viewDidLoad()
 
 		let indexPath = IndexPath(row: 0, section: 1)
-		Given(mockUiUtil, .tableViewRowAction(style: .any, title: .any, handler: .any, willReturn: UITableViewRowAction()))
+		Given(mockUiUtil, .contextualAction(style: .any, title: .any, handler: .any, willReturn: UIContextualAction()))
 		Given(mockUiUtil, .alertAction(title: .any, style: .any, handler: .any, willReturn: UIAlertAction()))
 		tableView.reloadData()
 
 		// when
-		let actions = controller.tableView(tableView, editActionsForRowAt: indexPath)
-		let handlerCaptor = ArgumentCaptor<(UITableViewRowAction, IndexPath) -> Void>()
-		Verify(mockUiUtil, .tableViewRowAction(style: .any, title: .value("🗑️"), handler: handlerCaptor.capture()))
+		let config = controller.tableView(tableView, trailingSwipeActionsConfigurationForRowAt: indexPath)
+		let handlerCaptor = ArgumentCaptor<UIContextualAction.Handler>()
+		Verify(mockUiUtil, .contextualAction(style: .any, title: .value("🗑️"), handler: handlerCaptor.capture()))
 		guard let handler = handlerCaptor.value else {
 			XCTFail("no handler")
 			return
 		}
-		handler(actions?[0] ?? UITableViewRowAction(), indexPath)
+		handler(config?.actions[0] ?? UIContextualAction(), UIView(), {_ in})
 		let yesHandlerCaptor = ArgumentCaptor<((UIAlertAction) -> Void)?>()
 		Verify(mockUiUtil, .alertAction(title: .value("Yes"), style: .any, handler: yesHandlerCaptor.capture()))
 		guard let yesHandler = yesHandlerCaptor.value as? (UIAlertAction) -> Void else {
@@ -808,12 +813,14 @@ final class ResultsViewControllerUnitTests: UnitTest {
 	private final func coreDataSampleMock() -> CoreDataSampleMock {
 		let mock = CoreDataSampleMock()
 		Given(mock, .attributedName(getter: ""))
+		Given(mock, .dates(willReturn: [.start: Date()]))
 		return mock
 	}
 
 	private final func searchableCoreDataSampleMock(matches: Bool? = nil) -> SearchableCoreDataSampleMock {
 		let mock = SearchableCoreDataSampleMock()
 		Given(mock, .attributedName(getter: ""))
+		Given(mock, .dates(willReturn: [.start: Date()]))
 		if let matches = matches {
 			Given(mock, .matchesSearchString(.any, willReturn: matches))
 		}

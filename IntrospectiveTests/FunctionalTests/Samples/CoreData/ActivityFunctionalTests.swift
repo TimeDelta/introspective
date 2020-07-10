@@ -53,7 +53,7 @@ final class ActivityFunctionalTests: FunctionalTest {
 		let duration = activity.duration
 
 		// then
-		let expectedDuration = Duration(expectedInterval)
+		let expectedDuration = TimeDuration(expectedInterval)
 		assertThat(duration, equalTo(expectedDuration))
 	}
 
@@ -131,11 +131,11 @@ final class ActivityFunctionalTests: FunctionalTest {
 		// given
 		let startDate = Date() - 10.days
 		let endDate = Date()
-		let expectedDuration = Duration(start: startDate, end: endDate)
+		let expectedDuration = TimeDuration(start: startDate, end: endDate)
 		let activity = ActivityDataTestUtil.createActivity(startDate: startDate, endDate: endDate)
 
 		// when
-		let duration = try activity.value(of: Activity.durationAttribute) as? Duration
+		let duration = try activity.value(of: Activity.durationAttribute) as? TimeDuration
 
 		// then
 		XCTAssertEqual(duration, expectedDuration)
@@ -236,7 +236,7 @@ final class ActivityFunctionalTests: FunctionalTest {
 		let activity = ActivityDataTestUtil.createActivity()
 
 		// when
-		XCTAssertThrowsError(try activity.set(attribute: Activity.durationAttribute, to: Duration(0))) { error in
+		XCTAssertThrowsError(try activity.set(attribute: Activity.durationAttribute, to: TimeDuration(0))) { error in
 			// then
 			XCTAssert(error is UnknownAttributeError)
 		}

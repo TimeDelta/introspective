@@ -33,7 +33,7 @@ final class NotEqualToDurationAttributeRestrictionUnitTests: UnitTest {
 
 	func test_description_containsValue() {
 		// given
-		let value = Duration(2.days + 3.hours)
+		let value = TimeDuration(2.days + 3.hours)
 		restriction.value = value
 
 		// when
@@ -63,11 +63,11 @@ final class NotEqualToDurationAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenValueAttribute_valueOf_returnsCorrectDuration() {
 		// given
-		let expectedValue = Duration(15)
+		let expectedValue = TimeDuration(15)
 		restriction.value = expectedValue
 
 		// when
-		let actualValue = try! restriction.value(of: Me.valueAttribute) as! Duration
+		let actualValue = try! restriction.value(of: Me.valueAttribute) as! TimeDuration
 
 		// then
 		XCTAssertEqual(actualValue, expectedValue)
@@ -77,7 +77,7 @@ final class NotEqualToDurationAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenUnknownAttribute_setAttributeTo_throwsUnknownAttributeError() {
 		// when
-		XCTAssertThrowsError(try restriction.set(attribute: Me.restrictedAttribute, to: Duration(15))) { error in
+		XCTAssertThrowsError(try restriction.set(attribute: Me.restrictedAttribute, to: TimeDuration(15))) { error in
 			// then
 			XCTAssert(error is UnknownAttributeError)
 		}
@@ -93,13 +93,13 @@ final class NotEqualToDurationAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenValueAttributeAndValidValue_setAttributeTo_setsDateToCorrectValue() {
 		// given
-		let expectedValue = Duration(15)
+		let expectedValue = TimeDuration(15)
 
 		// when
 		try! restriction.set(attribute: Me.valueAttribute, to: expectedValue)
 
 		// then
-		XCTAssertEqual(restriction.value as? Duration, expectedValue)
+		XCTAssertEqual(restriction.value as? TimeDuration, expectedValue)
 	}
 
 	// MARK: - samplePasses()
@@ -119,7 +119,7 @@ final class NotEqualToDurationAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleWithValueLessThanRestrictionValue_samplePasses_returnsTrue() {
 		// given
 		let mockSample = SampleMock()
-		let restrictionValue = Duration(15)
+		let restrictionValue = TimeDuration(15)
 		restriction.value = restrictionValue
 		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: restrictionValue - 1))
 
@@ -133,7 +133,7 @@ final class NotEqualToDurationAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleWithValueEqualToRestrictionValue_samplePasses_returnsFalse() {
 		// given
 		let mockSample = SampleMock()
-		let restrictionValue = Duration(15)
+		let restrictionValue = TimeDuration(15)
 		restriction.value = restrictionValue
 		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: restrictionValue))
 
@@ -147,7 +147,7 @@ final class NotEqualToDurationAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleWithValueGreaterThanRestrictionValue_samplePasses_returnsTrue() {
 		// given
 		let mockSample = SampleMock()
-		let restrictionValue = Duration(15)
+		let restrictionValue = TimeDuration(15)
 		restriction.value = restrictionValue
 		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: restrictionValue + 1))
 
@@ -160,7 +160,7 @@ final class NotEqualToDurationAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenNilSampleValueAndValueIsNotNil_samplePasses_returnsTrue() throws {
 		// given
-		restriction.value = Duration(15) as Any
+		restriction.value = TimeDuration(15) as Any
 		let sample = SampleCreatorTestUtil.createSample(withValue: nil as Any?, for: Me.restrictedAttribute)
 
 		// when
@@ -220,7 +220,7 @@ final class NotEqualToDurationAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameRestrictedAttributeButDifferentValues_equalToOperator_returnsFalse() {
 		// given
-		let restrictionValue = restriction.value as! Duration
+		let restrictionValue = restriction.value as! TimeDuration
 		let other = NotEqualToDurationAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
 			value: restrictionValue + 1)
@@ -234,7 +234,7 @@ final class NotEqualToDurationAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameTypeWithAllSameAttributes_equalToOperator_returnsTrue() {
 		// given
-		let restrictionValue = restriction.value as! Duration
+		let restrictionValue = restriction.value as! TimeDuration
 		let other = NotEqualToDurationAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
 			value: restrictionValue)
@@ -281,7 +281,7 @@ final class NotEqualToDurationAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameRestrictedAttributeButDifferentValue_equalToAttributed_returnsFalse() {
 		// given
-		let restrictionValue = restriction.value as! Duration
+		let restrictionValue = restriction.value as! TimeDuration
 		let otherAttributed: Attributed = NotEqualToDurationAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
 			value: restrictionValue + 1)
@@ -295,7 +295,7 @@ final class NotEqualToDurationAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameTypeWithAllSameAttributes_equalToAttributed_returnsTrue() {
 		// given
-		let restrictionValue = restriction.value as! Duration
+		let restrictionValue = restriction.value as! TimeDuration
 		let otherAttributed: Attributed = NotEqualToDurationAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
 			value: restrictionValue)
@@ -343,7 +343,7 @@ final class NotEqualToDurationAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameRestrictedAttributeButDifferentValues_equalToRestriction_returnsFalse() {
 		// given
-		let restrictionValue = restriction.value as! Duration
+		let restrictionValue = restriction.value as! TimeDuration
 		let otherRestriction: AttributeRestriction = NotEqualToDurationAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
 			value: restrictionValue + 1)
@@ -357,7 +357,7 @@ final class NotEqualToDurationAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameTypeWithAllSameAttributes_equalToRestriction_returnsTrue() {
 		// given
-		let restrictionValue = restriction.value as! Duration
+		let restrictionValue = restriction.value as! TimeDuration
 		let otherRestriction: AttributeRestriction = NotEqualToDurationAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
 			value: restrictionValue)
@@ -393,7 +393,7 @@ final class NotEqualToDurationAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameRestrictedAttributeButDifferentValues_equalTo_returnsFalse() {
 		// given
-		let restrictionValue = restriction.value as! Duration
+		let restrictionValue = restriction.value as! TimeDuration
 		let other = NotEqualToDurationAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
 			value: restrictionValue + 1)
@@ -407,7 +407,7 @@ final class NotEqualToDurationAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameTypeWithAllSameAttributes_equalTo_returnsTrue() {
 		// given
-		let restrictionValue = restriction.value as! Duration
+		let restrictionValue = restriction.value as! TimeDuration
 		let other = NotEqualToDurationAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
 			value: restrictionValue)

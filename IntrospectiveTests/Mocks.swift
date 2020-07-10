@@ -16170,6 +16170,13 @@ open class SettingsMock: Settings, Mock, StaticMock {
 	}
 	private var __p_convertTimeZones: (Bool)?
 
+    public var defaultSearchNearbyDuration: TimeDuration {
+		get {	invocations.append(.p_defaultSearchNearbyDuration_get); return __p_defaultSearchNearbyDuration ?? givenGetterValue(.p_defaultSearchNearbyDuration_get, "SettingsMock - stub value for defaultSearchNearbyDuration was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_defaultSearchNearbyDuration = newValue }
+	}
+	private var __p_defaultSearchNearbyDuration: (TimeDuration)?
+
 
     public static var entityName: String {
 		get {	SettingsMock.invocations.append(.p_entityName_get); return SettingsMock.__p_entityName ?? givenGetterValue(.p_entityName_get, "SettingsMock - stub value for entityName was not defined") }
@@ -16220,6 +16227,12 @@ open class SettingsMock: Settings, Mock, StaticMock {
     open func setConvertTimeZones(_ value: Bool) {
         addInvocation(.m_setConvertTimeZones__value(Parameter<Bool>.value(`value`)))
 		let perform = methodPerformValue(.m_setConvertTimeZones__value(Parameter<Bool>.value(`value`))) as? (Bool) -> Void
+		perform?(`value`)
+    }
+
+    open func setDefaultSearchNearbyDuration(_ value: TimeDuration) {
+        addInvocation(.m_setDefaultSearchNearbyDuration__value(Parameter<TimeDuration>.value(`value`)))
+		let perform = methodPerformValue(.m_setDefaultSearchNearbyDuration__value(Parameter<TimeDuration>.value(`value`))) as? (TimeDuration) -> Void
 		perform?(`value`)
     }
 
@@ -16307,6 +16320,7 @@ open class SettingsMock: Settings, Mock, StaticMock {
         case m_setAutoIgnoreEnabled__value(Parameter<Bool>)
         case m_setAutoIgnoreSeconds__value(Parameter<Int>)
         case m_setConvertTimeZones__value(Parameter<Bool>)
+        case m_setDefaultSearchNearbyDuration__value(Parameter<TimeDuration>)
         case m_changed__setting(Parameter<Setting>)
         case m_reset
         case m_save
@@ -16317,6 +16331,7 @@ open class SettingsMock: Settings, Mock, StaticMock {
         case p_autoIgnoreEnabled_get
         case p_autoIgnoreSeconds_get
         case p_convertTimeZones_get
+        case p_defaultSearchNearbyDuration_get
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -16341,6 +16356,9 @@ open class SettingsMock: Settings, Mock, StaticMock {
             case (.m_setConvertTimeZones__value(let lhsValue), .m_setConvertTimeZones__value(let rhsValue)):
                 guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
                 return true 
+            case (.m_setDefaultSearchNearbyDuration__value(let lhsValue), .m_setDefaultSearchNearbyDuration__value(let rhsValue)):
+                guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
+                return true 
             case (.m_changed__setting(let lhsSetting), .m_changed__setting(let rhsSetting)):
                 guard Parameter.compare(lhs: lhsSetting, rhs: rhsSetting, with: matcher) else { return false } 
                 return true 
@@ -16355,6 +16373,7 @@ open class SettingsMock: Settings, Mock, StaticMock {
             case (.p_autoIgnoreEnabled_get,.p_autoIgnoreEnabled_get): return true
             case (.p_autoIgnoreSeconds_get,.p_autoIgnoreSeconds_get): return true
             case (.p_convertTimeZones_get,.p_convertTimeZones_get): return true
+            case (.p_defaultSearchNearbyDuration_get,.p_defaultSearchNearbyDuration_get): return true
             default: return false
             }
         }
@@ -16368,6 +16387,7 @@ open class SettingsMock: Settings, Mock, StaticMock {
             case let .m_setAutoIgnoreEnabled__value(p0): return p0.intValue
             case let .m_setAutoIgnoreSeconds__value(p0): return p0.intValue
             case let .m_setConvertTimeZones__value(p0): return p0.intValue
+            case let .m_setDefaultSearchNearbyDuration__value(p0): return p0.intValue
             case let .m_changed__setting(p0): return p0.intValue
             case .m_reset: return 0
             case .m_save: return 0
@@ -16378,6 +16398,7 @@ open class SettingsMock: Settings, Mock, StaticMock {
             case .p_autoIgnoreEnabled_get: return 0
             case .p_autoIgnoreSeconds_get: return 0
             case .p_convertTimeZones_get: return 0
+            case .p_defaultSearchNearbyDuration_get: return 0
             }
         }
     }
@@ -16410,6 +16431,9 @@ open class SettingsMock: Settings, Mock, StaticMock {
         }
         public static func convertTimeZones(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_convertTimeZones_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func defaultSearchNearbyDuration(getter defaultValue: TimeDuration...) -> PropertyStub {
+            return Given(method: .p_defaultSearchNearbyDuration_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
         public static func changed(_ setting: Parameter<Setting>, willReturn: Bool...) -> MethodStub {
@@ -16444,6 +16468,7 @@ open class SettingsMock: Settings, Mock, StaticMock {
         public static func setAutoIgnoreEnabled(_ value: Parameter<Bool>) -> Verify { return Verify(method: .m_setAutoIgnoreEnabled__value(`value`))}
         public static func setAutoIgnoreSeconds(_ value: Parameter<Int>) -> Verify { return Verify(method: .m_setAutoIgnoreSeconds__value(`value`))}
         public static func setConvertTimeZones(_ value: Parameter<Bool>) -> Verify { return Verify(method: .m_setConvertTimeZones__value(`value`))}
+        public static func setDefaultSearchNearbyDuration(_ value: Parameter<TimeDuration>) -> Verify { return Verify(method: .m_setDefaultSearchNearbyDuration__value(`value`))}
         public static func changed(_ setting: Parameter<Setting>) -> Verify { return Verify(method: .m_changed__setting(`setting`))}
         public static func reset() -> Verify { return Verify(method: .m_reset)}
         public static func save() -> Verify { return Verify(method: .m_save)}
@@ -16454,6 +16479,7 @@ open class SettingsMock: Settings, Mock, StaticMock {
         public static var autoIgnoreEnabled: Verify { return Verify(method: .p_autoIgnoreEnabled_get) }
         public static var autoIgnoreSeconds: Verify { return Verify(method: .p_autoIgnoreSeconds_get) }
         public static var convertTimeZones: Verify { return Verify(method: .p_convertTimeZones_get) }
+        public static var defaultSearchNearbyDuration: Verify { return Verify(method: .p_defaultSearchNearbyDuration_get) }
     }
 
     public struct Perform {
@@ -16480,6 +16506,9 @@ open class SettingsMock: Settings, Mock, StaticMock {
         }
         public static func setConvertTimeZones(_ value: Parameter<Bool>, perform: @escaping (Bool) -> Void) -> Perform {
             return Perform(method: .m_setConvertTimeZones__value(`value`), performs: perform)
+        }
+        public static func setDefaultSearchNearbyDuration(_ value: Parameter<TimeDuration>, perform: @escaping (TimeDuration) -> Void) -> Perform {
+            return Perform(method: .m_setDefaultSearchNearbyDuration__value(`value`), performs: perform)
         }
         public static func changed(_ setting: Parameter<Setting>, perform: @escaping (Setting) -> Void) -> Perform {
             return Perform(method: .m_changed__setting(`setting`), performs: perform)

@@ -60,6 +60,10 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 		sourceAttribute,
 	]
 	public final let attributes: [Attribute] = Me.attributes
+	public static var dateAttributes: [DateType: DateAttribute] = [
+		.start: CommonSampleAttributes.startDate,
+		.end: CommonSampleAttributes.endDate,
+	]
 
 	// MARK: - Searching
 
@@ -114,10 +118,10 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 		}
 	}
 
-	public final var duration: Duration {
-		// use raw unconverted dates to avoid issues caused by start and end being in
-		// different time zones such as negative durations
-		Duration(start: startDate, end: endDate)
+	public final var duration: TimeDuration {
+		// use raw unconverted dates to avoid issues such as negative durations
+		// caused by start and end being in different time zones
+		TimeDuration(start: startDate, end: endDate)
 	}
 
 	public final var startDateTimeZone: String? { startDateTimeZoneId }

@@ -47,6 +47,9 @@ public final class Weight: HealthKitQuantitySample {
 	public static let defaultDependentAttribute: Attribute = weight
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp
 	public final var attributes: [Attribute] { Me.attributes }
+	public static var dateAttributes: [DateType: DateAttribute] = [
+		.start: CommonSampleAttributes.healthKitTimestamp,
+	]
 
 	// MARK: - Instance Variables
 

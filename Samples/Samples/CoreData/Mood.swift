@@ -74,6 +74,9 @@ public final class MoodImpl: NSManagedObject, Mood {
 		maxRating,
 	]
 	public final let attributes: [Attribute] = Me.attributes
+	public static var dateAttributes: [DateType: DateAttribute] = [
+		.start: CommonSampleAttributes.timestamp,
+	]
 
 	// MARK: - Searching
 

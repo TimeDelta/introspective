@@ -172,7 +172,7 @@ class EditActivityTableViewControllerUnitTests: UnitTest {
 		let cell = controller.tableView(tableView, cellForRowAt: index)
 
 		// then
-		assertThat(cell, hasDetailText(Duration(start: startDate, end: endDate).description))
+		assertThat(cell, hasDetailText(TimeDuration(start: startDate, end: endDate).description))
 	}
 
 	func testGivenNoteIndexWithAutoFocusTrue_tableViewCellForRowAt_returnsNoteCellWithAutoFocusTrue() {
@@ -437,7 +437,7 @@ class EditActivityTableViewControllerUnitTests: UnitTest {
 		let _ = tableView.allowsMultipleSelection
 		let startDate = Date() - 1.days
 		let endDate = Date()
-		let duration = Duration(start: startDate, end: endDate)
+		let duration = TimeDuration(start: startDate, end: endDate)
 		controller.startDate = startDate
 		controller.endDate = endDate
 		let presentedController = mockSelectDurationViewController()
@@ -501,7 +501,7 @@ class EditActivityTableViewControllerUnitTests: UnitTest {
 		let startDate = Date()
 		controller.startDate = startDate
 		controller.endDate = startDate + 1.days
-		let newDuration = Duration(2.days)
+		let newDuration = TimeDuration(2.days)
 		Given(mockUiUtil, .value(for: .value(.duration), from: .any, keyIsOptional: .any, willReturn: newDuration))
 
 		// when

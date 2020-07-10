@@ -24,7 +24,7 @@ public final class DurationAttributeValueViewController: AttributeValueTypeViewC
 		super.viewDidLoad()
 		valueIsValid()
 
-		guard let duration = currentValue as? Duration else { return }
+		guard let duration = currentValue as? TimeDuration else { return }
 
 		let units = duration.units()
 		if let days = units[.day] {
@@ -57,6 +57,6 @@ public final class DurationAttributeValueViewController: AttributeValueTypeViewC
 		if let seconds = Int(secondsTextField.text ?? "0") {
 			units[.second] = seconds
 		}
-		currentValue = Duration(units)
+		currentValue = TimeDuration(units)
 	}
 }

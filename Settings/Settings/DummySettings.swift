@@ -64,6 +64,11 @@ public final class DummySettings: Settings {
 		log.error("tried to set ConvertTimeZones")
 	}
 
+	public final let defaultSearchNearbyDuration: TimeDuration = TimeDuration(0)
+	public final func setDefaultSearchNearbyDuration(_ value: TimeDuration) {
+		log.error("tried to set DefaultSearchNearbyDuration")
+	}
+
 	public final func changed(_: Setting) -> Bool {
 		log.error("tried to check if setting was changed")
 		return false

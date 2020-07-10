@@ -182,9 +182,9 @@ final class SumInformationFunctionalTests: FunctionalTest {
 		let attribute = DurationAttribute()
 		let date = Date()
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [
-			Duration(start: date, end: date + 5.hours),
-			Duration(start: date, end: date + 6.minutes),
-			Duration(start: date, end: date + 7.seconds),
+			TimeDuration(start: date, end: date + 5.hours),
+			TimeDuration(start: date, end: date + 6.minutes),
+			TimeDuration(start: date, end: date + 7.seconds),
 		], for: attribute)
 		let information = SumInformation(attribute)
 
@@ -201,10 +201,10 @@ final class SumInformationFunctionalTests: FunctionalTest {
 		let date = Date()
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [
 			nil, nil,
-			Duration(start: date, end: date + 5.hours),
-			Duration(start: date, end: date + 6.minutes),
+			TimeDuration(start: date, end: date + 5.hours),
+			TimeDuration(start: date, end: date + 6.minutes),
 			nil,
-			Duration(start: date, end: date + 7.seconds),
+			TimeDuration(start: date, end: date + 7.seconds),
 		], for: attribute)
 		let information = SumInformation(attribute)
 
@@ -220,10 +220,10 @@ final class SumInformationFunctionalTests: FunctionalTest {
 		let attribute = DurationAttribute()
 		let date = Date()
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [
-			Duration(start: date, end: date + 4.days),
-			Duration(start: date, end: date + 5.hours),
-			Duration(start: date, end: date + 6.minutes),
-			Duration(start: date, end: date + 7.seconds),
+			TimeDuration(start: date, end: date + 4.days),
+			TimeDuration(start: date, end: date + 5.hours),
+			TimeDuration(start: date, end: date + 6.minutes),
+			TimeDuration(start: date, end: date + 7.seconds),
 		], for: attribute)
 		let information = SumInformation(attribute)
 
@@ -432,10 +432,10 @@ final class SumInformationFunctionalTests: FunctionalTest {
 		let attribute = DurationAttribute()
 		let date = Date()
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [
-			Duration(start: date, end: date + 4.days),
-			Duration(start: date, end: date + 5.hours),
-			Duration(start: date, end: date + 6.minutes),
-			Duration(start: date, end: date + 7.seconds),
+			TimeDuration(start: date, end: date + 4.days),
+			TimeDuration(start: date, end: date + 5.hours),
+			TimeDuration(start: date, end: date + 6.minutes),
+			TimeDuration(start: date, end: date + 7.seconds),
 		], for: attribute)
 		let information = SumInformation(attribute)
 
@@ -451,12 +451,12 @@ final class SumInformationFunctionalTests: FunctionalTest {
 		let attribute = DurationAttribute()
 		let date = Date()
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [
-			Duration(start: date, end: date + 4.days),
+			TimeDuration(start: date, end: date + 4.days),
 			nil, nil,
-			Duration(start: date, end: date + 5.hours),
-			Duration(start: date, end: date + 6.minutes),
+			TimeDuration(start: date, end: date + 5.hours),
+			TimeDuration(start: date, end: date + 6.minutes),
 			nil,
-			Duration(start: date, end: date + 7.seconds),
+			TimeDuration(start: date, end: date + 7.seconds),
 		], for: attribute)
 		let information = SumInformation(attribute)
 

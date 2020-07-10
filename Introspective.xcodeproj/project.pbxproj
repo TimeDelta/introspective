@@ -334,6 +334,7 @@
 		A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FC569196ECE6B2231D16543528A687 /* UITest.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A26589F32BFC0527881D20D03E4CB48C /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
+		44AE69745D62E48C8B7ADC3825308664 /* ContextualActionMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93404193AC00A5504745AFEE6956397E /* ContextualActionMatchers.swift */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
 		A2DF8D22C94D6F91A865D337C0730F03 /* DurationUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA96F5DDD263FD0D99095EBADBA4AACC /* DurationUnitTests.swift */; };
 		A307D44D6721A760E637CEAE90AFED42 /* BloodPressureTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F312D49748BD5F763B6D8463E6112C45 /* BloodPressureTableViewCell.swift */; };
@@ -507,6 +508,7 @@
 		FC82499D532401D4CACDE010C56D4F10 /* MoodExporterFunctionalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287A32D410A26F74A82A65C685055875 /* MoodExporterFunctionalTest.swift */; };
 		FC84066061291F60AC8E7D2280F20428 /* EqualToDurationAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B93F7FE435E06819E4BF152382DAA9 /* EqualToDurationAttributeRestrictionUnitTests.swift */; };
 		FC87A4E8884AA8796CA6A7F9BAFE4B2C /* DosageUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B7EADC414E7602ACFDC20A2A80D09E /* DosageUnitTests.swift */; };
+		FC9708966AAE10B9A1825B4EABEC073A /* ResultsSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50B19099BEC658A66AAA8AA5B97B849C /* ResultsSettingsViewController.swift */; };
 		FCC92E21CA25DE8C2FD240173C59D14D /* MedicationDoseMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117CB64B56A435C9650FD54239938AC7 /* MedicationDoseMatchers.swift */; };
 		FCFB7D106B651DCDE8ACD637F6A546F7 /* RecordMoodsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D85CE5C7460038D985922FA94DB9D2B2 /* RecordMoodsUITests.swift */; };
 		FDBF71260DDBA9C9786B966BB0E6F69B /* Pods_IntrospectiveUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41F9E79038690A6E79F32EC5F1CDFAEE /* Pods_IntrospectiveUITests.framework */; };
@@ -744,6 +746,7 @@
 		4F902645318CE3CA20F195D285592D48 /* EditActivityDefinitionTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditActivityDefinitionTableViewController.swift; sourceTree = "<group>"; };
 		4F9AD32F1EE1369EDE699A6AAF6B8A98 /* SampleQueryMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleQueryMock.swift; sourceTree = "<group>"; };
 		50669801E9B27BB96C5B13BC94E1EF14 /* ActivityExporterFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityExporterFunctionalTests.swift; sourceTree = "<group>"; };
+		50B19099BEC658A66AAA8AA5B97B849C /* ResultsSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsSettingsViewController.swift; sourceTree = "<group>"; };
 		512C33704C8FCB7593E08FF2F731EBEB /* SampleGroupInformationTableViewCellUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleGroupInformationTableViewCellUnitTests.swift; sourceTree = "<group>"; };
 		5148425BFEAA576D40966089DC41DC81 /* OnDayOfWeekAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDayOfWeekAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		52B5D834E4836EEA97F1DCE94B5D1248 /* IntrospectiveInjectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntrospectiveInjectionProvider.swift; sourceTree = "<group>"; };
@@ -913,6 +916,7 @@
 		A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		A2505FFD3F0233815468AA6A0A4B96FE /* CoreDataSampleMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSampleMock.swift; sourceTree = "<group>"; };
+		93404193AC00A5504745AFEE6956397E /* ContextualActionMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextualActionMatchers.swift; sourceTree = "<group>"; };
 		A455D3386BC23DDD4E8C89EF40475474 /* LessThanDoubleAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanDoubleAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A4CBB7B41499754C5234A1BC949DD2AC /* EditAttributeRestrictionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewController.swift; sourceTree = "<group>"; };
 		A64E0788E27B3B4FE185D06F3F454E46 /* ChooseSampleGrouperTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseSampleGrouperTypeViewController.swift; sourceTree = "<group>"; };
@@ -1828,6 +1832,14 @@
 			path = IntrospectiveTests;
 			sourceTree = "<group>";
 		};
+		590F22183F39135222E5C3A32320CC5A /* Results */ = {
+			isa = PBXGroup;
+			children = (
+				50B19099BEC658A66AAA8AA5B97B849C /* ResultsSettingsViewController.swift */,
+			);
+			path = Results;
+			sourceTree = "<group>";
+		};
 		5CD06FBC957CE64D9D7C4A8D667AB034 /* Duration */ = {
 			isa = PBXGroup;
 			children = (
@@ -2064,6 +2076,7 @@
 				0EB63FDE5B5A6DFD39E5B22F363583EE /* AlertActionMatchers.swift */,
 				5A419C1CD465E1A3F0C0755D262822A5 /* TableViewCellMatchers.swift */,
 				0740508A6FD914BE190754E72F9087DD /* NavigationItemMatchers.swift */,
+				93404193AC00A5504745AFEE6956397E /* ContextualActionMatchers.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -2230,6 +2243,7 @@
 				8AEC843A9367FDB05CCACB0F6454E178 /* SettingsTableViewController.swift */,
 				D9E64A5766AA8993DADE6612AD9C3D0D /* GeneralSettingsViewController.swift */,
 				1A958A24D33360AFB07C50E8312A454A /* VersionTableViewCell.swift */,
+				590F22183F39135222E5C3A32320CC5A /* Results */,
 				A1C3BA50256120CCFACDB2D1FEE43656 /* Testing */,
 				0F45F75F4B0E27A298765AFDA0E9CED4 /* Mood */,
 				F9AB63B1F298037E8D52463C642E3483 /* Activity */,
@@ -3520,6 +3534,7 @@
 				6175E22C40F537C911409371F0984D9F /* FrequencyAttributeUnitTests.swift in Sources */,
 				C47E802963A18E06B587E18196E2BB04 /* ImportDataTableViewControllerUnitTests.swift in Sources */,
 				EAFB09F17EE9E3F5A72E8736879CD707 /* CoreDataMatchers.swift in Sources */,
+				44AE69745D62E48C8B7ADC3825308664 /* ContextualActionMatchers.swift in Sources */,
 				694ED833548190CA7AB94CABA193D577 /* QueryMatchers.swift in Sources */,
 				77AA8DA138798243DC4A989D9AE6889E /* MedicationDoseEditorViewControllerMock.swift in Sources */,
 				7BDC54ADC99BF92F6D0D5B26F0A21305 /* MedicationDoseQueryFunctionalTest.swift in Sources */,
@@ -3636,6 +3651,7 @@
 				C8C7EA5082F78C5B404EFDF5B6DD381D /* TakeMedicationIntentHandler.swift in Sources */,
 				06FF10E422A2B6F2CADF8CABAC9F86DC /* DateOrTimeAttributeValueViewController.swift in Sources */,
 				754E4858B1BC2A46537CA603F26B0F11 /* VersionTableViewCell.swift in Sources */,
+				FC9708966AAE10B9A1825B4EABEC073A /* ResultsSettingsViewController.swift in Sources */,
 				9B1F01C84B1A10CAE4EEAADAC9B4C122 /* FrequencyEditorViewController.swift in Sources */,
 				02E5AD13C3696C1EA620CB3A7F1DF173 /* CoachMarkFactory.swift in Sources */,
 				0BC3C58EE48EB339C523FD62F5E1B894 /* StopActivitiesIntentHandler.swift in Sources */,

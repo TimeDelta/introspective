@@ -44,6 +44,9 @@ public final class BodyMassIndex: HealthKitQuantitySample {
 	public static let defaultDependentAttribute: Attribute = bmi
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp
 	public final var attributes: [Attribute] { Me.attributes }
+	public static var dateAttributes: [DateType: DateAttribute] = [
+		.start: CommonSampleAttributes.healthKitTimestamp,
+	]
 
 	// MARK: - Instance Variables
 

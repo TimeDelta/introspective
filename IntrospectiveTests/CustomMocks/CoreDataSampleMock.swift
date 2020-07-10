@@ -135,6 +135,14 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
 	private static var __p_defaultIndependentAttribute: (Attribute)?
 
 
+    public static var dateAttributes: [DateType: DateAttribute] {
+		get {	CoreDataSampleMock.invocations.append(.p_dateAttributes_get); return CoreDataSampleMock.__p_dateAttributes ?? givenGetterValue(.p_dateAttributes_get, "CoreDataSampleMock - stub value for dateAttributes was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	CoreDataSampleMock.__p_dateAttributes = newValue }
+	}
+	private static var __p_dateAttributes: ([DateType: DateAttribute])?
+
+
 
 
 
@@ -285,6 +293,7 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
         case p_attributes_get
         case p_defaultDependentAttribute_get
         case p_defaultIndependentAttribute_get
+        case p_dateAttributes_get
 
         static func compareParameters(lhs: StaticMethodType, rhs: StaticMethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -297,6 +306,7 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
             case (.p_attributes_get,.p_attributes_get): return true
             case (.p_defaultDependentAttribute_get,.p_defaultDependentAttribute_get): return true
             case (.p_defaultIndependentAttribute_get,.p_defaultIndependentAttribute_get): return true
+            case (.p_dateAttributes_get,.p_dateAttributes_get): return true
             default: return false
             }
         }
@@ -310,6 +320,7 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
                 case .p_attributes_get: return 0
                 case .p_defaultDependentAttribute_get: return 0
                 case .p_defaultIndependentAttribute_get: return 0
+                case .p_dateAttributes_get: return 0
             }
         }
     }
@@ -340,6 +351,9 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
         public static func defaultIndependentAttribute(getter defaultValue: Attribute...) -> StaticPropertyStub {
             return StaticGiven(method: .p_defaultIndependentAttribute_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
+        public static func dateAttributes(getter defaultValue: [DateType: DateAttribute]...) -> StaticPropertyStub {
+            return StaticGiven(method: .p_dateAttributes_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
 
         public static func exportHeaderRow(to csv: Parameter<CSVWriter>, willThrow: Error...) -> StaticMethodStub {
             return StaticGiven(method: .sm_exportHeaderRow__to_csv(`csv`), products: willThrow.map({ StubProduct.throw($0) }))
@@ -363,6 +377,7 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
         public static var attributes: StaticVerify { return StaticVerify(method: .p_attributes_get) }
         public static var defaultDependentAttribute: StaticVerify { return StaticVerify(method: .p_defaultDependentAttribute_get) }
         public static var defaultIndependentAttribute: StaticVerify { return StaticVerify(method: .p_defaultIndependentAttribute_get) }
+        public static var dateAttributes: StaticVerify { return StaticVerify(method: .p_dateAttributes_get) }
     }
 
     public struct StaticPerform {

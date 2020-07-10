@@ -115,8 +115,8 @@ final class MinimumInformationFunctionalTests: FunctionalTest {
 	func testGivenDurations_computeGraphable_returnsMaxDurationInHours() throws {
 		// given
 		let numHours = 23
-		let samples = SampleCreatorTestUtil.createSamples(withValues: [Duration(numHours.hours)], for: Me.restrictedAttribute)
-		let information = MinimumInformation<Duration>(Me.restrictedAttribute)
+		let samples = SampleCreatorTestUtil.createSamples(withValues: [TimeDuration(numHours.hours)], for: Me.restrictedAttribute)
+		let information = MinimumInformation<TimeDuration>(Me.restrictedAttribute)
 
 		// when
 		let value = try information.computeGraphable(forSamples: samples)

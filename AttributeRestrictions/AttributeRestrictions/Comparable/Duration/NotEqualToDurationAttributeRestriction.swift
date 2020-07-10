@@ -11,20 +11,20 @@ import Foundation
 import Attributes
 import Common
 
-public final class NotEqualToDurationAttributeRestriction: TypedNotEqualToAttributeRestrictionBase<Duration> {
+public final class NotEqualToDurationAttributeRestriction: TypedNotEqualToAttributeRestrictionBase<TimeDuration> {
 	private typealias Me = NotEqualToDurationAttributeRestriction
-	public static let valueAttribute = DurationAttribute(name: "Target Duration", pluralName: "Target Durations")
+	public static let valueAttribute = DurationAttribute(name: "Target TimeDuration", pluralName: "Target Durations")
 
 	public required convenience init(restrictedAttribute: Attribute) {
-		self.init(restrictedAttribute: restrictedAttribute, value: Duration(0))
+		self.init(restrictedAttribute: restrictedAttribute, value: TimeDuration(0))
 	}
 
-	public init(restrictedAttribute: Attribute, value: Duration = Duration(0)) {
+	public init(restrictedAttribute: Attribute, value: TimeDuration = TimeDuration(0)) {
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
 
 	public override func copy() -> AttributeRestriction {
-		NotEqualToDurationAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! Duration)
+		NotEqualToDurationAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! TimeDuration)
 	}
 
 	public override func predicate() -> NSPredicate? { nil }

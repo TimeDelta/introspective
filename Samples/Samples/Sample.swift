@@ -24,6 +24,7 @@ public protocol Sample: Attributed {
 	static var attributes: [Attribute] { get }
 	static var defaultDependentAttribute: Attribute { get }
 	static var defaultIndependentAttribute: Attribute { get }
+	static var dateAttributes: [DateType: DateAttribute] { get }
 
 	func graphableValue(of attribute: Attribute) throws -> Any?
 
@@ -64,7 +65,7 @@ public extension Sample {
 				if !safeEqualityCheck(attribute, otherSample, as: Double.self) { return false }
 				break
 			case is DurationAttribute:
-				if !safeEqualityCheck(attribute, otherSample, as: Duration.self) { return false }
+				if !safeEqualityCheck(attribute, otherSample, as: TimeDuration.self) { return false }
 				break
 			case is FrequencyAttribute:
 				if !safeEqualityCheck(attribute, otherSample, as: Frequency.self) { return false }

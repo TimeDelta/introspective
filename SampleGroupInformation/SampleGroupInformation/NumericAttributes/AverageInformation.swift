@@ -123,14 +123,14 @@ public final class AverageInformation: AnyInformation {
 		Double(try samples.filter { (try $0.value(of: attribute)) as? Dosage != nil }.count)
 	}
 
-	private final func averageDuration(_ samples: [Sample]) throws -> Duration {
-		let filteredSamples = try filterSamples(samples, as: Duration.self)
-		if filteredSamples.isEmpty { return Duration(0) }
+	private final func averageDuration(_ samples: [Sample]) throws -> TimeDuration {
+		let filteredSamples = try filterSamples(samples, as: TimeDuration.self)
+		if filteredSamples.isEmpty { return TimeDuration(0) }
 
-		var totalDuration = Duration(0)
+		var totalDuration = TimeDuration(0)
 		var totalNonNilSamples = 0
 		for sample in filteredSamples {
-			if let duration = try sample.value(of: attribute) as? Duration {
+			if let duration = try sample.value(of: attribute) as? TimeDuration {
 				totalDuration += duration
 				totalNonNilSamples += 1
 			}

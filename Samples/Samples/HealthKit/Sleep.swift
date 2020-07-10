@@ -76,6 +76,9 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 	public static let defaultDependentAttribute: Attribute = durationAttribute
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitStartDate
 	public final var attributes: [Attribute] { Me.attributes }
+	public static var dateAttributes: [DateType: DateAttribute] = [
+		.start: CommonSampleAttributes.healthKitTimestamp,
+	]
 
 	// MARK: - Searching
 
@@ -143,7 +146,7 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 
 	public final func graphableValue(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(Me.durationAttribute) {
-			return Duration(start: startDate, end: endDate).inUnit(.hour)
+			return TimeDuration(start: startDate, end: endDate).inUnit(.hour)
 		}
 		return try value(of: attribute)
 	}
@@ -152,7 +155,7 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 
 	public final func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(Me.durationAttribute) {
-			return Duration(start: startDate, end: endDate)
+			return TimeDuration(start: startDate, end: endDate)
 		}
 		if attribute.equalTo(Me.stateAttribute) {
 			return state

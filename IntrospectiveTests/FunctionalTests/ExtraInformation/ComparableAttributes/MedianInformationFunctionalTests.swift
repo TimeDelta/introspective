@@ -66,15 +66,15 @@ class MedianInformationFunctionalTests: FunctionalTest {
 
 	func testGivenDurationAttribute_compute_returnsCorrectValue() throws {
 		// given
-		let medianValue = Duration([.hour: 1])
+		let medianValue = TimeDuration([.hour: 1])
 		let attribute = DurationAttribute(name: "name")
 		let samples = SampleCreatorTestUtil.createSamples(
 			withValues: [
 				medianValue,
-				medianValue - Duration([.minute: 1]),
-				medianValue + Duration([.minute: 1])],
+				medianValue - TimeDuration([.minute: 1]),
+				medianValue + TimeDuration([.minute: 1])],
 			for: attribute)
-		let information = MedianInformation<Duration>(attribute)
+		let information = MedianInformation<TimeDuration>(attribute)
 
 		// when
 		let value = try information.compute(forSamples: samples)

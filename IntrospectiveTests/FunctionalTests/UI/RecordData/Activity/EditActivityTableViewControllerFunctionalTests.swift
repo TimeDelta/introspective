@@ -226,7 +226,7 @@ class EditActivityTableViewControllerFunctionalTests: FunctionalTest {
 	func testGivenNewDuration_durationChanged_updatesEndDate() {
 		// given
 		let startDate = Date()
-		let duration = Duration(1.days)
+		let duration = TimeDuration(1.days)
 		controller.startDate = startDate
 		Given(uiUtil, .value(for: .value(.duration), from: .any, keyIsOptional: .any, willReturn: duration))
 

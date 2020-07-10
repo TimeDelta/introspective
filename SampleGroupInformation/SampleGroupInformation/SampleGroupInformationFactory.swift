@@ -68,9 +68,9 @@ public final class SampleGroupInformationFactoryImpl: SampleGroupInformationFact
 		} else if attribute is DurationAttribute {
 			applicableInformationTypes.append(SumInformation.self)
 			applicableInformationTypes.append(AverageInformation.self)
-			applicableInformationTypes.append(MaximumInformation<Duration>.self)
-			applicableInformationTypes.append(MinimumInformation<Duration>.self)
-			applicableInformationTypes.append(MedianInformation<Duration>.self)
+			applicableInformationTypes.append(MaximumInformation<TimeDuration>.self)
+			applicableInformationTypes.append(MinimumInformation<TimeDuration>.self)
+			applicableInformationTypes.append(MedianInformation<TimeDuration>.self)
 		}
 		// TODO: - additional attribute types
 		applicableInformationTypes.append(contentsOf: Me.genericInformationTypes)
@@ -95,9 +95,9 @@ public final class SampleGroupInformationFactoryImpl: SampleGroupInformationFact
 			applicableInformationTypes.append(ModeInformation.self)
 		} else if attribute is DurationAttribute {
 			applicableInformationTypes.append(contentsOf: Me.numericInformationTypes)
-			applicableInformationTypes.append(MaximumInformation<Duration>.self)
-			applicableInformationTypes.append(MinimumInformation<Duration>.self)
-			applicableInformationTypes.append(MedianInformation<Duration>.self)
+			applicableInformationTypes.append(MaximumInformation<TimeDuration>.self)
+			applicableInformationTypes.append(MinimumInformation<TimeDuration>.self)
+			applicableInformationTypes.append(MedianInformation<TimeDuration>.self)
 			applicableInformationTypes.append(ModeInformation.self)
 		}
 		applicableInformationTypes.append(CountInformation.self)

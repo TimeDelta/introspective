@@ -17,11 +17,22 @@ import Persistence
 public enum Setting {
 	case minMood
 	case maxMood
+
+	/// Whether or not to use discrete mood ratings.
 	case discreteMoods
+
+	/// Whether or not imported mood ratings should automatically be scaled to the current min / max ratings
 	case scaleMoodsOnImport
+
+	/// Whether or not to ignore stopped activities with duration less than [autoIgnoreSeconds](x-source-tag://autoIgnoreSeconds).
 	case autoIgnoreEnabled
+	/// The minimum number of seconds that a stopped activity must be in order to be kept (only from record screens).
+	/// - Tag: autoIgnoreSeconds
 	case autoIgnoreSeconds
+
 	case convertTimeZones
+
+	case defaultSearchNearbyDuration
 }
 
 // sourcery: AutoMockable
@@ -47,6 +58,9 @@ public protocol Settings: CoreDataObject {
 
 	var convertTimeZones: Bool { get }
 	func setConvertTimeZones(_ value: Bool)
+
+	var defaultSearchNearbyDuration: TimeDuration { get }
+	func setDefaultSearchNearbyDuration(_ value: TimeDuration)
 
 	func changed(_ setting: Setting) -> Bool
 
@@ -157,6 +171,21 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		}
 	}
 
+	// MARK: - Results
+
+	// MARK: Default Search Nearby TimeDuration
+
+	private final var newDefaultSearchNearbyDuration: TimeDuration?
+	public final var defaultSearchNearbyDuration: TimeDuration {
+		newDefaultSearchNearbyDuration ?? storedDefaultSearchNearbyDuration
+	}
+
+	public func setDefaultSearchNearbyDuration(_ value: TimeDuration) {
+		if value != storedDefaultSearchNearbyDuration {
+			newDefaultSearchNearbyDuration = value
+		}
+	}
+
 	// MARK: - Other Functions
 
 	public final func changed(_ setting: Setting) -> Bool {
@@ -168,6 +197,7 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		case .autoIgnoreEnabled: return newAutoIgnoreEnabled != nil
 		case .autoIgnoreSeconds: return newAutoIgnoreSeconds != nil
 		case .convertTimeZones: return newConvertTimeZones != nil
+		case .defaultSearchNearbyDuration: return newDefaultSearchNearbyDuration != nil
 		}
 	}
 
@@ -179,6 +209,7 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		newAutoIgnoreEnabled = nil
 		newAutoIgnoreSeconds = nil
 		newConvertTimeZones = nil
+		newDefaultSearchNearbyDuration = nil
 	}
 
 	public final func save() throws {
@@ -190,6 +221,7 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		storedAutoIgnoreEnabled = autoIgnoreEnabled
 		storedAutoIgnoreSeconds = autoIgnoreSeconds
 		storedConvertTimeZones = convertTimeZones
+		storedDefaultSearchNearbyDuration = defaultSearchNearbyDuration
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 		reset()
 	}
@@ -206,7 +238,11 @@ public extension SettingsImpl {
 	@NSManaged fileprivate var storedMaxMood: Double
 	@NSManaged fileprivate var storedDiscreteMoods: Bool
 	@NSManaged fileprivate var storedScaleMoodsOnImport: Bool
+
 	@NSManaged fileprivate var storedAutoIgnoreEnabled: Bool
 	@NSManaged fileprivate var storedAutoIgnoreSeconds: Int
+
 	@NSManaged fileprivate var storedConvertTimeZones: Bool
+
+	@NSManaged fileprivate var storedDefaultSearchNearbyDuration: TimeDuration
 }

@@ -139,10 +139,10 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 		let attribute = DurationAttribute()
 		let date = Date()
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [
-			Duration(start: date, end: date + 4.days),
-			Duration(start: date, end: date + 8.hours),
-			Duration(start: date, end: date + 12.minutes),
-			Duration(start: date, end: date + 16.seconds),
+			TimeDuration(start: date, end: date + 4.days),
+			TimeDuration(start: date, end: date + 8.hours),
+			TimeDuration(start: date, end: date + 12.minutes),
+			TimeDuration(start: date, end: date + 16.seconds),
 		], for: attribute)
 		let information = AverageInformation(attribute)
 
@@ -158,12 +158,12 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 		let attribute = DurationAttribute()
 		let date = Date()
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [
-			Duration(start: date, end: date + 4.days),
+			TimeDuration(start: date, end: date + 4.days),
 			nil, nil,
-			Duration(start: date, end: date + 8.hours),
-			Duration(start: date, end: date + 12.minutes),
+			TimeDuration(start: date, end: date + 8.hours),
+			TimeDuration(start: date, end: date + 12.minutes),
 			nil,
-			Duration(start: date, end: date + 16.seconds),
+			TimeDuration(start: date, end: date + 16.seconds),
 		], for: attribute)
 		let information = AverageInformation(attribute)
 
@@ -324,10 +324,10 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 		let attribute = DurationAttribute()
 		let date = Date()
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [
-			Duration(start: date, end: date + 4.hours),
-			Duration(start: date, end: date + 3.hours),
-			Duration(start: date, end: date + 2.hours),
-			Duration(start: date, end: date + 1.hours),
+			TimeDuration(start: date, end: date + 4.hours),
+			TimeDuration(start: date, end: date + 3.hours),
+			TimeDuration(start: date, end: date + 2.hours),
+			TimeDuration(start: date, end: date + 1.hours),
 		], for: attribute)
 		let information = AverageInformation(attribute)
 
@@ -343,12 +343,12 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 		let attribute = DurationAttribute()
 		let date = Date()
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [
-			Duration(start: date, end: date + 4.hours),
+			TimeDuration(start: date, end: date + 4.hours),
 			nil, nil,
-			Duration(start: date, end: date + 3.hours),
-			Duration(start: date, end: date + 2.hours),
+			TimeDuration(start: date, end: date + 3.hours),
+			TimeDuration(start: date, end: date + 2.hours),
 			nil,
-			Duration(start: date, end: date + 1.hours),
+			TimeDuration(start: date, end: date + 1.hours),
 		], for: attribute)
 		let information = AverageInformation(attribute)
 

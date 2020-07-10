@@ -8,7 +8,6 @@
 
 import Foundation
 
-import Common
 import DependencyInjection
 
 public final class Frequency: NSObject, NSSecureCoding, Codable, Comparable {
