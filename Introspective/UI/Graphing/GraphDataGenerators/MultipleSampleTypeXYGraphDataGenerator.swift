@@ -136,8 +136,7 @@ public final class MultipleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator 
 		andY ySamples: [Sample],
 		as groupName: String? = nil,
 		usePointGroupValueForXAxis: Bool
-	)
-		throws {
+	) throws {
 		signpost.begin(name: "Grouping x-axis samples", "Grouping %d samples", xSamples.count)
 		let xGroups = try pointGroupers.x.group(samples: xSamples)
 		signpost.end(
@@ -153,7 +152,7 @@ public final class MultipleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator 
 		} else {
 			xValues = try transform(sampleGroups: xGroups, information: xInformation!)
 		}
-		let sortedXValues = getSortedXValues(xValues)
+		let sortedXValues = sort(xValues, by: { gentlyResolveAsString($0.groupValue) })
 
 		signpost.begin(name: "Grouping y-axis samples", "Grouping %d samples", ySamples.count)
 		let yGroups = try pointGroupers.y.group(samples: ySamples)
@@ -168,8 +167,9 @@ public final class MultipleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator 
 			yInformation,
 			fromGroups: yGroups,
 			groupedBy: pointGroupers.x,
-			withGroupName: groupName,
-			sortedXValues: sortedXValues
+			seriesNamePrefix: groupName,
+			sortedXValuesForSeries: sortedXValues,
+			allSortedXGroupValues: sortedXValues
 		))
 	}
 }

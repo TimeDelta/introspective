@@ -17,7 +17,7 @@ import UIExtensions
 
 public protocol BasicXYChartViewController: UIViewController {
 	var queries: [Query]? { get set }
-	var dataSeries: [[String: Any]]! { get set }
+	var dataSeries: [AASeriesElement]! { get set }
 	var displayXAxisValueLabels: Bool { get set }
 	var chartType: AAChartType! { get set }
 	var categories: [String]? { get set }
@@ -33,9 +33,9 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 	// MARK: - Instance Variables
 
 	public final var queries: [Query]?
-	public final var dataSeries: [[String: Any]]! {
+	public final var dataSeries: [AASeriesElement]! {
 		didSet {
-			dataSeries = dataSeries ?? [[String: Any]]()
+			dataSeries = dataSeries ?? [AASeriesElement]()
 			updateChartData()
 		}
 	}
@@ -119,9 +119,7 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 		if categories != nil {
 			chartModel = chartModel.categories(categories!)
 		}
-		let xAxis = AAXAxis().linkedTo(0).visible(displayXAxisValueLabels)
-		let chartOptions = AAOptionsConstructor.configureChartOptions(chartModel).xAxis(xAxis)
-		chartView.aa_drawChartWithChartOptions(chartOptions)
+		chartView.aa_drawChartWithChartModel(chartModel)
 	}
 
 	private final func doneWaiting() {

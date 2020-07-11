@@ -15,7 +15,7 @@ import SampleGroupers
 import SampleGroupInformation
 import Samples
 
-public typealias GraphData = [[String: Any]]
+public typealias GraphData = [AASeriesElement]
 
 public class XYGraphDataGenerator {
 	// MARK: - Instance Variables
@@ -80,78 +80,101 @@ public class XYGraphDataGenerator {
 
 	// MARK: - Sorting
 
-	/// - Parameter groupValue: Whatever the grouper passed back for the group value in the tuple returned from `group(samples: [Sample])`
-	/// - Parameter sampleValue: The combined value over all samples
-	final func getSortedXValues(
-		_ xValues: [(groupValue: Any, sampleValue: String)]
-	) -> [(groupValue: Any, sampleValue: Any)] {
-		let values = xValues.map { $0.sampleValue }
-		// if x values are numbers and are not sorted, graph will look very weird
-		if areAllNumbers(values) {
-			return sortXValuesByNumber(xValues)
-		} else if areAllDates(values) {
-			return sortXValuesByDate(xValues)
-		} else if areAllDaysOfWeek(values) {
-			return sortXValuesByDayOfWeek(xValues)
+	/// - Parameter values:
+	///     - groupValue: Whatever the grouper passed back for the group value in the tuple returned from `group(samples: [Sample])`.
+	///     - sampleValue: The combined value over all samples.
+	/// - Parameter valueResolver: How to resolve the value by which to sort each `(groupValue: Any, sampleValue: String)` tuple.
+	final func sort<ValueType>(
+		_ values: [ValueType],
+		by valueResolver: (ValueType) -> String
+	) -> [ValueType] {
+		let resolvedValues: [String] = values.map { valueResolver($0) }
+		if areAllNumbers(resolvedValues) {
+			return sortValuesAsNumbers(values, by: valueResolver)
+		} else if areAllDates(resolvedValues) {
+			return sortValuesAsDates(values, by: valueResolver)
+		} else if areAllDaysOfWeek(resolvedValues) {
+			return sortValuesAsDaysOfWeek(values, by: valueResolver)
 		}
-		return xValues.map { (groupValue: $0.groupValue, sampleValue: $0.sampleValue as Any) }
+		return values
 	}
 
-	final func sortXValuesByNumber(
-		_ xValues: [(groupValue: Any, sampleValue: String)]
-	) -> [(groupValue: Any, sampleValue: Any)] {
-		let sortedXValues: [(groupValue: Any, sampleValue: Any)]
-		let mappedXValues = xValues
-			.map { (groupValue: $0.groupValue, sampleValue: Double(formatNumber($0.sampleValue))!) }
-		signpost?.begin(name: "Sort x values as numbers", "Number of x values: %d", xValues.count)
-		sortedXValues = mappedXValues.sorted {
-			$0.sampleValue < $1.sampleValue
-		}.map {
-			(groupValue: $0.groupValue, sampleValue: $0.sampleValue as Any)
+	/// - Precondition: All resolved values are numbers
+	/// - Parameter values:
+	///     - groupValue: Whatever the grouper passed back for the group value in the tuple returned from `group(samples: [Sample])`.
+	///     - sampleValue: The combined value over all samples.
+	/// - Parameter valueResolver: How to resolve the value by which to sort each `(groupValue: Any, sampleValue: String)` tuple.
+	final func sortValuesAsNumbers<ValueType>(
+		_ values: [ValueType],
+		by valueResolver: (ValueType) -> String
+	) -> [ValueType] {
+		signpost?.begin(name: "Sort values as numbers", "Number of values: %d", values.count)
+		let sortedValues: [ValueType] = values.sorted {
+			let first = Double(formatNumber(valueResolver($0)))!
+			let second = Double(formatNumber(valueResolver($1)))!
+			return first < second
 		}
-		signpost?.end(name: "Sort x values as numbers")
-		return sortedXValues
+		signpost?.end(name: "Sort values as numbers")
+		return sortedValues
 	}
 
-	/// - Precondition: All sample values are valid date strings
-	final func sortXValuesByDate(
-		_ xValues: [(groupValue: Any, sampleValue: String)]
-	) -> [(groupValue: Any, sampleValue: Any)] {
-		let sortedXValues: [(groupValue: Any, sampleValue: Any)]
-		signpost?.begin(name: "Sort x values as dates", "Number of x values: %d", xValues.count)
-		sortedXValues = xValues.sorted {
-			getDate($0.sampleValue)! < getDate($1.sampleValue)!
-		}.map {
-			(groupValue: $0.groupValue, sampleValue: $0.sampleValue as Any)
+	/// - Precondition: All resolved values are valid date strings
+	/// - Parameter values:
+	///     - groupValue: Whatever the grouper passed back for the group value in the tuple returned from `group(samples: [Sample])`.
+	///     - sampleValue: The combined value over all samples.
+	/// - Parameter valueResolver: How to resolve the value by which to sort each `(groupValue: Any, sampleValue: String)` tuple.
+	final func sortValuesAsDates<ValueType>(
+		_ values: [ValueType],
+		by valueResolver: (ValueType) -> String
+	) -> [ValueType] {
+		signpost?.begin(name: "Sort values as dates", "Number of values: %d", values.count)
+		let sortedValues: [ValueType] = values.sorted {
+			getDate(valueResolver($0))! < getDate(valueResolver($1))!
 		}
-		signpost?.end(name: "Sort x values as dates")
-		return sortedXValues
+		signpost?.end(name: "Sort values as dates")
+		return sortedValues
 	}
 
-	final func sortXValuesByDayOfWeek(
-		_ xValues: [(groupValue: Any, sampleValue: String)]
-	) -> [(groupValue: Any, sampleValue: Any)] {
-		let sortedXValues: [(groupValue: Any, sampleValue: Any)]
-		signpost?.begin(name: "Sort x values as days of week", "Number of x values: %d", xValues.count)
-		sortedXValues = xValues.sorted {
-			let day1 = try! DayOfWeek.fromString($0.sampleValue)
-			let day2 = try! DayOfWeek.fromString($1.sampleValue)
+	/// - Precondition: All resolved values are days of the week
+	/// - Parameter values:
+	///     - groupValue: Whatever the grouper passed back for the group value in the tuple returned from `group(samples: [Sample])`.
+	///     - sampleValue: The combined value over all samples.
+	/// - Parameter valueResolver: How to resolve the value by which to sort each `(groupValue: Any, sampleValue: String)` tuple.
+	final func sortValuesAsDaysOfWeek<ValueType>(
+		_ values: [ValueType],
+		by valueResolver: (ValueType) -> String
+	) -> [ValueType] {
+		signpost?.begin(name: "Sort values as days of week", "Number of values: %d", values.count)
+		let sortedValues: [ValueType] = values.sorted {
+			let day1 = try! DayOfWeek.fromString(valueResolver($0))
+			let day2 = try! DayOfWeek.fromString(valueResolver($1))
 			return day1 < day2
-		}.map {
-			(groupValue: $0.groupValue, sampleValue: $0.sampleValue as Any)
 		}
-		signpost?.end(name: "Sort x values as days of week")
-		return sortedXValues
+		signpost?.end(name: "Sort values as days of week")
+		return sortedValues
 	}
 
 	// MARK: - Misc.
 
+	/// Generate series data, producing a separate series for each of the given `SampleGroupInformation`. A different color is generated for each series, maximizing average distance between colors (using the [populateColors() method](x-source-tag://populateColors))
+	///
+	/// For each series:
+	///   1. Transform `groups` by reducing the samples in each using the `SampleGroupInformation` associated with the series.
+	///   1. Iterate over thee x-values in the series, finidng the matching y-value based on same group value.
+	///
+	/// - Parameter yInformation: The information to apply to each group (point) in the series.
+	/// - Parameter groups: The groups of samples to include in the series.
+	/// - Parameter pointGrouper: This is only for use of `groupValuesAreEqual`. No additional grouping is done by this method.
+	/// - Parameter seriesNamePrefix: If provided, prepend the series name with this followed by `": "`.
+	/// - Parameter sortedXValuesForSeries: **Must** be sorted by group value.
+	/// - Parameter allSortedXGroupValues: **Must** be sorted by group value.
 	final func getSeriesDataForYInformation(
 		_ yInformation: [SampleGroupInformation],
 		fromGroups groups: [(Any, [Sample])],
-		groupedBy grouper: SampleGrouper,
-		withGroupName groupName: String?,
-		sortedXValues: [(groupValue: Any, sampleValue: Any)]
+		groupedBy pointGrouper: SampleGrouper,
+		seriesNamePrefix: String?,
+		sortedXValuesForSeries: [(groupValue: Any, sampleValue: Any)],
+		allSortedXGroupValues: [Any]
 	) throws -> GraphData {
 		var graphData = GraphData()
 		if colors.isEmpty {
@@ -160,37 +183,54 @@ public class XYGraphDataGenerator {
 		for yInformation in yInformation {
 			var seriesData = [Any]()
 			let yValues = try transform(sampleGroups: groups, information: yInformation)
-			var xValueIndex = 0
-			for (xGroupValue, xSampleValue) in sortedXValues {
-				// loop over x values so that series data is already sorted
-				if let yValueIndex = index(ofValue: xGroupValue, in: yValues, groupedBy: grouper) {
+			var xValueIndex: Int = 0
+			for (xGroupValue, xSampleValue) in sortedXValuesForSeries {
+				let alreadyAtCurrentXValueIndex = try pointGrouper.groupValuesAreEqual(
+					xGroupValue,
+					allSortedXGroupValues[xValueIndex]
+				)
+				if !alreadyAtCurrentXValueIndex {
+					// since x-value groups for series and all x-value groups are both sorted same, we only need to search from current position in x-value groups forward
+					let remainingXValues = allSortedXGroupValues[xValueIndex...]
+					// Note that because remainingXValues is an array slice, calling .firstIndex will return index relative to original array while only searching within the array slice
+					guard let newXValueIndex = try remainingXValues.firstIndex(where: { groupValue -> Bool in
+						try pointGrouper.groupValuesAreEqual(groupValue, xGroupValue)
+					}) else {
+						// if this happens, it means we can't match the y-value group to an x-value group
+						continue
+					}
+					xValueIndex = newXValueIndex
+				}
+				if let yValueIndex = index(ofValue: xGroupValue, in: yValues, groupedBy: pointGrouper) {
 					let yValue = yValues[yValueIndex].sampleValue
 					guard let yValueNum = Float(formatNumber(yValue)) else {
 						log.debug("Skipping y-value: %@", String(describing: yValue))
-						xValueIndex += 1
 						continue
 					}
-					let dataLabel = AADataLabels()
-						.x(Float(xValueIndex) / Float(sortedXValues.count))
-						.y(yValueNum)
-					let dataElement = AADataElement()
-						.name(String(describing: xSampleValue))
-						.dataLabels(dataLabel)
-						.y(yValueNum)
-					seriesData.append(dataElement.toDic()!)
+					if let xValue = xSampleValue as? Int {
+						seriesData.append([xValue, yValueNum])
+					} else if let xValue = xSampleValue as? Double {
+						seriesData.append([xValue, yValueNum])
+					} else if let xValue = xSampleValue as? Float {
+						seriesData.append([xValue, yValueNum])
+					} else {
+						let dataElement = AADataElement()
+							.name(String(describing: xSampleValue))
+							.x(Float(xValueIndex + 1) / Float(allSortedXGroupValues.count))
+							.y(yValueNum)
+						seriesData.append(dataElement)
+					}
 				}
-				xValueIndex += 1
 			}
 			var name = yInformation.description.localizedCapitalized
-			if let groupName = groupName {
-				name = "\(groupName): \(name)"
+			if let prefix = seriesNamePrefix {
+				name = "\(prefix): \(name)"
 			}
 			graphData.append(
 				AASeriesElement()
 					.name(name)
 					.data(seriesData)
 					.color(getNextColor())
-					.toDic()!
 			)
 		}
 		return graphData
@@ -210,7 +250,10 @@ public class XYGraphDataGenerator {
 		DependencyInjector.get(CalendarUtil.self).date(from: value)
 	}
 
-	/// Apply the given SampleGroupInformation to each sample group.
+	/// Apply the given `SampleGroupInformation` to each sample group.
+	/// - Returns: An array of tuples with:
+	///     - the group value
+	///     - resulting value from applying the `information` to the samples in the group
 	final func transform(
 		sampleGroups: [(Any, [Sample])],
 		information: SampleGroupInformation
@@ -219,7 +262,7 @@ public class XYGraphDataGenerator {
 		var values = [(groupValue: Any, sampleValue: String)]()
 		for (groupValue, samples) in sampleGroups {
 			if samples.count == 0 {
-				values.append((groupValue: groupValue, sampleValue: String(describing: groupValue)))
+				values.append((groupValue: groupValue, sampleValue: "0"))
 			} else {
 				let sampleValue = try information.computeGraphable(forSamples: samples)
 				values.append((groupValue: groupValue, sampleValue: sampleValue))
@@ -229,6 +272,7 @@ public class XYGraphDataGenerator {
 		return values
 	}
 
+	/// - Parameter value: The groupValue for which to search.
 	final func index(
 		ofValue value: Any,
 		in groupValues: [(groupValue: Any, sampleValue: String)],
@@ -249,7 +293,9 @@ public class XYGraphDataGenerator {
 		})
 	}
 
+	/// Calculate `number` different colors, evenly spaced in the HSB color space, maximizing distance between colors.
 	/// - Parameter number: The number of colors to generate (e.g. the number of series for which data is being generated)
+	/// - Tag: populateColors
 	final func populateColors(_ number: Int) {
 		for i in 0 ..< number {
 			let hue = CGFloat(Double(i) / Double(number))
@@ -259,9 +305,16 @@ public class XYGraphDataGenerator {
 		}
 	}
 
-	/// Get the next color that was generated by calling `populateColors(_ number: Int)`.
+	/// Get the next color that was generated by calling [populateColors()](x-source-tag://populateColors)
 	final func getNextColor() -> String {
 		colorToHex(colors.removeFirst())
+	}
+
+	final func gentlyResolveAsString(_ value: Any) -> String {
+		if let castedValue = value as? String {
+			return castedValue
+		}
+		return String(describing: value)
 	}
 
 	private final func colorToHex(_ color: UIColor) -> String {
