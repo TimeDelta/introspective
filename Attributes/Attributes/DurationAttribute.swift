@@ -12,13 +12,13 @@ import Common
 
 public final class DurationAttribute: AttributeBase<TimeDuration>, ComparableAttribute, GraphableAttribute {
 	public final override var typeName: String {
-		"TimeDuration"
+		"Duration"
 	}
 
 	// MARK: - Initializers
 
 	public override init(
-		name: String = "TimeDuration",
+		name: String = "Duration",
 		pluralName: String? = "Durations",
 		description: String? = nil,
 		variableName: String? = nil,
