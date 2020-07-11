@@ -177,7 +177,8 @@ public final class SettingsImpl: NSManagedObject, Settings {
 
 	private final var newDefaultSearchNearbyDuration: TimeDuration?
 	public final var defaultSearchNearbyDuration: TimeDuration {
-		newDefaultSearchNearbyDuration ?? storedDefaultSearchNearbyDuration
+		// can't set default in .xcdatamodel file because TimeDuration is stored as a Transformable
+		newDefaultSearchNearbyDuration ?? storedDefaultSearchNearbyDuration ?? TimeDuration(30.minutes)
 	}
 
 	public func setDefaultSearchNearbyDuration(_ value: TimeDuration) {
@@ -244,5 +245,5 @@ public extension SettingsImpl {
 
 	@NSManaged fileprivate var storedConvertTimeZones: Bool
 
-	@NSManaged fileprivate var storedDefaultSearchNearbyDuration: TimeDuration
+	@NSManaged fileprivate var storedDefaultSearchNearbyDuration: TimeDuration?
 }
