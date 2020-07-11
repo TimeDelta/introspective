@@ -15,50 +15,68 @@ import DependencyInjection
 import Persistence
 
 public enum Setting {
+	/// The minimum rating value for a mood.
+	/// - Tag: minMood
 	case minMood
+	/// The minimum rating value for a mood.
+	/// - Tag: maxMood
 	case maxMood
-
 	/// Whether or not to use discrete mood ratings.
+	/// - Tag: discreteMoods
 	case discreteMoods
-
 	/// Whether or not imported mood ratings should automatically be scaled to the current min / max ratings
+	/// - Tag: scaleMoodsOnImport
 	case scaleMoodsOnImport
 
 	/// Whether or not to ignore stopped activities with duration less than [autoIgnoreSeconds](x-source-tag://autoIgnoreSeconds).
+	/// - Tag: autoIgnoreEnabled
 	case autoIgnoreEnabled
 	/// The minimum number of seconds that a stopped activity must be in order to be kept (only from record screens).
 	/// - Tag: autoIgnoreSeconds
 	case autoIgnoreSeconds
 
+	/// Whether or not to convert dates back to their original time zone before using them in any queries. charts, etc.
+	/// - Tag: convertTimeZones
 	case convertTimeZones
 
+	/// The default amount of time away from a given sample to look when performing the search nearby action on the results screen
+	/// - Tag: defaultSearchNearbyDuration
 	case defaultSearchNearbyDuration
 }
 
 // sourcery: AutoMockable
 public protocol Settings: CoreDataObject {
 	// have to do it this way because the dependency injection system does not allow assignment
+
+	/// - See [minMood](x-source-tag://minMood)
 	var minMood: Double { get }
 	func setMinMood(_ value: Double)
 
+	/// - See [maxMood](x-source-tag://maxMood)
 	var maxMood: Double { get }
 	func setMaxMood(_ value: Double)
 
+	/// - See [discreteMoods](x-source-tag://discreteMoods)
 	var discreteMoods: Bool { get }
 	func setDiscreteMoods(_ value: Bool)
 
+	/// - See [scaleMoodsOnImport](x-source-tag://scaleMoodsOnImport)
 	var scaleMoodsOnImport: Bool { get }
 	func setScaleMoodsOnImport(_ value: Bool)
 
+	/// - See [autoIgnoreEnabled](x-source-tag://autoIgnoreEnabled)
 	var autoIgnoreEnabled: Bool { get }
 	func setAutoIgnoreEnabled(_ value: Bool)
 
+	/// - See [autoIgnoreSeconds](x-source-tag://autoIgnoreSeconds)
 	var autoIgnoreSeconds: Int { get }
 	func setAutoIgnoreSeconds(_ value: Int)
 
+	/// - See [convertTimeZones](x-source-tag://convertTimeZones)
 	var convertTimeZones: Bool { get }
 	func setConvertTimeZones(_ value: Bool)
 
+	/// - See [defaultSearchNearbyDuration](x-source-tag://defaultSearchNearbyDuration)
 	var defaultSearchNearbyDuration: TimeDuration { get }
 	func setDefaultSearchNearbyDuration(_ value: TimeDuration)
 
