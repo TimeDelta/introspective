@@ -10,8 +10,10 @@ import XCTest
 import SwiftyMocky
 import Hamcrest
 import SwiftDate
+
 @testable import Introspective
 @testable import Common
+@testable import SampleGroupers
 @testable import Samples
 
 final class XYGraphDataGeneratorUnitTests: UnitTest {
@@ -123,15 +125,22 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 
 	// MARK: - getSortedXValues()
 
+	// MARK: Edge cases
+
 	func testGivenEmptyArray_getSortedXVales_returnsEmptyArray() {
+		// given
+		let values = [(groupValue: Any, sampleValue: Any)]()
+
 		// when
-		let sortedValues = generator.getSortedXValues([])
+		let sortedValues = generator.sort(values, by: { generator.gentlyResolveAsString($0.sampleValue) })
 
 		// then
 		assertThat(sortedValues, hasCount(0))
 	}
 
-	func testGivenAllNumbers_getSortedXValues_returnsCorrectlySortedValues() {
+	// MARK: Sort by sample value
+
+	func testGivenAllNumbersSortBySampleValue_getSortedXValues_returnsCorrectlySortedValues() {
 		// given
 		Given(mockStringUtil, .isNumber(.any, willReturn: true))
 		let values: [(groupValue: Any, sampleValue: String)] = [
@@ -141,13 +150,13 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 		]
 
 		// when
-		let sortedValues = generator.getSortedXValues(values)
+		let sortedValues = generator.sort(values, by: { generator.gentlyResolveAsString($0.sampleValue) })
 
 		// then
-		assertThat(sortedValues, contains(hasSampleValue(1.0), hasSampleValue(2.0), hasSampleValue(3.0)))
+		assertThat(sortedValues, contains(hasSampleValue("1"), hasSampleValue("2"), hasSampleValue("3")))
 	}
 
-	func testGivenAllDates_getSortedXValues_returnsCorrectlySortedValues() {
+	func testGivenAllDatesSortBySampleValue_getSortedXValues_returnsCorrectlySortedValues() {
 		// given
 		let date1 = Date() - 2.days
 		let date2 = Date() - 1.days
@@ -166,7 +175,7 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 		Given(mockStringUtil, .isNumber(.any, willReturn: false))
 
 		// when
-		let sortedValues = generator.getSortedXValues(values)
+		let sortedValues = generator.sort(values, by: { generator.gentlyResolveAsString($0.sampleValue) })
 
 		// then
 		assertThat(
@@ -177,7 +186,7 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 				hasSampleValue(date3String)))
 	}
 
-	func testGivenAllDaysOfWeek_getSortedXValues_returnsCorrectlySortedValues() {
+	func testGivenAllDaysOfWeekSortBySampleValue_getSortedXValues_returnsCorrectlySortedValues() {
 		// given
 		let day1 = DayOfWeek.Sunday
 		let day2 = DayOfWeek.Monday
@@ -192,7 +201,7 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 		Given(mockStringUtil, .isDayOfWeek(.any, willReturn: true))
 
 		// when
-		let sortedValues = generator.getSortedXValues(values)
+		let sortedValues = generator.sort(values, by: { generator.gentlyResolveAsString($0.sampleValue) })
 
 		// then
 		assertThat(
@@ -203,7 +212,7 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 				hasSampleValue(day3.fullDayName)))
 	}
 
-	func testGivenNonSortableType_getSortedXValues_returnsSameAsInput() {
+	func testGivenNonSortableTypeSortBySampleValue_getSortedXValues_returnsSameAsInput() {
 		// given
 		let values: [(groupValue: Any, sampleValue: String)] = [
 			(groupValue: "1", sampleValue: "a"),
@@ -215,7 +224,7 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 		Given(mockStringUtil, .isDayOfWeek(.any, willReturn: false))
 
 		// when
-		let sortedValues = generator.getSortedXValues(values)
+		let sortedValues = generator.sort(values, by: { generator.gentlyResolveAsString($0.sampleValue) })
 
 		// then
 		assertThat(
@@ -226,16 +235,113 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 				hasSampleValue(values[2].sampleValue)))
 	}
 
+	func testGivenAllNumbersSortByGroupValue_getSortedXValues_returnsCorrectlySortedValues() {
+		// given
+		Given(mockStringUtil, .isNumber(.any, willReturn: true))
+		let values: [(groupValue: Any, sampleValue: String)] = [
+			(groupValue: "2", sampleValue: "a2"),
+			(groupValue: "1", sampleValue: "b1"),
+			(groupValue: "3", sampleValue: "c3"),
+		]
+
+		// when
+		let sortedValues = generator.sort(values, by: { generator.gentlyResolveAsString($0.groupValue) })
+
+		// then
+		assertThat(sortedValues, contains(hasGroupValue("1"), hasGroupValue("2"), hasGroupValue("3")))
+	}
+
+	func testGivenAllDatesSortByGroupValue_getSortedXValues_returnsCorrectlySortedValues() {
+		// given
+		let date1 = Date() - 2.days
+		let date2 = Date() - 1.days
+		let date3 = Date()
+		let date1String = "date1"
+		let date2String = "date2"
+		let date3String = "date3"
+		let values: [(groupValue: Any, sampleValue: String)] = [
+			(groupValue: date3String, sampleValue: "3"),
+			(groupValue: date1String, sampleValue: "1"),
+			(groupValue: date2String, sampleValue: "2"),
+		]
+		Given(mockCalendarUtil, .date(from: .value(date1String), format: .any, willReturn: date1))
+		Given(mockCalendarUtil, .date(from: .value(date2String), format: .any, willReturn: date2))
+		Given(mockCalendarUtil, .date(from: .value(date3String), format: .any, willReturn: date3))
+		Given(mockStringUtil, .isNumber(.any, willReturn: false))
+
+		// when
+		let sortedValues = generator.sort(values, by: { generator.gentlyResolveAsString($0.groupValue) })
+
+		// then
+		assertThat(
+			sortedValues,
+			contains(
+				hasGroupValue(date1String),
+				hasGroupValue(date2String),
+				hasGroupValue(date3String)))
+	}
+
+	func testGivenAllDaysOfWeekSortByGroupValue_getSortedXValues_returnsCorrectlySortedValues() {
+		// given
+		let day1 = DayOfWeek.Sunday
+		let day2 = DayOfWeek.Monday
+		let day3 = DayOfWeek.Tuesday
+		let values: [(groupValue: Any, sampleValue: String)] = [
+			(groupValue: day3.fullDayName, sampleValue: "3"),
+			(groupValue: day1.fullDayName, sampleValue: "1"),
+			(groupValue: day2.fullDayName, sampleValue: "2"),
+		]
+		Given(mockStringUtil, .isNumber(.any, willReturn: false))
+		Given(mockCalendarUtil, .date(from: .any, format: .any, willReturn: nil))
+		Given(mockStringUtil, .isDayOfWeek(.any, willReturn: true))
+
+		// when
+		let sortedValues = generator.sort(values, by: { generator.gentlyResolveAsString($0.groupValue) })
+
+		// then
+		assertThat(
+			sortedValues,
+			contains(
+				hasGroupValue(day1.fullDayName),
+				hasGroupValue(day2.fullDayName),
+				hasGroupValue(day3.fullDayName)))
+	}
+
+	func testGivenNonSortableTypeSortByGroupValue_getSortedXValues_returnsSameAsInput() {
+		// given
+		let values: [(groupValue: Any, sampleValue: String)] = [
+			(groupValue: "a", sampleValue: "3"),
+			(groupValue: "b", sampleValue: "1"),
+			(groupValue: "c", sampleValue: "2"),
+		]
+		Given(mockStringUtil, .isNumber(.any, willReturn: false))
+		Given(mockCalendarUtil, .date(from: .any, format: .any, willReturn: nil))
+		Given(mockStringUtil, .isDayOfWeek(.any, willReturn: false))
+
+		// when
+		let sortedValues = generator.sort(values, by: { generator.gentlyResolveAsString($0.groupValue) })
+
+		// then
+		assertThat(
+			sortedValues,
+			contains(
+				hasGroupValue("a"),
+				hasGroupValue("b"),
+				hasGroupValue("c")))
+	}
+
 	// MARK: - getSeriesDataForYInformation()
 
 	func testGivenNoYInformation_getSeriesDataForYInformation_returnsEmptyGraphData() throws {
 		// when
 		let graphData = try generator.getSeriesDataForYInformation(
 			[],
-			fromGroups: [],
+			fromGroups: [("a", [SampleCreatorTestUtil.createSample()])],
 			groupedBy: SampleGrouperMock(attributes: []),
-			withGroupName: nil,
-			sortedXValues: [])
+			seriesNamePrefix: nil,
+			sortedXValuesForSeries: [],
+			allSortedXGroupValues: []
+		)
 
 		// then
 		assertThat(graphData, hasCount(0))
@@ -253,11 +359,13 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 			[yInformation],
 			fromGroups: groups,
 			groupedBy: grouper,
-			withGroupName: nil,
-			sortedXValues: [])
+			seriesNamePrefix: nil,
+			sortedXValuesForSeries: [],
+			allSortedXGroupValues: []
+		)
 
 		// then
-		assertThat(graphData, hasSeriesWithData([] as [[Double]]))
+		assertThat(graphData, hasSeriesWithDataInAnyOrder([]))
 	}
 
 	func testGivenGroupValuesDoNotMatchUp_getSeriesDataForYInformation_returnsSeriesWithNoData() throws {
@@ -276,18 +384,20 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 			[yInformation],
 			fromGroups: groups,
 			groupedBy: grouper,
-			withGroupName: nil,
-			sortedXValues: xValues)
+			seriesNamePrefix: nil,
+			sortedXValuesForSeries: xValues,
+			allSortedXGroupValues: xValues.map { $0.groupValue }
+		)
 
 		// then
-		assertThat(graphData, hasSeriesWithData([] as [[Double]]))
+		assertThat(graphData, hasSeriesWithDataInAnyOrder([]))
 	}
 
 	func testGivenXGroupValuesMapToYGroupValues_getSeriesDataForYInformation_returnsSeriesWithCorrectData() throws {
 		// given
 		let yInformation = mockInformation()
-		let xValue = 0.0
-		let yValue = 1.0
+		let xValue: Float = 0.0
+		let yValue: Float = 1.0
 		let groupValue = "group"
 		Given(yInformation, .computeGraphable(forSamples: .any, willReturn: String(yValue)))
 		let grouper = SampleGrouperMock(attributes: [])
@@ -302,14 +412,84 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 			[yInformation],
 			fromGroups: groups,
 			groupedBy: grouper,
-			withGroupName: nil,
-			sortedXValues: xValues)
+			seriesNamePrefix: nil,
+			sortedXValuesForSeries: xValues,
+			allSortedXGroupValues: xValues.map { $0.groupValue }
+		)
 
 		// then
-		assertThat(graphData, hasSeriesWithData([[xValue, yValue]]))
+		assertThat(graphData, hasSeries(with(data: [[xValue, yValue]])))
 	}
 
-	func testGivenGroupName_getSeriesDataForYInformation_includesGroupNameInSeriesName() throws {
+	func testGivenSomeXGroupValuesDoNotMap_getSeriesDataForYInformation_returnsSeriesWithCorrectData() throws {
+		// given
+		let yInformation = mockInformation()
+		let xValue = "not a number"
+		let yValue1: Float = 1.0
+		let yValue2: Float = 2.0
+		let targetGroupValue1 = "c"
+		let targetGroupValue2 = "e"
+		Given(yInformation, .computeGraphable(forSamples: .any, willReturn: String(yValue1), String(yValue2)))
+		let grouper = SameValueSampleGrouper(sampleType: Activity.self)
+		grouper.groupByAttribute = Activity.noteAttribute
+		let groups: [(Any, [Sample])] = [
+			(targetGroupValue1, [SampleCreatorTestUtil.createSample()]),
+			(targetGroupValue2, [SampleCreatorTestUtil.createSample()]),
+		]
+		let xValues: [(groupValue: Any, sampleValue: Any)] = [
+			(groupValue: "a", sampleValue: "also not a number"),
+			(groupValue: "b", sampleValue: "also not a number"),
+			(groupValue: targetGroupValue1, sampleValue: xValue),
+			(groupValue: "d", sampleValue: "also not a number"),
+			(groupValue: targetGroupValue2, sampleValue: xValue),
+		]
+
+		// when
+		let graphData = try generator.getSeriesDataForYInformation(
+			[yInformation],
+			fromGroups: groups,
+			groupedBy: grouper,
+			seriesNamePrefix: nil,
+			sortedXValuesForSeries: xValues,
+			allSortedXGroupValues: xValues.map { $0.groupValue }
+		)
+
+		// then
+		assertThat(graphData, hasSeriesWithDataInAnyOrder([point(x: 0.6, y: yValue1), point(x: 1.0, y: yValue2)]))
+	}
+
+	func testGivenNonNumericYValue_getSeriesDataForYInformation_skipsThatYValue() throws {
+		// given
+		let yInformation = mockInformation()
+		let yValue = "not a number"
+		let targetGroupValue = "b"
+		Given(yInformation, .computeGraphable(forSamples: .any, willReturn: yValue))
+		let grouper = SameValueSampleGrouper(sampleType: Activity.self)
+		grouper.groupByAttribute = Activity.noteAttribute
+		let groups: [(Any, [Sample])] = [
+			(targetGroupValue, [SampleCreatorTestUtil.createSample()]),
+		]
+		let xValues: [(groupValue: Any, sampleValue: Any)] = [
+			(groupValue: "a", sampleValue: "some string"),
+			(groupValue: targetGroupValue, sampleValue: "doesn't matter"),
+			(groupValue: "c", sampleValue: "also doesn't matter"),
+		]
+
+		// when
+		let graphData = try generator.getSeriesDataForYInformation(
+			[yInformation],
+			fromGroups: groups,
+			groupedBy: grouper,
+			seriesNamePrefix: nil,
+			sortedXValuesForSeries: xValues,
+			allSortedXGroupValues: xValues.map { $0.groupValue }
+		)
+
+		// then
+		assertThat(graphData, hasSeries(hasNoData()))
+	}
+
+	func testGivenSeriesNamePrefix_getSeriesDataForYInformation_includesGroupNameInSeriesName() throws {
 		// given
 		let informationDescription = "information"
 		let yInformation = mockInformation(description: informationDescription)
@@ -323,18 +503,20 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 		let xValues: [(groupValue: Any, sampleValue: Any)] = [
 			(groupValue: groupValue, sampleValue: xValue),
 		]
-		let groupName = "group name"
+		let seriesNamePrefix = "group name"
 
 		// when
 		let graphData = try generator.getSeriesDataForYInformation(
 			[yInformation],
 			fromGroups: groups,
 			groupedBy: grouper,
-			withGroupName: groupName,
-			sortedXValues: xValues)
+			seriesNamePrefix: seriesNamePrefix,
+			sortedXValuesForSeries: xValues,
+			allSortedXGroupValues: xValues.map { $0.groupValue }
+		)
 
 		// then
-		assertThat(graphData, hasSeriesWithName("\(groupName): \(informationDescription.localizedCapitalized)"))
+		assertThat(graphData, hasSeries(with(name: "\(seriesNamePrefix): \(informationDescription.localizedCapitalized)")))
 	}
 
 	// MARK: - formatNumber()
@@ -388,6 +570,21 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 			contains(
 				has(groupValue: group1Value, sampleValue: group1SampleValue),
 				has(groupValue: group2Value, sampleValue: group2SampleValue)))
+	}
+
+	func testGivenGroupHasNoSamples_transform_usesZeroForThatGroupSampleValue() throws {
+		// given
+		let information = SampleGroupInformationMock()
+		let groupValue = "fnuoj"
+		let groups: [(Any, [Sample])] = [
+			(groupValue, []),
+		]
+
+		// when
+		let transformedValues = try generator.transform(sampleGroups: groups, information: information)
+
+		// then
+		assertThat(transformedValues, contains(has(groupValue: groupValue, sampleValue: "0")))
 	}
 
 	// MARK: - index()
@@ -459,7 +656,6 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 
 	// MARK: Matchers
 
-	// there is an error in the swift compiler that causes a segmentation fault when trying to compile the following method
 	private final func has<GroupType: Equatable, SampleType: Equatable>(
 		groupValue: GroupType,
 		sampleValue: SampleType)
@@ -509,6 +705,24 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 				return .match
 			}
 			return .mismatch("Was \(String(describing: sampleValue))")
+		}
+	}
+
+	private final func hasGroupValue<Type: Equatable>(_ expectedValue: Type)
+	-> Hamcrest.Matcher<(groupValue: Any, sampleValue: Any)> {
+		return hasGroupValue(expectedValue: expectedValue, areEqual: { $0 == $1 })
+	}
+
+	private final func hasGroupValue<Type>(expectedValue: Type, areEqual: @escaping (Type, Type) -> Bool)
+	-> Hamcrest.Matcher<(groupValue: Any, sampleValue: Any)> {
+		return Hamcrest.Matcher("Group value of \(String(describing: expectedValue))") { group -> MatchResult in
+			guard let groupValue = group.groupValue as? Type else {
+				return .mismatch("Wrong type")
+			}
+			if areEqual(groupValue, expectedValue) {
+				return .match
+			}
+			return .mismatch("Was \(String(describing: groupValue))")
 		}
 	}
 

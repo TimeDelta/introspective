@@ -35,10 +35,12 @@ public class DiscreteMoodWidget: UIViewController {
 
 	public override func viewDidLoad() {
 		super.viewDidLoad()
-		DependencyInjector.register(CommonInjectionProvider())
-		DependencyInjector.register(PersistenceInjectionProvider(ObjectModelContainer.objectModel))
-		DependencyInjector.register(SamplesInjectionProvider())
-		DependencyInjector.register(SettingsInjectionProvider())
+		DependencyInjector.register([
+			CommonInjectionProvider(),
+			PersistenceInjectionProvider(ObjectModelContainer.objectModel),
+			SamplesInjectionProvider(),
+			SettingsInjectionProvider(),
+		])
 
 		observe(selector: #selector(moodRatingButtonPressed), name: Me.moodRatingButtonPressed)
 

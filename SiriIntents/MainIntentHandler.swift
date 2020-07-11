@@ -60,10 +60,12 @@ class MainIntentHandler: INExtension {
 	}
 
 	static func registerDependencies() {
-		DependencyInjector.register(CommonInjectionProvider())
-		DependencyInjector.register(PersistenceInjectionProvider(ObjectModelContainer.objectModel))
-		DependencyInjector.register(SamplesInjectionProvider())
-		DependencyInjector.register(SettingsInjectionProvider())
+		DependencyInjector.register([
+			CommonInjectionProvider(),
+			PersistenceInjectionProvider(ObjectModelContainer.objectModel),
+			SamplesInjectionProvider(),
+			SettingsInjectionProvider(),
+		])
 		Me.dependenciesRegistered = true
 	}
 }

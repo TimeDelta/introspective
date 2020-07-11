@@ -52,7 +52,7 @@ class Test: XCTestCase {
 		types.append(contentsOf: SettingsInjectionProvider().types)
 
 		Given(injectionProvider, .types(getter: types))
-		DependencyInjector.register(injectionProvider)
+		DependencyInjector.register([injectionProvider])
 	}
 
 	final func registerMatchers() {
@@ -170,6 +170,9 @@ class Test: XCTestCase {
 		}
 		if let cell1 = one as? UITableViewCell, let cell2 = two as? UITableViewCell {
 			return cell1 == cell2
+		}
+		if let str1 = one as? String, let str2 = two as? String {
+			return str1 == str2
 		}
 		fatalError("Missing equality test for Any Matcher")
 	}

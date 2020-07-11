@@ -19,7 +19,7 @@ public protocol SampleGrouper: Attributed {
 	init(attributes: [Attribute])
 
 	func group(samples: [Sample]) throws -> [(Any, [Sample])]
-	/// - Parameter value: The value passed back from `group(samples: [Sample])`
+	/// - Parameter value: The value passed back from `group(samples: [Sample])` or a `String` representation of it.
 	func groupNameFor(value: Any) throws -> String
 	func groupValuesAreEqual(_ first: Any, _ second: Any) throws -> Bool
 

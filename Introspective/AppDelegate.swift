@@ -103,17 +103,19 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	static func registerDependencies() {
-		DependencyInjector.register(AttributeRestrictionsInjectionProvider())
-		DependencyInjector.register(BooleanAlgebraInjectionProvider())
-		DependencyInjector.register(CommonInjectionProvider())
-		DependencyInjector.register(DataExportInjectionProvider())
-		DependencyInjector.register(DataImportInjectionProvider())
-		DependencyInjector.register(IntrospectiveInjectionProvider())
-		DependencyInjector.register(PersistenceInjectionProvider(ObjectModelContainer.objectModel))
-		DependencyInjector.register(QueriesInjectionProvider())
-		DependencyInjector.register(SamplesInjectionProvider())
-		DependencyInjector.register(SampleGroupersInjectionProvider())
-		DependencyInjector.register(SampleGroupInformationInjectionProvider())
-		DependencyInjector.register(SettingsInjectionProvider())
+		DependencyInjector.register([
+			AttributeRestrictionsInjectionProvider(),
+			BooleanAlgebraInjectionProvider(),
+			CommonInjectionProvider(),
+			DataExportInjectionProvider(),
+			DataImportInjectionProvider(),
+			IntrospectiveInjectionProvider(),
+			PersistenceInjectionProvider(ObjectModelContainer.objectModel),
+			QueriesInjectionProvider(),
+			SamplesInjectionProvider(),
+			SampleGroupersInjectionProvider(),
+			SampleGroupInformationInjectionProvider(),
+			SettingsInjectionProvider(),
+		])
 	}
 }

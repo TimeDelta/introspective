@@ -10,6 +10,7 @@ import XCTest
 import SwiftyMocky
 import Hamcrest
 import AAInfographics
+
 @testable import Introspective
 @testable import Attributes
 @testable import Common

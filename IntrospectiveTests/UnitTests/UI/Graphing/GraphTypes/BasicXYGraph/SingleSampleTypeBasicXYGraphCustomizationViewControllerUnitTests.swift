@@ -9,6 +9,7 @@
 import XCTest
 import SwiftyMocky
 import Hamcrest
+
 @testable import Introspective
 @testable import Attributes
 @testable import Common

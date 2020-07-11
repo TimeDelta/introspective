@@ -116,20 +116,37 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 	}
 
 	public final func groupNameFor(value: Any) throws -> String {
+		if let dateString = value as? String {
+			return dateString
+		}
 		guard let date = value as? Date else {
-			throw GenericError("Expected date for group value but got \(String(describing: value))")
+			throw GenericError("Expected date or string for group value but got \(String(describing: value))")
 		}
 		return DependencyInjector.get(CalendarUtil.self).string(for: date, dateStyle: .medium, timeStyle: .medium)
 	}
 
 	public final func groupValuesAreEqual(_ first: Any, _ second: Any) throws -> Bool {
-		guard let date1 = first as? Date else {
-			throw GenericError("Expected date for group value but got \(String(describing: first))")
+		if
+			let dateString1 = first as? String,
+			let dateString2 = second as? String
+		// swiftformat:disable all
+		{
+			return dateString1 == dateString2
 		}
-		guard let date2 = second as? Date else {
-			throw GenericError("Expected date for group value but got \(String(describing: second))")
+		// swiftformat:enable all
+
+		if
+			let date1 = first as? Date,
+			let date2 = second as? Date
+		// swiftformat:disable all
+		{
+			return date1 == date2
 		}
-		return date1 == date2
+		// swiftformat:enable all
+
+		let firstStr = String(describing: first)
+		let secondStr = String(describing: first)
+		throw GenericError("Expected either date or string for group values but got '\(firstStr)' and '\(secondStr)'")
 	}
 
 	public final func copy() -> SampleGrouper {

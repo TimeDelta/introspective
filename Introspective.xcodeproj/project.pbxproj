@@ -337,6 +337,7 @@
 		A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FC569196ECE6B2231D16543528A687 /* UITest.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A26589F32BFC0527881D20D03E4CB48C /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
+		C20856BFEE25277F08AD5F1CBBF4C0C3 /* SingleSampleTypeXYGraphDataGeneratorUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED1ED371E1529BCAA650A691AE74834 /* SingleSampleTypeXYGraphDataGeneratorUnitTests.swift */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
 		A2DF8D22C94D6F91A865D337C0730F03 /* DurationUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA96F5DDD263FD0D99095EBADBA4AACC /* DurationUnitTests.swift */; };
 		A307D44D6721A760E637CEAE90AFED42 /* BloodPressureTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F312D49748BD5F763B6D8463E6112C45 /* BloodPressureTableViewCell.swift */; };
@@ -921,6 +922,7 @@
 		A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		A2505FFD3F0233815468AA6A0A4B96FE /* CoreDataSampleMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSampleMock.swift; sourceTree = "<group>"; };
+		AED1ED371E1529BCAA650A691AE74834 /* SingleSampleTypeXYGraphDataGeneratorUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleSampleTypeXYGraphDataGeneratorUnitTests.swift; sourceTree = "<group>"; };
 		A455D3386BC23DDD4E8C89EF40475474 /* LessThanDoubleAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanDoubleAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A4CBB7B41499754C5234A1BC949DD2AC /* EditAttributeRestrictionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewController.swift; sourceTree = "<group>"; };
 		A64E0788E27B3B4FE185D06F3F454E46 /* ChooseSampleGrouperTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseSampleGrouperTypeViewController.swift; sourceTree = "<group>"; };
@@ -1901,6 +1903,7 @@
 			isa = PBXGroup;
 			children = (
 				ACD271A7BDC5DC6B9C33EDCABB45B3A3 /* XYGraphDataGeneratorUnitTests.swift */,
+				AED1ED371E1529BCAA650A691AE74834 /* SingleSampleTypeXYGraphDataGeneratorUnitTests.swift */,
 			);
 			path = GraphDataGenerators;
 			sourceTree = "<group>";
@@ -3560,6 +3563,7 @@
 				DD536BA8B33319ED9E5EF71F5A734532 /* SameDatesSubQueryMatcherFunctionalTests.swift in Sources */,
 				2BD2A34E947772149EB310C6AB9586D0 /* IntrospectiveMedicationImporterFunctionalTests.swift in Sources */,
 				A4EFE5EFE5E482A7E834A91DEC1A4613 /* AfterTimeOfDayAttributeRestrictionUnitTests.swift in Sources */,
+				C20856BFEE25277F08AD5F1CBBF4C0C3 /* SingleSampleTypeXYGraphDataGeneratorUnitTests.swift in Sources */,
 				EF7E6725682111D894E907E6BC7CA755 /* GroupNameTableViewCellUnitTests.swift in Sources */,
 				FAFC70DA9F3EEF6339F86BF0E5D679D7 /* ActivityHasOneOfTagAttributeRestrictionFunctionalTests.swift in Sources */,
 				99296115E266A1EE3739855B0C35278D /* ChooseGroupersForXYGraphViewControllerMock.swift in Sources */,
