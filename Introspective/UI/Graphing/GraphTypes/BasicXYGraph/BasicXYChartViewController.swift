@@ -118,7 +118,7 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 		if categories != nil {
 			chartModel = chartModel.categories(categories!)
 		}
-		let xAxis = AAXAxis().min(0).max(1).linkedTo(0).visible(false)
+		let xAxis = AAXAxis().linkedTo(0).visible(displayXAxisValueLabels)
 		let chartOptions = AAOptionsConstructor.configureChartOptions(chartModel).xAxis(xAxis)
 		chartView.aa_drawChartWithChartOptions(chartOptions)
 	}

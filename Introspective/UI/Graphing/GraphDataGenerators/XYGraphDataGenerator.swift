@@ -49,8 +49,7 @@ public class XYGraphDataGenerator {
 	final func areAllDates(_ values: [String]) -> Bool {
 		signpost?.begin(name: "Are all dates", "Checking if %d values are all dates", values.count)
 		for value in values {
-			let date = getDate(value)
-			if date == nil {
+			guard let _ = getDate(value) else {
 				signpost?.end(name: "Are all dates", "Finished checking if %d values are all dates", values.count)
 				return false
 			}

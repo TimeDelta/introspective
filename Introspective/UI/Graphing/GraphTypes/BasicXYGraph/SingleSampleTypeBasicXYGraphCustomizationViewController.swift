@@ -323,12 +323,14 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 			usePointGroupValueForXAxis: usePointGroupValueForXAxis
 		)
 
-		// leave this outside of DispatchQueue.main.async because it can take a while
+		// leave this outside of DispatchQueue.main because it can take a while
 		let allData = try dataGenerator.generateData(samples: samples)
 
 		DispatchQueue.main.async {
 			self.chartController.dataSeries = allData
 		}
+
+		signpost.end(name: "Update Chart Data", "Number of samples: %d", samples.count)
 	}
 
 	private final func showGrouperEditController(

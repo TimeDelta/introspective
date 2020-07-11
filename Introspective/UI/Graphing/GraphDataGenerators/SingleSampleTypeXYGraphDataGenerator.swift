@@ -78,8 +78,8 @@ public final class SingleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator {
 			)
 			populateColors(seriesGroups.count)
 			for (groupValue, samples) in seriesGroups {
-				let groupName = try seriesGrouper.groupNameFor(value: groupValue)
-				try addData(to: &allData, for: samples, as: groupName)
+				let seriesName = try seriesGrouper.groupNameFor(value: groupValue)
+				try addData(to: &allData, for: samples, as: seriesName)
 			}
 		} else {
 			populateColors(1)
@@ -95,8 +95,7 @@ public final class SingleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator {
 		to allData: inout GraphData,
 		for samples: [Sample],
 		as groupName: String? = nil
-	)
-		throws {
+	) throws {
 		if let pointGrouper = pointGrouper {
 			let groups = try pointGrouper.group(samples: samples)
 			allData.append(contentsOf: try getDataFor(groups: groups, groupedBy: pointGrouper, as: groupName))
@@ -118,6 +117,7 @@ public final class SingleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator {
 		}
 	}
 
+	/// Use this when no grouping is required
 	private final func getSeriesDataFor(_ yAttribute: Attribute, from samples: [Sample]) throws -> [[Any]] {
 		guard let xAxisAttribute = xAxis.attribute else {
 			throw GenericError("No x-axis attribute specified")
@@ -125,7 +125,7 @@ public final class SingleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator {
 		let filteredSamples = try samples.filter {
 			let xValue = try $0.value(of: xAxisAttribute)
 			if xValue == nil { return false }
-			let yValue = try! $0.value(of: yAttribute)
+			let yValue = try $0.value(of: yAttribute)
 			return yValue != nil
 		}
 		return try filteredSamples.map { (sample: Sample) -> [Any] in

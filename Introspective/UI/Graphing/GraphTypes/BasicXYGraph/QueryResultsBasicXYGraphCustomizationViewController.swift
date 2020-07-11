@@ -264,7 +264,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 			usePointGroupValueForXAxis: usePointGroupValueForXAxis
 		)
 
-		// leave this outside of DispatchQueue.main.async because it can take a while
+		// leave this outside of DispatchQueue.main because it can take a while
 		let allData = try dataGenerator.generateData(samples: samples)
 
 		DispatchQueue.main.async {
