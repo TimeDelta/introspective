@@ -17,6 +17,7 @@ public enum UserInfoKey: StringLiteralType, Hashable, CustomStringConvertible {
 	case attributeRestriction = "attributeRestriction"
 	case attributes = "attributes"
 	case attributeValue = "attributeValue"
+	case autoTrimWhitespaceInActivityNotes = "autoTrimWhitespaceInActivityNotes"
 	case autoIgnoreEnabled = "autoIgnoreEnabled"
 	case autoIgnoreSeconds = "autoIgnoreSeconds"
 	case backgroundTaskId = "backgroundTaskId"

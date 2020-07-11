@@ -391,7 +391,7 @@
                                             <rect key="frame" x="16" y="30" width="22" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                             <connections>
-                                                <action selector="informationButtonPressed:" destination="OuH-ul-XZU" eventType="touchUpInside" id="RK0-1j-zfd"/>
+                                                <action selector="autoIgnoreInformationButtonPressed:" destination="OuH-ul-XZU" eventType="touchUpInside" id="RK0-1j-zfd"/>
                                             </connections>
                                         </button>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="seconds" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W63-EV-QGW">
@@ -410,6 +410,42 @@
                                     <outlet property="toggleSwitch" destination="Mhd-a8-pb2" id="wVI-Vp-6S6"/>
                                 </connections>
                             </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="autoTrimWhitespaceInActivityNotes" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="autoTrimWhitespaceInActivityNotes" rowHeight="58" id="glK-cz-CBq" customClass="AutoTrimWhitespaceInActivityNotesTableViewCell" customModule="Introspective" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="115" width="375" height="58"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="glK-cz-CBq" id="lH9-uZ-HQ1">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="58"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dBr-2w-KAD">
+                                            <rect key="frame" x="46" y="13" width="49" height="31"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="auto-ignore enabled" label="auto-ignore enabled"/>
+                                            <connections>
+                                                <action selector="autoTrimWhitespaceInActivityNotesChangedWithSender:" destination="OuH-ul-XZU" eventType="valueChanged" id="8Y8-XJ-D13"/>
+                                            </connections>
+                                        </switch>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoDark" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="czc-Pn-wrg">
+                                            <rect key="frame" x="16" y="17" width="22" height="22"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                            <connections>
+                                                <action selector="autoTrimWhitespaceInActivityNotesInformationButtonPressed:" destination="OuH-ul-XZU" eventType="touchUpInside" id="gY4-tJ-vMj"/>
+                                            </connections>
+                                        </button>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Trim extra spaces from Notes" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YJA-nt-HBC">
+                                            <rect key="frame" x="101" y="18" width="258" height="23"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="label" destination="YJA-nt-HBC" id="xbG-jz-moJ"/>
+                                    <outlet property="toggleSwitch" destination="dBr-2w-KAD" id="ycR-1I-4Qs"/>
+                                </connections>
+                            </tableViewCell>
                         </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="OuH-ul-XZU" id="l5T-gZ-1fy"/>
@@ -419,7 +455,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RnD-9G-xkk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2110" y="-589"/>
+            <point key="canvasLocation" x="2109.5999999999999" y="-589.65517241379314"/>
         </scene>
         <!--Export-->
         <scene sceneID="D9a-I2-Ppk">

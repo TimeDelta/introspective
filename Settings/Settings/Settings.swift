@@ -34,6 +34,9 @@ public enum Setting {
 	/// The minimum number of seconds that a stopped activity must be in order to be kept (only from record screens).
 	/// - Tag: autoIgnoreSeconds
 	case autoIgnoreSeconds
+	/// Whether or not each line of activity notes should be automatically trimmed of any leading or trailing whitespace.
+	/// - Tag: autoTrimWhitespaceInActivityNotes
+	case autoTrimWhitespaceInActivityNotes
 
 	/// Whether or not to convert dates back to their original time zone before using them in any queries. charts, etc.
 	/// - Tag: convertTimeZones
@@ -71,6 +74,10 @@ public protocol Settings: CoreDataObject {
 	/// - See [autoIgnoreSeconds](x-source-tag://autoIgnoreSeconds)
 	var autoIgnoreSeconds: Int { get }
 	func setAutoIgnoreSeconds(_ value: Int)
+
+	/// - See [autoTrimWhitespaceInActivityNotes](x-source-tag://autoTrimWhitespaceInActivityNotes)
+	var autoTrimWhitespaceInActivityNotes: Bool { get }
+	func setAutoTrimWhitespaceInActivityNotes(_ value: Bool)
 
 	/// - See [convertTimeZones](x-source-tag://convertTimeZones)
 	var convertTimeZones: Bool { get }
@@ -174,6 +181,19 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		}
 	}
 
+	// MARK: Auto Trim Whitespace In Activity Notes
+
+	private final var newAutoTrimWhitespaceInActivityNotes: Bool?
+	public final var autoTrimWhitespaceInActivityNotes: Bool {
+		newAutoTrimWhitespaceInActivityNotes ?? storedAutoTrimWhitespaceInActivityNotes
+	}
+
+	public final func setAutoTrimWhitespaceInActivityNotes(_ value: Bool) {
+		if value != storedAutoTrimWhitespaceInActivityNotes {
+			newAutoTrimWhitespaceInActivityNotes = value
+		}
+	}
+
 	// MARK: - General
 
 	// MARK: Convert Time Zones
@@ -191,7 +211,7 @@ public final class SettingsImpl: NSManagedObject, Settings {
 
 	// MARK: - Results
 
-	// MARK: Default Search Nearby TimeDuration
+	// MARK: Default Search Nearby Duration
 
 	private final var newDefaultSearchNearbyDuration: TimeDuration?
 	public final var defaultSearchNearbyDuration: TimeDuration {
@@ -215,6 +235,7 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		case .scaleMoodsOnImport: return newScaleMoodsOnImport != nil
 		case .autoIgnoreEnabled: return newAutoIgnoreEnabled != nil
 		case .autoIgnoreSeconds: return newAutoIgnoreSeconds != nil
+		case .autoTrimWhitespaceInActivityNotes: return newAutoTrimWhitespaceInActivityNotes != nil
 		case .convertTimeZones: return newConvertTimeZones != nil
 		case .defaultSearchNearbyDuration: return newDefaultSearchNearbyDuration != nil
 		}
@@ -225,22 +246,30 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		newMaxMood = nil
 		newDiscreteMoods = nil
 		newScaleMoodsOnImport = nil
+
 		newAutoIgnoreEnabled = nil
 		newAutoIgnoreSeconds = nil
+		newAutoTrimWhitespaceInActivityNotes = nil
+
 		newConvertTimeZones = nil
 		newDefaultSearchNearbyDuration = nil
 	}
 
 	public final func save() throws {
 		let transaction = DependencyInjector.get(Database.self).transaction()
+
 		storedMinMood = minMood
 		storedMaxMood = maxMood
 		storedDiscreteMoods = discreteMoods
 		storedScaleMoodsOnImport = scaleMoodsOnImport
+
 		storedAutoIgnoreEnabled = autoIgnoreEnabled
 		storedAutoIgnoreSeconds = autoIgnoreSeconds
+		storedAutoTrimWhitespaceInActivityNotes = autoTrimWhitespaceInActivityNotes
+
 		storedConvertTimeZones = convertTimeZones
 		storedDefaultSearchNearbyDuration = defaultSearchNearbyDuration
+
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 		reset()
 	}
@@ -260,6 +289,7 @@ public extension SettingsImpl {
 
 	@NSManaged fileprivate var storedAutoIgnoreEnabled: Bool
 	@NSManaged fileprivate var storedAutoIgnoreSeconds: Int
+	@NSManaged fileprivate var storedAutoTrimWhitespaceInActivityNotes: Bool
 
 	@NSManaged fileprivate var storedConvertTimeZones: Bool
 

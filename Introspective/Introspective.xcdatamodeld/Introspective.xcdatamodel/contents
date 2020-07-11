@@ -85,6 +85,7 @@
     <entity name="Settings" representedClassName="Settings.SettingsImpl" syncable="YES">
         <attribute name="storedAutoIgnoreEnabled" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="storedAutoIgnoreSeconds" attributeType="Integer 64" defaultValueString="15" usesScalarValueType="YES"/>
+        <attribute name="storedAutoTrimWhitespaceInActivityNotes" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
         <attribute name="storedConvertTimeZones" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="storedDefaultSearchNearbyDuration" optional="YES" attributeType="Transformable" customClassName="TimeDuration"/>
         <attribute name="storedDiscreteMoods" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
@@ -112,7 +113,7 @@
         <element name="Medication" positionX="-54" positionY="9" width="128" height="30"/>
         <element name="MedicationDose" positionX="-45" positionY="45" width="128" height="30"/>
         <element name="Mood" positionX="-63" positionY="-18" width="128" height="30"/>
-        <element name="Settings" positionX="-63" positionY="9" width="128" height="163"/>
+        <element name="Settings" positionX="-63" positionY="9" width="128" height="178"/>
         <element name="Tag" positionX="-18" positionY="81" width="128" height="30"/>
         <element name="WellnessMoodImporter" positionX="-54" positionY="18" width="128" height="30"/>
     </elements>

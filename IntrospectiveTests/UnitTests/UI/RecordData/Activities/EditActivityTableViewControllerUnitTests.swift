@@ -400,7 +400,7 @@ class EditActivityTableViewControllerUnitTests: UnitTest {
 
 	// MARK: - tableViewDidSelectRowAt()
 
-	func testGivenStartIndex_tableViewDidSelectRowAt_returnsNil() {
+	func testGivenStartIndex_tableViewDidSelectRowAt_setsCorrectInitialDateOnController() {
 		// given
 		let index = Class.startIndex
 		// force call to viewDidLoad() before setting start date or it will be overwritten
@@ -416,7 +416,7 @@ class EditActivityTableViewControllerUnitTests: UnitTest {
 		assertThat(presentedController.initialDate, equalTo(startDate))
 	}
 
-	func testGivenEndIndex_tableViewDidSelectRowAt_returnsNil() {
+	func testGivenEndIndex_tableViewDidSelectRowAt_setsCorrectInitialDateOnPresentedController() {
 		// given
 		let index = Class.endIndex
 		let endDate = Date() - 1.days
@@ -430,7 +430,7 @@ class EditActivityTableViewControllerUnitTests: UnitTest {
 		assertThat(presentedController.initialDate, equalTo(endDate))
 	}
 
-	func testGivenDurationIndex_tableViewDidSelectRowAt_returnsNil() {
+	func testGivenDurationIndex_tableViewDidSelectRowAt_setsCorrectInitialDurationOnPresentedController() {
 		// given
 		let index = Class.durationIndex
 		// force call to viewDidLoad() before setting start date or it will be overwritten

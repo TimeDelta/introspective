@@ -25,20 +25,30 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 
 	private static let changeNotifications = [
 		Notification.Name("autoIgnoreChanged"),
+		Notification.Name("autoTrimWhitespaceInActivityNotes"),
+	]
+
+	private static let notificationHandlers: [Selector] = [
+		#selector(autoIgnoreChanged),
+		#selector(autoTrimWhitespaceInActivityNotesChanged),
 	]
 
 	private static let identifiers = [
 		"autoIgnore",
+		"autoTrimWhitespaceInActivityNotes",
 	]
 
 	private static let cellHeights: [CGFloat] = [
 		87.0,
+		58.0,
 	]
 
 	// MARK: - Instance Variables
 
 	private final var autoIgnoreEnabled: Bool = DependencyInjector.get(Settings.self).autoIgnoreEnabled
 	private final var numberOfSeconds: Int = DependencyInjector.get(Settings.self).autoIgnoreSeconds
+	private final var autoTrimWhitespaceInActivityNotesEnabled: Bool = DependencyInjector.get(Settings.self)
+		.autoTrimWhitespaceInActivityNotes
 
 	private final let log = Log()
 
@@ -53,7 +63,9 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 		)
 
 		DependencyInjector.get(UiUtil.self).setBackButton(for: self, title: "Settings", action: #selector(done))
-		observe(selector: #selector(autoIgnoreChanged), name: Me.changeNotifications[0])
+		for i in 0 ..< Me.changeNotifications.count {
+			observe(selector: Me.notificationHandlers[i], name: Me.changeNotifications[i])
+		}
 	}
 
 	deinit {
@@ -67,17 +79,20 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 	}
 
 	public final override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-		1
+		Me.identifiers.count
 	}
 
 	public final override func tableView(
 		_ tableView: UITableView,
 		cellForRowAt indexPath: IndexPath
 	) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(
+		guard let cell = tableView.dequeueReusableCell(
 			withIdentifier: Me.identifiers[indexPath.row],
 			for: indexPath
-		) as! ActivitySettingTableViewCell
+		) as? ActivitySettingTableViewCell else {
+			log.error("Unable to create table view cell for identifier: %@", Me.identifiers[indexPath.row])
+			return UITableViewCell()
+		}
 		cell.changeNotification = Me.changeNotifications[indexPath.row]
 		return cell
 	}
@@ -103,6 +118,12 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 		}
 	}
 
+	@objc private final func autoTrimWhitespaceInActivityNotesChanged(notification: Notification) {
+		if let enabled: Bool = value(for: .autoTrimWhitespaceInActivityNotes, from: notification) {
+			autoTrimWhitespaceInActivityNotesEnabled = enabled
+		}
+	}
+
 	// MARK: - Actions
 
 	@objc private final func reset(_: Any) {
@@ -112,11 +133,17 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 		}
 	}
 
-	@IBAction final func informationButtonPressed(_: Any) {
+	@IBAction final func autoIgnoreInformationButtonPressed(_: Any) {
 		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")
-		controller
-			.descriptionText =
+		controller.descriptionText =
 			"If an activity is completed before this many seconds have passed, it will not be saved. This only applies when tapping to stop a running activity on the record screen (including the stop all button)."
+		customPresentViewController(Me.descriptionPresenter, viewController: controller, animated: false)
+	}
+
+	@IBAction final func autoTrimWhitespaceInActivityNotesInformationButtonPressed(_: Any) {
+		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")
+		controller.descriptionText =
+			"Whether or not to remove empty space at the begining and end of each line of activity notes when saving."
 		customPresentViewController(Me.descriptionPresenter, viewController: controller, animated: false)
 	}
 
@@ -127,6 +154,8 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 		if autoIgnoreEnabled {
 			DependencyInjector.get(Settings.self).setAutoIgnoreSeconds(numberOfSeconds)
 		}
+		DependencyInjector.get(Settings.self)
+			.setAutoTrimWhitespaceInActivityNotes(autoTrimWhitespaceInActivityNotesEnabled)
 		saveAndGoBackToSettings()
 	}
 

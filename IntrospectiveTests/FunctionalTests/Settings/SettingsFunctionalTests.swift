@@ -170,6 +170,28 @@ final class SettingsFunctionalTests: FunctionalTest {
 		XCTAssert(changed)
 	}
 
+	func testGivenAutoTrimWhitespaceInActivityNotesNotChanged_changed_returnsFalse() {
+		// given
+		settings.setAutoIgnoreEnabled(settings.autoIgnoreEnabled)
+
+		// when
+		let changed = settings.changed(.autoTrimWhitespaceInActivityNotes)
+
+		// then
+		XCTAssertFalse(changed)
+	}
+
+	func testGivenAutoTrimWhitespaceInActivityNotesChanged_changed_returnsTrue() {
+		// given
+		settings.setAutoTrimWhitespaceInActivityNotes(!settings.autoTrimWhitespaceInActivityNotes)
+
+		// when
+		let changed = settings.changed(.autoTrimWhitespaceInActivityNotes)
+
+		// then
+		XCTAssert(changed)
+	}
+
 	// MARK: - setMinMood()
 
 	func testGivenNewMinMood_setMinMood_correctlySetsValue() {
@@ -261,6 +283,19 @@ final class SettingsFunctionalTests: FunctionalTest {
 		XCTAssertEqual(settings.convertTimeZones, expectedValue)
 	}
 
+	// MARK: - setAutoTrimWhitespaceInActivityNotes()
+
+	func testGivenNewAutoTrimWhitespaceInActivityNotes_setAutoTrimWhitespaceInActivityNotes_correctlySetsValue() {
+		// given
+		let expectedValue = !settings.autoTrimWhitespaceInActivityNotes
+
+		// when
+		settings.setAutoTrimWhitespaceInActivityNotes(expectedValue)
+
+		// then
+		XCTAssertEqual(settings.autoTrimWhitespaceInActivityNotes, expectedValue)
+	}
+
 	// MARK: - reset()
 
 	func testGivenNewMinMood_reset_resetsMinMood() {
@@ -345,6 +380,18 @@ final class SettingsFunctionalTests: FunctionalTest {
 
 		// then
 		XCTAssertNotEqual(settings.convertTimeZones, expectedValue)
+	}
+
+	func testGivenNewAutoTrimWhitespaceInActivityNotes_reset_resetsAutoTrimWhitespaceInActivityNotes() {
+		// given
+		let expectedValue = !settings.autoTrimWhitespaceInActivityNotes
+		settings.setAutoTrimWhitespaceInActivityNotes(expectedValue)
+
+		// when
+		settings.reset()
+
+		// then
+		XCTAssertNotEqual(settings.autoTrimWhitespaceInActivityNotes, expectedValue)
 	}
 
 	// MARK: - save()
@@ -452,5 +499,20 @@ final class SettingsFunctionalTests: FunctionalTest {
 		let newSettingsObject = try DependencyInjector.get(Database.self).query(SettingsImpl.fetchRequest())[0]
 		try transaction.commit()
 		XCTAssertEqual(newSettingsObject.convertTimeZones, expectedValue)
+	}
+
+	func testGivenNewAutoTrimWhitespaceInActivityNotes_save_savesAutoTrimWhitespaceInActivityNotes() throws {
+		// given
+		let expectedValue = !settings.autoTrimWhitespaceInActivityNotes
+		settings.setAutoTrimWhitespaceInActivityNotes(expectedValue)
+
+		// when
+		try settings.save()
+
+		// then
+		let transaction = DependencyInjector.get(Database.self).transaction()
+		let newSettingsObject = try DependencyInjector.get(Database.self).query(SettingsImpl.fetchRequest())[0]
+		try transaction.commit()
+		XCTAssertEqual(newSettingsObject.autoTrimWhitespaceInActivityNotes, expectedValue)
 	}
 }

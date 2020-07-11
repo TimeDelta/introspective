@@ -59,6 +59,11 @@ public final class DummySettings: Settings {
 		log.error("tried to set AutoIgnoreSeconds")
 	}
 
+	public final let autoTrimWhitespaceInActivityNotes = true
+	public final func setAutoTrimWhitespaceInActivityNotes(_: Bool) {
+		log.error("tried to set AutoTrimWhitespaceInActivityNotes")
+	}
+
 	public final let convertTimeZones: Bool = true
 	public final func setConvertTimeZones(_: Bool) {
 		log.error("tried to set ConvertTimeZones")

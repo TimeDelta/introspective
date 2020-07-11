@@ -135,6 +135,7 @@
 		4285BDF609DFAEE57477ED7B99FF8E3A /* Introspective.xcdatamodeld in Resources */ = {isa = PBXBuildFile; fileRef = A7581418039FB6FD454DA7AA8C114E56 /* Introspective.xcdatamodeld */; };
 		430920C59B29C0AE2D20F76553F5DE92 /* HeartRateQueryFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEB900441A58470DF6731F6B7F737641 /* HeartRateQueryFunctionalTests.swift */; };
 		43ABA9B3115C47152BDFD828FCF8E5AE /* Samples.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A0010DEF24F98D6EFC8B867ED2212CD1 /* Samples.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		44AE69745D62E48C8B7ADC3825308664 /* ContextualActionMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93404193AC00A5504745AFEE6956397E /* ContextualActionMatchers.swift */; };
 		456C76707BAB3CBD31CDF633EB84E398 /* StringMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ADC6C6F1E17C13F640AA9741585DD0 /* StringMatchers.swift */; };
 		45B75B139CFE82D75940FDCBEFB10777 /* XCUIElementExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF27D6C1A5802F20C4A18B2E8E74930D /* XCUIElementExtensions.swift */; };
 		45CB94BA9AFB34665A6FA02A17A6A824 /* TakeMedicationIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B862D5325AA85A9E16272886E0962 /* TakeMedicationIntentHandler.swift */; };
@@ -334,7 +335,7 @@
 		A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FC569196ECE6B2231D16543528A687 /* UITest.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A26589F32BFC0527881D20D03E4CB48C /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
-		44AE69745D62E48C8B7ADC3825308664 /* ContextualActionMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93404193AC00A5504745AFEE6956397E /* ContextualActionMatchers.swift */; };
+		0AAE5EB1B7434CCD026262DAB9EE2406 /* AutoTrimWhitespaceInActivityNotesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDFACB9F4212C5A3EC176D55A3455AB8 /* AutoTrimWhitespaceInActivityNotesTableViewCell.swift */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
 		A2DF8D22C94D6F91A865D337C0730F03 /* DurationUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA96F5DDD263FD0D99095EBADBA4AACC /* DurationUnitTests.swift */; };
 		A307D44D6721A760E637CEAE90AFED42 /* BloodPressureTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F312D49748BD5F763B6D8463E6112C45 /* BloodPressureTableViewCell.swift */; };
@@ -876,6 +877,7 @@
 		92201F6025C7BD2A8790AC5AA3A8B882 /* ChooseAttributeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseAttributeViewController.swift; sourceTree = "<group>"; };
 		924490AED5E4A8D3FFDF4504D4D226B4 /* OrExpressionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrExpressionUnitTests.swift; sourceTree = "<group>"; };
 		92DB92D624DE5C36603AD4927E56B6F0 /* ChooseActivityDefinitionViewControllerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseActivityDefinitionViewControllerMock.swift; sourceTree = "<group>"; };
+		93404193AC00A5504745AFEE6956397E /* ContextualActionMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextualActionMatchers.swift; sourceTree = "<group>"; };
 		93C8EAD831164B17E8AA299FA9FE6D6F /* InSameCalendarUnitSubQueryMatcherFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InSameCalendarUnitSubQueryMatcherFunctionalTests.swift; sourceTree = "<group>"; };
 		93DB6DB41B08B37E821A6CD7E76786DE /* Pods_SiriIntents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SiriIntents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		93E0A93AAA9776F795153CBC94B78F92 /* EndsWithStringAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndsWithStringAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
@@ -916,7 +918,7 @@
 		A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		A2505FFD3F0233815468AA6A0A4B96FE /* CoreDataSampleMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSampleMock.swift; sourceTree = "<group>"; };
-		93404193AC00A5504745AFEE6956397E /* ContextualActionMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextualActionMatchers.swift; sourceTree = "<group>"; };
+		CDFACB9F4212C5A3EC176D55A3455AB8 /* AutoTrimWhitespaceInActivityNotesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoTrimWhitespaceInActivityNotesTableViewCell.swift; sourceTree = "<group>"; };
 		A455D3386BC23DDD4E8C89EF40475474 /* LessThanDoubleAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanDoubleAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A4CBB7B41499754C5234A1BC949DD2AC /* EditAttributeRestrictionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewController.swift; sourceTree = "<group>"; };
 		A64E0788E27B3B4FE185D06F3F454E46 /* ChooseSampleGrouperTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseSampleGrouperTypeViewController.swift; sourceTree = "<group>"; };
@@ -2788,6 +2790,7 @@
 				4B20DD516309EF7503CCD06B35C67947 /* ActivitySettingsTableViewController.swift */,
 				4BBD04483430BFC6D7F467D48F8C4749 /* ActivityAutoIgnoreTableViewCell.swift */,
 				03F29CA254A65DA3A13529455F95B00D /* ActivitySettingTableViewCell.swift */,
+				CDFACB9F4212C5A3EC176D55A3455AB8 /* AutoTrimWhitespaceInActivityNotesTableViewCell.swift */,
 			);
 			path = Activity;
 			sourceTree = "<group>";
@@ -3710,6 +3713,7 @@
 				642C02E0417CE0460CA21208063DECE9 /* UnifiedDayViewController.swift in Sources */,
 				1D00F6747831829D71CF6F1B3AE4903A /* SelectSampleGroupInformationViewController.swift in Sources */,
 				C2C88F1B669BAAF878E50FC890F92AD9 /* SelectOneAttributeValueViewController.swift in Sources */,
+				0AAE5EB1B7434CCD026262DAB9EE2406 /* AutoTrimWhitespaceInActivityNotesTableViewCell.swift in Sources */,
 				CC79712E3C842A7AA36BEB0BEA2860EE /* ExportDataTableViewController.swift in Sources */,
 				17B75FE368EBBA6548E29D9BE395012F /* ChooseRecentTimePeriodViewController.swift in Sources */,
 				6C92710823185693AC4F46730CD63B15 /* TestDataGenerationTableViewController.swift in Sources */,

@@ -14,6 +14,7 @@ import Common
 import DependencyInjection
 import Persistence
 import Samples
+import Settings
 
 public protocol EditActivityTableViewController: UITableViewController {
 	var notificationToSendOnAccept: Notification.Name! { get set }
@@ -299,7 +300,13 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 			activity.definition = try transaction.pull(savedObject: definition!)
 			activity.start = startDate
 			activity.end = endDate
-			activity.note = note
+			if DependencyInjector.get(Settings.self).autoTrimWhitespaceInActivityNotes {
+				activity.note = note?.split(separator: "\n").map {
+					str in str.trimmingCharacters(in: .whitespaces)
+				}.joined(separator: "\n")
+			} else {
+				activity.note = note
+			}
 			try updateTagsForActivity(activity, using: transaction)
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 			activity = try DependencyInjector.get(Database.self).pull(savedObject: activity)
