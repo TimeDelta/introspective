@@ -46,13 +46,13 @@
     <entity name="EasyPillMedicationImporter" representedClassName="DataImport.EasyPillMedicationImporterImpl" syncable="YES">
         <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
-    <entity name="IntrospectiveActivityImporter" representedClassName="DataImport.IntrospectiveActivityImporterImpl" syncable="YES" codeGenerationType="class">
+    <entity name="IntrospectiveActivityImporter" representedClassName="DataImport.IntrospectiveActivityImporterImpl" syncable="YES">
         <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
-    <entity name="IntrospectiveMedicationImporter" representedClassName="DataImport.IntrospectiveMedicationImporterImpl" syncable="YES" codeGenerationType="class">
+    <entity name="IntrospectiveMedicationImporter" representedClassName="DataImport.IntrospectiveMedicationImporterImpl" syncable="YES">
         <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
-    <entity name="IntrospectiveMoodImporter" representedClassName="DataImport.IntrospectiveMoodImporterImpl" syncable="YES" codeGenerationType="class">
+    <entity name="IntrospectiveMoodImporter" representedClassName="DataImport.IntrospectiveMoodImporterImpl" syncable="YES">
         <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
     <entity name="Medication" representedClassName="Samples.Medication" syncable="YES" coreSpotlightDisplayNameExpression="Medication">
