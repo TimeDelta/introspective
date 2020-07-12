@@ -27,7 +27,7 @@ public protocol Database {
 	) -> NSFetchedResultsController<Type>
 	func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type]
 	func count<Type: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<Type>) throws -> Int
-	/// Need to call this for any newly objects created after transaction is committed
+	/// Pull the specified managed object fresh from the root view context. Need to call this for any newly objects created after transaction is committed.
 	func pull<Type: NSManagedObject>(savedObject: Type) throws -> Type
 	/// This method needs to be called when trying to establish a relationship between two objects in different contexts.
 	/// This will happen if one object has already been saved and the other hasn't been saved yet.

@@ -32,6 +32,10 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 
 	public final var medication: Medication! {
 		didSet {
+			guard let medication = medication else {
+				log.error("Set medication to nil on RecordMedicationTableViewCell")
+				return
+			}
 			medicationNameLabel.text = medication.name
 			updateLastTakenButton()
 			updateTakeButtonAccessibility()
@@ -98,15 +102,21 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 
 	private final func updateLastTakenButton() {
 		var lastTakenText = "Never taken"
-		if let mostRecentDose = medication.sortedDoses(ascending: true).last {
-			lastTakenText = "Last taken: "
-			if let dosage = mostRecentDose.dosage {
-				lastTakenText += dosage.description + " on "
+		do {
+			if let mostRecentDose = try DependencyInjector.get(MedicationDAO.self).mostRecentDoseOf(medication) {
+				lastTakenText = "Last taken: "
+				if let dosage = mostRecentDose.dosage {
+					lastTakenText += dosage.description + " on "
+				}
+				lastTakenText += DependencyInjector.get(CalendarUtil.self)
+					.string(for: mostRecentDose.date, dateStyle: .medium, timeStyle: .short)
+				DependencyInjector.get(UiUtil.self).setButton(lastTakenOnDateButton, enabled: true, hidden: false)
+			} else {
+				DependencyInjector.get(UiUtil.self).setButton(lastTakenOnDateButton, enabled: false, hidden: false)
 			}
-			lastTakenText += DependencyInjector.get(CalendarUtil.self)
-				.string(for: mostRecentDose.date, dateStyle: .medium, timeStyle: .short)
-			DependencyInjector.get(UiUtil.self).setButton(lastTakenOnDateButton, enabled: true, hidden: false)
-		} else {
+		} catch {
+			log.error("Failed to retrieve most recent dose for %{private}@", medication.name)
+			lastTakenText = "Last Taken: An error ocurred"
 			DependencyInjector.get(UiUtil.self).setButton(lastTakenOnDateButton, enabled: false, hidden: false)
 		}
 		lastTakenOnDateButton.setTitle(lastTakenText, for: .normal)
@@ -124,20 +134,8 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 
 	private final func quickTakeMedication() {
 		do {
-			var transaction = DependencyInjector.get(Database.self).transaction()
-			let medicationDose = try transaction.new(MedicationDose.self)
-			medicationDose.setSource(.introspective)
-			medicationDose.medication = try transaction.pull(savedObject: medication)
-			medicationDose.dosage = medication.dosage
-			medicationDose.date = Date()
-			// have to save created dose before adding it to medication doses
-			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-
-			transaction = DependencyInjector.get(Database.self).transaction()
-			let doseFromTransaction = try transaction.pull(savedObject: medicationDose)
-			medication = try transaction.pull(savedObject: medication)
-			medication.addToDoses(doseFromTransaction)
-			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+			try DependencyInjector.get(MedicationDAO.self).takeMedicationUsingDefaultDosage(medication)
+			updateLastTakenButton()
 		} catch {
 			failedToMarkAsTaken(error)
 		}

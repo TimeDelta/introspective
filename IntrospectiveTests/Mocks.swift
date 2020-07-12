@@ -10081,6 +10081,21 @@ open class MedicationDAOMock: MedicationDAO, Mock {
 		return __value
     }
 
+    open func mostRecentDoseOf(_ medication: Medication) throws -> MedicationDose? {
+        addInvocation(.m_mostRecentDoseOf__medication(Parameter<Medication>.value(`medication`)))
+		let perform = methodPerformValue(.m_mostRecentDoseOf__medication(Parameter<Medication>.value(`medication`))) as? (Medication) -> Void
+		perform?(`medication`)
+		var __value: MedicationDose? = nil
+		do {
+		    __value = try methodReturnValue(.m_mostRecentDoseOf__medication(Parameter<Medication>.value(`medication`))).casted()
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
     open func createMedication(		name: String,		frequency: Frequency?,		dosage: Dosage?,		startedOn: Date?,		note: String?,		source: Sources.MedicationSourceNum,		recordScreenIndex: Int16?,		using transaction: Transaction?	) throws -> Medication {
         addInvocation(.m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(Parameter<String>.value(`name`), Parameter<Frequency?>.value(`frequency`), Parameter<Dosage?>.value(`dosage`), Parameter<Date?>.value(`startedOn`), Parameter<String?>.value(`note`), Parameter<Sources.MedicationSourceNum>.value(`source`), Parameter<Int16?>.value(`recordScreenIndex`), Parameter<Transaction?>.value(`transaction`)))
 		let perform = methodPerformValue(.m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(Parameter<String>.value(`name`), Parameter<Frequency?>.value(`frequency`), Parameter<Dosage?>.value(`dosage`), Parameter<Date?>.value(`startedOn`), Parameter<String?>.value(`note`), Parameter<Sources.MedicationSourceNum>.value(`source`), Parameter<Int16?>.value(`recordScreenIndex`), Parameter<Transaction?>.value(`transaction`))) as? (String, Frequency?, Dosage?, Date?, String?, Sources.MedicationSourceNum, Int16?, Transaction?) -> Void
@@ -10118,6 +10133,7 @@ open class MedicationDAOMock: MedicationDAO, Mock {
         case m_medicationExists__withName_nameusing_transaction(Parameter<String>, Parameter<Transaction?>)
         case m_medicationNamed__name(Parameter<String>)
         case m_takeMedicationUsingDefaultDosage__medication(Parameter<Medication>)
+        case m_mostRecentDoseOf__medication(Parameter<Medication>)
         case m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(Parameter<String>, Parameter<Frequency?>, Parameter<Dosage?>, Parameter<Date?>, Parameter<String?>, Parameter<Sources.MedicationSourceNum>, Parameter<Int16?>, Parameter<Transaction?>)
         case m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(Parameter<Medication>, Parameter<Dosage?>, Parameter<Date>, Parameter<Sources.MedicationSourceNum>, Parameter<Transaction?>)
 
@@ -10131,6 +10147,9 @@ open class MedicationDAOMock: MedicationDAO, Mock {
                 guard Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher) else { return false } 
                 return true 
             case (.m_takeMedicationUsingDefaultDosage__medication(let lhsMedication), .m_takeMedicationUsingDefaultDosage__medication(let rhsMedication)):
+                guard Parameter.compare(lhs: lhsMedication, rhs: rhsMedication, with: matcher) else { return false } 
+                return true 
+            case (.m_mostRecentDoseOf__medication(let lhsMedication), .m_mostRecentDoseOf__medication(let rhsMedication)):
                 guard Parameter.compare(lhs: lhsMedication, rhs: rhsMedication, with: matcher) else { return false } 
                 return true 
             case (.m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(let lhsName, let lhsFrequency, let lhsDosage, let lhsStartedon, let lhsNote, let lhsSource, let lhsRecordscreenindex, let lhsTransaction), .m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(let rhsName, let rhsFrequency, let rhsDosage, let rhsStartedon, let rhsNote, let rhsSource, let rhsRecordscreenindex, let rhsTransaction)):
@@ -10159,6 +10178,7 @@ open class MedicationDAOMock: MedicationDAO, Mock {
             case let .m_medicationExists__withName_nameusing_transaction(p0, p1): return p0.intValue + p1.intValue
             case let .m_medicationNamed__name(p0): return p0.intValue
             case let .m_takeMedicationUsingDefaultDosage__medication(p0): return p0.intValue
+            case let .m_mostRecentDoseOf__medication(p0): return p0.intValue
             case let .m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(p0, p1, p2, p3, p4, p5, p6, p7): return p0.intValue + p1.intValue + p2.intValue + p3.intValue + p4.intValue + p5.intValue + p6.intValue + p7.intValue
             case let .m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(p0, p1, p2, p3, p4): return p0.intValue + p1.intValue + p2.intValue + p3.intValue + p4.intValue
             }
@@ -10182,6 +10202,9 @@ open class MedicationDAOMock: MedicationDAO, Mock {
         }
         public static func takeMedicationUsingDefaultDosage(_ medication: Parameter<Medication>, willReturn: MedicationDose...) -> MethodStub {
             return Given(method: .m_takeMedicationUsingDefaultDosage__medication(`medication`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func mostRecentDoseOf(_ medication: Parameter<Medication>, willReturn: MedicationDose?...) -> MethodStub {
+            return Given(method: .m_mostRecentDoseOf__medication(`medication`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func createMedication(name: Parameter<String>, frequency: Parameter<Frequency?>, dosage: Parameter<Dosage?>, startedOn: Parameter<Date?>, note: Parameter<String?>, source: Parameter<Sources.MedicationSourceNum>, recordScreenIndex: Parameter<Int16?>, using transaction: Parameter<Transaction?>, willReturn: Medication...) -> MethodStub {
             return Given(method: .m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(`name`, `frequency`, `dosage`, `startedOn`, `note`, `source`, `recordScreenIndex`, `transaction`), products: willReturn.map({ StubProduct.return($0 as Any) }))
@@ -10219,6 +10242,16 @@ open class MedicationDAOMock: MedicationDAO, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func mostRecentDoseOf(_ medication: Parameter<Medication>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_mostRecentDoseOf__medication(`medication`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func mostRecentDoseOf(_ medication: Parameter<Medication>, willProduce: (StubberThrows<MedicationDose?>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_mostRecentDoseOf__medication(`medication`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (MedicationDose?).self)
+			willProduce(stubber)
+			return given
+        }
         public static func createMedication(name: Parameter<String>, frequency: Parameter<Frequency?>, dosage: Parameter<Dosage?>, startedOn: Parameter<Date?>, note: Parameter<String?>, source: Parameter<Sources.MedicationSourceNum>, recordScreenIndex: Parameter<Int16?>, using transaction: Parameter<Transaction?>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(`name`, `frequency`, `dosage`, `startedOn`, `note`, `source`, `recordScreenIndex`, `transaction`), products: willThrow.map({ StubProduct.throw($0) }))
         }
@@ -10247,6 +10280,7 @@ open class MedicationDAOMock: MedicationDAO, Mock {
         public static func medicationExists(withName name: Parameter<String>, using transaction: Parameter<Transaction?>) -> Verify { return Verify(method: .m_medicationExists__withName_nameusing_transaction(`name`, `transaction`))}
         public static func medicationNamed(_ name: Parameter<String>) -> Verify { return Verify(method: .m_medicationNamed__name(`name`))}
         public static func takeMedicationUsingDefaultDosage(_ medication: Parameter<Medication>) -> Verify { return Verify(method: .m_takeMedicationUsingDefaultDosage__medication(`medication`))}
+        public static func mostRecentDoseOf(_ medication: Parameter<Medication>) -> Verify { return Verify(method: .m_mostRecentDoseOf__medication(`medication`))}
         public static func createMedication(name: Parameter<String>, frequency: Parameter<Frequency?>, dosage: Parameter<Dosage?>, startedOn: Parameter<Date?>, note: Parameter<String?>, source: Parameter<Sources.MedicationSourceNum>, recordScreenIndex: Parameter<Int16?>, using transaction: Parameter<Transaction?>) -> Verify { return Verify(method: .m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(`name`, `frequency`, `dosage`, `startedOn`, `note`, `source`, `recordScreenIndex`, `transaction`))}
         public static func createDose(medication: Parameter<Medication>, dosage: Parameter<Dosage?>, timestamp: Parameter<Date>, source: Parameter<Sources.MedicationSourceNum>, using transaction: Parameter<Transaction?>) -> Verify { return Verify(method: .m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(`medication`, `dosage`, `timestamp`, `source`, `transaction`))}
     }
@@ -10263,6 +10297,9 @@ open class MedicationDAOMock: MedicationDAO, Mock {
         }
         public static func takeMedicationUsingDefaultDosage(_ medication: Parameter<Medication>, perform: @escaping (Medication) -> Void) -> Perform {
             return Perform(method: .m_takeMedicationUsingDefaultDosage__medication(`medication`), performs: perform)
+        }
+        public static func mostRecentDoseOf(_ medication: Parameter<Medication>, perform: @escaping (Medication) -> Void) -> Perform {
+            return Perform(method: .m_mostRecentDoseOf__medication(`medication`), performs: perform)
         }
         public static func createMedication(name: Parameter<String>, frequency: Parameter<Frequency?>, dosage: Parameter<Dosage?>, startedOn: Parameter<Date?>, note: Parameter<String?>, source: Parameter<Sources.MedicationSourceNum>, recordScreenIndex: Parameter<Int16?>, using transaction: Parameter<Transaction?>, perform: @escaping (String, Frequency?, Dosage?, Date?, String?, Sources.MedicationSourceNum, Int16?, Transaction?) -> Void) -> Perform {
             return Perform(method: .m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(`name`, `frequency`, `dosage`, `startedOn`, `note`, `source`, `recordScreenIndex`, `transaction`), performs: perform)

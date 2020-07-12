@@ -21,6 +21,9 @@ public protocol MedicationDAO {
 	@discardableResult
 	func takeMedicationUsingDefaultDosage(_ medication: Medication) throws -> MedicationDose
 
+	/// Get the most recently taken dose of the specified medication. If the specified medication has not been taken yet, returns `nil`.
+	func mostRecentDoseOf(_ medication: Medication) throws -> MedicationDose?
+
 	@discardableResult
 	func createMedication(
 		name: String,
@@ -105,6 +108,14 @@ public final class MedicationDAOImpl: MedicationDAO {
 		let medicationsWithSameName = try DependencyInjector.get(Database.self).query(fetchRequest)
 		guard !medicationsWithSameName.isEmpty else { return nil }
 		return medicationsWithSameName[0]
+	}
+
+	public final func mostRecentDoseOf(_ medication: Medication) throws -> MedicationDose? {
+		let fetchRequest: NSFetchRequest<MedicationDose> = MedicationDose.fetchRequest()
+		fetchRequest.predicate = NSPredicate(format: "medication.name ==[cd] %@", medication.name)
+		fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+		let doses = try DependencyInjector.get(Database.self).query(fetchRequest)
+		return doses.first
 	}
 
 	@discardableResult
