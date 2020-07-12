@@ -43,7 +43,6 @@
 		A29E1C472343AC73008B4AE9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A29E1C462343AC73008B4AE9 /* CoreData.framework */; };
 		A2A0E7552496969A006C0A6E /* SearchableSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A0E7542496969A006C0A6E /* SearchableSample.swift */; };
 		A2A0E75B2498FF24006C0A6E /* SearchableCoreDataSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A0E75A2498FF24006C0A6E /* SearchableCoreDataSample.swift */; };
-		A2A82E032345358D005D295D /* Samples.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A2A82E012345358D005D295D /* Samples.xcdatamodeld */; };
 		A2A8AFF62343E59100E883CE /* MoodUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A8AFF12343E59100E883CE /* MoodUtil.swift */; };
 		A2A8AFF72343E59100E883CE /* CoreDataSampleUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A8AFF22343E59100E883CE /* CoreDataSampleUtil.swift */; };
 		A2A8AFF82343E59100E883CE /* SampleUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A8AFF32343E59100E883CE /* SampleUtil.swift */; };
@@ -104,7 +103,6 @@
 		A29E1C462343AC73008B4AE9 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		A2A0E7542496969A006C0A6E /* SearchableSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchableSample.swift; sourceTree = "<group>"; };
 		A2A0E75A2498FF24006C0A6E /* SearchableCoreDataSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchableCoreDataSample.swift; sourceTree = "<group>"; };
-		A2A82E022345358D005D295D /* Samples.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Samples.xcdatamodel; sourceTree = "<group>"; };
 		A2A8AFF12343E59100E883CE /* MoodUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoodUtil.swift; sourceTree = "<group>"; };
 		A2A8AFF22343E59100E883CE /* CoreDataSampleUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataSampleUtil.swift; sourceTree = "<group>"; };
 		A2A8AFF32343E59100E883CE /* SampleUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleUtil.swift; sourceTree = "<group>"; };
@@ -186,7 +184,6 @@
 				A2A8AFF02343E59100E883CE /* Utils */,
 				A22D62312343983E0023470F /* Samples.h */,
 				A22D62322343983E0023470F /* Info.plist */,
-				A2A82E012345358D005D295D /* Samples.xcdatamodeld */,
 			);
 			path = Samples;
 			sourceTree = "<group>";
@@ -394,7 +391,6 @@
 				A2034F1724A700F200557F69 /* MoodDAO.swift in Sources */,
 				A22D625C234398AF0023470F /* ActivityDefinition.swift in Sources */,
 				A22D626A234398AF0023470F /* Weight.swift in Sources */,
-				A2A82E032345358D005D295D /* Samples.xcdatamodeld in Sources */,
 				A22D6272234398AF0023470F /* LeanBodyMass.swift in Sources */,
 				A22D625E234398AF0023470F /* Sources.swift in Sources */,
 				A2A0E75B2498FF24006C0A6E /* SearchableCoreDataSample.swift in Sources */,
@@ -640,19 +636,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		A2A82E012345358D005D295D /* Samples.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				A2A82E022345358D005D295D /* Samples.xcdatamodel */,
-			);
-			currentVersion = A2A82E022345358D005D295D /* Samples.xcdatamodel */;
-			path = Samples.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = A22D62252343983E0023470F /* Project object */;
 }

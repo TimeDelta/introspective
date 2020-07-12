@@ -11,7 +11,6 @@
 		A23C24142343CB2700EE00C4 /* DependencyInjection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A23C24132343CB2700EE00C4 /* DependencyInjection.framework */; };
 		A23C24162343CB3600EE00C4 /* SettingsInjectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A23C24152343CB3600EE00C4 /* SettingsInjectionProvider.swift */; };
 		A23C24182343CBE100EE00C4 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A23C24172343CBE100EE00C4 /* Persistence.framework */; };
-		A2A82E002345354E005D295D /* Settings.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A2A82DFE2345354E005D295D /* Settings.xcdatamodeld */; };
 		A2AF20142343C7D500E04517 /* Settings.h in Headers */ = {isa = PBXBuildFile; fileRef = A2AF20122343C7D500E04517 /* Settings.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A2AF201C2343C80100E04517 /* DummySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AF201A2343C80000E04517 /* DummySettings.swift */; };
 		A2AF201D2343C80100E04517 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AF201B2343C80100E04517 /* Settings.swift */; };
@@ -22,7 +21,6 @@
 		A23C24132343CB2700EE00C4 /* DependencyInjection.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DependencyInjection.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A23C24152343CB3600EE00C4 /* SettingsInjectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsInjectionProvider.swift; sourceTree = "<group>"; };
 		A23C24172343CBE100EE00C4 /* Persistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Persistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A2A82DFF2345354E005D295D /* Settings.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Settings.xcdatamodel; sourceTree = "<group>"; };
 		A2AF200F2343C7D500E04517 /* Settings.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Settings.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2AF20122343C7D500E04517 /* Settings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
 		A2AF20132343C7D500E04517 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -79,7 +77,6 @@
 				A2AF201A2343C80000E04517 /* DummySettings.swift */,
 				A2AF20122343C7D500E04517 /* Settings.h */,
 				A2AF20132343C7D500E04517 /* Info.plist */,
-				A2A82DFE2345354E005D295D /* Settings.xcdatamodeld */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -165,7 +162,6 @@
 			files = (
 				A23C24162343CB3600EE00C4 /* SettingsInjectionProvider.swift in Sources */,
 				A2AF201D2343C80100E04517 /* Settings.swift in Sources */,
-				A2A82E002345354E005D295D /* Settings.xcdatamodeld in Sources */,
 				A2AF201C2343C80100E04517 /* DummySettings.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -374,19 +370,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		A2A82DFE2345354E005D295D /* Settings.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				A2A82DFF2345354E005D295D /* Settings.xcdatamodel */,
-			);
-			currentVersion = A2A82DFF2345354E005D295D /* Settings.xcdatamodel */;
-			path = Settings.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = A2AF20062343C7D500E04517 /* Project object */;
 }
