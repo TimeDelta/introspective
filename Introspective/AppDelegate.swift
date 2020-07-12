@@ -29,6 +29,8 @@ import Settings
 final class AppDelegate: UIResponder, UIApplicationDelegate {
 	private typealias Me = AppDelegate
 
+	private static var wasInBackground = false
+
 	final var window: UIWindow?
 
 	private final var userNotificationDelegate: UserNotificationDelegate!
@@ -79,6 +81,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 	final func applicationDidEnterBackground(_: UIApplication) {
 		// Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
 		// If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+		Me.wasInBackground = true
 	}
 
 	final func applicationWillEnterForeground(_: UIApplication) {
@@ -87,7 +90,12 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	final func applicationDidBecomeActive(_: UIApplication) {
 		// Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-		DependencyInjector.get(Database.self).refreshContext()
+		if Me.wasInBackground {
+			// not necessary on startup because context is always pulled fresh on app start. this allows faster startup
+			// essentially this is needed in case persisted objects were modified by app extension (SiriIntent / widget)
+			DependencyInjector.get(Database.self).refreshContext()
+		}
+		Me.wasInBackground = false
 	}
 
 	final func applicationWillTerminate(_: UIApplication) {
