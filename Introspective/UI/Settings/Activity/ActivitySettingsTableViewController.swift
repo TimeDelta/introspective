@@ -25,7 +25,7 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 
 	private static let changeNotifications = [
 		Notification.Name("autoIgnoreChanged"),
-		Notification.Name("autoTrimWhitespaceInActivityNotes"),
+		Notification.Name("autoTrimWhitespaceInActivityNotesChanged"),
 	]
 
 	private static let notificationHandlers: [Selector] = [

@@ -422,7 +422,7 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                             <accessibility key="accessibilityConfiguration" identifier="auto-ignore enabled" label="auto-ignore enabled"/>
                                             <connections>
-                                                <action selector="autoTrimWhitespaceInActivityNotesChangedWithSender:" destination="OuH-ul-XZU" eventType="valueChanged" id="8Y8-XJ-D13"/>
+                                                <action selector="valueChangeed:" destination="glK-cz-CBq" eventType="valueChanged" id="z7S-BY-qeE"/>
                                             </connections>
                                         </switch>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoDark" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="czc-Pn-wrg">

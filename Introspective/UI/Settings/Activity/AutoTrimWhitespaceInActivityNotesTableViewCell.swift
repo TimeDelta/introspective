@@ -20,6 +20,12 @@ class AutoTrimWhitespaceInActivityNotesTableViewCell: ActivitySettingTableViewCe
 
 	@IBOutlet final var label: UILabel!
 
+	// MARK: - Actions
+
+	@IBAction final func valueChangeed(_: Any) {
+		sendValueChangedNotification()
+	}
+
 	// MARK: - Other Functions
 
 	public final override func reset() {
