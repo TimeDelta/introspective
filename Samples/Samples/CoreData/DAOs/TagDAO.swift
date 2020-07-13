@@ -17,6 +17,7 @@ import Persistence
 public protocol TagDAO {
 	func getTag(named name: String) throws -> Tag?
 	func getOrCreateTag(named name: String) throws -> Tag
+	func getAllTags() throws -> [Tag]
 }
 
 public final class TagDAOImpl: TagDAO {
@@ -47,5 +48,9 @@ public final class TagDAOImpl: TagDAO {
 		tag.name = name
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 		return tag
+	}
+
+	public final func getAllTags() throws -> [Tag] {
+		try DependencyInjector.get(Database.self).query(Tag.fetchRequest())
 	}
 }

@@ -6,7 +6,6 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import CoreData
 import UIKit
 import WSTagsField
 
@@ -35,7 +34,7 @@ public final class ActivityDefinitionTagsTableViewCell: UITableViewCell {
 			} // only reason to change is for Dark Mode so not necessary before iOS 13
 
 			do {
-				let tags = try DependencyInjector.get(Database.self).query(Tag.fetchRequest() as NSFetchRequest<Tag>)
+				let tags = try DependencyInjector.get(TagDAO.self).getAllTags()
 				tagsField.textField.filterStrings(tags.map { $0.name })
 			} catch {
 				log.error("Auto complete failure: %@", errorInfo(error))
