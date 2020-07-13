@@ -139,6 +139,9 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	// MARK: - UIViewController Overloads
 
 	public final override func viewDidLoad() {
+		super.viewDidLoad()
+		setTableViewInsetsForTabBar()
+
 		actionsButton.target = self
 		actionsButton.action = #selector(presentActions)
 		actionsButton.accessibilityLabel = "actions button"

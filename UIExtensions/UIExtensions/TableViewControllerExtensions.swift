@@ -28,4 +28,13 @@ public extension UITableViewController {
 		let reorderRecognizer = LongPressReorderGestureRecognizer({ self }, allowReorder: allowReorder)
 		tableView.addGestureRecognizer(reorderRecognizer)
 	}
+
+	/// This prevents the last UITableViewCell from sometimes being hidden by the tab bar
+	final func setTableViewInsetsForTabBar() {
+		if let rect = navigationController?.tabBarController?.tabBar.frame {
+			let y = rect.size.height
+			tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: y, right: 0)
+			tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: y, right: 0)
+		}
+	}
 }

@@ -55,6 +55,7 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 	// MARK: - UIViewController Overrides
 
 	public final override func viewDidLoad() {
+		super.viewDidLoad()
 		navigationItem.rightBarButtonItem = UIBarButtonItem(
 			title: "Reset",
 			style: .plain,
