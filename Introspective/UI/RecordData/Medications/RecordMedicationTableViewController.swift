@@ -440,6 +440,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 			signpost.end(name: "resetting fetched results controller")
 		} catch {
 			log.error("Failed to fetch medications: %@", errorInfo(error))
+			signpost.end(name: "resetting fetched results controller")
 			showError(
 				title: "Failed to retrieve activities",
 				message: "Something went wrong while trying to retrieve the list of your activities. Sorry for the inconvenience.",
