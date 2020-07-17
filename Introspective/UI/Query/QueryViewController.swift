@@ -81,6 +81,9 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	private final let log = Log()
 
+	private final var addedRestrictionForInstructions = false
+	private final var addedSubQueryForInstructions = false
+
 	private final var coachMarksController = DependencyInjector.get(CoachMarkFactory.self).controller()
 	private final var coachMarksDataSourceAndDelegate: DefaultCoachMarksDataSourceAndDelegate!
 	private lazy final var coachMarksInfo: [CoachMarkInfo] = [
@@ -122,6 +125,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 				}
 				if !hasAttributeRestriction {
 					self.addOrUpdateAttributeRestrictionFor(nil)
+					self.addedRestrictionForInstructions = true
 				}
 			}
 		),
@@ -140,6 +144,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 						parts: []
 					))
 					self.partWasAdded()
+					self.addedSubQueryForInstructions = true
 				}
 			}
 		),
@@ -180,6 +185,19 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		coachMarksDataSourceAndDelegate = DefaultCoachMarksDataSourceAndDelegate(
 			coachMarksInfo,
 			instructionsShownKey: .queryViewInstructionsShown,
+			cleanup: {
+				if self.addedSubQueryForInstructions {
+					_ = self.queries.popLast()
+				}
+				if self.addedRestrictionForInstructions {
+					_ = self.queries[self.queries.count - 1].parts.popLast()
+				}
+				if self.addedSubQueryForInstructions || self.addedRestrictionForInstructions {
+					self.tableView.reloadData()
+				}
+				self.addedRestrictionForInstructions = false
+				self.addedSubQueryForInstructions = false
+			},
 			skipViewLayoutConstraints: defaultCoachMarkSkipViewConstraints()
 		)
 		coachMarksController.dataSource = coachMarksDataSourceAndDelegate
