@@ -134,11 +134,11 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 			},
 			setup: {
 				if self.queries.count < 2 {
-					self.queries
-						.append((sampleTypeInfo: SampleTypeInfo(
-							DependencyInjector.get(SampleFactory.self)
-								.allTypes()[1]
-						), parts: []))
+					let subQuerySampleType = DependencyInjector.get(SampleFactory.self).allTypes()[1]
+					self.queries.append((
+						sampleTypeInfo: SampleTypeInfo(subQuerySampleType),
+						parts: []
+					))
 					self.partWasAdded()
 				}
 			}
