@@ -41,6 +41,8 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 	// MARK: - Instance Variables
 
+	private final var sortButton: UIBarButtonItem!
+
 	private final let searchController = UISearchController(searchResultsController: nil)
 	private final var finishedLoading = false {
 		didSet {
@@ -93,9 +95,9 @@ public final class RecordMedicationTableViewController: UITableViewController {
 			}
 		),
 		CoachMarkInfo(
-			hint: "Long press on an activity to reorder it.",
+			hint: "Sorting options can be accessed here.",
 			useArrow: true,
-			view: { self.tableView.visibleCells[0] }
+			view: { self.sortButton.value(forKey: "view") as? UIView }
 		),
 	]
 
@@ -113,7 +115,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 			quickPress: #selector(quickPressAddButton),
 			longPress: #selector(longPressAddButton)
 		)
-		let sortButton = barButton(title: "⇅", action: #selector(sortButtonPressed))
+		sortButton = barButton(title: "⇅", action: #selector(sortButtonPressed))
 		navigationItem.rightBarButtonItems = [addButton, sortButton]
 
 		searchController.searchResultsUpdater = self
