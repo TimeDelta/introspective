@@ -26,6 +26,7 @@ public protocol BasicXYChartViewController: UIViewController {
 public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChartViewController {
 	// MARK: - IBOutlets
 
+	@IBOutlet final var pleaseBePatientLabel: UILabel!
 	@IBOutlet final var activityIndicator: UIActivityIndicatorView!
 	@IBOutlet final var chartViewOutline: UIView!
 
@@ -126,5 +127,7 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 	private final func doneWaiting() {
 		activityIndicator.isHidden = true
 		activityIndicator.isUserInteractionEnabled = false
+		pleaseBePatientLabel.isHidden = true
+		pleaseBePatientLabel.isUserInteractionEnabled = false
 	}
 }
