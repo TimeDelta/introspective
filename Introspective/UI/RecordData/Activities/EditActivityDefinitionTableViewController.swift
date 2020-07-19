@@ -6,7 +6,6 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
-import CoreData
 import Presentr
 import UIKit
 import WSTagsField
@@ -223,11 +222,8 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 			} else {
 				activityDefinition = try transaction.new(ActivityDefinition.self)
 				activityDefinition.setSource(.introspective)
-				activityDefinition
-					.recordScreenIndex = Int16(
-						try DependencyInjector.get(Database.self)
-							.query(ActivityDefinition.fetchRequest()).count
-					)
+				let numDefinitions = try DependencyInjector.get(Database.self).count(ActivityDefinition.self)
+				activityDefinition.recordScreenIndex = Int16(numDefinitions)
 			}
 
 			activityDefinition.name = name
@@ -277,12 +273,6 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 	}
 
 	private final func findTagWithName(_ name: String, using transaction: Transaction) throws -> Tag? {
-		let fetchRequest: NSFetchRequest<Tag> = Tag.fetchRequest()
-		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
-		let tags = try transaction.query(fetchRequest)
-		if !tags.isEmpty {
-			return tags[0]
-		}
-		return nil
+		try DependencyInjector.get(TagDAO.self).getTag(named: name, using: transaction)
 	}
 }

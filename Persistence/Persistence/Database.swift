@@ -26,6 +26,7 @@ public protocol Database {
 		cacheName: String?
 	) -> NSFetchedResultsController<Type>
 	func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type]
+	func count<Type: NSManagedObject>(_ type: Type.Type) throws -> Int
 	func count<Type: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<Type>) throws -> Int
 	/// Pull the specified managed object fresh from the root view context. Need to call this for any newly objects created after transaction is committed.
 	func pull<Type: NSManagedObject>(savedObject: Type) throws -> Type
@@ -114,6 +115,10 @@ internal class DatabaseImpl: Database {
 			signpost.end(name: "Database Query", idObject: fetchRequest)
 			throw error
 		}
+	}
+
+	public final func count<Type: NSManagedObject>(_ type: Type.Type) throws -> Int {
+		try count(Type.fetchRequest())
 	}
 
 	public final func count<Type: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<Type>) throws -> Int {

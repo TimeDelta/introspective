@@ -15,9 +15,15 @@ import Persistence
 
 // sourcery: AutoMockable
 public protocol TagDAO {
-	func getTag(named name: String) throws -> Tag?
+	func getTag(named name: String, using transaction: Transaction?) throws -> Tag?
 	func getOrCreateTag(named name: String) throws -> Tag
 	func getAllTags() throws -> [Tag]
+}
+
+extension TagDAO {
+	public func getTag(named name: String, using transaction: Transaction? = nil) throws -> Tag? {
+		try getTag(named: name, using: transaction)
+	}
 }
 
 public final class TagDAOImpl: TagDAO {
