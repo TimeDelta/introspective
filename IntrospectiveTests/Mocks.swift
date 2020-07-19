@@ -527,6 +527,22 @@ open class ActivityDAOMock: ActivityDAO, Mock {
 
 
 
+    open func getAllActivitiesForToday(_ activityDefinition: ActivityDefinition) throws -> [Activity] {
+        addInvocation(.m_getAllActivitiesForToday__activityDefinition(Parameter<ActivityDefinition>.value(`activityDefinition`)))
+		let perform = methodPerformValue(.m_getAllActivitiesForToday__activityDefinition(Parameter<ActivityDefinition>.value(`activityDefinition`))) as? (ActivityDefinition) -> Void
+		perform?(`activityDefinition`)
+		var __value: [Activity]
+		do {
+		    __value = try methodReturnValue(.m_getAllActivitiesForToday__activityDefinition(Parameter<ActivityDefinition>.value(`activityDefinition`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for getAllActivitiesForToday(_ activityDefinition: ActivityDefinition). Use given")
+			Failure("Stub return value not specified for getAllActivitiesForToday(_ activityDefinition: ActivityDefinition). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
     open func getMostRecentActivityEndDate() throws -> Date? {
         addInvocation(.m_getMostRecentActivityEndDate)
 		let perform = methodPerformValue(.m_getMostRecentActivityEndDate) as? () -> Void
@@ -542,13 +558,13 @@ open class ActivityDAOMock: ActivityDAO, Mock {
 		return __value
     }
 
-    open func getMostRecentActivity(_ activityDefinition: ActivityDefinition) throws -> Activity? {
-        addInvocation(.m_getMostRecentActivity__activityDefinition(Parameter<ActivityDefinition>.value(`activityDefinition`)))
-		let perform = methodPerformValue(.m_getMostRecentActivity__activityDefinition(Parameter<ActivityDefinition>.value(`activityDefinition`))) as? (ActivityDefinition) -> Void
+    open func getMostRecentlyStartedActivity(for activityDefinition: ActivityDefinition) throws -> Activity? {
+        addInvocation(.m_getMostRecentlyStartedActivity__for_activityDefinition(Parameter<ActivityDefinition>.value(`activityDefinition`)))
+		let perform = methodPerformValue(.m_getMostRecentlyStartedActivity__for_activityDefinition(Parameter<ActivityDefinition>.value(`activityDefinition`))) as? (ActivityDefinition) -> Void
 		perform?(`activityDefinition`)
 		var __value: Activity? = nil
 		do {
-		    __value = try methodReturnValue(.m_getMostRecentActivity__activityDefinition(Parameter<ActivityDefinition>.value(`activityDefinition`))).casted()
+		    __value = try methodReturnValue(.m_getMostRecentlyStartedActivity__for_activityDefinition(Parameter<ActivityDefinition>.value(`activityDefinition`))).casted()
 		} catch MockError.notStubed {
 			// do nothing
 		} catch {
@@ -597,6 +613,22 @@ open class ActivityDAOMock: ActivityDAO, Mock {
 		} catch MockError.notStubed {
 			onFatalFailure("Stub return value not specified for activityDefinitionWithNameExists(_ name: String). Use given")
 			Failure("Stub return value not specified for activityDefinitionWithNameExists(_ name: String). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func hasUnfinishedActivity(_ activityDefinition: ActivityDefinition) throws -> Bool {
+        addInvocation(.m_hasUnfinishedActivity__activityDefinition(Parameter<ActivityDefinition>.value(`activityDefinition`)))
+		let perform = methodPerformValue(.m_hasUnfinishedActivity__activityDefinition(Parameter<ActivityDefinition>.value(`activityDefinition`))) as? (ActivityDefinition) -> Void
+		perform?(`activityDefinition`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_hasUnfinishedActivity__activityDefinition(Parameter<ActivityDefinition>.value(`activityDefinition`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for hasUnfinishedActivity(_ activityDefinition: ActivityDefinition). Use given")
+			Failure("Stub return value not specified for hasUnfinishedActivity(_ activityDefinition: ActivityDefinition). Use given")
 		} catch {
 		    throw error
 		}
@@ -715,11 +747,13 @@ open class ActivityDAOMock: ActivityDAO, Mock {
 
 
     fileprivate enum MethodType {
+        case m_getAllActivitiesForToday__activityDefinition(Parameter<ActivityDefinition>)
         case m_getMostRecentActivityEndDate
-        case m_getMostRecentActivity__activityDefinition(Parameter<ActivityDefinition>)
+        case m_getMostRecentlyStartedActivity__for_activityDefinition(Parameter<ActivityDefinition>)
         case m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(Parameter<ActivityDefinition>)
         case m_getDefinitionWith__name_name(Parameter<String>)
         case m_activityDefinitionWithNameExists__name(Parameter<String>)
+        case m_hasUnfinishedActivity__activityDefinition(Parameter<ActivityDefinition>)
         case m_startActivity__definitionwithNote_note(Parameter<ActivityDefinition>, Parameter<String?>)
         case m_stopMostRecentlyStartedIncompleteActivity__for_activityDefinition(Parameter<ActivityDefinition>)
         case m_stopMostRecentlyStartedIncompleteActivity
@@ -730,9 +764,12 @@ open class ActivityDAOMock: ActivityDAO, Mock {
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
+            case (.m_getAllActivitiesForToday__activityDefinition(let lhsActivitydefinition), .m_getAllActivitiesForToday__activityDefinition(let rhsActivitydefinition)):
+                guard Parameter.compare(lhs: lhsActivitydefinition, rhs: rhsActivitydefinition, with: matcher) else { return false } 
+                return true 
             case (.m_getMostRecentActivityEndDate, .m_getMostRecentActivityEndDate):
                 return true 
-            case (.m_getMostRecentActivity__activityDefinition(let lhsActivitydefinition), .m_getMostRecentActivity__activityDefinition(let rhsActivitydefinition)):
+            case (.m_getMostRecentlyStartedActivity__for_activityDefinition(let lhsActivitydefinition), .m_getMostRecentlyStartedActivity__for_activityDefinition(let rhsActivitydefinition)):
                 guard Parameter.compare(lhs: lhsActivitydefinition, rhs: rhsActivitydefinition, with: matcher) else { return false } 
                 return true 
             case (.m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(let lhsActivitydefinition), .m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(let rhsActivitydefinition)):
@@ -743,6 +780,9 @@ open class ActivityDAOMock: ActivityDAO, Mock {
                 return true 
             case (.m_activityDefinitionWithNameExists__name(let lhsName), .m_activityDefinitionWithNameExists__name(let rhsName)):
                 guard Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher) else { return false } 
+                return true 
+            case (.m_hasUnfinishedActivity__activityDefinition(let lhsActivitydefinition), .m_hasUnfinishedActivity__activityDefinition(let rhsActivitydefinition)):
+                guard Parameter.compare(lhs: lhsActivitydefinition, rhs: rhsActivitydefinition, with: matcher) else { return false } 
                 return true 
             case (.m_startActivity__definitionwithNote_note(let lhsDefinition, let lhsNote), .m_startActivity__definitionwithNote_note(let rhsDefinition, let rhsNote)):
                 guard Parameter.compare(lhs: lhsDefinition, rhs: rhsDefinition, with: matcher) else { return false } 
@@ -782,11 +822,13 @@ open class ActivityDAOMock: ActivityDAO, Mock {
 
         func intValue() -> Int {
             switch self {
+            case let .m_getAllActivitiesForToday__activityDefinition(p0): return p0.intValue
             case .m_getMostRecentActivityEndDate: return 0
-            case let .m_getMostRecentActivity__activityDefinition(p0): return p0.intValue
+            case let .m_getMostRecentlyStartedActivity__for_activityDefinition(p0): return p0.intValue
             case let .m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(p0): return p0.intValue
             case let .m_getDefinitionWith__name_name(p0): return p0.intValue
             case let .m_activityDefinitionWithNameExists__name(p0): return p0.intValue
+            case let .m_hasUnfinishedActivity__activityDefinition(p0): return p0.intValue
             case let .m_startActivity__definitionwithNote_note(p0, p1): return p0.intValue + p1.intValue
             case let .m_stopMostRecentlyStartedIncompleteActivity__for_activityDefinition(p0): return p0.intValue
             case .m_stopMostRecentlyStartedIncompleteActivity: return 0
@@ -807,11 +849,14 @@ open class ActivityDAOMock: ActivityDAO, Mock {
         }
 
 
+        public static func getAllActivitiesForToday(_ activityDefinition: Parameter<ActivityDefinition>, willReturn: [Activity]...) -> MethodStub {
+            return Given(method: .m_getAllActivitiesForToday__activityDefinition(`activityDefinition`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func getMostRecentActivityEndDate(willReturn: Date?...) -> MethodStub {
             return Given(method: .m_getMostRecentActivityEndDate, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func getMostRecentActivity(_ activityDefinition: Parameter<ActivityDefinition>, willReturn: Activity?...) -> MethodStub {
-            return Given(method: .m_getMostRecentActivity__activityDefinition(`activityDefinition`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func getMostRecentlyStartedActivity(for activityDefinition: Parameter<ActivityDefinition>, willReturn: Activity?...) -> MethodStub {
+            return Given(method: .m_getMostRecentlyStartedActivity__for_activityDefinition(`activityDefinition`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func getMostRecentlyStartedIncompleteActivity(for activityDefinition: Parameter<ActivityDefinition>, willReturn: Activity?...) -> MethodStub {
             return Given(method: .m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(`activityDefinition`), products: willReturn.map({ StubProduct.return($0 as Any) }))
@@ -821,6 +866,9 @@ open class ActivityDAOMock: ActivityDAO, Mock {
         }
         public static func activityDefinitionWithNameExists(_ name: Parameter<String>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_activityDefinitionWithNameExists__name(`name`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func hasUnfinishedActivity(_ activityDefinition: Parameter<ActivityDefinition>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_hasUnfinishedActivity__activityDefinition(`activityDefinition`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func startActivity(_ definition: Parameter<ActivityDefinition>, withNote note: Parameter<String?>, willReturn: Activity...) -> MethodStub {
             return Given(method: .m_startActivity__definitionwithNote_note(`definition`, `note`), products: willReturn.map({ StubProduct.return($0 as Any) }))
@@ -850,6 +898,16 @@ open class ActivityDAOMock: ActivityDAO, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func getAllActivitiesForToday(_ activityDefinition: Parameter<ActivityDefinition>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_getAllActivitiesForToday__activityDefinition(`activityDefinition`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func getAllActivitiesForToday(_ activityDefinition: Parameter<ActivityDefinition>, willProduce: (StubberThrows<[Activity]>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_getAllActivitiesForToday__activityDefinition(`activityDefinition`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: ([Activity]).self)
+			willProduce(stubber)
+			return given
+        }
         public static func getMostRecentActivityEndDate(willThrow: Error...) -> MethodStub {
             return Given(method: .m_getMostRecentActivityEndDate, products: willThrow.map({ StubProduct.throw($0) }))
         }
@@ -860,12 +918,12 @@ open class ActivityDAOMock: ActivityDAO, Mock {
 			willProduce(stubber)
 			return given
         }
-        public static func getMostRecentActivity(_ activityDefinition: Parameter<ActivityDefinition>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_getMostRecentActivity__activityDefinition(`activityDefinition`), products: willThrow.map({ StubProduct.throw($0) }))
+        public static func getMostRecentlyStartedActivity(for activityDefinition: Parameter<ActivityDefinition>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_getMostRecentlyStartedActivity__for_activityDefinition(`activityDefinition`), products: willThrow.map({ StubProduct.throw($0) }))
         }
-        public static func getMostRecentActivity(_ activityDefinition: Parameter<ActivityDefinition>, willProduce: (StubberThrows<Activity?>) -> Void) -> MethodStub {
+        public static func getMostRecentlyStartedActivity(for activityDefinition: Parameter<ActivityDefinition>, willProduce: (StubberThrows<Activity?>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_getMostRecentActivity__activityDefinition(`activityDefinition`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let given: Given = { return Given(method: .m_getMostRecentlyStartedActivity__for_activityDefinition(`activityDefinition`), products: willThrow.map({ StubProduct.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Activity?).self)
 			willProduce(stubber)
 			return given
@@ -896,6 +954,16 @@ open class ActivityDAOMock: ActivityDAO, Mock {
         public static func activityDefinitionWithNameExists(_ name: Parameter<String>, willProduce: (StubberThrows<Bool>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_activityDefinitionWithNameExists__name(`name`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func hasUnfinishedActivity(_ activityDefinition: Parameter<ActivityDefinition>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_hasUnfinishedActivity__activityDefinition(`activityDefinition`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func hasUnfinishedActivity(_ activityDefinition: Parameter<ActivityDefinition>, willProduce: (StubberThrows<Bool>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_hasUnfinishedActivity__activityDefinition(`activityDefinition`), products: willThrow.map({ StubProduct.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Bool).self)
 			willProduce(stubber)
 			return given
@@ -965,11 +1033,13 @@ open class ActivityDAOMock: ActivityDAO, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
+        public static func getAllActivitiesForToday(_ activityDefinition: Parameter<ActivityDefinition>) -> Verify { return Verify(method: .m_getAllActivitiesForToday__activityDefinition(`activityDefinition`))}
         public static func getMostRecentActivityEndDate() -> Verify { return Verify(method: .m_getMostRecentActivityEndDate)}
-        public static func getMostRecentActivity(_ activityDefinition: Parameter<ActivityDefinition>) -> Verify { return Verify(method: .m_getMostRecentActivity__activityDefinition(`activityDefinition`))}
+        public static func getMostRecentlyStartedActivity(for activityDefinition: Parameter<ActivityDefinition>) -> Verify { return Verify(method: .m_getMostRecentlyStartedActivity__for_activityDefinition(`activityDefinition`))}
         public static func getMostRecentlyStartedIncompleteActivity(for activityDefinition: Parameter<ActivityDefinition>) -> Verify { return Verify(method: .m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(`activityDefinition`))}
         public static func getDefinitionWith(name: Parameter<String>) -> Verify { return Verify(method: .m_getDefinitionWith__name_name(`name`))}
         public static func activityDefinitionWithNameExists(_ name: Parameter<String>) -> Verify { return Verify(method: .m_activityDefinitionWithNameExists__name(`name`))}
+        public static func hasUnfinishedActivity(_ activityDefinition: Parameter<ActivityDefinition>) -> Verify { return Verify(method: .m_hasUnfinishedActivity__activityDefinition(`activityDefinition`))}
         public static func startActivity(_ definition: Parameter<ActivityDefinition>, withNote note: Parameter<String?>) -> Verify { return Verify(method: .m_startActivity__definitionwithNote_note(`definition`, `note`))}
         public static func stopMostRecentlyStartedIncompleteActivity(for activityDefinition: Parameter<ActivityDefinition>) -> Verify { return Verify(method: .m_stopMostRecentlyStartedIncompleteActivity__for_activityDefinition(`activityDefinition`))}
         public static func stopMostRecentlyStartedIncompleteActivity() -> Verify { return Verify(method: .m_stopMostRecentlyStartedIncompleteActivity)}
@@ -983,11 +1053,14 @@ open class ActivityDAOMock: ActivityDAO, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
+        public static func getAllActivitiesForToday(_ activityDefinition: Parameter<ActivityDefinition>, perform: @escaping (ActivityDefinition) -> Void) -> Perform {
+            return Perform(method: .m_getAllActivitiesForToday__activityDefinition(`activityDefinition`), performs: perform)
+        }
         public static func getMostRecentActivityEndDate(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_getMostRecentActivityEndDate, performs: perform)
         }
-        public static func getMostRecentActivity(_ activityDefinition: Parameter<ActivityDefinition>, perform: @escaping (ActivityDefinition) -> Void) -> Perform {
-            return Perform(method: .m_getMostRecentActivity__activityDefinition(`activityDefinition`), performs: perform)
+        public static func getMostRecentlyStartedActivity(for activityDefinition: Parameter<ActivityDefinition>, perform: @escaping (ActivityDefinition) -> Void) -> Perform {
+            return Perform(method: .m_getMostRecentlyStartedActivity__for_activityDefinition(`activityDefinition`), performs: perform)
         }
         public static func getMostRecentlyStartedIncompleteActivity(for activityDefinition: Parameter<ActivityDefinition>, perform: @escaping (ActivityDefinition) -> Void) -> Perform {
             return Perform(method: .m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(`activityDefinition`), performs: perform)
@@ -997,6 +1070,9 @@ open class ActivityDAOMock: ActivityDAO, Mock {
         }
         public static func activityDefinitionWithNameExists(_ name: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
             return Perform(method: .m_activityDefinitionWithNameExists__name(`name`), performs: perform)
+        }
+        public static func hasUnfinishedActivity(_ activityDefinition: Parameter<ActivityDefinition>, perform: @escaping (ActivityDefinition) -> Void) -> Perform {
+            return Perform(method: .m_hasUnfinishedActivity__activityDefinition(`activityDefinition`), performs: perform)
         }
         public static func startActivity(_ definition: Parameter<ActivityDefinition>, withNote note: Parameter<String?>, perform: @escaping (ActivityDefinition, String?) -> Void) -> Perform {
             return Perform(method: .m_startActivity__definitionwithNote_note(`definition`, `note`), performs: perform)
@@ -4648,6 +4724,22 @@ open class DatabaseMock: Database, Mock {
 		return __value
     }
 
+    open func count<Type: NSManagedObject>(_ type: Type.Type) throws -> Int {
+        addInvocation(.m_count__type(Parameter<Type.Type>.value(`type`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_count__type(Parameter<Type.Type>.value(`type`).wrapAsGeneric())) as? (Type.Type) -> Void
+		perform?(`type`)
+		var __value: Int
+		do {
+		    __value = try methodReturnValue(.m_count__type(Parameter<Type.Type>.value(`type`).wrapAsGeneric())).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for count<Type: NSManagedObject>(_ type: Type.Type). Use given")
+			Failure("Stub return value not specified for count<Type: NSManagedObject>(_ type: Type.Type). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
     open func count<Type: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<Type>) throws -> Int {
         addInvocation(.m_count__fetchRequest(Parameter<NSFetchRequest<Type>>.value(`fetchRequest`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_count__fetchRequest(Parameter<NSFetchRequest<Type>>.value(`fetchRequest`).wrapAsGeneric())) as? (NSFetchRequest<Type>) -> Void
@@ -4731,6 +4823,7 @@ open class DatabaseMock: Database, Mock {
         case m_refreshContext
         case m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(Parameter<GenericAttribute>, Parameter<[NSSortDescriptor]>, Parameter<String?>)
         case m_query__fetchRequest(Parameter<GenericAttribute>)
+        case m_count__type(Parameter<GenericAttribute>)
         case m_count__fetchRequest(Parameter<GenericAttribute>)
         case m_pull__savedObject_savedObject(Parameter<GenericAttribute>)
         case m_pull__savedObject_savedObjectfromSameContextAs_otherObject(Parameter<GenericAttribute>, Parameter<NSManagedObject>)
@@ -4750,6 +4843,9 @@ open class DatabaseMock: Database, Mock {
                 return true 
             case (.m_query__fetchRequest(let lhsFetchrequest), .m_query__fetchRequest(let rhsFetchrequest)):
                 guard Parameter.compare(lhs: lhsFetchrequest, rhs: rhsFetchrequest, with: matcher) else { return false } 
+                return true 
+            case (.m_count__type(let lhsType), .m_count__type(let rhsType)):
+                guard Parameter.compare(lhs: lhsType, rhs: rhsType, with: matcher) else { return false } 
                 return true 
             case (.m_count__fetchRequest(let lhsFetchrequest), .m_count__fetchRequest(let rhsFetchrequest)):
                 guard Parameter.compare(lhs: lhsFetchrequest, rhs: rhsFetchrequest, with: matcher) else { return false } 
@@ -4777,6 +4873,7 @@ open class DatabaseMock: Database, Mock {
             case .m_refreshContext: return 0
             case let .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_query__fetchRequest(p0): return p0.intValue
+            case let .m_count__type(p0): return p0.intValue
             case let .m_count__fetchRequest(p0): return p0.intValue
             case let .m_pull__savedObject_savedObject(p0): return p0.intValue
             case let .m_pull__savedObject_savedObjectfromSameContextAs_otherObject(p0, p1): return p0.intValue + p1.intValue
@@ -4803,6 +4900,9 @@ open class DatabaseMock: Database, Mock {
         }
         public static func query<Type: NSManagedObject>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willReturn: [Type]...) -> MethodStub {
             return Given(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func count<Type: NSManagedObject>(_ type: Parameter<Type.Type>, willReturn: Int...) -> MethodStub {
+            return Given(method: .m_count__type(`type`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func count<Type: NSFetchRequestResult>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willReturn: Int...) -> MethodStub {
             return Given(method: .m_count__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
@@ -4837,6 +4937,16 @@ open class DatabaseMock: Database, Mock {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) })) }()
 			let stubber = given.stubThrows(for: ([Type]).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func count<Type: NSManagedObject>(_ type: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_count__type(`type`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func count<Type: NSManagedObject>(_ type: Parameter<Type.Type>, willProduce: (StubberThrows<Int>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_count__type(`type`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Int).self)
 			willProduce(stubber)
 			return given
         }
@@ -4899,6 +5009,7 @@ open class DatabaseMock: Database, Mock {
         public static func refreshContext() -> Verify { return Verify(method: .m_refreshContext)}
         public static func fetchedResultsController<Type>(type: Parameter<Type.Type>, sortDescriptors: Parameter<[NSSortDescriptor]>, cacheName: Parameter<String?>) -> Verify where Type:NSManagedObject { return Verify(method: .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(`type`.wrapAsGeneric(), `sortDescriptors`, `cacheName`))}
         public static func query<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify where Type:NSManagedObject { return Verify(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()))}
+        public static func count<Type>(_ type: Parameter<Type.Type>) -> Verify where Type:NSManagedObject { return Verify(method: .m_count__type(`type`.wrapAsGeneric()))}
         public static func count<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify where Type:NSFetchRequestResult { return Verify(method: .m_count__fetchRequest(`fetchRequest`.wrapAsGeneric()))}
         public static func pull<Type>(savedObject: Parameter<Type>) -> Verify where Type:NSManagedObject { return Verify(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()))}
         public static func pull<Type>(savedObject: Parameter<Type>, fromSameContextAs otherObject: Parameter<NSManagedObject>) -> Verify where Type:NSManagedObject { return Verify(method: .m_pull__savedObject_savedObjectfromSameContextAs_otherObject(`savedObject`.wrapAsGeneric(), `otherObject`))}
@@ -4921,6 +5032,9 @@ open class DatabaseMock: Database, Mock {
         }
         public static func query<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, perform: @escaping (NSFetchRequest<Type>) -> Void) -> Perform where Type:NSManagedObject {
             return Perform(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), performs: perform)
+        }
+        public static func count<Type>(_ type: Parameter<Type.Type>, perform: @escaping (Type.Type) -> Void) -> Perform where Type:NSManagedObject {
+            return Perform(method: .m_count__type(`type`.wrapAsGeneric()), performs: perform)
         }
         public static func count<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, perform: @escaping (NSFetchRequest<Type>) -> Void) -> Perform where Type:NSFetchRequestResult {
             return Perform(method: .m_count__fetchRequest(`fetchRequest`.wrapAsGeneric()), performs: perform)
@@ -17817,13 +17931,13 @@ open class TagDAOMock: TagDAO, Mock {
 
 
 
-    open func getTag(named name: String) throws -> Tag? {
-        addInvocation(.m_getTag__named_name(Parameter<String>.value(`name`)))
-		let perform = methodPerformValue(.m_getTag__named_name(Parameter<String>.value(`name`))) as? (String) -> Void
-		perform?(`name`)
+    open func getTag(named name: String, using transaction: Transaction?) throws -> Tag? {
+        addInvocation(.m_getTag__named_nameusing_transaction(Parameter<String>.value(`name`), Parameter<Transaction?>.value(`transaction`)))
+		let perform = methodPerformValue(.m_getTag__named_nameusing_transaction(Parameter<String>.value(`name`), Parameter<Transaction?>.value(`transaction`))) as? (String, Transaction?) -> Void
+		perform?(`name`, `transaction`)
 		var __value: Tag? = nil
 		do {
-		    __value = try methodReturnValue(.m_getTag__named_name(Parameter<String>.value(`name`))).casted()
+		    __value = try methodReturnValue(.m_getTag__named_nameusing_transaction(Parameter<String>.value(`name`), Parameter<Transaction?>.value(`transaction`))).casted()
 		} catch MockError.notStubed {
 			// do nothing
 		} catch {
@@ -17848,18 +17962,38 @@ open class TagDAOMock: TagDAO, Mock {
 		return __value
     }
 
+    open func getAllTags() throws -> [Tag] {
+        addInvocation(.m_getAllTags)
+		let perform = methodPerformValue(.m_getAllTags) as? () -> Void
+		perform?()
+		var __value: [Tag]
+		do {
+		    __value = try methodReturnValue(.m_getAllTags).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for getAllTags(). Use given")
+			Failure("Stub return value not specified for getAllTags(). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
 
     fileprivate enum MethodType {
-        case m_getTag__named_name(Parameter<String>)
+        case m_getTag__named_nameusing_transaction(Parameter<String>, Parameter<Transaction?>)
         case m_getOrCreateTag__named_name(Parameter<String>)
+        case m_getAllTags
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
-            case (.m_getTag__named_name(let lhsName), .m_getTag__named_name(let rhsName)):
+            case (.m_getTag__named_nameusing_transaction(let lhsName, let lhsTransaction), .m_getTag__named_nameusing_transaction(let rhsName, let rhsTransaction)):
                 guard Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsTransaction, rhs: rhsTransaction, with: matcher) else { return false } 
                 return true 
             case (.m_getOrCreateTag__named_name(let lhsName), .m_getOrCreateTag__named_name(let rhsName)):
                 guard Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher) else { return false } 
+                return true 
+            case (.m_getAllTags, .m_getAllTags):
                 return true 
             default: return false
             }
@@ -17867,8 +18001,9 @@ open class TagDAOMock: TagDAO, Mock {
 
         func intValue() -> Int {
             switch self {
-            case let .m_getTag__named_name(p0): return p0.intValue
+            case let .m_getTag__named_nameusing_transaction(p0, p1): return p0.intValue + p1.intValue
             case let .m_getOrCreateTag__named_name(p0): return p0.intValue
+            case .m_getAllTags: return 0
             }
         }
     }
@@ -17882,18 +18017,21 @@ open class TagDAOMock: TagDAO, Mock {
         }
 
 
-        public static func getTag(named name: Parameter<String>, willReturn: Tag?...) -> MethodStub {
-            return Given(method: .m_getTag__named_name(`name`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func getTag(named name: Parameter<String>, using transaction: Parameter<Transaction?>, willReturn: Tag?...) -> MethodStub {
+            return Given(method: .m_getTag__named_nameusing_transaction(`name`, `transaction`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func getOrCreateTag(named name: Parameter<String>, willReturn: Tag...) -> MethodStub {
             return Given(method: .m_getOrCreateTag__named_name(`name`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func getTag(named name: Parameter<String>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_getTag__named_name(`name`), products: willThrow.map({ StubProduct.throw($0) }))
+        public static func getAllTags(willReturn: [Tag]...) -> MethodStub {
+            return Given(method: .m_getAllTags, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func getTag(named name: Parameter<String>, willProduce: (StubberThrows<Tag?>) -> Void) -> MethodStub {
+        public static func getTag(named name: Parameter<String>, using transaction: Parameter<Transaction?>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_getTag__named_nameusing_transaction(`name`, `transaction`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func getTag(named name: Parameter<String>, using transaction: Parameter<Transaction?>, willProduce: (StubberThrows<Tag?>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_getTag__named_name(`name`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let given: Given = { return Given(method: .m_getTag__named_nameusing_transaction(`name`, `transaction`), products: willThrow.map({ StubProduct.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Tag?).self)
 			willProduce(stubber)
 			return given
@@ -17908,24 +18046,38 @@ open class TagDAOMock: TagDAO, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func getAllTags(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_getAllTags, products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func getAllTags(willProduce: (StubberThrows<[Tag]>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_getAllTags, products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: ([Tag]).self)
+			willProduce(stubber)
+			return given
+        }
     }
 
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func getTag(named name: Parameter<String>) -> Verify { return Verify(method: .m_getTag__named_name(`name`))}
+        public static func getTag(named name: Parameter<String>, using transaction: Parameter<Transaction?>) -> Verify { return Verify(method: .m_getTag__named_nameusing_transaction(`name`, `transaction`))}
         public static func getOrCreateTag(named name: Parameter<String>) -> Verify { return Verify(method: .m_getOrCreateTag__named_name(`name`))}
+        public static func getAllTags() -> Verify { return Verify(method: .m_getAllTags)}
     }
 
     public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func getTag(named name: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
-            return Perform(method: .m_getTag__named_name(`name`), performs: perform)
+        public static func getTag(named name: Parameter<String>, using transaction: Parameter<Transaction?>, perform: @escaping (String, Transaction?) -> Void) -> Perform {
+            return Perform(method: .m_getTag__named_nameusing_transaction(`name`, `transaction`), performs: perform)
         }
         public static func getOrCreateTag(named name: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
             return Perform(method: .m_getOrCreateTag__named_name(`name`), performs: perform)
+        }
+        public static func getAllTags(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_getAllTags, performs: perform)
         }
     }
 

@@ -8,6 +8,7 @@
 
 import CoreData
 import Foundation
+import os
 
 import Common
 import DependencyInjection
@@ -16,8 +17,10 @@ import Settings
 
 // sourcery: AutoMockable
 public protocol ActivityDAO {
+	/// Retrieve all activites for the given `definition` that either started today and have not ended or ended today. This should cover all cases except: started before today and not stopped
+	func getAllActivitiesForToday(_ activityDefinition: ActivityDefinition) throws -> [Activity]
 	func getMostRecentActivityEndDate() throws -> Date?
-	func getMostRecentActivity(_ activityDefinition: ActivityDefinition) throws -> Activity?
+	func getMostRecentlyStartedActivity(for activityDefinition: ActivityDefinition) throws -> Activity?
 	func getMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) throws -> Activity?
 	/// Get the activity definition with the specified name (if it exists).
 	/// - Throws: If there is more than one activity definition with the given name.
@@ -25,6 +28,7 @@ public protocol ActivityDAO {
 	func getDefinitionWith(name: String) throws -> ActivityDefinition?
 	/// - Parameter name: case-insensitive activity name for which to search
 	func activityDefinitionWithNameExists(_ name: String) throws -> Bool
+	func hasUnfinishedActivity(_ activityDefinition: ActivityDefinition) throws -> Bool
 
 	@discardableResult
 	func startActivity(_ definition: ActivityDefinition, withNote note: String?) throws -> Activity
@@ -114,8 +118,35 @@ extension ActivityDAO {
 
 public class ActivityDAOImpl: ActivityDAO {
 	private final let log = Log()
+	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "ActivityDAO"))
 
 	// MARK: - Getters
+
+	public final func getAllActivitiesForToday(_ activityDefinition: ActivityDefinition) throws -> [Activity] {
+		let signpostName: StaticString = "getAllActivitiesForToday"
+		signpost.begin(
+			name: signpostName,
+			idObject: activityDefinition,
+			"estimated # activities: %d",
+			activityDefinition.activities.count
+		)
+
+		let startOfDay = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: Date()) as NSDate
+		let endOfDay = DependencyInjector.get(CalendarUtil.self).end(of: .day, in: Date()) as NSDate
+		let fetchRequest = basicFetchRequest(activityDefinition)
+		fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+			fetchRequest.predicate!,
+			NSPredicate(
+				// either it started today and has not ended or ended today
+				// this should cover all cases except: started before today and not stopped
+				format: "(endDate == nil AND startDate > %@ AND startDate < %@) OR (endDate > %@ AND endDate < %@)",
+				startOfDay, endOfDay, startOfDay, endOfDay
+			),
+		])
+		let activities = try DependencyInjector.get(Database.self).query(fetchRequest)
+		signpost.end(name: signpostName, idObject: activityDefinition, "actual # activities: %d", activities.count)
+		return activities
+	}
 
 	public final func getMostRecentActivityEndDate() throws -> Date? {
 		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
@@ -128,12 +159,28 @@ public class ActivityDAOImpl: ActivityDAO {
 		return nil
 	}
 
-	public final func getMostRecentActivity(_ activityDefinition: ActivityDefinition) throws -> Activity? {
+	public final func getMostRecentlyStartedActivity(for activityDefinition: ActivityDefinition) throws -> Activity? {
+		let signpostName: StaticString = "getMostRecentlyStartedActivity"
+		signpost.begin(
+			name: signpostName,
+			idObject: activityDefinition,
+			"estimated # activities: %d",
+			activityDefinition.activities.count
+		)
+
 		let keyName = CommonSampleAttributes.startDate.variableName!
 		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
-		fetchRequest.predicate = NSPredicate(format: "definition.name == %@", activityDefinition.name)
+		fetchRequest.predicate = NSPredicate(format: "definition.name ==[cd] %@", activityDefinition.name)
 		fetchRequest.sortDescriptors = [NSSortDescriptor(key: keyName, ascending: false)]
 		let activities = try DependencyInjector.get(Database.self).query(fetchRequest)
+
+		signpost.end(
+			name: signpostName,
+			idObject: activityDefinition,
+			"actual # activities: %d",
+			activities.count
+		)
+
 		if !activities.isEmpty {
 			return activities[0]
 		}
@@ -185,6 +232,21 @@ public class ActivityDAOImpl: ActivityDAO {
 		)
 		throw GenericError(errorMessage)
 	}
+
+	public final func hasUnfinishedActivity(_ activityDefinition: ActivityDefinition) throws -> Bool {
+		let signpostName: StaticString = "hasUnfinishedActivity"
+		signpost.begin(name: signpostName, idObject: activityDefinition)
+		let fetchRequest = basicFetchRequest(activityDefinition)
+		fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+			fetchRequest.predicate!,
+			NSPredicate(format: "endDate == nil"),
+		])
+		let unfinishedActivities = try DependencyInjector.get(Database.self).query(fetchRequest)
+		signpost.end(name: signpostName, idObject: activityDefinition)
+		return !unfinishedActivities.isEmpty
+	}
+
+	// MARK: - Start / Stop
 
 	@discardableResult
 	public final func startActivity(_ definition: ActivityDefinition, withNote note: String?) throws -> Activity {
@@ -348,5 +410,13 @@ public class ActivityDAOImpl: ActivityDAO {
 
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 		return try DependencyInjector.get(Database.self).pull(savedObject: activity)
+	}
+
+	// MARK: - Helper Functions
+
+	private final func basicFetchRequest(_ activityDefinition: ActivityDefinition) -> NSFetchRequest<Activity> {
+		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
+		fetchRequest.predicate = NSPredicate(format: "definition.name == %@", activityDefinition.name)
+		return fetchRequest
 	}
 }

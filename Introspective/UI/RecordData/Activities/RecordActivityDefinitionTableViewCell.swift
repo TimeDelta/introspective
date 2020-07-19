@@ -134,21 +134,10 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 	}
 
 	private final func getMostRecentlyStartedActivity() -> Activity? {
-		signpost.begin(
-			name: "getMostRecentlyStartedActivity",
-			idObject: activityDefinition,
-			"# activities: %d", activityDefinition.activities.count
-		)
-		let keyName = CommonSampleAttributes.startDate.variableName!
-		let fetchRequest: NSFetchRequest<Activity> = basicFetchRequest()
-		fetchRequest.sortDescriptors = [NSSortDescriptor(key: keyName, ascending: false)]
 		do {
-			let activities = try DependencyInjector.get(Database.self).query(fetchRequest)
-			signpost.end(name: "getMostRecentlyStartedActivity", idObject: activityDefinition)
-			if !activities.isEmpty {
-				return activities[0]
-			}
+			return try DependencyInjector.get(ActivityDAO.self).getMostRecentlyStartedActivity(for: activityDefinition)
 		} catch {
+			signpost.end(name: "getMostRecentlyStartedActivity", idObject: activityDefinition)
 			log.error("Failed to fetch activities: %@", errorInfo(error))
 		}
 
@@ -157,52 +146,19 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 
 	private final func getAllActivitiesForToday() -> [Activity] {
 		do {
-			signpost.begin(
-				name: "getAllActivitiesForToday",
-				idObject: activityDefinition,
-				"# activities: %d", activityDefinition.activities.count
-			)
-			let startOfDay = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: Date()) as NSDate
-			let endOfDay = DependencyInjector.get(CalendarUtil.self).end(of: .day, in: Date()) as NSDate
-			let fetchRequest = basicFetchRequest()
-			fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
-				fetchRequest.predicate!,
-				NSPredicate(
-					format: "(endDate == nil AND startDate > %@ AND startDate < %@) OR (endDate > %@ AND endDate < %@)",
-					startOfDay, endOfDay, startOfDay, endOfDay
-				),
-			])
-			let activities = try DependencyInjector.get(Database.self).query(fetchRequest)
-			signpost.end(name: "getAllActivitiesForToday", idObject: activityDefinition)
-			return activities
+			return try DependencyInjector.get(ActivityDAO.self).getAllActivitiesForToday(activityDefinition)
 		} catch {
 			log.error("Failed to fetch activities: %@", errorInfo(error))
-			signpost.end(name: "getAllActivitiesForToday", idObject: activityDefinition)
 			return []
 		}
 	}
 
 	private final func hasUnfinishedActivity() -> Bool {
-		signpost.begin(name: "hasUnfinishedActivity", idObject: activityDefinition)
-		let fetchRequest = basicFetchRequest()
-		fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
-			fetchRequest.predicate!,
-			NSPredicate(format: "endDate == nil"),
-		])
 		do {
-			let unfinishedActivities = try DependencyInjector.get(Database.self).query(fetchRequest)
-			signpost.end(name: "hasUnfinishedActivity", idObject: activityDefinition)
-			return !unfinishedActivities.isEmpty
+			return try DependencyInjector.get(ActivityDAO.self).hasUnfinishedActivity(activityDefinition)
 		} catch {
 			log.error("Failed to query for unfinished activities: %@", errorInfo(error))
 		}
-		signpost.end(name: "hasUnfinishedActivity", idObject: activityDefinition)
 		return false
-	}
-
-	private final func basicFetchRequest() -> NSFetchRequest<Activity> {
-		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
-		fetchRequest.predicate = NSPredicate(format: "definition.name == %@", activityDefinition.name)
-		return fetchRequest
 	}
 }

@@ -805,7 +805,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	private final func getMostRecentActivity(_ activityDefinition: ActivityDefinition) -> Activity? {
 		do {
 			return try DependencyInjector.get(ActivityDAO.self)
-				.getMostRecentActivity(activityDefinition)
+				.getMostRecentlyStartedActivity(for: activityDefinition)
 		} catch {
 			log.error("Failed to fetch activities while retrieving most recent: %@", errorInfo(error))
 			return nil
