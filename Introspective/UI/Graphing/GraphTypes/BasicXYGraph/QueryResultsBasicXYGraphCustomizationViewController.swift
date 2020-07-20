@@ -338,7 +338,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	}
 
 	private final func pointGrouperSet() {
-		if pointGrouper != nil {
+		if let _ = pointGrouper {
 			choosePointGrouperButton.setTitle("Point grouping chosen", for: .normal)
 			DependencyInjector.get(UiUtil.self).setButton(clearPointGrouperButton, enabled: true, hidden: false)
 			if pointGrouperWasNil {
