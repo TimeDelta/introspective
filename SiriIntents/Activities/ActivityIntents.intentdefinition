@@ -742,7 +742,7 @@
 							<key>INIntentParameterPromptDialogCustom</key>
 							<true/>
 							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>Just to confirm, you wanted ‘${activityName}’?</string>
+							<string>${activityName} is already running. Would you like to start another instance?</string>
 							<key>INIntentParameterPromptDialogFormatStringID</key>
 							<string>gB4Z8l</string>
 							<key>INIntentParameterPromptDialogType</key>

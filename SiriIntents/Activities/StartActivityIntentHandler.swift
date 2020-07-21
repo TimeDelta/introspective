@@ -28,7 +28,22 @@ public final class StartActivityIntentHandler: ActivityIntentHandler<StartActivi
 			completion(INStringResolutionResult.needsValue())
 			return
 		}
-		completion(INStringResolutionResult.success(with: activityName))
+		do {
+			guard let activityDefinition = try DependencyInjector.get(ActivityDAO.self)
+				.getDefinitionWith(name: activityName)
+			else {
+				completion(INStringResolutionResult.needsValue())
+				return
+			}
+			let alreadyStarted = try DependencyInjector.get(ActivityDAO.self).hasUnfinishedActivity(activityDefinition)
+			if alreadyStarted {
+				completion(INStringResolutionResult.confirmationRequired(with: activityName))
+			} else {
+				completion(INStringResolutionResult.success(with: activityName))
+			}
+		} catch {
+			completion(INStringResolutionResult.needsValue())
+		}
 	}
 
 	public override func provideActivityNameOptions(
