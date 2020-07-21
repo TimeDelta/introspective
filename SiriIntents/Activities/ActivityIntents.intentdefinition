@@ -1570,9 +1570,9 @@
 						<key>INTypePropertyMetadataDateStyle</key>
 						<string>Short</string>
 						<key>INTypePropertyMetadataFormat</key>
-						<string>Style</string>
+						<string>Relative</string>
 						<key>INTypePropertyMetadataTimeStyle</key>
-						<string>Medium</string>
+						<string>Short</string>
 						<key>INTypePropertyMetadataType</key>
 						<string>DateTime</string>
 					</dict>
@@ -1621,9 +1621,9 @@
 						<key>INTypePropertyMetadataDateStyle</key>
 						<string>Short</string>
 						<key>INTypePropertyMetadataFormat</key>
-						<string>Style</string>
+						<string>Relative</string>
 						<key>INTypePropertyMetadataTimeStyle</key>
-						<string>Medium</string>
+						<string>Short</string>
 						<key>INTypePropertyMetadataType</key>
 						<string>DateTime</string>
 					</dict>
