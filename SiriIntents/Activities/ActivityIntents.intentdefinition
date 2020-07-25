@@ -11,9 +11,9 @@
 	<key>INIntentDefinitionSystemVersion</key>
 	<string>19F101</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>11E608c</string>
+	<string>11E708</string>
 	<key>INIntentDefinitionToolsVersion</key>
-	<string>11.5</string>
+	<string>11.6</string>
 	<key>INIntents</key>
 	<array>
 		<dict>
@@ -1570,7 +1570,7 @@
 						<key>INTypePropertyMetadataDateStyle</key>
 						<string>Short</string>
 						<key>INTypePropertyMetadataFormat</key>
-						<string>Relative</string>
+						<string>Style</string>
 						<key>INTypePropertyMetadataTimeStyle</key>
 						<string>Short</string>
 						<key>INTypePropertyMetadataType</key>
@@ -1621,7 +1621,7 @@
 						<key>INTypePropertyMetadataDateStyle</key>
 						<string>Short</string>
 						<key>INTypePropertyMetadataFormat</key>
-						<string>Relative</string>
+						<string>Style</string>
 						<key>INTypePropertyMetadataTimeStyle</key>
 						<string>Short</string>
 						<key>INTypePropertyMetadataType</key>
