@@ -98,12 +98,12 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 	}
 
 	private final func filterAndCallBack() {
-		if subQueryCallbackParameters?.error != nil {
-			callback(nil, subQueryCallbackParameters!.error)
+		if let error = subQueryCallbackParameters?.error {
+			callback(nil, error)
 			return
 		}
-		if queryCallbackParameters!.error != nil {
-			callback(nil, queryCallbackParameters!.error)
+		if let error = queryCallbackParameters?.error {
+			callback(nil, error)
 			return
 		}
 
@@ -119,17 +119,19 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 	}
 
 	private final func filterResults() throws -> SampleQueryResult<SampleType>? {
-		guard queryCallbackParameters!.result != nil else { throw GenericError("query result is nil") }
-
-		if subQuery == nil {
-			return queryCallbackParameters!.result
+		guard let queryResult = queryCallbackParameters?.result else {
+			throw GenericError("query result is nil")
 		}
-		let queryResult = queryCallbackParameters!.result!
-		let querySamples = queryResult.typedSamples
-		let subQuerySamples = subQueryCallbackParameters!.result!.samples
 
-		let filteredSamples: [SampleType] = try subQuery!.matcher
-			.getSamples(from: querySamples, matching: subQuerySamples)
+		guard let subQuery = subQuery else {
+			return queryResult
+		}
+		let querySamples = queryResult.typedSamples
+		guard let subQuerySamples = subQueryCallbackParameters?.result?.samples else {
+			throw GenericError("cannot retrieve subQuery samples")
+		}
+
+		let filteredSamples = try subQuery.matcher.getSamples(from: querySamples, matching: subQuerySamples)
 		let filteredResult = SampleQueryResult<SampleType>(filteredSamples)
 
 		return filteredResult
