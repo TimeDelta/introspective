@@ -44,7 +44,7 @@ public class ResultsViewControllerMock: UITableViewController, ResultsViewContro
     }
 
 
-    public var query: Query! {
+    public var query: Query? {
 		get {	invocations.append(.p_query_get); return __p_query ?? optionalGivenGetterValue(.p_query_get, "ResultsViewControllerMock - stub value for query was not defined") }
 		set {	invocations.append(.p_query_set(.value(newValue))); __p_query = newValue }
 	}
