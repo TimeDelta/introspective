@@ -47,8 +47,6 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 
 	private final var timer: Timer!
 
-	private final let signpost =
-		Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "ActivityDefinition Table Cell"))
 	private final let log = Log()
 
 	deinit { timer?.invalidate() }
@@ -137,7 +135,6 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 		do {
 			return try DependencyInjector.get(ActivityDAO.self).getMostRecentlyStartedActivity(for: activityDefinition)
 		} catch {
-			signpost.end(name: "getMostRecentlyStartedActivity", idObject: activityDefinition)
 			log.error("Failed to fetch activities: %@", errorInfo(error))
 		}
 
