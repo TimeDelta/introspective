@@ -17,10 +17,34 @@ import UIExtensions
 public protocol CoachMarksDataSourceAndDelegate: CoachMarksControllerDataSource, CoachMarksControllerDelegate {}
 
 public final class DefaultCoachMarksDataSourceAndDelegate: CoachMarksDataSourceAndDelegate {
+	// MARK: - Member Variables
+
 	private final let coachMarksInfo: [CoachMarkInfo]
 	private final let instructionsShownKey: UserDefaultKey
 	private final let cleanup: (() -> Void)?
 	private final let skipViewLayoutConstraints: [CoachMarkSkipViewConstraint]?
+
+	// MARK: - Static Functions
+
+	static func defaultSkipInstructionsView() -> CoachMarkSkipView {
+		let skipView = CoachMarkSkipDefaultView()
+		skipView.setTitle("Skip instructions", for: .normal)
+		skipView.frame = CGRect(x: 0.0, y: 0.0, width: skipView.frame.width, height: skipView.frame.height)
+		return skipView
+	}
+
+	static func defaultCoachMarkSkipViewConstraints() -> [CoachMarkSkipViewConstraint] {
+		[
+			HorizontallyCenteredCoachMarkSkipViewConstraint(),
+			GenericCoachMarkSkipViewConstraint(
+				skipViewAttribute: .bottom,
+				relatedBy: .equal,
+				parentViewAttribute: .bottomMargin
+			),
+		]
+	}
+
+	// MARK: - Constructors
 
 	/// - Parameter instructionsShownKey: The UserDefaults key to be used when determining if the instructions for this screen have been shown yet.
 	/// - Parameter cleanup: When the user either skips the remaining instructions or finishes the instructions, this will run.

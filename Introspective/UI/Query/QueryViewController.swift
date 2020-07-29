@@ -81,79 +81,9 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	private final let log = Log()
 
-	private final var addedRestrictionForInstructions = false
-	private final var addedSubQueryForInstructions = false
-
+	/// Have to maintain a strong reference to this or instructions won't show
 	private final var coachMarksController = DependencyInjector.get(CoachMarkFactory.self).controller()
-	private final var coachMarksDataSourceAndDelegate: DefaultCoachMarksDataSourceAndDelegate!
-	private lazy final var coachMarksInfo: [CoachMarkInfo] = [
-		CoachMarkInfo(
-			hint: "This is the main data type. It determines what type of data will be returned by this query. Tap it to change the main data type.",
-			useArrow: true,
-			view: { self.tableView.visibleCells[0] }
-		),
-		CoachMarkInfo(
-			hint: "Press the + button to add more parts to the query.",
-			useArrow: false,
-			view: { self.toolbar }
-		),
-		CoachMarkInfo(
-			hint: "This is an attribute restriction. It allows you to restrict which samples are returned based on their attributes. Tap it to edit.",
-			useArrow: false,
-			view: {
-				var attributeRestrictionIndexPath = IndexPath(row: 1, section: 0)
-				for section in 0 ..< self.queries.count {
-					for row in 0 ..< self.queries[section].parts.count {
-						if self.queries[section].parts[row].type == .expression {
-							attributeRestrictionIndexPath = IndexPath(row: row, section: section)
-							break
-						}
-					}
-				}
-				self.tableView.scrollToRow(at: attributeRestrictionIndexPath, at: .bottom, animated: true)
-				return self.tableView.visibleCells.last!
-			},
-			setup: {
-				var hasAttributeRestriction = false
-				for query in self.queries {
-					for part in query.parts {
-						if part.type == .expression {
-							hasAttributeRestriction = true
-							break
-						}
-					}
-				}
-				if !hasAttributeRestriction {
-					self.addOrUpdateAttributeRestrictionFor(nil)
-					self.addedRestrictionForInstructions = true
-				}
-			}
-		),
-		CoachMarkInfo(
-			hint: "This is the start of a subquery. It allows you to restrict what samples are returned based on other types of data. Tap it to edit.",
-			useArrow: false,
-			view: {
-				self.tableView.scrollToRow(at: IndexPath(row: 0, section: 1), at: .bottom, animated: true)
-				return self.tableView.visibleCells[0]
-			},
-			setup: {
-				if self.queries.count < 2 {
-					let subQuerySampleType = DependencyInjector.get(SampleFactory.self).allTypes()[1]
-					self.queries.append((
-						sampleTypeInfo: SampleTypeInfo(subQuerySampleType),
-						parts: []
-					))
-					self.partWasAdded()
-					self.addedSubQueryForInstructions = true
-				}
-			}
-		),
-		CoachMarkInfo(
-			hint: "Swipe left on any part of the query (except the main data type) to reveal a button that will remove that part of the query.",
-			useArrow: true,
-			view: { self.tableView.visibleCells[2] }
-		),
-	]
+	private final var coachMarksDataSourceAndDelegate: CoachMarksDataSourceAndDelegate!
 
 	// MARK: - UIViewController Overloads
 
@@ -182,27 +112,10 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		addPartButton?.target = self
 		addPartButton?.action = #selector(addPartButtonWasPressed)
 
-		coachMarksDataSourceAndDelegate = DefaultCoachMarksDataSourceAndDelegate(
-			coachMarksInfo,
-			instructionsShownKey: .queryViewInstructionsShown,
-			cleanup: {
-				if self.addedSubQueryForInstructions {
-					_ = self.queries.popLast()
-				}
-				if self.addedRestrictionForInstructions {
-					_ = self.queries[self.queries.count - 1].parts.popLast()
-				}
-				if self.addedSubQueryForInstructions || self.addedRestrictionForInstructions {
-					self.tableView.reloadData()
-				}
-				self.addedRestrictionForInstructions = false
-				self.addedSubQueryForInstructions = false
-			},
-			skipViewLayoutConstraints: defaultCoachMarkSkipViewConstraints()
-		)
+		coachMarksDataSourceAndDelegate = QueryViewControllerCoachMarksDataSourceAndDelegate(self)
 		coachMarksController.dataSource = coachMarksDataSourceAndDelegate
 		coachMarksController.delegate = coachMarksDataSourceAndDelegate
-		coachMarksController.skipView = defaultSkipInstructionsView()
+		coachMarksController.skipView = DefaultCoachMarksDataSourceAndDelegate.defaultSkipInstructionsView()
 	}
 
 	public final override func viewDidAppear(_ animated: Bool) {
@@ -515,7 +428,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		queries[indexPath.section].sampleTypeInfo.sampleType
 	}
 
-	private final func partWasAdded() {
+	final fileprivate func partWasAdded() {
 		if queries.count > 1 || !queries[0].parts.isEmpty {
 			tableView.reloadData()
 		}
@@ -748,7 +661,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		}
 	}
 
-	private final func addOrUpdateAttributeRestrictionFor(_ indexPath: IndexPath?) {
+	final fileprivate func addOrUpdateAttributeRestrictionFor(_ indexPath: IndexPath?) {
 		if let indexPath = indexPath {
 			let restriction = defaultAttributeRestriction(for: bottomMostSampleTypeAbove(indexPath))
 			queries[indexPath.section].parts[indexPath.row - 1] = (type: .expression, expression: restriction)
@@ -812,5 +725,154 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 			indentation -= 1
 		}
 		return max(indentation, 1)
+	}
+}
+
+// MARK: - Instructions
+
+/// This class is used to break retain cycles between `QueryViewController` and the closures used by `CoachMarkInfo`, preventing them from causing memory leaks
+final fileprivate class QueryViewControllerCoachMarksDataSourceAndDelegate: CoachMarksDataSourceAndDelegate {
+	private typealias Super = DefaultCoachMarksDataSourceAndDelegate
+	private typealias ControllerClass = QueryViewControllerImpl
+
+	private weak final var controller: QueryViewControllerImpl?
+
+	private final var addedRestrictionForInstructions = false
+	private final var addedSubQueryForInstructions = false
+
+	private lazy final var coachMarksInfo: [CoachMarkInfo] = [
+		CoachMarkInfo(
+			hint: "This is the main data type. It determines what type of data will be returned by this query. Tap it to change the main data type.",
+			useArrow: true,
+			view: { self.controller?.tableView.visibleCells[0] }
+		),
+		CoachMarkInfo(
+			hint: "Press the + button to add more parts to the query.",
+			useArrow: false,
+			view: { self.controller?.toolbar }
+		),
+		CoachMarkInfo(
+			hint: "This is an attribute restriction. It allows you to restrict which samples are returned based on their attributes. Tap it to edit.",
+			useArrow: false,
+			view: {
+				guard let controller = self.controller else { return nil }
+
+				var attributeRestrictionIndexPath = IndexPath(row: 1, section: 0)
+				for section in 0 ..< controller.queries.count {
+					for row in 0 ..< controller.queries[section].parts.count {
+						if self.controller?.queries[section].parts[row].type == .expression {
+							attributeRestrictionIndexPath = IndexPath(row: row, section: section)
+							break
+						}
+					}
+				}
+				self.controller?.tableView.scrollToRow(at: attributeRestrictionIndexPath, at: .bottom, animated: true)
+				return self.controller?.tableView.visibleCells.last!
+			},
+			setup: {
+				guard let controller = self.controller else { return }
+
+				var hasAttributeRestriction = false
+				for query in controller.queries {
+					for part in query.parts {
+						if part.type == .expression {
+							hasAttributeRestriction = true
+							break
+						}
+					}
+				}
+				if !hasAttributeRestriction {
+					controller.addOrUpdateAttributeRestrictionFor(nil)
+					self.addedRestrictionForInstructions = true
+				}
+			}
+		),
+		CoachMarkInfo(
+			hint: "This is the start of a subquery. It allows you to restrict what samples are returned based on other types of data. Tap it to edit.",
+			useArrow: false,
+			view: {
+				self.controller?.tableView.scrollToRow(at: IndexPath(row: 0, section: 1), at: .bottom, animated: true)
+				return self.controller?.tableView.visibleCells[0]
+			},
+			setup: {
+				guard let controller = self.controller else { return }
+
+				if controller.queries.count < 2 {
+					let subQuerySampleType = DependencyInjector.get(SampleFactory.self).allTypes()[1]
+					controller.queries.append((
+						sampleTypeInfo: ControllerClass.SampleTypeInfo(subQuerySampleType),
+						parts: []
+					))
+					controller.partWasAdded()
+					self.addedSubQueryForInstructions = true
+				}
+			}
+		),
+		CoachMarkInfo(
+			hint: "Swipe left on any part of the query (except the main data type) to reveal a button that will remove that part of the query.",
+			useArrow: true,
+			view: { self.controller?.tableView.visibleCells[2] }
+		),
+	]
+
+	private lazy var delegate: DefaultCoachMarksDataSourceAndDelegate = {
+		DefaultCoachMarksDataSourceAndDelegate(
+			self.coachMarksInfo,
+			instructionsShownKey: .queryViewInstructionsShown,
+			cleanup: {
+				guard let controller = self.controller else { return }
+
+				if self.addedSubQueryForInstructions {
+					_ = controller.queries.popLast()
+				}
+				if self.addedRestrictionForInstructions {
+					_ = controller.queries[controller.queries.count - 1].parts.popLast()
+				}
+				if self.addedSubQueryForInstructions || self.addedRestrictionForInstructions {
+					controller.tableView.reloadData()
+				}
+				self.addedRestrictionForInstructions = false
+				self.addedSubQueryForInstructions = false
+			},
+			skipViewLayoutConstraints: Super.defaultCoachMarkSkipViewConstraints()
+		)
+	}()
+
+	public init(_ controller: QueryViewControllerImpl) {
+		self.controller = controller
+	}
+
+	public final func coachMarksController(
+		_ coachMarksController: CoachMarksController,
+		coachMarkViewsAt index: Int,
+		madeFrom coachMark: CoachMark
+	) -> (bodyView: CoachMarkBodyView, arrowView: CoachMarkArrowView?) {
+		delegate.coachMarksController(coachMarksController, coachMarkViewsAt: index, madeFrom: coachMark)
+	}
+
+	public final func coachMarksController(
+		_ coachMarksController: CoachMarksController,
+		coachMarkAt index: Int
+	) -> CoachMark {
+		delegate.coachMarksController(coachMarksController, coachMarkAt: index)
+	}
+
+	public final func numberOfCoachMarks(for controller: CoachMarksController) -> Int {
+		delegate.numberOfCoachMarks(for: controller)
+	}
+
+	public final func coachMarksController(
+		_ coachMarksController: CoachMarksController,
+		constraintsForSkipView skipView: UIView,
+		inParent parentView: UIView
+	) -> [NSLayoutConstraint]? {
+		delegate.coachMarksController(coachMarksController, constraintsForSkipView: skipView, inParent: parentView)
+	}
+
+	public final func coachMarksController(
+		_ coachMarksController: CoachMarksController,
+		didEndShowingBySkipping skipped: Bool
+	) {
+		delegate.coachMarksController(coachMarksController, didEndShowingBySkipping: skipped)
 	}
 }

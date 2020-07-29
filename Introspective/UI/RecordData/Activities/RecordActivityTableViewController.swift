@@ -194,11 +194,11 @@ public final class RecordActivityTableViewController: UITableViewController {
 			coachMarksInfo,
 			instructionsShownKey: .recordActivitiesInstructionsShown,
 			cleanup: deleteExampleActivity,
-			skipViewLayoutConstraints: defaultCoachMarkSkipViewConstraints()
+			skipViewLayoutConstraints: DefaultCoachMarksDataSourceAndDelegate.defaultCoachMarkSkipViewConstraints()
 		)
 		coachMarksController.dataSource = coachMarksDataSourceAndDelegate
 		coachMarksController.delegate = coachMarksDataSourceAndDelegate
-		coachMarksController.skipView = defaultSkipInstructionsView()
+		coachMarksController.skipView = DefaultCoachMarksDataSourceAndDelegate.defaultSkipInstructionsView()
 	}
 
 	public final override func viewDidAppear(_ animated: Bool) {

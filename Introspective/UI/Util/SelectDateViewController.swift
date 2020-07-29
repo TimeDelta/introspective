@@ -81,11 +81,11 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 		coachMarksDataSourceAndDelegate = DefaultCoachMarksDataSourceAndDelegate(
 			coachMarksInfo,
 			instructionsShownKey: .selectDateViewInstructionsShown,
-			skipViewLayoutConstraints: defaultCoachMarkSkipViewConstraints()
+			skipViewLayoutConstraints: DefaultCoachMarksDataSourceAndDelegate.defaultCoachMarkSkipViewConstraints()
 		)
 		coachMarksController.dataSource = coachMarksDataSourceAndDelegate
 		coachMarksController.delegate = coachMarksDataSourceAndDelegate
-		coachMarksController.skipView = defaultSkipInstructionsView()
+		coachMarksController.skipView = DefaultCoachMarksDataSourceAndDelegate.defaultSkipInstructionsView()
 
 		let lastButton = UIBarButtonItem(
 			title: "Last",

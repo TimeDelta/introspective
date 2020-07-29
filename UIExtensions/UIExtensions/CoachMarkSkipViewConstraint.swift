@@ -47,6 +47,8 @@ public final class GenericCoachMarkSkipViewConstraint: CoachMarkSkipViewConstrai
 }
 
 public final class HorizontallyCenteredCoachMarkSkipViewConstraint: CoachMarkSkipViewConstraint {
+	public init() {}
+
 	public final func constraint(skipView: UIView, parentView: UIView) -> NSLayoutConstraint {
 		NSLayoutConstraint(
 			item: skipView,
