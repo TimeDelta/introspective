@@ -80,6 +80,7 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 		subQuery?.query.resetStoppedState()
 	}
 
+	/// This should be called by any subclasses after finishing the query.
 	final func queryDone(_ result: SampleQueryResult<SampleType>?, _ error: Error?) {
 		queryCallbackParameters = (result, error)
 		if subQuery == nil || subQueryCallbackParameters != nil {
