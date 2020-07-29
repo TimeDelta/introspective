@@ -37,13 +37,11 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		center: .topCenter
 	)
 
-	private static let exampleMedicationName = "Example Medication"
-
 	// MARK: - Instance Variables
 
-	private final var sortButton: UIBarButtonItem!
+	final fileprivate var sortButton: UIBarButtonItem!
 
-	private final let searchController = UISearchController(searchResultsController: nil)
+	final fileprivate let searchController = UISearchController(searchResultsController: nil)
 	private final var finishedLoading = false {
 		didSet {
 			searchController.searchBar.isUserInteractionEnabled = finishedLoading
@@ -57,49 +55,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	private final let defaultSort = NSSortDescriptor(key: "recordScreenIndex", ascending: true)
 
 	private final let coachMarksController = CoachMarksController()
-	private final var coachMarksDataSourceAndDelegate: DefaultCoachMarksDataSourceAndDelegate!
-	private lazy final var coachMarksInfo: [CoachMarkInfo] = [
-		CoachMarkInfo(
-			hint: "Tap the + button to create new medications. You can also type the name of a new medication in the search bar and long press the + button to quickly create and mark it as taken.",
-			useArrow: true,
-			view: { self.navigationItem.rightBarButtonItem?.value(forKey: "view") as? UIView }
-		),
-		CoachMarkInfo(
-			hint: "This is the name of the medication. Tap it to edit the medication.",
-			useArrow: true,
-			view: {
-				let exampleMedicationCell = self.tableView.visibleCells[0] as! RecordMedicationTableViewCell
-				return exampleMedicationCell.medicationNameLabel
-			},
-			setup: {
-				if self.tableView.visibleCells.isEmpty {
-					self.searchController.searchBar.text = Me.exampleMedicationName
-					self.quickCreateAndTake()
-				}
-			}
-		),
-		CoachMarkInfo(
-			hint: "Press this button to quickly mark this medication as taken. Long pressing allows setting the dosage and date / time that it was taken.",
-			useArrow: true,
-			view: {
-				let exampleMedicationCell = self.tableView.visibleCells[0] as! RecordMedicationTableViewCell
-				return exampleMedicationCell.takeButton
-			}
-		),
-		CoachMarkInfo(
-			hint: "This displays the most recent date and time that this medication was taken. Tap to display the full history for this medication.",
-			useArrow: true,
-			view: {
-				let exampleMedicationCell = self.tableView.visibleCells[0] as! RecordMedicationTableViewCell
-				return exampleMedicationCell.lastTakenOnDateButton
-			}
-		),
-		CoachMarkInfo(
-			hint: "Sorting options can be accessed here.",
-			useArrow: true,
-			view: { self.sortButton.value(forKey: "view") as? UIView }
-		),
-	]
+	private final var coachMarksDataSourceAndDelegate: CoachMarksDataSourceAndDelegate!
 
 	private final let log = Log()
 	private final let signpost =
@@ -141,12 +97,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		observe(selector: #selector(medicationEdited), name: Me.medicationEdited)
 		observe(selector: #selector(reloadTableViewData), name: UIApplication.willEnterForegroundNotification)
 
-		coachMarksDataSourceAndDelegate = DefaultCoachMarksDataSourceAndDelegate(
-			coachMarksInfo,
-			instructionsShownKey: .recordMedicationsInstructionsShown,
-			cleanup: deleteExampleMedication,
-			skipViewLayoutConstraints: DefaultCoachMarksDataSourceAndDelegate.defaultCoachMarkSkipViewConstraints()
-		)
+		coachMarksDataSourceAndDelegate = RecordMedicationTableViewControllerCoachMarksDataSourceAndDelegate(self)
 		coachMarksController.dataSource = coachMarksDataSourceAndDelegate
 		coachMarksController.delegate = coachMarksDataSourceAndDelegate
 		coachMarksController.skipView = DefaultCoachMarksDataSourceAndDelegate.defaultSkipInstructionsView()
@@ -227,7 +178,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 			let medication = self.fetchedResultsController.object(at: indexPath)
 			let alert = UIAlertController(
 				title: "Are you sure you want to delete \(medication.name)?",
-				message: "This will delete all history for this activity.",
+				message: "This will delete all history for this medication.",
 				preferredStyle: .alert
 			)
 			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
@@ -415,7 +366,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		present(controller, using: Me.presenter)
 	}
 
-	private final func loadMedications() {
+	final fileprivate func loadMedications() {
 		resetFetchedResultsController()
 		finishedLoading = true
 		tableView.reloadData()
@@ -452,12 +403,12 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		}
 	}
 
-	private final func quickCreateAndTake() {
+	final fileprivate func quickCreateAndTake() {
 		let searchText = getSearchText()
 		if !searchText.isEmpty {
 			do {
 				guard try !medicationWithNameExists(searchText) else {
-					showError(title: "Activity named '\(searchText)' already exists.")
+					showError(title: "Medication named '\(searchText)' already exists.")
 					return
 				}
 				let transaction = DependencyInjector.get(Database.self).transaction()
@@ -505,22 +456,6 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		controller.initialName = getSearchText()
 		navigationController?.pushViewController(controller, animated: false)
 	}
-
-	private final func deleteExampleMedication() {
-		let medicationFetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
-		medicationFetchRequest.predicate = NSPredicate(format: "name == %@", Me.exampleMedicationName)
-		do {
-			let medications = try DependencyInjector.get(Database.self).query(medicationFetchRequest)
-			for medication in medications {
-				let transaction = DependencyInjector.get(Database.self).transaction()
-				try transaction.delete(medication)
-				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-				loadMedications()
-			}
-		} catch {
-			log.error("Failed to fetch activities while retrieving most recent: %@", errorInfo(error))
-		}
-	}
 }
 
 // MARK: - UISearchResultsUpdating
@@ -537,5 +472,135 @@ extension RecordMedicationTableViewController: UISearchResultsUpdating {
 	public func updateSearchResults(for _: UISearchController) {
 		resetFetchedResultsController()
 		tableView.reloadData()
+	}
+}
+
+// MARK: - Instructions
+
+/// This class is used to break retain cycles between `RecordMedicationTableViewController` and the closures used by `CoachMarkInfo`, preventing them from causing memory leaks
+final fileprivate class RecordMedicationTableViewControllerCoachMarksDataSourceAndDelegate: CoachMarksDataSourceAndDelegate {
+	private typealias Me = RecordMedicationTableViewControllerCoachMarksDataSourceAndDelegate
+	private typealias Super = DefaultCoachMarksDataSourceAndDelegate
+	private typealias ControllerClass = RecordMedicationTableViewController
+
+	private static let exampleMedicationName = "Example Medication"
+
+	private weak final var controller: RecordMedicationTableViewController?
+
+	private final let log = Log()
+
+	private lazy final var coachMarksInfo: [CoachMarkInfo] = [
+		CoachMarkInfo(
+			hint: "Tap the + button to create new medications. You can also type the name of a new medication in the search bar and long press the + button to quickly create and mark it as taken.",
+			useArrow: true,
+			view: { self.controller?.navigationItem.rightBarButtonItem?.value(forKey: "view") as? UIView }
+		),
+		CoachMarkInfo(
+			hint: "This is the name of the medication. Tap it to edit the medication.",
+			useArrow: true,
+			view: { self.getExampleMedicationCell()?.medicationNameLabel },
+			setup: {
+				guard let controller = self.controller else { return }
+				if controller.tableView.visibleCells.isEmpty {
+					controller.searchController.searchBar.text = Me.exampleMedicationName
+					controller.quickCreateAndTake()
+				}
+			}
+		),
+		CoachMarkInfo(
+			hint: "Press this button to quickly mark this medication as taken. Long pressing allows setting the dosage and date / time that it was taken.",
+			useArrow: true,
+			view: { self.getExampleMedicationCell()?.takeButton }
+		),
+		CoachMarkInfo(
+			hint: "This displays the most recent date and time that this medication was taken. Tap to display the full history for this medication.",
+			useArrow: true,
+			view: { self.getExampleMedicationCell()?.lastTakenOnDateButton }
+		),
+		CoachMarkInfo(
+			hint: "Sorting options can be accessed here.",
+			useArrow: true,
+			view: { self.controller?.sortButton.value(forKey: "view") as? UIView }
+		),
+	]
+
+	private lazy var delegate: DefaultCoachMarksDataSourceAndDelegate = {
+		DefaultCoachMarksDataSourceAndDelegate(
+			coachMarksInfo,
+			instructionsShownKey: .recordMedicationsInstructionsShown,
+			cleanup: deleteExampleMedication,
+			skipViewLayoutConstraints: Super.defaultCoachMarkSkipViewConstraints()
+		)
+	}()
+
+	public init(_ controller: RecordMedicationTableViewController) {
+		self.controller = controller
+	}
+
+	public final func coachMarksController(
+		_ coachMarksController: CoachMarksController,
+		coachMarkViewsAt index: Int,
+		madeFrom coachMark: CoachMark
+	) -> (bodyView: CoachMarkBodyView, arrowView: CoachMarkArrowView?) {
+		delegate.coachMarksController(coachMarksController, coachMarkViewsAt: index, madeFrom: coachMark)
+	}
+
+	public final func coachMarksController(
+		_ coachMarksController: CoachMarksController,
+		coachMarkAt index: Int
+	) -> CoachMark {
+		delegate.coachMarksController(coachMarksController, coachMarkAt: index)
+	}
+
+	public final func numberOfCoachMarks(for controller: CoachMarksController) -> Int {
+		delegate.numberOfCoachMarks(for: controller)
+	}
+
+	public final func coachMarksController(
+		_ coachMarksController: CoachMarksController,
+		constraintsForSkipView skipView: UIView,
+		inParent parentView: UIView
+	) -> [NSLayoutConstraint]? {
+		delegate.coachMarksController(coachMarksController, constraintsForSkipView: skipView, inParent: parentView)
+	}
+
+	public final func coachMarksController(
+		_ coachMarksController: CoachMarksController,
+		didEndShowingBySkipping skipped: Bool
+	) {
+		delegate.coachMarksController(coachMarksController, didEndShowingBySkipping: skipped)
+	}
+
+	private final func deleteExampleMedication() {
+		let medicationFetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
+		medicationFetchRequest.predicate = NSPredicate(format: "name == %@", Me.exampleMedicationName)
+		do {
+			let medications = try DependencyInjector.get(Database.self).query(medicationFetchRequest)
+			for medication in medications {
+				let transaction = DependencyInjector.get(Database.self).transaction()
+				try transaction.delete(medication)
+				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+				controller?.loadMedications()
+			}
+		} catch {
+			log.error("Failed to delete example medication: %@", errorInfo(error))
+		}
+	}
+
+	private final func getExampleMedicationCell() -> RecordMedicationTableViewCell? {
+		guard let controller = self.controller else { return nil }
+		guard controller.tableView.visibleCells.count > 0 else {
+			log.error("No visible cells while trying to present instruction")
+			return nil
+		}
+		let cell = controller.tableView.visibleCells[0]
+		guard let exampleMedicationCell = cell as? RecordMedicationTableViewCell else {
+			log.error(
+				"unable to cast to RecordMedicationTableViewCell: was a %@",
+				String(describing: type(of: cell))
+			)
+			return nil
+		}
+		return exampleMedicationCell
 	}
 }
