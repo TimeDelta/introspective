@@ -17,12 +17,11 @@ import UIExtensions
 public protocol CoachMarksDataSourceAndDelegate: CoachMarksControllerDataSource, CoachMarksControllerDelegate {}
 
 public final class DefaultCoachMarksDataSourceAndDelegate: CoachMarksDataSourceAndDelegate {
-	// MARK: - Member Variables
+	// MARK: - Static Variables
 
-	private final let coachMarksInfo: [CoachMarkInfo]
-	private final let instructionsShownKey: UserDefaultKey
-	private final let cleanup: (() -> Void)?
-	private final let skipViewLayoutConstraints: [CoachMarkSkipViewConstraint]?
+	private typealias Me = DefaultCoachMarksDataSourceAndDelegate
+
+	private static let log = Log()
 
 	// MARK: - Static Functions
 
@@ -44,6 +43,13 @@ public final class DefaultCoachMarksDataSourceAndDelegate: CoachMarksDataSourceA
 		]
 	}
 
+	// MARK: - Member Variables
+
+	private final let _coachMarksInfo: [WeakRef<CoachMarkInfo>]
+	private final let instructionsShownKey: UserDefaultKey
+	private final let cleanup: (() -> Void)?
+	private final let skipViewLayoutConstraints: [CoachMarkSkipViewConstraint]?
+
 	// MARK: - Constructors
 
 	/// - Parameter instructionsShownKey: The UserDefaults key to be used when determining if the instructions for this screen have been shown yet.
@@ -54,7 +60,7 @@ public final class DefaultCoachMarksDataSourceAndDelegate: CoachMarksDataSourceA
 		cleanup: (() -> Void)? = nil,
 		skipViewLayoutConstraints: [CoachMarkSkipViewConstraint]? = nil
 	) {
-		self.coachMarksInfo = coachMarksInfo
+		_coachMarksInfo = coachMarksInfo.map { WeakRef($0) }
 		self.instructionsShownKey = instructionsShownKey
 		self.cleanup = cleanup
 		self.skipViewLayoutConstraints = skipViewLayoutConstraints
@@ -68,12 +74,12 @@ public final class DefaultCoachMarksDataSourceAndDelegate: CoachMarksDataSourceA
 		madeFrom coachMark: CoachMark
 	) -> (bodyView: CoachMarkBodyView, arrowView: CoachMarkArrowView?) {
 		let coachViews = coachMarksController.helper.makeDefaultCoachViews(
-			withArrow: coachMarksInfo[index].useArrow,
+			withArrow: coachMarksInfo(index).useArrow,
 			arrowOrientation: coachMark.arrowOrientation
 		)
 
-		coachViews.bodyView.hintLabel.text = coachMarksInfo[index].hintText
-		coachViews.bodyView.nextLabel.text = coachMarksInfo[index].nextText
+		coachViews.bodyView.hintLabel.text = coachMarksInfo(index).hintText
+		coachViews.bodyView.nextLabel.text = coachMarksInfo(index).nextText
 
 		return (bodyView: coachViews.bodyView, arrowView: coachViews.arrowView)
 	}
@@ -82,17 +88,17 @@ public final class DefaultCoachMarksDataSourceAndDelegate: CoachMarksDataSourceA
 		_ coachMarksController: CoachMarksController,
 		coachMarkAt index: Int
 	) -> CoachMark {
-		if let runSetup = coachMarksInfo[index].setup {
+		if let runSetup = coachMarksInfo(index).setup {
 			runSetup()
 		}
-		if index == coachMarksInfo.count - 1 {
+		if index == _coachMarksInfo.count - 1 {
 			DependencyInjector.get(UserDefaultsUtil.self).setUserDefault(true, forKey: instructionsShownKey)
 		}
-		return coachMarksController.helper.makeCoachMark(for: coachMarksInfo[index].view)
+		return coachMarksController.helper.makeCoachMark(for: coachMarksInfo(index).view)
 	}
 
 	public final func numberOfCoachMarks(for _: CoachMarksController) -> Int {
-		coachMarksInfo.count
+		_coachMarksInfo.count
 	}
 
 	public final func coachMarksController(
@@ -115,5 +121,15 @@ public final class DefaultCoachMarksDataSourceAndDelegate: CoachMarksDataSourceA
 		if let cleanup = cleanup {
 			cleanup()
 		}
+	}
+
+	// MARK: - Helper Functions
+
+	private final func coachMarksInfo(_ index: Int) -> CoachMarkInfo {
+		guard let coachMark = _coachMarksInfo[index].value else {
+			Me.log.error("Unable to resolve CoachMarkInfo")
+			return CoachMarkInfo(hint: "", useArrow: false)
+		}
+		return coachMark
 	}
 }
