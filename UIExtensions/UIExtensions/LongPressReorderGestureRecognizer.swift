@@ -12,10 +12,10 @@ public final class LongPressReorderGestureRecognizer: UILongPressGestureRecogniz
 	// MARK: - Instance Variables
 
 	private final var tableView: UITableView {
-		tableViewController().tableView
+		tableViewController.tableView
 	}
 
-	private final let tableViewController: () -> UITableViewController
+	private weak final var tableViewController: UITableViewController!
 	private final let allowReorder: ((IndexPath, IndexPath?) -> Bool)?
 
 	private final var initialIndexPath: IndexPath!
@@ -24,7 +24,7 @@ public final class LongPressReorderGestureRecognizer: UILongPressGestureRecogniz
 	// MARK: - Initializers
 
 	public init(
-		_ tableViewController: @escaping () -> UITableViewController,
+		_ tableViewController: UITableViewController,
 		allowReorder: ((IndexPath, IndexPath?) -> Bool)? = nil
 	) {
 		self.tableViewController = tableViewController
@@ -76,7 +76,7 @@ public final class LongPressReorderGestureRecognizer: UILongPressGestureRecogniz
 		case .ended:
 			guard let indexPath = indexPath else { return }
 			if indexPath != initialIndexPath {
-				tableViewController().tableView(tableView, moveRowAt: initialIndexPath, to: indexPath)
+				tableViewController.tableView(tableView, moveRowAt: initialIndexPath, to: indexPath)
 				initialIndexPath = indexPath
 			}
 			if let allowReorder = allowReorder {

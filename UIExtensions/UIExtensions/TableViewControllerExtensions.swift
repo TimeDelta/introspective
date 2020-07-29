@@ -25,7 +25,7 @@ public extension UITableViewController {
 	}
 
 	final func reorderOnLongPress(allowReorder: ((IndexPath, IndexPath?) -> Bool)? = nil) {
-		let reorderRecognizer = LongPressReorderGestureRecognizer({ self }, allowReorder: allowReorder)
+		let reorderRecognizer = LongPressReorderGestureRecognizer(self, allowReorder: allowReorder)
 		tableView.addGestureRecognizer(reorderRecognizer)
 	}
 
