@@ -24,7 +24,7 @@ import Samples
 import UIExtensions
 
 public protocol ResultsViewController: UITableViewController {
-	var query: Query! { get set }
+	var query: Query? { get set }
 	var samples: [Sample]! { get set }
 	var backButtonTitle: String? { get set }
 }
@@ -55,7 +55,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	public final var backButtonTitle: String?
 
-	public final var query: Query!
+	public final var query: Query?
 	public final var samples: [Sample]! {
 		didSet {
 			guard !failed else { return }
@@ -732,10 +732,15 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				handler: { _ in self.setSampleSort() }
 			))
 		}
-		actionsController?
-			.addAction(DependencyInjector.get(UiUtil.self).alertAction(title: "Add Information", style: .default) { _ in
-				DependencyInjector.get(AsyncUtil.self).run(qos: .userInteractive) { self.addInformation() }
-			})
+		actionsController?.addAction(DependencyInjector.get(UiUtil.self).alertAction(
+			title: "Add Information",
+			style: .default,
+			handler: { _ in
+				DependencyInjector.get(AsyncUtil.self).run(qos: .userInteractive) {
+					self.addInformation()
+				}
+			}
+		))
 		if let _ = query {
 			actionsController?.addAction(DependencyInjector.get(UiUtil.self).alertAction(
 				title: "Refresh",
@@ -758,7 +763,8 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	}
 
 	@objc private final func done() {
-		query.stop()
+		query?.stop()
+		samples = nil
 		navigationController?.popViewController(animated: false)
 	}
 

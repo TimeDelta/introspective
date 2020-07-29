@@ -112,6 +112,9 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 			log.error("Failed to filter query results: %@", errorInfo(error))
 			callback(nil, error)
 		}
+		// could capture surrounding context (from e.g. view controller) so set to nil to avoid retain cycles, which
+		// cause memory leaks
+		callback = nil
 	}
 
 	private final func filterResults() throws -> SampleQueryResult<SampleType>? {
