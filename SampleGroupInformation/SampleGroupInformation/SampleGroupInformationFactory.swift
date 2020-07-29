@@ -13,7 +13,9 @@ import Common
 
 // sourcery: AutoMockable
 public protocol SampleGroupInformationFactory {
+	/// - Returns: Guaranteed not to return an empty array.
 	func getApplicableInformationTypes(forAttribute attribute: Attribute) -> [SampleGroupInformation.Type]
+	/// - Returns: Guaranteed not to return an empty array. At minimum, will contain `CountInformation`.
 	func getApplicableNumericInformationTypes(forAttribute attribute: Attribute) -> [SampleGroupInformation.Type]
 	func initInformation(
 		_ informationType: SampleGroupInformation.Type,
