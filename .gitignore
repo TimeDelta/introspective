@@ -12,3 +12,4 @@ mocky.yml
 Pods/
 Podfile.lock
 instruments/*
+**/build/
