@@ -14,14 +14,16 @@ import DependencyInjection
 import Samples
 
 public final class SumInformation: AnyInformation {
+	// MARK: - Static Variables
+
+	private typealias Me = SumInformation
+
+	private static let log = Log()
+
 	// MARK: - Display Information
 
 	public final override var name: String { "Total" }
 	public final override var description: String { name + " " + attribute.name.localizedLowercase }
-
-	// MARK: - Instance Variables
-
-	private final let log = Log()
 
 	// MARK: - Initializers
 
@@ -133,7 +135,7 @@ public final class SumInformation: AnyInformation {
 			if dosage != nil {
 				break
 			} else if !attribute.optional {
-				log.error("Non-optional dosage returned nil value for %@ sample", sample.attributedName)
+				Me.log.error("Non-optional dosage returned nil value for %@ sample", sample.attributedName)
 			}
 		}
 		return dosage

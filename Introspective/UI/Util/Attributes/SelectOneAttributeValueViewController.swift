@@ -13,6 +13,12 @@ import Common
 import Samples
 
 public final class SelectOneAttributeValueViewController: AttributeValueTypeViewController {
+	// MARK: - Static Variables
+
+	private typealias Me = SelectOneAttributeValueViewController
+
+	private static let log = Log()
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var selectOnePicker: UIPickerView!
@@ -20,7 +26,6 @@ public final class SelectOneAttributeValueViewController: AttributeValueTypeView
 	// MARK: - Instance Variables
 
 	public final var selectOneAttribute: SelectOneAttribute!
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -33,9 +38,9 @@ public final class SelectOneAttributeValueViewController: AttributeValueTypeView
 		if let index = selectOneAttribute.indexOf(possibleValue: currentValue) {
 			selectOnePicker.selectRow(index, inComponent: 0, animated: false)
 		} else {
-			log.debug("currentValue not set for select one attribute on load")
+			Me.log.debug("currentValue not set for select one attribute on load")
 			guard !selectOneAttribute.possibleValues.isEmpty else {
-				log.info("No possible values for SelectOneAttribute: %@", selectOneAttribute.name)
+				Me.log.info("No possible values for SelectOneAttribute: %@", selectOneAttribute.name)
 				var message: String?
 				if selectOneAttribute is TagAttribute {
 					message = "You must first create a tag."
@@ -75,7 +80,7 @@ extension SelectOneAttributeValueViewController: UIPickerViewDelegate {
 		do {
 			return try selectOneAttribute.convertToDisplayableString(from: value)
 		} catch {
-			log.error(
+			Me.log.error(
 				"Failed to convert value of %@ as %@ to displayable string: %@",
 				String(describing: value),
 				selectOneAttribute.name,
@@ -87,7 +92,7 @@ extension SelectOneAttributeValueViewController: UIPickerViewDelegate {
 
 	public final func pickerView(_: UIPickerView, didSelectRow row: Int, inComponent _: Int) {
 		guard row >= 0 && row < selectOneAttribute.possibleValues.count else {
-			log.error("Selected value out of index range for possible values: %d", row)
+			Me.log.error("Selected value out of index range for possible values: %d", row)
 			return
 		}
 		currentValue = selectOneAttribute.possibleValues[row]

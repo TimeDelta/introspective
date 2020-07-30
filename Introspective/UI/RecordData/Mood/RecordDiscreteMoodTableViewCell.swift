@@ -19,12 +19,15 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 	// MARK: - Static Variables
 
 	private typealias Me = RecordDiscreteMoodTableViewCell
+
 	private static let notePresenter: Presentr = DependencyInjector.get(UiUtil.self)
 		.customPresenter(width: .custom(size: 300), height: .custom(size: 200), center: .topCenter)
 	private static let ratingPresenter: Presentr = DependencyInjector.get(UiUtil.self)
 		.customPresenter(width: .custom(size: 300), height: .custom(size: 70), center: .topCenter)
 
 	private static let ratingChanged = Notification.Name("moodRatingChanged")
+
+	private static let log = Log()
 
 	// MARK: - IBOutlets
 
@@ -42,8 +45,6 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 	private final var ratingButtons = [UIButton]()
 
 	private final let spacingBetweenRatingButtons: CGFloat = 5
-
-	private final let log = Log()
 
 	// MARK: - UIView Overrides
 
@@ -105,7 +106,7 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 			reset()
 			updateUI()
 		} catch {
-			log.error("Failed to create or save mood: %@", errorInfo(error))
+			Me.log.error("Failed to create or save mood: %@", errorInfo(error))
 			NotificationCenter.default.post(
 				name: RecordDataTableViewController.showErrorMessage,
 				object: self,
@@ -141,10 +142,10 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 
 				self.rating = rating
 			} else {
-				log.error("Unable to get rating from button title")
+				Me.log.error("Unable to get rating from button title")
 			}
 		} else {
-			log.error("Missing title for mood rating button")
+			Me.log.error("Missing title for mood rating button")
 		}
 	}
 

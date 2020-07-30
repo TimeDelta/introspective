@@ -47,17 +47,20 @@ public class AnyAttributeRestriction: AttributeRestriction {
 	// MARK: - Static Variables
 
 	private typealias Me = AnyAttributeRestriction
+
 	public static let selectAnAttribute = TextAttribute(name: "Atribute", pluralName: "Attributes")
+
+	private static let log = Log()
 
 	// MARK: - Instance Variables
 
 	public var attributedName: String {
-		log.error("Must override attributedName")
+		Me.log.error("Must override attributedName")
 		return ""
 	}
 
 	public var description: String {
-		log.error("Must override description")
+		Me.log.error("Must override description")
 		return ""
 	}
 
@@ -65,8 +68,6 @@ public class AnyAttributeRestriction: AttributeRestriction {
 	public final var restrictedAttribute: Attribute {
 		didSet { restrictedAttributeWasSet() }
 	}
-
-	private final let log = Log()
 
 	// MARK: - Initializers
 
@@ -88,7 +89,7 @@ public class AnyAttributeRestriction: AttributeRestriction {
 	// MARK: - Functions
 
 	public func predicate() -> NSPredicate? {
-		log.error("predicate() not overriden")
+		Me.log.error("predicate() not overriden")
 		return nil
 	}
 
@@ -99,7 +100,7 @@ public class AnyAttributeRestriction: AttributeRestriction {
 	}
 
 	public func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
-		log.error("Must override equalTo()")
+		Me.log.error("Must override equalTo()")
 		return type(of: self) == type(of: otherRestriction)
 	}
 
@@ -115,7 +116,7 @@ public class AnyAttributeRestriction: AttributeRestriction {
 
 	public func copy() -> AttributeRestriction {
 		let typeDescription = String(describing: type(of: self))
-		log.error("Did not override copy() for %@", typeDescription)
+		Me.log.error("Did not override copy() for %@", typeDescription)
 		return self
 	}
 

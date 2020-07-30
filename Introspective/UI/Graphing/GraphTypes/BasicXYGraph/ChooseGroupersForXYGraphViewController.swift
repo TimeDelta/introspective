@@ -27,6 +27,10 @@ public protocol ChooseGroupersForXYGraphViewController: UIViewController {
 
 public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
 	ChooseGroupersForXYGraphViewController {
+	private typealias Me = ChooseGroupersForXYGraphViewControllerImpl
+
+	private static let log = Log()
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var chooseAttributeTypeButton: UIButton!
@@ -72,7 +76,6 @@ public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
 	/// Delay certain functions until loading complete to avoid errors being thrown
 	/// (i.e. accessing a UI element before it has been initialized)
 	private final var runWhenFinishedLoading = [() -> Void]()
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -118,7 +121,7 @@ public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
 			fromStoryboard: "Util"
 		) as! ChooseSampleGrouperTypeViewController
 		guard let attributes = xAttributeTypeToAttributes[currentAttributeType] else {
-			log.error("No attributes of chosen type found for x-axis")
+			Me.log.error("No attributes of chosen type found for x-axis")
 			return
 		}
 		controller.grouperTypes = DependencyInjector.get(SampleGrouperFactory.self).typesFor(attributes: attributes)
@@ -135,7 +138,7 @@ public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
 		}
 
 		guard let currentGrouper = grouper else {
-			log.error("No x-axis attributes for chosen attribute type")
+			Me.log.error("No x-axis attributes for chosen attribute type")
 			return
 		}
 
@@ -155,7 +158,7 @@ public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
 		}
 
 		guard let currentGrouper = grouper else {
-			log.error("No y-axis attributes for chosen attribute type")
+			Me.log.error("No y-axis attributes for chosen attribute type")
 			return
 		}
 

@@ -92,8 +92,6 @@ extension MedicationDAO {
 }
 
 public final class MedicationDAOImpl: MedicationDAO {
-	private final let log = Log()
-
 	public final func medicationExists(withName name: String, using transaction: Transaction?) throws -> Bool {
 		let transaction = transaction ?? DependencyInjector.get(Database.self).transaction()
 		let fetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()

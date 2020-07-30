@@ -24,6 +24,12 @@ public protocol SelectDateViewController: UIViewController {
 }
 
 public final class SelectDateViewControllerImpl: UIViewController, SelectDateViewController {
+	// MARK: - Static Variables
+
+	private typealias Me = SelectDateViewControllerImpl
+
+	private static let log = Log()
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var datePicker: UIDatePicker!
@@ -37,7 +43,7 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 	public final var datePickerMode: UIDatePicker.Mode = .dateAndTime {
 		didSet {
 			if datePickerMode == .countDownTimer {
-				log.error("this view is not meant to do timers")
+				Me.log.error("this view is not meant to do timers")
 			}
 		}
 	}
@@ -48,8 +54,6 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 	private final var limitDateToStartOfMinute = true
 
 	private final var decrementByThirtyButton: UIBarButtonItem!
-
-	private final let log = Log()
 
 	private final var coachMarksController = DependencyInjector.get(CoachMarkFactory.self).controller()
 	private final var coachMarksDataSourceAndDelegate: CoachMarksDataSourceAndDelegate!
@@ -147,7 +151,7 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 			datePicker.date = date
 			limitDateToStartOfMinute = false
 		} else {
-			log.error("last date was unexpectedly nil")
+			Me.log.error("last date was unexpectedly nil")
 		}
 	}
 

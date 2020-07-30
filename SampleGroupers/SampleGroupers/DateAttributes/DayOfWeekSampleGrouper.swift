@@ -14,6 +14,12 @@ import DependencyInjection
 import Samples
 
 public final class DayOfWeekSampleGrouper: SampleGrouper {
+	// MARK: - Static Variables
+
+	private typealias Me = DayOfWeekSampleGrouper
+
+	private static let log = Log()
+
 	// MARK: - Display Information
 
 	public static var userVisibleDescription: String = "Group By Day Of Week"
@@ -33,7 +39,6 @@ public final class DayOfWeekSampleGrouper: SampleGrouper {
 	// MARK: - Instance Variables
 
 	public final var groupByAttribute: Attribute?
-	private final let log = Log()
 
 	// MARK: - Initializers
 
@@ -47,7 +52,7 @@ public final class DayOfWeekSampleGrouper: SampleGrouper {
 		}
 		groupByAttribute = applicableAttributes.first
 		if groupByAttribute == nil {
-			log.error("No date or day of week attributes provided to DayOfWeekSampleGrouper")
+			Me.log.error("No date or day of week attributes provided to DayOfWeekSampleGrouper")
 		}
 		attributeSelectAttribute = AttributeSelectAttribute(attributes: applicableAttributes)
 		self.attributes = [attributeSelectAttribute]

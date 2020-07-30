@@ -43,14 +43,18 @@ public protocol Transaction {
 }
 
 final internal class TransactionImpl: Transaction {
+	// MARK: - Static Variables
+
+	private typealias Me = TransactionImpl
+
+	private static let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Database"))
+	private static let log = Log()
+
 	// MARK: - Instance Variables
 
 	private final var myContext: NSManagedObjectContext
 	private final var mainContext: NSManagedObjectContext?
 	private final var childTransactions = [Transaction]()
-
-	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Database"))
-	private final let log = Log()
 
 	// MARK: - Initializers
 
@@ -92,26 +96,26 @@ final internal class TransactionImpl: Transaction {
 	// MARK: - Fetching
 
 	public final func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type] {
-		signpost.begin(name: "Transaction Query", idObject: fetchRequest, "%@", fetchRequest.debugDescription)
+		Me.signpost.begin(name: "Transaction Query", idObject: fetchRequest, "%@", fetchRequest.debugDescription)
 		fetchRequest.shouldRefreshRefetchedObjects = true
 		do {
 			let result = try myContext.fetch(fetchRequest)
-			signpost.end(name: "Transaction Query", idObject: fetchRequest)
+			Me.signpost.end(name: "Transaction Query", idObject: fetchRequest)
 			return result
 		} catch {
-			signpost.end(name: "Transaction Query", idObject: fetchRequest)
+			Me.signpost.end(name: "Transaction Query", idObject: fetchRequest)
 			throw error
 		}
 	}
 
 	public final func count<Type: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<Type>) throws -> Int {
-		signpost.begin(name: "Transaction Count Query", idObject: fetchRequest, "%@", fetchRequest.debugDescription)
+		Me.signpost.begin(name: "Transaction Count Query", idObject: fetchRequest, "%@", fetchRequest.debugDescription)
 		do {
 			let result = try myContext.count(for: fetchRequest)
-			signpost.end(name: "Transaction Count Query", idObject: fetchRequest)
+			Me.signpost.end(name: "Transaction Count Query", idObject: fetchRequest)
 			return result
 		} catch {
-			signpost.end(name: "Transaction Count Query", idObject: fetchRequest)
+			Me.signpost.end(name: "Transaction Count Query", idObject: fetchRequest)
 			throw error
 		}
 	}
@@ -119,14 +123,14 @@ final internal class TransactionImpl: Transaction {
 	// MARK: - Creating
 
 	public final func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Type.Type) throws -> Type {
-		signpost.begin(name: "New", idObject: objectType)
+		Me.signpost.begin(name: "New", idObject: objectType)
 		let entity = NSEntityDescription.entity(forEntityName: objectType.entityName, in: myContext)!
 		guard let newObject = NSManagedObject(entity: entity, insertInto: myContext) as? Type else {
-			log.error("Could not cast new object as %@", objectType.entityName)
-			signpost.end(name: "New", idObject: objectType)
+			Me.log.error("Could not cast new object as %@", objectType.entityName)
+			Me.signpost.end(name: "New", idObject: objectType)
 			throw FailedToInstantiateObject(objectTypeName: objectType.entityName)
 		}
-		signpost.end(name: "New", idObject: objectType)
+		Me.signpost.end(name: "New", idObject: objectType)
 		return newObject
 	}
 
@@ -151,10 +155,10 @@ final internal class TransactionImpl: Transaction {
 		guard let object = coreDataObject as? NSManagedObject else {
 			throw GenericError("Tried to delete non NSManagedObject")
 		}
-		signpost.begin(name: "Delete", idObject: object)
+		Me.signpost.begin(name: "Delete", idObject: object)
 		let objectToDelete = try pull(savedObject: object, fromContext: myContext)
 		myContext.delete(objectToDelete)
-		signpost.end(name: "Delete", idObject: object)
+		Me.signpost.end(name: "Delete", idObject: object)
 	}
 
 	public final func deleteAll(_ objects: [NSManagedObject]) throws {
@@ -171,16 +175,16 @@ final internal class TransactionImpl: Transaction {
 	}
 
 	public final func deleteAll(_ entityName: String) throws {
-		signpost.begin(name: "Delete all with entity name", idObject: entityName as AnyObject)
+		Me.signpost.begin(name: "Delete all with entity name", idObject: entityName as AnyObject)
 		let request = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
 		let batchDelete = NSBatchDeleteRequest(fetchRequest: request)
 		do {
 			try myContext.execute(batchDelete)
 		} catch {
-			signpost.end(name: "Delete all with entity name", idObject: entityName as AnyObject)
+			Me.signpost.end(name: "Delete all with entity name", idObject: entityName as AnyObject)
 			throw error
 		}
-		signpost.end(name: "Delete all with entity name", idObject: entityName as AnyObject)
+		Me.signpost.end(name: "Delete all with entity name", idObject: entityName as AnyObject)
 	}
 
 	// MARK: - Helper Functions
@@ -194,7 +198,7 @@ final internal class TransactionImpl: Transaction {
 	}
 
 	private final func saveContext(_ context: NSManagedObjectContext) throws {
-		signpost.begin(name: "Save", idObject: context)
+		Me.signpost.begin(name: "Save", idObject: context)
 		var errorToThrow: Error?
 		context.performAndWait {
 			// NOTE: if getting an error here that this coordinator has no persistent stores,
@@ -207,32 +211,32 @@ final internal class TransactionImpl: Transaction {
 				}
 			}
 		}
-		signpost.end(name: "Save", idObject: context)
+		Me.signpost.end(name: "Save", idObject: context)
 		if let error = errorToThrow {
 			throw error
 		}
 	}
 
 	private final func nonBatchDeleteAll(_ objects: [NSManagedObject], from context: NSManagedObjectContext) throws {
-		signpost.begin(name: "Non-batch delete all with objects", idObject: objects as AnyObject)
+		Me.signpost.begin(name: "Non-batch delete all with objects", idObject: objects as AnyObject)
 		try objects.map { try pull(savedObject: $0) }.forEach { context.delete($0) }
-		signpost.end(name: "Non-batch delete all with objects", idObject: objects as AnyObject)
+		Me.signpost.end(name: "Non-batch delete all with objects", idObject: objects as AnyObject)
 	}
 
 	/// - Note: This will throw an error if any of the objects have relationships
 	private final func batchDeleteAll(_ objects: [NSManagedObject], from context: NSManagedObjectContext) throws {
-		signpost.begin(name: "Batch delete all with objects", idObject: objects as AnyObject)
+		Me.signpost.begin(name: "Batch delete all with objects", idObject: objects as AnyObject)
 		let ids = objects.map { $0.objectID }
 		if !ids.isEmpty {
 			let batchDeleteRequest = NSBatchDeleteRequest(objectIDs: ids)
 			do {
 				try context.execute(batchDeleteRequest)
 			} catch {
-				signpost.end(name: "Batch delete all with objects", idObject: objects as AnyObject)
+				Me.signpost.end(name: "Batch delete all with objects", idObject: objects as AnyObject)
 				throw error
 			}
 		}
-		signpost.end(name: "Batch delete all with objects", idObject: objects as AnyObject)
+		Me.signpost.end(name: "Batch delete all with objects", idObject: objects as AnyObject)
 	}
 
 	private final func getObject<Type: NSManagedObject>(_ object: NSManagedObject, as type: Type.Type) throws -> Type {
@@ -243,7 +247,7 @@ final internal class TransactionImpl: Transaction {
 			}
 			wasFault += "a fault"
 			let objectTypeName = type.entity().name ?? type.debugDescription()
-			log.error("Could not cast managed object as %@: %@", objectTypeName)
+			Me.log.error("Could not cast managed object as %@: %@", objectTypeName)
 			throw FailedToInstantiateObject(objectTypeName: objectTypeName)
 		}
 		return castedObject

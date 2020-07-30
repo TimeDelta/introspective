@@ -18,6 +18,12 @@ protocol ChooseSampleTypeViewController: UIViewController {
 }
 
 final class ChooseSampleTypeViewControllerImpl: UIViewController, ChooseSampleTypeViewController {
+	// MARK: - Static Variables
+
+	private typealias Me = ChooseSampleTypeViewControllerImpl
+
+	private static let log = Log()
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var sampleTypePicker: UIPickerView!
@@ -26,8 +32,6 @@ final class ChooseSampleTypeViewControllerImpl: UIViewController, ChooseSampleTy
 
 	public final var selectedSampleType: Sample.Type?
 	public final var notificationToSendOnAccept: NotificationName!
-
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -40,7 +44,7 @@ final class ChooseSampleTypeViewControllerImpl: UIViewController, ChooseSampleTy
 				.index(where: { $0 == selectedSampleType }) {
 				sampleTypePicker.selectRow(selectedIndex, inComponent: 0, animated: false)
 			} else {
-				log.error("Could not find index for specified type")
+				Me.log.error("Could not find index for specified type")
 			}
 		}
 	}

@@ -14,14 +14,16 @@ import DependencyInjection
 import Samples
 
 public final class AverageInformation: AnyInformation {
+	// MARK: - Static Variables
+
+	private typealias Me = AverageInformation
+
+	private static let log = Log()
+
 	// MARK: - Display Information
 
 	public final override var name: String { "Average" }
 	public final override var description: String { name + " " + attribute.name.localizedLowercase }
-
-	// MARK: - Instance Variables
-
-	private final let log = Log()
 
 	// MARK: - Initializers
 
@@ -55,7 +57,7 @@ public final class AverageInformation: AnyInformation {
 			return (try averageDuration(samples)).description
 		}
 
-		log.error(
+		Me.log.error(
 			"Unknown attribute type (%@) for attribute named '%@' of sample type '%@'",
 			String(describing: type(of: attribute)),
 			attribute.name,
@@ -88,7 +90,7 @@ public final class AverageInformation: AnyInformation {
 			return String(try averageDuration(samples).inUnit(.hour))
 		}
 
-		log.error(
+		Me.log.error(
 			"Unknown attribute type (%@) for attribute named '%@' of sample type '%@'",
 			String(describing: type(of: attribute)),
 			attribute.name,

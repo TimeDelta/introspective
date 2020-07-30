@@ -19,9 +19,12 @@ import SampleGroupInformation
 import Samples
 
 public final class UnifiedDayViewController: DayViewController {
+	private typealias Me = UnifiedDayViewController
+
+	private static let log = Log()
+
 	private final var stopQueryFunctions = [() -> Void]()
 
-	private final let log = Log()
 	private final let healthKitUtil = DependencyInjector.get(HealthKitUtil.self)
 
 	// MARK: - DayViewController Overrides
@@ -86,7 +89,7 @@ public final class UnifiedDayViewController: DayViewController {
 			let value = try operation.compute(forSamples: moods)
 			display(valueDescription, value, nil, startDate, endDate)
 		} catch {
-			log.error("Failed to calculate %@ for mood: %@", operation.description, errorInfo(error))
+			Me.log.error("Failed to calculate %@ for mood: %@", operation.description, errorInfo(error))
 			showError(title: "Could not calculate \(valueDescription)", error: error)
 		}
 	}
@@ -113,9 +116,9 @@ public final class UnifiedDayViewController: DayViewController {
 	) {
 		guard error == nil && value != nil else {
 			if let error = error {
-				log.error("Failed to calculate %@: %@", description, errorInfo(error))
+				Me.log.error("Failed to calculate %@: %@", description, errorInfo(error))
 			} else {
-				log.error("Failed to calculate %@ but no error was returned", description)
+				Me.log.error("Failed to calculate %@ but no error was returned", description)
 			}
 			showError(title: "Could not calculate \(description)")
 			return
@@ -161,7 +164,7 @@ public final class UnifiedDayViewController: DayViewController {
 		do {
 			return try DependencyInjector.get(Database.self).query(fetchRequest)
 		} catch {
-			log.error("Failed to query for activities on %@: %@", String(describing: date), errorInfo(error))
+			Me.log.error("Failed to query for activities on %@: %@", String(describing: date), errorInfo(error))
 			showError(title: "Something went wrong while loading your activity data", error: error)
 			return []
 		}
@@ -197,7 +200,7 @@ public final class UnifiedDayViewController: DayViewController {
 		let callback = { (samples: [HKSample]?, error: Error?) in
 			if let error = error {
 				errorMessage = "Could not retrieve sleep data."
-				self.log.error("Failed to retrieve sleep samples: %@", errorInfo(error))
+				Me.log.error("Failed to retrieve sleep samples: %@", errorInfo(error))
 				group.leave()
 				return
 			}
@@ -205,7 +208,7 @@ public final class UnifiedDayViewController: DayViewController {
 				typeSamples.append(contentsOf: samples.map { initSample($0 as! HKType) })
 			} else {
 				errorMessage = "Could not retrieve sleep data."
-				self.log.error("Both samples and error variables are nil")
+				Me.log.error("Both samples and error variables are nil")
 			}
 			group.leave()
 		}
@@ -247,7 +250,7 @@ public final class UnifiedDayViewController: DayViewController {
 		case .discreteMax: return "maximum"
 		case .discreteMin: return "minimum"
 		default:
-			log.error("Unsupported operation type passed")
+			Me.log.error("Unsupported operation type passed")
 			return ""
 		}
 	}

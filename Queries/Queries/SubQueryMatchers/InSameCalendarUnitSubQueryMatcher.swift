@@ -16,6 +16,8 @@ import Samples
 public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable {
 	private typealias Me = InSameCalendarUnitSubQueryMatcher
 
+	private static let log = Log()
+
 	// MARK: - Attributes
 
 	public static let timeUnit = CalendarComponentAttribute(name: "Time unit", possibleValues: [
@@ -54,8 +56,6 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 
 	public final var timeUnit: Calendar.Component = .day
 	public final var mostRecentOnly: Bool = false
-
-	private final let log = Log()
 
 	// MARK: - Initializers
 
@@ -180,7 +180,7 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 				return attribute
 			}
 		}
-		log.error("Unable to find start date attribute for sample type: %@", _sample.attributedName)
+		Me.log.error("Unable to find start date attribute for sample type: %@", _sample.attributedName)
 		return CommonSampleAttributes.startDate
 	}
 

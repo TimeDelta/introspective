@@ -22,10 +22,17 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	// MARK: - Static Variables
 
 	private typealias Me = RecordMedicationTableViewController
+
 	private static let cacheName = "allMedications"
+
+	// MARK: Notification Names
+
 	private static let medicationCreated = Notification.Name("medicationCreatedFromRecordScreen")
 	private static let medicationEdited = Notification.Name("medicationEditedFromRecordScreen")
 	private static let medicationDoseCreated = Notification.Name("medicationDoseCreated")
+
+	// MARK: Presenters
+
 	private static let setDosePresenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 250),
@@ -36,6 +43,12 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		height: .custom(size: 300),
 		center: .topCenter
 	)
+
+	// MARK: Logging / Performance
+
+	private static let log = Log()
+	private static let signpost =
+		Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Medication Display"))
 
 	// MARK: - Instance Variables
 
@@ -56,10 +69,6 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 	private final let coachMarksController = CoachMarksController()
 	private final var coachMarksDataSourceAndDelegate: CoachMarksDataSourceAndDelegate!
-
-	private final let log = Log()
-	private final let signpost =
-		Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Medication Display"))
 
 	// MARK: - UIViewController Overrides
 
@@ -132,7 +141,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		if let fetchedObjects = fetchedResultsController.fetchedObjects {
 			return fetchedObjects.count
 		}
-		log.error("Unable to determine number of expected rows because fetched objects was nil")
+		Me.log.error("Unable to determine number of expected rows because fetched objects was nil")
 		return 0
 	}
 
@@ -188,7 +197,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 					self.loadMedications()
 				} catch {
-					self.log.error("Failed to delete medication: %@", errorInfo(error))
+					Me.log.error("Failed to delete medication: %@", errorInfo(error))
 					self.showError(title: "Failed to delete medication", error: error)
 				}
 			})
@@ -212,7 +221,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 					if let medication = fetchedResultsController.fetchedObjects?[i] {
 						try transaction.pull(savedObject: medication).recordScreenIndex -= 1
 					} else {
-						log.error("Failed to get medication for index %d", i)
+						Me.log.error("Failed to get medication for index %d", i)
 					}
 				}
 			} else {
@@ -220,18 +229,18 @@ public final class RecordMedicationTableViewController: UITableViewController {
 					if let medication = fetchedResultsController.fetchedObjects?[i] {
 						try transaction.pull(savedObject: medication).recordScreenIndex += 1
 					} else {
-						log.error("Failed to get medication for index %d", i)
+						Me.log.error("Failed to get medication for index %d", i)
 					}
 				}
 			}
 			if let medication = fetchedResultsController.fetchedObjects?[medicationsFromIndex] {
 				try transaction.pull(savedObject: medication).recordScreenIndex = Int16(medicationsToIndex)
 			} else {
-				log.error("Failed to get medication for index %d", medicationsFromIndex)
+				Me.log.error("Failed to get medication for index %d", medicationsFromIndex)
 			}
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 		} catch {
-			log.error("Failed to reorder medications: %@", errorInfo(error))
+			Me.log.error("Failed to reorder medications: %@", errorInfo(error))
 		}
 		searchController.searchBar.text = searchText
 		loadMedications()
@@ -374,7 +383,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 	private final func resetFetchedResultsController() {
 		do {
-			signpost.begin(name: "resetting fetched results controller")
+			Me.signpost.begin(name: "resetting fetched results controller")
 			fetchedResultsController = DependencyInjector.get(Database.self).fetchedResultsController(
 				type: Medication.self,
 				sortDescriptors: [currentSort ?? defaultSort],
@@ -390,10 +399,10 @@ public final class RecordMedicationTableViewController: UITableViewController {
 				)
 			}
 			try fetchedResultsController.performFetch()
-			signpost.end(name: "resetting fetched results controller")
+			Me.signpost.end(name: "resetting fetched results controller")
 		} catch {
-			log.error("Failed to fetch medications: %@", errorInfo(error))
-			signpost.end(name: "resetting fetched results controller")
+			Me.log.error("Failed to fetch medications: %@", errorInfo(error))
+			Me.signpost.end(name: "resetting fetched results controller")
 			showError(
 				title: "Failed to retrieve activities",
 				message: "Something went wrong while trying to retrieve the list of your activities. Sorry for the inconvenience.",
@@ -429,7 +438,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 				searchController.searchBar.text = ""
 				loadMedications()
 			} catch {
-				log.error("Failed to quick create & take medication: %@", errorInfo(error))
+				Me.log.error("Failed to quick create & take medication: %@", errorInfo(error))
 				showError(
 					title: "Failed to create and start",
 					message: "Something went wrong while trying to save this medication. Sorry for the inconvenience.",
@@ -479,15 +488,21 @@ extension RecordMedicationTableViewController: UISearchResultsUpdating {
 
 /// This class is used to break retain cycles between `RecordMedicationTableViewController` and the closures used by `CoachMarkInfo`, preventing them from causing memory leaks
 final fileprivate class RecordMedicationTableViewControllerCoachMarksDataSourceAndDelegate: CoachMarksDataSourceAndDelegate {
+	// MARK: Type Aliases
+
 	private typealias Me = RecordMedicationTableViewControllerCoachMarksDataSourceAndDelegate
 	private typealias Super = DefaultCoachMarksDataSourceAndDelegate
 	private typealias ControllerClass = RecordMedicationTableViewController
 
+	// MARK: Static Variables
+
 	private static let exampleMedicationName = "Example Medication"
 
-	private weak final var controller: RecordMedicationTableViewController?
+	private static let log = Log()
 
-	private final let log = Log()
+	// MARK: Instance Variables
+
+	private weak final var controller: RecordMedicationTableViewController?
 
 	private lazy final var coachMarksInfo: [CoachMarkInfo] = [
 		CoachMarkInfo(
@@ -533,9 +548,13 @@ final fileprivate class RecordMedicationTableViewControllerCoachMarksDataSourceA
 		)
 	}()
 
+	// MARK: Initializers
+
 	public init(_ controller: RecordMedicationTableViewController) {
 		self.controller = controller
 	}
+
+	// MARK: Functions
 
 	public final func coachMarksController(
 		_ coachMarksController: CoachMarksController,
@@ -583,19 +602,19 @@ final fileprivate class RecordMedicationTableViewControllerCoachMarksDataSourceA
 				controller?.loadMedications()
 			}
 		} catch {
-			log.error("Failed to delete example medication: %@", errorInfo(error))
+			Me.log.error("Failed to delete example medication: %@", errorInfo(error))
 		}
 	}
 
 	private final func getExampleMedicationCell() -> RecordMedicationTableViewCell? {
 		guard let controller = self.controller else { return nil }
 		guard controller.tableView.visibleCells.count > 0 else {
-			log.error("No visible cells while trying to present instruction")
+			Me.log.error("No visible cells while trying to present instruction")
 			return nil
 		}
 		let cell = controller.tableView.visibleCells[0]
 		guard let exampleMedicationCell = cell as? RecordMedicationTableViewCell else {
-			log.error(
+			Me.log.error(
 				"unable to cast to RecordMedicationTableViewCell: was a %@",
 				String(describing: type(of: cell))
 			)

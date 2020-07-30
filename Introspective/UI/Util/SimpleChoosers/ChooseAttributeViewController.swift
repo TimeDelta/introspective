@@ -12,6 +12,12 @@ import Attributes
 import Common
 
 final class ChooseAttributeViewController: UIViewController {
+	// MARK: - Static Variables
+
+	private typealias Me = ChooseAttributeViewController
+
+	private static let log = Log()
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var attributePicker: UIPickerView!
@@ -24,8 +30,6 @@ final class ChooseAttributeViewController: UIViewController {
 	public final var notificationToSendOnAccept: NotificationName!
 	public final var acceptButtonTitle = "Save"
 
-	private final let log = Log()
-
 	// MARK: - UIViewController Overrides
 
 	final override func viewDidLoad() {
@@ -37,12 +41,12 @@ final class ChooseAttributeViewController: UIViewController {
 			if let selectedIndex = attributes.index(where: { $0.equalTo(selectedAttribute!) }) {
 				attributePicker.selectRow(selectedIndex, inComponent: 0, animated: false)
 			} else {
-				log.error("Could not find index for specified component")
+				Me.log.error("Could not find index for specified component")
 			}
 		} else if !attributes.isEmpty {
 			selectedAttribute = attributes[0]
 		} else {
-			log.error("No attributes passed")
+			Me.log.error("No attributes passed")
 		}
 	}
 

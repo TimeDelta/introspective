@@ -16,7 +16,10 @@ public final class ResultsSettingsViewController: UIViewController {
 	// MARK: - Static Variables
 
 	private typealias Me = ResultsSettingsViewController
+
 	private static let choseDefaultSearchNearbyDuration = Notification.Name("choseDefaultSearchNearbyDuration")
+
+	private static let log = Log()
 
 	// MARK: - IBOutlets
 
@@ -25,8 +28,6 @@ public final class ResultsSettingsViewController: UIViewController {
 	// MARK: - Instance Variables
 
 	private final var duration: TimeDuration!
-
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -87,7 +88,7 @@ public final class ResultsSettingsViewController: UIViewController {
 			try retryOnFail({ try DependencyInjector.get(Settings.self).save() }, maxRetries: 2)
 			navigationController?.popViewController(animated: false)
 		} catch {
-			log.error("Failed to save results view settings: %@", errorInfo(error))
+			Me.log.error("Failed to save results view settings: %@", errorInfo(error))
 			showError(title: "Failed to save settings", error: error, tryAgain: saveAndGoBackToSettings)
 		}
 	}

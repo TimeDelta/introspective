@@ -17,6 +17,12 @@ public protocol ChooseTextViewController: UIViewController {
 }
 
 public final class ChooseTextViewControllerImpl: UIViewController, ChooseTextViewController {
+	// MARK: - Static Variables
+
+	private typealias Me = ChooseTextViewControllerImpl
+
+	private static let log = Log()
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var picker: UIPickerView!
@@ -43,8 +49,6 @@ public final class ChooseTextViewControllerImpl: UIViewController, ChooseTextVie
 
 	public final var selectedText: String?
 
-	private final let log = Log()
-
 	// MARK: - UIViewController Overrides
 
 	public final override func viewDidLoad() {
@@ -55,12 +59,12 @@ public final class ChooseTextViewControllerImpl: UIViewController, ChooseTextVie
 			if let selectedIndex = availableChoices.index(of: selectedText) {
 				picker.selectRow(selectedIndex, inComponent: 0, animated: false)
 			} else {
-				log.error("Could not find index for specified component")
+				Me.log.error("Could not find index for specified component")
 			}
 		} else if !availableChoices.isEmpty {
 			selectedText = availableChoices[0]
 		} else {
-			log.error("No text values passed")
+			Me.log.error("No text values passed")
 			dismiss(animated: false)
 		}
 	}

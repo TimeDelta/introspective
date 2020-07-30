@@ -16,6 +16,8 @@ import DependencyInjection
 public final class Sleep: HealthKitCategorySample, SearchableSample {
 	private typealias Me = Sleep
 
+	private static let log = Log()
+
 	public enum State: CustomStringConvertible {
 		case awake
 		case inBed
@@ -94,8 +96,6 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 	public final var endDate: Date
 	public final var state: State
 
-	private final let log = Log()
-
 	// MARK: - Initializers
 
 	public init(_ state: State = .awake, startDate: Date = Date(), endDate: Date = Date()) {
@@ -116,7 +116,7 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 			state = .asleep
 			break
 		default:
-			log.error("Unknown state: %d", sample.value)
+			Me.log.error("Unknown state: %d", sample.value)
 			state = .awake
 			break
 		}

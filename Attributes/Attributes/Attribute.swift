@@ -54,11 +54,9 @@ open class AttributeBase<ValueType>: Attribute {
 	public let valueType: Any.Type = ValueType.self
 	/// This should be presentable to the user to understand what type of attribute this is
 	open var typeName: String {
-		log.error("Did not override typeName for %@", String(describing: type(of: self)))
+		Log().error("Did not override typeName for %@", String(describing: type(of: self)))
 		return ""
 	}
-
-	private final let log = Log()
 
 	/// - Parameter pluralName: If nil, use `name` parameter.
 	/// - Parameter description: If nil, no description is needed for the user to understand this attribute.
@@ -89,11 +87,11 @@ open class AttributeBase<ValueType>: Attribute {
 		guard let first = first else { return second == nil }
 		guard let second = second else { return false }
 		guard let castedFirst = first as? ValueType else {
-			log.error("Failed to cast first value when testing equality: %@", String(describing: first))
+			Log().error("Failed to cast first value when testing equality: %@", String(describing: first))
 			return false
 		}
 		guard let castedSecond = second as? ValueType else {
-			log.error("Failed to cast second value when testing equality: %@", String(describing: first))
+			Log().error("Failed to cast second value when testing equality: %@", String(describing: first))
 			return false
 		}
 		return typedValuesAreEqual(castedFirst, castedSecond)

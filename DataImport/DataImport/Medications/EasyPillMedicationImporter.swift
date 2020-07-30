@@ -20,7 +20,15 @@ public protocol EasyPillMedicationImporter: MedicationImporter {}
 public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedicationImporter, CoreDataObject {
 	// MARK: - Static Variables
 
+	private typealias Me = EasyPillMedicationImporterImpl
+
+	// MARK: CoreData
+
 	public static let entityName = "EasyPillMedicationImporter"
+
+	// MARK: Logging
+
+	private static let log = Log()
 
 	// MARK: - Instance Variables
 
@@ -41,7 +49,6 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 	private final let mainTransaction = DependencyInjector.get(Database.self).transaction()
 	private final var latestDate: Date!
 	private final var lines = [String]()
-	private final let log = Log()
 
 	// MARK: - Functions
 
@@ -87,7 +94,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 
 	public final func resume() throws {
 		guard !isCancelled else {
-			log.error("Tried to resume a cancelled medicaiton import from EasyPill")
+			Me.log.error("Tried to resume a cancelled medicaiton import from EasyPill")
 			return
 		}
 
@@ -110,7 +117,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 
 			try retryOnFail({ try mainTransaction.commit() }, maxRetries: 2)
 		} catch {
-			log.error("Failed to import medications from EasyPill: %@", errorInfo(error))
+			Me.log.error("Failed to import medications from EasyPill: %@", errorInfo(error))
 			throw error
 		}
 	}
@@ -209,7 +216,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 			medicationsWithCurrentName = try DependencyInjector.get(Database.self)
 				.query(medicationsWithCurrentNameFetchRequest)
 		} catch {
-			log.error("Failed to check for existing medications named '%@': %@", name, errorInfo(error))
+			Me.log.error("Failed to check for existing medications named '%@': %@", name, errorInfo(error))
 			throw GenericDisplayableError(
 				title: "Data Access Error",
 				description: "Unable to check for existing medications named \(name)."

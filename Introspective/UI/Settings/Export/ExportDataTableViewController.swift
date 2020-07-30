@@ -19,20 +19,22 @@ public final class ExportDataTableViewController: UITableViewController {
 	// MARK: - Static Variables
 
 	private typealias Me = ExportDataTableViewController
+
+	// MARK: Section Indexes
+
 	private static let dataTypeSection = 0
 	private static let activeExportsSection = 1
+
+	// MARK: Exportable Sample Types
+
+	/// All exportable sample types
 	private static let sampleTypes: [CoreDataSample.Type] = [
 		Activity.self,
 		MedicationDose.self,
 		MoodImpl.self,
 	]
 
-	/// This is for testing purposes only
-	public static func resetExports() {
-		backgroundExportOrder = []
-		_backgroundExports = [:]
-		taskIds = [:]
-	}
+	// MARK: Active Exports
 
 	// keep these as static so that they persist if the user goes back to settings screen
 	private static var backgroundExportOrder = [UIBackgroundTaskIdentifier]()
@@ -55,13 +57,15 @@ public final class ExportDataTableViewController: UITableViewController {
 	/// complain about referencing a variable in its definition.
 	private static var taskIds = [UUID: UIBackgroundTaskIdentifier]()
 
+	// MARK: Logging
+
+	private static let log = Log()
+
 	// MARK: - Instance Variables
 
 	/// Leave this as an instance variable because making it local will cause
 	/// a bug with ARC that prevents the user from actually saving the file
 	private final var documentInteractionController: UIDocumentInteractionController!
-
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -143,7 +147,7 @@ public final class ExportDataTableViewController: UITableViewController {
 			alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
 			presentView(alert)
 		} catch {
-			log.error("Failed to create data exporter while presenting directory picker: %@", errorInfo(error))
+			Me.log.error("Failed to create data exporter while presenting directory picker: %@", errorInfo(error))
 			showError(title: "Unable to export", message: "You found a bug. Please report this.")
 		}
 	}
@@ -153,7 +157,7 @@ public final class ExportDataTableViewController: UITableViewController {
 	@objc private final func extendTime(notification: Notification) {
 		if let taskId: String = value(for: .backgroundTaskId, from: notification) {
 			guard let taskIdRawValue = Int(taskId) else {
-				log.error("Failed to convert %@ to raw value for background task id", taskId)
+				Me.log.error("Failed to convert %@ to raw value for background task id", taskId)
 				return
 			}
 			let backgroundTaskId = UIBackgroundTaskIdentifier(rawValue: taskIdRawValue)
@@ -164,7 +168,7 @@ public final class ExportDataTableViewController: UITableViewController {
 				}
 				Me.backgroundExportOrder.removeAll(where: { $0 == backgroundTaskId })
 			} else {
-				log.error("Unable to retrieve exporter for background task: %d", backgroundTaskId.rawValue)
+				Me.log.error("Unable to retrieve exporter for background task: %d", backgroundTaskId.rawValue)
 			}
 		}
 	}
@@ -172,7 +176,7 @@ public final class ExportDataTableViewController: UITableViewController {
 	@objc private final func cancelBackgroundExport(notification: Notification) {
 		if let taskId: String = value(for: .backgroundTaskId, from: notification) {
 			guard let taskIdRawValue = Int(taskId) else {
-				log.error("Failed to convert %@ to raw value for background task id", taskId)
+				Me.log.error("Failed to convert %@ to raw value for background task id", taskId)
 				return
 			}
 			let backgroundTaskId = UIBackgroundTaskIdentifier(rawValue: taskIdRawValue)
@@ -196,7 +200,7 @@ public final class ExportDataTableViewController: UITableViewController {
 	@objc private final func shareExportFile(notification: Notification) {
 		if let backgroundTaskId: UIBackgroundTaskIdentifier = value(for: .backgroundTaskId, from: notification) {
 			guard let exporter = Me.backgroundExports({ $0[backgroundTaskId] }) else {
-				log.error("Did not find exporter associated with background task id")
+				Me.log.error("Did not find exporter associated with background task id")
 				return
 			}
 			let controller = UIDocumentInteractionController(url: exporter.url)
@@ -214,13 +218,12 @@ public final class ExportDataTableViewController: UITableViewController {
 		DispatchQueue.global(qos: .utility).async {
 			let uuid = UUID()
 			let backgroundTask = UIApplication.shared.beginBackgroundTask(withName: taskDescription) { [weak self] in
-				self?.log.info("Background task to export %@ expired", dataType)
+				Me.log.info("Background task to export %@ expired", dataType)
 				exporter.pause()
 				guard let taskId = Me.taskIds[uuid] else {
-					self?.log
-						.error(
-							"Missing background task id. App might be killed by iOS due to inability to end background task."
-						)
+					Me.log.error(
+						"Missing background task id. App might be killed by iOS due to inability to end background task."
+					)
 					return
 				}
 				self?.sendExtendTimeNotification(for: taskId)
@@ -237,10 +240,10 @@ public final class ExportDataTableViewController: UITableViewController {
 				}
 				Me.taskIds[uuid] = backgroundTask
 				if exporter.isPaused {
-					self.log.info("Continuing background export of %@", dataType)
+					Me.log.info("Continuing background export of %@", dataType)
 					try exporter.resume()
 				} else {
-					self.log.info("Starting background export of %@", dataType)
+					Me.log.info("Starting background export of %@", dataType)
 					try exporter.exportData()
 				}
 				if !exporter.isPaused && !exporter.isCancelled {
@@ -248,11 +251,11 @@ public final class ExportDataTableViewController: UITableViewController {
 					self.post(.backgroundExportFinished, object: exporter)
 				}
 			} catch {
-				self.log.error("Failed to export %@: %@", dataType, errorInfo(error))
+				Me.log.error("Failed to export %@: %@", dataType, errorInfo(error))
 				self.sendBackgroundErrorNotification(for: exporter, error: error)
 			}
 			if exporter.isCancelled {
-				self.log.info("Finished background export of %@", dataType)
+				Me.log.info("Finished background export of %@", dataType)
 				self.removeExporterFor(backgroundTask)
 			}
 		}
@@ -278,7 +281,7 @@ public final class ExportDataTableViewController: UITableViewController {
 		if type == MoodImpl.self {
 			return DependencyInjector.get(MoodExporter.self)
 		}
-		log.error("Unknown index path: (section: %d, row: %d)", indexPath.section, indexPath.row)
+		Me.log.error("Unknown index path: (section: %d, row: %d)", indexPath.section, indexPath.row)
 		throw GenericError("Unknown index path")
 	}
 
@@ -308,14 +311,14 @@ public final class ExportDataTableViewController: UITableViewController {
 			content.categoryIdentifier = UserNotificationDelegate.finishedExportingMoods.identifier
 			break
 		default:
-			log.error("Forgot a type of exporter for notifications: %@", String(describing: exporter))
+			Me.log.error("Forgot a type of exporter for notifications: %@", String(describing: exporter))
 		}
 		sendUserNotification(withContent: content, id: "FinishedExport")
 	}
 
 	private final func sendExtendTimeNotification(for backgroundTaskId: UIBackgroundTaskIdentifier) {
 		guard let exporter = Me.backgroundExports({ $0[backgroundTaskId] }) else {
-			log.error("Missing exporter for background task")
+			Me.log.error("Missing exporter for background task")
 			// just let it go because won't be able to resume the export anyways
 			return
 		}
@@ -356,5 +359,14 @@ public final class ExportDataTableViewController: UITableViewController {
 		content.sound = UNNotificationSound.default
 		content.categoryIdentifier = UserNotificationDelegate.generalError.identifier
 		sendUserNotification(withContent: content, id: "ExportErrorOccurred")
+	}
+
+	// MARK: - Testing
+
+	/// This is for testing purposes only
+	public static func resetExports() {
+		backgroundExportOrder = []
+		_backgroundExports = [:]
+		taskIds = [:]
 	}
 }

@@ -17,16 +17,15 @@ public final class MostRecentDateInformation: AnyInformation {
 	// MARK: - Static Variables
 
 	private typealias Me = MostRecentDateInformation
+
 	static let noSamplesMessage = "No samples between given start and end dates"
+
+	private static let log = Log()
 
 	// MARK: - Display Information
 
 	public final override var name: String { "Most Recent" }
 	public final override var description: String { name + " " + attribute.name.localizedLowercase }
-
-	// MARK: Instance Variables
-
-	private final let log = Log()
 
 	// MARK: - Initializers
 
@@ -63,7 +62,7 @@ public final class MostRecentDateInformation: AnyInformation {
 
 		let firstSampleValue = try filteredSamples[0].value(of: attribute)
 		guard var mostRecentDate = firstSampleValue as? Date else {
-			log.error("Failed to get initial date when computing most recent")
+			Me.log.error("Failed to get initial date when computing most recent")
 			throw TypeMismatchError(attribute: attribute, of: filteredSamples[0], wasA: type(of: firstSampleValue))
 		}
 		for sample in filteredSamples {
@@ -73,7 +72,7 @@ public final class MostRecentDateInformation: AnyInformation {
 					mostRecentDate = date
 				}
 			} else if !attribute.optional || value != nil {
-				log.error(
+				Me.log.error(
 					"non-optional attribute (%@) of sample (%@) returned %@",
 					attribute.name,
 					sample.attributedName,

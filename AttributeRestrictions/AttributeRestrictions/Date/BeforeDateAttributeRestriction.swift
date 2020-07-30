@@ -18,6 +18,11 @@ public final class BeforeDateAttributeRestriction: DateAttributeRestriction, Equ
 	// MARK: - Static Variables
 
 	private typealias Me = BeforeDateAttributeRestriction
+
+	private static let log = Log()
+
+	// MARK: - Attributes
+
 	public static let dateAttribute = DateOnlyAttribute()
 	public static var attributes: [Attribute] = [
 		dateAttribute,
@@ -31,7 +36,7 @@ public final class BeforeDateAttributeRestriction: DateAttributeRestriction, Equ
 			let dateText = try Me.dateAttribute.convertToDisplayableString(from: date)
 			return "Before " + dateText
 		} catch {
-			log.error("Failed to convert date into displayable string: %@", errorInfo(error))
+			Me.log.error("Failed to convert date into displayable string: %@", errorInfo(error))
 			let formatter = DateFormatter()
 			formatter.dateStyle = .medium
 			formatter.timeStyle = .none
@@ -46,8 +51,6 @@ public final class BeforeDateAttributeRestriction: DateAttributeRestriction, Equ
 			date = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: date)
 		}
 	}
-
-	private final let log = Log()
 
 	// MARK: - Initializers
 

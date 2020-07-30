@@ -12,6 +12,12 @@ import Foundation
 import Common
 
 open class BaseExporter: Exporter {
+	// MARK: - Static Variables
+
+	private typealias Me = BaseExporter
+
+	private static let log = Log()
+
 	// MARK: - Instance Variables
 
 	public let dataTypePluralName: String
@@ -26,8 +32,6 @@ open class BaseExporter: Exporter {
 
 	public final var totalRecordsToExport = 0
 	public final var recordsCompleted = 0
-
-	private final let log = Log()
 
 	// MARK: - Initializers
 
@@ -51,7 +55,7 @@ open class BaseExporter: Exporter {
 
 	open func cancel() {
 		let className = String(describing: type(of: self))
-		log.error("Did not override cancel() for %@", className)
+		Me.log.error("Did not override cancel() for %@", className)
 		isCancelled = true
 	}
 

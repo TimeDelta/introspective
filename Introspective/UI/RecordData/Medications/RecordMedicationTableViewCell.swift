@@ -18,9 +18,12 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 	// MARK: - Static Variables
 
 	private typealias Me = RecordMedicationTableViewCell
+
 	public static let errorOccurred = Notification.Name("recordMedicationErrorOcurred")
 	public static let shouldPresentMedicationDoseView = Notification.Name("shouldPresentDoseViewFromRecordScreen")
 	public static let shouldPresentDosesView = Notification.Name("shouldPresentDosesViewFromRecordScreen")
+
+	private static let log = Log()
 
 	// MARK: - IBOutlets
 
@@ -33,7 +36,7 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 	public final var medication: Medication! {
 		didSet {
 			guard let medication = medication else {
-				log.error("Set medication to nil on RecordMedicationTableViewCell")
+				Me.log.error("Set medication to nil on RecordMedicationTableViewCell")
 				return
 			}
 			medicationNameLabel.text = medication.name
@@ -48,8 +51,6 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 
 	private final var uniqueNotificationNameForMedication: Notification.Name!
 	private final var dateThatTakenButtonWasPressed: Date?
-
-	private final let log = Log()
 
 	// MARK: - Received Notifications
 
@@ -115,7 +116,7 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 				DependencyInjector.get(UiUtil.self).setButton(lastTakenOnDateButton, enabled: false, hidden: false)
 			}
 		} catch {
-			log.error("Failed to retrieve most recent dose for %{private}@", medication.name)
+			Me.log.error("Failed to retrieve most recent dose for %{private}@", medication.name)
 			lastTakenText = "Last Taken: An error ocurred"
 			DependencyInjector.get(UiUtil.self).setButton(lastTakenOnDateButton, enabled: false, hidden: false)
 		}
@@ -142,7 +143,7 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 	}
 
 	private final func failedToMarkAsTaken(_ error: Error) {
-		log.error("Failed to mark medication (%{private}@) as taken: %@", medication.name, errorInfo(error))
+		Me.log.error("Failed to mark medication (%{private}@) as taken: %@", medication.name, errorInfo(error))
 		var title = "Failed to mark \(medication.name) as taken."
 		var message = "Sorry for the inconvenience"
 		if let error = error as? DisplayableError {

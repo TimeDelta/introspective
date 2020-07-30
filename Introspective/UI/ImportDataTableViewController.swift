@@ -17,12 +17,13 @@ import DependencyInjection
 import Notifications
 
 public final class ImportDataTableViewController: UITableViewController {
-	// MARK: - Static Variables
-
-	private typealias Me = ImportDataTableViewController
 	private enum Errors: Error {
 		case unknownIndexPath
 	}
+
+	// MARK: - Static Variables
+
+	private typealias Me = ImportDataTableViewController
 
 	public static let sectionRows = [
 		(
@@ -48,6 +49,8 @@ public final class ImportDataTableViewController: UITableViewController {
 			]
 		),
 	]
+
+	private static let log = Log()
 
 	// MARK: activities
 
@@ -90,8 +93,6 @@ public final class ImportDataTableViewController: UITableViewController {
 	/// the returned id from its expiration handler otherwise compiler will
 	/// complain about referencing a variable in its definition.
 	private final var taskIds = [UUID: UIBackgroundTaskIdentifier]()
-
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -180,7 +181,7 @@ public final class ImportDataTableViewController: UITableViewController {
 				do {
 					try self.importer.resetLastImportDate()
 				} catch {
-					self.log.error("Failed to reset last import date: %@", errorInfo(error))
+					Me.log.error("Failed to reset last import date: %@", errorInfo(error))
 					self.showError(title: "Failed to reset last import date", error: error)
 				}
 			})
@@ -189,7 +190,7 @@ public final class ImportDataTableViewController: UITableViewController {
 			})
 			presentView(actionSheet)
 		} catch {
-			log.error("Failed to create data importer while presenting menu: %@", errorInfo(error))
+			Me.log.error("Failed to create data importer while presenting menu: %@", errorInfo(error))
 		}
 	}
 
@@ -198,7 +199,7 @@ public final class ImportDataTableViewController: UITableViewController {
 	@objc private final func extendTime(notification: Notification) {
 		if let taskId: String = value(for: .backgroundTaskId, from: notification) {
 			guard let taskIdRawValue = Int(taskId) else {
-				log.error("Failed to convert %@ to raw value for background task id", taskId)
+				Me.log.error("Failed to convert %@ to raw value for background task id", taskId)
 				return
 			}
 			let backgroundTaskId = UIBackgroundTaskIdentifier(rawValue: taskIdRawValue)
@@ -209,7 +210,7 @@ public final class ImportDataTableViewController: UITableViewController {
 				}
 				backgroundImportOrder.removeAll(where: { $0 == backgroundTaskId })
 			} else {
-				log.error("Unable to retrieve importer for background task: %d", backgroundTaskId.rawValue)
+				Me.log.error("Unable to retrieve importer for background task: %d", backgroundTaskId.rawValue)
 			}
 		}
 	}
@@ -217,7 +218,7 @@ public final class ImportDataTableViewController: UITableViewController {
 	@objc private final func cancelBackgroundImport(notification: Notification) {
 		if let taskId: String = value(for: .backgroundTaskId, from: notification) {
 			guard let taskIdRawValue = Int(taskId) else {
-				log.error("Failed to convert %@ to raw value for background task id", taskId)
+				Me.log.error("Failed to convert %@ to raw value for background task id", taskId)
 				return
 			}
 			let backgroundTaskId = UIBackgroundTaskIdentifier(rawValue: taskIdRawValue)
@@ -269,13 +270,12 @@ public final class ImportDataTableViewController: UITableViewController {
 		DispatchQueue.global(qos: .utility).async {
 			let uuid = UUID()
 			let backgroundTask = UIApplication.shared.beginBackgroundTask(withName: taskDescription) { [weak self] in
-				self?.log.info("Background task to import %@ from %@ expired", dataType, source)
+				Me.log.info("Background task to import %@ from %@ expired", dataType, source)
 				importer.pause()
 				guard let taskId = self?.taskIds[uuid] else {
-					self?.log
-						.error(
-							"Missing background task id. App might be killed by iOS due to inability to end background task."
-						)
+					Me.log.error(
+						"Missing background task id. App might be killed by iOS due to inability to end background task."
+					)
 					return
 				}
 				self?.sendExtendTimeNotification(for: taskId)
@@ -292,21 +292,21 @@ public final class ImportDataTableViewController: UITableViewController {
 				}
 				self.taskIds[uuid] = backgroundTask
 				if let url = url {
-					self.log.info("Starting background import for %@ from %@", dataType, source)
+					Me.log.info("Starting background import for %@ from %@", dataType, source)
 					try importer.importData(from: url)
 				} else {
-					self.log.info("Continuing background import for %@ from %@", dataType, source)
+					Me.log.info("Continuing background import for %@ from %@", dataType, source)
 					try importer.resume()
 				}
 				if !importer.isPaused && !importer.isCancelled {
 					self.sendSuccessfulImportNotification(for: importer)
 				}
 			} catch {
-				self.log.error("Failed to import %@ from %@: %@", dataType, source, errorInfo(error))
+				Me.log.error("Failed to import %@ from %@: %@", dataType, source, errorInfo(error))
 				self.sendBackgroundErrorNotification(for: importer, error: error)
 			}
 			if !importer.isPaused {
-				self.log.info("Finished background import for %@ from %@", dataType, source)
+				Me.log.info("Finished background import for %@ from %@", dataType, source)
 				self.backgroundImportsAccessQueue.sync(flags: .barrier) {
 					self._backgroundImports[backgroundTask] = nil
 				}
@@ -333,7 +333,7 @@ public final class ImportDataTableViewController: UITableViewController {
 		} else if indexPath == Me.introspectiveMedicationIndex {
 			return try DependencyInjector.get(ImporterFactory.self).introspectiveMedicationImporter()
 		} else {
-			log.error("Unknown index path: (section: %d, row: %d)", indexPath.section, indexPath.row)
+			Me.log.error("Unknown index path: (section: %d, row: %d)", indexPath.section, indexPath.row)
 			throw Errors.unknownIndexPath
 		}
 	}
@@ -367,14 +367,14 @@ public final class ImportDataTableViewController: UITableViewController {
 			content.categoryIdentifier = UserNotificationDelegate.finishedImportingMoods.identifier
 			break
 		default:
-			log.error("Forgot a type of importer for notifications: %@", String(describing: importer))
+			Me.log.error("Forgot a type of importer for notifications: %@", String(describing: importer))
 		}
 		sendUserNotification(withContent: content, id: "FinishedImport")
 	}
 
 	private final func sendExtendTimeNotification(for backgroundTaskId: UIBackgroundTaskIdentifier) {
 		guard let importer = backgroundImports({ $0[backgroundTaskId] }) else {
-			log.error("Missing importer for background task")
+			Me.log.error("Missing importer for background task")
 			// just let it go because won't be able to resume the import anyways
 			return
 		}
@@ -427,7 +427,7 @@ public final class ImportDataTableViewController: UITableViewController {
 extension ImportDataTableViewController: UIDocumentPickerDelegate {
 	public final func documentPicker(_: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
 		if urls.count != 1 {
-			log.error("Wrong number of urls for document picker: received %d", urls.count)
+			Me.log.error("Wrong number of urls for document picker: received %d", urls.count)
 			return
 		}
 		let url = urls[0]

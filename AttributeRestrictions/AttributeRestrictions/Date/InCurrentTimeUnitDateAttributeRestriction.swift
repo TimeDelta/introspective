@@ -48,8 +48,6 @@ public final class InCurrentTimeUnitDateAttributeRestriction: DateAttributeRestr
 
 	public final var timeUnit: Calendar.Component
 
-	private final let log = Log()
-
 	// MARK: - Initializers
 
 	public required convenience init(restrictedAttribute: Attribute) {

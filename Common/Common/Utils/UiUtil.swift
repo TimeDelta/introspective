@@ -159,7 +159,8 @@ public extension UiUtil {
 }
 
 public final class UiUtilImpl: UiUtil {
-	private final let log = Log()
+	private typealias Me = UiUtilImpl
+	private static let log = Log()
 
 	public final let defaultPresenter: Presentr = {
 		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 200), center: .center)
@@ -238,7 +239,7 @@ public final class UiUtilImpl: UiUtil {
 		if let userInfo = notification.userInfo {
 			guard userInfo.keys.contains(key) else {
 				if !keyIsOptional {
-					log.error(
+					Me.log.error(
 						"Missing user info key for '%@' notification: %@",
 						notification.name.rawValue,
 						key.description
@@ -250,10 +251,10 @@ public final class UiUtilImpl: UiUtil {
 			if value is Type || value is Type? {
 				return value as? Type
 			}
-			log.error("Wrong object type for '%@' notification: %@", notification.name.rawValue, key.description)
+			Me.log.error("Wrong object type for '%@' notification: %@", notification.name.rawValue, key.description)
 			return nil
 		}
-		log.error("No user info for '%@' notification", notification.name.rawValue)
+		Me.log.error("No user info for '%@' notification", notification.name.rawValue)
 		return nil
 	}
 

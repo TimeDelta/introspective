@@ -25,7 +25,7 @@ public final class TestDataCreationSampleTypeTableViewCell: UITableViewCell {
 	@IBOutlet final var samplesPerHourLabel: UILabel!
 	@IBOutlet final var samplesPerHourTextField: UITextField!
 
-	// MARK: - Member Variables
+	// MARK: - Instance Variables
 
 	public final var sampleType: Sample.Type! {
 		didSet {

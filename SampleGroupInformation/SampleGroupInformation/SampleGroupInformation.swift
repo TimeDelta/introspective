@@ -30,13 +30,16 @@ public protocol SampleGroupInformation: CustomStringConvertible {
 
 // An abstract base class for everything that implements SampleGroupInformation
 public class AnyInformation: SampleGroupInformation {
+	private typealias Me = AnyInformation
+	private static let log = Log()
+
 	public var name: String {
-		log.error("Must override name")
+		Me.log.error("Must override name")
 		return ""
 	}
 
 	public var description: String {
-		log.error("Must override description")
+		Me.log.error("Must override description")
 		return ""
 	}
 
@@ -45,24 +48,22 @@ public class AnyInformation: SampleGroupInformation {
 	public final var startDate: Date?
 	public final var endDate: Date?
 
-	private final let log = Log()
-
 	public required init(_ attribute: Attribute) {
 		self.attribute = attribute
 	}
 
 	public func compute(forSamples _: [Sample]) throws -> String {
-		log.error("Must override compute()")
+		Me.log.error("Must override compute()")
 		return ""
 	}
 
 	public func computeGraphable(forSamples _: [Sample]) throws -> String {
-		log.error("Must override computeGraphable()")
+		Me.log.error("Must override computeGraphable()")
 		return ""
 	}
 
 	public func equalTo(_ other: SampleGroupInformation) -> Bool {
-		log.error("Must override equalTo()")
+		Me.log.error("Must override equalTo()")
 		return type(of: self) == type(of: other)
 	}
 
@@ -73,7 +74,7 @@ public class AnyInformation: SampleGroupInformation {
 			do {
 				let include = try $0.value(of: attribute) as? Type != nil
 				if !include && !attribute.optional {
-					log.error(
+					Me.log.error(
 						"Found nil value for non-optional attribute '%@' in %@ sample",
 						attribute.name,
 						$0.attributedName
@@ -81,7 +82,7 @@ public class AnyInformation: SampleGroupInformation {
 				}
 				return include
 			} catch {
-				log.error(
+				Me.log.error(
 					"Failed to get value of '%@' for '%@' sample while filtering: %@",
 					attribute.name,
 					$0.attributedName,

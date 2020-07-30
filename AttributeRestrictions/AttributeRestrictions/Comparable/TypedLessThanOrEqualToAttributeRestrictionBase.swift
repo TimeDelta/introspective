@@ -21,7 +21,7 @@ public class TypedLessThanOrEqualToAttributeRestrictionBase<ValueType: Comparabl
 			let valueText = try restrictedAttribute.convertToDisplayableString(from: value)
 			return restrictedAttribute.name + " ≤ " + valueText
 		} catch {
-			log.error(
+			Log().error(
 				"Could not convert current value (%@) to displayable string: %@",
 				String(describing: value),
 				errorInfo(error)
@@ -34,8 +34,6 @@ public class TypedLessThanOrEqualToAttributeRestrictionBase<ValueType: Comparabl
 
 	public final var value: ValueType
 	private final var valueAttribute: Attribute
-
-	private final let log = Log()
 
 	// MARK: - Initializers
 

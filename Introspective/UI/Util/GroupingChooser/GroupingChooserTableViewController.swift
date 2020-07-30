@@ -23,6 +23,12 @@ public protocol GroupingChooserTableViewController: UITableViewController {
 }
 
 public final class GroupingChooserTableViewControllerImpl: UITableViewController, GroupingChooserTableViewController {
+	// MARK: - Static Variables
+
+	private typealias Me = GroupingChooserTableViewControllerImpl
+
+	private static let log = Log()
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var addButton: UIBarButtonItem!
@@ -39,8 +45,6 @@ public final class GroupingChooserTableViewControllerImpl: UITableViewController
 
 	private final var availableGroupers: [SampleGrouper]!
 	private final var editedGroupDefinitionIndex: Int!
-
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -87,7 +91,7 @@ public final class GroupingChooserTableViewControllerImpl: UITableViewController
 			return 1
 		}
 		guard let advancedGrouper = currentGrouper as? AdvancedSampleGrouper else {
-			log.error(
+			Me.log.error(
 				"Asked for number of rows in section %d but current grouper is not advanced grouper: %s",
 				section,
 				String(describing: type(of: currentGrouper))
@@ -100,7 +104,7 @@ public final class GroupingChooserTableViewControllerImpl: UITableViewController
 	public final override func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section == 0 { return nil }
 		if section == 1 { return "Group Definitions" }
-		log.error("Unknown section number: %d", section)
+		Me.log.error("Unknown section number: %d", section)
 		return nil
 	}
 
@@ -119,7 +123,7 @@ public final class GroupingChooserTableViewControllerImpl: UITableViewController
 		}
 
 		guard let advancedGrouper = currentGrouper as? AdvancedSampleGrouper else {
-			log.error(
+			Me.log.error(
 				"Current grouper is not advanced grouper: %s",
 				String(describing: type(of: currentGrouper))
 			)
@@ -168,7 +172,7 @@ public final class GroupingChooserTableViewControllerImpl: UITableViewController
 
 	@IBAction final func addButtonPressed(_: Any) {
 		guard let advancedGrouper = currentGrouper as? AdvancedSampleGrouper else {
-			log.error("Add button pressed when current grouper not AdvancedSampleGrouper")
+			Me.log.error("Add button pressed when current grouper not AdvancedSampleGrouper")
 			return
 		}
 		let groupDefinition = DependencyInjector.get(SampleGrouperFactory.self).groupDefinition(sampleType)
@@ -191,7 +195,7 @@ public final class GroupingChooserTableViewControllerImpl: UITableViewController
 
 	@objc private final func groupDefinitionEdited(notification: Notification) {
 		guard let advancedGrouper = currentGrouper as? AdvancedSampleGrouper else {
-			log.error("Received groupDefinitionEdited notification when grouper was not AdvancedSampleGrouper")
+			Me.log.error("Received groupDefinitionEdited notification when grouper was not AdvancedSampleGrouper")
 			return
 		}
 		if let newDefinition: GroupDefinition? = value(for: .groupDefinition, from: notification) {
@@ -226,7 +230,7 @@ public final class GroupingChooserTableViewControllerImpl: UITableViewController
 	private final func showGroupDefinitionView(for indexPath: IndexPath) {
 		let controller: GroupDefinitionTableViewController = viewController(named: "groupDefinitionView")
 		guard let advancedGrouper = currentGrouper as? AdvancedSampleGrouper else {
-			log.error("Unable to cast currentGrouper as AdvancedSampleGrouper")
+			Me.log.error("Unable to cast currentGrouper as AdvancedSampleGrouper")
 			showError(title: "You found a bug. Please report it.")
 			return
 		}

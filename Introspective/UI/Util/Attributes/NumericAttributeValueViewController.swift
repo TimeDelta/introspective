@@ -13,6 +13,12 @@ import Common
 import DependencyInjection
 
 final class NumericAttributeValueViewController: UIViewController {
+	// MARK: - Static Variables
+
+	private typealias Me = NumericAttributeValueViewController
+
+	private static let log = Log()
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var textField: UITextField!
@@ -24,8 +30,6 @@ final class NumericAttributeValueViewController: UIViewController {
 	public final var notificationToSendOnAccept: Notification.Name!
 	public final var currentValue: Any!
 
-	private final let log = Log()
-
 	// MARK: - UIViewController Overrides
 
 	final override func viewDidLoad() {
@@ -36,7 +40,7 @@ final class NumericAttributeValueViewController: UIViewController {
 			} else if numericAttribute is IntegerAttribute {
 				textField.text = String(currentValue as! Int)
 			} else {
-				log.error("Forgot a type of NumericAttribute when setting initial value for text field")
+				Me.log.error("Forgot a type of NumericAttribute when setting initial value for text field")
 			}
 		}
 	}
@@ -68,7 +72,7 @@ final class NumericAttributeValueViewController: UIViewController {
 				currentValue = try numericAttribute.convertToValue(from: value ?? "")
 				enableSaveButton()
 			} catch {
-				log.error("Failed to convert value of '%@' to number: %@", value ?? "", errorInfo(error))
+				Me.log.error("Failed to convert value of '%@' to number: %@", value ?? "", errorInfo(error))
 			}
 		} else {
 			disableSaveButton()

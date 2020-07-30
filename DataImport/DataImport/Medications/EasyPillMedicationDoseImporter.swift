@@ -20,7 +20,15 @@ public protocol EasyPillMedicationDoseImporter: MedicationImporter {}
 public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPillMedicationDoseImporter, CoreDataObject {
 	// MARK: - Static Variables
 
+	private typealias Me = EasyPillMedicationDoseImporterImpl
+
+	// MARK: CoreData
+
 	public static let entityName = "EasyPillMedicationDoseImporter"
+
+	// MARK: Logging
+
+	private static let log = Log()
 
 	// MARK: - Instance Variables
 
@@ -37,7 +45,6 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 	private final let mainTransaction = DependencyInjector.get(Database.self).transaction()
 	private final var latestDate: Date!
 	private final var lines = [String]()
-	private final let log = Log()
 
 	// MARK: - Functions
 
@@ -83,7 +90,7 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 
 	public final func resume() throws {
 		guard !isCancelled else {
-			log.error("Tried to resume a cancelled medicaiton dose import from EasyPill")
+			Me.log.error("Tried to resume a cancelled medicaiton dose import from EasyPill")
 			return
 		}
 		isPaused = false
@@ -98,7 +105,7 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 			lastImport = latestDate
 			try retryOnFail({ try mainTransaction.commit() }, maxRetries: 2)
 		} catch {
-			log.error("Failed to import medication doses from EasyPill: %@", errorInfo(error))
+			Me.log.error("Failed to import medication doses from EasyPill: %@", errorInfo(error))
 			throw error
 		}
 	}
@@ -189,7 +196,7 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 			medication.addToDoses(dose)
 			try childTransaction.commit()
 		} catch {
-			log.error("Failed to create and modify medication dose: %@", errorInfo(error))
+			Me.log.error("Failed to create and modify medication dose: %@", errorInfo(error))
 			let dateText = DependencyInjector.get(CalendarUtil.self)
 				.string(for: date, dateStyle: .medium, timeStyle: .short)
 			throw GenericDisplayableError(
@@ -208,7 +215,7 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 		do {
 			return try transaction.query(medicationsWithNameFetchRequest)
 		} catch {
-			log.error("Failed to check for existing medications named '%@': %@", medicationName, errorInfo(error))
+			Me.log.error("Failed to check for existing medications named '%@': %@", medicationName, errorInfo(error))
 			throw GenericDisplayableError(
 				title: "Data Access Error",
 				description: "Unable to check for medication named \(medicationName)."

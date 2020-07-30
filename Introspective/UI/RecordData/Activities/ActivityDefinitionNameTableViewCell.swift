@@ -16,6 +16,10 @@ import Samples
 import UIExtensions
 
 public final class ActivityDefinitionNameTableViewCell: UITableViewCell {
+	private typealias Me = ActivityDefinitionNameTableViewCell
+
+	private static let log = Log()
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var nameLabel: UILabel!
@@ -31,8 +35,6 @@ public final class ActivityDefinitionNameTableViewCell: UITableViewCell {
 			nameChanged(self)
 		}
 	}
-
-	private final let log = Log()
 
 	// MARK: - Actions
 
@@ -80,7 +82,7 @@ public final class ActivityDefinitionNameTableViewCell: UITableViewCell {
 			let results = try DependencyInjector.get(Database.self).query(fetchRequest)
 			return !results.isEmpty
 		} catch {
-			log.error("Failed to check for activity name duplication")
+			Me.log.error("Failed to check for activity name duplication")
 			return true
 		}
 	}

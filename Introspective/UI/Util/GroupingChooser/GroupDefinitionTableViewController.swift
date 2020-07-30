@@ -16,6 +16,12 @@ import SampleGroupers
 import Samples
 
 public final class GroupDefinitionTableViewController: UITableViewController {
+	// MARK: - Static Variables
+
+	private typealias Me = GroupDefinitionTableViewController
+
+	private static let log = Log()
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var addButton: UIBarButtonItem!
@@ -45,8 +51,6 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 
 	/// The index of the exppression part that is being edited. Only applies to attribute restrictions.
 	private final var editedIndex: Int!
-
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -161,7 +165,7 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 	@objc private final func attributeRestrictionEdited(notification: Notification) {
 		if let restriction: AttributeRestriction = value(for: .attributeRestriction, from: notification) {
 			guard let editedIndex = editedIndex else {
-				log.error("editedIndex not set for attribute restriction")
+				Me.log.error("editedIndex not set for attribute restriction")
 				return
 			}
 			expressionParts[editedIndex] = (type: .expression, expression: restriction)
@@ -223,7 +227,7 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 	private final func addOrUpdateAttributeRestrictionFor(_ indexPath: IndexPath?) {
 		let restriction = getDefaultAttributeRestriction()
 		guard let expression = restriction else {
-			log.error("No restrictions available for sample type: %@", sampleType.name)
+			Me.log.error("No restrictions available for sample type: %@", sampleType.name)
 			return
 		}
 		if let indexPath = indexPath {

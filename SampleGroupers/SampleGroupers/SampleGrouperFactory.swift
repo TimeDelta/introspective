@@ -46,7 +46,7 @@ public final class SampleGrouperFactoryImpl: SampleGrouperFactory {
 		SplitByListElementSampleGrouper.self,
 	]
 
-	private final let log = Log()
+	private static let log = Log()
 
 	public final func typesFor(sampleType: Sample.Type) -> [SampleGrouper.Type] {
 		typesFor(attributes: sampleType.attributes)
@@ -69,7 +69,7 @@ public final class SampleGrouperFactoryImpl: SampleGrouperFactory {
 			case is TextAttribute:
 				addEverythingNotAdded(to: &types, from: Me.textTypes, addedSoFar: &addedSoFar)
 				break
-			default: log.error("Missing attribute type: %@", attribute.typeName)
+			default: Me.log.error("Missing attribute type: %@", attribute.typeName)
 			}
 		}
 		addEverythingNotAdded(to: &types, from: Me.genericTypes, addedSoFar: &addedSoFar)

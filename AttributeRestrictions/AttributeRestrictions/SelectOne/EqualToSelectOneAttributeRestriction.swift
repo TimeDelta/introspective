@@ -12,11 +12,15 @@ import Attributes
 import Common
 
 public final class EqualToSelectOneAttributeRestriction: EqualToAttributeRestriction {
+	// MARK: - Static Variables
+
+	private typealias Me = EqualToSelectOneAttributeRestriction
+
+	private static let log = Log()
+
 	// MARK: - Instance Variables
 
 	private final var selectOneAttribute: SelectOneAttribute
-
-	private final let log = Log()
 
 	// MARK: - Initializers
 
@@ -66,7 +70,7 @@ public final class EqualToSelectOneAttributeRestriction: EqualToAttributeRestric
 				value = selectOneAttribute.possibleValues[0]
 			}
 		} catch {
-			log.error("Failed to check for possible value: %@", errorInfo(error))
+			Me.log.error("Failed to check for possible value: %@", errorInfo(error))
 		}
 	}
 
@@ -96,7 +100,7 @@ public final class EqualToSelectOneAttributeRestriction: EqualToAttributeRestric
 		do {
 			return try selectOneAttribute.valuesAreEqual(value, other.value)
 		} catch {
-			log.error("Failed to check if values are equal: %@", errorInfo(error))
+			Me.log.error("Failed to check if values are equal: %@", errorInfo(error))
 			return false
 		}
 	}

@@ -43,14 +43,14 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 		58.0,
 	]
 
+	private static let log = Log()
+
 	// MARK: - Instance Variables
 
 	private final var autoIgnoreEnabled: Bool = DependencyInjector.get(Settings.self).autoIgnoreEnabled
 	private final var numberOfSeconds: Int = DependencyInjector.get(Settings.self).autoIgnoreSeconds
 	private final var autoTrimWhitespaceInActivityNotesEnabled: Bool = DependencyInjector.get(Settings.self)
 		.autoTrimWhitespaceInActivityNotes
-
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -91,7 +91,7 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 			withIdentifier: Me.identifiers[indexPath.row],
 			for: indexPath
 		) as? ActivitySettingTableViewCell else {
-			log.error("Unable to create table view cell for identifier: %@", Me.identifiers[indexPath.row])
+			Me.log.error("Unable to create table view cell for identifier: %@", Me.identifiers[indexPath.row])
 			return UITableViewCell()
 		}
 		cell.changeNotification = Me.changeNotifications[indexPath.row]
@@ -165,7 +165,7 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 			try retryOnFail({ try DependencyInjector.get(Settings.self).save() }, maxRetries: 2)
 			navigationController?.popViewController(animated: false)
 		} catch {
-			log.error("Failed to save activity settings: %@", errorInfo(error))
+			Me.log.error("Failed to save activity settings: %@", errorInfo(error))
 			showError(title: "Failed to save settins", error: error, tryAgain: saveAndGoBackToSettings)
 		}
 	}

@@ -115,7 +115,7 @@ public final class AttributeRestrictionFactoryImpl: AttributeRestrictionFactory 
 		NotEqualToDurationAttributeRestriction.self,
 	]
 
-	private final let log = Log()
+	private static let log = Log()
 
 	public final func typesFor(_ attribute: Attribute) -> [AttributeRestriction.Type] {
 		switch attribute {
@@ -131,7 +131,7 @@ public final class AttributeRestrictionFactoryImpl: AttributeRestrictionFactory 
 		case is TagsAttribute: return Me.tagsTypes
 		case is DurationAttribute: return Me.durationTypes
 		default:
-			log.error("Forgot a type of attribute: %@", String(describing: type(of: attribute)))
+			Me.log.error("Forgot a type of attribute: %@", String(describing: type(of: attribute)))
 			return []
 		}
 	}

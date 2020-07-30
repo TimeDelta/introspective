@@ -23,11 +23,22 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	// MARK: - Static Variables
 
 	private typealias Me = SingleSampleTypeBasicXYGraphCustomizationViewController
+
+	// MARK: Presenters
+
 	private static let presenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
 		center: .center
 	)
+
+	// MARK: Logging / Performance
+
+	private static let signpost = Signpost(log: OSLog(
+		subsystem: Bundle.main.bundleIdentifier!,
+		category: "SingleSampleTypeBasicXYGraphCustomizationViewController"
+	))
+	private static let log = Log()
 
 	// MARK: - IBOutlets
 
@@ -73,12 +84,6 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	}
 
 	private final var chartController: BasicXYChartViewController!
-
-	private final let signpost = Signpost(log: OSLog(
-		subsystem: Bundle.main.bundleIdentifier!,
-		category: "SingleSampleTypeBasicXYGraphCustomizationViewController"
-	))
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -170,7 +175,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 			}
 			realNavigationController?.pushViewController(chartController, animated: false)
 		} catch {
-			log.error("Failed to get %@ query: %@", sampleType.name, errorInfo(error))
+			Me.log.error("Failed to get %@ query: %@", sampleType.name, errorInfo(error))
 			showError(title: "You found a bug", error: error)
 		}
 	}
@@ -252,7 +257,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 			usePointGroupValueForXAxis = usePointGroupValue
 			xAxis = nil
 		} else {
-			log.error("Missing both optional attributes in x-axis setup notification")
+			Me.log.error("Missing both optional attributes in x-axis setup notification")
 		}
 	}
 
@@ -285,13 +290,13 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	}
 
 	private final func runQuery() {
-		signpost.begin(name: "Query")
-		if query == nil { log.error("Query was unexpectedly nil") }
+		Me.signpost.begin(name: "Query")
+		if query == nil { Me.log.error("Query was unexpectedly nil") }
 		query?.resetStoppedState()
 		query?.runQuery { result, error in
-			self.signpost.end(name: "Query")
+			Me.signpost.end(name: "Query")
 			if let error = error {
-				self.log.error("Query run failed: %@", errorInfo(error))
+				Me.log.error("Query run failed: %@", errorInfo(error))
 				DispatchQueue.main.async {
 					self.chartController.showError(title: "Failed to run the query", error: error)
 				}
@@ -301,19 +306,19 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 				do {
 					try self.updateChartData(samples)
 				} catch {
-					self.log.error("Failed to update chart data: %@", errorInfo(error))
+					Me.log.error("Failed to update chart data: %@", errorInfo(error))
 					DispatchQueue.main.async {
 						self.chartController.showError(title: "Failed to gather the required data", error: error)
 					}
 				}
 			} else {
-				self.log.error("Query run did not return an error or any results")
+				Me.log.error("Query run did not return an error or any results")
 			}
 		}
 	}
 
 	private final func updateChartData(_ samples: [Sample]) throws {
-		signpost.begin(name: "Update Chart Data", "Number of samples: %d", samples.count)
+		Me.signpost.begin(name: "Update Chart Data", "Number of samples: %d", samples.count)
 
 		let dataGenerator = SingleSampleTypeXYGraphDataGenerator(
 			seriesGrouper: seriesGrouper,
@@ -330,7 +335,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 			self.chartController.dataSeries = allData
 		}
 
-		signpost.end(name: "Update Chart Data", "Number of samples: %d", samples.count)
+		Me.signpost.end(name: "Update Chart Data", "Number of samples: %d", samples.count)
 	}
 
 	private final func showGrouperEditController(

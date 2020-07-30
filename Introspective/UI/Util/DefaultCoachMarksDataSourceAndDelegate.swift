@@ -43,14 +43,14 @@ public final class DefaultCoachMarksDataSourceAndDelegate: CoachMarksDataSourceA
 		]
 	}
 
-	// MARK: - Member Variables
+	// MARK: - Instance Variables
 
 	private final let _coachMarksInfo: [WeakRef<CoachMarkInfo>]
 	private final let instructionsShownKey: UserDefaultKey
 	private final let cleanup: (() -> Void)?
 	private final let skipViewLayoutConstraints: [CoachMarkSkipViewConstraint]?
 
-	// MARK: - Constructors
+	// MARK: - Initializers
 
 	/// - Parameter instructionsShownKey: The UserDefaults key to be used when determining if the instructions for this screen have been shown yet.
 	/// - Parameter cleanup: When the user either skips the remaining instructions or finishes the instructions, this will run.

@@ -52,9 +52,12 @@ public extension Database {
 }
 
 internal class DatabaseImpl: Database {
+	private typealias Me = DatabaseImpl
+
+	private static let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Database"))
+	private static let log = Log()
+
 	private final var persistentContainer: NSPersistentContainer
-	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Database"))
-	private final let log = Log()
 
 	public init(_ container: NSPersistentContainer) {
 		persistentContainer = container
@@ -105,14 +108,14 @@ internal class DatabaseImpl: Database {
 	}
 
 	public final func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type] {
-		signpost.begin(name: "Database Query", idObject: fetchRequest, "%@", fetchRequest.debugDescription)
+		Me.signpost.begin(name: "Database Query", idObject: fetchRequest, "%@", fetchRequest.debugDescription)
 		fetchRequest.shouldRefreshRefetchedObjects = true
 		do {
 			let result = try persistentContainer.viewContext.fetch(fetchRequest)
-			signpost.end(name: "Database Query", idObject: fetchRequest)
+			Me.signpost.end(name: "Database Query", idObject: fetchRequest)
 			return result
 		} catch {
-			signpost.end(name: "Database Query", idObject: fetchRequest)
+			Me.signpost.end(name: "Database Query", idObject: fetchRequest)
 			throw error
 		}
 	}
@@ -122,25 +125,25 @@ internal class DatabaseImpl: Database {
 	}
 
 	public final func count<Type: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<Type>) throws -> Int {
-		signpost.begin(name: "Database Count Query", idObject: fetchRequest, "%@", fetchRequest.debugDescription)
+		Me.signpost.begin(name: "Database Count Query", idObject: fetchRequest, "%@", fetchRequest.debugDescription)
 		do {
 			let result = try persistentContainer.viewContext.count(for: fetchRequest)
-			signpost.end(name: "Database Count Query", idObject: fetchRequest)
+			Me.signpost.end(name: "Database Count Query", idObject: fetchRequest)
 			return result
 		} catch {
-			signpost.end(name: "Database Count Query", idObject: fetchRequest)
+			Me.signpost.end(name: "Database Count Query", idObject: fetchRequest)
 			throw error
 		}
 	}
 
 	public final func pull<Type: NSManagedObject>(savedObject: Type) throws -> Type {
-		signpost.begin(name: "Pull", idObject: savedObject)
+		Me.signpost.begin(name: "Pull", idObject: savedObject)
 		do {
 			let object = try pull(savedObject: savedObject, fromContext: persistentContainer.viewContext)
-			signpost.end(name: "Pull", idObject: savedObject)
+			Me.signpost.end(name: "Pull", idObject: savedObject)
 			return object
 		} catch {
-			signpost.end(name: "Pull", idObject: savedObject)
+			Me.signpost.end(name: "Pull", idObject: savedObject)
 			throw error
 		}
 	}
@@ -149,16 +152,16 @@ internal class DatabaseImpl: Database {
 		savedObject: Type,
 		fromSameContextAs otherObject: NSManagedObject
 	) throws -> Type {
-		signpost.begin(name: "Pull", idObject: savedObject)
+		Me.signpost.begin(name: "Pull", idObject: savedObject)
 		do {
 			guard let context = otherObject.managedObjectContext else {
 				throw UnknownManagedObjectContext()
 			}
 			let object = try pull(savedObject: savedObject, fromContext: context)
-			signpost.end(name: "Pull", idObject: savedObject)
+			Me.signpost.end(name: "Pull", idObject: savedObject)
 			return object
 		} catch {
-			signpost.end(name: "Pull", idObject: savedObject)
+			Me.signpost.end(name: "Pull", idObject: savedObject)
 			throw error
 		}
 	}
@@ -204,7 +207,7 @@ internal class DatabaseImpl: Database {
 			}
 			wasFault += "a fault"
 			let objectTypeName = type.entity().name ?? type.debugDescription()
-			log.error("Could not cast managed object as %@: %@", objectTypeName, wasFault)
+			Me.log.error("Could not cast managed object as %@: %@", objectTypeName, wasFault)
 			throw FailedToInstantiateObject(objectTypeName: objectTypeName)
 		}
 		return castedObject

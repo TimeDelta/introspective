@@ -22,8 +22,8 @@ public class XYGraphDataGenerator {
 
 	private final var colors = [UIColor]()
 
-	private final let signpost: Signpost?
-	private final let log: Log
+	private weak final var signpost: Signpost?
+	private weak final var log: Log?
 
 	// MARK: - Initializers
 
@@ -204,7 +204,7 @@ public class XYGraphDataGenerator {
 				if let yValueIndex = index(ofValue: xGroupValue, in: yValues, groupedBy: pointGrouper) {
 					let yValue = yValues[yValueIndex].sampleValue
 					guard let yValueNum = Float(formatNumber(yValue)) else {
-						log.debug("Skipping y-value: %@", String(describing: yValue))
+						log?.debug("Skipping y-value: %@", String(describing: yValue))
 						continue
 					}
 					if let xValue = xSampleValue as? Int {
@@ -282,7 +282,7 @@ public class XYGraphDataGenerator {
 			do {
 				return try grouper.groupValuesAreEqual($0.groupValue, value)
 			} catch {
-				self.log.error(
+				self.log?.error(
 					"Failed to test for value equality between '%@' and '%@': %@",
 					String(describing: $0.groupValue),
 					String(describing: value),

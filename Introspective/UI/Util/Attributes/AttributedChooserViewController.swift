@@ -13,6 +13,12 @@ import Common
 import UIExtensions
 
 final class AttributedChooserViewController: UIViewController {
+	// MARK: - Static Variables
+
+	private typealias Me = AttributedChooserViewController
+
+	private static let log = Log()
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var valuePicker: UIPickerView! {
@@ -52,8 +58,6 @@ final class AttributedChooserViewController: UIViewController {
 	private final var initialSetDone = false
 
 	private final var acceptButton: UIButton!
-
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -107,7 +111,7 @@ final class AttributedChooserViewController: UIViewController {
 					sendValueChangeNotification()
 				}
 			} catch {
-				log.error("Failed to set attribute value: %@", errorInfo(error))
+				Me.log.error("Failed to set attribute value: %@", errorInfo(error))
 			}
 		}
 	}
@@ -121,7 +125,7 @@ final class AttributedChooserViewController: UIViewController {
 			do {
 				try currentValue.set(attribute: attribute, to: attributeValue)
 			} catch {
-				log.error(
+				Me.log.error(
 					"Failed to set %@ of %@ to %@: %@",
 					attribute.name,
 					currentValue.attributedName,
@@ -213,7 +217,12 @@ final class AttributedChooserViewController: UIViewController {
 		do {
 			controller.attributeValue = try currentValue.value(of: attribute)
 		} catch {
-			log.error("Failed to retrieve %@ of %@: %@", attribute.name, currentValue.attributedName, errorInfo(error))
+			Me.log.error(
+				"Failed to retrieve %@ of %@: %@",
+				attribute.name,
+				currentValue.attributedName,
+				errorInfo(error)
+			)
 			// let the user continue
 		}
 		let valueChangedNotification = Notification.Name("attributeValueChanged_" + attribute.name)
@@ -329,7 +338,7 @@ extension AttributedChooserViewController: UIPickerViewDelegate {
 					let attributeCurrentValue = try currentValue.value(of: attribute)
 					try newValue.set(attribute: attribute, to: attributeCurrentValue)
 				} catch {
-					log.error(
+					Me.log.error(
 						"Failed to set or retrieve %@ of %@ or %@: %@",
 						attribute.name,
 						currentValue.attributedName,

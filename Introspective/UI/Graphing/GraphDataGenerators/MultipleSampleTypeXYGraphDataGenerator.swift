@@ -28,6 +28,17 @@ public final class MultipleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator 
 		}
 	}
 
+	// MARK: - Static Variables
+
+	private typealias Me = MultipleSampleTypeXYGraphDataGenerator
+
+	private static let signpost =
+		Signpost(log: OSLog(
+			subsystem: Bundle.main.bundleIdentifier!,
+			category: "MultiplSampleTypeXYGraphCreationPerformance"
+		))
+	private static let log = Log()
+
 	// MARK: - Instance Variables
 
 	private final let seriesGroupers: Groupers?
@@ -36,13 +47,6 @@ public final class MultipleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator 
 	private final let yInformation: [SampleGroupInformation]
 	// leaving this as public only for testing purposes
 	public final var usePointGroupValueForXAxis: Bool
-
-	private final let signpost =
-		Signpost(log: OSLog(
-			subsystem: Bundle.main.bundleIdentifier!,
-			category: "MultiplSampleTypeXYGraphCreationPerformance"
-		))
-	private final let log = Log()
 
 	// MARK: - Initializers
 
@@ -58,7 +62,7 @@ public final class MultipleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator 
 		self.xInformation = xInformation
 		self.yInformation = yInformation
 		self.usePointGroupValueForXAxis = usePointGroupValueForXAxis
-		super.init(signpost: signpost, log: log)
+		super.init(signpost: Me.signpost, log: Me.log)
 	}
 
 	// MARK: - Public Functions
@@ -104,9 +108,9 @@ public final class MultipleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator 
 		guard let seriesGroupers = seriesGroupers else {
 			throw GenericError("Tried to group x-axis series without seriesGroupers set")
 		}
-		signpost.begin(name: "Grouping x-axis samples for series", "Grouping %d samples", xSamples.count)
+		Me.signpost.begin(name: "Grouping x-axis samples for series", "Grouping %d samples", xSamples.count)
 		let xAxisSeriesGroups = try seriesGroupers.x.group(samples: xSamples)
-		signpost.end(
+		Me.signpost.end(
 			name: "Grouping x-axis samples for series",
 			"Grouped %d samples into %d groups",
 			xSamples.count,
@@ -119,9 +123,9 @@ public final class MultipleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator 
 		guard let seriesGroupers = seriesGroupers else {
 			throw GenericError("Tried to group y-axis series without seriesGroupers set")
 		}
-		signpost.begin(name: "Grouping y-axis samples for series", "Grouping %d samples", ySamples.count)
+		Me.signpost.begin(name: "Grouping y-axis samples for series", "Grouping %d samples", ySamples.count)
 		let yAxisSeriesGroups = try seriesGroupers.y.group(samples: ySamples)
-		signpost.end(
+		Me.signpost.end(
 			name: "Grouping y-axis samples for series",
 			"Grouped %d samples into %d groups",
 			ySamples.count,
@@ -137,9 +141,9 @@ public final class MultipleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator 
 		as groupName: String? = nil,
 		usePointGroupValueForXAxis: Bool
 	) throws {
-		signpost.begin(name: "Grouping x-axis samples", "Grouping %d samples", xSamples.count)
+		Me.signpost.begin(name: "Grouping x-axis samples", "Grouping %d samples", xSamples.count)
 		let xGroups = try pointGroupers.x.group(samples: xSamples)
-		signpost.end(
+		Me.signpost.end(
 			name: "Grouping x-axis samples",
 			"Grouped %d samples into %d groups",
 			xSamples.count,
@@ -154,9 +158,9 @@ public final class MultipleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator 
 		}
 		let sortedXValues = sort(xValues, by: { gentlyResolveAsString($0.groupValue) })
 
-		signpost.begin(name: "Grouping y-axis samples", "Grouping %d samples", ySamples.count)
+		Me.signpost.begin(name: "Grouping y-axis samples", "Grouping %d samples", ySamples.count)
 		let yGroups = try pointGroupers.y.group(samples: ySamples)
-		signpost.end(
+		Me.signpost.end(
 			name: "Grouping x-axis samples",
 			"Grouped %d samples into %d groups",
 			ySamples.count,

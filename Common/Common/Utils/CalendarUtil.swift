@@ -53,9 +53,11 @@ public extension CalendarUtil {
 }
 
 public final class CalendarUtilImpl: CalendarUtil {
+	private typealias Me = CalendarUtilImpl
+	private static let log = Log()
+
 	/// This is only used for testing
 	private final var timeZone: TimeZone?
-	private final let log = Log()
 
 	public enum Errors: String, Error {
 		case invalidCalendarComponent
@@ -173,7 +175,7 @@ public final class CalendarUtilImpl: CalendarUtil {
 
 	public final func distance(from date1: Date, to date2: Date, in unit: Calendar.Component) throws -> Int {
 		guard let distance = Calendar.autoupdatingCurrent.dateComponents([unit], from: date1, to: date2).in(unit) else {
-			log.error("Unable to calculate date distance in %@", unit.description)
+			Me.log.error("Unable to calculate date distance in %@", unit.description)
 			throw Errors.invalidCalendarComponent
 		}
 		return distance
@@ -199,7 +201,7 @@ public final class CalendarUtilImpl: CalendarUtil {
 		case .minute: return Date() - numUnits.minutes
 		case .second: return Date() - numUnits.seconds
 		default:
-			log.error("Unsupported time unit %@: ", timeUnit.description)
+			Me.log.error("Unsupported time unit %@: ", timeUnit.description)
 			return Date()
 		}
 	}

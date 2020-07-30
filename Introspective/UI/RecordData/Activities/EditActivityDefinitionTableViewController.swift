@@ -20,10 +20,14 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 
 	private typealias Me = EditActivityDefinitionTableViewController
 
+	// MARK: IndexPaths
+
 	private static let nameIndex = IndexPath(row: 0, section: 0)
 	private static let autoNoteIndex = IndexPath(row: 1, section: 0)
 	private static let descriptionIndex = IndexPath(row: 0, section: 1)
 	private static let tagsIndex = IndexPath(row: 0, section: 2)
+
+	// MARK: Notificaiton Names
 
 	private static let nameChanged = Notification.Name("activityDefinitionNameChanged")
 	private static let descriptionChanged = Notification.Name("activityDefinitionDescriptionChanged")
@@ -31,6 +35,10 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 	private static let autoNoteChanged = Notification.Name("autoNoteChanged")
 	private static let invalid = Notification.Name("activityDefinitionInvalid")
 	private static let showPopup = Notification.Name("showPopup")
+
+	// MARK: Logging
+
+	private static let log = Log()
 
 	// MARK: - Instance Variables
 
@@ -52,8 +60,6 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 	private final var autoNote = false
 
 	private final var saveButton: UIBarButtonItem!
-
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -144,7 +150,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 			cell.notificationToSendOnChange = Me.tagsChanged
 			return cell
 		}
-		log.error("Missing cell customization case for edit activity")
+		Me.log.error("Missing cell customization case for edit activity")
 		return UITableViewCell()
 	}
 
@@ -245,7 +251,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 			}
 			navigationController?.popViewController(animated: false)
 		} catch {
-			log.error("Failed to create, edit or save ActivityDefinition: %@", errorInfo(error))
+			Me.log.error("Failed to create, edit or save ActivityDefinition: %@", errorInfo(error))
 			showError(
 				title: "Failed to save activity",
 				message: "Something went wrong while trying to save this activity. Sorry for the inconvenience.",

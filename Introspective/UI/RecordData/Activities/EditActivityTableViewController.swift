@@ -32,6 +32,8 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 
 	private typealias Me = EditActivityTableViewControllerImpl
 
+	// MARK: IndexPaths
+
 	static let definitionIndex = IndexPath(row: 0, section: 0)
 	static let startIndex = IndexPath(row: definitionIndex.row + 1, section: 0)
 	static let endIndex = IndexPath(row: startIndex.row + 1, section: 0)
@@ -39,11 +41,15 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 	static let noteIndex = IndexPath(row: 0, section: 1)
 	static let tagsIndex = IndexPath(row: 0, section: 2)
 
+	// MARK: Presenters
+
 	private static let presenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .full,
 		height: .fluid(percentage: 0.4),
 		center: .bottomCenter
 	)
+
+	// MARK: Notification Names
 
 	static let activityDefinitionChanged = Notification.Name("activityDefinitionChanged")
 	static let startDateChanged = Notification.Name("activityStartDateChanged")
@@ -51,6 +57,10 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 	static let noteChanged = Notification.Name("activityNoteChanged")
 	static let tagsChanged = Notification.Name("tagsChanged")
 	static let durationChanged = Notification.Name("activityDurationChanged")
+
+	// MARK: Logging
+
+	private static let log = Log()
 
 	// MARK: - Instance Variables
 
@@ -77,8 +87,6 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 	final var tagNames = Set<String>()
 
 	private final var saveButton: UIBarButtonItem!
-
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -178,7 +186,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 			cell = tagsCell
 		} else {
 			cell = UITableViewCell()
-			log.error("Missing cell customization case for edit activity")
+			Me.log.error("Missing cell customization case for edit activity")
 		}
 
 		return cell
@@ -321,7 +329,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 			}
 			navigationController?.popViewController(animated: false)
 		} catch {
-			log.error("Failed to create, edit or save activity: %@", errorInfo(error))
+			Me.log.error("Failed to create, edit or save activity: %@", errorInfo(error))
 			showError(title: "Failed to save activity instance", error: error)
 		}
 	}

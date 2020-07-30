@@ -47,6 +47,10 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	private static let setDosePresenter: Presentr = DependencyInjector.get(UiUtil.self)
 		.customPresenter(width: .custom(size: 300), height: .custom(size: 250), center: .center)
 
+	// MARK: Logging
+
+	private static let log = Log()
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var actionsButton: UIBarButtonItem!
@@ -133,8 +137,6 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	private final var actionsController: UIAlertController?
 
 	private final var failed = false
-
-	private final let log = Log()
 
 	// MARK: - UIViewController Overloads
 
@@ -226,7 +228,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			}
 			return "Entries"
 		} else {
-			log.error("Unexpected section index while getting section title")
+			Me.log.error("Unexpected section index while getting section title")
 			return nil
 		}
 	}
@@ -248,7 +250,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			return filteredSamples.count
 		}
 
-		log.error("Unexpected section index (%@) while determining number of rows in section", String(section))
+		Me.log.error("Unexpected section index (%@) while determining number of rows in section", String(section))
 		return 0
 	}
 
@@ -328,12 +330,12 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				cell.sleep = (sample as! Sleep)
 				return cell
 			default:
-				log.error("Forgot a type of Sample")
+				Me.log.error("Forgot a type of Sample")
 				return UITableViewCell()
 			}
 		}
 
-		log.error("Unexpected section index (%@) while instantiating cell", String(section))
+		Me.log.error("Unexpected section index (%@) while instantiating cell", String(section))
 		return UITableViewCell()
 	}
 
@@ -344,7 +346,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		} else {
 			let sample = filteredSamples[indexPath.row]
 			guard let allSamplesIndex = samples.firstIndex(where: { s in s.equalTo(sample) }) else {
-				log.error("Unable to find filtered sample in original samples")
+				Me.log.error("Unable to find filtered sample in original samples")
 				return
 			}
 			lastSelectedUnfilteredRowIndex = allSamplesIndex
@@ -488,7 +490,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 						self.tableView.reloadData()
 					}
 				} catch {
-					self.log.error("Failed to delete sample: %@", errorInfo(error))
+					Me.log.error("Failed to delete sample: %@", errorInfo(error))
 					self.showError(
 						title: "Failed to delete " + self.filteredSamples[indexPath.row].attributedName
 							.localizedLowercase,
@@ -520,7 +522,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 							self.tableView.reloadRows(at: [IndexPath(row: editIndex, section: 0)], with: .automatic)
 						}
 					} catch {
-						self.log.error(
+						Me.log.error(
 							"Failed to compute %@ information: %@",
 							selectedInformation!.name,
 							errorInfo(error)
@@ -534,7 +536,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 					}
 				}
 			} else {
-				log.error("Extra Information edit index was nil")
+				Me.log.error("Extra Information edit index was nil")
 				showError(title: "Failed to edit selected information")
 			}
 		}
@@ -543,7 +545,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	@objc private final func editedSample(notification: Notification) {
 		if let sample: Sample? = value(for: .sample, from: notification) {
 			guard let editIndex = lastSelectedRowIndex else {
-				log.error("edit index nil")
+				Me.log.error("edit index nil")
 				return
 			}
 			samples[lastSelectedUnfilteredRowIndex] = sample!
@@ -592,7 +594,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				case is FrequencyAttribute: self.sort(by: Frequency.self); break
 				case is DosageAttribute: self.sort(by: Dosage.self); break
 				default:
-					self.log.error("Unknown sort attribute type: %@", String(describing: type(of: self.sortAttribute)))
+					Me.log.error("Unknown sort attribute type: %@", String(describing: type(of: self.sortAttribute)))
 				}
 				self.sortTask = nil
 				DispatchQueue.main.async {
@@ -607,7 +609,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	@objc private final func searchNearby(notification: Notification) {
 		guard let duration: TimeDuration = value(for: .duration, from: notification) else {
-			log.error("Missing duration for searchNearby notification")
+			Me.log.error("Missing duration for searchNearby notification")
 			return
 		}
 		do {
@@ -630,7 +632,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 					duration: duration
 				)
 			} else {
-				log.error("Sample type has no dates: %@", selectedSearchNearbySampleType.name)
+				Me.log.error("Sample type has no dates: %@", selectedSearchNearbySampleType.name)
 			}
 			let controller = viewController(named: "results") as! ResultsViewController
 			query.runQuery { (result: QueryResult?, error: Error?) in
@@ -668,7 +670,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		let minDate = startDate - duration
 		let maxDate = endDate + duration
 		guard let startAttribute = sampleType.dateAttributes[.start] else {
-			log.error("Missing start attribute for %@", sampleType.name)
+			Me.log.error("Missing start attribute for %@", sampleType.name)
 			throw GenericDisplayableError(
 				title: "Unable to search nearby",
 				description: "You found a bug: please report RVCbnq1"
@@ -697,7 +699,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		let minDate = timestamp - duration
 		let maxDate = timestamp + duration
 		guard let startAttribute = sampleType.dateAttributes[.start] else {
-			log.error("Missing start attribute for %@", sampleType.name)
+			Me.log.error("Missing start attribute for %@", sampleType.name)
 			throw GenericDisplayableError(
 				title: "Unable to search nearby",
 				description: "You found a bug: please report RVCbnq3"
@@ -806,7 +808,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				)
 			}
 		} catch {
-			log.error("Failed to compute information: %@", errorInfo(error))
+			Me.log.error("Failed to compute information: %@", errorInfo(error))
 			showError(title: "You found a bug.", error: error)
 		}
 	}
@@ -828,7 +830,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 						self.navigationController?.popViewController(animated: false)
 					}
 				} catch {
-					self.log.error("Failed to delete all %@: %@", sampleType, errorInfo(error))
+					Me.log.error("Failed to delete all %@: %@", sampleType, errorInfo(error))
 					DispatchQueue.main.async {
 						self.showError(title: "Failed to delete all \(sampleType) records", error: error)
 					}
@@ -842,7 +844,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	private final func refreshQuery() {
 		query?.runQuery { result, error in
 			if let error = error {
-				self.log.error("Refresh query failed: %@", errorInfo(error))
+				Me.log.error("Refresh query failed: %@", errorInfo(error))
 			}
 			self.initialSampleSortDone = false
 			self.samples = result?.samples
@@ -880,7 +882,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			fromStoryboard: "RecordData"
 		) as! EditActivityTableViewController
 		guard let activity = filteredSamples[indexPath.row] as? Activity else {
-			log.error("Failed to cast result sample as Activity")
+			Me.log.error("Failed to cast result sample as Activity")
 			return
 		}
 		controller.activity = activity
@@ -898,7 +900,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 		let controller = viewController(named: "editMood", fromStoryboard: "Util") as! EditMoodTableViewController
 		guard let mood = filteredSamples[indexPath.row] as? Mood else {
-			log.error("Failed to cast result sample as Mood")
+			Me.log.error("Failed to cast result sample as Mood")
 			return
 		}
 		controller.mood = mood
@@ -919,7 +921,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			fromStoryboard: "RecordData"
 		) as! MedicationDoseEditorViewController
 		guard let dose = filteredSamples[indexPath.row] as? MedicationDose else {
-			log.error("Failed to cast result sample as MedicationDose")
+			Me.log.error("Failed to cast result sample as MedicationDose")
 			return
 		}
 		controller.medicationDose = dose
@@ -952,7 +954,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			do {
 				informationValues.append(try information[index].compute(forSamples: filteredSamples))
 			} catch {
-				log.error("Failed to compute %@ information: %@", information[index].name, errorInfo(error))
+				Me.log.error("Failed to compute %@ information: %@", information[index].name, errorInfo(error))
 				informationValues.append("") // avoid any index out of bounds errors
 			}
 		}
@@ -1001,7 +1003,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				return value1! >= value2!
 			}
 		} catch {
-			log.error("Failed to sort by %@: %@", String(describing: type), errorInfo(error))
+			Me.log.error("Failed to sort by %@: %@", String(describing: type), errorInfo(error))
 			tellUserSortFailed()
 		}
 	}

@@ -33,13 +33,11 @@ open class TypedMultiSelectAttribute<ValueType: Hashable>: AttributeBase<ValueTy
 		if let possibleValuesFunction = possibleValuesFunction {
 			return possibleValuesFunction()
 		}
-		log.error("Unable to determine possible values for multiselect attribute")
+		Log().error("Unable to determine possible values for multiselect attribute")
 		return []
 	}
 
 	final fileprivate let possibleValueToString: (ValueType) -> String
-
-	private final let log = Log()
 
 	// MARK: Initializers
 

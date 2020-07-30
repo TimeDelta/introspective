@@ -21,7 +21,6 @@ public final class MedianInformation<AttributeType: Comparable>: AnyInformation 
 	// MARK: - Instance Variables
 
 	final let noSamplesMessage = "No samples between given start and end dates"
-	private final let log = Log()
 
 	// MARK: - Initializers
 
@@ -61,7 +60,7 @@ public final class MedianInformation<AttributeType: Comparable>: AnyInformation 
 				let value2 = try $1.value(of: attribute) as? AttributeType {
 				return value1 < value2
 			}
-			self.log.error("Failed to compare %@ attribute of two %@ samples", attribute.name, $0.attributedName)
+			Log().error("Failed to compare %@ attribute of two %@ samples", attribute.name, $0.attributedName)
 			return true
 		})
 		let value = try sortedSamples[sortedSamples.count / 2].value(of: attribute)

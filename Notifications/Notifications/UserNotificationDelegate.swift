@@ -15,13 +15,19 @@ import DependencyInjection
 import Queries
 
 public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
+	// MARK: - Static Variables
+
 	private typealias Me = UserNotificationDelegate
+
+	private static let log = Log()
 
 	public static let generalError = basicCategory(id: "error occurred")
 
 	public static let extendTime = UNNotificationAction(identifier: "extendTime", title: "Continue")
 	public static let cancelTask = UNNotificationAction(identifier: "cancelTask", title: "Cancel Task")
 	public static let timeExpired = basicCategory(id: "time expired", actions: [extendTime, cancelTask])
+
+	// MARK: Activity Import
 
 	public static let showActivityHistory = UNNotificationAction(
 		identifier: "showActivityHistory",
@@ -33,6 +39,8 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 		actions: [showActivityHistory]
 	)
 
+	// MARK: Medication Import
+
 	public static let showMedicationHistory = UNNotificationAction(
 		identifier: "showMedicationHistory",
 		title: "Show Medications",
@@ -43,12 +51,16 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 		actions: [showMedicationHistory]
 	)
 
+	// MARK: Mood Import
+
 	public static let showMoodHistory = UNNotificationAction(
 		identifier: "showMoodHistory",
 		title: "Show Moods",
 		options: .foreground
 	)
 	public static let finishedImportingMoods = basicCategory(id: "finished importing moods", actions: [showMoodHistory])
+
+	// MARK: Export
 
 	public static let finishedExportingActivities = basicCategory(id: "finished exporting activities")
 	public static let finishedExportingMedications = basicCategory(id: "finished exporting medications")
@@ -65,7 +77,6 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 	// MARK: - Instance Variables
 
 	private final let window: UIWindow?
-	private final let log = Log()
 
 	// MARK: - Initializers
 
@@ -121,7 +132,7 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 			sendNotificationForTimeExpiredAction(.cancelBackgroundTask, content)
 			break
 		default:
-			log.error("Unknown response action identifier: %@", actionIdentifier)
+			Me.log.error("Unknown response action identifier: %@", actionIdentifier)
 		}
 		completionHandler()
 	}
@@ -136,7 +147,7 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 			sendNotificationForTimeExpiredAction(.cancelBackgroundTask, content)
 			break
 		default:
-			log.debug("Unhandled dismiss action category: %@", category)
+			Me.log.debug("Unhandled dismiss action category: %@", category)
 		}
 	}
 
@@ -148,7 +159,7 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 			sendNotificationForTimeExpiredAction(.extendBackgroundTaskTime, content)
 			break
 		default:
-			log.debug("Unhandled default action category: %@", category)
+			Me.log.debug("Unhandled default action category: %@", category)
 		}
 	}
 
@@ -173,7 +184,7 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 		_ content: UNNotificationContent
 	) {
 		guard let taskId = content.userInfo[UserInfoKey.backgroundTaskId.description] else {
-			log.error(
+			Me.log.error(
 				"Missing background task id on time expired user notification. Title: %@. Body: %@",
 				content.title,
 				content.body
@@ -196,7 +207,7 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 		if let tabController = window?.rootViewController as? UITabBarController {
 			tabController.selectedIndex = index
 		} else {
-			log.error("unable to find tab bar")
+			Me.log.error("unable to find tab bar")
 		}
 	}
 

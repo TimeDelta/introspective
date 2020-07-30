@@ -117,14 +117,17 @@ extension ActivityDAO {
 }
 
 public class ActivityDAOImpl: ActivityDAO {
-	private final let log = Log()
-	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "ActivityDAO"))
+	private typealias Me = ActivityDAOImpl
+
+	private static let log = Log()
+	private static let signpost =
+		Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "ActivityDAO"))
 
 	// MARK: - Getters
 
 	public final func getAllActivitiesForToday(_ activityDefinition: ActivityDefinition) throws -> [Activity] {
 		let signpostName: StaticString = "getAllActivitiesForToday"
-		signpost.begin(
+		Me.signpost.begin(
 			name: signpostName,
 			idObject: activityDefinition,
 			"estimated # activities: %d",
@@ -144,7 +147,7 @@ public class ActivityDAOImpl: ActivityDAO {
 			),
 		])
 		let activities = try DependencyInjector.get(Database.self).query(fetchRequest)
-		signpost.end(name: signpostName, idObject: activityDefinition, "actual # activities: %d", activities.count)
+		Me.signpost.end(name: signpostName, idObject: activityDefinition, "actual # activities: %d", activities.count)
 		return activities
 	}
 
@@ -161,7 +164,7 @@ public class ActivityDAOImpl: ActivityDAO {
 
 	public final func getMostRecentlyStartedActivity(for activityDefinition: ActivityDefinition) throws -> Activity? {
 		let signpostName: StaticString = "getMostRecentlyStartedActivity"
-		signpost.begin(
+		Me.signpost.begin(
 			name: signpostName,
 			idObject: activityDefinition,
 			"estimated # activities: %d",
@@ -174,7 +177,7 @@ public class ActivityDAOImpl: ActivityDAO {
 		fetchRequest.sortDescriptors = [NSSortDescriptor(key: keyName, ascending: false)]
 		let activities = try DependencyInjector.get(Database.self).query(fetchRequest)
 
-		signpost.end(
+		Me.signpost.end(
 			name: signpostName,
 			idObject: activityDefinition,
 			"actual # activities: %d",
@@ -235,14 +238,14 @@ public class ActivityDAOImpl: ActivityDAO {
 
 	public final func hasUnfinishedActivity(_ activityDefinition: ActivityDefinition) throws -> Bool {
 		let signpostName: StaticString = "hasUnfinishedActivity"
-		signpost.begin(name: signpostName, idObject: activityDefinition)
+		Me.signpost.begin(name: signpostName, idObject: activityDefinition)
 		let fetchRequest = basicFetchRequest(activityDefinition)
 		fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
 			fetchRequest.predicate!,
 			NSPredicate(format: "endDate == nil"),
 		])
 		let unfinishedActivities = try DependencyInjector.get(Database.self).query(fetchRequest)
-		signpost.end(name: signpostName, idObject: activityDefinition)
+		Me.signpost.end(name: signpostName, idObject: activityDefinition)
 		return !unfinishedActivities.isEmpty
 	}
 
@@ -344,7 +347,7 @@ public class ActivityDAOImpl: ActivityDAO {
 					try transaction.commit()
 					return true
 				} catch {
-					log.error("Failed to delete activity that should be auto-ignored: %@", errorInfo(error))
+					Me.log.error("Failed to delete activity that should be auto-ignored: %@", errorInfo(error))
 				}
 			}
 		}

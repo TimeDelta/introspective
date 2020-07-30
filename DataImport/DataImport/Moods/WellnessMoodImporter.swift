@@ -20,12 +20,21 @@ import Settings
 public protocol WellnessMoodImporter: MoodImporter {}
 
 public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImporter, CoreDataObject {
+	// MARK: - Static Variables
+
 	private typealias Me = WellnessMoodImporterImpl
+
+	private static let log = Log()
+
+	// MARK: CSV Column Names
+
 	public static let entityName = "WellnessMoodImporter"
 	private static let dateColumn = "Date"
 	private static let timeColumn = "Time"
 	private static let ratingColumn = "Rating"
 	private static let noteColumn = "Note"
+
+	// MARK: Instance Variables
 
 	public final let dataTypePluralName: String = "moods"
 	public final let sourceName: String = "Wellness"
@@ -40,8 +49,6 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 	private final let mainTransaction = DependencyInjector.get(Database.self).transaction()
 	private final var csv: CSVReader!
 	private final var latestDate: Date!
-
-	private final let log = Log()
 
 	public final func importData(from url: URL) throws {
 		csv = try DependencyInjector.get(IOUtil.self).csvReader(url: url, hasHeaderRow: true)
@@ -83,7 +90,7 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 
 	public final func resume() throws {
 		guard !isCancelled else {
-			log.error("Tried to resume a cancelled mood import from Wellness")
+			Me.log.error("Tried to resume a cancelled mood import from Wellness")
 			return
 		}
 
@@ -101,7 +108,7 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 			lastImport = latestDate
 			try retryOnFail({ try mainTransaction.commit() }, maxRetries: 2)
 		} catch {
-			log.error("Failed to import moods from Wellness: %@", errorInfo(error))
+			Me.log.error("Failed to import moods from Wellness: %@", errorInfo(error))
 			throw error
 		}
 	}

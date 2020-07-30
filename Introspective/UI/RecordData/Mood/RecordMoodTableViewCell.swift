@@ -19,12 +19,15 @@ final class RecordMoodTableViewCell: UITableViewCell {
 	// MARK: - Static Variables
 
 	private typealias Me = RecordMoodTableViewCell
+
 	private static let notePresenter: Presentr = DependencyInjector.get(UiUtil.self)
 		.customPresenter(width: .custom(size: 300), height: .custom(size: 200), center: .topCenter)
 	private static let ratingPresenter: Presentr = DependencyInjector.get(UiUtil.self)
 		.customPresenter(width: .custom(size: 300), height: .custom(size: 70), center: .topCenter)
 
 	private static let ratingChanged = Notification.Name("moodRatingChanged")
+
+	private static let log = Log()
 
 	// MARK: - IBOutlets
 
@@ -42,8 +45,6 @@ final class RecordMoodTableViewCell: UITableViewCell {
 	private final var rating: Double = DependencyInjector.get(Settings.self).maxMood / 2 {
 		didSet { updateUI() }
 	}
-
-	private final let log = Log()
 
 	// MARK: - UIView Overrides
 
@@ -119,7 +120,7 @@ final class RecordMoodTableViewCell: UITableViewCell {
 
 			reset()
 		} catch {
-			log.error("Failed to create or save mood: %@", errorInfo(error))
+			Me.log.error("Failed to create or save mood: %@", errorInfo(error))
 			NotificationCenter.default.post(
 				name: RecordDataTableViewController.showErrorMessage,
 				object: self,

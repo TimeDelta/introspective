@@ -24,7 +24,13 @@ public final class IntrospectiveMoodImporterImpl: NSManagedObject, Introspective
 
 	private typealias Me = IntrospectiveMoodImporterImpl
 
+	// MARK: CoreData
+
 	public static let entityName = "IntrospectiveMoodImporter"
+
+	// MARK: Logging
+
+	private static let log = Log()
 
 	// MARK: - Instance Variables
 
@@ -44,8 +50,6 @@ public final class IntrospectiveMoodImporterImpl: NSManagedObject, Introspective
 	private final let mainTransaction = DependencyInjector.get(Database.self).transaction()
 	private final var csv: CSVReader!
 	private final var latestDate: Date!
-
-	private final let log = Log()
 
 	// MARK: - Main Functions
 
@@ -89,7 +93,7 @@ public final class IntrospectiveMoodImporterImpl: NSManagedObject, Introspective
 
 	public final func resume() throws {
 		guard !isCancelled else {
-			log.error("Tried to resume a cancelled mood import from Introspective")
+			Me.log.error("Tried to resume a cancelled mood import from Introspective")
 			return
 		}
 
@@ -107,7 +111,7 @@ public final class IntrospectiveMoodImporterImpl: NSManagedObject, Introspective
 			lastImport = latestDate
 			try retryOnFail({ try mainTransaction.commit() }, maxRetries: 2)
 		} catch {
-			log.error("Failed to import moods from Introspective: %@", errorInfo(error))
+			Me.log.error("Failed to import moods from Introspective: %@", errorInfo(error))
 			throw error
 		}
 	}
@@ -191,8 +195,11 @@ public final class IntrospectiveMoodImporterImpl: NSManagedObject, Introspective
 			let currentLine = csv.currentRow?.joined(separator: ",") ?? ""
 			throw InvalidFileFormatError("No timestamp for record \(recordNumber): \(currentLine)")
 		}
-		guard let date = DependencyInjector.get(CalendarUtil.self)
-			.date(from: dateString, dateStyle: .full, timeStyle: .full) else {
+		guard let date = DependencyInjector.get(CalendarUtil.self).date(
+			from: dateString,
+			dateStyle: .full,
+			timeStyle: .full
+		) else {
 			throw InvalidFileFormatError("Invalid date / time format for record \(recordNumber).")
 		}
 		return date
@@ -203,12 +210,14 @@ public final class IntrospectiveMoodImporterImpl: NSManagedObject, Introspective
 	}
 
 	private final func shouldImport(_ date: Date) -> Bool {
+		// swiftformat:disable all
 		!importOnlyNewData || // user doesn't care about data duplication -> import everything
-			lastImport == nil || ( // never imported before -> import everything
-				importOnlyNewData &&
-					lastImport != nil &&
-					date.isAfterDate(lastImport!, granularity: .nanosecond)
-			)
+		lastImport == nil || ( // never imported before -> import everything
+			importOnlyNewData &&
+			lastImport != nil &&
+			date.isAfterDate(lastImport!, granularity: .nanosecond)
+		)
+		// swiftformat:enable all
 	}
 }
 

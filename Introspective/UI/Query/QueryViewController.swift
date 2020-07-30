@@ -46,8 +46,13 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	// MARK: - Static Variables
 
 	private typealias Me = QueryViewControllerImpl
+
+	// MARK: Notification Names
+
 	private static let acceptedAttributeRestrictionEdit = Notification.Name("acceptedAttributeRestrictionEdit")
 	private static let acceptedSubSampleTypeEdit = Notification.Name("acceptedSubSampleTypeEdit")
+
+	// MARK: Presenters
 
 	private static let editSampleTypePresenter: Presentr = {
 		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 200), center: .center)
@@ -57,6 +62,10 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		customPresenter.roundCorners = true
 		return customPresenter
 	}()
+
+	// MARK: Logging
+
+	private static let log = Log()
 
 	// MARK: - IBOutlets
 
@@ -78,8 +87,6 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	final var queries = [(sampleTypeInfo: SampleTypeInfo, parts: [BooleanExpressionPart])]()
 	private final var editedSampleTypeSectionIndex: Int!
 	private final var editedAttributeRestrictionIndex: IndexPath!
-
-	private final let log = Log()
 
 	/// Have to maintain a strong reference to this or instructions won't show
 	private final var coachMarksController = DependencyInjector.get(CoachMarkFactory.self).controller()
@@ -182,7 +189,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 				cell.indentationLevel = getIndentationLevelFor(indexPath)
 				return cell
 			}
-			log.error("Unknown expression type in query")
+			Me.log.error("Unknown expression type in query")
 			break
 		case .and:
 			return andCell(for: indexPath)
@@ -193,7 +200,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		case .groupEnd:
 			return groupEndCell(for: indexPath)
 		}
-		log.error("Forgot a type of cell: %@", String(describing: part))
+		Me.log.error("Forgot a type of cell: %@", String(describing: part))
 		return UITableViewCell()
 	}
 
@@ -210,7 +217,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	public final override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		if let fromPart = getPartFor(fromIndexPath) {
 			guard to.section != 0 || to.row != 0 else {
-				log.debug("User tried to move non-data-type query part to top row of query")
+				Me.log.debug("User tried to move non-data-type query part to top row of query")
 				return
 			}
 			if fromPart.type != .expression {
@@ -307,7 +314,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	@IBAction final func finishedButtonPressed(_: Any) {
 		guard let query = buildQuery() else {
-			log.error("buildQuery() returned nil")
+			Me.log.error("buildQuery() returned nil")
 			showError(title: "Failed to build query")
 			return
 		}
@@ -354,7 +361,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 			controller.sampleType = queries[editedAttributeRestrictionIndex.section].sampleTypeInfo.sampleType
 			guard let attributeRestriction = getPartFor(editedAttributeRestrictionIndex)?
 				.expression as? AttributeRestriction else {
-				log.error("Expected attribute restriction for segue but did not get one")
+				Me.log.error("Expected attribute restriction for segue but did not get one")
 				return
 			}
 			controller.attributeRestriction = attributeRestriction
@@ -381,7 +388,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	@objc final func saveEditedAttributeRestriction(notification: Notification) {
 		if let attributeRestriction: AttributeRestriction? = value(for: .attributeRestriction, from: notification) {
 			guard let index = editedAttributeRestrictionIndex else {
-				log.error("editedAttributeRestrictionIndex was nil")
+				Me.log.error("editedAttributeRestrictionIndex was nil")
 				return
 			}
 			queries[index.section].parts[index.row - 1].expression = attributeRestriction
@@ -476,7 +483,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	private final func ensureValidExpression(at indexPath: IndexPath) {
 		guard let attributeRestriction = getPartFor(indexPath)?.expression as? AttributeRestriction else {
-			log.error("Expected attribute restriction while ensuring valid expression")
+			Me.log.error("Expected attribute restriction while ensuring valid expression")
 			return
 		}
 		let sampleType = bottomMostSampleTypeAbove(indexPath)
@@ -508,7 +515,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		case is SexualActivityQuery: addQuerySampleType(SexualActivity.self, matcher); break
 		case is SleepQuery: addQuerySampleType(Sleep.self, matcher); break
 		case is WeightQuery: addQuerySampleType(Weight.self, matcher); break
-		default: log.error("Forgot query type: %@", String(describing: type(of: query)))
+		default: Me.log.error("Forgot query type: %@", String(describing: type(of: query)))
 		}
 		if let expression = query.expression {
 			populateExpression(expression)
@@ -539,7 +546,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 			queries[queries.count - 1].parts.append((type: .expression, expression: attributeRestriction))
 			partWasAdded()
 		} else {
-			log.error("Unknown expression type")
+			Me.log.error("Unknown expression type")
 			showError(
 				title: "You found a bug",
 				message: "Please report that you found a bug with expression population."

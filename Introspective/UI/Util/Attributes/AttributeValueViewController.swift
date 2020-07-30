@@ -16,8 +16,11 @@ final class AttributeValueViewController: UIViewController {
 	// MARK: - Static Variables
 
 	private typealias Me = AttributeValueViewController
+
 	private static let valueIsInvalidNotification = Notification.Name("invalidValue")
 	private static let valueIsValidNotification = Notification.Name("validValue")
+
+	private static let log = Log()
 
 	// MARK: - IBOutlets
 
@@ -31,8 +34,6 @@ final class AttributeValueViewController: UIViewController {
 	public final var attributeValue: Any!
 
 	private final var subViewController: AttributeValueTypeViewController!
-
-	private final let log = Log()
 
 	// MARK: UIViewController Overrides
 
@@ -71,7 +72,7 @@ final class AttributeValueViewController: UIViewController {
 			controller.currentValue = attributeValue
 			subViewController = controller
 		} else {
-			log.error("Unknown attribute type: %@", String(describing: type(of: attribute)))
+			Me.log.error("Unknown attribute type: %@", String(describing: type(of: attribute)))
 		}
 
 		if subViewController != nil {

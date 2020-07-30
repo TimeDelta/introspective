@@ -22,6 +22,12 @@ public protocol MedicationDoseEditorViewController: UIViewController {
 }
 
 public final class MedicationDoseEditorViewControllerImpl: UIViewController, MedicationDoseEditorViewController {
+	// MARK: - Static Variables
+
+	private typealias Me = MedicationDoseEditorViewControllerImpl
+
+	private static let log = Log()
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var dosageLabel: UILabel!
@@ -36,8 +42,6 @@ public final class MedicationDoseEditorViewControllerImpl: UIViewController, Med
 	public final var medication: Medication!
 	public final var notificationToSendOnAccept: Notification.Name!
 	public final var userInfoKey: UserInfoKey = .dose
-
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -85,7 +89,7 @@ public final class MedicationDoseEditorViewControllerImpl: UIViewController, Med
 			)
 			dismiss(animated: false, completion: nil)
 		} catch {
-			log.error("Failed to create medication dose: %@", errorInfo(error))
+			Me.log.error("Failed to create medication dose: %@", errorInfo(error))
 			showError(title: "Failed to save dose", error: error, tryAgain: { self.saveButtonPressed(sender) })
 		}
 	}

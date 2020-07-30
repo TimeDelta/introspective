@@ -11,15 +11,19 @@ import UIKit
 import Common
 
 public class ActivitySettingTableViewCell: UITableViewCell {
+	// MARK: - Static Variables
+
+	private typealias Me = ActivitySettingTableViewCell
+
+	private static let log = Log()
+
 	// MARK: - Instance Variables
 
 	final var changeNotification: Notification.Name!
 
-	private final let log = Log()
-
 	// MARK: - Functions
 
 	func reset() {
-		log.error("reset() not overriden")
+		Me.log.error("reset() not overriden")
 	}
 }

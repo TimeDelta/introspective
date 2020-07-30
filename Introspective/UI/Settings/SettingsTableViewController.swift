@@ -40,7 +40,7 @@ public final class SettingsTableViewController: UITableViewController {
 		),
 	]
 
-	// MARK: - Member Variables
+	// MARK: - Instance Variables
 
 	private final var disableGenerateTestDataCell = false
 

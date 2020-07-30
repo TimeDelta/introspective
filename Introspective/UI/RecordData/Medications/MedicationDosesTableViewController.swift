@@ -19,8 +19,14 @@ public final class MedicationDosesTableViewController: UITableViewController {
 	// MARK: - Static Variables
 
 	private typealias Me = MedicationDosesTableViewController
+
+	// MARK: Notification Names
+
 	static let dateRangeSet = Notification.Name("medicationDosesTableDateRangeSet")
 	static let medicationDoseEdited = Notification.Name("medicationDoseEdited")
+
+	// MARK: Presenters
+
 	private static let dateFilterPresenter: Presentr = {
 		let customType = PresentationType.custom(width: .default, height: .custom(size: 438), center: .center)
 		let customPresenter = Presentr(presentationType: customType)
@@ -40,6 +46,10 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		customPresenter.roundCorners = true
 		return customPresenter
 	}()
+
+	// MARK: Logging
+
+	private static let log = Log()
 
 	// MARK: - IBOutlets
 
@@ -61,8 +71,6 @@ public final class MedicationDosesTableViewController: UITableViewController {
 	private final var filterStartDate: Date?
 	private final var filterEndDate: Date?
 	private final var lastClickedIndex: Int!
-
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -129,7 +137,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 							tableView.deleteRows(at: [indexPath], with: .fade)
 							tableView.reloadData()
 						} catch {
-							self.log.error("Failed to delete medication dose: %@", errorInfo(error))
+							Me.log.error("Failed to delete medication dose: %@", errorInfo(error))
 							self.showError(title: "Failed to delete dose", error: error)
 						}
 					})
@@ -187,7 +195,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 				resetFilteredDoses()
 				tableView.reloadData()
 			} catch {
-				log.error("Failed to save medication and dose edit: %@", errorInfo(error))
+				Me.log.error("Failed to save medication and dose edit: %@", errorInfo(error))
 				showError(
 					title: "Failed to save dose of \(medication.name)",
 					error: error,

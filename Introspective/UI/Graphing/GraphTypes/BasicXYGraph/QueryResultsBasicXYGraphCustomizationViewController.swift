@@ -23,12 +23,24 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	// MARK: - Static Variables
 
 	private typealias Me = QueryResultsBasicXYGraphCustomizationViewController
+
+	// MARK: Presenters
+
 	private static let aggregationChanged = Notification.Name("aggregationChanged")
 	private static let presenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
 		center: .center
 	)
+
+	// MARK: Logging / Performance
+
+	private static let log = Log()
+	private static let signpost =
+		Signpost(log: OSLog(
+			subsystem: Bundle.main.bundleIdentifier!,
+			category: "QueryResultsBasicXYGraphCustomizationViewController"
+		))
 
 	// MARK: - IBOutlets
 
@@ -64,13 +76,6 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	}
 
 	private final var chartController: BasicXYChartViewController!
-
-	private final let log = Log()
-	private final let signpost =
-		Signpost(log: OSLog(
-			subsystem: Bundle.main.bundleIdentifier!,
-			category: "QueryResultsBasicXYGraphCustomizationViewController"
-		))
 
 	// MARK: - UIViewController Overrides
 
@@ -170,7 +175,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 			do {
 				try self.updateChartData()
 			} catch {
-				self.log.error("Failed to update chart data: %@", errorInfo(error))
+				Me.log.error("Failed to update chart data: %@", errorInfo(error))
 				DispatchQueue.main.async {
 					self.chartController.showError(title: "Failed to gather required data", error: error)
 				}
@@ -220,7 +225,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 			usePointGroupValueForXAxis = usePointGroupValue
 			xAxis = nil
 		} else {
-			log.error("Missing both optional attributes in x-axis setup notification")
+			Me.log.error("Missing both optional attributes in x-axis setup notification")
 		}
 	}
 

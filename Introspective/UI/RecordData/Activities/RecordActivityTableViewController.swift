@@ -26,15 +26,25 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private typealias Me = RecordActivityTableViewController
 
+	// MARK: Notification Names
+
 	private static let activityDefinitionCreated = Notification.Name("activityDefinitionCreated")
 	private static let activityEditedOrCreated = Notification.Name("activityEdited")
 	private static let activityDefinitionEdited = Notification.Name("activityDefinitionEdited")
+
+	// MARK: Presenters
 
 	private static let presenter = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .full,
 		height: .custom(size: 300),
 		center: .topCenter
 	)
+
+	// MARK: Logging / Performance
+
+	private static let signpost =
+		Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Activity Display"))
+	private static let log = Log()
 
 	// MARK: - Instance Variables
 
@@ -57,10 +67,6 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final let coachMarksController = CoachMarksController()
 	private final var coachMarksDataSourceAndDelegate: CoachMarksDataSourceAndDelegate!
-
-	private final let signpost =
-		Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Activity Display"))
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -143,7 +149,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 				return fetchedObjects.count
 			}
 		}
-		log.error("Unable to determine number of expected rows because fetched objects was nil")
+		Me.log.error("Unable to determine number of expected rows because fetched objects was nil")
 		return 0
 	}
 
@@ -182,7 +188,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 			if let activity = getMostRecentlyStartedIncompleteActivity(for: activityDefinition) {
 				stopActivity(activity, associatedCell: cell)
 			} else {
-				log.error("Could not find activity to stop.")
+				Me.log.error("Could not find activity to stop.")
 				showError(title: "Failed to stop activity")
 			}
 		} else {
@@ -208,7 +214,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 					if let definition = allFetchedResultsController.fetchedObjects?[i] {
 						try transaction.pull(savedObject: definition).recordScreenIndex -= 1
 					} else {
-						log.error("Failed to get activity definition for index %d", i)
+						Me.log.error("Failed to get activity definition for index %d", i)
 					}
 				}
 			} else {
@@ -216,18 +222,18 @@ public final class RecordActivityTableViewController: UITableViewController {
 					if let definition = allFetchedResultsController.fetchedObjects?[i] {
 						try transaction.pull(savedObject: definition).recordScreenIndex += 1
 					} else {
-						log.error("Failed to get activity definition for index %d", i)
+						Me.log.error("Failed to get activity definition for index %d", i)
 					}
 				}
 			}
 			if let definition = allFetchedResultsController.fetchedObjects?[definitionsFromIndex] {
 				try transaction.pull(savedObject: definition).recordScreenIndex = Int16(definitionsToIndex)
 			} else {
-				log.error("Failed to get activity definition for index %d", definitionsFromIndex)
+				Me.log.error("Failed to get activity definition for index %d", definitionsFromIndex)
 			}
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 		} catch {
-			log.error("Failed to reorder activities: %@", errorInfo(error))
+			Me.log.error("Failed to reorder activities: %@", errorInfo(error))
 		}
 		resetInactiveActivitiesFetchedResultsController()
 		tableView.reloadSections(IndexSet(arrayLiteral: 1), with: .automatic)
@@ -317,7 +323,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 					self.loadActivitiyDefinitions()
 				} catch {
-					self.log.error("Failed to delete activity: %@", errorInfo(error))
+					Me.log.error("Failed to delete activity: %@", errorInfo(error))
 					self.showError(title: "Failed to delete activity instance", error: error)
 				}
 			})
@@ -376,7 +382,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 					self.loadActivitiyDefinitions()
 				} catch {
-					self.log.error("Failed to delete activity definition: %@", errorInfo(error))
+					Me.log.error("Failed to delete activity definition: %@", errorInfo(error))
 					self.showError(title: "Failed to delete activity", error: error)
 				}
 			})
@@ -421,7 +427,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 				}
 				loadActivitiyDefinitions()
 			} catch {
-				log.error("Failed to save activity definition: %@", errorInfo(error))
+				Me.log.error("Failed to save activity definition: %@", errorInfo(error))
 				showError(
 					title: "Failed to save activity",
 					error: error,
@@ -439,10 +445,9 @@ public final class RecordActivityTableViewController: UITableViewController {
 		if let indexPath = definitionEditIndex {
 			tableView.reloadRows(at: [indexPath], with: .automatic)
 		} else {
-			log
-				.error(
-					"Failed to find activity definition in original set. Resorting to reload of activity definitions."
-				)
+			Me.log.error(
+				"Failed to find activity definition in original set. Resorting to reload of activity definitions."
+			)
 			loadActivitiyDefinitions()
 		}
 	}
@@ -612,7 +617,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 				searchController.searchBar.text = ""
 				loadActivitiyDefinitions()
 			} catch {
-				log.error("Failed to quick create / start activity: %@", errorInfo(error))
+				Me.log.error("Failed to quick create / start activity: %@", errorInfo(error))
 				showError(
 					title: "Failed to create and start",
 					message: "Something went wrong while trying to save this activity. Sorry for the inconvenience.",
@@ -631,7 +636,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 			// just calling updateUiElements here doesn't display the progress indicator for some reason
 			cell.activityDefinition = try DependencyInjector.get(Database.self).pull(savedObject: activityDefinition)
 		} catch {
-			log.error("Failed to start activity: %@", errorInfo(error))
+			Me.log.error("Failed to start activity: %@", errorInfo(error))
 			showError(title: "Failed to start activity", error: error)
 		}
 	}
@@ -701,7 +706,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 			return try DependencyInjector.get(ActivityDAO.self)
 				.getMostRecentlyStartedIncompleteActivity(for: activityDefinition)
 		} catch {
-			log.error("Failed to fetch most recent activity: %@", errorInfo(error))
+			Me.log.error("Failed to fetch most recent activity: %@", errorInfo(error))
 			return nil
 		}
 	}
@@ -711,7 +716,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 			return try DependencyInjector.get(ActivityDAO.self)
 				.getMostRecentlyStartedActivity(for: activityDefinition)
 		} catch {
-			log.error("Failed to fetch activities while retrieving most recent: %@", errorInfo(error))
+			Me.log.error("Failed to fetch activities while retrieving most recent: %@", errorInfo(error))
 			return nil
 		}
 	}
@@ -752,7 +757,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final func resetActiveActivitiesFetchedResultsController() {
 		do {
-			signpost.begin(name: "resetting active fetched results controller")
+			Me.signpost.begin(name: "resetting active fetched results controller")
 			activeActivitiesFetchedResultsController = DependencyInjector.get(Database.self).fetchedResultsController(
 				type: ActivityDefinition.self,
 				sortDescriptors: [currentSort ?? defaultSort],
@@ -773,9 +778,9 @@ public final class RecordActivityTableViewController: UITableViewController {
 			}
 
 			try activeActivitiesFetchedResultsController.performFetch()
-			signpost.end(name: "resetting active fetched results controller")
+			Me.signpost.end(name: "resetting active fetched results controller")
 		} catch {
-			log.error("Failed to fetch active activities: %@", errorInfo(error))
+			Me.log.error("Failed to fetch active activities: %@", errorInfo(error))
 			showError(
 				title: "Failed to retrieve activities",
 				message: "Something went wrong while trying to retrieve the list of your activities. Sorry for the inconvenience.",
@@ -787,7 +792,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final func resetInactiveActivitiesFetchedResultsController() {
 		do {
-			signpost.begin(name: "resetting inactive fetched results controller")
+			Me.signpost.begin(name: "resetting inactive fetched results controller")
 			inactiveActivitiesFetchedResultsController = DependencyInjector.get(Database.self).fetchedResultsController(
 				type: ActivityDefinition.self,
 				sortDescriptors: [currentSort ?? defaultSort],
@@ -808,9 +813,9 @@ public final class RecordActivityTableViewController: UITableViewController {
 			}
 
 			try inactiveActivitiesFetchedResultsController.performFetch()
-			signpost.end(name: "resetting inactive fetched results controller")
+			Me.signpost.end(name: "resetting inactive fetched results controller")
 		} catch {
-			log.error("Failed to fetch activities: %@", errorInfo(error))
+			Me.log.error("Failed to fetch activities: %@", errorInfo(error))
 			showError(
 				title: "Failed to retrieve activities",
 				message: "Something went wrong while trying to retrieve the list of your activities. Sorry for the inconvenience.",
@@ -821,14 +826,14 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func getAllFetchedResultsController() throws -> NSFetchedResultsController<ActivityDefinition> {
-		signpost.begin(name: "getting all fetched results controller")
+		Me.signpost.begin(name: "getting all fetched results controller")
 		let controller = DependencyInjector.get(Database.self).fetchedResultsController(
 			type: ActivityDefinition.self,
 			sortDescriptors: [currentSort ?? defaultSort],
 			cacheName: "definitions"
 		)
 		try controller.performFetch()
-		signpost.end(name: "getting all fetched results controller")
+		Me.signpost.end(name: "getting all fetched results controller")
 		return controller
 	}
 }
@@ -857,11 +862,15 @@ final fileprivate class RecordActivityTableViewControllerCoachMarksDataSourceAnd
 	private typealias Super = DefaultCoachMarksDataSourceAndDelegate
 	private typealias ControllerClass = RecordActivityTableViewController
 
+	// MARK: Static Variables
+
 	private static let exampleActivityName = "Example activity"
 
-	private weak final var controller: RecordActivityTableViewController?
+	private static let log = Log()
 
-	private final let log = Log()
+	// MARK: Instance Variables
+
+	private weak final var controller: RecordActivityTableViewController?
 
 	private lazy final var coachMarksInfo: [CoachMarkInfo] = [
 		CoachMarkInfo(
@@ -956,9 +965,13 @@ final fileprivate class RecordActivityTableViewControllerCoachMarksDataSourceAnd
 		)
 	}()
 
+	// MARK: Initializers
+
 	public init(_ controller: RecordActivityTableViewController) {
 		self.controller = controller
 	}
+
+	// MARK: Functions
 
 	public final func coachMarksController(
 		_ coachMarksController: CoachMarksController,
@@ -1006,19 +1019,19 @@ final fileprivate class RecordActivityTableViewControllerCoachMarksDataSourceAnd
 				controller?.loadActivitiyDefinitions()
 			}
 		} catch {
-			log.error("Failed to delete example activity: %@", errorInfo(error))
+			Me.log.error("Failed to delete example activity: %@", errorInfo(error))
 		}
 	}
 
 	private final func getExampleActivityCell() -> RecordActivityDefinitionTableViewCell? {
 		guard let controller = self.controller else { return nil }
 		guard controller.tableView.visibleCells.count > 0 else {
-			log.error("No visible cells while trying to present instruction")
+			Me.log.error("No visible cells while trying to present instruction")
 			return nil
 		}
 		let cell = controller.tableView.visibleCells[0]
 		guard let exampleActivityCell = cell as? RecordActivityDefinitionTableViewCell else {
-			log.error(
+			Me.log.error(
 				"unable to cast to RecordActivityDefinitionTableViewCell: was a %@",
 				String(describing: type(of: cell))
 			)

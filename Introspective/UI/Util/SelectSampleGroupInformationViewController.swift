@@ -25,6 +25,12 @@ protocol SelectSampleGroupInformationViewController: UIViewController {
 
 final class SelectSampleGroupInformationViewControllerImpl: UIViewController,
 	SelectSampleGroupInformationViewController {
+	// MARK: - Static Variables
+
+	private typealias Me = SelectSampleGroupInformationViewControllerImpl
+
+	private static let log = Log()
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var attributePicker: UIPickerView!
@@ -38,8 +44,6 @@ final class SelectSampleGroupInformationViewControllerImpl: UIViewController,
 	public final var limitToNumericInformation: Bool = false
 	public final var notificationToSendWhenFinished: NotificationName!
 	public final var notificationFilter: Any?
-
-	private final let log = Log()
 
 	// MARK: - UIViewController Overloads
 
@@ -57,7 +61,7 @@ final class SelectSampleGroupInformationViewControllerImpl: UIViewController,
 		if let selectedAttributeIndex = attributes.index(where: { $0.equalTo(selectedAttribute) }) {
 			attributePicker.selectRow(selectedAttributeIndex, inComponent: 0, animated: false)
 		} else {
-			log.error("Failed to find attribute in attributes array")
+			Me.log.error("Failed to find attribute in attributes array")
 		}
 
 		if let selectedInformationIndex = indexOfSelectedInformation() {
@@ -104,7 +108,7 @@ final class SelectSampleGroupInformationViewControllerImpl: UIViewController,
 		let index = getApplicableInformationTypesForSelectedAttribute()
 			.index(where: { $0.init(selectedAttribute).equalTo(selectedInformation!) })
 		if index == nil {
-			log.error("Failed to find information in information array")
+			Me.log.error("Failed to find information in information array")
 		}
 		return index
 	}
@@ -124,7 +128,7 @@ extension SelectSampleGroupInformationViewControllerImpl: UIPickerViewDataSource
 		if pickerView == informationPicker {
 			return getApplicableInformationTypesForSelectedAttribute().count
 		}
-		log.error("Unknown picker view while attempting to retrieve number of rows")
+		Me.log.error("Unknown picker view while attempting to retrieve number of rows")
 		return 0
 	}
 }
@@ -140,7 +144,7 @@ extension SelectSampleGroupInformationViewControllerImpl: UIPickerViewDelegate {
 			return getApplicableInformationTypesForSelectedAttribute()[row].init(selectedAttribute).name
 				.localizedCapitalized
 		}
-		log.error("Unknown picker view while attempting to retrieve title for row")
+		Me.log.error("Unknown picker view while attempting to retrieve title for row")
 		return nil
 	}
 
@@ -158,6 +162,6 @@ extension SelectSampleGroupInformationViewControllerImpl: UIPickerViewDelegate {
 		if pickerView == informationPicker {
 			selectedInformation = getApplicableInformationTypesForSelectedAttribute()[row].init(selectedAttribute)
 		}
-		log.error("Unknown picker view while running didSelectRow")
+		Me.log.error("Unknown picker view while running didSelectRow")
 	}
 }

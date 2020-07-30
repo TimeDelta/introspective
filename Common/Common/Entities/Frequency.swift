@@ -50,6 +50,8 @@ public final class Frequency: NSObject, NSSecureCoding, Codable, Comparable {
 		.year,
 	]
 
+	private static let log = Log()
+
 	// MARK: - Instance Variables
 
 	public final var timesPerTimeUnit: Double
@@ -67,8 +69,6 @@ public final class Frequency: NSObject, NSSecureCoding, Codable, Comparable {
 		text += " per " + timeUnit.description.localizedLowercase
 		return text
 	}
-
-	private final let log = Log()
 
 	// MARK: - Initializers
 
@@ -90,7 +90,7 @@ public final class Frequency: NSObject, NSSecureCoding, Codable, Comparable {
 
 	public init?(_ timesPerTimeUnit: Double, _ timeUnit: Calendar.Component) {
 		guard Me.supportedTimeUnits.contains(timeUnit) else {
-			log.error("Tried to initialize frequency with invalid time unit: %@", timeUnit.description)
+			Me.log.error("Tried to initialize frequency with invalid time unit: %@", timeUnit.description)
 			return nil
 		}
 		self.timesPerTimeUnit = timesPerTimeUnit

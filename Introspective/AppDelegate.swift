@@ -30,12 +30,11 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 	private typealias Me = AppDelegate
 
 	private static var wasInBackground = false
+	private static let log = Log()
 
 	final var window: UIWindow?
 
 	private final var userNotificationDelegate: UserNotificationDelegate!
-
-	private final let log = Log()
 
 	final func application(
 		_: UIApplication,
@@ -63,10 +62,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		let options: UNAuthorizationOptions = [.alert, .sound, .badge]
 		UNUserNotificationCenter.current().requestAuthorization(options: options) { granted, error in
 			if let error = error {
-				self.log.error("Failed to request authorization for notifications: %@", errorInfo(error))
+				Me.log.error("Failed to request authorization for notifications: %@", errorInfo(error))
 			}
 			if !granted {
-				self.log.info("Notifications not authorized")
+				Me.log.info("Notifications not authorized")
 			}
 		}
 

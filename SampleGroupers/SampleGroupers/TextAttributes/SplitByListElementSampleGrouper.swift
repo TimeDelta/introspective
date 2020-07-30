@@ -32,8 +32,6 @@ public final class SplitByListElementSampleGrouper: SampleGrouper {
 
 	public final var groupByAttribute: TextAttribute?
 
-	private final let log = Log()
-
 	// MARK: - Initializers
 
 	public required convenience init(sampleType: Sample.Type) {

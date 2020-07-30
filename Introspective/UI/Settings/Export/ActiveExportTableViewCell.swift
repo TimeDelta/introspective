@@ -13,6 +13,12 @@ import DataExport
 import DependencyInjection
 
 public final class ActiveExportTableViewCell: UITableViewCell {
+	// MARK: - Static Variables
+
+	private typealias Me = ActiveExportTableViewCell
+
+	private static let log = Log()
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var cancelButton: UIButton!
@@ -35,7 +41,6 @@ public final class ActiveExportTableViewCell: UITableViewCell {
 	}
 
 	private final var timer: Timer!
-	private final let log = Log()
 
 	// MARK: - UITableViewCell Overrides
 
@@ -88,7 +93,7 @@ public final class ActiveExportTableViewCell: UITableViewCell {
 		if let percentString = numberFormatter.string(from: NSNumber(value: percentComplete)) {
 			percentLabel.text = percentString
 		} else {
-			log.error("Unable to convert %f to string", percentComplete * 100)
+			Me.log.error("Unable to convert %f to string", percentComplete * 100)
 		}
 		if progressView.progress == 1 {
 			timer?.invalidate()

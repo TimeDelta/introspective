@@ -17,6 +17,11 @@ public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Eq
 	// MARK: - Static Variables
 
 	private typealias Me = OnDayOfWeekAttributeRestriction
+
+	private static let log = Log()
+
+	// MARK: - Attributes
+
 	public static let daysOfWeekAttribute = DaysOfWeekAttribute()
 	public static var attributes: [Attribute] = [
 		daysOfWeekAttribute,
@@ -30,7 +35,7 @@ public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Eq
 			let daysOfWeekText = try Me.daysOfWeekAttribute.convertToDisplayableString(from: daysOfWeek)
 			return "On a " + daysOfWeekText
 		} catch {
-			log.error("Failed to convert days of week to displayable string: %@", errorInfo(error))
+			Me.log.error("Failed to convert days of week to displayable string: %@", errorInfo(error))
 			var daysOfWeekText = ""
 			var index = 0
 			for day in daysOfWeek {
@@ -49,7 +54,6 @@ public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Eq
 	// MARK: - Instance Variables
 
 	public final var daysOfWeek: Set<DayOfWeek>
-	private final let log = Log()
 
 	// MARK: - Initializers
 

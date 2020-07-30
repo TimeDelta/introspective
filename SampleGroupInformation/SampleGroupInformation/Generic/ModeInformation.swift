@@ -13,6 +13,12 @@ import Common
 import Samples
 
 public final class ModeInformation: AnyInformation {
+	// MARK: - Static Variables
+
+	private typealias Me = ModeInformation
+
+	private static let log = Log()
+
 	// MARK: - Display Information
 
 	public final override var name: String { "Mode" }
@@ -21,7 +27,6 @@ public final class ModeInformation: AnyInformation {
 	// MARK: - Instance Variables
 
 	final let noSamplesMessage = "No samples between given start and end dates"
-	private final let log = Log()
 
 	// MARK: - Initializers
 
@@ -67,7 +72,7 @@ public final class ModeInformation: AnyInformation {
 					modeCount = count
 				}
 			} else {
-				log.error("Unable to retrieve value count")
+				Me.log.error("Unable to retrieve value count")
 			}
 		}
 

@@ -15,9 +15,13 @@ import Samples
 import Settings
 
 public final class AfterDateAttributeRestriction: DateAttributeRestriction, Equatable {
+	// MARK: - Static Variables
+
 	private typealias Me = AfterDateAttributeRestriction
 
-	// MARK: - Static Variables
+	private static let log = Log()
+
+	// MARK: - Attributes
 
 	public static let dateAttribute = DateOnlyAttribute()
 	public static var attributes: [Attribute] = [
@@ -32,7 +36,7 @@ public final class AfterDateAttributeRestriction: DateAttributeRestriction, Equa
 			let dateText = try Me.dateAttribute.convertToDisplayableString(from: date)
 			return "After " + dateText
 		} catch {
-			log.error("Failed to convert date into displayable string: %@", errorInfo(error))
+			Me.log.error("Failed to convert date into displayable string: %@", errorInfo(error))
 			let formatter = DateFormatter()
 			formatter.dateStyle = .medium
 			formatter.timeStyle = .none
@@ -47,8 +51,6 @@ public final class AfterDateAttributeRestriction: DateAttributeRestriction, Equa
 			date = DependencyInjector.get(CalendarUtil.self).end(of: .day, in: date)
 		}
 	}
-
-	private final let log = Log()
 
 	// MARK: Initializers
 

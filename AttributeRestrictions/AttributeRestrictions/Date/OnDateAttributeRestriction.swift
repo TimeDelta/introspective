@@ -19,6 +19,11 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatab
 	// MARK: - Static Variables
 
 	private typealias Me = OnDateAttributeRestriction
+
+	private static let log = Log()
+
+	// MARK: - Attributes
+
 	public static let dateAttribute = DateOnlyAttribute()
 	public static var attributes: [Attribute] = [
 		dateAttribute,
@@ -32,7 +37,7 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatab
 			let dateText = try Me.dateAttribute.convertToDisplayableString(from: date)
 			return "On " + dateText
 		} catch {
-			log.error("Failed to convert date into displayable string: %@", errorInfo(error))
+			Me.log.error("Failed to convert date into displayable string: %@", errorInfo(error))
 			let formatter = DateFormatter()
 			formatter.dateStyle = .medium
 			formatter.timeStyle = .none
@@ -43,7 +48,6 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatab
 	// MARK: - Instance Variables
 
 	public final var date: Date
-	private final let log = Log()
 
 	// MARK: - Initializers
 

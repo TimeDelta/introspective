@@ -25,7 +25,7 @@ open class TypedSelectOneAttribute<Type>: AttributeBase<Type>, SelectOneAttribut
 		if let possibleValuesFunction = possibleValuesFunction {
 			return possibleValuesFunction()
 		}
-		log.error("Unable to determine possible values for multiselect attribute")
+		Log().error("Unable to determine possible values for multiselect attribute")
 		return []
 	}
 
@@ -37,8 +37,6 @@ open class TypedSelectOneAttribute<Type>: AttributeBase<Type>, SelectOneAttribut
 	public final let areEqual: (Type, Type) -> Bool
 
 	private final let possibleValueToString: (Type) -> String
-
-	private final let log = Log()
 
 	// MARK: - Initializers
 

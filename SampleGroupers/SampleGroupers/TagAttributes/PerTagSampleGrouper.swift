@@ -13,6 +13,12 @@ import Common
 import Samples
 
 public final class PerTagSampleGrouper: SampleGrouper {
+	// MARK: - Static Variables
+
+	private typealias Me = PerTagSampleGrouper
+
+	private static let log = Log()
+
 	// MARK: - Display Information
 
 	public static var userVisibleDescription: String = "Group By Tag"
@@ -32,7 +38,6 @@ public final class PerTagSampleGrouper: SampleGrouper {
 	// MARK: - Instance Variables
 
 	public final var groupByAttribute: Attribute?
-	private final let log = Log()
 
 	// MARK: - Initializers
 
@@ -44,7 +49,7 @@ public final class PerTagSampleGrouper: SampleGrouper {
 		let applicableAttributes = attributes.filter { $0 is TagAttribute || $0 is TagsAttribute }
 		groupByAttribute = applicableAttributes.first
 		if groupByAttribute == nil {
-			log.error("No tag attributes provided to PerTagSampleGrouper")
+			Me.log.error("No tag attributes provided to PerTagSampleGrouper")
 		}
 		attributeSelectAttribute = AttributeSelectAttribute(attributes: applicableAttributes)
 		self.attributes = [attributeSelectAttribute]

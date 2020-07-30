@@ -13,7 +13,7 @@ public final class DescriptionViewController: UIViewController {
 
 	@IBOutlet final var descriptionTextView: UITextView!
 
-	// MARK: - Member Variables
+	// MARK: - Instance Variables
 
 	public final var descriptionText: String!
 

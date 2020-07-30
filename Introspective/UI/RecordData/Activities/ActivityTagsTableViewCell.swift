@@ -21,6 +21,10 @@ public protocol ActivityTagsTableViewCell: UITableViewCell {
 }
 
 public final class ActivityTagsTableViewCellImpl: UITableViewCell, ActivityTagsTableViewCell {
+	private typealias Me = ActivityTagsTableViewCellImpl
+
+	private static let log = Log()
+
 	// MARK: - IBOutlets
 
 	/// This field automatically prevents duplication of tags
@@ -43,7 +47,7 @@ public final class ActivityTagsTableViewCellImpl: UITableViewCell, ActivityTagsT
 				let tags = try DependencyInjector.get(Database.self).query(Tag.fetchRequest() as NSFetchRequest<Tag>)
 				tagsField.textField.filterStrings(tags.map { $0.name })
 			} catch {
-				log.error("Auto complete failure: %@", errorInfo(error))
+				Me.log.error("Auto complete failure: %@", errorInfo(error))
 			}
 		}
 	}
@@ -62,8 +66,6 @@ public final class ActivityTagsTableViewCellImpl: UITableViewCell, ActivityTagsT
 	}
 
 	private final var initialTagsSet = false
-
-	private final let log = Log()
 
 	// MARK: - Helper Functions
 

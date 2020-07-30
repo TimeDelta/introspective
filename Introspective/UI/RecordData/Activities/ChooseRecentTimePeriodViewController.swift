@@ -32,6 +32,8 @@ public final class ChooseRecentTimePeriodViewControllerImpl: UIViewController, C
 		.minute,
 	]
 
+	private static let log = Log()
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var sortByLabel: UILabel!
@@ -46,8 +48,6 @@ public final class ChooseRecentTimePeriodViewControllerImpl: UIViewController, C
 	public final var initialNumTimeUnits: Int?
 	public final var initialTimeUnit: Calendar.Component?
 
-	private final let log = Log()
-
 	// MARK: - UIViewController Overloads
 
 	public final override func viewDidLoad() {
@@ -61,7 +61,7 @@ public final class ChooseRecentTimePeriodViewControllerImpl: UIViewController, C
 			if let index = Me.supportedTimeUnits.firstIndex(of: initialTimeUnit) {
 				timeUnitPicker.selectRow(index, inComponent: 0, animated: false)
 			} else {
-				log.error("Unknown initial time unit: %@", initialTimeUnit.description)
+				Me.log.error("Unknown initial time unit: %@", initialTimeUnit.description)
 			}
 		}
 

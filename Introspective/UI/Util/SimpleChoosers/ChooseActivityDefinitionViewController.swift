@@ -23,6 +23,12 @@ public protocol ChooseActivityDefinitionViewController: UIViewController {
 
 public final class ChooseActivityDefinitionViewControllerImpl: UIViewController,
 	ChooseActivityDefinitionViewController {
+	// MARK: - Static Variables
+
+	private typealias Me = ChooseActivityDefinitionViewControllerImpl
+
+	private static let log = Log()
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var picker: UIPickerView!
@@ -33,8 +39,6 @@ public final class ChooseActivityDefinitionViewControllerImpl: UIViewController,
 	/// If not initially set, will populate with all existing ActivityDefinitions
 	public final var availableDefinitions: [ActivityDefinition]!
 	public final var selectedDefinition: ActivityDefinition?
-
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -49,7 +53,7 @@ public final class ChooseActivityDefinitionViewControllerImpl: UIViewController,
 				fetchRequest.sortDescriptors = [NSSortDescriptor(key: "recordScreenIndex", ascending: true)]
 				availableDefinitions = try DependencyInjector.get(Database.self).query(fetchRequest)
 			} catch {
-				log.error("Failed to load activities: %@", errorInfo(error))
+				Me.log.error("Failed to load activities: %@", errorInfo(error))
 				parent?.showError(title: "Failed to load activities", error: error)
 				dismiss(animated: false, completion: nil)
 			}
@@ -62,7 +66,7 @@ public final class ChooseActivityDefinitionViewControllerImpl: UIViewController,
 			if let index = availableDefinitions.firstIndex(of: selectedDefinition) {
 				picker.selectRow(index, inComponent: 0, animated: false)
 			} else {
-				log.error("Failed to find selected definition in available definitions")
+				Me.log.error("Failed to find selected definition in available definitions")
 			}
 		}
 	}

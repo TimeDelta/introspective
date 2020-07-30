@@ -24,7 +24,13 @@ public final class IntrospectiveMedicationImporterImpl: NSManagedObject, Introsp
 
 	public typealias Me = IntrospectiveMedicationImporterImpl
 
+	// MARK: CoreData
+
 	public static let entityName = "IntrospectiveMedicationImporter"
+
+	// MARK: Logging
+
+	private static let log = Log()
 
 	// MARK: - Instance Variables
 
@@ -44,7 +50,6 @@ public final class IntrospectiveMedicationImporterImpl: NSManagedObject, Introsp
 	private final let mainTransaction = DependencyInjector.get(Database.self).transaction()
 	private final var csv: CSVReader!
 	private final var latestDate: Date!
-	private final let log = Log()
 
 	// MARK: - Main Functions
 
@@ -87,7 +92,7 @@ public final class IntrospectiveMedicationImporterImpl: NSManagedObject, Introsp
 
 	public final func resume() throws {
 		guard !isCancelled else {
-			log.error("Tried to resume a cancelled medication import from Introspective")
+			Me.log.error("Tried to resume a cancelled medication import from Introspective")
 			return
 		}
 
@@ -113,7 +118,7 @@ public final class IntrospectiveMedicationImporterImpl: NSManagedObject, Introsp
 			lastImport = latestDate
 			try retryOnFail({ try mainTransaction.commit() }, maxRetries: 2)
 		} catch {
-			log.error("Failed to import medications from Introspective: %@", errorInfo(error))
+			Me.log.error("Failed to import medications from Introspective: %@", errorInfo(error))
 			throw error
 		}
 	}
@@ -154,7 +159,7 @@ public final class IntrospectiveMedicationImporterImpl: NSManagedObject, Introsp
 				)
 			}
 		} catch {
-			log.error("Failed to check for existing medications: %@", errorInfo(error))
+			Me.log.error("Failed to check for existing medications: %@", errorInfo(error))
 			throw GenericDisplayableError(
 				title: "Data Access Error",
 				description: "Unable to check for existing medications named \(name)."
@@ -188,8 +193,7 @@ public final class IntrospectiveMedicationImporterImpl: NSManagedObject, Introsp
 		let medicationsInMainContext = Set(
 			try DependencyInjector.get(Database.self)
 				.query(Medication.fetchRequest())
-		)
-		.filter {
+		).filter {
 			let id = $0.objectID
 			return !medicationsInTransaction.contains(where: { med in med.objectID == id })
 		}
@@ -205,7 +209,7 @@ public final class IntrospectiveMedicationImporterImpl: NSManagedObject, Introsp
 		do {
 			medication = try childTransaction.new(Medication.self)
 		} catch {
-			log.error("Failed to create new medication")
+			Me.log.error("Failed to create new medication")
 			throw GenericDisplayableError(
 				title: "Unable to create new medication",
 				description: "Failed to create new medication."
@@ -238,7 +242,7 @@ public final class IntrospectiveMedicationImporterImpl: NSManagedObject, Introsp
 		do {
 			dose = try childTransaction.new(MedicationDose.self)
 		} catch {
-			log.error("Failed to create new dose")
+			Me.log.error("Failed to create new dose")
 			throw GenericDisplayableError(
 				title: "Unable to create new dose",
 				description: "Failed to create new dose."

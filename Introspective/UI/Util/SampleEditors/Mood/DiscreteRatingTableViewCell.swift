@@ -13,6 +13,12 @@ import DependencyInjection
 import Settings
 
 public final class DiscreteRatingTableViewCell: UITableViewCell {
+	// MARK: - Static Variables
+
+	private typealias Me = DiscreteRatingTableViewCell
+
+	private static let log = Log()
+
 	// MARK: - IBOutlet
 
 	@IBOutlet final var scrollView: UIScrollView!
@@ -26,8 +32,6 @@ public final class DiscreteRatingTableViewCell: UITableViewCell {
 	private final var ratingButtons = [UIButton]()
 
 	private final let spacingBetweenRatingButtons: CGFloat = 5
-
-	private final let log = Log()
 
 	// MARK: - UIView Overrides
 
@@ -51,10 +55,10 @@ public final class DiscreteRatingTableViewCell: UITableViewCell {
 
 				post(.moodRatingChanged, userInfo: [.number: Double(rating)])
 			} else {
-				log.error("Unable to get rating from button title")
+				Me.log.error("Unable to get rating from button title")
 			}
 		} else {
-			log.error("Missing title for mood rating button")
+			Me.log.error("Missing title for mood rating button")
 		}
 	}
 

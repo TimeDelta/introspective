@@ -26,18 +26,28 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 
 	private typealias Me = EditMoodTableViewControllerImpl
 
+	// MARK: Notification Names
+
 	private static let timestampChanged = Notification.Name("moodTimestampChanged")
 	private static let noteChanged = Notification.Name("moodNoteChanged")
+
+	// MARK: IndexPaths
 
 	private static let timestampIndex = IndexPath(row: 0, section: 0)
 	private static let ratingIndex = IndexPath(row: 1, section: 0)
 	private static let noteIndex = IndexPath(row: 0, section: 1)
+
+	// MARK: Presenters
 
 	private static let datePresenter = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .full,
 		height: .fluid(percentage: 0.4),
 		center: .bottomCenter
 	)
+
+	// MARK: Logging
+
+	private static let log = Log()
 
 	// MARK: - Instance Variables
 
@@ -59,8 +69,6 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 	private final var minRating: Double = DependencyInjector.get(Settings.self).minMood
 	private final var maxRating: Double = DependencyInjector.get(Settings.self).maxMood
 	private final var note: String?
-
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -121,7 +129,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 			cell.notificationToSendOnChange = Me.noteChanged
 			return cell
 		}
-		log.error("Missing cell customization case for edit mood")
+		Me.log.error("Missing cell customization case for edit mood")
 		return UITableViewCell()
 	}
 
@@ -176,7 +184,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 				if let localMood = localMood as? MoodImpl {
 					mood = try transaction.pull(savedObject: localMood)
 				} else { // otherwise mood is a Mock and we're testing
-					log.debug("Mood not pulled from transaction")
+					Me.log.debug("Mood not pulled from transaction")
 				}
 			} else {
 				mood = try transaction.new(MoodImpl.self)
@@ -189,7 +197,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 			if let localMood = mood as? MoodImpl {
 				mood = try DependencyInjector.get(Database.self).pull(savedObject: localMood)
 			} else { // otherwise mood is a Mock and we're testing
-				log.debug("Mood not pulled from database")
+				Me.log.debug("Mood not pulled from database")
 			}
 			DispatchQueue.main.async {
 				NotificationCenter.default.post(
@@ -202,7 +210,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 			}
 			navigationController?.popViewController(animated: false)
 		} catch {
-			log.error("Failed to save create or save mood: %@", errorInfo(error))
+			Me.log.error("Failed to save create or save mood: %@", errorInfo(error))
 			showError(title: "Failed to save mood", error: error)
 		}
 	}

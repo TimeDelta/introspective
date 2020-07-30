@@ -27,7 +27,9 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 	// MARK: - Static Variables
 
 	private typealias Me = XAxisSetupViewControllerImpl
+
 	private static let groupingChanged = Notification.Name("groupingChanged")
+
 	private static let presenter: Presentr = {
 		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 200), center: .center)
 		let customPresenter = Presentr(presentationType: customType)
@@ -35,6 +37,8 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 		customPresenter.roundCorners = true
 		return customPresenter
 	}()
+
+	private static let log = Log()
 
 	// MARK: - IBOutlets
 
@@ -67,8 +71,6 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 	public final var notificationToSendWhenFinished: NotificationName!
 	private final var finishedLoading = false
 
-	private final let log = Log()
-
 	// MARK: - UIViewController Overrides
 
 	final override func viewDidLoad() {
@@ -85,7 +87,7 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 		if let selectedAttributeIndex = attributes.index(where: { $0.equalTo(selectedAttribute) }) {
 			attributePicker.selectRow(selectedAttributeIndex, inComponent: 0, animated: false)
 		} else {
-			log.error("Failed to find selected attribute in attributes array")
+			Me.log.error("Failed to find selected attribute in attributes array")
 		}
 
 		if let selectedInformationIndex = indexOfSelectedInformation() {
@@ -118,7 +120,7 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 
 	private final func sendUngroupedAcceptedNotification() {
 		guard let selectedAttribute = selectedAttribute else {
-			log.error("Selected attribute not set")
+			Me.log.error("Selected attribute not set")
 			return
 		}
 		syncPost(
@@ -139,7 +141,7 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 			)
 		} else {
 			guard let selectedInformation = selectedInformation else {
-				log.error("Selected information not set")
+				Me.log.error("Selected information not set")
 				return
 			}
 			syncPost(
@@ -193,7 +195,10 @@ extension XAxisSetupViewControllerImpl: UIPickerViewDataSource {
 		if pickerView == informationPicker {
 			return getApplicableInformationTypesForSelectedAttribute().count
 		}
-		log.error("Unknown UIPickerView when determining number of rows: '%@'", pickerView.restorationIdentifier ?? "")
+		Me.log.error(
+			"Unknown UIPickerView when determining number of rows: '%@'",
+			pickerView.restorationIdentifier ?? ""
+		)
 		return 0
 	}
 }
@@ -209,7 +214,7 @@ extension XAxisSetupViewControllerImpl: UIPickerViewDelegate {
 			return getApplicableInformationTypesForSelectedAttribute()[row].init(selectedAttribute).name
 				.localizedCapitalized
 		}
-		log.error("Unknown UIPickerView when determining row title: '%@'", pickerView.restorationIdentifier ?? "")
+		Me.log.error("Unknown UIPickerView when determining row title: '%@'", pickerView.restorationIdentifier ?? "")
 		return nil
 	}
 
@@ -220,6 +225,6 @@ extension XAxisSetupViewControllerImpl: UIPickerViewDelegate {
 		if pickerView == informationPicker {
 			selectedInformation = getApplicableInformationTypesForSelectedAttribute()[row].init(selectedAttribute)
 		}
-		log.error("Unknown UIPickerView when determining row title: '%@'", pickerView.restorationIdentifier ?? "")
+		Me.log.error("Unknown UIPickerView when determining row title: '%@'", pickerView.restorationIdentifier ?? "")
 	}
 }

@@ -12,11 +12,13 @@ import UIKit
 import Common
 
 public class BasicXYGraphTypeSetupViewController: GraphTypeSetupViewController {
+	private typealias Me = BasicXYGraphTypeSetupViewController
+
+	private static let log = Log()
+
 	public final var chartType: AAChartType! { didSet { chartTypeSet() } }
 
-	private final let log = Log()
-
 	func chartTypeSet() {
-		log.debug("chartTypeSet() not overriden")
+		Me.log.debug("chartTypeSet() not overriden")
 	}
 }

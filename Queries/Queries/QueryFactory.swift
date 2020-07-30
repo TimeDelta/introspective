@@ -41,8 +41,6 @@ public protocol QueryFactory {
 }
 
 public final class QueryFactoryImpl: QueryFactory {
-	private final let log = Log()
-
 	public final func activityQuery() -> ActivityQuery {
 		ActivityQueryImpl()
 	}

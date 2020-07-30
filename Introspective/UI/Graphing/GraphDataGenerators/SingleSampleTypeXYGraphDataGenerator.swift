@@ -29,6 +29,17 @@ public final class SingleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator {
 		}
 	}
 
+	// MARK: - Static Variables
+
+	private typealias Me = SingleSampleTypeXYGraphDataGenerator
+
+	private static let signpost =
+		Signpost(log: OSLog(
+			subsystem: Bundle.main.bundleIdentifier!,
+			category: "SingleSampleTypeXYGraphCreationPerformance"
+		))
+	private static let log = Log()
+
 	// MARK: - Instance Variables
 
 	/// The grouper to use for grouping samples into data series
@@ -38,13 +49,6 @@ public final class SingleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator {
 	private final let xAxis: AttributeOrInformation!
 	private final let yAxis: [AttributeOrInformation]
 	private final var usePointGroupValueForXAxis: Bool
-
-	private final let signpost =
-		Signpost(log: OSLog(
-			subsystem: Bundle.main.bundleIdentifier!,
-			category: "SingleSampleTypeXYGraphCreationPerformance"
-		))
-	private final let log = Log()
 
 	// MARK: - Initializers
 
@@ -60,7 +64,7 @@ public final class SingleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator {
 		self.xAxis = xAxis
 		self.yAxis = yAxis
 		self.usePointGroupValueForXAxis = usePointGroupValueForXAxis
-		super.init(signpost: signpost, log: log)
+		super.init(signpost: Me.signpost, log: Me.log)
 	}
 
 	// MARK: - Public Functions
@@ -69,9 +73,9 @@ public final class SingleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator {
 		var allData = GraphData()
 
 		if let seriesGrouper = seriesGrouper {
-			signpost.begin(name: "Grouping samples for series", "Grouping %d samples", samples.count)
+			Me.signpost.begin(name: "Grouping samples for series", "Grouping %d samples", samples.count)
 			let seriesGroups = try seriesGrouper.group(samples: samples)
-			signpost.end(
+			Me.signpost.end(
 				name: "Grouping samples for series",
 				"Grouped %d samples into %d groups",
 				samples.count,

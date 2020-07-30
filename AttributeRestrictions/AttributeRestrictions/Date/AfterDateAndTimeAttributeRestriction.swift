@@ -18,6 +18,11 @@ public final class AfterDateAndTimeAttributeRestriction: DateAttributeRestrictio
 	// MARK: - Static Variables
 
 	private typealias Me = AfterDateAndTimeAttributeRestriction
+
+	private static let log = Log()
+
+	// MARK: - Attributes
+
 	public static let dateAttribute = DateTimeAttribute(name: "Date", format: "MMMM d yyyy 'at' H:mm")
 	public static var attributes: [Attribute] = [
 		dateAttribute,
@@ -31,7 +36,7 @@ public final class AfterDateAndTimeAttributeRestriction: DateAttributeRestrictio
 			let dateText = try Me.dateAttribute.convertToDisplayableString(from: date)
 			return "After " + dateText
 		} catch {
-			log.error("Failed to convert date into displayable string: %@", errorInfo(error))
+			Me.log.error("Failed to convert date into displayable string: %@", errorInfo(error))
 			let formatter = DateFormatter()
 			formatter.dateStyle = .medium
 			formatter.timeStyle = .short
@@ -42,7 +47,6 @@ public final class AfterDateAndTimeAttributeRestriction: DateAttributeRestrictio
 	// MARK: - Instance Variables
 
 	public final var date: Date
-	private final let log = Log()
 
 	// MARK: - Initializers
 

@@ -15,6 +15,12 @@ import SampleGroupInformation
 import Samples
 
 final class SelectAttributeOrInformationViewController: UIViewController {
+	// MARK: - Static Variables
+
+	private typealias Me = SelectAttributeOrInformationViewController
+
+	private static let log = Log()
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var typeSelectSegmentedControl: UISegmentedControl!
@@ -30,8 +36,6 @@ final class SelectAttributeOrInformationViewController: UIViewController {
 	public final var information: SampleGroupInformation?
 	public final var notificationToSendOnAccept: Notification.Name!
 
-	private final let log = Log()
-
 	// MARK: - UIViewController Overrides
 
 	override func viewDidLoad() {
@@ -46,7 +50,7 @@ final class SelectAttributeOrInformationViewController: UIViewController {
 			if let index = sampleType.attributes.index(where: { $0.equalTo(attribute) }) {
 				attributePicker.selectRow(index, inComponent: 0, animated: false)
 			} else {
-				log.error("Attribute passed is incompatible with specified sample type")
+				Me.log.error("Attribute passed is incompatible with specified sample type")
 			}
 		}
 
@@ -71,7 +75,7 @@ final class SelectAttributeOrInformationViewController: UIViewController {
 		} else if index == 1 {
 			set(informationPicker, enabled: true)
 		} else {
-			log.error("Unexpected selected index (%d) for segmented control when user changed value", index)
+			Me.log.error("Unexpected selected index (%d) for segmented control when user changed value", index)
 		}
 	}
 
@@ -83,7 +87,7 @@ final class SelectAttributeOrInformationViewController: UIViewController {
 		} else if index == 1 {
 			userInfo = info([.information: information as Any])
 		} else {
-			log.error("Unexpected selected index (%d) for segmented control when user pressed Accept", index)
+			Me.log.error("Unexpected selected index (%d) for segmented control when user pressed Accept", index)
 		}
 		NotificationCenter.default.post(name: notificationToSendOnAccept, object: self, userInfo: userInfo)
 	}
@@ -115,7 +119,7 @@ extension SelectAttributeOrInformationViewController: UIPickerViewDataSource {
 		if pickerView == informationPicker {
 			return getApplicableInformationTypesForSelectedAttribute().count
 		}
-		log.error("Unknown picker view while attempting to retrieve number of rows")
+		Me.log.error("Unknown picker view while attempting to retrieve number of rows")
 		return 0
 	}
 }
@@ -130,7 +134,7 @@ extension SelectAttributeOrInformationViewController: UIPickerViewDelegate {
 		if pickerView == informationPicker {
 			return getApplicableInformationTypesForSelectedAttribute()[row].init(attribute).name.localizedCapitalized
 		}
-		log.error("Unknown picker view while attempting to retrieve title for row")
+		Me.log.error("Unknown picker view while attempting to retrieve title for row")
 		return nil
 	}
 
@@ -146,6 +150,6 @@ extension SelectAttributeOrInformationViewController: UIPickerViewDelegate {
 		if pickerView == informationPicker {
 			information = getApplicableInformationTypesForSelectedAttribute()[row].init(attribute)
 		}
-		log.error("Unknown picker view while running didSelectRow")
+		Me.log.error("Unknown picker view while running didSelectRow")
 	}
 }

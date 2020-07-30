@@ -13,6 +13,12 @@ import Common
 import DependencyInjection
 
 public final class DateOrTimeAttributeValueViewController: AttributeValueTypeViewController {
+	// MARK: - Static Variables
+
+	private typealias Me = DateOrTimeAttributeValueViewController
+
+	private static let log = Log()
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var datePicker: UIDatePicker!
@@ -21,8 +27,6 @@ public final class DateOrTimeAttributeValueViewController: AttributeValueTypeVie
 
 	public final var dateAttribute: DateAttribute!
 	public final var timeOfDayAttribute: TimeOfDayAttribute!
-
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -51,7 +55,7 @@ public final class DateOrTimeAttributeValueViewController: AttributeValueTypeVie
 		} else if let time = currentValue as? TimeOfDay {
 			datePicker.setDate(Date(time), animated: false)
 		} else {
-			log.error("Unknown value type: %@", String(describing: currentValue))
+			Me.log.error("Unknown value type: %@", String(describing: currentValue))
 		}
 	}
 

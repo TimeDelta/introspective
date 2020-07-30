@@ -23,7 +23,13 @@ public final class IntrospectiveActivityImporterImpl: NSManagedObject, Introspec
 
 	private typealias Me = IntrospectiveActivityImporterImpl
 
+	// MARK: CoreData
+
 	public static let entityName = "IntrospectiveActivityImporter"
+
+	// MARK: Logging
+
+	private static let log = Log()
 
 	// MARK: - Instance Variables
 
@@ -43,7 +49,6 @@ public final class IntrospectiveActivityImporterImpl: NSManagedObject, Introspec
 	private final let mainTransaction = DependencyInjector.get(Database.self).transaction()
 	private final var csv: CSVReader!
 	private final var latestDate: Date!
-	private final let log = Log()
 
 	// MARK: - Main Functions
 
@@ -86,7 +91,7 @@ public final class IntrospectiveActivityImporterImpl: NSManagedObject, Introspec
 
 	public final func resume() throws {
 		guard !isCancelled else {
-			log.error("Tried to resume a cancelled activity import from Introspective")
+			Me.log.error("Tried to resume a cancelled activity import from Introspective")
 			return
 		}
 
@@ -112,7 +117,7 @@ public final class IntrospectiveActivityImporterImpl: NSManagedObject, Introspec
 			lastImport = latestDate
 			try retryOnFail({ try mainTransaction.commit() }, maxRetries: 2)
 		} catch {
-			log.error("Failed to import activities from Introspective: %@", errorInfo(error))
+			Me.log.error("Failed to import activities from Introspective: %@", errorInfo(error))
 			throw error
 		}
 	}

@@ -16,6 +16,11 @@ public final class BeforeTimeOfDayAttributeRestriction: DateAttributeRestriction
 	// MARK: - Static Variables
 
 	private typealias Me = BeforeTimeOfDayAttributeRestriction
+
+	private static let log = Log()
+
+	// MARK: - Attributes
+
 	public static let timeAttribute = TimeOfDayAttribute(
 		name: "Time",
 		pluralName: "Times",
@@ -33,7 +38,7 @@ public final class BeforeTimeOfDayAttributeRestriction: DateAttributeRestriction
 			let timeText = try Me.timeAttribute.convertToDisplayableString(from: timeOfDay)
 			return "Before " + timeText
 		} catch {
-			log.error("Failed to convert time of day to displayable string: %@", errorInfo(error))
+			Me.log.error("Failed to convert time of day to displayable string: %@", errorInfo(error))
 			return "Before " + timeOfDay.toString()
 		}
 	}
@@ -41,7 +46,6 @@ public final class BeforeTimeOfDayAttributeRestriction: DateAttributeRestriction
 	// MARK: - Instance Variables
 
 	public final var timeOfDay: TimeOfDay
-	private final let log = Log()
 
 	// MARK: - Initializers
 

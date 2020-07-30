@@ -18,6 +18,12 @@ public protocol ChooseSampleGrouperTypeViewController: UIViewController {
 }
 
 public final class ChooseSampleGrouperTypeViewControllerImpl: UIViewController, ChooseSampleGrouperTypeViewController {
+	// MARK: - Static Variables
+
+	private typealias Me = ChooseSampleGrouperTypeViewControllerImpl
+
+	private static let log = Log()
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var picker: UIPickerView!
@@ -26,8 +32,6 @@ public final class ChooseSampleGrouperTypeViewControllerImpl: UIViewController, 
 
 	public final var grouperTypes: [SampleGrouper.Type]!
 	public final var selectedGrouperType: SampleGrouper.Type?
-
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -39,12 +43,12 @@ public final class ChooseSampleGrouperTypeViewControllerImpl: UIViewController, 
 			if let selectedIndex = grouperTypes.index(where: { $0 == selectedGrouperType }) {
 				picker.selectRow(selectedIndex, inComponent: 0, animated: false)
 			} else {
-				log.error("Could not find index for specified component")
+				Me.log.error("Could not find index for specified component")
 			}
 		} else if !grouperTypes.isEmpty {
 			selectedGrouperType = grouperTypes[0]
 		} else {
-			log.error("No groupers passed")
+			Me.log.error("No groupers passed")
 			dismiss(animated: false)
 		}
 	}

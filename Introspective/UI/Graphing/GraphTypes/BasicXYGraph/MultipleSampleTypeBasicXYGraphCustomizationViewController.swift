@@ -23,11 +23,22 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	// MARK: - Static Variables
 
 	private typealias Me = MultipleSampleTypeBasicXYGraphCustomizationViewController
+
+	// MARK: Presenters
+
 	private static let presenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
 		center: .center
 	)
+
+	// MARK: Logging / Performance
+
+	private static let signpost = Signpost(log: OSLog(
+		subsystem: Bundle.main.bundleIdentifier!,
+		category: "MultipleSampleTypeBasicXYGraphCustomizationViewController"
+	))
+	private static let log = Log()
 
 	// MARK: - IBOutlets
 
@@ -88,12 +99,6 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	private final var xAxisSamples: [Sample]! { didSet { samplesAssigned() } }
 	private final var yAxisSamples: [Sample]! { didSet { samplesAssigned() } }
 	private final var chartController: BasicXYChartViewController!
-
-	private final let signpost = Signpost(log: OSLog(
-		subsystem: Bundle.main.bundleIdentifier!,
-		category: "MultipleSampleTypeBasicXYGraphCustomizationViewController"
-	))
-	private final let log = Log()
 
 	// MARK: - UIViewController Overloads
 
@@ -247,7 +252,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 			}
 			realNavigationController?.pushViewController(chartController, animated: false)
 		} catch {
-			log.error("Failed to get query: %@", errorInfo(error))
+			Me.log.error("Failed to get query: %@", errorInfo(error))
 			showError(title: "You found a bug", error: error)
 		}
 	}
@@ -340,7 +345,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		xAxisQuery?.resetStoppedState()
 		xAxisQuery!.runQuery { result, error in
 			if let error = error {
-				self.log.error("X-axis query run failed: %@", errorInfo(error))
+				Me.log.error("X-axis query run failed: %@", errorInfo(error))
 				DispatchQueue.main.async {
 					self.chartController.showError(title: "Failed to run the x-axis query", error: error)
 				}
@@ -349,14 +354,14 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 			if let samples = result?.samples {
 				self.xAxisSamples = samples
 			} else {
-				self.log.error("X-axis query run did not return an error or any results")
+				Me.log.error("X-axis query run did not return an error or any results")
 			}
 		}
 
 		yAxisQuery?.resetStoppedState()
 		yAxisQuery!.runQuery { result, error in
 			if let error = error {
-				self.log.error("Y-axis query run failed: %@", errorInfo(error))
+				Me.log.error("Y-axis query run failed: %@", errorInfo(error))
 				DispatchQueue.main.async {
 					self.chartController.showError(title: "Failed to run the y-axis query", error: error)
 				}
@@ -365,7 +370,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 			if let samples = result?.samples {
 				self.yAxisSamples = samples
 			} else {
-				self.log.error("Y-axis query run did not return an error or any results")
+				Me.log.error("Y-axis query run did not return an error or any results")
 			}
 		}
 	}
@@ -374,7 +379,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		do {
 			try updateChartData()
 		} catch {
-			log.error("Failed to update chart data: %@", errorInfo(error))
+			Me.log.error("Failed to update chart data: %@", errorInfo(error))
 			DispatchQueue.main.async {
 				self.chartController.showError(title: "Failed to gather the required data", error: error)
 			}
@@ -396,7 +401,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 			return
 		}
 
-		signpost.begin(
+		Me.signpost.begin(
 			name: "Update Chart Data", "Number of samples: (x-axis: %d, y-axis: %d)",
 			xAxisSamples.count,
 			yAxisSamples.count
@@ -427,7 +432,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 			self.chartController.dataSeries = allData
 		}
 
-		signpost.end(
+		Me.signpost.end(
 			name: "Update Chart Data", "Number of samples: (x-axis: %d, y-axis: %d)",
 			xAxisSamples.count,
 			yAxisSamples.count

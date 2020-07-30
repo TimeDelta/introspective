@@ -35,8 +35,6 @@ public final class FrequencyEditorViewController: UIViewController {
 	public final var notificationToSendOnAccept: Notification.Name!
 	public final var initialFrequency: Frequency?
 
-	private final let log = Log()
-
 	// MARK: - UIViewController Overrides
 
 	public final override func viewDidLoad() {

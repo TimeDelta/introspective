@@ -14,6 +14,7 @@ public final class ContainerView<T: UIViewController>: UIView {
 	unowned final var parentController: UIViewController
 	weak final var currentController: T?
 
+	/// Can't make this static because "Static stored properties not supported in generic types"
 	private final let log = Log()
 
 	init(parentController: UIViewController) {

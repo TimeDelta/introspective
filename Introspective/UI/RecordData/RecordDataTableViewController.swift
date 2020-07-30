@@ -25,6 +25,8 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 	private static let continuousMoodId = "continuousMood"
 	private static let discreteMoodId = "discreteMood"
 
+	private static let log = Log()
+
 	// MARK: - Instance Variables
 
 	private final var viewOrder = [
@@ -38,8 +40,6 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		"medication": 52,
 		"activity": 52,
 	]
-
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -82,7 +82,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		if let height = viewHeights[id] {
 			return height
 		}
-		log.error("Failed to retrieve height for id: %@", id)
+		Me.log.error("Failed to retrieve height for id: %@", id)
 		// return the largest possible size so that all content is shown
 		return viewHeights.map { $0.value }.sorted()[0]
 	}
@@ -127,7 +127,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		if let navigationController = navigationController {
 			navigationController.pushViewController(controller, animated: false)
 		} else {
-			log.error("no navigation controller")
+			Me.log.error("no navigation controller")
 		}
 	}
 
@@ -136,7 +136,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		if let navigationController = navigationController {
 			navigationController.pushViewController(controller, animated: false)
 		} else {
-			log.error("no navigation controller")
+			Me.log.error("no navigation controller")
 		}
 	}
 

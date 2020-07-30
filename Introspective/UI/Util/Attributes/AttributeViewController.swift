@@ -18,21 +18,42 @@ final class AttributeViewController: UIViewController {
 	// MARK: - Static Variables
 
 	private typealias Me = AttributeViewController
-	private static let numericPresenter = DependencyInjector.get(UiUtil.self)
-		.customPresenter(width: .full, height: .custom(size: 100), center: .topCenter)
-	private static let dosagePresenter = DependencyInjector.get(UiUtil.self)
-		.customPresenter(height: .custom(size: 100), center: .topCenter)
-	private static let frequencyPresenter = DependencyInjector.get(UiUtil.self)
-		.customPresenter(width: .custom(size: 250), height: .custom(size: 250), center: .topCenter)
-	private static let multiSelectPresenter = DependencyInjector.get(UiUtil.self)
-		.customPresenter(width: .full, height: .fluid(percentage: 0.45), center: .topCenter)
-	private static let defaultPresenter = DependencyInjector.get(UiUtil.self)
-		.customPresenter(width: .full, height: .custom(size: 200), center: .topCenter)
+
+	// MARK: Presenters
+
+	private static let numericPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
+		width: .full,
+		height: .custom(size: 100),
+		center: .topCenter
+	)
+	private static let dosagePresenter = DependencyInjector.get(UiUtil.self).customPresenter(
+		height: .custom(size: 100),
+		center: .topCenter
+	)
+	private static let frequencyPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
+		width: .custom(size: 250),
+		height: .custom(size: 250),
+		center: .topCenter
+	)
+	private static let multiSelectPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
+		width: .full,
+		height: .fluid(percentage: 0.45),
+		center: .topCenter
+	)
+	private static let defaultPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
+		width: .full,
+		height: .custom(size: 200),
+		center: .topCenter
+	)
 	private static let descriptionPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
 		center: .center
 	)
+
+	// MARK: Logging
+
+	private static let log = Log()
 
 	// MARK: - IBOutlets
 
@@ -50,8 +71,6 @@ final class AttributeViewController: UIViewController {
 			observe(selector: #selector(valueChanged), name: notificationToSendOnValueChange)
 		}
 	}
-
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -202,7 +221,7 @@ final class AttributeViewController: UIViewController {
 				}
 				attributeValueButton.setTitle(attributeValueDescription, for: .normal)
 			} catch {
-				log.error(
+				Me.log.error(
 					"Failed to convert %@ as %@ to displayable string: %@",
 					String(describing: attributeValue),
 					attribute.name,
@@ -227,7 +246,7 @@ final class AttributeViewController: UIViewController {
 		do {
 			attributeValueButton.accessibilityValue = try attribute.convertToDisplayableString(from: attributeValue)
 		} catch {
-			log.error(
+			Me.log.error(
 				"Failed to set accessibility value on %@: %@",
 				attributeValueButton.accessibilityIdentifier!,
 				errorInfo(error)

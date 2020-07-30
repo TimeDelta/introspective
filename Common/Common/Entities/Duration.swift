@@ -24,6 +24,8 @@ public final class TimeDuration: NSObject, NSSecureCoding, Codable, Comparable {
 		.year: 31_536_000,
 	]
 
+	private static let log = Log()
+
 	// MARK: - Display Information
 
 	public final override var description: String {
@@ -49,7 +51,6 @@ public final class TimeDuration: NSObject, NSSecureCoding, Codable, Comparable {
 	// MARK: - Instance Variables
 
 	private final let interval: TimeInterval
-	private final let log = Log()
 
 	// MARK: - Initializers
 
@@ -72,7 +73,7 @@ public final class TimeDuration: NSObject, NSSecureCoding, Codable, Comparable {
 			if let multiplier = Me.unitMultipliers[unit] {
 				tempInterval.addProduct(multiplier, Double(amount))
 			} else {
-				log.error("Missing multiplier for component type in TimeDuration initializer: ", unit.description)
+				Me.log.error("Missing multiplier for component type in TimeDuration initializer: ", unit.description)
 			}
 		}
 		interval = tempInterval
@@ -138,6 +139,8 @@ public final class TimeDuration: NSObject, NSSecureCoding, Codable, Comparable {
 
 	// MARK: - Math Operators
 
+	// MARK: Subtraction
+
 	public static func - (lhs: TimeDuration, rhs: TimeDuration) -> TimeDuration {
 		TimeDuration(lhs.interval - rhs.interval)
 	}
@@ -158,6 +161,8 @@ public final class TimeDuration: NSObject, NSSecureCoding, Codable, Comparable {
 		lhs.addingTimeInterval(-rhs.interval)
 	}
 
+	// MARK: Subtractive Assignment
+
 	public static func -= (lhs: inout TimeDuration, rhs: TimeDuration) {
 		lhs = lhs - rhs
 	}
@@ -173,6 +178,8 @@ public final class TimeDuration: NSObject, NSSecureCoding, Codable, Comparable {
 	public static func -= (lhs: inout TimeDuration, rhs: DateComponents) {
 		lhs = lhs - rhs
 	}
+
+	// MARK: Addition
 
 	public static func + (lhs: TimeDuration, rhs: TimeDuration) -> TimeDuration {
 		TimeDuration(lhs.interval + rhs.interval)
@@ -194,6 +201,8 @@ public final class TimeDuration: NSObject, NSSecureCoding, Codable, Comparable {
 		lhs.addingTimeInterval(rhs.interval)
 	}
 
+	// MARK: Additive Assignment
+
 	public static func += (lhs: inout TimeDuration, rhs: TimeDuration) {
 		lhs = lhs + rhs
 	}
@@ -209,6 +218,8 @@ public final class TimeDuration: NSObject, NSSecureCoding, Codable, Comparable {
 	public static func += (lhs: inout TimeDuration, rhs: DateComponents) {
 		lhs = lhs + rhs
 	}
+
+	// MARK: Division
 
 	public static func / (lhs: TimeDuration, rhs: TimeDuration) -> Double {
 		lhs.interval / rhs.interval
@@ -226,6 +237,8 @@ public final class TimeDuration: NSObject, NSSecureCoding, Codable, Comparable {
 		lhs.interval / rhs.timeInterval
 	}
 
+	// MARK: Division Assignment
+
 	public static func /= (lhs: inout TimeDuration, rhs: Int) {
 		lhs = lhs / rhs
 	}
@@ -233,6 +246,8 @@ public final class TimeDuration: NSObject, NSSecureCoding, Codable, Comparable {
 	public static func /= (lhs: inout TimeDuration, rhs: Double) {
 		lhs = lhs / rhs
 	}
+
+	// MARK: Multiplication
 
 	public static func * (lhs: TimeDuration, rhs: Int) -> TimeDuration {
 		TimeDuration(lhs.interval * Double(rhs))
@@ -249,6 +264,8 @@ public final class TimeDuration: NSObject, NSSecureCoding, Codable, Comparable {
 	public static func * (lhs: Double, rhs: TimeDuration) -> TimeDuration {
 		TimeDuration(rhs.interval * lhs)
 	}
+
+	// MARK: Multiplicative Assignment
 
 	public static func *= (lhs: inout TimeDuration, rhs: Int) {
 		lhs = lhs * rhs

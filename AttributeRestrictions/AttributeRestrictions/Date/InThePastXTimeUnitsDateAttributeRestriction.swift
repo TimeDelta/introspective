@@ -56,8 +56,6 @@ public final class InThePastXTimeUnitsDateAttributeRestriction: DateAttributeRes
 	public final var numberOfTimeUnits: Int
 	public final var timeUnit: Calendar.Component
 
-	private final let log = Log()
-
 	// MARK: - Initializers
 
 	public required convenience init(restrictedAttribute: Attribute) {

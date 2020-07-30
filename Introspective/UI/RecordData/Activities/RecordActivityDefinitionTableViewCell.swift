@@ -17,6 +17,10 @@ import Persistence
 import Samples
 
 public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
+	private typealias Me = RecordActivityDefinitionTableViewCell
+
+	private static let log = Log()
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var nameLabel: UILabel!
@@ -46,8 +50,6 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 	}
 
 	private final var timer: Timer!
-
-	private final let log = Log()
 
 	deinit { timer?.invalidate() }
 
@@ -135,7 +137,7 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 		do {
 			return try DependencyInjector.get(ActivityDAO.self).getMostRecentlyStartedActivity(for: activityDefinition)
 		} catch {
-			log.error("Failed to fetch activities: %@", errorInfo(error))
+			Me.log.error("Failed to fetch activities: %@", errorInfo(error))
 		}
 
 		return nil
@@ -145,7 +147,7 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 		do {
 			return try DependencyInjector.get(ActivityDAO.self).getAllActivitiesForToday(activityDefinition)
 		} catch {
-			log.error("Failed to fetch activities: %@", errorInfo(error))
+			Me.log.error("Failed to fetch activities: %@", errorInfo(error))
 			return []
 		}
 	}
@@ -154,7 +156,7 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 		do {
 			return try DependencyInjector.get(ActivityDAO.self).hasUnfinishedActivity(activityDefinition)
 		} catch {
-			log.error("Failed to query for unfinished activities: %@", errorInfo(error))
+			Me.log.error("Failed to query for unfinished activities: %@", errorInfo(error))
 		}
 		return false
 	}

@@ -12,6 +12,12 @@ import Attributes
 import Common
 
 final class ChooseCalendarComponentViewController: UIViewController {
+	// MARK: - Static Variables
+
+	private typealias Me = ChooseCalendarComponentViewController
+
+	private static let log = Log()
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var calendarComponentPicker: UIPickerView!
@@ -21,8 +27,6 @@ final class ChooseCalendarComponentViewController: UIViewController {
 	public final var selectedComponent: Calendar.Component?
 	public final var notificationToSendOnAccept: Notification.Name!
 	public final var applicableComponents: [Calendar.Component]! = CalendarComponentAttribute.supportedComponents
-
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -34,7 +38,7 @@ final class ChooseCalendarComponentViewController: UIViewController {
 			if let selectedIndex = applicableComponents.index(of: selectedComponent) {
 				calendarComponentPicker.selectRow(selectedIndex, inComponent: 0, animated: false)
 			} else {
-				log.error("Could not find index for specified component")
+				Me.log.error("Could not find index for specified component")
 			}
 		}
 	}

@@ -33,7 +33,9 @@ public protocol CodableStorage {
 }
 
 final internal class CodableStorageImpl: CodableStorage {
-	private final let log = Log()
+	private typealias Me = CodableStorageImpl
+
+	private static let log = Log()
 
 	/// Store an encodable struct to the specified directory on disk
 	///
@@ -52,7 +54,7 @@ final internal class CodableStorageImpl: CodableStorage {
 			}
 			FileManager.default.createFile(atPath: url.path, contents: data, attributes: nil)
 		} catch {
-			log.error(
+			Me.log.error(
 				"Failed to store object (%@) in '%@' as '%@': %@",
 				String(describing: object),
 				String(describing: directory),
@@ -78,7 +80,7 @@ final internal class CodableStorageImpl: CodableStorage {
 		let url = getURL(for: directory).appendingPathComponent(fileName, isDirectory: false)
 
 		if !FileManager.default.fileExists(atPath: url.path) {
-			log.error("File at path '%@' does not exist!", url.path)
+			Me.log.error("File at path '%@' does not exist!", url.path)
 			throw CodableStorageError.fileDoesNotExist
 		}
 
@@ -87,7 +89,7 @@ final internal class CodableStorageImpl: CodableStorage {
 			let model = try decoder.decode(type, from: data)
 			return model
 		} else {
-			log.error("No data at %@", url.path)
+			Me.log.error("No data at %@", url.path)
 			throw CodableStorageError.noDataFound
 		}
 	}
@@ -133,7 +135,7 @@ final internal class CodableStorageImpl: CodableStorage {
 		if let url = FileManager.default.urls(for: searchPathDirectory, in: .userDomainMask).first {
 			return url
 		}
-		log.error("Could not create URL for specified directory!")
+		Me.log.error("Could not create URL for specified directory!")
 		return URL(fileURLWithPath: "/")
 	}
 }

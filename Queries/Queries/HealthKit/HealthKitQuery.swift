@@ -16,7 +16,6 @@ import Samples
 public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<SampleType> {
 	private final var stopFunction: (() -> Void)?
 	private final var finishedQuery: Bool = false
-	private final let log = Log()
 
 	func initFromHKSample(_: HKSample) -> SampleType {
 		fatalError("Must override")

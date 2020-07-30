@@ -15,6 +15,10 @@ import Persistence
 import Samples
 
 public final class ActivityDefinitionTagsTableViewCell: UITableViewCell {
+	private typealias Me = ActivityDefinitionTagsTableViewCell
+
+	private static let log = Log()
+
 	// MARK: - IBOutlets
 
 	/// This field automatically prevents duplication of tags
@@ -37,7 +41,7 @@ public final class ActivityDefinitionTagsTableViewCell: UITableViewCell {
 				let tags = try DependencyInjector.get(TagDAO.self).getAllTags()
 				tagsField.textField.filterStrings(tags.map { $0.name })
 			} catch {
-				log.error("Auto complete failure: %@", errorInfo(error))
+				Me.log.error("Auto complete failure: %@", errorInfo(error))
 			}
 		}
 	}
@@ -56,8 +60,6 @@ public final class ActivityDefinitionTagsTableViewCell: UITableViewCell {
 	}
 
 	private final var initialTagsSet = false
-
-	private final let log = Log()
 
 	// MARK: - Helper Functions
 

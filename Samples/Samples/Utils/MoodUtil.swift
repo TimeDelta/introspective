@@ -20,7 +20,9 @@ public protocol MoodUtil {
 }
 
 public final class MoodUtilImpl: MoodUtil {
-	private final let log = Log()
+	private typealias Me = MoodUtilImpl
+
+	private static let log = Log()
 
 	public final func scaleMoods() throws {
 		do {
@@ -31,7 +33,7 @@ public final class MoodUtilImpl: MoodUtil {
 			}
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 		} catch {
-			log.error("Failed to scale old moods: %@", errorInfo(error))
+			Me.log.error("Failed to scale old moods: %@", errorInfo(error))
 			throw error
 		}
 	}

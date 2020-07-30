@@ -22,6 +22,9 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 	// MARK: - Static Variables
 
 	private typealias Me = ATrackerActivityImporterImpl
+
+	// MARK: CSV Column Names
+
 	private static let nameColumn = "Task name"
 	private static let descriptionColumn = " Task description"
 	private static let startDateColumn = " Start time"
@@ -29,7 +32,13 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 	private static let noteColumn = " Note"
 	private static let tagsColumn = " Tag"
 
+	// MARK: Core Data
+
 	public static let entityName = "ATrackerActivityImporter"
+
+	// MARK: Logging
+
+	private static let log = Log()
 
 	// MARK: - Instance Variables
 
@@ -49,7 +58,6 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 	private final let mainTransaction = DependencyInjector.get(Database.self).transaction()
 	private final var csv: CSVReader!
 	private final var latestDate: Date!
-	private final let log = Log()
 
 	// MARK: - Functions
 
@@ -92,7 +100,7 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 
 	public final func resume() throws {
 		guard !isCancelled else {
-			log.error("Tried to resume a cancelled activity import from ATracker")
+			Me.log.error("Tried to resume a cancelled activity import from ATracker")
 			return
 		}
 
@@ -118,7 +126,7 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 			lastImport = latestDate
 			try retryOnFail({ try mainTransaction.commit() }, maxRetries: 2)
 		} catch {
-			log.error("Failed to import activities from ATracker: %@", errorInfo(error))
+			Me.log.error("Failed to import activities from ATracker: %@", errorInfo(error))
 			throw error
 		}
 	}

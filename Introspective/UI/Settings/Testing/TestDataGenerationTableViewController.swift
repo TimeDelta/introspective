@@ -17,13 +17,17 @@ import Samples
 import Settings
 
 final class TestDataGenerationTableViewController: UITableViewController {
-	// MARK: - Static Member Variables
+	// MARK: - Static Variables
 
 	private typealias Me = TestDataGenerationTableViewController
+
+	// MARK: Notification Names
 
 	public static let numberOfDaysChanged = Notification.Name("numberOfDaysChanged")
 	public static let samplesPerHourChanged = Notification.Name("samplesPerHourChanged")
 	public static let shouldGenerateSampleTypeChanged = Notification.Name("shouldGenerateSampleTypeChanged")
+
+	// MARK: Value Ranges
 
 	private static let activityDurationHoursRange: (min: Int, max: Int) = (min: 1, max: 10)
 	private static let activityDurationMinutesRange: (min: Int, max: Int) = (min: 0, max: 60)
@@ -41,6 +45,8 @@ final class TestDataGenerationTableViewController: UITableViewController {
 	)
 	private static let sleepHoursRange: (min: Int, max: Int) = (min: 5, max: 10)
 	private static let weightRange: (min: Double, max: Double) = (min: 100, max: 200)
+
+	// MARK: Fake Data Strings
 
 	private static let names = [
 		"1a",
@@ -66,12 +72,10 @@ final class TestDataGenerationTableViewController: UITableViewController {
 		public init() {}
 	}
 
-	// MARK: - Member Variables
+	// MARK: - Instance Variables
 
 	private final var sampleTypeOptions = [String: Options]()
 	private final var generateTestDataButton: UIBarButtonItem!
-
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 

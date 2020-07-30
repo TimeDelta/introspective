@@ -18,8 +18,14 @@ public final class EditMedicationViewController: UIViewController {
 	// MARK: - Static Variables
 
 	private typealias Me = EditMedicationViewController
+
+	// MARK: Notification Names
+
 	private static let frequencyChanged = Notification.Name("medicationFrequencyChanged")
 	private static let startedOnChanged = Notification.Name("medicationStartedOnChanged")
+
+	// MARK: Presenters
+
 	private static let frequencyPresenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 250),
 		height: .custom(size: 250),
@@ -35,6 +41,10 @@ public final class EditMedicationViewController: UIViewController {
 		height: .custom(size: 200),
 		center: .center
 	)
+
+	// MARK: Logging
+
+	private static let log = Log()
 
 	// MARK: - IBOutlets
 
@@ -66,8 +76,6 @@ public final class EditMedicationViewController: UIViewController {
 	private final var frequency: Frequency?
 
 	private final var saveButton: UIBarButtonItem!
-
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -228,7 +236,7 @@ public final class EditMedicationViewController: UIViewController {
 			)
 			navigationController?.popViewController(animated: false)
 		} catch {
-			log.error("Failed to save medication: %@", errorInfo(error))
+			Me.log.error("Failed to save medication: %@", errorInfo(error))
 			showError(title: "Could not save medication", error: error, tryAgain: { self.saveButtonPressed(sender) })
 		}
 	}
@@ -288,7 +296,7 @@ public final class EditMedicationViewController: UIViewController {
 		do {
 			return try DependencyInjector.get(MedicationDAO.self).medicationExists(withName: name)
 		} catch {
-			log.error("Failed to check for medication name duplication: %@", errorInfo(error))
+			Me.log.error("Failed to check for medication name duplication: %@", errorInfo(error))
 			return true
 		}
 	}

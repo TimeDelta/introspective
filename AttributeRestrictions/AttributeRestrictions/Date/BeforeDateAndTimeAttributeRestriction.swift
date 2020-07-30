@@ -18,6 +18,11 @@ public final class BeforeDateAndTimeAttributeRestriction: DateAttributeRestricti
 	// MARK: - Static Variables
 
 	private typealias Me = BeforeDateAndTimeAttributeRestriction
+
+	private static let log = Log()
+
+	// MARK: - Attributes
+
 	public static let dateAttribute = DateTimeAttribute(name: "Date", format: "MMMM d yyyy 'at' H:mm")
 	public static var attributes: [Attribute] = [
 		dateAttribute,
@@ -31,7 +36,7 @@ public final class BeforeDateAndTimeAttributeRestriction: DateAttributeRestricti
 			let dateText = try Me.dateAttribute.convertToDisplayableString(from: date)
 			return "Before " + dateText
 		} catch {
-			log.error("Failed to convert date into displayable string: %@", errorInfo(error))
+			Me.log.error("Failed to convert date into displayable string: %@", errorInfo(error))
 			let formatter = DateFormatter()
 			formatter.dateStyle = .medium
 			formatter.timeStyle = .short
@@ -42,7 +47,6 @@ public final class BeforeDateAndTimeAttributeRestriction: DateAttributeRestricti
 	// MARK: - Instance Variables
 
 	public var date: Date
-	private final let log = Log()
 
 	// MARK: - Initializers
 

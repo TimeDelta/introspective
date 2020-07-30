@@ -19,6 +19,8 @@ import Persistence
 public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 	private typealias Me = Activity
 
+	private static let log = Log()
+
 	// MARK: - CoreData Stuff
 
 	public static let entityName = "Activity"
@@ -126,8 +128,6 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 
 	public final var startDateTimeZone: String? { startDateTimeZoneId }
 	public final var endDateTimeZone: String? { endDateTimeZoneId }
-
-	private final let log = Log()
 
 	// MARK: - Testing Purposes
 
@@ -347,7 +347,7 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 			tags.append(contentsOf: definition.tagsArray())
 			return !tags.filter { t in t.name.localizedLowercase == targetName.localizedLowercase }.isEmpty
 		}
-		log.error("Failed to cast activity tags array")
+		Me.log.error("Failed to cast activity tags array")
 		return false
 	}
 

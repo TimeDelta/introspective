@@ -15,8 +15,11 @@ final class BasicXYGraphSetupViewController: BasicXYGraphTypeSetupViewController
 	// MARK: - Static Variables
 
 	private typealias Me = BasicXYGraphSetupViewController
+
 	private static let singleDataType = 0
 	private static let multipleDataTypes = 1
+
+	private static let log = Log()
 
 	// MARK: - IBOutlets
 
@@ -26,8 +29,6 @@ final class BasicXYGraphSetupViewController: BasicXYGraphTypeSetupViewController
 	// MARK: - Instance Variables
 
 	private final var subViewController: BasicXYGraphTypeSetupViewController?
-
-	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -71,7 +72,7 @@ final class BasicXYGraphSetupViewController: BasicXYGraphTypeSetupViewController
 			addChild(controller)
 			break
 		default:
-			log.error("Unknown segmented control index: %d", numberOfDataTypesSegmentedControl.selectedSegmentIndex)
+			Me.log.error("Unknown segmented control index: %d", numberOfDataTypesSegmentedControl.selectedSegmentIndex)
 		}
 	}
 }

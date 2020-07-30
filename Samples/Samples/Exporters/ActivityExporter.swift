@@ -29,8 +29,6 @@ public final class ActivityExporterImpl: BaseExporter, ActivityExporter {
 	private final var started = false
 	private final var headerWritten = false
 
-	private final let log = Log()
-
 	// MARK: - Initializers
 
 	public init() throws {
