@@ -102,7 +102,7 @@
     </entity>
     <fetchRequest name="allActivityDefinitions" entity="ActivityDefinition" predicateString="TRUEPREDICATE"/>
     <elements>
-        <element name="Activity" positionX="-36" positionY="63" width="128" height="30"/>
+        <element name="Activity" positionX="-36" positionY="63" width="128" height="163"/>
         <element name="ActivityDefinition" positionX="-45" positionY="54" width="128" height="30"/>
         <element name="ATrackerActivityImporter" positionX="-36" positionY="72" width="128" height="30"/>
         <element name="EasyPillMedicationDoseImporter" positionX="-36" positionY="63" width="128" height="30"/>

@@ -10,7 +10,7 @@ import Foundation
 
 import Common
 
-public final class DosageAttribute: AttributeBase<Dosage>, ComparableAttribute {
+public final class DosageAttribute: AttributeBase<Dosage>, ComparableAttribute, GraphableAttribute {
 	public final override var typeName: String {
 		"Dosage"
 	}
@@ -29,6 +29,13 @@ public final class DosageAttribute: AttributeBase<Dosage>, ComparableAttribute {
 			variableName: variableName,
 			optional: optional
 		)
+	}
+
+	public func graphableValueFor(_ value: Any) throws -> Double {
+		guard let dosage = value as? Dosage else {
+			throw GenericError("Passed \(String(describing: value)) to graphableValueFor()")
+		}
+		return dosage.getBaseUnitAmount()
 	}
 
 	public final override func isValid(value: Any?) -> Bool {
