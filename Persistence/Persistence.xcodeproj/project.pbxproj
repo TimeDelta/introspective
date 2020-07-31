@@ -17,6 +17,7 @@
 		A231CF64234259ED00CCE625 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = A231CF5E234259EC00CCE625 /* Database.swift */; };
 		A231CF65234259ED00CCE625 /* FunctionalTestDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A231CF5F234259EC00CCE625 /* FunctionalTestDatabase.swift */; };
 		A231CF6723425A0400CCE625 /* PersistenceInjectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A231CF6623425A0400CCE625 /* PersistenceInjectionProvider.swift */; };
+		A29CCF4124D4781C00218CE2 /* NSManagedObjectExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29CCF4024D4781C00218CE2 /* NSManagedObjectExtensions.swift */; };
 		A29E1C492343AC86008B4AE9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A29E1C482343AC86008B4AE9 /* CoreData.framework */; };
 		A2A8B0132343E79D00E883CE /* Globals.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2A8B0122343E79D00E883CE /* Globals.framework */; };
 		A2C88ACC23467D63005EAD2A /* SharedPersistentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C88ACB23467D63005EAD2A /* SharedPersistentContainer.swift */; };
@@ -38,6 +39,7 @@
 		A231CF5E234259EC00CCE625 /* Database.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		A231CF5F234259EC00CCE625 /* FunctionalTestDatabase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FunctionalTestDatabase.swift; sourceTree = "<group>"; };
 		A231CF6623425A0400CCE625 /* PersistenceInjectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceInjectionProvider.swift; sourceTree = "<group>"; };
+		A29CCF4024D4781C00218CE2 /* NSManagedObjectExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSManagedObjectExtensions.swift; sourceTree = "<group>"; };
 		A29E1C482343AC86008B4AE9 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		A2A8B0122343E79D00E883CE /* Globals.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Globals.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2C88ACB23467D63005EAD2A /* SharedPersistentContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedPersistentContainer.swift; sourceTree = "<group>"; };
@@ -98,6 +100,7 @@
 				A231CF5F234259EC00CCE625 /* FunctionalTestDatabase.swift */,
 				A231CF5B234259EB00CCE625 /* Transaction.swift */,
 				A2C88ACB23467D63005EAD2A /* SharedPersistentContainer.swift */,
+				A29CCF4024D4781C00218CE2 /* NSManagedObjectExtensions.swift */,
 				A231CF4D234259B100CCE625 /* Persistence.h */,
 				A231CF4E234259B100CCE625 /* Info.plist */,
 			);
@@ -217,6 +220,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A29CCF4124D4781C00218CE2 /* NSManagedObjectExtensions.swift in Sources */,
 				A231CF61234259ED00CCE625 /* Transaction.swift in Sources */,
 				A231CF63234259ED00CCE625 /* CoreDataObject.swift in Sources */,
 				A231CF62234259ED00CCE625 /* CodableStorage.swift in Sources */,

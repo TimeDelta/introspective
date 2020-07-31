@@ -4817,6 +4817,12 @@ open class DatabaseMock: Database, Mock {
 		}
     }
 
+    open func cleanUpManagedObjectWithStrongReferenceCycle<Type: NSManagedObject>(_ object: Type) {
+        addInvocation(.m_cleanUpManagedObjectWithStrongReferenceCycle__object(Parameter<Type>.value(`object`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_cleanUpManagedObjectWithStrongReferenceCycle__object(Parameter<Type>.value(`object`).wrapAsGeneric())) as? (Type) -> Void
+		perform?(`object`)
+    }
+
 
     fileprivate enum MethodType {
         case m_transaction
@@ -4829,6 +4835,7 @@ open class DatabaseMock: Database, Mock {
         case m_pull__savedObject_savedObjectfromSameContextAs_otherObject(Parameter<GenericAttribute>, Parameter<NSManagedObject>)
         case m_pull__savedObject_savedObjectfromContext_context(Parameter<GenericAttribute>, Parameter<NSManagedObjectContext>)
         case m_deleteEverything
+        case m_cleanUpManagedObjectWithStrongReferenceCycle__object(Parameter<GenericAttribute>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -4863,6 +4870,9 @@ open class DatabaseMock: Database, Mock {
                 return true 
             case (.m_deleteEverything, .m_deleteEverything):
                 return true 
+            case (.m_cleanUpManagedObjectWithStrongReferenceCycle__object(let lhsObject), .m_cleanUpManagedObjectWithStrongReferenceCycle__object(let rhsObject)):
+                guard Parameter.compare(lhs: lhsObject, rhs: rhsObject, with: matcher) else { return false } 
+                return true 
             default: return false
             }
         }
@@ -4879,6 +4889,7 @@ open class DatabaseMock: Database, Mock {
             case let .m_pull__savedObject_savedObjectfromSameContextAs_otherObject(p0, p1): return p0.intValue + p1.intValue
             case let .m_pull__savedObject_savedObjectfromContext_context(p0, p1): return p0.intValue + p1.intValue
             case .m_deleteEverything: return 0
+            case let .m_cleanUpManagedObjectWithStrongReferenceCycle__object(p0): return p0.intValue
             }
         }
     }
@@ -5015,6 +5026,7 @@ open class DatabaseMock: Database, Mock {
         public static func pull<Type>(savedObject: Parameter<Type>, fromSameContextAs otherObject: Parameter<NSManagedObject>) -> Verify where Type:NSManagedObject { return Verify(method: .m_pull__savedObject_savedObjectfromSameContextAs_otherObject(`savedObject`.wrapAsGeneric(), `otherObject`))}
         public static func pull<Type>(savedObject: Parameter<Type>, fromContext context: Parameter<NSManagedObjectContext>) -> Verify where Type:NSManagedObject { return Verify(method: .m_pull__savedObject_savedObjectfromContext_context(`savedObject`.wrapAsGeneric(), `context`))}
         public static func deleteEverything() -> Verify { return Verify(method: .m_deleteEverything)}
+        public static func cleanUpManagedObjectWithStrongReferenceCycle<Type>(_ object: Parameter<Type>) -> Verify where Type:NSManagedObject { return Verify(method: .m_cleanUpManagedObjectWithStrongReferenceCycle__object(`object`.wrapAsGeneric()))}
     }
 
     public struct Perform {
@@ -5050,6 +5062,9 @@ open class DatabaseMock: Database, Mock {
         }
         public static func deleteEverything(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_deleteEverything, performs: perform)
+        }
+        public static func cleanUpManagedObjectWithStrongReferenceCycle<Type>(_ object: Parameter<Type>, perform: @escaping (Type) -> Void) -> Perform where Type:NSManagedObject {
+            return Perform(method: .m_cleanUpManagedObjectWithStrongReferenceCycle__object(`object`.wrapAsGeneric()), performs: perform)
         }
     }
 

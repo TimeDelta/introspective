@@ -31,7 +31,7 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 
 	// MARK: - Instance Variables
 
-	public final var activityDefinition: ActivityDefinition! {
+	public weak final var activityDefinition: ActivityDefinition! {
 		didSet {
 			timer?.invalidate()
 			updateUiElements()
@@ -49,14 +49,18 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 		hasUnfinishedActivity()
 	}
 
-	private final var timer: Timer!
+	private final var timer: Timer?
 
 	deinit { timer?.invalidate() }
+
+	public override func prepareForReuse() {
+		timer?.invalidate()
+	}
 
 	// MARK: - Helper Functions
 
 	public final func updateUiElements() {
-		nameLabel.text = activityDefinition.name
+		nameLabel.text = activityDefinition?.name
 		updateMostRecentTimeLabel()
 		updateDurationLabels()
 
@@ -67,6 +71,10 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 	}
 
 	@objc private final func updateDurationLabels() {
+		guard activityDefinition != nil else {
+			timer?.invalidate()
+			return
+		}
 		updateTotalDurationTodayLabel()
 		updateCurrentInstanceDurationLabel()
 	}

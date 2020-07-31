@@ -39,6 +39,10 @@ public protocol Database {
 
 	/// This will completely destroy the persistent store, permanently deleting everything in the entire database.
 	func deleteEverything() throws
+
+	/// This is needed for the strong reference cycle between i.e. Activity <-> ActivityDefinition
+	/// - Note: See [Apple's CoreData docs on Breaking Strong References Between Objects](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/CoreData/MO_Lifecycle.html#//apple_ref/doc/uid/TP40001075-CH31-SW1) for more information
+	func cleanUpManagedObjectWithStrongReferenceCycle<Type: NSManagedObject>(_ object: Type)
 }
 
 public extension Database {
@@ -85,6 +89,7 @@ internal class DatabaseImpl: Database {
 				}
 			})
 			container.viewContext.automaticallyMergesChangesFromParent = true
+			container.viewContext.retainsRegisteredObjects = false
 			return container
 		}()
 	}
@@ -195,6 +200,10 @@ internal class DatabaseImpl: Database {
 				options: nil
 			)
 		}
+	}
+
+	public final func cleanUpManagedObjectWithStrongReferenceCycle<Type: NSManagedObject>(_ object: Type) {
+		persistentContainer.viewContext.refresh(object, mergeChanges: false)
 	}
 
 	// MARK: - Helper Functions
