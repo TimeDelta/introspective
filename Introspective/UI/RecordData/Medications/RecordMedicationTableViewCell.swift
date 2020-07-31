@@ -33,7 +33,7 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 
 	// MARK: - Instance Variables
 
-	public final var medication: Medication! {
+	public weak final var medication: Medication! {
 		didSet {
 			guard let medication = medication else {
 				Me.log.error("Set medication to nil on RecordMedicationTableViewCell")
