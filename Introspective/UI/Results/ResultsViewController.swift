@@ -70,6 +70,9 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 					viewIsReady()
 					return
 				}
+
+				information.append(CountInformation(samples[0].attributes[0]))
+
 				initialSampleSortDone = true
 				DependencyInjector.get(AsyncUtil.self).run(qos: .userInteractive) {
 					let dateAttributes = self.samples[0].attributes.filter { $0 is DateAttribute }
