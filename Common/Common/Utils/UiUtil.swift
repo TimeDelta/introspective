@@ -210,7 +210,8 @@ public final class UiUtilImpl: UiUtil {
 
 		let button = UIButton(type: .system)
 		button.setImage(UIImage(named: "back-button"), for: .normal)
-		button.setTitle(title, for: .normal)
+		// add a space in front of the title so that it looks more like the default back button
+		button.setTitle(" \(title)", for: .normal)
 		button.sizeToFit()
 		button.addTarget(viewController, action: selector, for: .touchUpInside)
 
