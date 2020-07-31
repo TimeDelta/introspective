@@ -30,7 +30,7 @@ public final class MedicationDose: NSManagedObject, CoreDataSample, SearchableSa
 
 	// MARK: - Attributes
 
-	public static let nameAttribute = TextAttribute(name: "Name", pluralName: "Names")
+	public static let nameAttribute = TextAttribute(name: "Name", pluralName: "Names", variableName: "medication.name")
 	public static let dosage = DosageAttribute(optional: true)
 	public static let sourceAttribute = TypedEquatableSelectOneAttribute<String>(
 		name: "Source",
