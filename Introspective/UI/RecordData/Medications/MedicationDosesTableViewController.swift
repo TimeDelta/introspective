@@ -97,6 +97,8 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		navigationItem.rightBarButtonItem = editButtonItem
 		navigationItem.title = medication.name
 
+		setTableViewInsetsForTabBar()
+
 		observe(selector: #selector(dateRangeSet), name: Me.dateRangeSet)
 		observe(selector: #selector(medicationDoseEdited), name: Me.medicationDoseEdited)
 	}
