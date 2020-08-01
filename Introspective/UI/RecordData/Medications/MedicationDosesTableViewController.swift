@@ -13,6 +13,7 @@ import UIKit
 import Common
 import DependencyInjection
 import Persistence
+import SampleGroupInformation
 import Samples
 
 public final class MedicationDosesTableViewController: UITableViewController {
@@ -24,6 +25,11 @@ public final class MedicationDosesTableViewController: UITableViewController {
 
 	static let dateRangeSet = Notification.Name("medicationDosesTableDateRangeSet")
 	static let medicationDoseEdited = Notification.Name("medicationDoseEdited")
+
+	// MARK: Section Indexes
+
+	private static let informationSectionIndex = 0
+	private static let dosesSectionIndex = 1
 
 	// MARK: Presenters
 
@@ -46,6 +52,13 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		customPresenter.roundCorners = true
 		return customPresenter
 	}()
+
+	// MARK: Information
+
+	private static let information = [
+		CountInformation(MedicationDose.defaultIndependentAttribute),
+		SumInformation(MedicationDose.dosage),
+	]
 
 	// MARK: Logging
 
@@ -95,11 +108,26 @@ public final class MedicationDosesTableViewController: UITableViewController {
 	// MARK: - TableViewDataSource
 
 	public final override func numberOfSections(in _: UITableView) -> Int {
-		1
+		2
 	}
 
-	public final override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-		filteredDoses.count
+	public final override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
+		switch section {
+		case Me.informationSectionIndex:
+			return Me.information.count
+		case Me.dosesSectionIndex:
+			return filteredDoses.count
+		default:
+			Me.log.error("Unknown section index: %d", section)
+			return 0
+		}
+	}
+
+	public final override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+		if section == Me.dosesSectionIndex {
+			return "Doses"
+		}
+		return nil
 	}
 
 	public final override func tableView(
@@ -107,7 +135,16 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		cellForRowAt indexPath: IndexPath
 	) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "dose", for: indexPath)
-		cell.textLabel?.text = getTextForDoseAt(indexPath.row)
+
+		switch indexPath.section {
+		case Me.informationSectionIndex:
+			cell.textLabel?.text = computeInformation(at: indexPath.row)
+		case Me.dosesSectionIndex:
+			cell.textLabel?.text = getTextForDoseAt(indexPath.row)
+		default:
+			Me.log.error("Unknown section index: %d", indexPath.section)
+		}
+
 		return cell
 	}
 
@@ -117,37 +154,43 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		_ tableView: UITableView,
 		editActionsForRowAt indexPath: IndexPath
 	) -> [UITableViewRowAction]? {
+		guard indexPath.section != Me.informationSectionIndex else { return nil }
+
 		let dose = filteredDoses[indexPath.row]
-		let delete = DependencyInjector.get(UiUtil.self)
-			.tableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
-				let alert = DependencyInjector.get(UiUtil.self).alert(
-					title: "Are you sure you want to delete this dose?",
-					message: self.getTextForDoseAt(indexPath.row),
-					preferredStyle: .alert
-				)
-				alert
-					.addAction(DependencyInjector.get(UiUtil.self).alertAction(title: "Yes", style: .destructive) { _ in
-						let indexToDelete = self.medication.doses.index(of: dose)
-						let transaction = DependencyInjector.get(Database.self).transaction()
-						do {
-							try retryOnFail({ try transaction.delete(dose) }, maxRetries: 2)
-							try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-							self.medication.removeFromDoses(at: indexToDelete)
-							self.resetFilteredDoses()
-							tableView.deleteRows(at: [indexPath], with: .fade)
-							tableView.reloadData()
-						} catch {
-							Me.log.error("Failed to delete medication dose: %@", errorInfo(error))
-							self.showError(title: "Failed to delete dose", error: error)
-						}
-					})
-				alert
-					.addAction(
-						DependencyInjector.get(UiUtil.self)
-							.alertAction(title: "No", style: .cancel, handler: nil)
-					)
-				self.present(alert, animated: false, completion: nil)
-			}
+		let delete = DependencyInjector.get(UiUtil.self).tableViewRowAction(
+			style: .destructive,
+			title: "🗑️"
+		) { _, indexPath in
+			let alert = DependencyInjector.get(UiUtil.self).alert(
+				title: "Are you sure you want to delete this dose?",
+				message: self.getTextForDoseAt(indexPath.row),
+				preferredStyle: .alert
+			)
+			alert.addAction(DependencyInjector.get(UiUtil.self).alertAction(
+				title: "Yes",
+				style: .destructive
+			) { _ in
+				let indexToDelete = self.medication.doses.index(of: dose)
+				let transaction = DependencyInjector.get(Database.self).transaction()
+				do {
+					try retryOnFail({ try transaction.delete(dose) }, maxRetries: 2)
+					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+					self.medication.removeFromDoses(at: indexToDelete)
+					self.resetFilteredDoses()
+					tableView.deleteRows(at: [indexPath], with: .fade)
+					tableView.reloadData()
+				} catch {
+					Me.log.error("Failed to delete medication dose: %@", errorInfo(error))
+					self.showError(title: "Failed to delete dose", error: error)
+				}
+			})
+			alert.addAction(DependencyInjector.get(UiUtil.self).alertAction(
+				title: "No",
+				style: .cancel,
+				handler: nil
+			))
+			self.present(alert, animated: false, completion: nil)
+		}
 		delete.accessibilityLabel = "delete dose button"
 		let dateText = DependencyInjector.get(CalendarUtil.self)
 			.string(for: dose.date, dateStyle: .long, timeStyle: .short)
@@ -161,6 +204,11 @@ public final class MedicationDosesTableViewController: UITableViewController {
 	}
 
 	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		guard indexPath.section != Me.informationSectionIndex else {
+			tableView.deselectRow(at: indexPath, animated: false)
+			return
+		}
+
 		let controller = viewController(named: "medicationDoseEditor") as! MedicationDoseEditorViewController
 		controller.medicationDose = filteredDoses[indexPath.row]
 		controller.notificationToSendOnAccept = Me.medicationDoseEdited
@@ -253,6 +301,17 @@ public final class MedicationDosesTableViewController: UITableViewController {
 	}
 
 	// MARK: - Helper Functions
+
+	private final func computeInformation(at index: Int) -> String? {
+		let information = Me.information[index]
+		do {
+			let value = try information.compute(forSamples: filteredDoses)
+			return information.description + ": \(value)"
+		} catch {
+			Me.log.error("Failed to compute %@ for filtered doses: %@", information.description, errorInfo(error))
+			return nil
+		}
+	}
 
 	private final func getTextForDoseAt(_ index: Int) -> String {
 		let dose = filteredDoses[index]
