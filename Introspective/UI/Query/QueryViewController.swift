@@ -191,14 +191,11 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 			}
 			Me.log.error("Unknown expression type in query")
 			break
-		case .and:
-			return andCell(for: indexPath)
-		case .or:
-			return orCell(for: indexPath)
-		case .groupStart:
-			return groupStartCell(for: indexPath)
-		case .groupEnd:
-			return groupEndCell(for: indexPath)
+		case .and: return andCell(for: indexPath)
+		case .or: return orCell(for: indexPath)
+		case .groupStart: return groupStartCell(for: indexPath)
+		case .groupEnd: return groupEndCell(for: indexPath)
+		case .not: return notCell(for: indexPath)
 		}
 		Me.log.error("Forgot a type of cell: %@", String(describing: part))
 		return UITableViewCell()
@@ -639,6 +636,11 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 			handler: getAddOrEditExpressionPartHandlerFor(.or, indexPath)
 		))
 		actionSheet.addAction(DependencyInjector.get(UiUtil.self).alertAction(
+			title: "Not",
+			style: .default,
+			handler: getAddOrEditExpressionPartHandlerFor(.not, indexPath)
+		))
+		actionSheet.addAction(DependencyInjector.get(UiUtil.self).alertAction(
 			title: "Condition Group Start",
 			style: .default,
 			handler: getAddOrEditExpressionPartHandlerFor(.groupStart, indexPath)
@@ -707,6 +709,13 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		let cell = tableView.dequeueReusableCell(withIdentifier: "basic", for: indexPath)
 		cell.indentationLevel = getIndentationLevelFor(indexPath)
 		cell.textLabel?.text = ")"
+		return cell
+	}
+
+	private final func notCell(for indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: "basic", for: indexPath)
+		cell.indentationLevel = getIndentationLevelFor(indexPath)
+		cell.textLabel?.text = "not"
 		return cell
 	}
 

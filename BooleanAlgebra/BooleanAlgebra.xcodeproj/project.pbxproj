@@ -16,6 +16,7 @@
 		A231CF3A234255A300CCE625 /* OrExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = A231CF34234255A200CCE625 /* OrExpression.swift */; };
 		A231CF3C2342563100CCE625 /* BooleanAlgebraInjectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A231CF3B2342563100CCE625 /* BooleanAlgebraInjectionProvider.swift */; };
 		A231CF3F2342564E00CCE625 /* DependencyInjection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A231CF3E2342564E00CCE625 /* DependencyInjection.framework */; };
+		A29CCF4324D4FE6E00218CE2 /* NotExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29CCF4224D4FE6D00218CE2 /* NotExpression.swift */; };
 		CFEFD80C13DA3E21C891636B /* Pods_BooleanAlgebra.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD478BED6662D617D5C83AE9 /* Pods_BooleanAlgebra.framework */; };
 /* End PBXBuildFile section */
 
@@ -32,6 +33,7 @@
 		A231CF34234255A200CCE625 /* OrExpression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrExpression.swift; sourceTree = "<group>"; };
 		A231CF3B2342563100CCE625 /* BooleanAlgebraInjectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooleanAlgebraInjectionProvider.swift; sourceTree = "<group>"; };
 		A231CF3E2342564E00CCE625 /* DependencyInjection.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DependencyInjection.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A29CCF4224D4FE6D00218CE2 /* NotExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotExpression.swift; sourceTree = "<group>"; };
 		DD478BED6662D617D5C83AE9 /* Pods_BooleanAlgebra.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BooleanAlgebra.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E95C29B43EE4501D07734B6E /* Pods-BooleanAlgebra.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BooleanAlgebra.release.xcconfig"; path = "../Pods/Target Support Files/Pods-BooleanAlgebra/Pods-BooleanAlgebra.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -75,6 +77,7 @@
 				A231CF2F234255A100CCE625 /* BooleanExpression.swift */,
 				A231CF31234255A100CCE625 /* BooleanExpressionGroup.swift */,
 				A231CF33234255A200CCE625 /* BooleanExpressionParser.swift */,
+				A29CCF4224D4FE6D00218CE2 /* NotExpression.swift */,
 				A231CF30234255A100CCE625 /* AndExpression.swift */,
 				A231CF34234255A200CCE625 /* OrExpression.swift */,
 				A231CF272342557B00CCE625 /* BooleanAlgebra.h */,
@@ -207,6 +210,7 @@
 				A231CF3A234255A300CCE625 /* OrExpression.swift in Sources */,
 				A231CF3C2342563100CCE625 /* BooleanAlgebraInjectionProvider.swift in Sources */,
 				A231CF39234255A300CCE625 /* BooleanExpressionParser.swift in Sources */,
+				A29CCF4324D4FE6E00218CE2 /* NotExpression.swift in Sources */,
 				A231CF36234255A300CCE625 /* AndExpression.swift in Sources */,
 				A231CF37234255A300CCE625 /* BooleanExpressionGroup.swift in Sources */,
 			);

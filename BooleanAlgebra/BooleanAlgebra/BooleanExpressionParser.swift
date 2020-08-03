@@ -17,6 +17,7 @@ public enum BooleanExpressionType {
 	case expression
 	case and
 	case or
+	case not
 }
 
 // sourcery: AutoMockable
@@ -25,6 +26,10 @@ public protocol BooleanExpressionParser {
 }
 
 internal final class BooleanExpressionParserImpl: BooleanExpressionParser {
+	private typealias Me = BooleanExpressionParserImpl
+
+	private static let log = Log()
+
 	public final func parse(_ parts: [BooleanExpressionPart]) throws -> BooleanExpression {
 		guard !parts.isEmpty else {
 			throw GenericError("Nothing to parse")
@@ -32,6 +37,9 @@ internal final class BooleanExpressionParserImpl: BooleanExpressionParser {
 		var stack = [BooleanExpression]()
 		for part in parts {
 			switch part.type {
+			case .not:
+				stack.append(NotExpression())
+				break
 			case .and:
 				try parseAnd(&stack)
 				break
@@ -39,8 +47,7 @@ internal final class BooleanExpressionParserImpl: BooleanExpressionParser {
 				try parseOr(&stack)
 				break
 			case .groupStart:
-				let group = BooleanExpressionGroup()
-				stack.append(group)
+				stack.append(BooleanExpressionGroup())
 				break
 			case .groupEnd:
 				try parseGroupEnd(&stack)
@@ -50,7 +57,7 @@ internal final class BooleanExpressionParserImpl: BooleanExpressionParser {
 				break
 			}
 		}
-		if stack.count > 1 {
+		while stack.count > 1 {
 			let current = stack.removeLast()
 			if let and = stack[0] as? AndExpression {
 				and.expression2 = current
@@ -58,11 +65,16 @@ internal final class BooleanExpressionParserImpl: BooleanExpressionParser {
 			} else if let or = stack[0] as? OrExpression {
 				or.expression2 = current
 				stack[0] = or
+			} else if let not = stack[0] as? NotExpression {
+				not.subExpression = current
+				stack[0] = not
 			} else {
-				throw GenericError("Expected and / or but received \(current.description)")
+				throw GenericError("Expected 'and' / 'or' / 'not' but received \(current.description)")
 			}
 		}
 		guard let expression = stack.first else {
+			// this shouldn't be able to happen even with an invalid expression
+			Me.log.error("Nothing left in stack after parsing boolean expression")
 			throw GenericError("No expression")
 		}
 		guard expression.isValid() else {
@@ -102,6 +114,9 @@ internal final class BooleanExpressionParserImpl: BooleanExpressionParser {
 			} else if let or = current as? OrExpression {
 				or.expression2 = subGroup
 				subGroup = or
+			} else if let not = current as? NotExpression {
+				not.subExpression = subGroup
+				subGroup = not
 			} else {
 				throw GenericError("Expected AND or OR but received \(current.description)")
 			}
@@ -120,6 +135,9 @@ internal final class BooleanExpressionParserImpl: BooleanExpressionParser {
 		} else if let or = stack.last as? OrExpression {
 			or.expression2 = group
 			stack[stack.count - 1] = or
+		} else if let not = stack.last as? NotExpression {
+			not.subExpression = group
+			stack[stack.count - 1] = not
 		}
 		stack.append(group)
 	}
@@ -130,6 +148,9 @@ internal final class BooleanExpressionParserImpl: BooleanExpressionParser {
 		}
 		if stack.isEmpty {
 			stack.append(expression)
+		} else if let not = stack.last as? NotExpression {
+			not.subExpression = expression
+			stack[stack.count - 1] = not
 		} else if let and = stack.last as? AndExpression {
 			and.expression2 = expression
 			stack[stack.count - 1] = and

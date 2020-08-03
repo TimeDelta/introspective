@@ -7,6 +7,8 @@
 //
 
 import XCTest
+import Hamcrest
+
 @testable import Introspective
 @testable import BooleanAlgebra
 
@@ -19,7 +21,7 @@ final class BooleanExpressionParserUnitTests: UnitTest {
 		parser = BooleanExpressionParserImpl()
 	}
 
-	// MARK: - parse()
+	// MARK: - parse() - invalid expressions
 
 	func testGivenEmptyArray_parse_throwsError() throws {
 		// given
@@ -29,7 +31,9 @@ final class BooleanExpressionParserUnitTests: UnitTest {
 		XCTAssertThrowsError(try parser.parse(parts))
 	}
 
-	func testGivenHangingOr_parse_throwsError() throws {
+	// MARK: Dangling Conjunction (missing second subexpression)
+
+	func testGivenDanglingOr_parse_throwsError() throws {
 		// given
 		let parts: [BooleanExpressionPart] = [
 			(type: .expression, expression: ExpressionStub("a")),
@@ -40,7 +44,7 @@ final class BooleanExpressionParserUnitTests: UnitTest {
 		XCTAssertThrowsError(try parser.parse(parts))
 	}
 
-	func testGivenHangingAnd_parse_throwsError() throws {
+	func testGivenDanglingAnd_parse_throwsError() throws {
 		// given
 		let parts: [BooleanExpressionPart] = [
 			(type: .expression, expression: ExpressionStub("a")),
@@ -50,6 +54,8 @@ final class BooleanExpressionParserUnitTests: UnitTest {
 		// when / then
 		XCTAssertThrowsError(try parser.parse(parts))
 	}
+
+	// MARK: Groups
 
 	func testGivenOnlyGroupStart_parse_throwsError() throws {
 		// given
@@ -82,6 +88,33 @@ final class BooleanExpressionParserUnitTests: UnitTest {
 		XCTAssertThrowsError(try parser.parse(parts))
 	}
 
+	// MARK: Not
+
+	func testGivenOnlyNot_parse_throwsError() throws {
+		// given
+		let parts: [BooleanExpressionPart] = [
+			(type: .not, expression: nil),
+		]
+
+		// when / then
+		XCTAssertThrowsError(try parser.parse(parts))
+	}
+
+	func testGivenExpressionFollowedByNot_parse_throwsError() throws {
+		// given
+		let parts: [BooleanExpressionPart] = [
+			(type: .expression, expression: ExpressionStub("a")),
+			(type: .not, expression: nil),
+			// want to make sure the error thrown is not because of missing sub expression for not
+			(type: .expression, expression: ExpressionStub("b")),
+		]
+
+		// when / then
+		XCTAssertThrowsError(try parser.parse(parts))
+	}
+
+	// MARK: Or
+
 	func testGivenOnlyOr_parse_throwsError() throws {
 		// given
 		let parts: [BooleanExpressionPart] = [
@@ -103,6 +136,8 @@ final class BooleanExpressionParserUnitTests: UnitTest {
 		// when / then
 		XCTAssertThrowsError(try parser.parse(parts))
 	}
+
+	// MARK: And
 
 	func testGivenOnlyAnd_parse_throwsError() throws {
 		// given
@@ -126,19 +161,7 @@ final class BooleanExpressionParserUnitTests: UnitTest {
 		XCTAssertThrowsError(try parser.parse(parts))
 	}
 
-	func testGivenOnlyExpression_parse_correctlyParsesExpression() throws {
-		// given
-		let expectedExpression = ExpressionStub("a")
-		let parts: [BooleanExpressionPart] = [
-			(type: .expression, expression: expectedExpression),
-		]
-
-		// when
-		let actualExpression = try parser.parse(parts)
-
-		// then
-		XCTAssert(actualExpression.equalTo(expectedExpression))
-	}
+	// MARK: Combos
 
 	func testGivenGroupStartOrGroupEnd_parse_throwsError() throws {
 		// given
@@ -175,7 +198,194 @@ final class BooleanExpressionParserUnitTests: UnitTest {
 		XCTAssertThrowsError(try parser.parse(parts))
 	}
 
-	// ((a&b|c))|d
+	func testGivenGroupEndFollowedByPlainExpression_parse_throwsError() throws {
+		// given
+		let parts: [BooleanExpressionPart] = [
+			(type: .groupStart, expression: nil),
+			(type: .expression, expression: ExpressionStub("a")),
+			(type: .groupEnd, expression: nil),
+			(type: .expression, expression: ExpressionStub("b")),
+		]
+
+		// when / then
+		XCTAssertThrowsError(try parser.parse(parts))
+	}
+
+	func testGivenGroupEndFollowedByNot_parse_throwsError() throws {
+		// given
+		let parts: [BooleanExpressionPart] = [
+			(type: .groupStart, expression: nil),
+			(type: .expression, expression: ExpressionStub("a")),
+			(type: .groupEnd, expression: nil),
+			(type: .not, expression: nil),
+			// want to make sure the error thrown is not because of missing sub expression for not
+			(type: .expression, expression: ExpressionStub("b")),
+		]
+
+		// when / then
+		XCTAssertThrowsError(try parser.parse(parts))
+	}
+
+	// MARK: - parse() - valid expressions
+
+	// MARK: a
+
+	func testGivenOnlyExpression_parse_correctlyParsesExpression() throws {
+		// given
+		let expectedExpression = ExpressionStub("a")
+		let parts: [BooleanExpressionPart] = [
+			(type: .expression, expression: expectedExpression),
+		]
+
+		// when
+		let actualExpression = try parser.parse(parts)
+
+		// then
+		assertThat(actualExpression, equals(expectedExpression))
+	}
+
+	// MARK: (a)
+
+	func testGivenOnlyGroupedExpression_parse_correctlyParsesExpression() throws {
+		// given
+		let parts: [BooleanExpressionPart] = [
+			(type: .groupStart, expression: nil),
+			(type: .expression, expression: ExpressionStub("a")),
+			(type: .groupEnd, expression: nil),
+		]
+		let expectedExpression = BooleanExpressionGroup(ExpressionStub("a"))
+
+		// when
+		let actualExpression = try parser.parse(parts)
+
+		// then
+		assertThat(actualExpression, equals(expectedExpression))
+	}
+
+	// MARK: !a
+
+	func testGivenSimpleNotExpression_parse_correctlyParsesExpression() throws {
+		// given
+		let parts: [BooleanExpressionPart] = [
+			(type: .not, expression: nil),
+			(type: .expression, expression: ExpressionStub("a")),
+		]
+		let expectedExpression = NotExpression(ExpressionStub("a"))
+
+		// when
+		let actualExpression = try parser.parse(parts)
+
+		// then
+		assertThat(actualExpression, equals(expectedExpression))
+	}
+
+	// MARK: !a|b
+
+	func testGivenNotAOrB_parse_correctlyParsesExpression() throws {
+		// given
+		let parts: [BooleanExpressionPart] = [
+			(type: .not, expression: nil),
+			(type: .expression, expression: ExpressionStub("a")),
+			(type: .or, expression: nil),
+			(type: .expression, expression: ExpressionStub("b")),
+		]
+		let expectedExpression = OrExpression(
+			NotExpression(ExpressionStub("a")),
+			ExpressionStub("b")
+		)
+
+		// when
+		let actualExpression = try parser.parse(parts)
+
+		// then
+		assertThat(actualExpression, equals(expectedExpression))
+	}
+
+	// MARK: !(a|b)
+
+	func testGivenNotGroupedAOrB_parse_correctlyParsesExpression() throws {
+		// given
+		let parts: [BooleanExpressionPart] = [
+			(type: .not, expression: nil),
+			(type: .groupStart, expression: nil),
+			(type: .expression, expression: ExpressionStub("a")),
+			(type: .or, expression: nil),
+			(type: .expression, expression: ExpressionStub("b")),
+			(type: .groupEnd, expression: nil),
+		]
+		let expectedExpression = NotExpression(
+			BooleanExpressionGroup(
+				OrExpression(
+					ExpressionStub("a"),
+					ExpressionStub("b")
+				)
+			)
+		)
+
+		// when
+		let actualExpression = try parser.parse(parts)
+
+		// then
+		assertThat(actualExpression, equals(expectedExpression))
+	}
+
+	// MARK: (!!a)
+
+	func testGivenValidData5_parse_correctlyParsesExpression() throws {
+		// given
+		let parts: [BooleanExpressionPart] = [
+			(type: .groupStart, expression: nil),
+			(type: .not, expression: nil),
+			(type: .not, expression: nil),
+			(type: .expression, expression: ExpressionStub("a")),
+			(type: .groupEnd, expression: nil),
+		]
+		let expectedExpression = BooleanExpressionGroup(
+			NotExpression(NotExpression(ExpressionStub("a")))
+		)
+
+		// when
+		let actualExpression = try parser.parse(parts)
+
+		// then
+		assertThat(actualExpression, equals(expectedExpression))
+	}
+
+	// MARK: a&!(b|c)
+
+	func testGivenAAndNotGroupedBOrC_parse_correctlyParsesExpression() throws {
+		// given
+		let parts: [BooleanExpressionPart] = [
+			(type: .expression, expression: ExpressionStub("a")),
+			(type: .and, expression: nil),
+			(type: .not, expression: nil),
+			(type: .groupStart, expression: nil),
+			(type: .expression, expression: ExpressionStub("b")),
+			(type: .or, expression: nil),
+			(type: .expression, expression: ExpressionStub("c")),
+			(type: .groupEnd, expression: nil),
+		]
+		let expectedExpression = AndExpression(
+			ExpressionStub("a"),
+			NotExpression(
+				BooleanExpressionGroup(
+					OrExpression(
+						ExpressionStub("b"),
+						ExpressionStub("c")
+					)
+				)
+			)
+		)
+
+		// when
+		let actualExpression = try parser.parse(parts)
+
+		// then
+		assertThat(actualExpression, equals(expectedExpression))
+	}
+
+	// MARK: ((a&b|c))|d
+
 	func testGivenValidData1_parse_correctlyParsesExpression() throws {
 		// given
 		let parts: [BooleanExpressionPart] = [
@@ -207,10 +417,11 @@ final class BooleanExpressionParserUnitTests: UnitTest {
 		let actualExpression = try parser.parse(parts)
 
 		// then
-		XCTAssert(actualExpression.equalTo(expectedExpression))
+		assertThat(actualExpression, equals(expectedExpression))
 	}
 
-	// (a&(b|c))
+	// MARK: (a&(b|c))
+
 	func testGivenValidData2_parse_correctlyParsesExpression() throws {
 		// given
 		let parts: [BooleanExpressionPart] = [
@@ -240,10 +451,11 @@ final class BooleanExpressionParserUnitTests: UnitTest {
 		let actualExpression = try parser.parse(parts)
 
 		// then
-		XCTAssert(actualExpression.equalTo(expectedExpression))
+		assertThat(actualExpression, equals(expectedExpression))
 	}
 
-	// (a&(b|c))|(b&(c|d))
+	// MARK: (a&(b|c))|(b&(c|d))
+
 	func testGivenValidData3_parse_correctlyParsesExpression() throws {
 		// given
 		let parts: [BooleanExpressionPart] = [
@@ -290,10 +502,11 @@ final class BooleanExpressionParserUnitTests: UnitTest {
 		let actualExpression = try parser.parse(parts)
 
 		// then
-		XCTAssert(actualExpression.equalTo(expectedExpression))
+		assertThat(actualExpression, equals(expectedExpression))
 	}
 
-	// a&b|((c|d|e)&a)|f
+	// MARK: a&b|((c|d|e)&a)|f
+
 	func testGivenValidData4_parse_correctlyParsesExpression() throws {
 		// given
 		let parts: [BooleanExpressionPart] = [
@@ -337,6 +550,6 @@ final class BooleanExpressionParserUnitTests: UnitTest {
 		let actualExpression = try parser.parse(parts)
 
 		// then
-		XCTAssert(actualExpression.equalTo(expectedExpression))
+		assertThat(actualExpression, equals(expectedExpression))
 	}
 }

@@ -108,6 +108,7 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 		case .groupStart: return groupStartCell(for: indexPath)
 		case .groupEnd: return groupEndCell(for: indexPath)
 		case .expression: return expressionCell(for: indexPath)
+		case .not: return notCell(for: indexPath)
 		}
 	}
 
@@ -331,6 +332,13 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 		let part = expressionParts[indexPath.row]
 		cell.attributeRestriction = part.expression as? AttributeRestriction
 		cell.indentationLevel = getIndentationLevelFor(indexPath)
+		return cell
+	}
+
+	private final func notCell(for indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: "basic", for: indexPath)
+		cell.indentationLevel = getIndentationLevelFor(indexPath)
+		cell.textLabel?.text = "not"
 		return cell
 	}
 }
