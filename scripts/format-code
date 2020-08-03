@@ -2,11 +2,11 @@
 set -e
 
 if ! which swiftformat > /dev/null; then
-  echo "ERROR: You have to install SwiftFormat first."
-  echo "This is easy to do using HomeBrew: brew install swiftformat"
-  echo "Don't have HomeBrew? No problem. Just run the following: "
-  echo '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"'
-  exit 1
+  echo "ERROR: You have to install SwiftFormat first." >&2
+  echo "This is easy to do using HomeBrew: brew install swiftformat" >&2
+  echo "Don't have HomeBrew? No problem. Just run the following: " >&2
+  echo '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"' >&2
+  exit 0
 fi
 
 get_rules_list() {
@@ -26,7 +26,7 @@ swiftformat \
   --indent tab \
   --linebreaks lf \
   --header ignore \
-  --specifierorder public,private,static,final,convenience,override \
+  --specifierorder open,public,internal,private,static,weak,strong,unowned,final,convenience,override \
   --disable `get_rules_list disabled` \
   --enable `get_rules_list enabled` \
   `find . -type d -maxdepth 1 -print \
