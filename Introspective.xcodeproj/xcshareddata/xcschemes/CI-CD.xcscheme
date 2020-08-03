@@ -1,26 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1030"
-   wasCreatedForAppExtension = "YES"
-   version = "2.0">
+   LastUpgradeVersion = "1160"
+   version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES">
       <BuildActionEntries>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "863443B57A8C8D8D1AE1C8636F9821BB"
-               BuildableName = "DiscreteMoodWidget.appex"
-               BlueprintName = "DiscreteMoodWidget"
-               ReferencedContainer = "container:Introspective.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
          <BuildActionEntry
             buildForTesting = "YES"
             buildForRunning = "YES"
@@ -38,53 +23,76 @@
       </BuildActionEntries>
    </BuildAction>
    <TestAction
-      buildConfiguration = "Debug"
-      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
-      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      buildConfiguration = "Release"
+      selectedDebuggerIdentifier = ""
+      selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
       shouldUseLaunchSchemeArgsEnv = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "863443B57A8C8D8D1AE1C8636F9821BB"
-            BuildableName = "DiscreteMoodWidget.appex"
-            BlueprintName = "DiscreteMoodWidget"
-            ReferencedContainer = "container:Introspective.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "C52F3CA73E4CEB90C2AC84DD7AFF5550"
+               BuildableName = "IntrospectiveTests.xctest"
+               BlueprintName = "IntrospectiveTests"
+               ReferencedContainer = "container:Introspective.xcodeproj">
+            </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "BloodPressureQueryFunctionalTests">
+               </Test>
+               <Test
+                  Identifier = "BodyMassIndexQueryFunctionalTests">
+               </Test>
+               <Test
+                  Identifier = "CombinedQueryFunctionalTests">
+               </Test>
+               <Test
+                  Identifier = "HeartRateQueryFunctionalTests">
+               </Test>
+               <Test
+                  Identifier = "LeanBodyMassQueryFunctionalTests">
+               </Test>
+               <Test
+                  Identifier = "RestingHeartRateQueryFunctionalTests">
+               </Test>
+               <Test
+                  Identifier = "SleepQueryFunctionalTests">
+               </Test>
+               <Test
+                  Identifier = "WeightQueryFunctionalTests">
+               </Test>
+            </SkippedTests>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Debug"
+      buildConfiguration = "Release"
       selectedDebuggerIdentifier = ""
       selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
       launchStyle = "0"
-      askForAppToLaunch = "Yes"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
-      allowLocationSimulation = "YES"
-      launchAutomaticallySubstyle = "2">
-      <RemoteRunnable
-         runnableDebuggingMode = "2"
-         BundleIdentifier = "com.apple.springboard">
+      allowLocationSimulation = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "863443B57A8C8D8D1AE1C8636F9821BB"
-            BuildableName = "DiscreteMoodWidget.appex"
-            BlueprintName = "DiscreteMoodWidget"
+            BlueprintIdentifier = "BB0A1DC399A7E3FFC11219EB8C00C163"
+            BuildableName = "Introspective.app"
+            BlueprintName = "Introspective"
             ReferencedContainer = "container:Introspective.xcodeproj">
          </BuildableReference>
-      </RemoteRunnable>
+      </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
-      debugDocumentVersioning = "YES"
-      launchAutomaticallySubstyle = "2">
+      debugDocumentVersioning = "YES">
       <BuildableProductRunnable
          runnableDebuggingMode = "0">
          <BuildableReference
@@ -97,7 +105,7 @@
       </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
-      buildConfiguration = "Debug">
+      buildConfiguration = "Release">
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Release"

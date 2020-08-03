@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1030"
+   LastUpgradeVersion = "1160"
    wasCreatedForAppExtension = "YES"
    version = "2.0">
    <BuildAction
@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "863443B57A8C8D8D1AE1C8636F9821BB"
-               BuildableName = "DiscreteMoodWidget.appex"
-               BlueprintName = "DiscreteMoodWidget"
+               BlueprintIdentifier = "A5E432A59235FCF8D2DD69F018FA0B8F"
+               BuildableName = "SiriIntents.appex"
+               BlueprintName = "SiriIntents"
                ReferencedContainer = "container:Introspective.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -42,15 +42,6 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "863443B57A8C8D8D1AE1C8636F9821BB"
-            BuildableName = "DiscreteMoodWidget.appex"
-            BlueprintName = "DiscreteMoodWidget"
-            ReferencedContainer = "container:Introspective.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <Testables>
       </Testables>
    </TestAction>
@@ -66,17 +57,16 @@
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES"
       launchAutomaticallySubstyle = "2">
-      <RemoteRunnable
-         runnableDebuggingMode = "2"
-         BundleIdentifier = "com.apple.springboard">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "863443B57A8C8D8D1AE1C8636F9821BB"
-            BuildableName = "DiscreteMoodWidget.appex"
-            BlueprintName = "DiscreteMoodWidget"
+            BlueprintIdentifier = "BB0A1DC399A7E3FFC11219EB8C00C163"
+            BuildableName = "Introspective.app"
+            BlueprintName = "Introspective"
             ReferencedContainer = "container:Introspective.xcodeproj">
          </BuildableReference>
-      </RemoteRunnable>
+      </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
