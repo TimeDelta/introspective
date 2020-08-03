@@ -26,6 +26,7 @@ jobs:
           cd "`git rev-parse --show-toplevel`/Common/Common"
           echo "$filesource" > GitVersion.swift
           touch GitVersion.swift
+          cat GitVersion.swift
       - name: Build
         run: |
           xcodebuild clean build -workspace Introspective.xcworkspace -scheme CI-CD -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
