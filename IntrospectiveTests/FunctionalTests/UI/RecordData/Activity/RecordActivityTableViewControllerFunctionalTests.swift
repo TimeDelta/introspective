@@ -24,6 +24,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 
 	final override func setUp() {
 		super.setUp()
+		Given(uiUtil, .setBackButton(for: .any, title: .any, action: .any, willReturn: UIBarButtonItem()))
 		let storyboard = UIStoryboard(name: "RecordData", bundle: nil)
 		controller = (storyboard.instantiateViewController(withIdentifier: "activitiesTable") as! RecordActivityTableViewController)
 	}

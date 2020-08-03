@@ -68,7 +68,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 		let sections = controller.numberOfSections(in: tableView)
 
 		// then
-		assertThat(sections, equalTo(1))
+		assertThat(sections, equalTo(2))
 	}
 
 	// MARK: - tableViewNumberOfRowsInSection()
@@ -80,7 +80,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 		controller.medication = medication
 
 		// when
-		let numberOfRows = controller.tableView(tableView, numberOfRowsInSection: 0)
+		let numberOfRows = controller.tableView(tableView, numberOfRowsInSection: 1)
 
 		// then
 		assertThat(numberOfRows, equalTo(expectedNumberOfRows))
@@ -94,7 +94,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 		let medication = try createMedicationWith(numberOfDoses: expectedNumberOfRows)
 		controller.medication = medication
 		mockDeleteActionRequirements()
-		let indexPath = IndexPath(row: 0, section: 0)
+		let indexPath = IndexPath(row: 0, section: 1)
 
 		// when
 		let actions = controller.tableView(tableView, editActionsForRowAt: indexPath)
@@ -120,7 +120,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 		controller.medication = medication
 		mockDeleteActionRequirements()
 		// note that doses are displayed as most recent first so this should delete the third dose
-		let indexPath = IndexPath(row: 0, section: 0)
+		let indexPath = IndexPath(row: 0, section: 1)
 
 		// when
 		let actions = controller.tableView(tableView, editActionsForRowAt: indexPath)
@@ -158,7 +158,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 		setDateRange(from: filterDateMin)
 		mockDeleteActionRequirements()
 		// note that doses are displayed as most recent first so this should delete the second dose
-		let indexPath = IndexPath(row: 1, section: 0)
+		let indexPath = IndexPath(row: 1, section: 1)
 
 		// when
 		let actions = controller.tableView(tableView, editActionsForRowAt: indexPath)
@@ -188,13 +188,13 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 
 		// when
 		// display order: descending order of timestamp
-		controller.tableView(tableView, didSelectRowAt: IndexPath(row: 1, section: 0))
+		controller.tableView(tableView, didSelectRowAt: IndexPath(row: 1, section: 1))
 
 		// then
 		assertThat(presentedController.medicationDose, equals(dose1))
 	}
 
-	func test_tableViewDidSelectRowAt_setsCorrectMedicationOnPresentedController() throws {
+	func testGivenSectionOne_tableViewDidSelectRowAt_setsCorrectMedicationOnPresentedController() throws {
 		// given
 		let presentedController = mockMedicationDoseEditorViewController()
 		var medication = MedicationDataTestUtil.createMedication()
@@ -203,7 +203,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 		controller.medication = medication
 
 		// when
-		controller.tableView(tableView, didSelectRowAt: IndexPath(row: 0, section: 0))
+		controller.tableView(tableView, didSelectRowAt: IndexPath(row: 0, section: 1))
 
 		// then
 		assertThat(presentedController.medication, equals(medication))
@@ -221,7 +221,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 		setDateRange(from: nil, to: nil)
 
 		// then
-		let numberOfRows = controller.tableView(tableView, numberOfRowsInSection: 0)
+		let numberOfRows = controller.tableView(tableView, numberOfRowsInSection: 1)
 		assertThat(numberOfRows, equalTo(expectedNumberOfDoses))
 	}
 
@@ -492,7 +492,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 //		controller.medication = medication
 //		setDateRange(from: date, to: nil)
 //		mockMedicationDoseEditorViewController()
-//		controller.tableView(tableView, didSelectRowAt: IndexPath(row: 0, section: 0))
+//		controller.tableView(tableView, didSelectRowAt: IndexPath(row: 0, section: 1))
 //		let transaction = DependencyInjector.get(Database.self).transaction()
 //		dose2 = try transaction.pull(savedObject: dose2)
 //		dose2.dosage = Dosage(3, "mg")
@@ -528,7 +528,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 //		controller.medication = medication
 //		setDateRange(from: date, to: nil)
 //		mockMedicationDoseEditorViewController()
-//		controller.tableView(tableView, didSelectRowAt: IndexPath(row: 0, section: 0))
+//		controller.tableView(tableView, didSelectRowAt: IndexPath(row: 0, section: 1))
 //		let transaction = DependencyInjector.get(Database.self).transaction()
 //		dose2 = try transaction.pull(savedObject: dose2)
 //		dose2.dosage = Dosage(3, "mg")

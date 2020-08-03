@@ -552,11 +552,16 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				return
 			}
 			samples[lastSelectedUnfilteredRowIndex] = sample!
-			tableView.reloadRows(at: [IndexPath(row: editIndex, section: 1)], with: .automatic)
+			DispatchQueue.main.async {
+				self.tableView.reloadRows(at: [IndexPath(row: editIndex, section: 1)], with: .automatic)
+			}
 			for i in 0 ..< informationValues.count {
 				informationValues[i] = nil
 			}
-			tableView.reloadSections(IndexSet(arrayLiteral: 0), with: .automatic)
+			DispatchQueue.main.async {
+				// replace with waiting cell until all information is recomputed
+				self.tableView.reloadSections(IndexSet(arrayLiteral: 0), with: .automatic)
+			}
 			DependencyInjector.get(AsyncUtil.self).run(qos: .userInteractive) {
 				self.recomputeInformation()
 				DispatchQueue.main.async {

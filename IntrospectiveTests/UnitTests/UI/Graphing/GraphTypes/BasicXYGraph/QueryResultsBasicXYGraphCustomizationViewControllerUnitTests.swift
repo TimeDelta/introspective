@@ -294,10 +294,10 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 			HeartRate.heartRate,
 			IntegerAttribute(name: "int"),
 			DurationAttribute(name: "duration"),
+			DosageAttribute(name: "dosage"),
 		]
 		var attributes: [Attribute] = [
 			TextAttribute(name: "text"),
-			DosageAttribute(name: "dosage"),
 		]
 		attributes.append(contentsOf: graphableAttributes)
 		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: attributes)
