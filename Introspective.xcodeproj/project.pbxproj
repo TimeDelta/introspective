@@ -337,7 +337,6 @@
 		A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FC569196ECE6B2231D16543528A687 /* UITest.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A26589F32BFC0527881D20D03E4CB48C /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
-		C20856BFEE25277F08AD5F1CBBF4C0C3 /* SingleSampleTypeXYGraphDataGeneratorUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED1ED371E1529BCAA650A691AE74834 /* SingleSampleTypeXYGraphDataGeneratorUnitTests.swift */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
 		A2DF8D22C94D6F91A865D337C0730F03 /* DurationUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA96F5DDD263FD0D99095EBADBA4AACC /* DurationUnitTests.swift */; };
 		A307D44D6721A760E637CEAE90AFED42 /* BloodPressureTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F312D49748BD5F763B6D8463E6112C45 /* BloodPressureTableViewCell.swift */; };
@@ -389,6 +388,7 @@
 		BED85826775FACFBBEF7AB8D4DB9A78B /* SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F6386CEF72DF109B7D92424A6DE652B /* SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests.swift */; };
 		BF221747777E2C3EFA565A644662738E /* AdvancedSampleGrouperUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C835393CC1EB20AE6C15EC6C759560B /* AdvancedSampleGrouperUnitTests.swift */; };
 		BF9C130E3A2C43AC8769BD79BB54CA49 /* DependencyInjection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62C6FB5762C7C9E6ABE9DCCC99A61F89 /* DependencyInjection.framework */; };
+		C20856BFEE25277F08AD5F1CBBF4C0C3 /* SingleSampleTypeXYGraphDataGeneratorUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED1ED371E1529BCAA650A691AE74834 /* SingleSampleTypeXYGraphDataGeneratorUnitTests.swift */; };
 		C2C88F1B669BAAF878E50FC890F92AD9 /* SelectOneAttributeValueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA75F2691AE8A3935FF7CAA81B5A3D4E /* SelectOneAttributeValueViewController.swift */; };
 		C3FD8E71E815CF49F7DAB1F40C7B279F /* ActivityIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07DBCF028AB728CB91602F18C812CB2A /* ActivityIntentHandler.swift */; };
 		C43A2229976D53A013FF8E722A72BDDE /* RecordData.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B5F8BF11900044421A50FB27C0A83A25 /* RecordData.storyboard */; };
@@ -922,7 +922,6 @@
 		A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		A2505FFD3F0233815468AA6A0A4B96FE /* CoreDataSampleMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSampleMock.swift; sourceTree = "<group>"; };
-		AED1ED371E1529BCAA650A691AE74834 /* SingleSampleTypeXYGraphDataGeneratorUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleSampleTypeXYGraphDataGeneratorUnitTests.swift; sourceTree = "<group>"; };
 		A455D3386BC23DDD4E8C89EF40475474 /* LessThanDoubleAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanDoubleAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A4CBB7B41499754C5234A1BC949DD2AC /* EditAttributeRestrictionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewController.swift; sourceTree = "<group>"; };
 		A64E0788E27B3B4FE185D06F3F454E46 /* ChooseSampleGrouperTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseSampleGrouperTypeViewController.swift; sourceTree = "<group>"; };
@@ -941,6 +940,7 @@
 		AE92103BE7FA3F73CAFCCEE92C88812B /* SameStartDatesSubQueryMatcherUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SameStartDatesSubQueryMatcherUnitTests.swift; sourceTree = "<group>"; };
 		AE99842B0CECEA6988A3B61ED88CDB3A /* HealthKitDataTestUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitDataTestUtil.swift; sourceTree = "<group>"; };
 		AEB900441A58470DF6731F6B7F737641 /* HeartRateQueryFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateQueryFunctionalTests.swift; sourceTree = "<group>"; };
+		AED1ED371E1529BCAA650A691AE74834 /* SingleSampleTypeXYGraphDataGeneratorUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleSampleTypeXYGraphDataGeneratorUnitTests.swift; sourceTree = "<group>"; };
 		AEDF01F769863A9123FEED8DBF775E9C /* GeneralResultsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralResultsUITests.swift; sourceTree = "<group>"; };
 		B0368D1DF231C9DCB97EF42A2B8065D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B115DB016120DBDE20823406A34EA731 /* Attributes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Attributes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2892,8 +2892,8 @@
 			buildConfigurationList = D63E90AF276550132DB77384E58E04DA /* Build configuration list for PBXNativeTarget "Introspective" */;
 			buildPhases = (
 				75E20E1CC157703ADA5941E98FF972D1 /* [CP] Check Pods Manifest.lock */,
+				C0F2C0B6434B840D9C4C6583DE0D8E9B /* Run Script - Create GitVersion.swift */,
 				5C892A1694A626CA237B8DDA20F4BFA8 /* Run Script - format code */,
-				F0FB89F745BB6CFF964B314ECF77BAAF /* Run Script - Create GitVersion.swift */,
 				BF6DA2C10FFDD3FB4515D3A60FA139E2 /* Sources */,
 				C51BB4D038DED40DD32EC47510ABCC76 /* Frameworks */,
 				98059E3C1A4EB06EC76869AA9E6318CC /* Resources */,
@@ -3242,7 +3242,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F0FB89F745BB6CFF964B314ECF77BAAF /* Run Script - Create GitVersion.swift */ = {
+		C0F2C0B6434B840D9C4C6583DE0D8E9B /* Run Script - Create GitVersion.swift */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3258,7 +3258,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nversion=$(git rev-parse --verify HEAD | cut -c 1-7)\ncurdate=$(date +\"%Y-%m-%d\")\n\nfilesource=\"//  DO NOT EDIT - GENERATED FILE\\n//  GitVersion.swift\\n//  Created on $curdate.\\n//\\n\\npublic let GIT_SHA_VERSION = \\\"$version\\\"\"\n\ncd ${SOURCE_ROOT}/Common/Common\necho \"$filesource\" > GitVersion.swift\ntouch GitVersion.swift\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nversion=$(git rev-parse --verify HEAD | cut -c 1-7)\ncurdate=$(date +\"%Y-%m-%d\")\n\nfilesource=\"//  DO NOT EDIT - GENERATED FILE\\n//  GitVersion.swift\\n//  Created on $curdate.\\n//\\n\\npublic let GIT_SHA_VERSION = \\\"$version\\\"\"\n\ncd ${SOURCE_ROOT}/Common/Common\necho -e \"$filesource\" > GitVersion.swift\ntouch GitVersion.swift\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
