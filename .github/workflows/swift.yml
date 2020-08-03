@@ -18,6 +18,14 @@ jobs:
         uses: actions/checkout@master
       - name: Get Dependencies
         run: pod install
+      - name: Create GitVersion.swift
+        run: |
+          version=$(git rev-parse --verify HEAD | cut -c 1-7)
+          curdate=$(date +"%Y-%m-%d")
+          filesource="//  DO NOT EDIT - GENERATED FILE\n//  GitVersion.swift\n//  Created on $curdate.\n//\n\npublic let GIT_SHA_VERSION = \"$version\""
+          cd "`git rev-parse --show-toplevel`/Common/Common"
+          echo "$filesource" > GitVersion.swift
+          touch GitVersion.swift
       - name: Build
         run: |
           xcodebuild clean build -workspace Introspective.xcworkspace -scheme CI-CD -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
