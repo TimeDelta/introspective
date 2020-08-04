@@ -2892,8 +2892,8 @@
 			buildConfigurationList = D63E90AF276550132DB77384E58E04DA /* Build configuration list for PBXNativeTarget "Introspective" */;
 			buildPhases = (
 				75E20E1CC157703ADA5941E98FF972D1 /* [CP] Check Pods Manifest.lock */,
-				C0F2C0B6434B840D9C4C6583DE0D8E9B /* Run Script - Create GitVersion.swift */,
-				5C892A1694A626CA237B8DDA20F4BFA8 /* Run Script - format code */,
+				8E829D092E55F316AC53E74C38777713 /* Run Script - Create GitVersion.swift */,
+				5C892A1694A626CA237B8DDA20F4BFA8 /* Run Script - Format Code */,
 				BF6DA2C10FFDD3FB4515D3A60FA139E2 /* Sources */,
 				C51BB4D038DED40DD32EC47510ABCC76 /* Frameworks */,
 				98059E3C1A4EB06EC76869AA9E6318CC /* Resources */,
@@ -3119,7 +3119,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		5C892A1694A626CA237B8DDA20F4BFA8 /* Run Script - format code */ = {
+		5C892A1694A626CA237B8DDA20F4BFA8 /* Run Script - Format Code */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3128,7 +3128,7 @@
 			);
 			inputPaths = (
 			);
-			name = "Run Script - format code";
+			name = "Run Script - Format Code";
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -3136,6 +3136,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "${SOURCE_ROOT}/scripts/format-code\n";
+			showEnvVarsInLog = 0;
 		};
 		5D1C14AD77BD9B66DB53DB1301911123 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3224,6 +3225,25 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Introspective/Pods-Introspective-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		8E829D092E55F316AC53E74C38777713 /* Run Script - Create GitVersion.swift */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script - Create GitVersion.swift";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${SOURCE_ROOT}/scripts/create-git-version-swift-file.sh\n";
+			showEnvVarsInLog = 0;
+		};
 		CB9A470863FA06650F751757EBDE58AA /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3241,24 +3261,6 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
-		};
-		C0F2C0B6434B840D9C4C6583DE0D8E9B /* Run Script - Create GitVersion.swift */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Run Script - Create GitVersion.swift";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nversion=$(git rev-parse --verify HEAD | cut -c 1-7)\ncurdate=$(date +\"%Y-%m-%d\")\n\nfilesource=\"//  DO NOT EDIT - GENERATED FILE\\n//  GitVersion.swift\\n//  Created on $curdate.\\n//\\n\\npublic let GIT_SHA_VERSION = \\\"$version\\\"\"\n\ncd ${SOURCE_ROOT}/Common/Common\necho -e \"$filesource\" > GitVersion.swift\ntouch GitVersion.swift\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
