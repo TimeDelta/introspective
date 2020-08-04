@@ -13,3 +13,4 @@ Pods/
 Podfile.lock
 instruments/*
 **/build/
+.swiftpm/
