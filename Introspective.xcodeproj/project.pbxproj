@@ -2916,8 +2916,8 @@
 			buildConfigurationList = DA3902413A9032DB0C31B07A1BF12402 /* Build configuration list for PBXNativeTarget "IntrospectiveTests" */;
 			buildPhases = (
 				684FE7A0413FD4F07560E7980BBC6BBE /* [CP] Check Pods Manifest.lock */,
-				49BE5C3B7F1DB6A2618310BB7349165D /* Sources */,
 				28B15F5E37FCE875874620B8D8FED2F6 /* SwiftyMocky - Generate Mocks */,
+				49BE5C3B7F1DB6A2618310BB7349165D /* Sources */,
 				EFD289161DD6FFAB7AF5952E10A3DCC3 /* Frameworks */,
 				C490F7220783FD21B097C273B9818E7A /* Resources */,
 				9E11D9960C5CD817C14C2053B27B7F04 /* [CP] Embed Pods Frameworks */,
@@ -3191,6 +3191,25 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		8E829D092E55F316AC53E74C38777713 /* Run Script - Create GitVersion.swift */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script - Create GitVersion.swift";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${SOURCE_ROOT}/scripts/create-git-version-swift-file.sh\n";
+			showEnvVarsInLog = 0;
+		};
 		9E11D9960C5CD817C14C2053B27B7F04 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3223,25 +3242,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Introspective/Pods-Introspective-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		8E829D092E55F316AC53E74C38777713 /* Run Script - Create GitVersion.swift */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Run Script - Create GitVersion.swift";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "${SOURCE_ROOT}/scripts/create-git-version-swift-file.sh\n";
 			showEnvVarsInLog = 0;
 		};
 		CB9A470863FA06650F751757EBDE58AA /* [CP] Check Pods Manifest.lock */ = {
