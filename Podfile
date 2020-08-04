@@ -13,8 +13,7 @@ target 'Introspective' do
   pod 'AAInfographics', :git => 'https://github.com/AAChartModel/AAChartKit-Swift.git', :commit => '5a4cd821251442fbb24720897db0b1abf7ccef32'
   pod 'NotificationBannerSwift'
   pod 'CalendarKit'
-  pod 'WSTagsField', '5.0.0'
-  pod "SearchTextField"
+  pod 'WSTagsField', :git => 'https://github.com/TimeDelta/WSTagsField.git', :commit => '9c629c40a11a2c7dc60f2783469eb161a6239208'
   pod 'CSV.swift', '~> 2.3.1'
   pod 'Instructions', '~> 1.2.2'
 
