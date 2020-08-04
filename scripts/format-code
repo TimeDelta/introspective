@@ -26,7 +26,7 @@ swiftformat \
   --indent tab \
   --linebreaks lf \
   --header ignore \
-  --specifierorder open,public,internal,private,static,weak,strong,unowned,final,convenience,override \
+  --specifierorder open,public,internal,private,static,weak,unowned,final,convenience,override \
   --disable `get_rules_list disabled` \
   --enable `get_rules_list enabled` \
   `find . -type d -maxdepth 1 -print \
