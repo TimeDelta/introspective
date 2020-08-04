@@ -2916,7 +2916,7 @@
 			buildConfigurationList = DA3902413A9032DB0C31B07A1BF12402 /* Build configuration list for PBXNativeTarget "IntrospectiveTests" */;
 			buildPhases = (
 				684FE7A0413FD4F07560E7980BBC6BBE /* [CP] Check Pods Manifest.lock */,
-				28B15F5E37FCE875874620B8D8FED2F6 /* SwiftyMocky - Generate Mocks */,
+				B7CC9104F28FC8F4524CB81C9F4DC2E9 /* SwiftyMocky - Generate Mocks */,
 				49BE5C3B7F1DB6A2618310BB7349165D /* Sources */,
 				EFD289161DD6FFAB7AF5952E10A3DCC3 /* Frameworks */,
 				C490F7220783FD21B097C273B9818E7A /* Resources */,
@@ -3065,7 +3065,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		28B15F5E37FCE875874620B8D8FED2F6 /* SwiftyMocky - Generate Mocks */ = {
+		B7CC9104F28FC8F4524CB81C9F4DC2E9 /* SwiftyMocky - Generate Mocks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3077,7 +3077,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "rake mock\n";
+			shellScript = "# only generate mocks if swiftymocky CLI can be found to avoid installing it in the CI build\nif [[ -n `which swiftymocky` ]]; then\n\trake mock\nelse\n\techo \"WARNING: Skipping mock generation. Install SwifyMocky CLI and make sure it is accessible in your PATH to generate mocks when building.\"\nfi\n";
 		};
 		38CB7D3BE010AA2048ABC975FE5D735A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
