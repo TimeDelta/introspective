@@ -56,7 +56,7 @@ for file in `find "${INPUT_DIR}" -type f -name \*.swift | grep -v "/Pods/" | gre
 done
 
 echo "templates:" >> "$CONFIG_FILE"
-echo "  - $PROJECT_DIR/Pods/SwiftyMocky/Sources/Templates" >> "$CONFIG_FILE"
+echo "  - $PROJECT_DIR/Pods/SwiftyMocky/Templates" >> "$CONFIG_FILE"
 echo "output:" >> "$CONFIG_FILE"
 echo "  $NORMAL_MOCKS_FILE" >> "$CONFIG_FILE"
 
