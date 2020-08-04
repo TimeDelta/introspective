@@ -10,7 +10,7 @@ target 'Introspective' do
   pod "Sourcery"
   pod "Presentr"
   pod 'SwiftDate', '6.0.3'
-  pod 'AAInfographics'
+  pod 'AAInfographics', :git => 'https://github.com/AAChartModel/AAChartKit-Swift.git', :commit => '5a4cd821251442fbb24720897db0b1abf7ccef32'
   pod 'NotificationBannerSwift'
   pod 'CalendarKit'
   pod 'WSTagsField', '5.0.0'
