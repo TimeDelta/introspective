@@ -137,7 +137,6 @@ target 'SampleGroupers' do
   pod 'Sourcery'
   pod 'SwiftDate', '6.0.3'
   pod 'CSV.swift', '~> 2.3.1'
-  pod 'NotificationBannerSwift'
 end
 
 target 'SampleGroupInformation' do
