@@ -42,7 +42,7 @@ public protocol Transaction {
 	func deleteAll(_ entityName: String) throws
 }
 
-final internal class TransactionImpl: Transaction {
+internal final class TransactionImpl: Transaction {
 	// MARK: - Static Variables
 
 	private typealias Me = TransactionImpl

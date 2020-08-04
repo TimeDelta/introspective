@@ -10,7 +10,7 @@ import CoreData
 import Foundation
 
 public class SharedPersistentContainer: NSPersistentContainer {
-	class open override func defaultDirectoryURL() -> URL {
+	open class override func defaultDirectoryURL() -> URL {
 		let storeURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.Introspective")?
 			.appendingPathComponent("Introspective.sqlite")
 		return storeURL!

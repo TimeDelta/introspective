@@ -32,7 +32,7 @@ public protocol CodableStorage {
 	func fileExists(_ fileName: String, in directory: StorageDirectory) -> Bool
 }
 
-final internal class CodableStorageImpl: CodableStorage {
+internal final class CodableStorageImpl: CodableStorage {
 	private typealias Me = CodableStorageImpl
 
 	private static let log = Log()

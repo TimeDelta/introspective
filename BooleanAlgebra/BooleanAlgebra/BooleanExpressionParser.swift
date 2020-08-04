@@ -24,7 +24,7 @@ public protocol BooleanExpressionParser {
 	func parse(_ parts: [BooleanExpressionPart]) throws -> BooleanExpression
 }
 
-final internal class BooleanExpressionParserImpl: BooleanExpressionParser {
+internal final class BooleanExpressionParserImpl: BooleanExpressionParser {
 	public final func parse(_ parts: [BooleanExpressionPart]) throws -> BooleanExpression {
 		guard !parts.isEmpty else {
 			throw GenericError("Nothing to parse")
