@@ -48,7 +48,7 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 	private final var chartModel = AAChartModel()
 		.animationType(.easeInCubic)
 		.zoomType(.xy)
-		.backgroundColor(AAColor.darkGray)
+		.backgroundColor(colorToHex(.secondarySystemBackground))
 		.dataLabelsEnabled(true)
 
 	// MARK: - UIViewController Overrides

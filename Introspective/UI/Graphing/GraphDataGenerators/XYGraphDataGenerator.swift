@@ -299,9 +299,19 @@ public class XYGraphDataGenerator {
 	final func populateColors(_ number: Int) {
 		for i in 0 ..< number {
 			let hue = CGFloat(Double(i) / Double(number))
-			let brightness = CGFloat(Double.random(in: 0.6 ... 1.0))
-			let saturation = CGFloat(Double.random(in: 0.6 ... 1.0))
-			colors.append(UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: 1))
+			let brightness: CGFloat
+			if #available(iOS 13.0, *) {
+				var white: CGFloat = 0
+				UIColor.systemBackground.getWhite(&white, alpha: nil)
+				if white == 1 {
+					brightness = CGFloat(Double.random(in: 0.4 ... 0.8))
+				} else {
+					brightness = CGFloat(Double.random(in: 0.6 ... 1.0))
+				}
+			} else {
+				brightness = CGFloat(Double.random(in: 0.6 ... 0.8))
+			}
+			colors.append(UIColor(hue: hue, saturation: 1, brightness: brightness, alpha: 1))
 		}
 	}
 
@@ -324,13 +334,5 @@ public class XYGraphDataGenerator {
 			return stringValue
 		}
 		return String(describing: value)
-	}
-
-	private final func colorToHex(_ color: UIColor) -> String {
-		let components = color.cgColor.components!
-		let r = Float(components[0])
-		let g = Float(components[1])
-		let b = Float(components[2])
-		return String(format: "#%02lX%02lX%02lX", lroundf(r * 255), lroundf(g * 255), lroundf(b * 255))
 	}
 }

@@ -75,3 +75,14 @@ public func versionString() -> String {
 		return GIT_SHA_VERSION
 	}
 }
+
+public func colorToHex(_ color: UIColor) -> String {
+	guard let components = color.cgColor.components else {
+		Log().error("Unable to color components: %@", color.description)
+		return "#000000" // black
+	}
+	let r = Float(components[0])
+	let g = Float(components[1])
+	let b = Float(components[2])
+	return String(format: "#%02lX%02lX%02lX", lroundf(r * 255), lroundf(g * 255), lroundf(b * 255))
+}
