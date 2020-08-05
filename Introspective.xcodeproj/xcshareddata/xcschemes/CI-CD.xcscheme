@@ -35,6 +35,10 @@
             argument = "--functional-testing"
             isEnabled = "YES">
          </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--testing"
+            isEnabled = "YES">
+         </CommandLineArgument>
       </CommandLineArguments>
       <CodeCoverageTargets>
          <BuildableReference
