@@ -9,6 +9,8 @@
 import XCTest
 import CoreData
 import SwiftyMocky
+import Hamcrest
+
 @testable import Introspective
 @testable import Common
 @testable import DataImport
@@ -17,6 +19,8 @@ import SwiftyMocky
 @testable import Samples
 
 final class EasyPillMedicationDoseImporterFunctionalTests: ImporterTest {
+
+	// MARK: - Test Setup
 
 	private typealias Me = EasyPillMedicationDoseImporterFunctionalTests
 
@@ -168,12 +172,15 @@ abc,,
 		useInput("fdhj\n\n")
 		let existingMedicationName = "fdsjho"
 		let existingDoseDate = Date()
-		MedicationDataTestUtil.createDose(medication: MedicationDataTestUtil.createMedication(name: existingMedicationName), timestamp: existingDoseDate)
+		let dose = MedicationDataTestUtil.createDose(
+			medication: MedicationDataTestUtil.createMedication(name: existingMedicationName),
+			timestamp: existingDoseDate
+		)
 
 		// when
 		XCTAssertThrowsError(try importer.importData(from: url)) { error in
 			// then
-			XCTAssert(try! doseWasImported(for: existingMedicationName, at: existingDoseDate))
+			assertThat(MedicationDoseInfo(dose), exists(MedicationDose.self))
 		}
 	}
 

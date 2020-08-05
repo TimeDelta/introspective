@@ -21,9 +21,9 @@ public class MedicationDoseInfo: Info {
 
 	public init(
 		medication: MedicationInfo,
-		dosage: Dosage?,
+		dosage: Dosage? = nil,
 		timestamp: Date,
-		timeZone: TimeZone?,
+		timeZone: TimeZone? = nil,
 		source: Sources.MedicationSourceNum
 	) {
 		self.medication = medication
@@ -31,6 +31,14 @@ public class MedicationDoseInfo: Info {
 		self.timestamp = timestamp
 		self.timeZone = timeZone
 		self.source = source
+	}
+
+	public init(_ dose: MedicationDose) {
+		medication = MedicationInfo(dose.medication)
+		dosage = dose.dosage
+		timestamp = dose.date
+		timeZone = dose.timeZone
+		source = dose.getSource()
 	}
 
 	public func getPredicates() -> [String: NSPredicate] {

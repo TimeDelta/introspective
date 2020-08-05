@@ -14,6 +14,7 @@ import Foundation
 public final class MedicationInfo: Info {
 
 	var name: String
+	/// Default dosage
 	var dosage: Dosage?
 	var frequency: Frequency?
 	var startedOn: Date?
@@ -24,11 +25,11 @@ public final class MedicationInfo: Info {
 
 	public init(
 		name: String,
-		dosage: Dosage?,
-		frequency: Frequency?,
-		startedOn: Date?,
-		startedOnTimeZone: TimeZone?,
-		notes: String?,
+		dosage: Dosage? = nil,
+		frequency: Frequency? = nil,
+		startedOn: Date? = nil,
+		startedOnTimeZone: TimeZone? = nil,
+		notes: String? = nil,
 		source: Sources.MedicationSourceNum,
 		recordScreenIndex: Int16
 	) {
@@ -40,6 +41,17 @@ public final class MedicationInfo: Info {
 		self.notes = notes
 		self.source = source
 		self.recordScreenIndex = recordScreenIndex
+	}
+
+	public init(_ medication: Medication) {
+		name = medication.name
+		dosage = medication.dosage
+		frequency = medication.frequency
+		startedOn = medication.startedOn
+		startedOnTimeZone = medication.startedOnTimeZone
+		notes = medication.notes
+		source = medication.getSource()
+		recordScreenIndex = medication.recordScreenIndex
 	}
 
 	public func getPredicates() -> [String: NSPredicate] {

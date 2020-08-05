@@ -42,7 +42,7 @@ func exists<SubType: NSManagedObject & CoreDataObject, InfoType: Info>(_ type: S
 
 			return .mismatch(getClosestEntriesDescription(totalNumberOfFields: predicatesOnly.count, closest: closest))
 		} catch {
-			return .mismatch("FetchRequest failed: " + error.localizedDescription)
+			return .mismatch("Matcher FetchRequest failed: " + error.localizedDescription)
 		}
 	}
 }
