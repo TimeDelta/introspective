@@ -6,8 +6,6 @@
 **/xcdebugger/
 **/GitVersion.swift
 *.framework/
-*.png
-*.xcf
 Pods/
 Podfile.lock
 instruments/*
