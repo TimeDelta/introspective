@@ -166,10 +166,9 @@ public final class DiscreteRatingTableViewCell: UITableViewCell {
 
 	private final func getBaseWidth() -> CGFloat {
 		let minWidth: CGFloat = 30
-		let numberOfMoods = CGFloat(
-			DependencyInjector.get(Settings.self).maxMood - DependencyInjector
-				.get(Settings.self).minMood + 1
-		)
+		let max = DependencyInjector.get(Settings.self).maxMood
+		let min = DependencyInjector.get(Settings.self).minMood
+		let numberOfMoods = CGFloat(max - min + 1)
 		// not -1 because need to account for one mood always being selected, which adds 1 spacing
 		let totalSpacingRequired = spacingBetweenRatingButtons * numberOfMoods
 		let proportionalWidth = (scrollView.frame.width - totalSpacingRequired) / numberOfMoods
