@@ -41,34 +41,27 @@ final class AttributeValueViewController: UIViewController {
 		super.viewDidLoad()
 
 		if attribute is SelectOneAttribute {
-			let controller = storyboard!
-				.instantiateViewController(
-					withIdentifier: "selectOneAttribute"
-				) as! SelectOneAttributeValueViewController
+			let controller = viewController(named: "selectOneAttribute") as! SelectOneAttributeValueViewController
 			controller.currentValue = attributeValue
 			controller.selectOneAttribute = (attribute as! SelectOneAttribute)
 			subViewController = controller
 		} else if attribute is DateAttribute {
-			let controller = storyboard!
-				.instantiateViewController(withIdentifier: "dateAttribute") as! DateOrTimeAttributeValueViewController
+			let controller = viewController(named: "dateAttribute") as! DateOrTimeAttributeValueViewController
 			controller.dateAttribute = (attribute as! DateAttribute)
 			controller.currentValue = attributeValue
 			subViewController = controller
 		} else if attribute is TimeOfDayAttribute {
-			let controller = storyboard!
-				.instantiateViewController(withIdentifier: "dateAttribute") as! DateOrTimeAttributeValueViewController
+			let controller = viewController(named: "dateAttribute") as! DateOrTimeAttributeValueViewController
 			controller.timeOfDayAttribute = (attribute as! TimeOfDayAttribute)
 			controller.currentValue = attributeValue
 			subViewController = controller
 		} else if attribute is TextAttribute {
-			let controller = storyboard!
-				.instantiateViewController(withIdentifier: "textAttribute") as! TextAttributeValueViewController
+			let controller = viewController(named: "textAttribute") as! TextAttributeValueViewController
 			controller.textAttribute = (attribute as! TextAttribute)
 			controller.currentValue = attributeValue
 			subViewController = controller
 		} else if attribute is DurationAttribute {
-			let controller = storyboard!
-				.instantiateViewController(withIdentifier: "durationAttribute") as! DurationAttributeValueViewController
+			let controller = viewController(named: "durationAttribute") as! DurationAttributeValueViewController
 			controller.currentValue = attributeValue
 			subViewController = controller
 		} else {
