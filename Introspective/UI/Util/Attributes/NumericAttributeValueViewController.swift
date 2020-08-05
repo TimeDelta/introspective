@@ -34,11 +34,19 @@ final class NumericAttributeValueViewController: UIViewController {
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
-		if currentValue != nil {
+		if let currentValue = currentValue {
 			if numericAttribute is DoubleAttribute {
-				textField.text = String(currentValue as! Double)
+				if let doubleValue = currentValue as? Double {
+					textField.text = String(doubleValue)
+				} else {
+					Me.log.error("Unable to cast DoubleAttribute value as double: %@", String(describing: currentValue))
+				}
 			} else if numericAttribute is IntegerAttribute {
-				textField.text = String(currentValue as! Int)
+				if let intValue = currentValue as? Int {
+					textField.text = String(intValue)
+				} else {
+					Me.log.error("Unable to cast IntegerAttribute value as int: %@", String(describing: currentValue))
+				}
 			} else {
 				Me.log.error("Forgot a type of NumericAttribute when setting initial value for text field")
 			}
