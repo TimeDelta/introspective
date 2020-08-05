@@ -57,6 +57,9 @@
                   Identifier = "RestingHeartRateQueryFunctionalTests">
                </Test>
                <Test
+                  Identifier = "SexualActivityQueryFunctionalTests">
+               </Test>
+               <Test
                   Identifier = "SleepQueryFunctionalTests">
                </Test>
                <Test
