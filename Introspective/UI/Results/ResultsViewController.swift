@@ -71,7 +71,10 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 					return
 				}
 
-				information.append(CountInformation(samples[0].attributes[0]))
+				let countInformation = CountInformation(samples[0].attributes[0])
+				if !information.contains(where: { $0.name == countInformation.name }) {
+					information.append(countInformation)
+				}
 
 				initialSampleSortDone = true
 				DependencyInjector.get(AsyncUtil.self).run(qos: .userInteractive) {
