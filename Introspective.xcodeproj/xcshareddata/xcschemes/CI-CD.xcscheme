@@ -26,7 +26,151 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = ""
       selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
-      shouldUseLaunchSchemeArgsEnv = "YES">
+      shouldUseLaunchSchemeArgsEnv = "NO"
+      disableMainThreadChecker = "YES"
+      codeCoverageEnabled = "YES"
+      onlyGenerateCoverageForSpecifiedTargets = "YES">
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "--functional-testing"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
+      <CodeCoverageTargets>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A22D622D2343983E0023470F"
+            BuildableName = "Samples.framework"
+            BlueprintName = "Samples"
+            ReferencedContainer = "container:Samples/Samples.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A297703923451959004E2C35"
+            BuildableName = "SampleGroupers.framework"
+            BlueprintName = "SampleGroupers"
+            ReferencedContainer = "container:SampleGroupers/SampleGroupers.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A2B88B53233EA02A00E37728"
+            BuildableName = "Common.framework"
+            BlueprintName = "Common"
+            ReferencedContainer = "container:Common/Common.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A24F908C234647A70047A11C"
+            BuildableName = "Notifications.framework"
+            BlueprintName = "Notifications"
+            ReferencedContainer = "container:Notifications/Notifications.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A29F68BF233EAAAB00B8DFDB"
+            BuildableName = "DataExport.framework"
+            BlueprintName = "DataExport"
+            ReferencedContainer = "container:DataExport/DataExport.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A2A8B0042343E70D00E883CE"
+            BuildableName = "Globals.framework"
+            BlueprintName = "Globals"
+            ReferencedContainer = "container:Globals/Globals.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A231CF49234259B100CCE625"
+            BuildableName = "Persistence.framework"
+            BlueprintName = "Persistence"
+            ReferencedContainer = "container:Persistence/Persistence.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A24E2E8923451CE500A7707D"
+            BuildableName = "Queries.framework"
+            BlueprintName = "Queries"
+            ReferencedContainer = "container:Queries/Queries.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A29700C42344F95F004B97E6"
+            BuildableName = "SampleGroupInformation.framework"
+            BlueprintName = "SampleGroupInformation"
+            ReferencedContainer = "container:SampleGroupInformation/SampleGroupInformation.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A2AF200E2343C7D500E04517"
+            BuildableName = "Settings.framework"
+            BlueprintName = "Settings"
+            ReferencedContainer = "container:Settings/Settings.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A231CED12342539400CCE625"
+            BuildableName = "Attributes.framework"
+            BlueprintName = "Attributes"
+            ReferencedContainer = "container:Attributes/Attributes.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A231CF232342557B00CCE625"
+            BuildableName = "BooleanAlgebra.framework"
+            BlueprintName = "BooleanAlgebra"
+            ReferencedContainer = "container:BooleanAlgebra/BooleanAlgebra.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "863443B57A8C8D8D1AE1C8636F9821BB"
+            BuildableName = "DiscreteMoodWidget.appex"
+            BlueprintName = "DiscreteMoodWidget"
+            ReferencedContainer = "container:Introspective.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "BB0A1DC399A7E3FFC11219EB8C00C163"
+            BuildableName = "Introspective.app"
+            BlueprintName = "Introspective"
+            ReferencedContainer = "container:Introspective.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A5E432A59235FCF8D2DD69F018FA0B8F"
+            BuildableName = "SiriIntents.appex"
+            BlueprintName = "SiriIntents"
+            ReferencedContainer = "container:Introspective.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A24E2EE223451EBB00A7707D"
+            BuildableName = "DataImport.framework"
+            BlueprintName = "DataImport"
+            ReferencedContainer = "container:DataImport/DataImport.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A231CEAC23415BFE00CCE625"
+            BuildableName = "DependencyInjection.framework"
+            BlueprintName = "DependencyInjection"
+            ReferencedContainer = "container:DependencyInjection/DependencyInjection.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A2E2C4A8234799BD00840BEA"
+            BuildableName = "UIExtensions.framework"
+            BlueprintName = "UIExtensions"
+            ReferencedContainer = "container:UIExtensions/UIExtensions.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A29701082344FEE3004B97E6"
+            BuildableName = "AttributeRestrictions.framework"
+            BlueprintName = "AttributeRestrictions"
+            ReferencedContainer = "container:AttributeRestrictions/AttributeRestrictions.xcodeproj">
+         </BuildableReference>
+      </CodeCoverageTargets>
       <Testables>
          <TestableReference
             skipped = "NO">
