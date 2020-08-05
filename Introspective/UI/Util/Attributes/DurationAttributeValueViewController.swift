@@ -39,6 +39,8 @@ public final class DurationAttributeValueViewController: AttributeValueTypeViewC
 		if let seconds = units[.second] {
 			secondsTextField.text = String(seconds)
 		}
+
+		daysTextField.becomeFirstResponder()
 	}
 
 	// MARK: - Actions

@@ -27,6 +27,7 @@ public final class SetMedicationDosageViewController: UIViewController {
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
 		textField.text = initialDosage?.description
+		textField.becomeFirstResponder()
 	}
 
 	// MARK: - Actions

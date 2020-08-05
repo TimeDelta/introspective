@@ -20,6 +20,7 @@ public final class MoodNoteTableViewCell: UITableViewCell {
 		didSet {
 			noteView.text = note ?? ""
 			noteView.delegate = self
+			noteView.becomeFirstResponder()
 		}
 	}
 }

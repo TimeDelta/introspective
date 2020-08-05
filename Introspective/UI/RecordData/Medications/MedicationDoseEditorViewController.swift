@@ -59,6 +59,8 @@ public final class MedicationDoseEditorViewControllerImpl: UIViewController, Med
 		datePicker.datePickerMode = .dateAndTime
 
 		validate()
+
+		dosageTextField.becomeFirstResponder()
 	}
 
 	// MARK: - Actions

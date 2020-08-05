@@ -51,6 +51,7 @@ final class NumericAttributeValueViewController: UIViewController {
 				Me.log.error("Forgot a type of NumericAttribute when setting initial value for text field")
 			}
 		}
+		textField.becomeFirstResponder()
 	}
 
 	// MARK: - Actions

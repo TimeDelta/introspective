@@ -86,6 +86,8 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 		observe(selector: #selector(ratingChanged), name: .moodRatingChanged)
 		observe(selector: #selector(noteChanged), name: Me.noteChanged)
 		observe(selector: #selector(useDiscreteMoodChanged), name: MoodUiUtilImpl.useDiscreteMoodChanged)
+
+		hideKeyboardOnTapNonTextInput()
 	}
 
 	deinit {

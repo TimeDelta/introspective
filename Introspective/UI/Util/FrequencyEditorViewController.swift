@@ -51,6 +51,8 @@ public final class FrequencyEditorViewController: UIViewController {
 		} else if let index = Me.timeUnits.firstIndex(of: Me.defaultTimeUnit) {
 			timeUnitPicker.selectRow(index, inComponent: 0, animated: false)
 		}
+
+		amountTextField.becomeFirstResponder()
 	}
 
 	// MARK: - Button Actions

@@ -49,6 +49,8 @@ public class SelectDurationViewControllerImpl: UIViewController, SelectDurationV
 		if let seconds = units[.second] {
 			secondsTextField.text = String(seconds)
 		}
+
+		daysTextField.becomeFirstResponder()
 	}
 
 	// MARK: - Actions

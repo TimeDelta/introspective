@@ -27,7 +27,8 @@ public final class TextAttributeValueViewController: AttributeValueTypeViewContr
 		textView.delegate = self
 		if let text = currentValue as? String {
 			textView.text = text
-		} else {}
+		}
+		textView.becomeFirstResponder()
 	}
 
 	// MARK: - Functions
