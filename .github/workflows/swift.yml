@@ -22,7 +22,7 @@ jobs:
 
       - name: Create GitVersion.swift
         run: |
-          "`git rev-parse --show-toplevel`"/scripts/create-git-version-swift-file.sh
+          ./scripts/create-git-version-swift-file.sh
 
       - name: Build
         run: |
