@@ -268,7 +268,9 @@ public extension Medication {
 	@NSManaged var storedStartedOn: Date?
 	@NSManaged fileprivate var startedOnTimeZoneId: String?
 	@NSManaged var notes: String?
+	/// The default dosage to use when taking this medication
 	@NSManaged var dosage: Dosage?
+	/// The index at which this medication should be displayed in the table view controller when listing medications on the record screen
 	@NSManaged var recordScreenIndex: Int16
 	@NSManaged var doses: NSOrderedSet
 	@NSManaged var source: Int16

@@ -20,6 +20,7 @@ public extension ActivityDefinition {
 	@NSManaged var activityDescription: String?
 	@NSManaged var tags: NSSet
 	@NSManaged var activities: NSSet
+	/// The index at which this medication should be displayed in the table view controller when listing medications on the record screen
 	@NSManaged var recordScreenIndex: Int16
 	@NSManaged var source: Int16
 }
