@@ -65,9 +65,9 @@ public final class MoodRatingTableViewCell: UITableViewCell {
 		ratingSlider.thumbTintColor = DependencyInjector.get(MoodUiUtil.self)
 			.colorForMood(rating: rating, minRating: minRating, maxRating: maxRating)
 		ratingTextField.text = DependencyInjector.get(MoodUiUtil.self).valueToString(rating)
-		ratingRangeLabel
-			.text =
-			"(\(DependencyInjector.get(MoodUiUtil.self).valueToString(minRating))-\(DependencyInjector.get(MoodUiUtil.self).valueToString(maxRating)))"
+		let minText = DependencyInjector.get(MoodUiUtil.self).valueToString(minRating)
+		let maxText = DependencyInjector.get(MoodUiUtil.self).valueToString(maxRating)
+		ratingRangeLabel.text = "(\(minText)-\(maxText))"
 	}
 
 	private final func sendRatingChangedNotification() {
