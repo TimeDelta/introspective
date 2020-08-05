@@ -210,11 +210,8 @@ public final class EditMedicationViewController: UIViewController {
 			} else {
 				medication = try transaction.new(Medication.self)
 				medication.setSource(.introspective)
-				medication
-					.recordScreenIndex = Int16(
-						try DependencyInjector.get(Database.self)
-							.query(Medication.fetchRequest()).count
-					)
+				let numMeds = try DependencyInjector.get(Database.self).query(Medication.fetchRequest()).count
+				medication.recordScreenIndex = Int16(numMeds)
 			}
 			medication.name = nameTextField.text!
 			medication.frequency = frequency
