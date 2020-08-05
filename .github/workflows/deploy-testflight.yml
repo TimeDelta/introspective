@@ -1,0 +1,38 @@
+name: Deploy to TestFlight
+
+# trigger this workflow manually
+on: workflow_dispatch
+
+jobs:
+  deploy:
+    name: Deploy to TestFlight
+    runs-on: macOS-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+
+      - name: Install gpg
+        run: brew install gnupg
+
+      - name: Decrypt Secrets
+        env:
+          DECRYPTION_KEY: ${{ secrets.DECRYPTION_KEY }}
+        run: ./scripts/decrypt-secrets.sh
+
+      - name: Create Build Keychain
+        run: ./scripts/create-build-keychain.sh
+
+      - name: Archive project
+        env:
+          PR_NUMBER: $(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+        run: ./scripts/archive-app.sh
+
+      - name: Export .ipa
+        run: ./scripts/export-ipa.sh
+
+      - name: Publish app
+        if: success()
+        env:
+          APPLE_ID_USERNAME: ${{ secrets.APPLE_ID_USERNAME }}
+          APPLE_ID_APP_PASSWORD: ${{ secrets.APPLE_ID_APP_PASSWORD }}
+        run: ./scripts/publish-testflight.sh
