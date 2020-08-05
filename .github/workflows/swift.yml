@@ -16,16 +16,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@master
+
       - name: Get Dependencies
         run: pod install
+
       - name: Create GitVersion.swift
         run: |
           "`git rev-parse --show-toplevel`"/scripts/create-git-version-swift-file.sh
+
       - name: Build
         run: |
           xcodebuild clean build -workspace Introspective.xcworkspace -scheme CI-CD -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
         env:
          destination: ${{ matrix.destination }}
+
       - name: Test
         run: |
           xcodebuild test -workspace Introspective.xcworkspace -scheme CI-CD -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
