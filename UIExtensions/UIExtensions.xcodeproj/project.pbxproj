@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		23F786ABFD3F384EA7F48CD7 /* Pods_UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1147016D2448C6885D1A65F /* Pods_UIExtensions.framework */; };
+		A22D311224DC92B8006BD9F2 /* ContextualActionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22D311124DC92B8006BD9F2 /* ContextualActionExtensions.swift */; };
 		A29D44A623479C0300D41E1C /* CoachMarkSkipViewConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29D44A523479C0300D41E1C /* CoachMarkSkipViewConstraint.swift */; };
 		A2E2C4AE234799BD00840BEA /* UIExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = A2E2C4AC234799BD00840BEA /* UIExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A2E2C4BC234799E500840BEA /* ScrollViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E2C4B4234799E300840BEA /* ScrollViewExtensions.swift */; };
@@ -26,6 +27,7 @@
 		0587B8E3B37E202897495C29 /* Pods-UIExtensions.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UIExtensions.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-UIExtensions/Pods-UIExtensions.debug.xcconfig"; sourceTree = "<group>"; };
 		4F8E0D9CC28F630AA25FE880 /* Pods-UIExtensions.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UIExtensions.release.xcconfig"; path = "../Pods/Target Support Files/Pods-UIExtensions/Pods-UIExtensions.release.xcconfig"; sourceTree = "<group>"; };
 		A1147016D2448C6885D1A65F /* Pods_UIExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UIExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A22D311124DC92B8006BD9F2 /* ContextualActionExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextualActionExtensions.swift; sourceTree = "<group>"; };
 		A29D44A523479C0300D41E1C /* CoachMarkSkipViewConstraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoachMarkSkipViewConstraint.swift; sourceTree = "<group>"; };
 		A2E2C4A9234799BD00840BEA /* UIExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UIExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2E2C4AC234799BD00840BEA /* UIExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UIExtensions.h; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 				A2E2C4B4234799E300840BEA /* ScrollViewExtensions.swift */,
 				A2E2C4B5234799E400840BEA /* TableViewCellExtensions.swift */,
 				A2E2C4B6234799E400840BEA /* UIColorExtensions.swift */,
+				A22D311124DC92B8006BD9F2 /* ContextualActionExtensions.swift */,
 				A2E2C4BA234799E400840BEA /* RecordMoodScrollView.swift */,
 				A2E2C4B7234799E400840BEA /* LongPressReorderGestureRecognizer.swift */,
 				A29D44A523479C0300D41E1C /* CoachMarkSkipViewConstraint.swift */,
@@ -217,6 +220,7 @@
 				A2E2C4C0234799E500840BEA /* UIViewControllerExtensions.swift in Sources */,
 				A29D44A623479C0300D41E1C /* CoachMarkSkipViewConstraint.swift in Sources */,
 				A2E2C4BC234799E500840BEA /* ScrollViewExtensions.swift in Sources */,
+				A22D311224DC92B8006BD9F2 /* ContextualActionExtensions.swift in Sources */,
 				A2E2C4C2234799E500840BEA /* RecordMoodScrollView.swift in Sources */,
 				A2E2C4C3234799E500840BEA /* TableViewControllerExtensions.swift in Sources */,
 				A2E2C4BD234799E500840BEA /* TableViewCellExtensions.swift in Sources */,
