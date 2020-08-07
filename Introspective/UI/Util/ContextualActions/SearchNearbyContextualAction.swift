@@ -100,6 +100,7 @@ public final class SearchNearbyContextualAction: UIContextualAction {
 	// MARK: - Received Notifications
 
 	@objc private final func searchNearby(notification: Notification) {
+		#warning("currently, this never gets called (ARC probably cleans up this objeect first)")
 		// if the parent controller doesn't exist anymore, no point in continuing
 		guard let parentController = parentController else { return }
 
@@ -108,27 +109,8 @@ public final class SearchNearbyContextualAction: UIContextualAction {
 			return
 		}
 		do {
-			var query = try DependencyInjector.get(QueryFactory.self).queryFor(selectedSampleType)
-			let start = selectedSampleDates[.start]
-			let end = selectedSampleDates[.end]
-			if let startDate = start, let endDate = end {
-				try buildNearbyQuery(
-					&query,
-					sampleType: selectedSampleType,
-					startDate: startDate,
-					endDate: endDate,
-					duration: duration
-				)
-			} else if let timestamp = start {
-				try buildNearbyQuery(
-					&query,
-					sampleType: selectedSampleType,
-					timestamp: timestamp,
-					duration: duration
-				)
-			} else {
-				Me.log.error("Sample type has no dates: %@", selectedSampleType.name)
-			}
+			let query = try DependencyInjector.get(QueryFactory.self)
+				.buildQueryToSearch(for: selectedSampleType, within: duration, of: selectedSampleDates)
 			let controller = parentController.viewController(
 				named: "results",
 				fromStoryboard: "Results"
@@ -158,65 +140,6 @@ public final class SearchNearbyContextualAction: UIContextualAction {
 	}
 
 	// MARK: - Helper Functions
-
-	/// Build a query to search nearby a sample that has two dates.
-	private final func buildNearbyQuery(
-		_ query: inout Query,
-		sampleType: Sample.Type,
-		startDate: Date,
-		endDate: Date,
-		duration: TimeDuration
-	) throws {
-		let minDate = startDate - duration
-		let maxDate = endDate + duration
-		guard let startAttribute = sampleType.dateAttributes[.start] else {
-			Me.log.error("Missing start attribute for %@", sampleType.name)
-			throw GenericDisplayableError(
-				title: "Unable to search nearby",
-				description: "You found a bug: please report RVCbnq1"
-			)
-		}
-		if let endAttribute = sampleType.dateAttributes[.end] {
-			query.expression = AndExpression(
-				AfterDateAndTimeAttributeRestriction(restrictedAttribute: startAttribute, date: minDate),
-				BeforeDateAndTimeAttributeRestriction(restrictedAttribute: endAttribute, date: maxDate)
-			)
-		} else { // only one attribute on target sample type
-			query.expression = AndExpression(
-				AfterDateAndTimeAttributeRestriction(restrictedAttribute: startAttribute, date: minDate),
-				BeforeDateAndTimeAttributeRestriction(restrictedAttribute: startAttribute, date: maxDate)
-			)
-		}
-	}
-
-	/// Build a query to search nearby a sample that has only one date.
-	private final func buildNearbyQuery(
-		_ query: inout Query,
-		sampleType: Sample.Type,
-		timestamp: Date,
-		duration: TimeDuration
-	) throws {
-		let minDate = timestamp - duration
-		let maxDate = timestamp + duration
-		guard let startAttribute = sampleType.dateAttributes[.start] else {
-			Me.log.error("Missing start attribute for %@", sampleType.name)
-			throw GenericDisplayableError(
-				title: "Unable to search nearby",
-				description: "You found a bug: please report RVCbnq3"
-			)
-		}
-		if let endAttribute = sampleType.dateAttributes[.end] {
-			query.expression = AndExpression(
-				AfterDateAndTimeAttributeRestriction(restrictedAttribute: startAttribute, date: minDate),
-				BeforeDateAndTimeAttributeRestriction(restrictedAttribute: endAttribute, date: maxDate)
-			)
-		} else { // only one attribute on target sample type
-			query.expression = AndExpression(
-				AfterDateAndTimeAttributeRestriction(restrictedAttribute: startAttribute, date: minDate),
-				BeforeDateAndTimeAttributeRestriction(restrictedAttribute: startAttribute, date: maxDate)
-			)
-		}
-	}
 
 	/// Retrieve the value for the specified `UserInfoKey` from the given notification.
 	/// - Parameter keyIsOptional: If true, no error will be logged if the specified key does not exist in the user info.

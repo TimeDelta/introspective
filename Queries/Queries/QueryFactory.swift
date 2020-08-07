@@ -9,6 +9,7 @@
 import Foundation
 import os
 
+import AttributeRestrictions
 import BooleanAlgebra
 import Common
 import Samples
@@ -37,10 +38,21 @@ public protocol QueryFactory {
 	func sleepQuery(_ parts: [BooleanExpressionPart]) throws -> SleepQuery
 	func weightQuery() -> WeightQuery
 	func weightQuery(_ parts: [BooleanExpressionPart]) throws -> WeightQuery
+
 	func queryFor(_ sampleType: Sample.Type) throws -> Query
+
+	func buildQueryToSearch(
+		for sampleType: Sample.Type,
+		within duration: TimeDuration,
+		of sampleDates: [DateType: Date]
+	) throws -> Query
 }
 
 public final class QueryFactoryImpl: QueryFactory {
+	private typealias Me = QueryFactoryImpl
+
+	private static let log = Log()
+
 	public final func activityQuery() -> ActivityQuery {
 		ActivityQueryImpl()
 	}
@@ -144,6 +156,97 @@ public final class QueryFactoryImpl: QueryFactory {
 		case is Weight.Type: return weightQuery()
 		default:
 			throw UnknownSampleTypeError(sampleType)
+		}
+	}
+
+	public func buildQueryToSearch(
+		for sampleType: Sample.Type,
+		within duration: TimeDuration,
+		of sampleDates: [DateType: Date]
+	) throws -> Query {
+		var query = try queryFor(sampleType)
+		let start = sampleDates[.start]
+		let end = sampleDates[.end]
+		if let startDate = start, let endDate = end {
+			try buildNearbyQuery(
+				&query,
+				sampleType: sampleType,
+				startDate: startDate,
+				endDate: endDate,
+				duration: duration
+			)
+		} else if let timestamp = start {
+			try buildNearbyQuery(
+				&query,
+				sampleType: sampleType,
+				timestamp: timestamp,
+				duration: duration
+			)
+		} else {
+			Me.log.error("No dates provided to build search nearby query")
+			throw GenericError("Must provide dates to build a search nearby query")
+		}
+		return query
+	}
+
+	// MARK: - Helper Functions
+
+	/// Build a query to search nearby a sample that has two dates.
+	private final func buildNearbyQuery(
+		_ query: inout Query,
+		sampleType: Sample.Type,
+		startDate: Date,
+		endDate: Date,
+		duration: TimeDuration
+	) throws {
+		let minDate = startDate - duration
+		let maxDate = endDate + duration
+		guard let startAttribute = sampleType.dateAttributes[.start] else {
+			Me.log.error("Missing start attribute for %@", sampleType.name)
+			throw GenericDisplayableError(
+				title: "Unable to search nearby",
+				description: "You found a bug: please report QFbnq1"
+			)
+		}
+		if let endAttribute = sampleType.dateAttributes[.end] {
+			query.expression = AndExpression(
+				AfterDateAndTimeAttributeRestriction(restrictedAttribute: startAttribute, date: minDate),
+				BeforeDateAndTimeAttributeRestriction(restrictedAttribute: endAttribute, date: maxDate)
+			)
+		} else { // only one attribute on target sample type
+			query.expression = AndExpression(
+				AfterDateAndTimeAttributeRestriction(restrictedAttribute: startAttribute, date: minDate),
+				BeforeDateAndTimeAttributeRestriction(restrictedAttribute: startAttribute, date: maxDate)
+			)
+		}
+	}
+
+	/// Build a query to search nearby a sample that has only one date.
+	private final func buildNearbyQuery(
+		_ query: inout Query,
+		sampleType: Sample.Type,
+		timestamp: Date,
+		duration: TimeDuration
+	) throws {
+		let minDate = timestamp - duration
+		let maxDate = timestamp + duration
+		guard let startAttribute = sampleType.dateAttributes[.start] else {
+			Me.log.error("Missing start attribute for %@", sampleType.name)
+			throw GenericDisplayableError(
+				title: "Unable to search nearby",
+				description: "You found a bug: please report QFbnq2"
+			)
+		}
+		if let endAttribute = sampleType.dateAttributes[.end] {
+			query.expression = AndExpression(
+				AfterDateAndTimeAttributeRestriction(restrictedAttribute: startAttribute, date: minDate),
+				BeforeDateAndTimeAttributeRestriction(restrictedAttribute: endAttribute, date: maxDate)
+			)
+		} else { // only one attribute on target sample type
+			query.expression = AndExpression(
+				AfterDateAndTimeAttributeRestriction(restrictedAttribute: startAttribute, date: minDate),
+				BeforeDateAndTimeAttributeRestriction(restrictedAttribute: startAttribute, date: maxDate)
+			)
 		}
 	}
 }
