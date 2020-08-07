@@ -2039,6 +2039,7 @@ final class QueryViewControllerUnitTests: UnitTest {
 		mockAlertAction(withTitle: "Attribute Restriction")
 		mockAlertAction(withTitle: "And")
 		mockAlertAction(withTitle: "Or")
+		mockAlertAction(withTitle: "Not")
 		mockAlertAction(withTitle: "Condition Group Start")
 		mockAlertAction(withTitle: "Condition Group End")
 		mockAlertAction(withTitle: "Cancel")
