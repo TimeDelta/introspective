@@ -28,7 +28,7 @@ public final class BodyMassIndex: HealthKitQuantitySample {
 	}
 
 	public static func initUnits() {
-		unit = DependencyInjector.get(HealthKitUtil.self).preferredUnitFor(.bodyMassIndex) ?? HKUnit.count()
+		unit = injected(HealthKitUtil.self).preferredUnitFor(.bodyMassIndex) ?? HKUnit.count()
 	}
 
 	// MARK: - Display Information
@@ -65,7 +65,7 @@ public final class BodyMassIndex: HealthKitQuantitySample {
 	public required init(_ sample: HKQuantitySample) {
 		bmi = sample.quantity.doubleValue(for: Me.unit)
 		timestamp = sample.startDate
-		DependencyInjector.get(HealthKitUtil.self).setTimeZoneIfApplicable(for: &timestamp, from: sample)
+		injected(HealthKitUtil.self).setTimeZoneIfApplicable(for: &timestamp, from: sample)
 	}
 
 	// MARK: - HealthKitSample Functions
@@ -152,6 +152,6 @@ extension BodyMassIndex: Equatable {
 
 extension BodyMassIndex: CustomDebugStringConvertible {
 	public final var debugDescription: String {
-		"BodyMassIndex of \(bmi) at " + DependencyInjector.get(CalendarUtil.self).string(for: timestamp)
+		"BodyMassIndex of \(bmi) at " + injected(CalendarUtil.self).string(for: timestamp)
 	}
 }

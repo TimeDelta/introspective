@@ -112,7 +112,7 @@ public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
 		controller.availableChoices = commonAttributeTypes
 		controller.selectedText = currentAttributeType
 		controller.notificationToSendOnAccept = .attributeTypeEdited
-		present(controller, using: DependencyInjector.get(UiUtil.self).defaultPresenter)
+		present(controller, using: injected(UiUtil.self).defaultPresenter)
 	}
 
 	@IBAction final func chooseGrouperTypeButtonPressed(_: Any) {
@@ -124,9 +124,9 @@ public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
 			Me.log.error("No attributes of chosen type found for x-axis")
 			return
 		}
-		controller.grouperTypes = DependencyInjector.get(SampleGrouperFactory.self).typesFor(attributes: attributes)
+		controller.grouperTypes = injected(SampleGrouperFactory.self).typesFor(attributes: attributes)
 		controller.selectedGrouperType = chosenGrouperType
-		present(controller, using: DependencyInjector.get(UiUtil.self).defaultPresenter)
+		present(controller, using: injected(UiUtil.self).defaultPresenter)
 	}
 
 	@IBAction final func chooseXAxisGrouperButtonPressed(_: Any) {

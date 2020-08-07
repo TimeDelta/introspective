@@ -35,7 +35,7 @@ class BloodPressureTableViewCell: UITableViewCell {
 
 			valueLabel.text = formatValue(sample.systolic) + "/" + formatValue(sample.diastolic)
 
-			timestampLabel.text = DependencyInjector.get(CalendarUtil.self).string(
+			timestampLabel.text = injected(CalendarUtil.self).string(
 				for: sample.timestamp,
 				dateStyle: .medium,
 				timeStyle: .short

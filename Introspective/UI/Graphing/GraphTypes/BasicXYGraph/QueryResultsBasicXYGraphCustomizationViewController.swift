@@ -27,7 +27,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	// MARK: Presenters
 
 	private static let aggregationChanged = Notification.Name("aggregationChanged")
-	private static let presenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(
+	private static let presenter: Presentr = injected(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
 		center: .center
@@ -334,10 +334,10 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	private final func seriesGrouperSet() {
 		if seriesGrouper != nil {
 			chooseSeriesGrouperButton.setTitle("Series grouping chosen", for: .normal)
-			DependencyInjector.get(UiUtil.self).setButton(clearSeriesGrouperButton, enabled: true, hidden: false)
+			injected(UiUtil.self).setButton(clearSeriesGrouperButton, enabled: true, hidden: false)
 		} else {
 			chooseSeriesGrouperButton.setTitle("Choose series grouping (optional)", for: .normal)
-			DependencyInjector.get(UiUtil.self).setButton(clearSeriesGrouperButton, enabled: false, hidden: true)
+			injected(UiUtil.self).setButton(clearSeriesGrouperButton, enabled: false, hidden: true)
 		}
 		chooseSeriesGrouperButton.accessibilityValue = chooseSeriesGrouperButton.currentTitle
 	}
@@ -345,7 +345,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	private final func pointGrouperSet() {
 		if let _ = pointGrouper {
 			choosePointGrouperButton.setTitle("Point grouping chosen", for: .normal)
-			DependencyInjector.get(UiUtil.self).setButton(clearPointGrouperButton, enabled: true, hidden: false)
+			injected(UiUtil.self).setButton(clearPointGrouperButton, enabled: true, hidden: false)
 			if pointGrouperWasNil {
 				// old value of yAxis (if it exists) will be [Attribute] but [Information]
 				// is needed when pointGrouper is provided
@@ -356,7 +356,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 			}
 		} else {
 			choosePointGrouperButton.setTitle("Choose point grouping (optional)", for: .normal)
-			DependencyInjector.get(UiUtil.self).setButton(clearPointGrouperButton, enabled: false, hidden: true)
+			injected(UiUtil.self).setButton(clearPointGrouperButton, enabled: false, hidden: true)
 			if !pointGrouperWasNil {
 				// old value of yAxis (if it exists) will be [Information] but [Attribute]
 				// is needed when pointGrouper is not provided

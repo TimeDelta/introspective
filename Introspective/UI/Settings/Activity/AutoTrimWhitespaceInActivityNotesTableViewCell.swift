@@ -36,7 +36,7 @@ class AutoTrimWhitespaceInActivityNotesTableViewCell: ActivitySettingTableViewCe
 
 	private final func resetToggleSwitch() {
 		guard let toggleSwitch = toggleSwitch else { return }
-		toggleSwitch.isOn = DependencyInjector.get(Settings.self).autoTrimWhitespaceInActivityNotes
+		toggleSwitch.isOn = injected(Settings.self).autoTrimWhitespaceInActivityNotes
 	}
 
 	private final func sendValueChangedNotification() {

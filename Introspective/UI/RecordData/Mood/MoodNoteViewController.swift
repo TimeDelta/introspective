@@ -33,7 +33,7 @@ final class MoodNoteViewController: UIViewController {
 			textView.text = note
 		}
 
-		DependencyInjector.get(UiUtil.self)
+		injected(UiUtil.self)
 			.addSaveButtonToKeyboardFor(textView, target: self, action: #selector(saveClicked))
 		textView.becomeFirstResponder()
 	}

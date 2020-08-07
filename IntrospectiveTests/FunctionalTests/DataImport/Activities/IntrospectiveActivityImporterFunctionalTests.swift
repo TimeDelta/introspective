@@ -64,7 +64,7 @@ class IntrospectiveActivityImporterFunctionalTests: ImporterTest {
 
 	public override func setUp() {
 		super.setUp()
-		importer = try! DependencyInjector.get(ImporterFactory.self).introspectiveActivityImporter() as! IntrospectiveActivityImporterImpl
+		importer = try! injected(ImporterFactory.self).introspectiveActivityImporter() as! IntrospectiveActivityImporterImpl
 	}
 
 	// MARK: - importData()
@@ -249,7 +249,7 @@ class IntrospectiveActivityImporterFunctionalTests: ImporterTest {
 		try importer.resume()
 
 		// then
-		let definitions = try DependencyInjector.get(Database.self).query(ActivityDefinition.fetchRequest())
+		let definitions = try injected(Database.self).query(ActivityDefinition.fetchRequest())
 		let definitionIndexes = definitions.map{ d -> Int16 in d.recordScreenIndex }
 		var previousIndex: Int16 = -1
 		for index in definitionIndexes.sorted() {
@@ -300,7 +300,7 @@ class IntrospectiveActivityImporterFunctionalTests: ImporterTest {
 		try importer.resetLastImportDate()
 
 		// then
-		importer = try DependencyInjector.get(Database.self).pull(savedObject: importer)
+		importer = try injected(Database.self).pull(savedObject: importer)
 		XCTAssertNil(importer.lastImport)
 	}
 

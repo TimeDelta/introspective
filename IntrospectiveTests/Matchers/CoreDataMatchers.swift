@@ -21,7 +21,7 @@ func exists<SubType: NSManagedObject & CoreDataObject, InfoType: Info>(_ type: S
 			let namedPredicates = expectedInfo.getPredicates()
 			let predicatesOnly = namedPredicates.map{ (k, v) -> NSPredicate in v}
 			let request = NSFetchRequest<NSManagedObject>(entityName: SubType.entityName)
-			let allOfSubType = try DependencyInjector.get(Database.self).query(request)
+			let allOfSubType = try injected(Database.self).query(request)
 			if allOfSubType.count == 0 {
 				return .mismatch("No matching \(SubType.entityName) found")
 			}

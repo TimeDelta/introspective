@@ -93,7 +93,7 @@ extension MedicationDAO {
 
 public final class MedicationDAOImpl: MedicationDAO {
 	public final func medicationExists(withName name: String, using transaction: Transaction?) throws -> Bool {
-		let transaction = transaction ?? DependencyInjector.get(Database.self).transaction()
+		let transaction = transaction ?? injected(Database.self).transaction()
 		let fetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
 		let medicationsWithSameName = try transaction.query(fetchRequest)
@@ -103,7 +103,7 @@ public final class MedicationDAOImpl: MedicationDAO {
 	public final func medicationNamed(_ name: String) throws -> Medication? {
 		let fetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
-		let medicationsWithSameName = try DependencyInjector.get(Database.self).query(fetchRequest)
+		let medicationsWithSameName = try injected(Database.self).query(fetchRequest)
 		guard !medicationsWithSameName.isEmpty else { return nil }
 		return medicationsWithSameName[0]
 	}
@@ -112,7 +112,7 @@ public final class MedicationDAOImpl: MedicationDAO {
 		let fetchRequest: NSFetchRequest<MedicationDose> = MedicationDose.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "medication.name ==[cd] %@", medication.name)
 		fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
-		let doses = try DependencyInjector.get(Database.self).query(fetchRequest)
+		let doses = try injected(Database.self).query(fetchRequest)
 		return doses.first
 	}
 
@@ -137,7 +137,7 @@ public final class MedicationDAOImpl: MedicationDAO {
 		recordScreenIndex: Int16?,
 		using transaction: Transaction?
 	) throws -> Medication {
-		let transaction = transaction ?? DependencyInjector.get(Database.self).transaction()
+		let transaction = transaction ?? injected(Database.self).transaction()
 		let medication = try! transaction.new(Medication.self)
 
 		medication.name = name
@@ -150,12 +150,12 @@ public final class MedicationDAOImpl: MedicationDAO {
 		if let recordScreenIndex = recordScreenIndex {
 			medication.recordScreenIndex = recordScreenIndex
 		} else {
-			let numDefinitions = try DependencyInjector.get(Database.self).query(Medication.fetchRequest()).count
+			let numDefinitions = try injected(Database.self).query(Medication.fetchRequest()).count
 			medication.recordScreenIndex = Int16(numDefinitions)
 		}
 
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-		return try DependencyInjector.get(Database.self).pull(savedObject: medication)
+		return try injected(Database.self).pull(savedObject: medication)
 	}
 
 	@discardableResult
@@ -166,7 +166,7 @@ public final class MedicationDAOImpl: MedicationDAO {
 		source: Sources.MedicationSourceNum,
 		using transaction: Transaction?
 	) throws -> MedicationDose {
-		let transaction = transaction ?? DependencyInjector.get(Database.self).transaction()
+		let transaction = transaction ?? injected(Database.self).transaction()
 		let dose = try transaction.new(MedicationDose.self)
 		let sameContextMedication = try! transaction.pull(savedObject: medication)
 
@@ -177,6 +177,6 @@ public final class MedicationDAOImpl: MedicationDAO {
 		sameContextMedication.addToDoses(dose)
 
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-		return try DependencyInjector.get(Database.self).pull(savedObject: dose)
+		return try injected(Database.self).pull(savedObject: dose)
 	}
 }

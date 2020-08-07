@@ -60,20 +60,20 @@ class IntrospectiveMoodImporterFunctionalTests: ImporterTest {
 	private final var importer: IntrospectiveMoodImporterImpl!
 	private final var scaleMoods: Bool! {
 		didSet {
-			DependencyInjector.get(Settings.self).setScaleMoodsOnImport(scaleMoods)
-			try! DependencyInjector.get(Settings.self).save()
+			injected(Settings.self).setScaleMoodsOnImport(scaleMoods)
+			try! injected(Settings.self).save()
 		}
 	}
 	private var minMood = 1.0 {
 		didSet {
-			DependencyInjector.get(Settings.self).setMinMood(minMood)
-			try! DependencyInjector.get(Settings.self).save()
+			injected(Settings.self).setMinMood(minMood)
+			try! injected(Settings.self).save()
 		}
 	}
 	private var maxMood = 7.0 {
 		didSet {
-			DependencyInjector.get(Settings.self).setMaxMood(maxMood)
-			try! DependencyInjector.get(Settings.self).save()
+			injected(Settings.self).setMaxMood(maxMood)
+			try! injected(Settings.self).save()
 		}
 	}
 
@@ -81,9 +81,9 @@ class IntrospectiveMoodImporterFunctionalTests: ImporterTest {
 
 	public override func setUp() {
 		super.setUp()
-		importer = try! DependencyInjector.get(ImporterFactory.self).introspectiveMoodImporter() as! IntrospectiveMoodImporterImpl
+		importer = try! injected(ImporterFactory.self).introspectiveMoodImporter() as! IntrospectiveMoodImporterImpl
 		scaleMoods = false
-		try! DependencyInjector.get(Settings.self).save()
+		try! injected(Settings.self).save()
 	}
 
 	// MARK: - importData()
@@ -253,7 +253,7 @@ class IntrospectiveMoodImporterFunctionalTests: ImporterTest {
 		try importer.resetLastImportDate()
 
 		// then
-		importer = try DependencyInjector.get(Database.self).pull(savedObject: importer)
+		importer = try injected(Database.self).pull(savedObject: importer)
 		XCTAssertNil(importer.lastImport)
 	}
 

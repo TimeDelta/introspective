@@ -338,7 +338,7 @@ final class MoodExporterFunctionalTest: ExporterFunctionalTest {
 	}
 
 	private final func expectedFields(for mood: MoodImpl) -> [String] {
-		let dateText = DependencyInjector.get(CalendarUtil.self).string(for: mood.date, dateStyle: .full, timeStyle: .full)
+		let dateText = injected(CalendarUtil.self).string(for: mood.date, dateStyle: .full, timeStyle: .full)
 		return [
 			dateText,
 			TimeZone.autoupdatingCurrent.identifier,

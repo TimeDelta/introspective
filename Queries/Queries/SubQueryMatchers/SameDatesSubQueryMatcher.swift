@@ -51,7 +51,7 @@ public final class SameDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 
 		var applicableSubQuerySamples = subQuerySamples
 		if mostRecentOnly {
-			applicableSubQuerySamples = DependencyInjector.get(SampleUtil.self)
+			applicableSubQuerySamples = injected(SampleUtil.self)
 				.sort(samples: subQuerySamples, by: .start, in: .orderedDescending)
 			applicableSubQuerySamples = [subQuerySamples[0]]
 		}
@@ -61,7 +61,7 @@ public final class SameDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 				compare(s1, s2) == .orderedAscending
 			}
 		for sample in querySamples {
-			let matchingSampleIndex = DependencyInjector.get(SearchUtil.self)
+			let matchingSampleIndex = injected(SearchUtil.self)
 				.binarySearch(for: sample, in: subQuerySamplesSortedByStartAndEndDates, compare: compare)
 			if matchingSampleIndex != nil {
 				matchingSamples.append(sample)
@@ -123,6 +123,6 @@ public final class SameDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 			return startDateComparison
 		}
 
-		return DependencyInjector.get(CalendarUtil.self).compare(s1.dates()[.end], s2.dates()[.end])
+		return injected(CalendarUtil.self).compare(s1.dates()[.end], s2.dates()[.end])
 	}
 }

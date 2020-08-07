@@ -49,14 +49,14 @@ public final class StopActivitiesIntentHandler: ActivityIntentHandler<StopActivi
 		do {
 			var stoppedActivities = [Activity]()
 			for name in activityNames {
-				guard let definition = try DependencyInjector.get(ActivityDAO.self).getDefinitionWith(name: name) else {
+				guard let definition = try injected(ActivityDAO.self).getDefinitionWith(name: name) else {
 					Me.log.error("Activity named %{private}@ does not exist.", name)
 					completion(
 						StopActivitiesIntentResponse.failure(error: "Activity named \"\(name)\" does not exist.")
 					)
 					return
 				}
-				let activity = try DependencyInjector.get(ActivityDAO.self)
+				let activity = try injected(ActivityDAO.self)
 					.stopMostRecentlyStartedIncompleteActivity(for: definition)
 				stoppedActivities.append(activity)
 			}

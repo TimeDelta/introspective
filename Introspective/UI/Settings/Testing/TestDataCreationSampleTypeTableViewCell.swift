@@ -84,13 +84,13 @@ public final class TestDataCreationSampleTypeTableViewCell: UITableViewCell {
 	// MARK: - Helper Functions
 
 	private final func updateHideShowState() {
-		DependencyInjector.get(UiUtil.self)
+		injected(UiUtil.self)
 			.setView(numberOfDaysLabel, enabled: generateDataSwitch.isOn, hidden: !generateDataSwitch.isOn)
-		DependencyInjector.get(UiUtil.self)
+		injected(UiUtil.self)
 			.setView(numberOfDaysTextField, enabled: generateDataSwitch.isOn, hidden: !generateDataSwitch.isOn)
-		DependencyInjector.get(UiUtil.self)
+		injected(UiUtil.self)
 			.setView(samplesPerHourLabel, enabled: generateDataSwitch.isOn, hidden: !generateDataSwitch.isOn)
-		DependencyInjector.get(UiUtil.self)
+		injected(UiUtil.self)
 			.setView(samplesPerHourTextField, enabled: generateDataSwitch.isOn, hidden: !generateDataSwitch.isOn)
 	}
 }

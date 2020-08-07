@@ -25,7 +25,7 @@ public final class StopAllActivitiesIntentHandler: ActivityIntentHandler<StopAll
 		completion: @escaping (StopAllActivitiesIntentResponse) -> Void
 	) {
 		do {
-			try DependencyInjector.get(ActivityDAO.self).stopAllActivities()
+			try injected(ActivityDAO.self).stopAllActivities()
 			completion(StopAllActivitiesIntentResponse(code: .success, userActivity: nil))
 		} catch {
 			Me.log.error("Failed to retrieve ActivityDefinition for StopAllActivitiesIntent: %@", errorInfo(error))

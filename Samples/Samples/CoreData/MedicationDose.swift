@@ -65,7 +65,7 @@ public final class MedicationDose: NSManagedObject, CoreDataSample, SearchableSa
 	public final override var description: String { Me.description }
 	public final var date: Date {
 		get {
-			DependencyInjector.get(CoreDataSampleUtil.self)
+			injected(CoreDataSampleUtil.self)
 				.convertTimeZoneIfApplicable(for: timestamp, timeZoneId: timestampTimeZoneId)
 		}
 		set {
@@ -116,7 +116,7 @@ public final class MedicationDose: NSManagedObject, CoreDataSample, SearchableSa
 		let dose = dosage?.description ?? ""
 		try csv.write(field: dose, quoted: true)
 
-		let timestampText = DependencyInjector.get(CalendarUtil.self)
+		let timestampText = injected(CalendarUtil.self)
 			.string(for: timestamp, dateStyle: .full, timeStyle: .full)
 		try csv.write(field: timestampText, quoted: true)
 
@@ -159,7 +159,7 @@ public final class MedicationDose: NSManagedObject, CoreDataSample, SearchableSa
 	}
 
 	public final func set(attribute: Attribute, to value: Any?) throws {
-		let transaction = DependencyInjector.get(Database.self).transaction()
+		let transaction = injected(Database.self).transaction()
 
 		if attribute.equalTo(Me.nameAttribute) {
 			guard let castedValue = value as? String else {
@@ -177,7 +177,7 @@ public final class MedicationDose: NSManagedObject, CoreDataSample, SearchableSa
 				throw UnsupportedValueError(attribute: attribute, of: self, is: value)
 			}
 
-			medication = try DependencyInjector.get(Database.self)
+			medication = try injected(Database.self)
 				.pull(savedObject: matchingMedications[0], fromSameContextAs: self)
 			return
 		}

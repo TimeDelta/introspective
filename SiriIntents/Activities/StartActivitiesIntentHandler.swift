@@ -49,7 +49,7 @@ public final class StartActivitiesIntentHandler: ActivityIntentHandler<StartActi
 		do {
 			var startedActivities = [Activity]()
 			for name in activityNames {
-				guard let definition = try DependencyInjector.get(ActivityDAO.self).getDefinitionWith(name: name) else {
+				guard let definition = try injected(ActivityDAO.self).getDefinitionWith(name: name) else {
 					Me.log.error("Activity named %{private}@ does not exist.", name)
 					completion(
 						StartActivitiesIntentResponse
@@ -57,7 +57,7 @@ public final class StartActivitiesIntentHandler: ActivityIntentHandler<StartActi
 					)
 					return
 				}
-				let activity = try DependencyInjector.get(ActivityDAO.self).startActivity(definition)
+				let activity = try injected(ActivityDAO.self).startActivity(definition)
 				startedActivities.append(activity)
 			}
 			let activitiesInfo = startedActivities.map { a in ActivityIntentInfo(a) }

@@ -49,12 +49,12 @@ public final class RecordDecimalMoodIntentHandler: NSObject, RecordDecimalMoodIn
 			return
 		}
 		do {
-			let minRating = DependencyInjector.get(Settings.self).minMood
-			let maxRating = DependencyInjector.get(Settings.self).maxMood
+			let minRating = injected(Settings.self).minMood
+			let maxRating = injected(Settings.self).maxMood
 			let rating = minRating + (maxRating - minRating) * ratingPercent
 
-			let mood = try DependencyInjector.get(MoodDAO.self).createMood(rating: rating)
-			let message = DependencyInjector.get(MoodUiUtil.self).feedbackMessage(
+			let mood = try injected(MoodDAO.self).createMood(rating: rating)
+			let message = injected(MoodUiUtil.self).feedbackMessage(
 				for: mood.rating,
 				min: mood.minRating,
 				max: mood.maxRating

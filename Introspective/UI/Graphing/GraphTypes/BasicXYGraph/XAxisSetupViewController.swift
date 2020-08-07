@@ -156,7 +156,7 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 	// MARK: - Helper Functions
 
 	private final func getApplicableInformationTypesForSelectedAttribute() -> [SampleGroupInformation.Type] {
-		DependencyInjector.get(SampleGroupInformationFactory.self)
+		injected(SampleGroupInformationFactory.self)
 			.getApplicableInformationTypes(forAttribute: selectedAttribute)
 	}
 
@@ -168,14 +168,14 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 
 	private final func updateDisplay() {
 		if finishedLoading {
-			DependencyInjector.get(UiUtil.self).setView(usePointGroupValueLabel, enabled: grouped, hidden: !grouped)
-			DependencyInjector.get(UiUtil.self).setView(usePointGroupValueSwitch, enabled: grouped, hidden: !grouped)
+			injected(UiUtil.self).setView(usePointGroupValueLabel, enabled: grouped, hidden: !grouped)
+			injected(UiUtil.self).setView(usePointGroupValueSwitch, enabled: grouped, hidden: !grouped)
 			if grouped && usePointGroupValueSwitch.isOn {
-				DependencyInjector.get(UiUtil.self).setView(informationPicker, enabled: false, hidden: true)
-				DependencyInjector.get(UiUtil.self).setView(attributePicker, enabled: false, hidden: true)
+				injected(UiUtil.self).setView(informationPicker, enabled: false, hidden: true)
+				injected(UiUtil.self).setView(attributePicker, enabled: false, hidden: true)
 			} else {
-				DependencyInjector.get(UiUtil.self).setView(informationPicker, enabled: grouped, hidden: !grouped)
-				DependencyInjector.get(UiUtil.self).setView(attributePicker, enabled: true, hidden: false)
+				injected(UiUtil.self).setView(informationPicker, enabled: grouped, hidden: !grouped)
+				injected(UiUtil.self).setView(attributePicker, enabled: true, hidden: false)
 			}
 		}
 	}

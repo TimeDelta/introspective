@@ -40,7 +40,7 @@ public final class MedicationExporterImpl: BaseExporter, MedicationExporter {
 		)
 		super.init(
 			dataTypePluralName: "Medications",
-			url: DependencyInjector.get(ExporterUtil.self).urlOfExportFile(for: MedicationDose.self, in: directory)
+			url: injected(ExporterUtil.self).urlOfExportFile(for: MedicationDose.self, in: directory)
 		)
 	}
 
@@ -62,7 +62,7 @@ public final class MedicationExporterImpl: BaseExporter, MedicationExporter {
 
 		totalRecordsToExport = doses.count
 
-		csv = try DependencyInjector.get(IOUtil.self).csvWriter(url: url)
+		csv = try injected(IOUtil.self).csvWriter(url: url)
 
 		guard !isPaused else { return }
 		try exportRemaining()
@@ -91,6 +91,6 @@ public final class MedicationExporterImpl: BaseExporter, MedicationExporter {
 	private final func getDoses() throws {
 		let fetchRequest: NSFetchRequest<MedicationDose> = MedicationDose.fetchRequest()
 		fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: true)]
-		doses = try DependencyInjector.get(Database.self).query(fetchRequest)
+		doses = try injected(Database.self).query(fetchRequest)
 	}
 }

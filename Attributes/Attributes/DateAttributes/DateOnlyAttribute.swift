@@ -39,8 +39,8 @@ public final class DateOnlyAttribute: DateAttributeBase {
 	}
 
 	public final override func typedValuesAreEqual(_ first: Date, _ second: Date) -> Bool {
-		let firstDate = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: first)
-		let secondDate = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: second)
+		let firstDate = injected(CalendarUtil.self).start(of: .day, in: first)
+		let secondDate = injected(CalendarUtil.self).start(of: .day, in: second)
 		return firstDate == secondDate
 	}
 }

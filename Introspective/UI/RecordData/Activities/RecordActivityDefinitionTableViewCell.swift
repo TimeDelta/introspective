@@ -95,7 +95,7 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 			if startDate.isToday() {
 				startText = TimeOfDay(startDate).toString(.medium)
 			} else {
-				startText = DependencyInjector.get(CalendarUtil.self)
+				startText = injected(CalendarUtil.self)
 					.string(for: startDate, dateStyle: .short, timeStyle: .short)
 			}
 			mostRecentTimeLabel.text = startText + " -"
@@ -105,7 +105,7 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 				} else if endDate.isToday() {
 					mostRecentTimeLabel.text! += " Today, " + TimeOfDay(endDate).toString(.medium)
 				} else {
-					mostRecentTimeLabel.text! += " " + DependencyInjector.get(CalendarUtil.self)
+					mostRecentTimeLabel.text! += " " + injected(CalendarUtil.self)
 						.string(for: endDate, dateStyle: .short, timeStyle: .short)
 				}
 			}
@@ -143,7 +143,7 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 
 	private final func getMostRecentlyStartedActivity() -> Activity? {
 		do {
-			return try DependencyInjector.get(ActivityDAO.self).getMostRecentlyStartedActivity(for: activityDefinition)
+			return try injected(ActivityDAO.self).getMostRecentlyStartedActivity(for: activityDefinition)
 		} catch {
 			Me.log.error("Failed to fetch activities: %@", errorInfo(error))
 		}
@@ -153,7 +153,7 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 
 	private final func getAllActivitiesForToday() -> [Activity] {
 		do {
-			return try DependencyInjector.get(ActivityDAO.self).getAllActivitiesForToday(activityDefinition)
+			return try injected(ActivityDAO.self).getAllActivitiesForToday(activityDefinition)
 		} catch {
 			Me.log.error("Failed to fetch activities: %@", errorInfo(error))
 			return []
@@ -162,7 +162,7 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 
 	private final func hasUnfinishedActivity() -> Bool {
 		do {
-			return try DependencyInjector.get(ActivityDAO.self).hasUnfinishedActivity(activityDefinition)
+			return try injected(ActivityDAO.self).hasUnfinishedActivity(activityDefinition)
 		} catch {
 			Me.log.error("Failed to query for unfinished activities: %@", errorInfo(error))
 		}

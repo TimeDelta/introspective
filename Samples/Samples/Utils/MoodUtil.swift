@@ -26,7 +26,7 @@ public final class MoodUtilImpl: MoodUtil {
 
 	public final func scaleMoods() throws {
 		do {
-			let transaction = DependencyInjector.get(Database.self).transaction()
+			let transaction = injected(Database.self).transaction()
 			let moods = try transaction.query(MoodImpl.fetchRequest())
 			for mood in moods {
 				scaleMood(mood)
@@ -43,8 +43,8 @@ public final class MoodUtilImpl: MoodUtil {
 		let oldMin = mood.minRating
 		let oldMax = mood.maxRating
 		let oldRating = mood.rating
-		let newMin = DependencyInjector.get(Settings.self).minMood
-		let newMax = DependencyInjector.get(Settings.self).maxMood
+		let newMin = injected(Settings.self).minMood
+		let newMax = injected(Settings.self).maxMood
 		mood.minRating = newMin
 		mood.maxRating = newMax
 		// (r1 - min1) / (max1 - min1) = (r2 - min2) / (max2 - min2)

@@ -20,17 +20,17 @@ final class MoodTableViewCellImpl: UITableViewCell, MoodTableViewCell {
 	public final var mood: Mood! {
 		didSet {
 			guard let mood = mood else { return }
-			moodRatingColorLabel.backgroundColor = DependencyInjector.get(MoodUiUtil.self).colorForMood(
+			moodRatingColorLabel.backgroundColor = injected(MoodUiUtil.self).colorForMood(
 				rating: mood.rating,
 				minRating: mood.minRating,
 				maxRating: mood.maxRating
 			)
 			moodRatingColorLabel.text = nil
-			let ratingText = DependencyInjector.get(MoodUiUtil.self).valueToString(mood.rating)
-			let minText = DependencyInjector.get(MoodUiUtil.self).valueToString(mood.minRating)
-			let maxText = DependencyInjector.get(MoodUiUtil.self).valueToString(mood.maxRating)
+			let ratingText = injected(MoodUiUtil.self).valueToString(mood.rating)
+			let minText = injected(MoodUiUtil.self).valueToString(mood.minRating)
+			let maxText = injected(MoodUiUtil.self).valueToString(mood.maxRating)
 			moodRatingLabel.text = ratingText + " (\(minText)-\(maxText))"
-			timestampLabel.text = DependencyInjector.get(CalendarUtil.self)
+			timestampLabel.text = injected(CalendarUtil.self)
 				.string(for: mood.date, dateStyle: .medium, timeStyle: .short)
 			if let note = mood.note {
 				if !note.isEmpty {

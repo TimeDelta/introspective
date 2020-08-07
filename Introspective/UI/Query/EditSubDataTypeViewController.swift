@@ -39,7 +39,7 @@ final class EditSubSampleTypeViewController: UIViewController {
 		dataTypePicker.dataSource = self
 		dataTypePicker.delegate = self
 
-		let index = DependencyInjector.get(SampleFactory.self).allTypes().index { $0 == sampleType }
+		let index = injected(SampleFactory.self).allTypes().index { $0 == sampleType }
 		if index != nil {
 			dataTypePicker.selectRow(index!, inComponent: 0, animated: false)
 		}
@@ -121,7 +121,7 @@ extension EditSubSampleTypeViewController: UIPickerViewDataSource {
 	}
 
 	final func pickerView(_: UIPickerView, numberOfRowsInComponent _: Int) -> Int {
-		DependencyInjector.get(SampleFactory.self).allTypes().count
+		injected(SampleFactory.self).allTypes().count
 	}
 }
 
@@ -129,10 +129,10 @@ extension EditSubSampleTypeViewController: UIPickerViewDataSource {
 
 extension EditSubSampleTypeViewController: UIPickerViewDelegate {
 	public final func pickerView(_: UIPickerView, titleForRow row: Int, forComponent _: Int) -> String? {
-		DependencyInjector.get(SampleFactory.self).allTypes()[row].name
+		injected(SampleFactory.self).allTypes()[row].name
 	}
 
 	public final func pickerView(_: UIPickerView, didSelectRow row: Int, inComponent _: Int) {
-		sampleType = DependencyInjector.get(SampleFactory.self).allTypes()[row]
+		sampleType = injected(SampleFactory.self).allTypes()[row]
 	}
 }

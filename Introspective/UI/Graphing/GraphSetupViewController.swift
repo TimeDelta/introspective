@@ -62,7 +62,7 @@ final class GraphSetupViewController: UIViewController {
 		controller.currentValue = graphType
 		controller.notificationToSendOnAccept = Me.setGraphType
 		customPresentViewController(
-			DependencyInjector.get(UiUtil.self).defaultPresenter,
+			injected(UiUtil.self).defaultPresenter,
 			viewController: controller,
 			animated: false
 		)

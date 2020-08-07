@@ -21,31 +21,31 @@ final class AttributeViewController: UIViewController {
 
 	// MARK: Presenters
 
-	private static let numericPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
+	private static let numericPresenter = injected(UiUtil.self).customPresenter(
 		width: .full,
 		height: .custom(size: 100),
 		center: .topCenter
 	)
-	private static let dosagePresenter = DependencyInjector.get(UiUtil.self).customPresenter(
+	private static let dosagePresenter = injected(UiUtil.self).customPresenter(
 		height: .custom(size: 100),
 		center: .topCenter
 	)
-	private static let frequencyPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
+	private static let frequencyPresenter = injected(UiUtil.self).customPresenter(
 		width: .custom(size: 250),
 		height: .custom(size: 250),
 		center: .topCenter
 	)
-	private static let multiSelectPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
+	private static let multiSelectPresenter = injected(UiUtil.self).customPresenter(
 		width: .full,
 		height: .fluid(percentage: 0.45),
 		center: .topCenter
 	)
-	private static let defaultPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
+	private static let defaultPresenter = injected(UiUtil.self).customPresenter(
 		width: .full,
 		height: .custom(size: 200),
 		center: .topCenter
 	)
-	private static let descriptionPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
+	private static let descriptionPresenter = injected(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
 		center: .center

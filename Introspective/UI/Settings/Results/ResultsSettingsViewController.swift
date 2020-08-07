@@ -33,7 +33,7 @@ public final class ResultsSettingsViewController: UIViewController {
 
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
-		duration = DependencyInjector.get(Settings.self).defaultSearchNearbyDuration
+		duration = injected(Settings.self).defaultSearchNearbyDuration
 		updateUI()
 		navigationItem.rightBarButtonItem = UIBarButtonItem(
 			title: "Reset",
@@ -42,7 +42,7 @@ public final class ResultsSettingsViewController: UIViewController {
 			action: #selector(reset)
 		)
 
-		DependencyInjector.get(UiUtil.self).setBackButton(for: self, title: "Settings", action: #selector(done))
+		injected(UiUtil.self).setBackButton(for: self, title: "Settings", action: #selector(done))
 
 		observe(selector: #selector(choseDefaultSearchNearbyDuration), name: Me.choseDefaultSearchNearbyDuration)
 	}
@@ -50,12 +50,12 @@ public final class ResultsSettingsViewController: UIViewController {
 	// MARK: - Actions
 
 	@objc private func reset(_: Any) {
-		DependencyInjector.get(Settings.self).reset()
+		injected(Settings.self).reset()
 		updateUI()
 	}
 
 	@objc private final func done() {
-		DependencyInjector.get(Settings.self).setDefaultSearchNearbyDuration(duration)
+		injected(Settings.self).setDefaultSearchNearbyDuration(duration)
 		saveAndGoBackToSettings()
 	}
 
@@ -66,7 +66,7 @@ public final class ResultsSettingsViewController: UIViewController {
 		) as! SelectDurationViewController
 		controller.initialDuration = duration
 		controller.notificationToSendOnAccept = Me.choseDefaultSearchNearbyDuration
-		present(controller, using: DependencyInjector.get(UiUtil.self).defaultPresenter)
+		present(controller, using: injected(UiUtil.self).defaultPresenter)
 	}
 
 	// MARK: - Received Notifications
@@ -79,13 +79,13 @@ public final class ResultsSettingsViewController: UIViewController {
 	// MARK: - Helper Functions
 
 	private final func updateUI() {
-		let currentDefaultSearchNearbyDuration = DependencyInjector.get(Settings.self).defaultSearchNearbyDuration
+		let currentDefaultSearchNearbyDuration = injected(Settings.self).defaultSearchNearbyDuration
 		defaultSearchNearbyDurationButton.setTitle(currentDefaultSearchNearbyDuration.description, for: .normal)
 	}
 
 	private final func saveAndGoBackToSettings() {
 		do {
-			try retryOnFail({ try DependencyInjector.get(Settings.self).save() }, maxRetries: 2)
+			try retryOnFail({ try injected(Settings.self).save() }, maxRetries: 2)
 			navigationController?.popViewController(animated: false)
 		} catch {
 			Me.log.error("Failed to save results view settings: %@", errorInfo(error))

@@ -51,7 +51,7 @@ public final class ChooseActivityDefinitionViewControllerImpl: UIViewController,
 			do {
 				let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
 				fetchRequest.sortDescriptors = [NSSortDescriptor(key: "recordScreenIndex", ascending: true)]
-				availableDefinitions = try DependencyInjector.get(Database.self).query(fetchRequest)
+				availableDefinitions = try injected(Database.self).query(fetchRequest)
 			} catch {
 				Me.log.error("Failed to load activities: %@", errorInfo(error))
 				parent?.showError(title: "Failed to load activities", error: error)

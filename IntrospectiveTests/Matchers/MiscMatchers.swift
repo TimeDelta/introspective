@@ -21,7 +21,7 @@ func numberStoredInDatabase<Type: NSManagedObject & CoreDataObject>(
 	_ expectedCountMatcher: Matcher<Int>
 ) -> Matcher<Type.Type> {
 	return Matcher("No \(Type.entityName) exists") { _ -> MatchResult in
-		let count = try! DependencyInjector.get(Database.self).query(Type.fetchRequest() as! NSFetchRequest<Type>).count
+		let count = try! injected(Database.self).query(Type.fetchRequest() as! NSFetchRequest<Type>).count
 		return expectedCountMatcher.matches(count)
 	}
 }

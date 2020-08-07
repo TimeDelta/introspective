@@ -53,7 +53,7 @@ public final class TakeMedicationWithDosageIntentHandler: NSObject, TakeMedicati
 	) {
 		Me.log.info("Providing valid medication names")
 		do {
-			let medications = try DependencyInjector.get(Database.self).query(Medication.fetchRequest())
+			let medications = try injected(Database.self).query(Medication.fetchRequest())
 			completion(medications.map { medication in medication.name }, nil)
 		} catch {
 			completion(nil, error)
@@ -77,7 +77,7 @@ public final class TakeMedicationWithDosageIntentHandler: NSObject, TakeMedicati
 		}
 
 		do {
-			guard let medication = try DependencyInjector.get(MedicationDAO.self).medicationNamed(medicationName) else {
+			guard let medication = try injected(MedicationDAO.self).medicationNamed(medicationName) else {
 				Me.log.error("Medication named %{private}@ does not exist.", medicationName)
 				completion(
 					TakeMedicationWithDosageIntentResponse
@@ -93,7 +93,7 @@ public final class TakeMedicationWithDosageIntentHandler: NSObject, TakeMedicati
 				)
 				return
 			}
-			try DependencyInjector.get(MedicationDAO.self).createDose(medication: medication, dosage: dosage)
+			try injected(MedicationDAO.self).createDose(medication: medication, dosage: dosage)
 			completion(TakeMedicationWithDosageIntentResponse.success(dosage: dosageText, medication: medicationName))
 		} catch {
 			Me.log.error(

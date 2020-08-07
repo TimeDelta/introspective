@@ -26,9 +26,9 @@ final class MoodUtilFunctionalTests: FunctionalTest {
 	func testGivenExistingMoodOf6WithOriginalRange0To7AndNewRange1To8_scaleMoods_setsMoodTo7() throws {
 		// given
 		MoodDataTestUtil.createMood(rating: 6, min: 0, max: 7)
-		DependencyInjector.get(Settings.self).setMinMood(1)
-		DependencyInjector.get(Settings.self).setMaxMood(8)
-		try DependencyInjector.get(Settings.self).save()
+		injected(Settings.self).setMinMood(1)
+		injected(Settings.self).setMaxMood(8)
+		try injected(Settings.self).save()
 
 		// when
 		try util.scaleMoods()
@@ -40,9 +40,9 @@ final class MoodUtilFunctionalTests: FunctionalTest {
 	func testGivenExistingMoodOf6WithOriginalRange0To7AndNewRange1To15_scaleMoods_setsMoodTo13() throws {
 		// given
 		MoodDataTestUtil.createMood(rating: 6, min: 0, max: 7)
-		DependencyInjector.get(Settings.self).setMinMood(1)
-		DependencyInjector.get(Settings.self).setMaxMood(15)
-		try DependencyInjector.get(Settings.self).save()
+		injected(Settings.self).setMinMood(1)
+		injected(Settings.self).setMaxMood(15)
+		try injected(Settings.self).save()
 
 		// when
 		try util.scaleMoods()
@@ -54,9 +54,9 @@ final class MoodUtilFunctionalTests: FunctionalTest {
 	func testGivenExistingMoodOf10WithOriginalRange1To11AndNewRange0To5_scaleMoods_setsMoodTo4Point5() throws {
 		// given
 		MoodDataTestUtil.createMood(rating: 10, min: 1, max: 11)
-		DependencyInjector.get(Settings.self).setMinMood(0)
-		DependencyInjector.get(Settings.self).setMaxMood(5)
-		try DependencyInjector.get(Settings.self).save()
+		injected(Settings.self).setMinMood(0)
+		injected(Settings.self).setMaxMood(5)
+		try injected(Settings.self).save()
 
 		// when
 		try util.scaleMoods()
@@ -69,9 +69,9 @@ final class MoodUtilFunctionalTests: FunctionalTest {
 		// given
 		MoodDataTestUtil.createMood(rating: 6, min: 0, max: 7)
 		MoodDataTestUtil.createMood(rating: 4, min: 1, max: 4)
-		DependencyInjector.get(Settings.self).setMinMood(1)
-		DependencyInjector.get(Settings.self).setMaxMood(8)
-		try DependencyInjector.get(Settings.self).save()
+		injected(Settings.self).setMinMood(1)
+		injected(Settings.self).setMaxMood(8)
+		try injected(Settings.self).save()
 
 		// when
 		try util.scaleMoods()
@@ -86,6 +86,6 @@ final class MoodUtilFunctionalTests: FunctionalTest {
 	private final func moodExistsWith(rating: Double, min: Double, max: Double) throws -> Bool {
 		let fetchRequest: NSFetchRequest<MoodImpl> = MoodImpl.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "rating == %f AND minRating == %f AND maxRating == %f", rating, min, max)
-		return (try DependencyInjector.get(Database.self).query(fetchRequest)).count > 0
+		return (try injected(Database.self).query(fetchRequest)).count > 0
 	}
 }

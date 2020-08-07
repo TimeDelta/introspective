@@ -165,12 +165,12 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 
 	private final func showActivityHistory() {
 		showRecordDataScreen()
-		DependencyInjector.get(NotificationUtil.self).post(.showRecordActivitiesScreen, object: self)
+		injected(NotificationUtil.self).post(.showRecordActivitiesScreen, object: self)
 	}
 
 	private final func showMedicationHistory() {
 		showRecordDataScreen()
-		DependencyInjector.get(NotificationUtil.self).post(.showRecordMedicationsScreen, object: self)
+		injected(NotificationUtil.self).post(.showRecordMedicationsScreen, object: self)
 	}
 
 	private final func showMoodHistory() {
@@ -191,7 +191,7 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 			)
 			return
 		}
-		DependencyInjector.get(NotificationUtil.self).post(name, object: self, userInfo: [.backgroundTaskId: taskId])
+		injected(NotificationUtil.self).post(name, object: self, userInfo: [.backgroundTaskId: taskId])
 	}
 
 	private final func showRecordDataScreen() {
@@ -200,7 +200,7 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 
 	private final func showResultsScreenWith(forQuery query: Query) {
 		setTabBarIndex(1)
-		DependencyInjector.get(NotificationUtil.self).post(.showResultsScreen, object: self, userInfo: [.query: query])
+		injected(NotificationUtil.self).post(.showResultsScreen, object: self, userInfo: [.query: query])
 	}
 
 	private final func setTabBarIndex(_ index: Int) {

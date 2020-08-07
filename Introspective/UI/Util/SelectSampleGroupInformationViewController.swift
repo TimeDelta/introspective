@@ -95,10 +95,10 @@ final class SelectSampleGroupInformationViewControllerImpl: UIViewController,
 
 	private final func getApplicableInformationTypesForSelectedAttribute() -> [SampleGroupInformation.Type] {
 		if limitToNumericInformation {
-			return DependencyInjector.get(SampleGroupInformationFactory.self)
+			return injected(SampleGroupInformationFactory.self)
 				.getApplicableNumericInformationTypes(forAttribute: selectedAttribute)
 		} else {
-			return DependencyInjector.get(SampleGroupInformationFactory.self)
+			return injected(SampleGroupInformationFactory.self)
 				.getApplicableInformationTypes(forAttribute: selectedAttribute)
 		}
 	}

@@ -76,17 +76,17 @@ public final class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatab
 
 		var applicableSubQuerySamples = subQuerySamples
 		if mostRecentOnly {
-			applicableSubQuerySamples = DependencyInjector.get(SampleUtil.self)
+			applicableSubQuerySamples = injected(SampleUtil.self)
 				.sort(samples: subQuerySamples, by: .start, in: .orderedDescending)
 			applicableSubQuerySamples = [applicableSubQuerySamples[0]]
 		}
 
 		for sample in querySamples {
-			let closestSubQuerySample = DependencyInjector.get(SearchUtil.self)
+			let closestSubQuerySample = injected(SearchUtil.self)
 				.closestItem(to: sample, in: applicableSubQuerySamples) { sample1, sample2 in
-					DependencyInjector.get(SampleUtil.self).distance(between: sample1, and: sample2, in: self.timeUnit)
+					injected(SampleUtil.self).distance(between: sample1, and: sample2, in: self.timeUnit)
 				}
-			let distance = DependencyInjector.get(SampleUtil.self)
+			let distance = injected(SampleUtil.self)
 				.distance(between: sample, and: closestSubQuerySample, in: timeUnit)
 			if distance <= numberOfTimeUnits {
 				matchingSamples.append(sample)

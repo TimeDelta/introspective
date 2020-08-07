@@ -52,12 +52,12 @@ class FunctionalTest: Test {
 		database = FunctionalTestDatabase(ObjectModelContainer.objectModel)
 		Given(injectionProvider, .get(.value(Database.self), willReturn: database))
 
-		let transaction = DependencyInjector.get(Database.self).transaction()
+		let transaction = injected(Database.self).transaction()
 		settings = try! transaction.new(SettingsImpl.self)
 		try! transaction.commit()
 		// must pull from main database context or context will go out of scope and get deleted,
 		// causing CoreData to be unable to fulfill a fault
-		settings = try! DependencyInjector.get(Database.self).pull(savedObject: settings)
+		settings = try! injected(Database.self).pull(savedObject: settings)
 		Given(injectionProvider, .get(.value(Settings.self), willReturn: settings))
 
 		attributeRestrictionFactory = AttributeRestrictionFactoryImpl()

@@ -218,7 +218,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 
 	@objc private final func saveButtonPressed(_: Any) {
 		do {
-			let transaction = DependencyInjector.get(Database.self).transaction()
+			let transaction = injected(Database.self).transaction()
 
 			// have to use local variable here otherwise description will be
 			// overwritten when self.activityDefinition is set
@@ -228,7 +228,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 			} else {
 				activityDefinition = try transaction.new(ActivityDefinition.self)
 				activityDefinition.setSource(.introspective)
-				let numDefinitions = try DependencyInjector.get(Database.self).count(ActivityDefinition.self)
+				let numDefinitions = try injected(Database.self).count(ActivityDefinition.self)
 				activityDefinition.recordScreenIndex = Int16(numDefinitions)
 			}
 
@@ -238,7 +238,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 			try updateTagsForActivityDefinition(&activityDefinition, using: transaction)
 
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-			activityDefinition = try DependencyInjector.get(Database.self).pull(savedObject: activityDefinition)
+			activityDefinition = try injected(Database.self).pull(savedObject: activityDefinition)
 
 			DispatchQueue.main.async {
 				NotificationCenter.default.post(
@@ -279,6 +279,6 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 	}
 
 	private final func findTagWithName(_ name: String, using transaction: Transaction) throws -> Tag? {
-		try DependencyInjector.get(TagDAO.self).getTag(named: name, using: transaction)
+		try injected(TagDAO.self).getTag(named: name, using: transaction)
 	}
 }

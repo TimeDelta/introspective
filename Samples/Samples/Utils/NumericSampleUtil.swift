@@ -89,7 +89,7 @@ public final class NumericSampleUtilImpl: NumericSampleUtil {
 		}
 
 		var sampleAggregationAverages = [(date: Date?, value: Double)]()
-		for (aggregationDate, samples) in try DependencyInjector.get(SampleUtil.self)
+		for (aggregationDate, samples) in try injected(SampleUtil.self)
 			.sort(samples: samples, by: aggregationUnit!) {
 			sampleAggregationAverages.append((date: aggregationDate, value: try average(for: attribute, over: samples)))
 		}
@@ -130,7 +130,7 @@ public final class NumericSampleUtilImpl: NumericSampleUtil {
 		}
 
 		var sampleAggregationCounts = [(date: Date?, value: Int)]()
-		for (aggregationDate, samples) in try DependencyInjector.get(SampleUtil.self)
+		for (aggregationDate, samples) in try injected(SampleUtil.self)
 			.sort(samples: samples, by: aggregationUnit!) {
 			sampleAggregationCounts.append((date: aggregationDate, value: samples.count))
 		}
@@ -152,7 +152,7 @@ public final class NumericSampleUtilImpl: NumericSampleUtil {
 		}
 
 		var sampleAggregationMaxs = [(date: Date?, value: Type)]()
-		for (aggregationDate, samples) in try DependencyInjector.get(SampleUtil.self)
+		for (aggregationDate, samples) in try injected(SampleUtil.self)
 			.sort(samples: samples, by: aggregationUnit!) {
 			sampleAggregationMaxs
 				.append((date: aggregationDate, value: try max(for: attribute, over: samples, as: Type.self)))
@@ -197,7 +197,7 @@ public final class NumericSampleUtilImpl: NumericSampleUtil {
 		}
 
 		var sampleAggregationMins = [(date: Date?, value: Type)]()
-		for (aggregationDate, samples) in try DependencyInjector.get(SampleUtil.self)
+		for (aggregationDate, samples) in try injected(SampleUtil.self)
 			.sort(samples: samples, by: aggregationUnit!) {
 			sampleAggregationMins
 				.append((date: aggregationDate, value: try min(for: attribute, over: samples, as: Type.self)))
@@ -242,7 +242,7 @@ public final class NumericSampleUtilImpl: NumericSampleUtil {
 		}
 
 		var sampleAggregationSums = [(date: Date?, value: Type)]()
-		for (aggregationDate, samples) in try DependencyInjector.get(SampleUtil.self)
+		for (aggregationDate, samples) in try injected(SampleUtil.self)
 			.sort(samples: samples, by: aggregationUnit!) {
 			sampleAggregationSums
 				.append((date: aggregationDate, value: try sum(for: attribute, over: samples, as: Type.self)))

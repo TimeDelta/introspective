@@ -39,15 +39,15 @@ public final class MoodDAOImpl: MoodDAO {
 		max: Double?,
 		note: String?
 	) throws -> Mood {
-		let transaction = DependencyInjector.get(Database.self).transaction()
+		let transaction = injected(Database.self).transaction()
 		let mood = try transaction.new(MoodImpl.self)
 		mood.date = Date()
 		mood.rating = rating
 		mood.note = note
-		mood.minRating = min ?? DependencyInjector.get(Settings.self).minMood
-		mood.maxRating = max ?? DependencyInjector.get(Settings.self).maxMood
+		mood.minRating = min ?? injected(Settings.self).minMood
+		mood.maxRating = max ?? injected(Settings.self).maxMood
 		mood.setSource(.introspective)
 		try transaction.commit()
-		return try DependencyInjector.get(Database.self).pull(savedObject: mood)
+		return try injected(Database.self).pull(savedObject: mood)
 	}
 }

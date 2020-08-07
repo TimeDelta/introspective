@@ -29,7 +29,7 @@ public final class MedicationDoseTableTableViewCell: UITableViewCell {
 			if let dosage = medicationDose.dosage {
 				doseText += dosage.description + " on "
 			}
-			doseText += DependencyInjector.get(CalendarUtil.self)
+			doseText += injected(CalendarUtil.self)
 				.string(for: medicationDose.date, dateStyle: .medium, timeStyle: .short)
 			doseAndTimestampLabel.text = doseText
 		}

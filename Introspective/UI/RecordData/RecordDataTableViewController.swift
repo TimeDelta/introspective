@@ -99,7 +99,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 
 	@objc private final func showViewController(notification: Notification) {
 		if let controller: UIViewController = value(for: .controller, from: notification) {
-			let presenter: Presentr! = value(for: .presenter, from: notification) ?? DependencyInjector.get(UiUtil.self)
+			let presenter: Presentr! = value(for: .presenter, from: notification) ?? injected(UiUtil.self)
 				.defaultPresenter
 			customPresentViewController(presenter, viewController: controller, animated: false)
 		}
@@ -149,7 +149,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 	private final func getIdFor(_ indexPath: IndexPath) -> String {
 		var id = viewOrder[indexPath.row]
 		if id == Me.moodId {
-			if DependencyInjector.get(Settings.self).discreteMoods {
+			if injected(Settings.self).discreteMoods {
 				id = Me.discreteMoodId
 			} else {
 				id = Me.continuousMoodId

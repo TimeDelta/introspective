@@ -303,12 +303,12 @@ class EditActivityTableViewControllerFunctionalTests: FunctionalTest {
 		controller.saveButtonPressed(self)
 
 		// then
-		assertThat(DependencyInjector.get(Database.self), activityExists(hasDefinition(definition)))
-		assertThat(DependencyInjector.get(Database.self), activityExists(hasStartDate(startDate)))
-		assertThat(DependencyInjector.get(Database.self), activityExists(hasEndDate(endDate)))
-		assertThat(DependencyInjector.get(Database.self), activityExists(hasNote(note)))
-		assertThat(DependencyInjector.get(Database.self), activityExists(hasTags(tagNames)))
-		assertThat(DependencyInjector.get(Database.self), activityExists(allOf(
+		assertThat(injected(Database.self), activityExists(hasDefinition(definition)))
+		assertThat(injected(Database.self), activityExists(hasStartDate(startDate)))
+		assertThat(injected(Database.self), activityExists(hasEndDate(endDate)))
+		assertThat(injected(Database.self), activityExists(hasNote(note)))
+		assertThat(injected(Database.self), activityExists(hasTags(tagNames)))
+		assertThat(injected(Database.self), activityExists(allOf(
 			hasDefinition(definition),
 			hasStartDate(startDate),
 			hasEndDate(endDate),

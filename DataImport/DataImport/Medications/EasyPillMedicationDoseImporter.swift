@@ -42,14 +42,14 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 
 	private final var recordNumber: Int = -1
 	private final var totalLines: Int = -1
-	private final let mainTransaction = DependencyInjector.get(Database.self).transaction()
+	private final let mainTransaction = injected(Database.self).transaction()
 	private final var latestDate: Date!
 	private final var lines = [String]()
 
 	// MARK: - Functions
 
 	public final func importData(from url: URL) throws {
-		let contents = try DependencyInjector.get(IOUtil.self).contentsOf(url)
+		let contents = try injected(IOUtil.self).contentsOf(url)
 		lines = contents.components(separatedBy: "\n")
 		lines.removeFirst()
 		recordNumber = 1
@@ -64,7 +64,7 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 	}
 
 	public final func resetLastImportDate() throws {
-		let transaction = DependencyInjector.get(Database.self).transaction()
+		let transaction = injected(Database.self).transaction()
 		lastImport = nil
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 	}
@@ -152,7 +152,7 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 				from: parts,
 				errorMessage: "No date found for record \(recordNumber)."
 			)
-			date = DependencyInjector.get(CalendarUtil.self).date(from: nextColumnText, format: "M/d/yy")
+			date = injected(CalendarUtil.self).date(from: nextColumnText, format: "M/d/yy")
 			if date == nil {
 				medicationName += "," + nextColumnText
 			}
@@ -163,7 +163,7 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 			from: parts,
 			errorMessage: "No time found for record \(recordNumber)."
 		)
-		date = DependencyInjector.get(CalendarUtil.self)
+		date = injected(CalendarUtil.self)
 			.date(from: nextColumnText + " " + timeText, format: "M/d/yy HH:mm")
 
 		guard let timestamp = date else {
@@ -197,7 +197,7 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 			try childTransaction.commit()
 		} catch {
 			Me.log.error("Failed to create and modify medication dose: %@", errorInfo(error))
-			let dateText = DependencyInjector.get(CalendarUtil.self)
+			let dateText = injected(CalendarUtil.self)
 				.string(for: date, dateStyle: .medium, timeStyle: .short)
 			throw GenericDisplayableError(
 				title: "Could not save dose",

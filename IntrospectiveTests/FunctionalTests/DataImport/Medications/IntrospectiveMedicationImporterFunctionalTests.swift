@@ -80,7 +80,7 @@ class IntrospectiveMedicationImporterFunctionalTests: ImporterTest {
 
 	public override func setUp() {
 		super.setUp()
-		importer = try! DependencyInjector.get(ImporterFactory.self).introspectiveMedicationImporter() as! IntrospectiveMedicationImporterImpl
+		importer = try! injected(ImporterFactory.self).introspectiveMedicationImporter() as! IntrospectiveMedicationImporterImpl
 	}
 
 	// MARK: - importData()
@@ -209,7 +209,7 @@ class IntrospectiveMedicationImporterFunctionalTests: ImporterTest {
 		try importer.resume()
 
 		// then
-		let medications = try DependencyInjector.get(Database.self).query(Medication.fetchRequest())
+		let medications = try injected(Database.self).query(Medication.fetchRequest())
 		let medicationIndexes = medications.map{ m -> Int16 in m.recordScreenIndex }
 		var previousIndex: Int16 = -1
 		for index in medicationIndexes.sorted() {
@@ -260,7 +260,7 @@ class IntrospectiveMedicationImporterFunctionalTests: ImporterTest {
 		try importer.resetLastImportDate()
 
 		// then
-		importer = try DependencyInjector.get(Database.self).pull(savedObject: importer)
+		importer = try injected(Database.self).pull(savedObject: importer)
 		XCTAssertNil(importer.lastImport)
 	}
 
@@ -312,7 +312,7 @@ class IntrospectiveMedicationImporterFunctionalTests: ImporterTest {
 	// MARK: - Helper Functions
 
 	private final func getAllDoses() throws -> [MedicationDose] {
-		return try DependencyInjector.get(Database.self).query(MedicationDose.fetchRequest())
+		return try injected(Database.self).query(MedicationDose.fetchRequest())
 	}
 
 	// MARK: Input

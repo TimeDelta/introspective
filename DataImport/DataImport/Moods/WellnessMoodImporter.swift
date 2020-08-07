@@ -46,15 +46,15 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 
 	private final var recordNumber: Int = -1
 	private final var totalLines: Int = -1
-	private final let mainTransaction = DependencyInjector.get(Database.self).transaction()
+	private final let mainTransaction = injected(Database.self).transaction()
 	private final var csv: CSVReader!
 	private final var latestDate: Date!
 
 	public final func importData(from url: URL) throws {
-		csv = try DependencyInjector.get(IOUtil.self).csvReader(url: url, hasHeaderRow: true)
+		csv = try injected(IOUtil.self).csvReader(url: url, hasHeaderRow: true)
 		recordNumber = 1
 		// a rough approximation
-		totalLines = try DependencyInjector.get(IOUtil.self).contentsOf(url).split(separator: "\n").count
+		totalLines = try injected(IOUtil.self).contentsOf(url).split(separator: "\n").count
 
 		isPaused = false
 		isCancelled = false
@@ -65,7 +65,7 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 	}
 
 	public final func resetLastImportDate() throws {
-		let transaction = DependencyInjector.get(Database.self).transaction()
+		let transaction = injected(Database.self).transaction()
 		lastImport = nil
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 	}
@@ -147,8 +147,8 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 		currentMood.rating = rating
 		currentMood.note = note
 		currentMood.setSource(.wellness)
-		if DependencyInjector.get(Settings.self).scaleMoodsOnImport {
-			DependencyInjector.get(MoodUtil.self).scaleMood(currentMood)
+		if injected(Settings.self).scaleMoodsOnImport {
+			injected(MoodUtil.self).scaleMood(currentMood)
 		}
 	}
 
@@ -164,7 +164,7 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 				"No time for record \(recordNumber): \(currentLine)"
 			)
 		}
-		guard let date = DependencyInjector.get(CalendarUtil.self)
+		guard let date = injected(CalendarUtil.self)
 			.date(from: dateString + timeString, format: "M/d/yy HH:mm") else {
 			throw InvalidFileFormatError(
 				"Unexpected date / time for record \(recordNumber): \(dateString + timeString)"

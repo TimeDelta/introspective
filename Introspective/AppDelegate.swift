@@ -92,7 +92,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		if Me.wasInBackground {
 			// not necessary on startup because context is always pulled fresh on app start. this allows faster startup
 			// essentially this is needed in case persisted objects were modified by app extension (SiriIntent / widget)
-			DependencyInjector.get(Database.self).refreshContext()
+			injected(Database.self).refreshContext()
 		}
 		Me.wasInBackground = false
 	}

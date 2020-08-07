@@ -23,8 +23,8 @@ class MoodDAOFunctionalTests: FunctionalTest {
 		timestamp: Date(),
 		timeZone: TimeZone.autoupdatingCurrent,
 		rating: 2,
-		minRating: DependencyInjector.get(Settings.self).minMood,
-		maxRating: DependencyInjector.get(Settings.self).maxMood,
+		minRating: injected(Settings.self).minMood,
+		maxRating: injected(Settings.self).maxMood,
 		source: .introspective)
 
 	private var dao: MoodDAOImpl!

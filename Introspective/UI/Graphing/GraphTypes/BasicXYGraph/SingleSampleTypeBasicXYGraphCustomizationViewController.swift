@@ -26,7 +26,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 
 	// MARK: Presenters
 
-	private static let presenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(
+	private static let presenter: Presentr = injected(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
 		center: .center
@@ -90,7 +90,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	final override func viewDidLoad() {
 		super.viewDidLoad()
 
-		sampleType = DependencyInjector.get(SampleFactory.self).allTypes()[0]
+		sampleType = injected(SampleFactory.self).allTypes()[0]
 		sampleTypePicker.dataSource = self
 		sampleTypePicker.delegate = self
 
@@ -165,7 +165,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	@IBAction final func showGraph(_: Any) {
 		do {
 			if query == nil {
-				query = try DependencyInjector.get(QueryFactory.self).queryFor(sampleType)
+				query = try injected(QueryFactory.self).queryFor(sampleType)
 			}
 			chartController = (viewController(named: "BasicXYChartViewController") as! BasicXYChartViewController)
 			chartController.chartType = chartType
@@ -359,10 +359,10 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	private final func querySet() {
 		if query == nil {
 			queryButton.setTitle("Choose query (optional)", for: .normal)
-			DependencyInjector.get(UiUtil.self).setButton(clearQueryButton, enabled: false, hidden: true)
+			injected(UiUtil.self).setButton(clearQueryButton, enabled: false, hidden: true)
 		} else {
 			queryButton.setTitle("Query chosen (click to change)", for: .normal)
-			DependencyInjector.get(UiUtil.self).setButton(clearQueryButton, enabled: true, hidden: false)
+			injected(UiUtil.self).setButton(clearQueryButton, enabled: true, hidden: false)
 		}
 		queryButton.accessibilityValue = queryButton.currentTitle
 	}
@@ -406,10 +406,10 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	private final func seriesGrouperSet() {
 		if seriesGrouper != nil {
 			chooseSeriesGrouperButton.setTitle("Series grouping chosen", for: .normal)
-			DependencyInjector.get(UiUtil.self).setButton(clearSeriesGrouperButton, enabled: true, hidden: false)
+			injected(UiUtil.self).setButton(clearSeriesGrouperButton, enabled: true, hidden: false)
 		} else {
 			chooseSeriesGrouperButton.setTitle("Choose series grouping (optional)", for: .normal)
-			DependencyInjector.get(UiUtil.self).setButton(clearSeriesGrouperButton, enabled: false, hidden: true)
+			injected(UiUtil.self).setButton(clearSeriesGrouperButton, enabled: false, hidden: true)
 		}
 		chooseSeriesGrouperButton.accessibilityValue = chooseSeriesGrouperButton.title(for: .normal)
 	}
@@ -417,7 +417,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	private final func pointGrouperSet() {
 		if pointGrouper != nil {
 			choosePointGrouperButton.setTitle("Point grouping chosen", for: .normal)
-			DependencyInjector.get(UiUtil.self).setButton(clearPointGrouperButton, enabled: true, hidden: false)
+			injected(UiUtil.self).setButton(clearPointGrouperButton, enabled: true, hidden: false)
 			if pointGrouperWasNil {
 				// old value of yAxis (if it exists) will be [Attribute] but [Information]
 				// is needed when pointGrouper is provided
@@ -428,7 +428,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 			}
 		} else {
 			choosePointGrouperButton.setTitle("Choose point grouping (optional)", for: .normal)
-			DependencyInjector.get(UiUtil.self).setButton(clearPointGrouperButton, enabled: false, hidden: true)
+			injected(UiUtil.self).setButton(clearPointGrouperButton, enabled: false, hidden: true)
 			if !pointGrouperWasNil {
 				// old value of yAxis (if it exists) will be [Information] but [Attribute]
 				// is needed when pointGrouper is not provided
@@ -462,7 +462,7 @@ extension SingleSampleTypeBasicXYGraphCustomizationViewController: UIPickerViewD
 	}
 
 	public final func pickerView(_: UIPickerView, numberOfRowsInComponent _: Int) -> Int {
-		DependencyInjector.get(SampleFactory.self).allTypes().count
+		injected(SampleFactory.self).allTypes().count
 	}
 }
 
@@ -470,10 +470,10 @@ extension SingleSampleTypeBasicXYGraphCustomizationViewController: UIPickerViewD
 
 extension SingleSampleTypeBasicXYGraphCustomizationViewController: UIPickerViewDelegate {
 	public final func pickerView(_: UIPickerView, titleForRow row: Int, forComponent _: Int) -> String? {
-		DependencyInjector.get(SampleFactory.self).allTypes()[row].name
+		injected(SampleFactory.self).allTypes()[row].name
 	}
 
 	public final func pickerView(_: UIPickerView, didSelectRow row: Int, inComponent _: Int) {
-		sampleType = DependencyInjector.get(SampleFactory.self).allTypes()[row]
+		sampleType = injected(SampleFactory.self).allTypes()[row]
 	}
 }

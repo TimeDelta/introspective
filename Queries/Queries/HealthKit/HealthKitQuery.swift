@@ -22,7 +22,7 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 	}
 
 	final override func run() {
-		DependencyInjector.get(HealthKitUtil.self).getAuthorization {
+		injected(HealthKitUtil.self).getAuthorization {
 			(error: Error?) in
 
 			if error != nil {
@@ -33,7 +33,7 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 			SampleType.initUnits()
 			// need a way of building HealthKit-specific predicates to avoid failures like
 			// "Expected constant value of class HKQuantity, received 83.699996948242188"
-			self.stopFunction = DependencyInjector.get(HealthKitUtil.self).getSamples(
+			self.stopFunction = injected(HealthKitUtil.self).getSamples(
 				for: SampleType.self,
 				predicate: nil,
 				callback: self.processQueryResults

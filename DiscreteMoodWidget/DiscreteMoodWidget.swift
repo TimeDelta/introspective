@@ -56,12 +56,12 @@ public class DiscreteMoodWidget: UIViewController {
 	@objc final func moodRatingButtonPressed(notification: Notification) {
 		if let rating: Int? = value(for: .mood, from: notification) {
 			do {
-				let transaction = DependencyInjector.get(Database.self).transaction()
-				let mood = try DependencyInjector.get(SampleFactory.self).mood(using: transaction)
+				let transaction = injected(Database.self).transaction()
+				let mood = try injected(SampleFactory.self).mood(using: transaction)
 				mood.date = Date()
 				mood.rating = Double(rating!)
-				mood.minRating = DependencyInjector.get(Settings.self).minMood
-				mood.maxRating = DependencyInjector.get(Settings.self).maxMood
+				mood.minRating = injected(Settings.self).minMood
+				mood.maxRating = injected(Settings.self).maxMood
 				mood.setSource(.introspective)
 				try transaction.commit()
 				moodButtonsView.isHidden = true
@@ -100,8 +100,8 @@ public class DiscreteMoodWidget: UIViewController {
 	}
 
 	private final func numberOfMoodRatings() -> Int {
-		let min = DependencyInjector.get(Settings.self).minMood
-		let max = DependencyInjector.get(Settings.self).maxMood
+		let min = injected(Settings.self).minMood
+		let max = injected(Settings.self).maxMood
 		return Int(max - min + 1)
 	}
 }
@@ -150,7 +150,7 @@ extension DiscreteMoodWidget: UICollectionViewDelegate {
 	public func collectionView(_: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = moodButtonsView.dequeueReusableCell(withReuseIdentifier: "mood rating", for: indexPath)
 		let moodRatingCell = cell as! MoodRatingCollectionViewCell
-		let min = Int(DependencyInjector.get(Settings.self).minMood)
+		let min = Int(injected(Settings.self).minMood)
 		moodRatingCell.rating = min + indexPath.row
 		moodRatingCell.notificationToSendOnAccept = Me.moodRatingButtonPressed
 		return moodRatingCell

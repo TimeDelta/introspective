@@ -26,11 +26,11 @@ public final class MoodRatingTableViewCell: UITableViewCell {
 		didSet { updateUI() }
 	}
 
-	public final var minRating: Double = DependencyInjector.get(Settings.self).minMood {
+	public final var minRating: Double = injected(Settings.self).minMood {
 		didSet { updateUI() }
 	}
 
-	public final var maxRating: Double = DependencyInjector.get(Settings.self).maxMood {
+	public final var maxRating: Double = injected(Settings.self).maxMood {
 		didSet { updateUI() }
 	}
 
@@ -49,10 +49,10 @@ public final class MoodRatingTableViewCell: UITableViewCell {
 				self.rating = rating
 			} else if rating > maxRating {
 				self.rating = maxRating
-				ratingTextField.text = DependencyInjector.get(MoodUiUtil.self).valueToString(maxRating)
+				ratingTextField.text = injected(MoodUiUtil.self).valueToString(maxRating)
 			} else {
 				self.rating = minRating
-				ratingTextField.text = DependencyInjector.get(MoodUiUtil.self).valueToString(minRating)
+				ratingTextField.text = injected(MoodUiUtil.self).valueToString(minRating)
 			}
 			sendRatingChangedNotification()
 		}
@@ -62,11 +62,11 @@ public final class MoodRatingTableViewCell: UITableViewCell {
 
 	private final func updateUI() {
 		ratingSlider.setValue(Float(rating / maxRating), animated: false)
-		ratingSlider.thumbTintColor = DependencyInjector.get(MoodUiUtil.self)
+		ratingSlider.thumbTintColor = injected(MoodUiUtil.self)
 			.colorForMood(rating: rating, minRating: minRating, maxRating: maxRating)
-		ratingTextField.text = DependencyInjector.get(MoodUiUtil.self).valueToString(rating)
-		let minText = DependencyInjector.get(MoodUiUtil.self).valueToString(minRating)
-		let maxText = DependencyInjector.get(MoodUiUtil.self).valueToString(maxRating)
+		ratingTextField.text = injected(MoodUiUtil.self).valueToString(rating)
+		let minText = injected(MoodUiUtil.self).valueToString(minRating)
+		let maxText = injected(MoodUiUtil.self).valueToString(maxRating)
 		ratingRangeLabel.text = "(\(minText)-\(maxText))"
 	}
 

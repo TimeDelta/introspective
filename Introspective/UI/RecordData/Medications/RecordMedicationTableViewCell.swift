@@ -57,12 +57,12 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 	@objc private final func doseCreated(notification: Notification) {
 		do {
 			if let dose: MedicationDose = value(for: .dose, from: notification) {
-				let transaction = DependencyInjector.get(Database.self).transaction()
+				let transaction = injected(Database.self).transaction()
 				let doseFromTransaction = try transaction.pull(savedObject: dose)
 				medication = try transaction.pull(savedObject: medication)
 				medication.addToDoses(doseFromTransaction)
 				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-				medication = try DependencyInjector.get(Database.self).pull(savedObject: medication)
+				medication = try injected(Database.self).pull(savedObject: medication)
 				updateLastTakenButton()
 			}
 		} catch {
@@ -104,21 +104,21 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 	private final func updateLastTakenButton() {
 		var lastTakenText = "Never taken"
 		do {
-			if let mostRecentDose = try DependencyInjector.get(MedicationDAO.self).mostRecentDoseOf(medication) {
+			if let mostRecentDose = try injected(MedicationDAO.self).mostRecentDoseOf(medication) {
 				lastTakenText = "Last taken: "
 				if let dosage = mostRecentDose.dosage {
 					lastTakenText += dosage.description + " on "
 				}
-				lastTakenText += DependencyInjector.get(CalendarUtil.self)
+				lastTakenText += injected(CalendarUtil.self)
 					.string(for: mostRecentDose.date, dateStyle: .medium, timeStyle: .short)
-				DependencyInjector.get(UiUtil.self).setButton(lastTakenOnDateButton, enabled: true, hidden: false)
+				injected(UiUtil.self).setButton(lastTakenOnDateButton, enabled: true, hidden: false)
 			} else {
-				DependencyInjector.get(UiUtil.self).setButton(lastTakenOnDateButton, enabled: false, hidden: false)
+				injected(UiUtil.self).setButton(lastTakenOnDateButton, enabled: false, hidden: false)
 			}
 		} catch {
 			Me.log.error("Failed to retrieve most recent dose for %{private}@", medication.name)
 			lastTakenText = "Last Taken: An error ocurred"
-			DependencyInjector.get(UiUtil.self).setButton(lastTakenOnDateButton, enabled: false, hidden: false)
+			injected(UiUtil.self).setButton(lastTakenOnDateButton, enabled: false, hidden: false)
 		}
 		lastTakenOnDateButton.setTitle(lastTakenText, for: .normal)
 		lastTakenOnDateButton.accessibilityValue = lastTakenText
@@ -135,7 +135,7 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 
 	private final func quickTakeMedication() {
 		do {
-			try DependencyInjector.get(MedicationDAO.self).takeMedicationUsingDefaultDosage(medication)
+			try injected(MedicationDAO.self).takeMedicationUsingDefaultDosage(medication)
 			updateLastTakenButton()
 		} catch {
 			failedToMarkAsTaken(error)

@@ -38,7 +38,7 @@ public class TagsAttribute: TypedMultiSelectAttribute<Tag> {
 				do {
 					let fetchRequest: NSFetchRequest<Tag> = Tag.fetchRequest()
 					fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
-					return try DependencyInjector.get(Database.self).query(fetchRequest)
+					return try injected(Database.self).query(fetchRequest)
 				} catch {
 					Log().error("Failed to fetch tags: %@", errorInfo(error))
 					return []

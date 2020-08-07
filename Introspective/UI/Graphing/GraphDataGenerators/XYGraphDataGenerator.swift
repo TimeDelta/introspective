@@ -37,7 +37,7 @@ public class XYGraphDataGenerator {
 	final func areAllNumbers(_ values: [String]) -> Bool {
 		signpost?.begin(name: "Are all numbers", "Checking if %d values are all numbers", values.count)
 		for value in values {
-			if !DependencyInjector.get(StringUtil.self).isNumber(value) {
+			if !injected(StringUtil.self).isNumber(value) {
 				signpost?.end(name: "Are all numbers", "Finished checking if %d values are all numbers", values.count)
 				return false
 			}
@@ -61,7 +61,7 @@ public class XYGraphDataGenerator {
 	final func areAllDaysOfWeek(_ values: [String]) -> Bool {
 		signpost?.begin(name: "Are all days of week", "Checking if %d values are all days of week", values.count)
 		for value in values {
-			if !DependencyInjector.get(StringUtil.self).isDayOfWeek(value) {
+			if !injected(StringUtil.self).isDayOfWeek(value) {
 				signpost?.end(
 					name: "Are all days of week",
 					"Finished checking if %d values are all days of week",
@@ -247,7 +247,7 @@ public class XYGraphDataGenerator {
 	}
 
 	final func getDate(_ value: String) -> Date? {
-		DependencyInjector.get(CalendarUtil.self).date(from: value)
+		injected(CalendarUtil.self).date(from: value)
 	}
 
 	/// Apply the given `SampleGroupInformation` to each sample group.

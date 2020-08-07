@@ -28,7 +28,7 @@ public final class LeanBodyMass: HealthKitQuantitySample {
 	}
 
 	public static func initUnits() {
-		unit = DependencyInjector.get(HealthKitUtil.self).preferredUnitFor(.leanBodyMass) ?? HKUnit(from: .pound)
+		unit = injected(HealthKitUtil.self).preferredUnitFor(.leanBodyMass) ?? HKUnit(from: .pound)
 	}
 
 	// MARK: - Display Information
@@ -68,7 +68,7 @@ public final class LeanBodyMass: HealthKitQuantitySample {
 	public required init(_ sample: HKQuantitySample) {
 		leanBodyMass = sample.quantity.doubleValue(for: Me.unit)
 		timestamp = sample.startDate
-		DependencyInjector.get(HealthKitUtil.self).setTimeZoneIfApplicable(for: &timestamp, from: sample)
+		injected(HealthKitUtil.self).setTimeZoneIfApplicable(for: &timestamp, from: sample)
 	}
 
 	// MARK: - HealthKitSample Functions
@@ -155,6 +155,6 @@ extension LeanBodyMass: Equatable {
 
 extension LeanBodyMass: CustomDebugStringConvertible {
 	public final var debugDescription: String {
-		"LeanBodyMass of \(leanBodyMass) at " + DependencyInjector.get(CalendarUtil.self).string(for: timestamp)
+		"LeanBodyMass of \(leanBodyMass) at " + injected(CalendarUtil.self).string(for: timestamp)
 	}
 }

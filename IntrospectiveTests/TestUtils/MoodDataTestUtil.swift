@@ -23,7 +23,7 @@ public class MoodDataTestUtil {
 		max: Double = 7,
 		source: Sources.MoodSourceNum = .introspective)
 	-> MoodImpl {
-		let transaction = DependencyInjector.get(Database.self).transaction()
+		let transaction = injected(Database.self).transaction()
 		let mood = try! transaction.new(MoodImpl.self)
 		mood.rating = rating
 		mood.date = timestamp
@@ -32,6 +32,6 @@ public class MoodDataTestUtil {
 		mood.maxRating = max
 		mood.setSource(source)
 		try! transaction.commit()
-		return try! DependencyInjector.get(Database.self).pull(savedObject: mood)
+		return try! injected(Database.self).pull(savedObject: mood)
 	}
 }

@@ -51,19 +51,19 @@ public final class SameEndDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 
 		var applicableSubQuerySamples = subQuerySamples
 		if mostRecentOnly {
-			applicableSubQuerySamples = DependencyInjector.get(SampleUtil.self)
+			applicableSubQuerySamples = injected(SampleUtil.self)
 				.sort(samples: subQuerySamples, by: .end, in: .orderedDescending)
 			applicableSubQuerySamples = [subQuerySamples[0]]
 		}
 
-		let subQuerySamplesSortedByEndDate = DependencyInjector.get(SampleUtil.self)
+		let subQuerySamplesSortedByEndDate = injected(SampleUtil.self)
 			.sort(samples: applicableSubQuerySamples, by: .end, in: .orderedAscending)
 		for sample in querySamples {
-			let matchingSampleIndex = DependencyInjector.get(SearchUtil.self).binarySearch(
+			let matchingSampleIndex = injected(SearchUtil.self).binarySearch(
 				for: sample,
 				in: subQuerySamplesSortedByEndDate,
 				compare: { (s1: Sample, s2: Sample) -> ComparisonResult in
-					DependencyInjector.get(CalendarUtil.self).compare(s1.dates()[.end], s2.dates()[.end])
+					injected(CalendarUtil.self).compare(s1.dates()[.end], s2.dates()[.end])
 				}
 			)
 			if matchingSampleIndex != nil {

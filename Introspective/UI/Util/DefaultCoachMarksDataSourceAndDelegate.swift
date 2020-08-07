@@ -92,7 +92,7 @@ public final class DefaultCoachMarksDataSourceAndDelegate: CoachMarksDataSourceA
 			runSetup()
 		}
 		if index == _coachMarksInfo.count - 1 {
-			DependencyInjector.get(UserDefaultsUtil.self).setUserDefault(true, forKey: instructionsShownKey)
+			injected(UserDefaultsUtil.self).setUserDefault(true, forKey: instructionsShownKey)
 		}
 		return coachMarksController.helper.makeCoachMark(for: coachMarksInfo(index).view)
 	}
@@ -116,7 +116,7 @@ public final class DefaultCoachMarksDataSourceAndDelegate: CoachMarksDataSourceA
 
 	public final func coachMarksController(_: CoachMarksController, didEndShowingBySkipping skipped: Bool) {
 		if skipped {
-			DependencyInjector.get(UserDefaultsUtil.self).setUserDefault(true, forKey: instructionsShownKey)
+			injected(UserDefaultsUtil.self).setUserDefault(true, forKey: instructionsShownKey)
 		}
 		if let cleanup = cleanup {
 			cleanup()

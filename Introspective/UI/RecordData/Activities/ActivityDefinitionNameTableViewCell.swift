@@ -79,7 +79,7 @@ public final class ActivityDefinitionNameTableViewCell: UITableViewCell {
 		let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
 		do {
-			let results = try DependencyInjector.get(Database.self).query(fetchRequest)
+			let results = try injected(Database.self).query(fetchRequest)
 			return !results.isEmpty
 		} catch {
 			Me.log.error("Failed to check for activity name duplication")

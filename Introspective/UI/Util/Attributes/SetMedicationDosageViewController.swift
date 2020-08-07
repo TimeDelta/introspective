@@ -56,14 +56,14 @@ public final class SetMedicationDosageViewController: UIViewController {
 			} else {
 				saveButton.backgroundColor = .black
 			}
-			DependencyInjector.get(UiUtil.self).setButton(saveButton, enabled: true, hidden: false)
+			injected(UiUtil.self).setButton(saveButton, enabled: true, hidden: false)
 		} else {
 			if #available(iOS 13.0, *) {
 				saveButton.backgroundColor = .systemGray
 			} else {
 				saveButton.backgroundColor = .gray
 			}
-			DependencyInjector.get(UiUtil.self).setButton(saveButton, enabled: false, hidden: false)
+			injected(UiUtil.self).setButton(saveButton, enabled: false, hidden: false)
 		}
 	}
 

@@ -51,7 +51,7 @@ Pill name,Notes,Dosage,Frequency,How many times per day,How many days,Starting,E
 
 	final override func setUp() {
 		super.setUp()
-		importer = try! DependencyInjector.get(ImporterFactory.self).easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
+		importer = try! injected(ImporterFactory.self).easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
 	}
 
 	// MARK: - Valid Data
@@ -183,7 +183,7 @@ a,,,as needed
 		try importer.resetLastImportDate()
 
 		// then
-		importer = try DependencyInjector.get(Database.self).pull(savedObject: importer)
+		importer = try injected(Database.self).pull(savedObject: importer)
 		XCTAssertNil(importer.lastImport)
 	}
 
@@ -267,7 +267,7 @@ a,,,as needed
 	private final func getMedicationsWith(name: String) throws -> [Medication] {
 		let medicationsWithCurrentNameFetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
 		medicationsWithCurrentNameFetchRequest.predicate = NSPredicate(format: "%K ==[cd] %@", "name", name)
-		return try DependencyInjector.get(Database.self).query(medicationsWithCurrentNameFetchRequest)
+		return try injected(Database.self).query(medicationsWithCurrentNameFetchRequest)
 	}
 
 	// MARK: - structs

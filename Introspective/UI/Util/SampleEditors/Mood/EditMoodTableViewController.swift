@@ -39,7 +39,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 
 	// MARK: Presenters
 
-	private static let datePresenter = DependencyInjector.get(UiUtil.self).customPresenter(
+	private static let datePresenter = injected(UiUtil.self).customPresenter(
 		width: .full,
 		height: .fluid(percentage: 0.4),
 		center: .bottomCenter
@@ -66,8 +66,8 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 
 	private final var timestamp: Date = Date()
 	private final var rating: Double = 0
-	private final var minRating: Double = DependencyInjector.get(Settings.self).minMood
-	private final var maxRating: Double = DependencyInjector.get(Settings.self).maxMood
+	private final var minRating: Double = injected(Settings.self).minMood
+	private final var maxRating: Double = injected(Settings.self).maxMood
 	private final var note: String?
 
 	// MARK: - UIViewController Overrides
@@ -120,7 +120,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 	) -> UITableViewCell {
 		if indexPath == Me.timestampIndex {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "timestamp", for: indexPath)
-			cell.detailTextLabel?.text = DependencyInjector.get(CalendarUtil.self)
+			cell.detailTextLabel?.text = injected(CalendarUtil.self)
 				.string(for: timestamp, dateStyle: .medium, timeStyle: .medium)
 			return cell
 		} else if indexPath == Me.ratingIndex {
@@ -180,7 +180,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 
 	@objc private final func saveButtonPressed(_: Any) {
 		do {
-			let transaction = DependencyInjector.get(Database.self).transaction()
+			let transaction = injected(Database.self).transaction()
 			var mood: Mood! = self.mood
 			if let localMood = mood {
 				if let localMood = localMood as? MoodImpl {
@@ -197,7 +197,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 			mood.note = note
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 			if let localMood = mood as? MoodImpl {
-				mood = try DependencyInjector.get(Database.self).pull(savedObject: localMood)
+				mood = try injected(Database.self).pull(savedObject: localMood)
 			} else { // otherwise mood is a Mock and we're testing
 				Me.log.debug("Mood not pulled from database")
 			}
@@ -220,7 +220,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 	// MARK: - Helper Functions
 
 	private final func getRatingCell(for indexPath: IndexPath) -> UITableViewCell {
-		if DependencyInjector.get(Settings.self).discreteMoods {
+		if injected(Settings.self).discreteMoods {
 			let cell = tableView.dequeueReusableCell(
 				withIdentifier: "integerRating",
 				for: indexPath

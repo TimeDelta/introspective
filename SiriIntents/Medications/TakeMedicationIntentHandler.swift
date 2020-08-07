@@ -40,7 +40,7 @@ public final class TakeMedicationIntentHandler: NSObject, TakeMedicationIntentHa
 		do {
 			let fetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
 			fetchRequest.sortDescriptors = [NSSortDescriptor(key: "recordScreenIndex", ascending: true)]
-			let medications = try DependencyInjector.get(Database.self).query(fetchRequest)
+			let medications = try injected(Database.self).query(fetchRequest)
 			completion(medications.map { medication in medication.name }, nil)
 		} catch {
 			Me.log.error("Failed to provide valid medication names: %@", errorInfo(error))
@@ -58,12 +58,12 @@ public final class TakeMedicationIntentHandler: NSObject, TakeMedicationIntentHa
 
 		do {
 			for name in medicationNames {
-				guard let medication = try DependencyInjector.get(MedicationDAO.self).medicationNamed(name) else {
+				guard let medication = try injected(MedicationDAO.self).medicationNamed(name) else {
 					Me.log.error("Medication named %{private}@ does not exist.", name)
 					completion(TakeMedicationIntentResponse.failure(medications: medicationNames))
 					return
 				}
-				try DependencyInjector.get(MedicationDAO.self).takeMedicationUsingDefaultDosage(medication)
+				try injected(MedicationDAO.self).takeMedicationUsingDefaultDosage(medication)
 			}
 			completion(TakeMedicationIntentResponse.success(medications: medicationNames))
 		} catch {

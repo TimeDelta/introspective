@@ -55,7 +55,7 @@ final class ATrackerActivityImporterFunctionalTests: ImporterTest {
 
 	final override func setUp() {
 		super.setUp()
-		importer = try! DependencyInjector.get(ImporterFactory.self).aTrackerActivityImporter() as! ATrackerActivityImporterImpl
+		importer = try! injected(ImporterFactory.self).aTrackerActivityImporter() as! ATrackerActivityImporterImpl
 	}
 
 	// MARK: - importData() - Valid Data
@@ -352,7 +352,7 @@ not enough columns
 		try importer.resetLastImportDate()
 
 		// then
-		importer = try DependencyInjector.get(Database.self).pull(savedObject: importer)
+		importer = try injected(Database.self).pull(savedObject: importer)
 		XCTAssertNil(importer.lastImport)
 	}
 
@@ -423,11 +423,11 @@ not enough columns
 	}
 
 	private final func noActivitiesExist() throws -> Bool {
-		return try DependencyInjector.get(Database.self).query(Activity.fetchRequest()).count == 0
+		return try injected(Database.self).query(Activity.fetchRequest()).count == 0
 	}
 
 	private final func noDefinitionsExist() throws -> Bool {
-		return try DependencyInjector.get(Database.self).query(ActivityDefinition.fetchRequest()).count == 0
+		return try injected(Database.self).query(ActivityDefinition.fetchRequest()).count == 0
 	}
 
 	private final func activityExists(_ activityInfo: ActivityInfo) throws -> Bool {
@@ -442,7 +442,7 @@ not enough columns
 		predicates.append(tagsPredicate(for: activityInfo.tags))
 		predicates.append(notePredicate(for: activityInfo.note))
 		fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
-		let activities = try DependencyInjector.get(Database.self).query(fetchRequest)
+		let activities = try injected(Database.self).query(fetchRequest)
 		return activities.count == 1
 	}
 
@@ -481,20 +481,20 @@ not enough columns
 	private final func getDefinitionsWith(name: String) throws -> [ActivityDefinition] {
 		let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
-		return try DependencyInjector.get(Database.self).query(fetchRequest)
+		return try injected(Database.self).query(fetchRequest)
 	}
 
 	private final func objectExists(_ object: NSManagedObject) throws -> Bool {
-		return !(try DependencyInjector.get(Database.self).pull(savedObject: object).isFault)
+		return !(try injected(Database.self).pull(savedObject: object).isFault)
 	}
 
 	private static func inputFor(_ activities: [ActivityInfo]) -> String {
 		var input = Me.headerRow
 		for activityInfo in activities {
-			let startDateText = DependencyInjector.get(CalendarUtil.self).string(for: activityInfo.startDate, inFormat: Me.dateFormat)
+			let startDateText = injected(CalendarUtil.self).string(for: activityInfo.startDate, inFormat: Me.dateFormat)
 			let endDateText: String
 			if let endDate = activityInfo.endDate {
-				endDateText = DependencyInjector.get(CalendarUtil.self).string(for: endDate, inFormat: Me.dateFormat)
+				endDateText = injected(CalendarUtil.self).string(for: endDate, inFormat: Me.dateFormat)
 			} else {
 				endDateText = ""
 			}

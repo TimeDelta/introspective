@@ -55,7 +55,7 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 
 	private final var decrementByThirtyButton: UIBarButtonItem!
 
-	private final var coachMarksController = DependencyInjector.get(CoachMarkFactory.self).controller()
+	private final var coachMarksController = injected(CoachMarkFactory.self).controller()
 	private final var coachMarksDataSourceAndDelegate: CoachMarksDataSourceAndDelegate!
 	private lazy final var coachMarksInfo: [CoachMarkInfo] = [
 		CoachMarkInfo(
@@ -134,7 +134,7 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 
 	public final override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
-		if !DependencyInjector.get(UserDefaultsUtil.self).bool(forKey: .selectDateViewInstructionsShown) {
+		if !injected(UserDefaultsUtil.self).bool(forKey: .selectDateViewInstructionsShown) {
 			coachMarksController.start(in: .window(over: self))
 		}
 	}
@@ -199,9 +199,9 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 	@IBAction final func acceptButtonPressed(_: Any) {
 		var date = datePicker.date
 		if datePickerMode == .date {
-			date = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: date)
+			date = injected(CalendarUtil.self).start(of: .day, in: date)
 		} else if limitDateToStartOfMinute {
-			date = DependencyInjector.get(CalendarUtil.self).start(of: .minute, in: date)
+			date = injected(CalendarUtil.self).start(of: .minute, in: date)
 		}
 		post(notificationToSendOnAccept, userInfo: [.date: date])
 		dismiss(animated: false, completion: nil)

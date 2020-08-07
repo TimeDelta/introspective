@@ -33,12 +33,12 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 	// MARK: Presenters
 
-	private static let setDosePresenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(
+	private static let setDosePresenter: Presentr = injected(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 250),
 		center: .center
 	)
-	private static let presenter = DependencyInjector.get(UiUtil.self).customPresenter(
+	private static let presenter = injected(UiUtil.self).customPresenter(
 		width: .full,
 		height: .custom(size: 300),
 		center: .topCenter
@@ -114,7 +114,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 	public final override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
-		if !DependencyInjector.get(UserDefaultsUtil.self).bool(forKey: .recordMedicationsInstructionsShown) {
+		if !injected(UserDefaultsUtil.self).bool(forKey: .recordMedicationsInstructionsShown) {
 			coachMarksController.start(in: .window(over: self))
 		}
 	}
@@ -192,7 +192,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 			)
 			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 				do {
-					let transaction = DependencyInjector.get(Database.self).transaction()
+					let transaction = injected(Database.self).transaction()
 					try transaction.delete(medication)
 					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 					self.loadMedications()
@@ -215,7 +215,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		searchController.searchBar.text = ""
 		resetFetchedResultsController()
 		do {
-			let transaction = DependencyInjector.get(Database.self).transaction()
+			let transaction = injected(Database.self).transaction()
 			if medicationsFromIndex < medicationsToIndex {
 				for i in medicationsFromIndex + 1 ... medicationsToIndex {
 					if let medication = fetchedResultsController.fetchedObjects?[i] {
@@ -305,7 +305,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		}
 		actionsController.addAction(getEditDefaultSortAction())
 		actionsController.addAction(getSortByRecentCountAction())
-		actionsController.addAction(DependencyInjector.get(UiUtil.self).alertAction(
+		actionsController.addAction(injected(UiUtil.self).alertAction(
 			title: "Cancel",
 			style: .cancel,
 			handler: nil
@@ -314,7 +314,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	}
 
 	private final func getSortAlphabeticallyAction() -> UIAlertAction {
-		DependencyInjector.get(UiUtil.self).alertAction(
+		injected(UiUtil.self).alertAction(
 			title: "Sort Alphabetically",
 			style: .default,
 			handler: { _ in
@@ -325,7 +325,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	}
 
 	private final func getSortZetabeticallyAction() -> UIAlertAction {
-		DependencyInjector.get(UiUtil.self).alertAction(
+		injected(UiUtil.self).alertAction(
 			title: "Sort Zetabetically",
 			style: .default,
 			handler: { _ in
@@ -336,7 +336,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	}
 
 	private final func getUseDefaultSortAction() -> UIAlertAction {
-		DependencyInjector.get(UiUtil.self).alertAction(
+		injected(UiUtil.self).alertAction(
 			title: "Use Default Sort Order",
 			style: .default,
 			handler: { _ in
@@ -347,7 +347,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	}
 
 	private final func getEditDefaultSortAction() -> UIAlertAction {
-		DependencyInjector.get(UiUtil.self).alertAction(
+		injected(UiUtil.self).alertAction(
 			title: isEditing ? "Done Editing Default Sort Order" : "Edit Default Sort Order",
 			style: .default,
 			handler: { _ in
@@ -359,7 +359,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	}
 
 	private final func getSortByRecentCountAction() -> UIAlertAction {
-		DependencyInjector.get(UiUtil.self).alertAction(
+		injected(UiUtil.self).alertAction(
 			title: "Permanent Sort by Recent Count",
 			style: .default,
 			handler: { _ in self.presentSortByRecentCountOptions() }
@@ -384,7 +384,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	private final func resetFetchedResultsController() {
 		do {
 			Me.signpost.begin(name: "resetting fetched results controller")
-			fetchedResultsController = DependencyInjector.get(Database.self).fetchedResultsController(
+			fetchedResultsController = injected(Database.self).fetchedResultsController(
 				type: Medication.self,
 				sortDescriptors: [currentSort ?? defaultSort],
 				cacheName: "medications"
@@ -420,14 +420,14 @@ public final class RecordMedicationTableViewController: UITableViewController {
 					showError(title: "Medication named '\(searchText)' already exists.")
 					return
 				}
-				let transaction = DependencyInjector.get(Database.self).transaction()
+				let transaction = injected(Database.self).transaction()
 
 				let medication = try transaction.new(Medication.self)
 				medication.name = searchText
 				medication.setSource(.introspective)
 				medication
 					.recordScreenIndex = Int16(
-						try DependencyInjector.get(Database.self)
+						try injected(Database.self)
 							.query(Medication.fetchRequest()).count
 					)
 				let dose = try transaction.new(MedicationDose.self)
@@ -451,7 +451,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	private final func medicationWithNameExists(_ name: String) throws -> Bool {
 		let fetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
-		let results = try DependencyInjector.get(Database.self).query(fetchRequest)
+		let results = try injected(Database.self).query(fetchRequest)
 		return !results.isEmpty
 	}
 
@@ -594,9 +594,9 @@ final fileprivate class RecordMedicationTableViewControllerCoachMarksDataSourceA
 		let medicationFetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
 		medicationFetchRequest.predicate = NSPredicate(format: "name == %@", Me.exampleMedicationName)
 		do {
-			let medications = try DependencyInjector.get(Database.self).query(medicationFetchRequest)
+			let medications = try injected(Database.self).query(medicationFetchRequest)
 			for medication in medications {
-				let transaction = DependencyInjector.get(Database.self).transaction()
+				let transaction = injected(Database.self).transaction()
 				try transaction.delete(medication)
 				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 				controller?.loadMedications()

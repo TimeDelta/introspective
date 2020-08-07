@@ -15,7 +15,7 @@ public final class ActivityDefinitionAutoNoteTableViewCell: UITableViewCell {
 	// MARK: - Static Variables
 
 	private typealias Me = ActivityDefinitionAutoNoteTableViewCell
-	private static let descriptionPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
+	private static let descriptionPresenter = injected(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
 		center: .center

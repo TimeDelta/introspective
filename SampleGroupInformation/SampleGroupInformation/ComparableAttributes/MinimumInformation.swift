@@ -30,7 +30,7 @@ public final class MinimumInformation<AttributeType: Comparable>: AnyInformation
 	public final override func compute(forSamples samples: [Sample]) throws -> String {
 		let filteredSamples = try filterSamples(samples, as: AttributeType.self)
 		if filteredSamples.isEmpty { return "No samples matching filter" }
-		let value = try DependencyInjector.get(NumericSampleUtil.self)
+		let value = try injected(NumericSampleUtil.self)
 			.min(for: attribute, over: filteredSamples, as: AttributeType.self)
 		return String(describing: value)
 	}
@@ -38,7 +38,7 @@ public final class MinimumInformation<AttributeType: Comparable>: AnyInformation
 	public final override func computeGraphable(forSamples samples: [Sample]) throws -> String {
 		let filteredSamples = try filterSamples(samples, as: AttributeType.self)
 		if filteredSamples.isEmpty { throw GenericDisplayableError(title: "No samples matching filter") }
-		let value = try DependencyInjector.get(NumericSampleUtil.self)
+		let value = try injected(NumericSampleUtil.self)
 			.min(for: attribute, over: filteredSamples, as: AttributeType.self)
 		if value is TimeDuration {
 			return String((value as! TimeDuration).inUnit(.hour))

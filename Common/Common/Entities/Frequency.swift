@@ -81,7 +81,7 @@ public final class Frequency: NSObject, NSSecureCoding, Codable, Comparable {
 			range: NSMakeRange(0, text.count),
 			withTemplate: ""
 		)
-		if DependencyInjector.get(StringUtil.self).isNumber(numbersOnly) {
+		if injected(StringUtil.self).isNumber(numbersOnly) {
 			timesPerTimeUnit = Double(numbersOnly)!
 		} else {
 			return nil

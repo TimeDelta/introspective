@@ -36,7 +36,7 @@ public final class GroupDefinitionImpl: GroupDefinition {
 	public final let sampleType: Sample.Type
 	public final var attributeRestrictionExpression: BooleanExpression? {
 		do {
-			let parser = DependencyInjector.get(BooleanExpressionParser.self)
+			let parser = injected(BooleanExpressionParser.self)
 			return try parser.parse(expressionParts)
 		} catch {
 			return nil
@@ -58,7 +58,7 @@ public final class GroupDefinitionImpl: GroupDefinition {
 	// MARK: - Functions
 
 	public final func sampleBelongsInGroup(_ sample: Sample) throws -> Bool {
-		let parser = DependencyInjector.get(BooleanExpressionParser.self)
+		let parser = injected(BooleanExpressionParser.self)
 		let attributeRestrictionExpression = try parser.parse(expressionParts)
 		return try attributeRestrictionExpression.evaluate([.sample: sample])
 	}
@@ -66,7 +66,7 @@ public final class GroupDefinitionImpl: GroupDefinition {
 	public final func isValid() -> Bool {
 		guard !name.isEmpty else { return false }
 		guard !expressionParts.isEmpty else { return false }
-		let parser = DependencyInjector.get(BooleanExpressionParser.self)
+		let parser = injected(BooleanExpressionParser.self)
 		do {
 			_ = try parser.parse(expressionParts)
 		} catch {

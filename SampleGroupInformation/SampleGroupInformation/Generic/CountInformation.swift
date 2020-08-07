@@ -27,7 +27,7 @@ public final class CountInformation: AnyInformation {
 	// MARK: - Information Functions
 
 	public final override func compute(forSamples samples: [Sample]) -> String {
-		let filteredSamples = DependencyInjector.get(SampleUtil.self)
+		let filteredSamples = injected(SampleUtil.self)
 			.getOnly(samples: samples, from: startDate, to: endDate)
 		return String(filteredSamples.count)
 	}

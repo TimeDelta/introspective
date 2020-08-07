@@ -16,7 +16,7 @@ public extension UITableViewController {
 		withIdentifier identifier: String,
 		for indexPath: IndexPath
 	) -> Type {
-		DependencyInjector.get(UiUtil.self).tableViewCell(
+		injected(UiUtil.self).tableViewCell(
 			from: tableView,
 			withIdentifier: identifier,
 			for: indexPath,

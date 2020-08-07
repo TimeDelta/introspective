@@ -29,7 +29,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	// MARK: - Structs
 
 	struct SampleTypeInfo {
-		var sampleType: Sample.Type = DependencyInjector.get(SampleFactory.self).allTypes()[0]
+		var sampleType: Sample.Type = injected(SampleFactory.self).allTypes()[0]
 		var matcher: SubQueryMatcher? = SameDatesSubQueryMatcher()
 
 		init() {}
@@ -89,7 +89,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	private final var editedAttributeRestrictionIndex: IndexPath!
 
 	/// Have to maintain a strong reference to this or instructions won't show
-	private final var coachMarksController = DependencyInjector.get(CoachMarkFactory.self).controller()
+	private final var coachMarksController = injected(CoachMarkFactory.self).controller()
 	private final var coachMarksDataSourceAndDelegate: CoachMarksDataSourceAndDelegate!
 
 	// MARK: - UIViewController Overloads
@@ -127,7 +127,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	public final override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
-		if !DependencyInjector.get(UserDefaultsUtil.self).bool(forKey: .queryViewInstructionsShown) {
+		if !injected(UserDefaultsUtil.self).bool(forKey: .queryViewInstructionsShown) {
 			coachMarksController.start(in: .window(over: self))
 		}
 	}
@@ -267,7 +267,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		editActionsForRowAt indexPath: IndexPath
 	) -> [UITableViewRowAction]? {
 		guard indexPath.section > 0 || indexPath.row > 0 else { return nil }
-		let delete = DependencyInjector.get(UiUtil.self)
+		let delete = injected(UiUtil.self)
 			.tableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
 				if indexPath.row == 0 {
 					let orphanedParts = self.queries[indexPath.section].parts
@@ -441,8 +441,8 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	private final func defaultAttributeRestriction(for sampleType: Sample.Type) -> AttributeRestriction {
 		let attribute = sampleType.defaultIndependentAttribute
-		let restrictionType = DependencyInjector.get(AttributeRestrictionFactory.self).typesFor(attribute)[0]
-		return DependencyInjector.get(AttributeRestrictionFactory.self)
+		let restrictionType = injected(AttributeRestrictionFactory.self).typesFor(attribute)[0]
+		return injected(AttributeRestrictionFactory.self)
 			.initialize(type: restrictionType, forAttribute: attribute)
 	}
 
@@ -588,17 +588,17 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	private final func getQueryFor(sampleType: Sample.Type, parts: [BooleanExpressionPart]) throws -> Query {
 		switch sampleType {
-		case is Activity.Type: return try DependencyInjector.get(QueryFactory.self).activityQuery(parts)
-		case is BloodPressure.Type: return try DependencyInjector.get(QueryFactory.self).bloodPressureQuery(parts)
-		case is BodyMassIndex.Type: return try DependencyInjector.get(QueryFactory.self).bmiQuery(parts)
-		case is HeartRate.Type: return try DependencyInjector.get(QueryFactory.self).heartRateQuery(parts)
-		case is LeanBodyMass.Type: return try DependencyInjector.get(QueryFactory.self).leanBodyMassQuery(parts)
-		case is MedicationDose.Type: return try DependencyInjector.get(QueryFactory.self).medicationDoseQuery(parts)
-		case is MoodImpl.Type: return try DependencyInjector.get(QueryFactory.self).moodQuery(parts)
-		case is RestingHeartRate.Type: return try DependencyInjector.get(QueryFactory.self).restingHeartRateQuery(parts)
-		case is SexualActivity.Type: return try DependencyInjector.get(QueryFactory.self).sexualActivityQuery(parts)
-		case is Sleep.Type: return try DependencyInjector.get(QueryFactory.self).sleepQuery(parts)
-		case is Weight.Type: return try DependencyInjector.get(QueryFactory.self).weightQuery(parts)
+		case is Activity.Type: return try injected(QueryFactory.self).activityQuery(parts)
+		case is BloodPressure.Type: return try injected(QueryFactory.self).bloodPressureQuery(parts)
+		case is BodyMassIndex.Type: return try injected(QueryFactory.self).bmiQuery(parts)
+		case is HeartRate.Type: return try injected(QueryFactory.self).heartRateQuery(parts)
+		case is LeanBodyMass.Type: return try injected(QueryFactory.self).leanBodyMassQuery(parts)
+		case is MedicationDose.Type: return try injected(QueryFactory.self).medicationDoseQuery(parts)
+		case is MoodImpl.Type: return try injected(QueryFactory.self).moodQuery(parts)
+		case is RestingHeartRate.Type: return try injected(QueryFactory.self).restingHeartRateQuery(parts)
+		case is SexualActivity.Type: return try injected(QueryFactory.self).sexualActivityQuery(parts)
+		case is Sleep.Type: return try injected(QueryFactory.self).sleepQuery(parts)
+		case is Weight.Type: return try injected(QueryFactory.self).weightQuery(parts)
 		default: throw GenericError("Unknown sample type: \(sampleType.name)")
 		}
 	}
@@ -613,45 +613,45 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		if indexPath != nil {
 			title = "What would you like to change this to?"
 		}
-		let actionSheet = DependencyInjector.get(UiUtil.self)
+		let actionSheet = injected(UiUtil.self)
 			.alert(title: title, message: nil, preferredStyle: .actionSheet)
 		if indexPath == nil {
 			actionSheet.addAction(UIAlertAction(title: "Data Type", style: .default) { _ in
 				self.addSampleType()
 			})
 		}
-		actionSheet.addAction(DependencyInjector.get(UiUtil.self).alertAction(
+		actionSheet.addAction(injected(UiUtil.self).alertAction(
 			title: "Attribute Restriction",
 			style: .default,
 			handler: { _ in self.addOrUpdateAttributeRestrictionFor(indexPath) }
 		))
-		actionSheet.addAction(DependencyInjector.get(UiUtil.self).alertAction(
+		actionSheet.addAction(injected(UiUtil.self).alertAction(
 			title: "And",
 			style: .default,
 			handler: getAddOrEditExpressionPartHandlerFor(.and, indexPath)
 		))
-		actionSheet.addAction(DependencyInjector.get(UiUtil.self).alertAction(
+		actionSheet.addAction(injected(UiUtil.self).alertAction(
 			title: "Or",
 			style: .default,
 			handler: getAddOrEditExpressionPartHandlerFor(.or, indexPath)
 		))
-		actionSheet.addAction(DependencyInjector.get(UiUtil.self).alertAction(
+		actionSheet.addAction(injected(UiUtil.self).alertAction(
 			title: "Not",
 			style: .default,
 			handler: getAddOrEditExpressionPartHandlerFor(.not, indexPath)
 		))
-		actionSheet.addAction(DependencyInjector.get(UiUtil.self).alertAction(
+		actionSheet.addAction(injected(UiUtil.self).alertAction(
 			title: "Condition Group Start",
 			style: .default,
 			handler: getAddOrEditExpressionPartHandlerFor(.groupStart, indexPath)
 		))
-		actionSheet.addAction(DependencyInjector.get(UiUtil.self).alertAction(
+		actionSheet.addAction(injected(UiUtil.self).alertAction(
 			title: "Condition Group End",
 			style: .default,
 			handler: getAddOrEditExpressionPartHandlerFor(.groupEnd, indexPath)
 		))
 		actionSheet
-			.addAction(DependencyInjector.get(UiUtil.self).alertAction(title: "Cancel", style: .cancel, handler: nil))
+			.addAction(injected(UiUtil.self).alertAction(title: "Cancel", style: .cancel, handler: nil))
 		presentView(actionSheet)
 	}
 
@@ -814,7 +814,7 @@ final fileprivate class QueryViewControllerCoachMarksDataSourceAndDelegate: Coac
 				guard let controller = self.controller else { return }
 
 				if controller.queries.count < 2 {
-					let subQuerySampleType = DependencyInjector.get(SampleFactory.self).allTypes()[1]
+					let subQuerySampleType = injected(SampleFactory.self).allTypes()[1]
 					controller.queries.append((
 						sampleTypeInfo: ControllerClass.SampleTypeInfo(subQuerySampleType),
 						parts: []

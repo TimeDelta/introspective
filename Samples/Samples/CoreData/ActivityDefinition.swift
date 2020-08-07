@@ -84,7 +84,7 @@ public class ActivityDefinition: NSManagedObject, CoreDataObject, Exportable {
 	public final func setTags(_ newTags: [Tag]) throws {
 		removeAllTags()
 		for tag in newTags {
-			let tagToAdd = try DependencyInjector.get(Database.self).pull(savedObject: tag, fromSameContextAs: self)
+			let tagToAdd = try injected(Database.self).pull(savedObject: tag, fromSameContextAs: self)
 			addToTags(tagToAdd)
 		}
 	}

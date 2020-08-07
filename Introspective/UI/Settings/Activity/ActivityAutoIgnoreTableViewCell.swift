@@ -79,12 +79,12 @@ public final class ActivityAutoIgnoreTableViewCell: ActivitySettingTableViewCell
 
 	private final func resetToggleSwitch() {
 		guard let toggleSwitch = toggleSwitch else { return }
-		toggleSwitch.isOn = DependencyInjector.get(Settings.self).autoIgnoreEnabled
+		toggleSwitch.isOn = injected(Settings.self).autoIgnoreEnabled
 		updateUiPerToggleSwitch()
 	}
 
 	private final func resetTextField() {
 		guard let numberOfSecondsTextField = numberOfSecondsTextField else { return }
-		numberOfSecondsTextField.text = String(DependencyInjector.get(Settings.self).autoIgnoreSeconds)
+		numberOfSecondsTextField.text = String(injected(Settings.self).autoIgnoreSeconds)
 	}
 }

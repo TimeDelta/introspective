@@ -40,7 +40,7 @@ final class ChooseSampleTypeViewControllerImpl: UIViewController, ChooseSampleTy
 		sampleTypePicker.dataSource = self
 		sampleTypePicker.delegate = self
 		if selectedSampleType != nil {
-			if let selectedIndex = DependencyInjector.get(SampleFactory.self).allTypes()
+			if let selectedIndex = injected(SampleFactory.self).allTypes()
 				.index(where: { $0 == selectedSampleType }) {
 				sampleTypePicker.selectRow(selectedIndex, inComponent: 0, animated: false)
 			} else {
@@ -53,7 +53,7 @@ final class ChooseSampleTypeViewControllerImpl: UIViewController, ChooseSampleTy
 
 	@IBAction final func userPressedAccept(_: Any) {
 		let selectedIndex = sampleTypePicker.selectedRow(inComponent: 0)
-		let selectedSampleType = DependencyInjector.get(SampleFactory.self).allTypes()[selectedIndex]
+		let selectedSampleType = injected(SampleFactory.self).allTypes()[selectedIndex]
 		syncPost(
 			notificationToSendOnAccept,
 			userInfo: [
@@ -72,7 +72,7 @@ extension ChooseSampleTypeViewControllerImpl: UIPickerViewDataSource {
 	}
 
 	public final func pickerView(_: UIPickerView, numberOfRowsInComponent _: Int) -> Int {
-		DependencyInjector.get(SampleFactory.self).allTypes().count
+		injected(SampleFactory.self).allTypes().count
 	}
 }
 
@@ -80,10 +80,10 @@ extension ChooseSampleTypeViewControllerImpl: UIPickerViewDataSource {
 
 extension ChooseSampleTypeViewControllerImpl: UIPickerViewDelegate {
 	public final func pickerView(_: UIPickerView, titleForRow row: Int, forComponent _: Int) -> String? {
-		DependencyInjector.get(SampleFactory.self).allTypes()[row].name.localizedCapitalized
+		injected(SampleFactory.self).allTypes()[row].name.localizedCapitalized
 	}
 
 	public final func pickerView(_: UIPickerView, didSelectRow row: Int, inComponent _: Int) {
-		selectedSampleType = DependencyInjector.get(SampleFactory.self).allTypes()[row]
+		selectedSampleType = injected(SampleFactory.self).allTypes()[row]
 	}
 }

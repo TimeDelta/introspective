@@ -25,7 +25,7 @@ public extension UIViewController {
 
 	final func stopObserving(_ name: NotificationName, object: Any? = nil) {
 		NotificationCenter.default.removeObserver(self, name: name.toName(), object: object)
-		DependencyInjector.get(UiUtil.self).stopObserving(self, name: name, object: object)
+		injected(UiUtil.self).stopObserving(self, name: name, object: object)
 	}
 
 	@objc open func showError(
@@ -80,13 +80,13 @@ public extension UIViewController {
 	/// - Parameter keyIsOptional: If true, no error will be logged if the specified key does not exist in the user info.
 	/// - Note: Automatically logs when key is missing, wrong type or the notification does not have any user info.
 	func value<Type>(for key: UserInfoKey, from notification: Notification, keyIsOptional: Bool = false) -> Type? {
-		DependencyInjector.get(UiUtil.self).value(for: key, from: notification, keyIsOptional: keyIsOptional)
+		injected(UiUtil.self).value(for: key, from: notification, keyIsOptional: keyIsOptional)
 	}
 
 	/// This is just a pass-through method that will return the input. It is solely for syntactic
 	/// sugar so that you don't have to type out "UserInfoKey." everywhere.
 	final func info(_ info: [UserInfoKey: Any]) -> [AnyHashable: Any] {
-		DependencyInjector.get(UiUtil.self).info(info)
+		injected(UiUtil.self).info(info)
 	}
 
 	/// - Parameter storyboardName: If not provided, will attempt to pull the controller from same storyboard as this controller.
@@ -95,14 +95,14 @@ public extension UIViewController {
 		fromStoryboard storyboardName: String? = nil
 	) -> Type {
 		if let storyboardName = storyboardName {
-			return DependencyInjector.get(UiUtil.self)
+			return injected(UiUtil.self)
 				.controller(named: controllerName, from: storyboardName, as: Type.self)
 		}
-		return DependencyInjector.get(UiUtil.self).controller(named: controllerName, from: storyboard!, as: Type.self)
+		return injected(UiUtil.self).controller(named: controllerName, from: storyboard!, as: Type.self)
 	}
 
 	final func post(_ name: Notification.Name, object: Any? = self, userInfo: [UserInfoKey: Any]? = nil) {
-		DependencyInjector.get(UiUtil.self).post(name: name, object: object, userInfo: userInfo)
+		injected(UiUtil.self).post(name: name, object: object, userInfo: userInfo)
 	}
 
 	final func post(_ name: NotificationName, object: Any? = self, userInfo: [UserInfoKey: Any]? = nil) {
@@ -110,11 +110,11 @@ public extension UIViewController {
 	}
 
 	final func syncPost(_ name: NotificationName, object: Any? = self, userInfo: [UserInfoKey: Any]? = nil) {
-		DependencyInjector.get(NotificationUtil.self).post(name, object: object, userInfo: userInfo, qos: nil)
+		injected(NotificationUtil.self).post(name, object: object, userInfo: userInfo, qos: nil)
 	}
 
 	final func syncPost(_ name: Notification.Name, object: Any? = self, userInfo: [UserInfoKey: Any]? = nil) {
-		DependencyInjector.get(NotificationUtil.self).post(name, object: object, userInfo: userInfo, qos: nil)
+		injected(NotificationUtil.self).post(name, object: object, userInfo: userInfo, qos: nil)
 	}
 
 	final func present(
@@ -123,7 +123,7 @@ public extension UIViewController {
 		animated: Bool = false,
 		completion: (() -> Void)? = nil
 	) {
-		DependencyInjector.get(UiUtil.self)
+		injected(UiUtil.self)
 			.present(viewController, on: self, using: presenter, animated: animated, completion: completion)
 	}
 
@@ -132,16 +132,16 @@ public extension UIViewController {
 		animated: Bool = false,
 		completion: (() -> Void)? = nil
 	) {
-		DependencyInjector.get(UiUtil.self).present(self, viewController, animated: animated, completion: completion)
+		injected(UiUtil.self).present(self, viewController, animated: animated, completion: completion)
 	}
 
 	final func pushToNavigationController(_ controller: UIViewController, animated: Bool = false) {
-		DependencyInjector.get(UiUtil.self)
+		injected(UiUtil.self)
 			.push(controller: controller, toNavigationController: navigationController, animated: animated)
 	}
 
 	final func popFromNavigationController(animated: Bool = false) {
-		DependencyInjector.get(UiUtil.self).popFrom(navigationController, animated: animated)
+		injected(UiUtil.self).popFrom(navigationController, animated: animated)
 	}
 
 	final func sendUserNotification(
@@ -150,7 +150,7 @@ public extension UIViewController {
 		repeats: Bool = false,
 		interval: TimeInterval = 1
 	) {
-		DependencyInjector.get(UiUtil.self)
+		injected(UiUtil.self)
 			.sendUserNotification(withContent: content, id: id, repeats: repeats, interval: interval)
 	}
 

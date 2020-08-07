@@ -146,7 +146,7 @@ internal final class TransactionImpl: Transaction {
 	}
 
 	public final func pull<Type: NSManagedObject>(savedObject: Type) throws -> Type {
-		try DependencyInjector.get(Database.self).pull(savedObject: savedObject, fromContext: myContext)
+		try injected(Database.self).pull(savedObject: savedObject, fromContext: myContext)
 	}
 
 	// MARK: - Deleting

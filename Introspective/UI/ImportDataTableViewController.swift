@@ -140,7 +140,7 @@ public final class ImportDataTableViewController: UITableViewController {
 			cell.backgroundTaskId = backgroundImportOrder[indexPath.row]
 			cell.importer = backgroundImports { $0[cell.backgroundTaskId] }
 			// need to do this or will double subscribe and receive event twice, causing app to crash
-			DependencyInjector.get(UiUtil.self).stopObserving(self, name: .presentView, object: cell.importer)
+			injected(UiUtil.self).stopObserving(self, name: .presentView, object: cell.importer)
 			observe(selector: #selector(presentViewFrom), name: .presentView, object: cell.importer)
 			return cell
 		}
@@ -167,7 +167,7 @@ public final class ImportDataTableViewController: UITableViewController {
 			importer = try getImporterFor(indexPath)
 			var lastImportedText: String
 			if let importDate = importer.lastImport {
-				let dateText = DependencyInjector.get(CalendarUtil.self)
+				let dateText = injected(CalendarUtil.self)
 					.string(for: importDate, dateStyle: .medium, timeStyle: .medium)
 				lastImportedText = "Last import date: \(dateText)"
 			} else {
@@ -255,7 +255,7 @@ public final class ImportDataTableViewController: UITableViewController {
 	}
 
 	private final func importData(newDataOnly: Bool) {
-		let documentPickerController = DependencyInjector.get(UiUtil.self)
+		let documentPickerController = injected(UiUtil.self)
 			.documentPicker(docTypes: ["public.data"], in: .import)
 		documentPickerController.allowsMultipleSelection = false
 		documentPickerController.delegate = self
@@ -319,19 +319,19 @@ public final class ImportDataTableViewController: UITableViewController {
 
 	private final func getImporterFor(_ indexPath: IndexPath) throws -> Importer {
 		if indexPath == Me.aTrackerActivityIndex {
-			return try DependencyInjector.get(ImporterFactory.self).aTrackerActivityImporter()
+			return try injected(ImporterFactory.self).aTrackerActivityImporter()
 		} else if indexPath == Me.introspectiveActivityIndex {
-			return try DependencyInjector.get(ImporterFactory.self).introspectiveActivityImporter()
+			return try injected(ImporterFactory.self).introspectiveActivityImporter()
 		} else if indexPath == Me.wellnessMoodIndex {
-			return try DependencyInjector.get(ImporterFactory.self).wellnessMoodImporter()
+			return try injected(ImporterFactory.self).wellnessMoodImporter()
 		} else if indexPath == Me.introspectiveMoodIndex {
-			return try DependencyInjector.get(ImporterFactory.self).introspectiveMoodImporter()
+			return try injected(ImporterFactory.self).introspectiveMoodImporter()
 		} else if indexPath == Me.easyPillMedicationIndex {
-			return try DependencyInjector.get(ImporterFactory.self).easyPillMedicationImporter()
+			return try injected(ImporterFactory.self).easyPillMedicationImporter()
 		} else if indexPath == Me.easyPillDoseIndex {
-			return try DependencyInjector.get(ImporterFactory.self).easyPillMedicationDoseImporter()
+			return try injected(ImporterFactory.self).easyPillMedicationDoseImporter()
 		} else if indexPath == Me.introspectiveMedicationIndex {
-			return try DependencyInjector.get(ImporterFactory.self).introspectiveMedicationImporter()
+			return try injected(ImporterFactory.self).introspectiveMedicationImporter()
 		} else {
 			Me.log.error("Unknown index path: (section: %d, row: %d)", indexPath.section, indexPath.row)
 			throw Errors.unknownIndexPath

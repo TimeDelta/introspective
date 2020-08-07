@@ -28,14 +28,14 @@ public final class ActivityEndDateTableViewCellImpl: UITableViewCell, ActivityEn
 	public final var endDate: Date? {
 		didSet {
 			if let endDate = endDate {
-				endDateLabel.text = DependencyInjector.get(CalendarUtil.self)
+				endDateLabel.text = injected(CalendarUtil.self)
 					.string(for: endDate, dateStyle: .medium, timeStyle: .medium)
 			} else {
 				endDateLabel.text = ""
 			}
 			endDateLabel.accessibilityValue = endDateLabel.text
 			let hideClearButton = endDate == nil
-			DependencyInjector.get(UiUtil.self)
+			injected(UiUtil.self)
 				.setButton(clearButton, enabled: !hideClearButton, hidden: hideClearButton)
 		}
 	}

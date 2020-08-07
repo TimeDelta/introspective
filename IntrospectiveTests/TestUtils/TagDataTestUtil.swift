@@ -16,11 +16,11 @@ public final class TagDataTestUtil {
 
 	@discardableResult
 	public static func createTag(name: String = "") -> Tag {
-		let transaction = DependencyInjector.get(Database.self).transaction()
+		let transaction = injected(Database.self).transaction()
 		let tag = try! transaction.new(Tag.self)
 		tag.name = name
 		try! transaction.commit()
-		return try! DependencyInjector.get(Database.self).pull(savedObject: tag)
+		return try! injected(Database.self).pull(savedObject: tag)
 	}
 
 	@discardableResult

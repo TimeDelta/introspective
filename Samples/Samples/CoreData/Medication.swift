@@ -60,7 +60,7 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed, Expo
 	public final var startedOn: Date? {
 		get {
 			if let storedStartedOn = storedStartedOn {
-				return DependencyInjector.get(CoreDataSampleUtil.self).convertTimeZoneIfApplicable(
+				return injected(CoreDataSampleUtil.self).convertTimeZoneIfApplicable(
 					for: storedStartedOn,
 					timeZoneId: startedOnTimeZoneId
 				)
@@ -70,7 +70,7 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed, Expo
 		set {
 			storedStartedOn = newValue
 			if source == Sources.MedicationSourceNum.introspective.rawValue && startedOnTimeZoneId == nil {
-				startedOnTimeZoneId = DependencyInjector.get(CalendarUtil.self).currentTimeZone().identifier
+				startedOnTimeZoneId = injected(CalendarUtil.self).currentTimeZone().identifier
 			}
 		}
 	}
@@ -123,7 +123,7 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed, Expo
 		try csv.write(field: frequencyText, quoted: true)
 
 		if let startedOn = startedOn {
-			let timestampText = DependencyInjector.get(CalendarUtil.self)
+			let timestampText = injected(CalendarUtil.self)
 				.string(for: startedOn, dateStyle: .full, timeStyle: .full)
 			try csv.write(field: timestampText, quoted: true)
 		} else {
@@ -190,7 +190,7 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed, Expo
 			let castedValue = value as! Date?
 			storedStartedOn = castedValue
 			if source == Sources.MedicationSourceNum.introspective.rawValue && startedOnTimeZoneId == nil {
-				startedOnTimeZoneId = DependencyInjector.get(CalendarUtil.self).currentTimeZone().identifier
+				startedOnTimeZoneId = injected(CalendarUtil.self).currentTimeZone().identifier
 			}
 			return
 		}
@@ -218,7 +218,7 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed, Expo
 	public final func setSource(_ source: Sources.MedicationSourceNum) {
 		self.source = source.rawValue
 		if source == Sources.MedicationSourceNum.introspective && startedOnTimeZoneId == nil {
-			startedOnTimeZoneId = DependencyInjector.get(CalendarUtil.self).currentTimeZone().identifier
+			startedOnTimeZoneId = injected(CalendarUtil.self).currentTimeZone().identifier
 		}
 	}
 

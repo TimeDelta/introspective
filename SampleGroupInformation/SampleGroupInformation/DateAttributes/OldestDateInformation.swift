@@ -80,7 +80,7 @@ public final class OldestDateInformation: AnyInformation {
 				)
 			}
 		}
-		return DependencyInjector.get(CalendarUtil.self)
+		return injected(CalendarUtil.self)
 			.string(for: oldestSampleDate, dateStyle: .short, timeStyle: .short)
 	}
 }

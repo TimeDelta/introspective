@@ -47,17 +47,17 @@ public final class IntrospectiveMoodImporterImpl: NSManagedObject, Introspective
 
 	private final var recordNumber: Int = -1
 	private final var totalLines: Int = -1
-	private final let mainTransaction = DependencyInjector.get(Database.self).transaction()
+	private final let mainTransaction = injected(Database.self).transaction()
 	private final var csv: CSVReader!
 	private final var latestDate: Date!
 
 	// MARK: - Main Functions
 
 	public final func importData(from url: URL) throws {
-		csv = try DependencyInjector.get(IOUtil.self).csvReader(url: url, hasHeaderRow: true)
+		csv = try injected(IOUtil.self).csvReader(url: url, hasHeaderRow: true)
 		recordNumber = 1
 		// a rough approximation
-		totalLines = try DependencyInjector.get(IOUtil.self).contentsOf(url).split(separator: "\n").count
+		totalLines = try injected(IOUtil.self).contentsOf(url).split(separator: "\n").count
 
 		isPaused = false
 		isCancelled = false
@@ -68,7 +68,7 @@ public final class IntrospectiveMoodImporterImpl: NSManagedObject, Introspective
 	}
 
 	public final func resetLastImportDate() throws {
-		let transaction = DependencyInjector.get(Database.self).transaction()
+		let transaction = injected(Database.self).transaction()
 		lastImport = nil
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 	}
@@ -168,8 +168,8 @@ public final class IntrospectiveMoodImporterImpl: NSManagedObject, Introspective
 		currentMood.note = note
 		currentMood.setSource(try getSource())
 		currentMood.timeZone = getTimeZone()
-		if DependencyInjector.get(Settings.self).scaleMoodsOnImport {
-			DependencyInjector.get(MoodUtil.self).scaleMood(currentMood)
+		if injected(Settings.self).scaleMoodsOnImport {
+			injected(MoodUtil.self).scaleMood(currentMood)
 		}
 	}
 
@@ -195,7 +195,7 @@ public final class IntrospectiveMoodImporterImpl: NSManagedObject, Introspective
 			let currentLine = csv.currentRow?.joined(separator: ",") ?? ""
 			throw InvalidFileFormatError("No timestamp for record \(recordNumber): \(currentLine)")
 		}
-		guard let date = DependencyInjector.get(CalendarUtil.self).date(
+		guard let date = injected(CalendarUtil.self).date(
 			from: dateString,
 			dateStyle: .full,
 			timeStyle: .full

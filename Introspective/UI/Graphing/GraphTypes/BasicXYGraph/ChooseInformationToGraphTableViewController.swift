@@ -89,10 +89,10 @@ final class ChooseInformationToGraphTableViewControllerImpl: UITableViewControll
 		let attribute = attributes[0]
 		var newInformation: SampleGroupInformation
 		if limitToNumericInformation {
-			newInformation = DependencyInjector.get(SampleGroupInformationFactory.self)
+			newInformation = injected(SampleGroupInformationFactory.self)
 				.getApplicableNumericInformationTypes(forAttribute: attribute)[0].init(attribute)
 		} else {
-			newInformation = DependencyInjector.get(SampleGroupInformationFactory.self)
+			newInformation = injected(SampleGroupInformationFactory.self)
 				.getApplicableInformationTypes(forAttribute: attribute)[0].init(attribute)
 		}
 		chosenInformation.append(newInformation)

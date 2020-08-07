@@ -25,7 +25,7 @@ public class ActivityIntentHandler<IntentType: INIntent>: IntentHandler {
 		do {
 			let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
 			fetchRequest.sortDescriptors = [NSSortDescriptor(key: "recordScreenIndex", ascending: true)]
-			let definitions = try DependencyInjector.get(Database.self).query(fetchRequest)
+			let definitions = try injected(Database.self).query(fetchRequest)
 			completion(definitions.map { definition in definition.name }, nil)
 		} catch {
 			completion(nil, error)

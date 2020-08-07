@@ -38,7 +38,7 @@ public final class SumInformation: AnyInformation {
 			let filteredSamples = try filterSamples(samples, as: Double.self)
 			if filteredSamples.isEmpty { return "No samples match filter" }
 			return String(
-				try DependencyInjector.get(NumericSampleUtil.self)
+				try injected(NumericSampleUtil.self)
 					.sum(for: attribute, over: filteredSamples, as: Double.self)
 			)
 		}
@@ -46,7 +46,7 @@ public final class SumInformation: AnyInformation {
 			let filteredSamples = try filterSamples(samples, as: Int.self)
 			if filteredSamples.isEmpty { return "No samples match filter" }
 			return String(
-				try DependencyInjector.get(NumericSampleUtil.self)
+				try injected(NumericSampleUtil.self)
 					.sum(for: attribute, over: filteredSamples, as: Int.self)
 			)
 		}
@@ -82,7 +82,7 @@ public final class SumInformation: AnyInformation {
 			let filteredSamples = try filterSamples(samples, as: Double.self)
 			if filteredSamples.isEmpty { throw GenericDisplayableError(title: "No samples match filter") }
 			return String(
-				try DependencyInjector.get(NumericSampleUtil.self)
+				try injected(NumericSampleUtil.self)
 					.sum(for: attribute, over: filteredSamples, as: Double.self)
 			)
 		}
@@ -90,7 +90,7 @@ public final class SumInformation: AnyInformation {
 			let filteredSamples = try filterSamples(samples, as: Int.self)
 			if filteredSamples.isEmpty { throw GenericDisplayableError(title: "No samples match filter") }
 			return String(
-				try DependencyInjector.get(NumericSampleUtil.self)
+				try injected(NumericSampleUtil.self)
 					.sum(for: attribute, over: filteredSamples, as: Int.self)
 			)
 		}

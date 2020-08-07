@@ -29,13 +29,13 @@ public final class StartActivityIntentHandler: ActivityIntentHandler<StartActivi
 			return
 		}
 		do {
-			guard let activityDefinition = try DependencyInjector.get(ActivityDAO.self)
+			guard let activityDefinition = try injected(ActivityDAO.self)
 				.getDefinitionWith(name: activityName)
 			else {
 				completion(INStringResolutionResult.needsValue())
 				return
 			}
-			let alreadyStarted = try DependencyInjector.get(ActivityDAO.self).hasUnfinishedActivity(activityDefinition)
+			let alreadyStarted = try injected(ActivityDAO.self).hasUnfinishedActivity(activityDefinition)
 			if alreadyStarted {
 				completion(INStringResolutionResult.confirmationRequired(with: activityName))
 			} else {
@@ -98,7 +98,7 @@ public final class StartActivityIntentHandler: ActivityIntentHandler<StartActivi
 		}
 
 		do {
-			guard let definition = try DependencyInjector.get(ActivityDAO.self).getDefinitionWith(name: activityName)
+			guard let definition = try injected(ActivityDAO.self).getDefinitionWith(name: activityName)
 			else {
 				Me.log.error("Activity named %{private}@ does not exist.", activityName)
 				completion(
@@ -108,7 +108,7 @@ public final class StartActivityIntentHandler: ActivityIntentHandler<StartActivi
 				return
 			}
 			let startDate = intent.startDate?.date ?? Date()
-			let activity = try DependencyInjector.get(ActivityDAO.self).createActivity(
+			let activity = try injected(ActivityDAO.self).createActivity(
 				definition: definition,
 				startDate: startDate,
 				note: intent.note,
@@ -126,6 +126,6 @@ public final class StartActivityIntentHandler: ActivityIntentHandler<StartActivi
 	}
 
 	private func parseTags(_ tagNames: [String]) throws -> [Tag] {
-		try tagNames.map { name in try DependencyInjector.get(TagDAO.self).getOrCreateTag(named: name) }
+		try tagNames.map { name in try injected(TagDAO.self).getOrCreateTag(named: name) }
 	}
 }

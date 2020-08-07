@@ -116,7 +116,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 		let dose1 = MedicationDataTestUtil.createDose(medication: medication, dosage: Dosage(1, "mg"))
 		let dose2 = MedicationDataTestUtil.createDose(medication: medication, dosage: Dosage(2, "mg"))
 		MedicationDataTestUtil.createDose(medication: medication, dosage: Dosage(3, "mg"))
-		medication = try DependencyInjector.get(Database.self).pull(savedObject: medication)
+		medication = try injected(Database.self).pull(savedObject: medication)
 		controller.medication = medication
 		mockDeleteActionRequirements()
 		// note that doses are displayed as most recent first so this should delete the third dose
@@ -132,7 +132,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 		yesHandlerCaptor.value!!(UIAlertAction())
 
 		// then
-		let updatedMedication = try DependencyInjector.get(Database.self).pull(savedObject: medication)
+		let updatedMedication = try injected(Database.self).pull(savedObject: medication)
 		let doses = updatedMedication.doses.array as! [MedicationDose]
 		assertThat(doses, arrayHasExactly([dose1, dose2], areEqual: { $0.equalTo($1) }))
 	}
@@ -153,7 +153,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 			medication: medication,
 			dosage: Dosage(3, "mg"),
 			timestamp: filterDateMin + 1.days + 1.hours)
-		medication = try DependencyInjector.get(Database.self).pull(savedObject: medication)
+		medication = try injected(Database.self).pull(savedObject: medication)
 		controller.medication = medication
 		setDateRange(from: filterDateMin)
 		mockDeleteActionRequirements()
@@ -170,7 +170,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 		yesHandlerCaptor.value!!(UIAlertAction())
 
 		// then
-		let updatedMedication = try DependencyInjector.get(Database.self).pull(savedObject: medication)
+		let updatedMedication = try injected(Database.self).pull(savedObject: medication)
 		let doses = updatedMedication.doses.array as! [MedicationDose]
 		assertThat(doses, arrayHasExactly([dose1, dose3], areEqual: { $0.equalTo($1) }))
 	}
@@ -183,7 +183,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 		var medication = MedicationDataTestUtil.createMedication()
 		let dose1 = MedicationDataTestUtil.createDose(medication: medication, dosage: Dosage(1, "mg"))
 		MedicationDataTestUtil.createDose(medication: medication, dosage: Dosage(2, "mg"))
-		medication = try DependencyInjector.get(Database.self).pull(savedObject: medication)
+		medication = try injected(Database.self).pull(savedObject: medication)
 		controller.medication = medication
 
 		// when
@@ -199,7 +199,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 		let presentedController = mockMedicationDoseEditorViewController()
 		var medication = MedicationDataTestUtil.createMedication()
 		MedicationDataTestUtil.createDose(medication: medication, dosage: Dosage(1, "mg"))
-		medication = try DependencyInjector.get(Database.self).pull(savedObject: medication)
+		medication = try injected(Database.self).pull(savedObject: medication)
 		controller.medication = medication
 
 		// when
@@ -488,16 +488,16 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 //			medication: medication,
 //			dosage: Dosage(2, "mg"),
 //			timestamp: date + 2.days)
-//		medication = try DependencyInjector.get(Database.self).pull(savedObject: medication)
+//		medication = try injected(Database.self).pull(savedObject: medication)
 //		controller.medication = medication
 //		setDateRange(from: date, to: nil)
 //		mockMedicationDoseEditorViewController()
 //		controller.tableView(tableView, didSelectRowAt: IndexPath(row: 0, section: 1))
-//		let transaction = DependencyInjector.get(Database.self).transaction()
+//		let transaction = injected(Database.self).transaction()
 //		dose2 = try transaction.pull(savedObject: dose2)
 //		dose2.dosage = Dosage(3, "mg")
 //		try transaction.commit()
-//		dose2 = try DependencyInjector.get(Database.self).pull(savedObject: dose2)
+//		dose2 = try injected(Database.self).pull(savedObject: dose2)
 //
 //		// when
 //		Given(uiUtil, .value(for: .value(.dose), from: .any, keyIsOptional: .any, willReturn: dose2))
@@ -524,16 +524,16 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 //			medication: medication,
 //			dosage: Dosage(2, "mg"),
 //			timestamp: date + 2.days)
-//		medication = try DependencyInjector.get(Database.self).pull(savedObject: medication)
+//		medication = try injected(Database.self).pull(savedObject: medication)
 //		controller.medication = medication
 //		setDateRange(from: date, to: nil)
 //		mockMedicationDoseEditorViewController()
 //		controller.tableView(tableView, didSelectRowAt: IndexPath(row: 0, section: 1))
-//		let transaction = DependencyInjector.get(Database.self).transaction()
+//		let transaction = injected(Database.self).transaction()
 //		dose2 = try transaction.pull(savedObject: dose2)
 //		dose2.dosage = Dosage(3, "mg")
 //		try transaction.commit()
-//		dose2 = try DependencyInjector.get(Database.self).pull(savedObject: dose2)
+//		dose2 = try injected(Database.self).pull(savedObject: dose2)
 //
 //		// when
 //		Given(uiUtil, .value(for: .value(.dose), from: .any, keyIsOptional: .any, willReturn: dose2))
@@ -592,7 +592,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 			medication: medication,
 			dosage: Dosage(2, "mg"),
 			timestamp: date)
-		medication = try DependencyInjector.get(Database.self).pull(savedObject: medication)
+		medication = try injected(Database.self).pull(savedObject: medication)
 		controller.medication = medication
 		setDateRange(from: date, to: date)
 		controller.filteredDoses = []
@@ -630,7 +630,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 			medication: medication,
 			dosage: Dosage(2, "mg"),
 			timestamp: date - 1.days)
-		medication = try DependencyInjector.get(Database.self).pull(savedObject: medication)
+		medication = try injected(Database.self).pull(savedObject: medication)
 		controller.medication = medication
 		setDateRange(from: nil, to: date)
 		controller.filteredDoses = []
@@ -668,7 +668,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 			medication: medication,
 			dosage: Dosage(2, "mg"),
 			timestamp: date + 1.days)
-		medication = try DependencyInjector.get(Database.self).pull(savedObject: medication)
+		medication = try injected(Database.self).pull(savedObject: medication)
 		controller.medication = medication
 		setDateRange(from: date, to: nil)
 		controller.filteredDoses = []
@@ -707,7 +707,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 			medication: medication,
 			dosage: Dosage(2, "mg"),
 			timestamp: fromDate + 1.days)
-		medication = try DependencyInjector.get(Database.self).pull(savedObject: medication)
+		medication = try injected(Database.self).pull(savedObject: medication)
 		controller.medication = medication
 		setDateRange(from: fromDate, to: toDate)
 		controller.filteredDoses = []
@@ -749,7 +749,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 			medication: medication,
 			dosage: Dosage(2, "mg"),
 			timestamp: date)
-		medication = try DependencyInjector.get(Database.self).pull(savedObject: medication)
+		medication = try injected(Database.self).pull(savedObject: medication)
 		controller.medication = medication
 		setDateRange(from: date, to: date)
 		controller.filteredDoses = []
@@ -787,7 +787,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 			medication: medication,
 			dosage: Dosage(2, "mg"),
 			timestamp: date)
-		medication = try DependencyInjector.get(Database.self).pull(savedObject: medication)
+		medication = try injected(Database.self).pull(savedObject: medication)
 		controller.medication = medication
 		setDateRange(from: nil, to: date)
 		controller.filteredDoses = []
@@ -825,7 +825,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 			medication: medication,
 			dosage: Dosage(2, "mg"),
 			timestamp: date + 2.days)
-		medication = try DependencyInjector.get(Database.self).pull(savedObject: medication)
+		medication = try injected(Database.self).pull(savedObject: medication)
 		controller.medication = medication
 		setDateRange(from: date, to: nil)
 		controller.filteredDoses = []
@@ -864,7 +864,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 			medication: medication,
 			dosage: Dosage(2, "mg"),
 			timestamp: fromDate + 3.days)
-		medication = try DependencyInjector.get(Database.self).pull(savedObject: medication)
+		medication = try injected(Database.self).pull(savedObject: medication)
 		controller.medication = medication
 		setDateRange(from: fromDate, to: toDate)
 		controller.filteredDoses = []
@@ -912,7 +912,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 		for _ in 0 ..< numberOfDoses {
 			MedicationDataTestUtil.createDose(medication: medication)
 		}
-		return try DependencyInjector.get(Database.self).pull(savedObject: medication)
+		return try injected(Database.self).pull(savedObject: medication)
 	}
 
 	func mockDeleteActionRequirements() {

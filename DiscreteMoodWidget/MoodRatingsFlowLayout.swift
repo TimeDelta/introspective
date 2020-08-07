@@ -92,8 +92,8 @@ class MoodRatingsFlowLayout: UICollectionViewFlowLayout {
 	// MARK: Helper Functions
 
 	private final func numberOfMoodRatings() -> Int {
-		let min = DependencyInjector.get(Settings.self).minMood
-		let max = DependencyInjector.get(Settings.self).maxMood
+		let min = injected(Settings.self).minMood
+		let max = injected(Settings.self).maxMood
 		return Int(max - min + 1)
 	}
 

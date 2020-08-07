@@ -14,6 +14,6 @@ import Persistence
 
 public final class DeleteCoreDataTableViewCell: UITableViewCell {
 	@IBAction final func deleteCoreDataButtonPressed() {
-		try! DependencyInjector.get(Database.self).deleteEverything()
+		try! injected(Database.self).deleteEverything()
 	}
 }

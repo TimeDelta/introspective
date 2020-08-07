@@ -121,9 +121,9 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 			break
 		}
 		startDate = sample.startDate
-		DependencyInjector.get(HealthKitUtil.self).setTimeZoneIfApplicable(for: &startDate, from: sample)
+		injected(HealthKitUtil.self).setTimeZoneIfApplicable(for: &startDate, from: sample)
 		endDate = sample.endDate
-		DependencyInjector.get(HealthKitUtil.self).setTimeZoneIfApplicable(for: &endDate, from: sample)
+		injected(HealthKitUtil.self).setTimeZoneIfApplicable(for: &endDate, from: sample)
 	}
 
 	// MARK: - HealthKitSample Functions
@@ -225,7 +225,7 @@ extension Sleep: Equatable {
 
 extension Sleep: CustomDebugStringConvertible {
 	public final var debugDescription: String {
-		"Sleep with state \(state) from " + DependencyInjector.get(CalendarUtil.self)
-			.string(for: startDate) + " to " + DependencyInjector.get(CalendarUtil.self).string(for: endDate)
+		"Sleep with state \(state) from " + injected(CalendarUtil.self)
+			.string(for: startDate) + " to " + injected(CalendarUtil.self).string(for: endDate)
 	}
 }

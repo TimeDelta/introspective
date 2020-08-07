@@ -23,7 +23,7 @@ public final class ActivityDataTestUtil {
 		recordScreenIndex: Int16 = 0,
 		autoNote: Bool = false)
 	-> ActivityDefinition {
-		let transaction = DependencyInjector.get(Database.self).transaction()
+		let transaction = injected(Database.self).transaction()
 		let definition = try! transaction.new(ActivityDefinition.self)
 		definition.name = name
 		definition.activityDescription = description
@@ -33,7 +33,7 @@ public final class ActivityDataTestUtil {
 		definition.recordScreenIndex = recordScreenIndex
 		definition.autoNote = autoNote
 		try! transaction.commit()
-		return try! DependencyInjector.get(Database.self).pull(savedObject: definition)
+		return try! injected(Database.self).pull(savedObject: definition)
 	}
 
 	@discardableResult
@@ -47,7 +47,7 @@ public final class ActivityDataTestUtil {
 		source: Sources.ActivitySourceNum = .introspective,
 		tags: [Tag] = [])
 	-> Activity {
-		let transaction = DependencyInjector.get(Database.self).transaction()
+		let transaction = injected(Database.self).transaction()
 		let activity = try! transaction.new(Activity.self)
 		activity.definition = try! transaction.pull(savedObject: definition)
 		activity.start = startDate
@@ -60,7 +60,7 @@ public final class ActivityDataTestUtil {
 		}
 		activity.setSource(source)
 		try! transaction.commit()
-		return try! DependencyInjector.get(Database.self).pull(savedObject: activity)
+		return try! injected(Database.self).pull(savedObject: activity)
 	}
 
 	@discardableResult

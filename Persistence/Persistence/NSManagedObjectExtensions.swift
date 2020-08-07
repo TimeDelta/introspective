@@ -14,6 +14,6 @@ import DependencyInjection
 public extension NSManagedObject {
 	/// Turn this object back into a fault, removing any strong reference cycles so that it can be cleaned up normally by ARC.
 	func cleanUp() {
-		DependencyInjector.get(Database.self).cleanUpManagedObjectWithStrongReferenceCycle(self)
+		injected(Database.self).cleanUpManagedObjectWithStrongReferenceCycle(self)
 	}
 }

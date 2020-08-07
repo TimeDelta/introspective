@@ -93,7 +93,7 @@ public final class SexualActivity: HealthKitCategorySample, SearchableSample {
 			protectionUsed = .unspecified
 		}
 		timestamp = sample.startDate
-		DependencyInjector.get(HealthKitUtil.self).setTimeZoneIfApplicable(for: &timestamp, from: sample)
+		injected(HealthKitUtil.self).setTimeZoneIfApplicable(for: &timestamp, from: sample)
 	}
 
 	// MARK: - HealthKitSample Functions
@@ -184,7 +184,7 @@ extension SexualActivity: Equatable {
 
 extension SexualActivity: CustomDebugStringConvertible {
 	public final var debugDescription: String {
-		"SexualActivity with protection \(protectionUsed) at " + DependencyInjector.get(CalendarUtil.self)
+		"SexualActivity with protection \(protectionUsed) at " + injected(CalendarUtil.self)
 			.string(for: timestamp)
 	}
 }

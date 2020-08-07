@@ -26,7 +26,7 @@ public final class StopLastStartedActivityIntentHandler: ActivityIntentHandler<S
 	) {
 		Me.log.info("Handling StopLastStartedActivityIntent")
 		do {
-			let activity = try DependencyInjector.get(ActivityDAO.self).stopMostRecentlyStartedIncompleteActivity()
+			let activity = try injected(ActivityDAO.self).stopMostRecentlyStartedIncompleteActivity()
 			completion(StopLastStartedActivityIntentResponse.success(activity: ActivityIntentInfo(activity)))
 		} catch {
 			Me.log.error("Error during StopLastStartedActivityIntent: %@", errorInfo(error))

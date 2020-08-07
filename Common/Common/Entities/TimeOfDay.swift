@@ -70,7 +70,7 @@ public struct TimeOfDay: Comparable {
 
 	public nonmutating func toString(_ style: DateFormatter.Style = .medium) -> String {
 		let date = Calendar.autoupdatingCurrent.date(bySettingHour: hour, minute: minute, second: second, of: Date())!
-		return DependencyInjector.get(CalendarUtil.self).string(for: date, dateStyle: .none, timeStyle: style)
+		return injected(CalendarUtil.self).string(for: date, dateStyle: .none, timeStyle: style)
 	}
 
 	private func compare(to other: TimeOfDay) -> ComparisonResult {

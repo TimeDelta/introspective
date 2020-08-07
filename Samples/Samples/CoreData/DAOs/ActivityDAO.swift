@@ -134,8 +134,8 @@ public class ActivityDAOImpl: ActivityDAO {
 			activityDefinition.activities.count
 		)
 
-		let startOfDay = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: Date()) as NSDate
-		let endOfDay = DependencyInjector.get(CalendarUtil.self).end(of: .day, in: Date()) as NSDate
+		let startOfDay = injected(CalendarUtil.self).start(of: .day, in: Date()) as NSDate
+		let endOfDay = injected(CalendarUtil.self).end(of: .day, in: Date()) as NSDate
 		let fetchRequest = basicFetchRequest(activityDefinition)
 		fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
 			fetchRequest.predicate!,
@@ -146,7 +146,7 @@ public class ActivityDAOImpl: ActivityDAO {
 				startOfDay, endOfDay, startOfDay, endOfDay
 			),
 		])
-		let activities = try DependencyInjector.get(Database.self).query(fetchRequest)
+		let activities = try injected(Database.self).query(fetchRequest)
 		Me.signpost.end(name: signpostName, idObject: activityDefinition, "actual # activities: %d", activities.count)
 		return activities
 	}
@@ -155,7 +155,7 @@ public class ActivityDAOImpl: ActivityDAO {
 		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "endDate != nil")
 		fetchRequest.sortDescriptors = [NSSortDescriptor(key: "endDate", ascending: false)]
-		let activities = try DependencyInjector.get(Database.self).query(fetchRequest)
+		let activities = try injected(Database.self).query(fetchRequest)
 		if !activities.isEmpty {
 			return activities[0].end
 		}
@@ -175,7 +175,7 @@ public class ActivityDAOImpl: ActivityDAO {
 		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "definition.name ==[cd] %@", activityDefinition.name)
 		fetchRequest.sortDescriptors = [NSSortDescriptor(key: keyName, ascending: false)]
-		let activities = try DependencyInjector.get(Database.self).query(fetchRequest)
+		let activities = try injected(Database.self).query(fetchRequest)
 
 		Me.signpost.end(
 			name: signpostName,
@@ -199,7 +199,7 @@ public class ActivityDAOImpl: ActivityDAO {
 			NSPredicate(format: "definition ==[cd] %@", activityDefinition),
 			NSPredicate(format: "%K == nil", endDateVariableName),
 		])
-		let incompleteActivities = try DependencyInjector.get(Database.self).query(fetchRequest)
+		let incompleteActivities = try injected(Database.self).query(fetchRequest)
 
 		if !incompleteActivities.isEmpty {
 			let sortedIncompleteActivities = incompleteActivities.sorted(by: { $0.start > $1.start })
@@ -211,7 +211,7 @@ public class ActivityDAOImpl: ActivityDAO {
 	public final func activityDefinitionWithNameExists(_ name: String) throws -> Bool {
 		let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
-		let results = try DependencyInjector.get(Database.self).query(fetchRequest)
+		let results = try injected(Database.self).query(fetchRequest)
 		return !results.isEmpty
 	}
 
@@ -221,7 +221,7 @@ public class ActivityDAOImpl: ActivityDAO {
 	public final func getDefinitionWith(name: String) throws -> ActivityDefinition? {
 		let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
-		let results = try DependencyInjector.get(Database.self).query(fetchRequest)
+		let results = try injected(Database.self).query(fetchRequest)
 		if results.isEmpty {
 			return nil
 		}
@@ -244,7 +244,7 @@ public class ActivityDAOImpl: ActivityDAO {
 			fetchRequest.predicate!,
 			NSPredicate(format: "endDate == nil"),
 		])
-		let unfinishedActivities = try DependencyInjector.get(Database.self).query(fetchRequest)
+		let unfinishedActivities = try injected(Database.self).query(fetchRequest)
 		Me.signpost.end(name: signpostName, idObject: activityDefinition)
 		return !unfinishedActivities.isEmpty
 	}
@@ -253,17 +253,17 @@ public class ActivityDAOImpl: ActivityDAO {
 
 	@discardableResult
 	public final func startActivity(_ definition: ActivityDefinition, withNote note: String?) throws -> Activity {
-		let transaction = DependencyInjector.get(Database.self).transaction()
+		let transaction = injected(Database.self).transaction()
 		let activity = try transaction.new(Activity.self)
 		activity.setSource(.introspective)
-		let definition = try DependencyInjector.get(Database.self)
+		let definition = try injected(Database.self)
 			.pull(savedObject: definition, fromSameContextAs: activity)
 		activity.definition = definition
 		activity.start = Date()
 		activity.note = note
 		definition.addToActivities(activity)
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-		return try DependencyInjector.get(Database.self).pull(savedObject: activity)
+		return try injected(Database.self).pull(savedObject: activity)
 	}
 
 	@discardableResult
@@ -277,14 +277,14 @@ public class ActivityDAOImpl: ActivityDAO {
 
 		if !incompleteActivities.isEmpty {
 			let sortedIncompleteActivities = incompleteActivities.sorted(by: { $0.start > $1.start })
-			let transaction = DependencyInjector.get(Database.self).transaction()
+			let transaction = injected(Database.self).transaction()
 			let activity = try transaction.pull(savedObject: sortedIncompleteActivities[0])
 			let now = Date()
 			if !autoIgnoreIfAppropriate(activity, end: now) {
 				activity.end = now
 				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 			}
-			return try DependencyInjector.get(Database.self).pull(savedObject: activity)
+			return try injected(Database.self).pull(savedObject: activity)
 		}
 		let message = String(format: "Activity named %@ is not currently active", activityDefinition.name)
 		throw GenericDisplayableError(title: message)
@@ -299,7 +299,7 @@ public class ActivityDAOImpl: ActivityDAO {
 		fetchRequest.sortDescriptors = [NSSortDescriptor(key: startDateVariableName, ascending: false)]
 		fetchRequest.fetchLimit = 1
 
-		let transaction = DependencyInjector.get(Database.self).transaction()
+		let transaction = injected(Database.self).transaction()
 		let activities = try transaction.query(fetchRequest)
 		if activities.isEmpty {
 			throw GenericDisplayableError(title: "No activities currently running")
@@ -318,12 +318,12 @@ public class ActivityDAOImpl: ActivityDAO {
 		let endDateVariableName = CommonSampleAttributes.endDate.variableName!
 		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "%K == nil", endDateVariableName)
-		let activitiesToStop = try DependencyInjector.get(Database.self).query(fetchRequest)
+		let activitiesToStop = try injected(Database.self).query(fetchRequest)
 		let now = Date()
 		var activitiesToAutoNote = [Activity]()
 		for activity in activitiesToStop {
 			if !autoIgnoreIfAppropriate(activity, end: now) {
-				let transaction = DependencyInjector.get(Database.self).transaction()
+				let transaction = injected(Database.self).transaction()
 				activity.end = now
 				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 				if activity.definition.autoNote {
@@ -337,11 +337,11 @@ public class ActivityDAOImpl: ActivityDAO {
 	/// - Parameter end: If provided, use this as the stop date / time.
 	/// - Returns: Whether or not the activity was ignored
 	public final func autoIgnoreIfAppropriate(_ activity: Activity, end: Date = Date()) -> Bool {
-		if DependencyInjector.get(Settings.self).autoIgnoreEnabled {
-			let minSeconds = DependencyInjector.get(Settings.self).autoIgnoreSeconds
+		if injected(Settings.self).autoIgnoreEnabled {
+			let minSeconds = injected(Settings.self).autoIgnoreSeconds
 			if TimeDuration(start: activity.start, end: end).inUnit(.second) < Double(minSeconds) {
 				do {
-					let transaction = DependencyInjector.get(Database.self).transaction()
+					let transaction = injected(Database.self).transaction()
 					// can't really explain this to the user
 					try retryOnFail({ try transaction.delete(activity) }, maxRetries: 2)
 					try transaction.commit()
@@ -365,7 +365,7 @@ public class ActivityDAOImpl: ActivityDAO {
 		autoNote: Bool?,
 		using transaction: Transaction?
 	) throws -> ActivityDefinition {
-		let transaction = transaction ?? DependencyInjector.get(Database.self).transaction()
+		let transaction = transaction ?? injected(Database.self).transaction()
 		let activityDefinition = try transaction.new(ActivityDefinition.self)
 		activityDefinition.name = name
 		activityDefinition.activityDescription = description
@@ -374,7 +374,7 @@ public class ActivityDAOImpl: ActivityDAO {
 		if let recordScreenIndex = recordScreenIndex {
 			activityDefinition.recordScreenIndex = recordScreenIndex
 		} else {
-			let numDefinitions = try DependencyInjector.get(Database.self).query(ActivityDefinition.fetchRequest())
+			let numDefinitions = try injected(Database.self).query(ActivityDefinition.fetchRequest())
 				.count
 			activityDefinition.recordScreenIndex = Int16(numDefinitions)
 		}
@@ -398,7 +398,7 @@ public class ActivityDAOImpl: ActivityDAO {
 		extraTags: [Tag],
 		using transaction: Transaction?
 	) throws -> Activity {
-		let transaction = transaction ?? DependencyInjector.get(Database.self).transaction()
+		let transaction = transaction ?? injected(Database.self).transaction()
 		let activity = try transaction.new(Activity.self)
 		let sameContextDefinition = try transaction.pull(savedObject: definition)
 
@@ -412,7 +412,7 @@ public class ActivityDAOImpl: ActivityDAO {
 		sameContextDefinition.addToActivities(activity)
 
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-		return try DependencyInjector.get(Database.self).pull(savedObject: activity)
+		return try injected(Database.self).pull(savedObject: activity)
 	}
 
 	// MARK: - Helper Functions

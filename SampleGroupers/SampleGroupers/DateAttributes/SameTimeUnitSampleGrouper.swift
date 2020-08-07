@@ -97,7 +97,7 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 			throw GenericError("Called group on SameTimeUnitSampleGrouper before grouper ready")
 		}
 		signpost.begin(name: "Aggregation", "Aggregating %d samples", samples.count)
-		let samplesByTimeUnit = try DependencyInjector.get(SampleUtil.self)
+		let samplesByTimeUnit = try injected(SampleUtil.self)
 			.aggregate(samples: samples, by: timeUnit, for: attribute)
 		signpost.end(
 			name: "Aggregation",
@@ -122,7 +122,7 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 		guard let date = value as? Date else {
 			throw GenericError("Expected date or string for group value but got \(String(describing: value))")
 		}
-		return DependencyInjector.get(CalendarUtil.self).string(for: date, dateStyle: .medium, timeStyle: .medium)
+		return injected(CalendarUtil.self).string(for: date, dateStyle: .medium, timeStyle: .medium)
 	}
 
 	public final func groupValuesAreEqual(_ first: Any, _ second: Any) throws -> Bool {

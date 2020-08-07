@@ -40,7 +40,7 @@ public final class ActivityExporterImpl: BaseExporter, ActivityExporter {
 		)
 		super.init(
 			dataTypePluralName: "Activities",
-			url: DependencyInjector.get(ExporterUtil.self).urlOfExportFile(for: Activity.self, in: directory)
+			url: injected(ExporterUtil.self).urlOfExportFile(for: Activity.self, in: directory)
 		)
 	}
 
@@ -62,7 +62,7 @@ public final class ActivityExporterImpl: BaseExporter, ActivityExporter {
 
 		totalRecordsToExport = activities.count
 
-		csv = try DependencyInjector.get(IOUtil.self).csvWriter(url: url)
+		csv = try injected(IOUtil.self).csvWriter(url: url)
 
 		guard !isPaused else { return }
 		try exportRemaining()
@@ -92,6 +92,6 @@ public final class ActivityExporterImpl: BaseExporter, ActivityExporter {
 	private final func getActivities() throws {
 		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
 		fetchRequest.sortDescriptors = [NSSortDescriptor(key: "startDate", ascending: true)]
-		activities = try DependencyInjector.get(Database.self).query(fetchRequest)
+		activities = try injected(Database.self).query(fetchRequest)
 	}
 }

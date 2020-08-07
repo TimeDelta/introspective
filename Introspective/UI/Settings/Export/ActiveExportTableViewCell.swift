@@ -45,17 +45,17 @@ public final class ActiveExportTableViewCell: UITableViewCell {
 	// MARK: - UITableViewCell Overrides
 
 	public final override func prepareForReuse() {
-		DependencyInjector.get(UiUtil.self).setButton(cancelButton, enabled: true, hidden: false)
+		injected(UiUtil.self).setButton(cancelButton, enabled: true, hidden: false)
 		toolbar.isHidden = true
 		if let exporter = exporter {
-			DependencyInjector.get(UiUtil.self).stopObserving(self, name: .backgroundExportFinished, object: exporter)
+			injected(UiUtil.self).stopObserving(self, name: .backgroundExportFinished, object: exporter)
 		}
 	}
 
 	// MARK: - Actions
 
 	@IBAction final func cancelExport(_: Any) {
-		DependencyInjector.get(UiUtil.self).setButton(cancelButton, enabled: false, hidden: false)
+		injected(UiUtil.self).setButton(cancelButton, enabled: false, hidden: false)
 		let alert = UIAlertController(
 			title: "Cancel \(descriptionLabel.text!) export?",
 			message: nil,
@@ -66,7 +66,7 @@ public final class ActiveExportTableViewCell: UITableViewCell {
 			self.post(.cancelBackgroundTask, userInfo: [.backgroundTaskId: String(self.backgroundTaskId.rawValue)])
 		})
 		alert.addAction(UIAlertAction(title: "No", style: .cancel) { _ in
-			DependencyInjector.get(UiUtil.self).setButton(self.cancelButton, enabled: true, hidden: false)
+			injected(UiUtil.self).setButton(self.cancelButton, enabled: true, hidden: false)
 		})
 		post(.presentView, userInfo: [.controller: alert])
 	}
@@ -78,7 +78,7 @@ public final class ActiveExportTableViewCell: UITableViewCell {
 	// MARK: - Received Notifications
 
 	@objc private final func exportFinished(notification _: Notification) {
-		DependencyInjector.get(UiUtil.self).setButton(cancelButton, enabled: false, hidden: false)
+		injected(UiUtil.self).setButton(cancelButton, enabled: false, hidden: false)
 		toolbar.isHidden = false
 	}
 

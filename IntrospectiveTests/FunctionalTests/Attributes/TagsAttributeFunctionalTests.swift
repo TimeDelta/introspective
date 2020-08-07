@@ -70,7 +70,7 @@ final class TagsAttributeFunctionalTests: FunctionalTest {
 	func testGivenCorrectValueTypeAndOneValueIsNotPossibleValue_isValid_returnsFalse() throws {
 		// given
 		useOptionalAttribute()
-		let transaction = DependencyInjector.get(Database.self).transaction()
+		let transaction = injected(Database.self).transaction()
 		let tag = try transaction.new(Tag.self)
 		tag.name = "tag name"
 		let value = [tag]
@@ -173,7 +173,7 @@ final class TagsAttributeFunctionalTests: FunctionalTest {
 		// given
 		useRequiredAttribute()
 		TagDataTestUtil.createTag(name: "possible value")
-		let transaction = DependencyInjector.get(Database.self).transaction()
+		let transaction = injected(Database.self).transaction()
 		let tag = try transaction.new(Tag.self)
 		tag.name = "not a possible value"
 

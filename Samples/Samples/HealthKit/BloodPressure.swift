@@ -31,9 +31,9 @@ public final class BloodPressure: HealthKitCorrelationSample {
 	public static var diastolicUnit: HKUnit = HKUnit.millimeterOfMercury()
 
 	public static func initUnits() {
-		systolicUnit = DependencyInjector.get(HealthKitUtil.self).preferredUnitFor(.bloodPressureSystolic) ?? HKUnit
+		systolicUnit = injected(HealthKitUtil.self).preferredUnitFor(.bloodPressureSystolic) ?? HKUnit
 			.millimeterOfMercury()
-		diastolicUnit = DependencyInjector.get(HealthKitUtil.self).preferredUnitFor(.bloodPressureDiastolic) ?? HKUnit
+		diastolicUnit = injected(HealthKitUtil.self).preferredUnitFor(.bloodPressureDiastolic) ?? HKUnit
 			.millimeterOfMercury()
 	}
 
@@ -92,10 +92,10 @@ public final class BloodPressure: HealthKitCorrelationSample {
 		let diastolicStart = diastolicSample.startDate
 		if diastolicStart < systolicStart {
 			timestamp = diastolicStart
-			DependencyInjector.get(HealthKitUtil.self).setTimeZoneIfApplicable(for: &timestamp, from: diastolicSample)
+			injected(HealthKitUtil.self).setTimeZoneIfApplicable(for: &timestamp, from: diastolicSample)
 		} else {
 			timestamp = systolicStart
-			DependencyInjector.get(HealthKitUtil.self).setTimeZoneIfApplicable(for: &timestamp, from: systolicSample)
+			injected(HealthKitUtil.self).setTimeZoneIfApplicable(for: &timestamp, from: systolicSample)
 		}
 	}
 
@@ -201,6 +201,6 @@ extension BloodPressure: Equatable {
 
 extension BloodPressure: CustomDebugStringConvertible {
 	public final var debugDescription: String {
-		"BloodPressure of \(diastolic) at " + DependencyInjector.get(CalendarUtil.self).string(for: timestamp)
+		"BloodPressure of \(diastolic) at " + injected(CalendarUtil.self).string(for: timestamp)
 	}
 }

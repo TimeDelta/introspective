@@ -90,7 +90,7 @@ public final class MoodImpl: NSManagedObject, Mood {
 	public final override var description: String { Me.description }
 	public final var date: Date {
 		get {
-			DependencyInjector.get(CoreDataSampleUtil.self).convertTimeZoneIfApplicable(
+			injected(CoreDataSampleUtil.self).convertTimeZoneIfApplicable(
 				for: timestamp,
 				timeZoneId: timestampTimeZoneId
 			)
@@ -151,7 +151,7 @@ public final class MoodImpl: NSManagedObject, Mood {
 	}
 
 	public func export(to csv: CSVWriter) throws {
-		let timestampText = DependencyInjector.get(CalendarUtil.self)
+		let timestampText = injected(CalendarUtil.self)
 			.string(for: timestamp, dateStyle: .full, timeStyle: .full)
 		try csv.write(field: timestampText, quoted: true)
 

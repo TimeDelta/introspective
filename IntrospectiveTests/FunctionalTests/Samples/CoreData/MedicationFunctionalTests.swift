@@ -200,8 +200,8 @@ final class MedicationFunctionalTests: FunctionalTest {
 		Given(injectionProvider, .get(.value(CalendarUtil.self), willReturn: calendarUtil))
 		calendarUtil.setTimeZone(timeZoneOnSet)
 
-		DependencyInjector.get(Settings.self).setConvertTimeZones(true)
-		let transaction = DependencyInjector.get(Database.self).transaction()
+		injected(Settings.self).setConvertTimeZones(true)
+		let transaction = injected(Database.self).transaction()
 		let medication = try transaction.new(Medication.self)
 		let startDate = Date()
 
@@ -209,7 +209,7 @@ final class MedicationFunctionalTests: FunctionalTest {
 		try medication.set(attribute: Medication.startedOn, to: startDate)
 
 		// then
-		let expectedDate = DependencyInjector.get(CalendarUtil.self).convert(startDate, from: timeZoneOnAccess, to: timeZoneOnSet)
+		let expectedDate = injected(CalendarUtil.self).convert(startDate, from: timeZoneOnAccess, to: timeZoneOnSet)
 		calendarUtil.setTimeZone(timeZoneOnAccess)
 		XCTAssertEqual(medication.startedOn, expectedDate)
 	}
@@ -268,7 +268,7 @@ final class MedicationFunctionalTests: FunctionalTest {
 		var medication = MedicationDataTestUtil.createMedication()
 		let dose1 = MedicationDataTestUtil.createDose(medication: medication, dosage: nil, timestamp: Date())
 		let dose2 = MedicationDataTestUtil.createDose(medication: medication, dosage: nil, timestamp: Date())
-		medication = try DependencyInjector.get(Database.self).pull(savedObject: medication)
+		medication = try injected(Database.self).pull(savedObject: medication)
 
 		// when
 		let sortedDoses = medication.sortedDoses(ascending: true)
@@ -282,7 +282,7 @@ final class MedicationFunctionalTests: FunctionalTest {
 		var medication = MedicationDataTestUtil.createMedication()
 		let dose1 = MedicationDataTestUtil.createDose(medication: medication, dosage: nil, timestamp: Date())
 		let dose2 = MedicationDataTestUtil.createDose(medication: medication, dosage: nil, timestamp: Date())
-		medication = try DependencyInjector.get(Database.self).pull(savedObject: medication)
+		medication = try injected(Database.self).pull(savedObject: medication)
 
 		// when
 		let sortedDoses = medication.sortedDoses(ascending: false)
@@ -313,8 +313,8 @@ final class MedicationFunctionalTests: FunctionalTest {
 		Given(injectionProvider, .get(.value(CalendarUtil.self), willReturn: calendarUtil))
 		calendarUtil.setTimeZone(timeZoneOnSet)
 
-		DependencyInjector.get(Settings.self).setConvertTimeZones(true)
-		let transaction = DependencyInjector.get(Database.self).transaction()
+		injected(Settings.self).setConvertTimeZones(true)
+		let transaction = injected(Database.self).transaction()
 		let medication = try transaction.new(Medication.self)
 
 		// when
@@ -323,7 +323,7 @@ final class MedicationFunctionalTests: FunctionalTest {
 		// then
 		let startedOnDate = Date()
 		medication.startedOn = startedOnDate
-		let expectedDate = DependencyInjector.get(CalendarUtil.self).convert(startedOnDate, from: timeZoneOnAccess, to: timeZoneOnSet)
+		let expectedDate = injected(CalendarUtil.self).convert(startedOnDate, from: timeZoneOnAccess, to: timeZoneOnSet)
 		calendarUtil.setTimeZone(timeZoneOnAccess)
 		XCTAssertEqual(medication.startedOn, expectedDate)
 	}

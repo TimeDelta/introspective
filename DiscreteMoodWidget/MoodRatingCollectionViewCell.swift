@@ -24,9 +24,9 @@ public class MoodRatingCollectionViewCell: UICollectionViewCell {
 			guard let rating = rating else { return }
 
 			ratingButton.setTitle(String(rating), for: .normal)
-			let min = DependencyInjector.get(Settings.self).minMood
-			let max = DependencyInjector.get(Settings.self).maxMood
-			let color = DependencyInjector.get(MoodUiUtil.self).colorForMood(
+			let min = injected(Settings.self).minMood
+			let max = injected(Settings.self).maxMood
+			let color = injected(MoodUiUtil.self).colorForMood(
 				rating: Double(rating),
 				minRating: min,
 				maxRating: max

@@ -44,8 +44,8 @@ public final class RecordIntegerMoodIntentHandler: NSObject, RecordIntegerMoodIn
 		for _: RecordIntegerMoodIntent,
 		with completion: @escaping ([Int]?, Error?) -> Void
 	) {
-		let minValue = Int(DependencyInjector.get(Settings.self).minMood)
-		let maxValue = Int(DependencyInjector.get(Settings.self).maxMood)
+		let minValue = Int(injected(Settings.self).minMood)
+		let maxValue = Int(injected(Settings.self).maxMood)
 		completion(Array(minValue ... maxValue), nil)
 	}
 
@@ -58,8 +58,8 @@ public final class RecordIntegerMoodIntentHandler: NSObject, RecordIntegerMoodIn
 			return
 		}
 		do {
-			let mood = try DependencyInjector.get(MoodDAO.self).createMood(rating: Double(rating))
-			let message = DependencyInjector.get(MoodUiUtil.self).feedbackMessage(
+			let mood = try injected(MoodDAO.self).createMood(rating: Double(rating))
+			let message = injected(MoodUiUtil.self).feedbackMessage(
 				for: mood.rating,
 				min: mood.minRating,
 				max: mood.maxRating

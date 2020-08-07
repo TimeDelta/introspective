@@ -20,7 +20,7 @@ public class HealthKitDataTestUtil {
 	private static let healthStore = HKHealthStore()
 	private static let readPermissions: Set<HKObjectType> = {
 		var allPermissions = Set<HKObjectType>()
-		for permissions in DependencyInjector.get(SampleFactory.self).healthKitTypes().map({ $0.readPermissions }) {
+		for permissions in injected(SampleFactory.self).healthKitTypes().map({ $0.readPermissions }) {
 			allPermissions = allPermissions.union(permissions)
 		}
 		return allPermissions
@@ -28,7 +28,7 @@ public class HealthKitDataTestUtil {
 
 	private static let writePermissions: Set<HKSampleType> = {
 		var allPermissions = Set<HKSampleType>()
-		for permissions in DependencyInjector.get(SampleFactory.self).healthKitTypes().map({ $0.writePermissions }) {
+		for permissions in injected(SampleFactory.self).healthKitTypes().map({ $0.writePermissions }) {
 			allPermissions = allPermissions.union(permissions)
 		}
 		return allPermissions

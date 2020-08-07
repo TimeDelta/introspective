@@ -50,7 +50,7 @@ public final class StartActivityFromEndOfLastIntentHandler: ActivityIntentHandle
 		}
 
 		do {
-			guard let definition = try DependencyInjector.get(ActivityDAO.self).getDefinitionWith(name: activityName)
+			guard let definition = try injected(ActivityDAO.self).getDefinitionWith(name: activityName)
 			else {
 				Me.log.error("Activity named %{private}@ does not exist.", activityName)
 				completion(
@@ -59,8 +59,8 @@ public final class StartActivityFromEndOfLastIntentHandler: ActivityIntentHandle
 				)
 				return
 			}
-			let start = try DependencyInjector.get(ActivityDAO.self).getMostRecentActivityEndDate() ?? Date()
-			let activity = try DependencyInjector.get(ActivityDAO.self).createActivity(
+			let start = try injected(ActivityDAO.self).getMostRecentActivityEndDate() ?? Date()
+			let activity = try injected(ActivityDAO.self).createActivity(
 				definition: definition,
 				startDate: start
 			)
@@ -80,7 +80,7 @@ public final class StartActivityFromEndOfLastIntentHandler: ActivityIntentHandle
 		if start < Date() - 1.days {
 			dateStyle = .short
 		}
-		return DependencyInjector.get(CalendarUtil.self).string(
+		return injected(CalendarUtil.self).string(
 			for: start,
 			dateStyle: dateStyle,
 			timeStyle: .medium

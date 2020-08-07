@@ -8,6 +8,11 @@
 
 import Foundation
 
+/// Retrieve an injected instance (usually a Singleton) of the specified protocol type.
+public func injected<ProtocolType>(_ type: ProtocolType.Type) -> ProtocolType {
+	DependencyInjector.get(type)
+}
+
 /// - Tag: DependencyInjector
 public final class DependencyInjector {
 	private typealias Me = DependencyInjector

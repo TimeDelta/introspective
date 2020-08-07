@@ -20,9 +20,9 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 
 	private typealias Me = RecordDiscreteMoodTableViewCell
 
-	private static let notePresenter: Presentr = DependencyInjector.get(UiUtil.self)
+	private static let notePresenter: Presentr = injected(UiUtil.self)
 		.customPresenter(width: .custom(size: 300), height: .custom(size: 200), center: .topCenter)
-	private static let ratingPresenter: Presentr = DependencyInjector.get(UiUtil.self)
+	private static let ratingPresenter: Presentr = injected(UiUtil.self)
 		.customPresenter(width: .custom(size: 300), height: .custom(size: 70), center: .topCenter)
 
 	private static let ratingChanged = Notification.Name("moodRatingChanged")
@@ -41,7 +41,7 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 
 	/// This is not made private solely for testing purposes
 	final var note: String?
-	private final var rating: Int = Int(DependencyInjector.get(Settings.self).maxMood)
+	private final var rating: Int = Int(injected(Settings.self).maxMood)
 	private final var ratingButtons = [UIButton]()
 
 	private final let spacingBetweenRatingButtons: CGFloat = 5
@@ -79,17 +79,17 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 
 	@IBAction final func doneButtonPressed(_: Any) {
 		do {
-			let transaction = DependencyInjector.get(Database.self).transaction()
-			let mood = try DependencyInjector.get(SampleFactory.self).mood(using: transaction)
+			let transaction = injected(Database.self).transaction()
+			let mood = try injected(SampleFactory.self).mood(using: transaction)
 			mood.date = Date()
 			mood.rating = Double(rating)
 			mood.note = note
-			mood.minRating = DependencyInjector.get(Settings.self).minMood
-			mood.maxRating = DependencyInjector.get(Settings.self).maxMood
+			mood.minRating = injected(Settings.self).minMood
+			mood.maxRating = injected(Settings.self).maxMood
 			mood.setSource(.introspective)
 			try transaction.commit()
 
-			feedbackLabel.text = DependencyInjector.get(MoodUiUtil.self).feedbackMessage(
+			feedbackLabel.text = injected(MoodUiUtil.self).feedbackMessage(
 				for: Double(rating),
 				min: mood.minRating,
 				max: mood.maxRating
@@ -159,8 +159,8 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 	private final func reset() {
 		note = nil
 		addNoteButton.setTitle("Add Note", for: .normal)
-		let min = DependencyInjector.get(Settings.self).minMood
-		let max = DependencyInjector.get(Settings.self).maxMood
+		let min = injected(Settings.self).minMood
+		let max = injected(Settings.self).maxMood
 		rating = Int((max - min) / 2 + min)
 	}
 
@@ -171,8 +171,8 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 	private final func updateUI() {
 		removeExistingMoodButtons()
 
-		let min = DependencyInjector.get(Settings.self).minMood
-		let max = DependencyInjector.get(Settings.self).maxMood
+		let min = injected(Settings.self).minMood
+		let max = injected(Settings.self).maxMood
 		var lastView: UIView?
 		for i in Int(min) ... Int(max) {
 			let ratingButton = createButtonForRating(i)
@@ -197,11 +197,11 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 	}
 
 	private final func createButtonForRating(_ rating: Int) -> UIButton {
-		let min = DependencyInjector.get(Settings.self).minMood
-		let max = DependencyInjector.get(Settings.self).maxMood
+		let min = injected(Settings.self).minMood
+		let max = injected(Settings.self).maxMood
 		let button = UIButton(type: .custom)
 		button.addTarget(self, action: #selector(moodRatingButtonPressed), for: .touchUpInside)
-		button.backgroundColor = DependencyInjector.get(MoodUiUtil.self)
+		button.backgroundColor = injected(MoodUiUtil.self)
 			.colorForMood(rating: Double(rating), minRating: min, maxRating: max)
 		let titleColor = button.backgroundColor?.highContrast()
 		button.setTitleColor(titleColor, for: .normal)
@@ -227,7 +227,7 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 	}
 
 	private final func getRatingButton(forRating rating: Int) -> UIButton {
-		let buttonIndex = rating - Int(DependencyInjector.get(Settings.self).minMood)
+		let buttonIndex = rating - Int(injected(Settings.self).minMood)
 		return ratingButtons[buttonIndex]
 	}
 
@@ -273,7 +273,7 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 	private final func getBaseWidth() -> CGFloat {
 		let minWidth: CGFloat = 30
 		let numberOfMoods = CGFloat(
-			DependencyInjector.get(Settings.self).maxMood - DependencyInjector
+			injected(Settings.self).maxMood - DependencyInjector
 				.get(Settings.self).minMood + 1
 		)
 		// not -1 because need to account for one mood always being selected, which adds 1 spacing

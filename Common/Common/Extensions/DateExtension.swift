@@ -12,8 +12,8 @@ import Foundation
 public extension Date {
 	func isToday() -> Bool {
 		let now = Date()
-		let startOfDay = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: now)
-		let endOfDay = DependencyInjector.get(CalendarUtil.self).end(of: .day, in: now)
+		let startOfDay = injected(CalendarUtil.self).start(of: .day, in: now)
+		let endOfDay = injected(CalendarUtil.self).end(of: .day, in: now)
 		return isAfterDate(startOfDay, orEqual: true, granularity: .nanosecond) &&
 			isBeforeDate(endOfDay, orEqual: true, granularity: .nanosecond)
 	}

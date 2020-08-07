@@ -52,6 +52,6 @@ public class DateAttributeBase: AttributeBase<Date>, DateAttribute {
 		guard let castedValue = value as? Date else {
 			throw TypeMismatchError(attribute: self, wasA: type(of: value))
 		}
-		return DependencyInjector.get(CalendarUtil.self).string(for: castedValue, inFormat: dateFormat)
+		return injected(CalendarUtil.self).string(for: castedValue, inFormat: dateFormat)
 	}
 }

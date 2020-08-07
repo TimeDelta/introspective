@@ -42,7 +42,7 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 
 	public required init(parts: [BooleanExpressionPart]) throws {
 		if !parts.isEmpty {
-			expression = try DependencyInjector.get(BooleanExpressionParser.self).parse(parts)
+			expression = try injected(BooleanExpressionParser.self).parse(parts)
 		} else {
 			expression = nil
 		}

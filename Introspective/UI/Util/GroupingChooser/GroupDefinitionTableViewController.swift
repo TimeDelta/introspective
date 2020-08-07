@@ -36,7 +36,7 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 	// and edits carry through even if cancelled.
 	public final var groupDefinition: GroupDefinition! {
 		get {
-			var definition = DependencyInjector.get(SampleGrouperFactory.self).groupDefinition(sampleType)
+			var definition = injected(SampleGrouperFactory.self).groupDefinition(sampleType)
 			definition.name = groupName
 			definition.expressionParts = expressionParts
 			return definition
@@ -147,7 +147,7 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 		editActionsForRowAt indexPath: IndexPath
 	) -> [UITableViewRowAction]? {
 		guard indexPath.section == 1 else { return [] }
-		let delete = DependencyInjector.get(UiUtil.self)
+		let delete = injected(UiUtil.self)
 			.tableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
 				self.expressionParts.remove(at: indexPath.row)
 				self.validate()
@@ -202,7 +202,7 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 		if indexPath != nil {
 			title = "What would you like to change this to?"
 		}
-		let actionSheet = DependencyInjector.get(UiUtil.self)
+		let actionSheet = injected(UiUtil.self)
 			.alert(title: title, message: nil, preferredStyle: .actionSheet)
 		actionSheet.addAction(UIAlertAction(title: "Attribute Restriction", style: .default) { _ in
 			self.addOrUpdateAttributeRestrictionFor(indexPath)
@@ -280,9 +280,9 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 		let availableAttributes = sampleType.attributes
 		var restriction: AttributeRestriction?
 		for attribute in availableAttributes {
-			let availableRestrictionTypes = DependencyInjector.get(AttributeRestrictionFactory.self).typesFor(attribute)
+			let availableRestrictionTypes = injected(AttributeRestrictionFactory.self).typesFor(attribute)
 			if !availableRestrictionTypes.isEmpty {
-				restriction = DependencyInjector.get(AttributeRestrictionFactory.self)
+				restriction = injected(AttributeRestrictionFactory.self)
 					.initialize(type: availableRestrictionTypes[0], forAttribute: attribute)
 				break
 			}

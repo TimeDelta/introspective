@@ -256,7 +256,7 @@ public final class SettingsImpl: NSManagedObject, Settings {
 	}
 
 	public final func save() throws {
-		let transaction = DependencyInjector.get(Database.self).transaction()
+		let transaction = injected(Database.self).transaction()
 
 		storedMinMood = minMood
 		storedMaxMood = maxMood

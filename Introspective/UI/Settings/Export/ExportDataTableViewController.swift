@@ -114,7 +114,7 @@ public final class ExportDataTableViewController: UITableViewController {
 		cell.backgroundTaskId = Me.backgroundExportOrder[indexPath.row]
 		cell.exporter = Me.backgroundExports { $0[cell.backgroundTaskId] }
 		// need to do this or will double subscribe and receive event twice, causing app to crash
-		DependencyInjector.get(UiUtil.self).stopObserving(self, name: .presentView, object: cell.exporter)
+		injected(UiUtil.self).stopObserving(self, name: .presentView, object: cell.exporter)
 		observe(selector: #selector(presentViewFrom), name: .presentView, object: cell.exporter)
 		return cell
 	}
@@ -273,13 +273,13 @@ public final class ExportDataTableViewController: UITableViewController {
 	private final func getExporterFor(_ indexPath: IndexPath) throws -> Exporter {
 		let type = Me.sampleTypes[indexPath.row]
 		if type == Activity.self || type == ActivityDefinition.self {
-			return DependencyInjector.get(ActivityExporter.self)
+			return injected(ActivityExporter.self)
 		}
 		if type == MedicationDose.self || type == Medication.self {
-			return DependencyInjector.get(MedicationExporter.self)
+			return injected(MedicationExporter.self)
 		}
 		if type == MoodImpl.self {
-			return DependencyInjector.get(MoodExporter.self)
+			return injected(MoodExporter.self)
 		}
 		Me.log.error("Unknown index path: (section: %d, row: %d)", indexPath.section, indexPath.row)
 		throw GenericError("Unknown index path")

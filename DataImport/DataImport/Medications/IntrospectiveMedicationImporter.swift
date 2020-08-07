@@ -47,16 +47,16 @@ public final class IntrospectiveMedicationImporterImpl: NSManagedObject, Introsp
 
 	private final var recordNumber = -1
 	private final var totalLines = -1
-	private final let mainTransaction = DependencyInjector.get(Database.self).transaction()
+	private final let mainTransaction = injected(Database.self).transaction()
 	private final var csv: CSVReader!
 	private final var latestDate: Date!
 
 	// MARK: - Main Functions
 
 	public final func importData(from url: URL) throws {
-		csv = try DependencyInjector.get(IOUtil.self).csvReader(url: url, hasHeaderRow: true)
+		csv = try injected(IOUtil.self).csvReader(url: url, hasHeaderRow: true)
 		recordNumber = 1
-		totalLines = try DependencyInjector.get(IOUtil.self).contentsOf(url).split(separator: "\n").count
+		totalLines = try injected(IOUtil.self).contentsOf(url).split(separator: "\n").count
 
 		isPaused = false
 		isCancelled = false
@@ -67,7 +67,7 @@ public final class IntrospectiveMedicationImporterImpl: NSManagedObject, Introsp
 	}
 
 	public final func resetLastImportDate() throws {
-		let transaction = DependencyInjector.get(Database.self).transaction()
+		let transaction = injected(Database.self).transaction()
 		lastImport = nil
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 	}
@@ -191,7 +191,7 @@ public final class IntrospectiveMedicationImporterImpl: NSManagedObject, Introsp
 	private final func getAllMedications(using transaction: Transaction) throws -> Set<Medication> {
 		let medicationsInTransaction = Set(try transaction.query(Medication.fetchRequest()))
 		let medicationsInMainContext = Set(
-			try DependencyInjector.get(Database.self)
+			try injected(Database.self)
 				.query(Medication.fetchRequest())
 		).filter {
 			let id = $0.objectID
@@ -271,7 +271,7 @@ public final class IntrospectiveMedicationImporterImpl: NSManagedObject, Introsp
 		guard let dateText = csv[MedicationDose.timestampColumn] else {
 			throw MissingRequiredFieldError(MedicationDose.timestampColumn, recordNumber: recordNumber)
 		}
-		if let date = DependencyInjector.get(CalendarUtil.self)
+		if let date = injected(CalendarUtil.self)
 			.date(from: dateText, dateStyle: .full, timeStyle: .full) {
 			return date
 		}
@@ -290,7 +290,7 @@ public final class IntrospectiveMedicationImporterImpl: NSManagedObject, Introsp
 
 	private final func getStartedOnDate() throws -> Date? {
 		if let dateText = csv[Medication.startedOnColumn] {
-			if let date = DependencyInjector.get(CalendarUtil.self)
+			if let date = injected(CalendarUtil.self)
 				.date(from: dateText, dateStyle: .full, timeStyle: .full) {
 				return date
 			}

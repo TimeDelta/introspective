@@ -26,17 +26,17 @@ public final class EditMedicationViewController: UIViewController {
 
 	// MARK: Presenters
 
-	private static let frequencyPresenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(
+	private static let frequencyPresenter: Presentr = injected(UiUtil.self).customPresenter(
 		width: .custom(size: 250),
 		height: .custom(size: 250),
 		center: .topCenter
 	)
-	private static let startedOnPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
+	private static let startedOnPresenter = injected(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
 		center: .center
 	)
-	private static let descriptionPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
+	private static let descriptionPresenter = injected(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
 		center: .center
@@ -109,10 +109,10 @@ public final class EditMedicationViewController: UIViewController {
 		validate()
 
 		if frequency == nil {
-			DependencyInjector.get(UiUtil.self).setButton(resetFrequencyButton, enabled: false, hidden: true)
+			injected(UiUtil.self).setButton(resetFrequencyButton, enabled: false, hidden: true)
 		}
 		if startedOnDate == nil {
-			DependencyInjector.get(UiUtil.self).setButton(resetStartedOnButton, enabled: false, hidden: true)
+			injected(UiUtil.self).setButton(resetStartedOnButton, enabled: false, hidden: true)
 		}
 
 		notesTextView.delegate = self
@@ -135,15 +135,15 @@ public final class EditMedicationViewController: UIViewController {
 		frequency = value(for: .frequency, from: notification)
 		updateFrequencyButtonTitle()
 		if frequency != nil {
-			DependencyInjector.get(UiUtil.self).setButton(resetFrequencyButton, enabled: true, hidden: false)
+			injected(UiUtil.self).setButton(resetFrequencyButton, enabled: true, hidden: false)
 		}
 	}
 
 	@objc private final func setStartedOnDate(notification: Notification) {
 		let date: Date? = value(for: .date, from: notification)
 		if date != nil {
-			startedOnDate = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: date!)
-			DependencyInjector.get(UiUtil.self).setButton(resetStartedOnButton, enabled: true, hidden: false)
+			startedOnDate = injected(CalendarUtil.self).start(of: .day, in: date!)
+			injected(UiUtil.self).setButton(resetStartedOnButton, enabled: true, hidden: false)
 		} else {
 			startedOnDate = nil
 		}
@@ -172,7 +172,7 @@ public final class EditMedicationViewController: UIViewController {
 	@IBAction final func resetFrequencyButtonPressed(_: Any) {
 		frequency = nil
 		updateFrequencyButtonTitle()
-		DependencyInjector.get(UiUtil.self).setButton(resetFrequencyButton, enabled: false, hidden: true)
+		injected(UiUtil.self).setButton(resetFrequencyButton, enabled: false, hidden: true)
 	}
 
 	@IBAction final func startedOnDescriptionButtonPressed(_: Any) {
@@ -192,7 +192,7 @@ public final class EditMedicationViewController: UIViewController {
 	@IBAction final func resetStartedOnButtonPressed(_: Any) {
 		startedOnDate = nil
 		updateStartedOnDateButtonTitle()
-		DependencyInjector.get(UiUtil.self).setButton(resetStartedOnButton, enabled: false, hidden: true)
+		injected(UiUtil.self).setButton(resetStartedOnButton, enabled: false, hidden: true)
 	}
 
 	@IBAction final func dosageDescriptionButtonPressed(_: Any) {
@@ -203,14 +203,14 @@ public final class EditMedicationViewController: UIViewController {
 
 	@IBAction final func saveButtonPressed(_ sender: Any) {
 		do {
-			let transaction = DependencyInjector.get(Database.self).transaction()
+			let transaction = injected(Database.self).transaction()
 			var medication: Medication
 			if let localMedication = self.medication {
 				medication = try transaction.pull(savedObject: localMedication)
 			} else {
 				medication = try transaction.new(Medication.self)
 				medication.setSource(.introspective)
-				let numMeds = try DependencyInjector.get(Database.self).query(Medication.fetchRequest()).count
+				let numMeds = try injected(Database.self).query(Medication.fetchRequest()).count
 				medication.recordScreenIndex = Int16(numMeds)
 			}
 			medication.name = nameTextField.text!
@@ -223,7 +223,7 @@ public final class EditMedicationViewController: UIViewController {
 				medication.notes = notesTextView.text
 			}
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-			medication = try DependencyInjector.get(Database.self).pull(savedObject: medication)
+			medication = try injected(Database.self).pull(savedObject: medication)
 
 			post(
 				notificationToSendOnAccept,
@@ -253,7 +253,7 @@ public final class EditMedicationViewController: UIViewController {
 	private final func updateStartedOnDateButtonTitle() {
 		var startedOnText = "Not set"
 		if let date = startedOnDate {
-			startedOnText = DependencyInjector.get(CalendarUtil.self)
+			startedOnText = injected(CalendarUtil.self)
 				.string(for: date, dateStyle: .long, timeStyle: .none)
 		}
 		startedOnButton.setTitle(startedOnText, for: .normal)
@@ -291,7 +291,7 @@ public final class EditMedicationViewController: UIViewController {
 		let originalName = medication?.name ?? initialName ?? ""
 		guard name.localizedLowercase != originalName.localizedLowercase else { return false }
 		do {
-			return try DependencyInjector.get(MedicationDAO.self).medicationExists(withName: name)
+			return try injected(MedicationDAO.self).medicationExists(withName: name)
 		} catch {
 			Me.log.error("Failed to check for medication name duplication: %@", errorInfo(error))
 			return true

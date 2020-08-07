@@ -28,7 +28,7 @@ public final class Weight: HealthKitQuantitySample {
 	}
 
 	public static func initUnits() {
-		unit = DependencyInjector.get(HealthKitUtil.self).preferredUnitFor(.bodyMass) ?? HKUnit(from: .pound)
+		unit = injected(HealthKitUtil.self).preferredUnitFor(.bodyMass) ?? HKUnit(from: .pound)
 	}
 
 	// MARK: - Display Information
@@ -68,7 +68,7 @@ public final class Weight: HealthKitQuantitySample {
 	public required init(_ sample: HKQuantitySample) {
 		weight = sample.quantity.doubleValue(for: Me.unit)
 		timestamp = sample.startDate
-		DependencyInjector.get(HealthKitUtil.self).setTimeZoneIfApplicable(for: &timestamp, from: sample)
+		injected(HealthKitUtil.self).setTimeZoneIfApplicable(for: &timestamp, from: sample)
 	}
 
 	// MARK: - HealthKitSample Functions
@@ -155,6 +155,6 @@ extension Weight: Equatable {
 
 extension Weight: CustomDebugStringConvertible {
 	public final var debugDescription: String {
-		"Weight of \(weight) at " + DependencyInjector.get(CalendarUtil.self).string(for: timestamp)
+		"Weight of \(weight) at " + injected(CalendarUtil.self).string(for: timestamp)
 	}
 }

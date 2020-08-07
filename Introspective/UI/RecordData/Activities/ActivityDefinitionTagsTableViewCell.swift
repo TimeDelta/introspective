@@ -38,7 +38,7 @@ public final class ActivityDefinitionTagsTableViewCell: UITableViewCell {
 			} // only reason to change is for Dark Mode so not necessary before iOS 13
 
 			do {
-				let tags = try DependencyInjector.get(TagDAO.self).getAllTags()
+				let tags = try injected(TagDAO.self).getAllTags()
 				tagsField.textField.filterStrings(tags.map { $0.name })
 			} catch {
 				Me.log.error("Auto complete failure: %@", errorInfo(error))

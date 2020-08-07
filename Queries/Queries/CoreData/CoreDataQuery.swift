@@ -19,7 +19,7 @@ public class CoreDataQuery<SampleType: NSManagedObject & CoreDataSample>: Sample
 		fetchRequest.predicate = expression?.predicate()
 
 		do {
-			let samples: [SampleType] = try DependencyInjector.get(Database.self).query(fetchRequest)
+			let samples: [SampleType] = try injected(Database.self).query(fetchRequest)
 
 			if samples.isEmpty {
 				queryDone(nil, NoSamplesFoundQueryError(sampleType: SampleType.self))

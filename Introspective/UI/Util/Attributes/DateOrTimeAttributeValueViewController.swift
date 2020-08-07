@@ -67,7 +67,7 @@ public final class DateOrTimeAttributeValueViewController: AttributeValueTypeVie
 		} else if dateAttribute.includeTime {
 			currentValue = datePicker.date
 		} else {
-			currentValue = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: datePicker.date)
+			currentValue = injected(CalendarUtil.self).start(of: .day, in: datePicker.date)
 		}
 	}
 }

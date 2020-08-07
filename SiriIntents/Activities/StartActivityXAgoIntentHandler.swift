@@ -102,7 +102,7 @@ public final class StartActivityXAgoIntentHandler: ActivityIntentHandler<StartAc
 		}
 
 		do {
-			guard let definition = try DependencyInjector.get(ActivityDAO.self).getDefinitionWith(name: activityName)
+			guard let definition = try injected(ActivityDAO.self).getDefinitionWith(name: activityName)
 			else {
 				Me.log.error("Activity named %{private}@ does not exist.", activityName)
 				completion(
@@ -111,8 +111,8 @@ public final class StartActivityXAgoIntentHandler: ActivityIntentHandler<StartAc
 				)
 				return
 			}
-			let start = try DependencyInjector.get(ActivityDAO.self).getMostRecentActivityEndDate() ?? Date()
-			let activity = try DependencyInjector.get(ActivityDAO.self)
+			let start = try injected(ActivityDAO.self).getMostRecentActivityEndDate() ?? Date()
+			let activity = try injected(ActivityDAO.self)
 				.createActivity(definition: definition, startDate: start)
 			completion(StartActivityXAgoIntentResponse.success(
 				activity: ActivityIntentInfo(activity),

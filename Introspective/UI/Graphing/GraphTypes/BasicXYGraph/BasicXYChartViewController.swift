@@ -58,7 +58,7 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 
 		chartModel = chartModel.chartType(chartType)
 
-		DependencyInjector.get(UiUtil.self).setBackButton(for: self, title: "Graph Setup", action: #selector(back))
+		injected(UiUtil.self).setBackButton(for: self, title: "Graph Setup", action: #selector(back))
 
 		finishedSetup = true
 	}

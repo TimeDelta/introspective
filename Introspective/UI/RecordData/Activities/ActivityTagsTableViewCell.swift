@@ -44,7 +44,7 @@ public final class ActivityTagsTableViewCellImpl: UITableViewCell, ActivityTagsT
 			} // only reason to change is for Dark Mode so not necessary before iOS 13
 
 			do {
-				let tags = try DependencyInjector.get(Database.self).query(Tag.fetchRequest() as NSFetchRequest<Tag>)
+				let tags = try injected(Database.self).query(Tag.fetchRequest() as NSFetchRequest<Tag>)
 				tagsField.textField.filterStrings(tags.map { $0.name })
 			} catch {
 				Me.log.error("Auto complete failure: %@", errorInfo(error))

@@ -19,7 +19,7 @@ public final class RecordMoodRatingViewController: UIViewController {
 
 	// MARK: - Instance Variables
 
-	public final var rating: Double = DependencyInjector.get(Settings.self).maxMood / 2
+	public final var rating: Double = injected(Settings.self).maxMood / 2
 	public final var notificationToSendOnAccept: Notification.Name!
 
 	// MARK: - UIViewController Overrides
@@ -28,7 +28,7 @@ public final class RecordMoodRatingViewController: UIViewController {
 		super.viewDidLoad()
 
 		ratingTextField.text = String(rating)
-		DependencyInjector.get(UiUtil.self)
+		injected(UiUtil.self)
 			.addSaveButtonToKeyboardFor(ratingTextField, target: self, action: #selector(saveClicked))
 		ratingTextField.becomeFirstResponder()
 	}
@@ -37,18 +37,18 @@ public final class RecordMoodRatingViewController: UIViewController {
 
 	@IBAction final func textFieldValueChanged(_: Any) {
 		let ratingText = ratingTextField.text!
-		let minRating = DependencyInjector.get(Settings.self).minMood
-		let maxRating = DependencyInjector.get(Settings.self).maxMood
+		let minRating = injected(Settings.self).minMood
+		let maxRating = injected(Settings.self).maxMood
 		guard !ratingText.hasSuffix(".") else { return }
 		if let rating = Double(ratingText) {
 			if minRating <= rating && rating <= maxRating {
 				self.rating = rating
 			} else if rating > maxRating {
 				self.rating = maxRating
-				ratingTextField.text = DependencyInjector.get(MoodUiUtil.self).valueToString(maxRating)
+				ratingTextField.text = injected(MoodUiUtil.self).valueToString(maxRating)
 			} else {
 				self.rating = minRating
-				ratingTextField.text = DependencyInjector.get(MoodUiUtil.self).valueToString(minRating)
+				ratingTextField.text = injected(MoodUiUtil.self).valueToString(minRating)
 			}
 		}
 	}

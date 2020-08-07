@@ -38,7 +38,7 @@ public final class AverageInformation: AnyInformation {
 			let filteredSamples = try filterSamples(samples, as: Double.self)
 			if filteredSamples.isEmpty { return "No samples matching filter" }
 			return String(
-				try DependencyInjector.get(NumericSampleUtil.self)
+				try injected(NumericSampleUtil.self)
 					.average(for: attribute, over: filteredSamples)
 			)
 		}
@@ -46,7 +46,7 @@ public final class AverageInformation: AnyInformation {
 			let filteredSamples = try filterSamples(samples, as: Int.self)
 			if filteredSamples.isEmpty { return "No samples matching filter" }
 			return String(
-				try DependencyInjector.get(NumericSampleUtil.self)
+				try injected(NumericSampleUtil.self)
 					.average(for: attribute, over: filteredSamples)
 			)
 		}
@@ -71,7 +71,7 @@ public final class AverageInformation: AnyInformation {
 			let filteredSamples = try filterSamples(samples, as: Double.self)
 			if filteredSamples.isEmpty { throw GenericDisplayableError(title: "No samples matching filter") }
 			return String(
-				try DependencyInjector.get(NumericSampleUtil.self)
+				try injected(NumericSampleUtil.self)
 					.average(for: attribute, over: filteredSamples)
 			)
 		}
@@ -79,7 +79,7 @@ public final class AverageInformation: AnyInformation {
 			let filteredSamples = try filterSamples(samples, as: Int.self)
 			if filteredSamples.isEmpty { throw GenericDisplayableError(title: "No samples matching filter") }
 			return String(
-				try DependencyInjector.get(NumericSampleUtil.self)
+				try injected(NumericSampleUtil.self)
 					.average(for: attribute, over: filteredSamples)
 			)
 		}

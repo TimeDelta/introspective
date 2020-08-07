@@ -28,7 +28,7 @@ public class RestingHeartRate: HealthKitQuantitySample {
 	}
 
 	public static func initUnits() {
-		unit = DependencyInjector.get(HealthKitUtil.self)
+		unit = injected(HealthKitUtil.self)
 			.preferredUnitFor(.restingHeartRate) ?? HKUnit(from: "count/min")
 	}
 
@@ -69,7 +69,7 @@ public class RestingHeartRate: HealthKitQuantitySample {
 	public required init(_ sample: HKQuantitySample) {
 		restingHeartRate = sample.quantity.doubleValue(for: Me.unit)
 		timestamp = sample.startDate
-		DependencyInjector.get(HealthKitUtil.self).setTimeZoneIfApplicable(for: &timestamp, from: sample)
+		injected(HealthKitUtil.self).setTimeZoneIfApplicable(for: &timestamp, from: sample)
 	}
 
 	// MARK: - HealthKitSample Functions
@@ -156,6 +156,6 @@ extension RestingHeartRate: Equatable {
 
 extension RestingHeartRate: CustomDebugStringConvertible {
 	public final var debugDescription: String {
-		"RestingHeartRate of \(restingHeartRate) at " + DependencyInjector.get(CalendarUtil.self).string(for: timestamp)
+		"RestingHeartRate of \(restingHeartRate) at " + injected(CalendarUtil.self).string(for: timestamp)
 	}
 }

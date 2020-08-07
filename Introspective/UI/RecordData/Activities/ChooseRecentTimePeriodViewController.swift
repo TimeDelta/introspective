@@ -73,7 +73,7 @@ public final class ChooseRecentTimePeriodViewControllerImpl: UIViewController, C
 	@IBAction final func sortButtonPressed() {
 		let chosenTimeUnit = Me.supportedTimeUnits[timeUnitPicker.selectedRow(inComponent: 0)]
 		guard let numString = numTimeUnitsField.text else { return }
-		guard DependencyInjector.get(StringUtil.self).isInteger(numString) else { return }
+		guard injected(StringUtil.self).isInteger(numString) else { return }
 		guard let numTimeUnits = Int(numString) else { return }
 		post(
 			.timePeriodChosen,
@@ -95,7 +95,7 @@ public final class ChooseRecentTimePeriodViewControllerImpl: UIViewController, C
 		guard let numString = numTimeUnitsField.text else {
 			return false
 		}
-		guard DependencyInjector.get(StringUtil.self).isInteger(numString) else {
+		guard injected(StringUtil.self).isInteger(numString) else {
 			return false
 		}
 		return true
@@ -108,10 +108,10 @@ public final class ChooseRecentTimePeriodViewControllerImpl: UIViewController, C
 			} else {
 				sortByLabel.textColor = .black
 			}
-			DependencyInjector.get(UiUtil.self).setButton(sortButton, enabled: true, hidden: false)
+			injected(UiUtil.self).setButton(sortButton, enabled: true, hidden: false)
 		} else {
 			sortByLabel.textColor = .red
-			DependencyInjector.get(UiUtil.self).setButton(sortButton, enabled: false, hidden: false)
+			injected(UiUtil.self).setButton(sortButton, enabled: false, hidden: false)
 		}
 	}
 }

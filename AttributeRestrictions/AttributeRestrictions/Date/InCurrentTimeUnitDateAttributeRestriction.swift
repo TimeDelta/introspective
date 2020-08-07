@@ -87,8 +87,8 @@ public final class InCurrentTimeUnitDateAttributeRestriction: DateAttributeRestr
 			throw TypeMismatchError(attribute: restrictedAttribute, of: sample, wasA: type(of: sampleValue))
 		}
 		let now = Date()
-		let minDate = DependencyInjector.get(CalendarUtil.self).start(of: timeUnit, in: now)
-		let maxDate = DependencyInjector.get(CalendarUtil.self).end(of: timeUnit, in: now)
+		let minDate = injected(CalendarUtil.self).start(of: timeUnit, in: now)
+		let maxDate = injected(CalendarUtil.self).end(of: timeUnit, in: now)
 		return minDate <= sampleDate && sampleDate <= maxDate
 	}
 
@@ -99,11 +99,11 @@ public final class InCurrentTimeUnitDateAttributeRestriction: DateAttributeRestr
 	// MARK: - Boolean Expression Functions
 
 	public override func predicate() -> NSPredicate? {
-		guard !DependencyInjector.get(Settings.self).convertTimeZones else { return nil }
+		guard !injected(Settings.self).convertTimeZones else { return nil }
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		let now = Date()
-		let minDate = DependencyInjector.get(CalendarUtil.self).start(of: timeUnit, in: now)
-		let maxDate = DependencyInjector.get(CalendarUtil.self).end(of: timeUnit, in: now)
+		let minDate = injected(CalendarUtil.self).start(of: timeUnit, in: now)
+		let maxDate = injected(CalendarUtil.self).end(of: timeUnit, in: now)
 		return NSPredicate(
 			format: "%K >= %@ && %K <= %@",
 			variableName,

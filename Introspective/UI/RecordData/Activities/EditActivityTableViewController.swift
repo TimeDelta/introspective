@@ -43,7 +43,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 
 	// MARK: Presenters
 
-	private static let presenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(
+	private static let presenter: Presentr = injected(UiUtil.self).customPresenter(
 		width: .full,
 		height: .fluid(percentage: 0.4),
 		center: .bottomCenter
@@ -112,7 +112,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 
 		if activity == nil {
 			do {
-				startDate = try DependencyInjector.get(ActivityDAO.self).getMostRecentActivityEndDate() ?? Date()
+				startDate = try injected(ActivityDAO.self).getMostRecentActivityEndDate() ?? Date()
 			} catch {
 				startDate = Date()
 			}
@@ -151,7 +151,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 			cell.accessibilityHint = "Tap this to change this instance to another activity definition"
 		} else if indexPath == Me.startIndex {
 			cell = tableView.dequeueReusableCell(withIdentifier: "start", for: indexPath)
-			let startDateText = DependencyInjector.get(CalendarUtil.self)
+			let startDateText = injected(CalendarUtil.self)
 				.string(for: startDate, dateStyle: .medium, timeStyle: .medium)
 			cell.detailTextLabel?.text = startDateText
 			cell.detailTextLabel?.accessibilityValue = cell.detailTextLabel?.text
@@ -224,13 +224,13 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 			let controller = viewController(named: "datePicker", fromStoryboard: "Util") as! SelectDateViewController
 			controller.initialDate = startDate
 			controller.notificationToSendOnAccept = Me.startDateChanged
-			controller.lastDate = (try? DependencyInjector.get(ActivityDAO.self).getMostRecentActivityEndDate()) ?? nil
+			controller.lastDate = (try? injected(ActivityDAO.self).getMostRecentActivityEndDate()) ?? nil
 			customPresentViewController(Me.presenter, viewController: controller, animated: false)
 		} else if indexPath == Me.endIndex {
 			let controller = viewController(named: "datePicker", fromStoryboard: "Util") as! SelectDateViewController
 			controller.initialDate = endDate
 			controller.notificationToSendOnAccept = Me.endDateChanged
-			controller.lastDate = (try? DependencyInjector.get(ActivityDAO.self).getMostRecentActivityEndDate()) ?? nil
+			controller.lastDate = (try? injected(ActivityDAO.self).getMostRecentActivityEndDate()) ?? nil
 			customPresentViewController(Me.presenter, viewController: controller, animated: false)
 		} else if indexPath == Me.durationIndex {
 			let controller = viewController(
@@ -241,7 +241,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 			if endDate != nil {
 				controller.initialDuration = TimeDuration(start: startDate, end: endDate)
 			}
-			let presenter = DependencyInjector.get(UiUtil.self).customPresenter(
+			let presenter = injected(UiUtil.self).customPresenter(
 				width: .custom(size: 300),
 				height: .custom(size: 200),
 				center: .center
@@ -294,7 +294,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 
 	@objc final func saveButtonPressed(_: Any) {
 		do {
-			let transaction = DependencyInjector.get(Database.self).transaction()
+			let transaction = injected(Database.self).transaction()
 
 			// have to use local variable here otherwise everything will be
 			// overwritten when activity.definition is set
@@ -308,7 +308,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 			activity.definition = try transaction.pull(savedObject: definition!)
 			activity.start = startDate
 			activity.end = endDate
-			if DependencyInjector.get(Settings.self).autoTrimWhitespaceInActivityNotes {
+			if injected(Settings.self).autoTrimWhitespaceInActivityNotes {
 				activity.note = note?.split(separator: "\n").map {
 					str in str.trimmingCharacters(in: .whitespaces)
 				}.joined(separator: "\n")
@@ -317,7 +317,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 			}
 			try updateTagsForActivity(activity, using: transaction)
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-			activity = try DependencyInjector.get(Database.self).pull(savedObject: activity)
+			activity = try injected(Database.self).pull(savedObject: activity)
 			DispatchQueue.main.async {
 				NotificationCenter.default.post(
 					name: self.notificationToSendOnAccept,

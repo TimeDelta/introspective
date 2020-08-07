@@ -85,7 +85,7 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 
 	public final var start: Date {
 		get {
-			DependencyInjector.get(CoreDataSampleUtil.self).convertTimeZoneIfApplicable(
+			injected(CoreDataSampleUtil.self).convertTimeZoneIfApplicable(
 				for: startDate,
 				timeZoneId: startDateTimeZoneId
 			)
@@ -93,7 +93,7 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 		set {
 			startDate = newValue
 			if source == Sources.ActivitySourceNum.introspective.rawValue && startDateTimeZoneId == nil {
-				startDateTimeZoneId = DependencyInjector.get(CalendarUtil.self).currentTimeZone().identifier
+				startDateTimeZoneId = injected(CalendarUtil.self).currentTimeZone().identifier
 			}
 		}
 	}
@@ -101,7 +101,7 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 	public final var end: Date? {
 		get {
 			if let endDate = endDate {
-				return DependencyInjector.get(CoreDataSampleUtil.self).convertTimeZoneIfApplicable(
+				return injected(CoreDataSampleUtil.self).convertTimeZoneIfApplicable(
 					for: endDate,
 					timeZoneId: endDateTimeZoneId
 				)
@@ -112,7 +112,7 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 			endDate = newValue
 			if source == Sources.ActivitySourceNum.introspective
 				.rawValue && endDateTimeZoneId == nil && endDate != nil {
-				endDateTimeZoneId = DependencyInjector.get(CalendarUtil.self).currentTimeZone().identifier
+				endDateTimeZoneId = injected(CalendarUtil.self).currentTimeZone().identifier
 			}
 			if endDate == nil {
 				endDateTimeZoneId = nil
@@ -182,7 +182,7 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 	public final func export(to csv: CSVWriter) throws {
 		try definition.export(to: csv)
 
-		let startText = DependencyInjector.get(CalendarUtil.self)
+		let startText = injected(CalendarUtil.self)
 			.string(for: startDate, dateStyle: .full, timeStyle: .full)
 		try csv.write(field: startText, quoted: true)
 
@@ -190,7 +190,7 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 		try csv.write(field: startTimeZone, quoted: true)
 
 		if let endDate = endDate {
-			let endText = DependencyInjector.get(CalendarUtil.self)
+			let endText = injected(CalendarUtil.self)
 				.string(for: endDate, dateStyle: .full, timeStyle: .full)
 			try csv.write(field: endText, quoted: true)
 		} else {
@@ -246,12 +246,12 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 
 			let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
 			fetchRequest.predicate = NSPredicate(format: "name == %@", castedValue)
-			let matchingDefinitions = try DependencyInjector.get(Database.self).query(fetchRequest)
+			let matchingDefinitions = try injected(Database.self).query(fetchRequest)
 			if matchingDefinitions.isEmpty {
 				throw UnsupportedValueError(attribute: attribute, of: self, is: value)
 			}
 
-			definition = try DependencyInjector.get(Database.self)
+			definition = try injected(Database.self)
 				.pull(savedObject: matchingDefinitions[0], fromSameContextAs: self)
 			return
 		}
@@ -261,7 +261,7 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 			}
 			startDate = castedValue
 			if source == Sources.ActivitySourceNum.introspective.rawValue && startDateTimeZoneId == nil {
-				startDateTimeZoneId = DependencyInjector.get(CalendarUtil.self).currentTimeZone().identifier
+				startDateTimeZoneId = injected(CalendarUtil.self).currentTimeZone().identifier
 			}
 			return
 		}
@@ -272,7 +272,7 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 			endDate = (value as! Date?)
 			if source == Sources.ActivitySourceNum.introspective
 				.rawValue && endDateTimeZoneId == nil && endDate != nil {
-				endDateTimeZoneId = DependencyInjector.get(CalendarUtil.self).currentTimeZone().identifier
+				endDateTimeZoneId = injected(CalendarUtil.self).currentTimeZone().identifier
 			}
 			if endDate == nil {
 				endDateTimeZoneId = nil
@@ -317,10 +317,10 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 	public final func setSource(_ source: Sources.ActivitySourceNum) {
 		self.source = source.rawValue
 		if source == Sources.ActivitySourceNum.introspective && startDateTimeZoneId == nil {
-			startDateTimeZoneId = DependencyInjector.get(CalendarUtil.self).currentTimeZone().identifier
+			startDateTimeZoneId = injected(CalendarUtil.self).currentTimeZone().identifier
 		}
 		if source == Sources.ActivitySourceNum.introspective && endDateTimeZoneId == nil && endDate != nil {
-			endDateTimeZoneId = DependencyInjector.get(CalendarUtil.self).currentTimeZone().identifier
+			endDateTimeZoneId = injected(CalendarUtil.self).currentTimeZone().identifier
 		}
 	}
 
@@ -337,7 +337,7 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 	public final func setTags(_ newTags: [Tag]) throws {
 		removeAllTags()
 		for tag in newTags {
-			let tagToAdd = try DependencyInjector.get(Database.self).pull(savedObject: tag, fromSameContextAs: self)
+			let tagToAdd = try injected(Database.self).pull(savedObject: tag, fromSameContextAs: self)
 			addToTags(tagToAdd)
 		}
 	}

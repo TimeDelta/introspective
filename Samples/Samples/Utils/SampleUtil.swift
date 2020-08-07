@@ -111,12 +111,12 @@ public final class SampleUtilImpl: SampleUtil {
 	public final func sample(_ sample: Sample, occursOnOneOf daysOfWeek: Set<DayOfWeek>) -> Bool {
 		if !daysOfWeek.isEmpty {
 			let startDate = sample.dates()[.start]!
-			if DependencyInjector.get(CalendarUtil.self).date(startDate, isOnOneOf: daysOfWeek) {
+			if injected(CalendarUtil.self).date(startDate, isOnOneOf: daysOfWeek) {
 				return true
 			}
 			let endDate = sample.dates()[.end]
 			if let endDate = endDate {
-				return DependencyInjector.get(CalendarUtil.self).date(endDate, isOnOneOf: daysOfWeek)
+				return injected(CalendarUtil.self).date(endDate, isOnOneOf: daysOfWeek)
 			}
 			return false
 		}
@@ -284,7 +284,7 @@ public final class SampleUtilImpl: SampleUtil {
 	) -> SampleType2 {
 		precondition(!samples.isEmpty, "Precondition violated: input array must have at least one element")
 
-		return DependencyInjector.get(SearchUtil.self)
+		return injected(SearchUtil.self)
 			.closestItem(to: sample, in: samples) { (sample1: Sample, sample2: Sample) -> Int in
 				abs(distance(between: sample1, and: sample2))
 			} as! SampleType2
@@ -294,7 +294,7 @@ public final class SampleUtilImpl: SampleUtil {
 	public final func closestInTimeTo(sample: Sample, in samples: [Sample]) -> Sample {
 		precondition(!samples.isEmpty, "Precondition violated: input array must have at least one element")
 
-		return DependencyInjector.get(SearchUtil.self)
+		return injected(SearchUtil.self)
 			.closestItem(to: sample, in: samples) { (sample1: Sample, sample2: Sample) -> Int in
 				abs(distance(between: sample1, and: sample2))
 			}
@@ -356,7 +356,7 @@ public final class SampleUtilImpl: SampleUtil {
 			guard let date = value as? Date else {
 				throw TypeMismatchError(attribute: attribute, of: sample, wasA: type(of: value))
 			}
-			return DependencyInjector.get(CalendarUtil.self).start(of: aggregationUnit, in: date)
+			return injected(CalendarUtil.self).start(of: aggregationUnit, in: date)
 		})
 	}
 
@@ -369,7 +369,7 @@ public final class SampleUtilImpl: SampleUtil {
 			let date1 = sample1.dates()[dateType]
 			let date2 = sample2.dates()[dateType]
 
-			return DependencyInjector.get(CalendarUtil.self).compare(date1, date2) == order
+			return injected(CalendarUtil.self).compare(date1, date2) == order
 		})
 	}
 

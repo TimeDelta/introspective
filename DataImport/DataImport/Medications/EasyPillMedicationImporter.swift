@@ -46,14 +46,14 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 
 	private final var recordNumber = -1
 	private final var totalLines = -1
-	private final let mainTransaction = DependencyInjector.get(Database.self).transaction()
+	private final let mainTransaction = injected(Database.self).transaction()
 	private final var latestDate: Date!
 	private final var lines = [String]()
 
 	// MARK: - Functions
 
 	public final func importData(from url: URL) throws {
-		let contents = try DependencyInjector.get(IOUtil.self).contentsOf(url)
+		let contents = try injected(IOUtil.self).contentsOf(url)
 		lines = contents.components(separatedBy: "\n")
 		lines.removeFirst()
 		recordNumber = 1
@@ -68,7 +68,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 	}
 
 	public final func resetLastImportDate() throws {
-		let transaction = DependencyInjector.get(Database.self).transaction()
+		let transaction = injected(Database.self).transaction()
 		lastImport = nil
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 	}
@@ -182,7 +182,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 			from: parts,
 			errorMessage: "Could not get Started On date for record \(recordNumber)."
 		)
-		let startedOn = DependencyInjector.get(CalendarUtil.self).date(from: startedOnText, format: "M/d/yy")!
+		let startedOn = injected(CalendarUtil.self).date(from: startedOnText, format: "M/d/yy")!
 
 		try storeMedication(
 			named: medicationName,
@@ -213,7 +213,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 		medicationsWithCurrentNameFetchRequest.predicate = NSPredicate(format: "%K ==[cd] %@", "name", name)
 		let medicationsWithCurrentName: [Medication]
 		do {
-			medicationsWithCurrentName = try DependencyInjector.get(Database.self)
+			medicationsWithCurrentName = try injected(Database.self)
 				.query(medicationsWithCurrentNameFetchRequest)
 		} catch {
 			Me.log.error("Failed to check for existing medications named '%@': %@", name, errorInfo(error))
@@ -299,7 +299,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 			return Frequency(1, .hour)!
 		} else if frequencyText.starts(with: "every") {
 			guard let timeUnit = getTimeUnitFromFrequencyText(frequencyText) else { return nil }
-			if let numberRange = DependencyInjector.get(StringUtil.self).rangeOfNumberIn(frequencyText) {
+			if let numberRange = injected(StringUtil.self).rangeOfNumberIn(frequencyText) {
 				let number = 1.0 / Double(frequencyText[numberRange])!
 				return Frequency(number, timeUnit)!
 			}
@@ -333,7 +333,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 	}
 
 	private final func isNumber(_ str: String) -> Bool {
-		DependencyInjector.get(StringUtil.self).isNumber(str)
+		injected(StringUtil.self).isNumber(str)
 	}
 
 	private final func correctRecordScreenIndices() throws {
@@ -351,7 +351,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 
 	private final func getAllMedications(using transaction: Transaction) throws -> Set<Medication> {
 		let medicationsInTransaction = Set(try transaction.query(Medication.fetchRequest()))
-		let medicationsInMainContext = Set(try DependencyInjector.get(Database.self).query(Medication.fetchRequest()))
+		let medicationsInMainContext = Set(try injected(Database.self).query(Medication.fetchRequest()))
 			.filter {
 				let id = $0.objectID
 				return !medicationsInTransaction.contains(where: { med in med.objectID == id })

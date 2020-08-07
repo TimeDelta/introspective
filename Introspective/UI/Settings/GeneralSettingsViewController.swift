@@ -17,7 +17,7 @@ public final class GeneralSettingsViewController: UIViewController {
 
 	private typealias Me = GeneralSettingsViewController
 
-	private static let descriptionPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
+	private static let descriptionPresenter = injected(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
 		center: .center
@@ -42,7 +42,7 @@ public final class GeneralSettingsViewController: UIViewController {
 			action: #selector(reset)
 		)
 
-		DependencyInjector.get(UiUtil.self).setBackButton(for: self, title: "Settings", action: #selector(done))
+		injected(UiUtil.self).setBackButton(for: self, title: "Settings", action: #selector(done))
 	}
 
 	// MARK: - Actions
@@ -70,7 +70,7 @@ public final class GeneralSettingsViewController: UIViewController {
 			return
 		}
 		let recordedTime = TimeOfDay(date)
-		let convertedDate = DependencyInjector.get(CalendarUtil.self)
+		let convertedDate = injected(CalendarUtil.self)
 			.convert(date, from: currentTimeZone, to: targetTimeZone)
 		let convertedTime = TimeOfDay(convertedDate)
 		controller.descriptionText =
@@ -79,12 +79,12 @@ public final class GeneralSettingsViewController: UIViewController {
 	}
 
 	@objc private final func reset(_: Any) {
-		DependencyInjector.get(Settings.self).reset()
+		injected(Settings.self).reset()
 		updateUI()
 	}
 
 	@objc private final func done(_: Any) {
-		DependencyInjector.get(Settings.self).setConvertTimeZones(convertTimeZonesSwitch.isOn)
+		injected(Settings.self).setConvertTimeZones(convertTimeZonesSwitch.isOn)
 		saveAndGoBackToSettings()
 	}
 
@@ -92,7 +92,7 @@ public final class GeneralSettingsViewController: UIViewController {
 
 	private final func saveAndGoBackToSettings() {
 		do {
-			try retryOnFail({ try DependencyInjector.get(Settings.self).save() }, maxRetries: 2)
+			try retryOnFail({ try injected(Settings.self).save() }, maxRetries: 2)
 			navigationController?.popViewController(animated: false)
 		} catch {
 			Me.log.error("Failed to save mood settings: %@", errorInfo(error))
@@ -101,7 +101,7 @@ public final class GeneralSettingsViewController: UIViewController {
 	}
 
 	private final func updateUI() {
-		convertTimeZonesSwitch.isOn = DependencyInjector.get(Settings.self).convertTimeZones
+		convertTimeZonesSwitch.isOn = injected(Settings.self).convertTimeZones
 	}
 
 	private final func getTargetTimeZone(_ currentTimeZone: TimeZone) -> TimeZone? {

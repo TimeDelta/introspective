@@ -95,7 +95,7 @@ public final class DiscreteRatingTableViewCell: UITableViewCell {
 		let max = Double(maxRating)
 		let button = UIButton(type: .custom)
 		button.addTarget(self, action: #selector(moodRatingButtonPressed), for: .touchUpInside)
-		button.backgroundColor = DependencyInjector.get(MoodUiUtil.self)
+		button.backgroundColor = injected(MoodUiUtil.self)
 			.colorForMood(rating: Double(rating), minRating: min, maxRating: max)
 		let titleColor = button.backgroundColor?.highContrast()
 		button.setTitleColor(titleColor, for: .normal)
@@ -121,7 +121,7 @@ public final class DiscreteRatingTableViewCell: UITableViewCell {
 	}
 
 	private final func getRatingButton(forRating rating: Int) -> UIButton {
-		let buttonIndex = rating - Int(DependencyInjector.get(Settings.self).minMood)
+		let buttonIndex = rating - Int(injected(Settings.self).minMood)
 		return ratingButtons[buttonIndex]
 	}
 
@@ -166,8 +166,8 @@ public final class DiscreteRatingTableViewCell: UITableViewCell {
 
 	private final func getBaseWidth() -> CGFloat {
 		let minWidth: CGFloat = 30
-		let max = DependencyInjector.get(Settings.self).maxMood
-		let min = DependencyInjector.get(Settings.self).minMood
+		let max = injected(Settings.self).maxMood
+		let min = injected(Settings.self).minMood
 		let numberOfMoods = CGFloat(max - min + 1)
 		// not -1 because need to account for one mood always being selected, which adds 1 spacing
 		let totalSpacingRequired = spacingBetweenRatingButtons * numberOfMoods

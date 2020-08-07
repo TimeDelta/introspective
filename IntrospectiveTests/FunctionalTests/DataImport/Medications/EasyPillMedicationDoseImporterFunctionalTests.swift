@@ -52,7 +52,7 @@ final class EasyPillMedicationDoseImporterFunctionalTests: ImporterTest {
 
 	final override func setUp() {
 		super.setUp()
-		importer = try! DependencyInjector.get(ImporterFactory.self).easyPillMedicationDoseImporter() as! EasyPillMedicationDoseImporterImpl
+		importer = try! injected(ImporterFactory.self).easyPillMedicationDoseImporter() as! EasyPillMedicationDoseImporterImpl
 	}
 
 	// MARK: - importData() - Valid Data
@@ -194,7 +194,7 @@ abc,,
 		try importer.resetLastImportDate()
 
 		// then
-		importer = try DependencyInjector.get(Database.self).pull(savedObject: importer)
+		importer = try injected(Database.self).pull(savedObject: importer)
 		XCTAssertNil(importer.lastImport)
 	}
 
@@ -276,6 +276,6 @@ abc,,
 	private final func getMedicationsWith(name: String) throws -> [Medication] {
 		let medicationsWithCurrentNameFetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
 		medicationsWithCurrentNameFetchRequest.predicate = NSPredicate(format: "%K ==[cd] %@", "name", name)
-		return try DependencyInjector.get(Database.self).query(medicationsWithCurrentNameFetchRequest)
+		return try injected(Database.self).query(medicationsWithCurrentNameFetchRequest)
 	}
 }

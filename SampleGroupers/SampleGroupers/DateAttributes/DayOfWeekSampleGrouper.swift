@@ -159,7 +159,7 @@ public final class DayOfWeekSampleGrouper: SampleGrouper {
 			guard let date = sampleValue as? Date else {
 				throw TypeMismatchError(attribute: attribute, of: sample, wasA: type(of: sampleValue))
 			}
-			return [DependencyInjector.get(CalendarUtil.self).dayOfWeek(forDate: date)]
+			return [injected(CalendarUtil.self).dayOfWeek(forDate: date)]
 		} else if attribute is DayOfWeekAttribute {
 			let sampleValue = try sample.value(of: attribute)
 			guard let dayOfWeek = sampleValue as? DayOfWeek else {

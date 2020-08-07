@@ -46,16 +46,16 @@ public final class IntrospectiveActivityImporterImpl: NSManagedObject, Introspec
 
 	private final var recordNumber: Int = -1
 	private final var totalLines: Int = -1
-	private final let mainTransaction = DependencyInjector.get(Database.self).transaction()
+	private final let mainTransaction = injected(Database.self).transaction()
 	private final var csv: CSVReader!
 	private final var latestDate: Date!
 
 	// MARK: - Main Functions
 
 	public final func importData(from url: URL) throws {
-		csv = try DependencyInjector.get(IOUtil.self).csvReader(url: url, hasHeaderRow: true)
+		csv = try injected(IOUtil.self).csvReader(url: url, hasHeaderRow: true)
 		recordNumber = 1
-		totalLines = try DependencyInjector.get(IOUtil.self).contentsOf(url).split(separator: "\n").count
+		totalLines = try injected(IOUtil.self).contentsOf(url).split(separator: "\n").count
 
 		isPaused = false
 		isCancelled = false
@@ -66,7 +66,7 @@ public final class IntrospectiveActivityImporterImpl: NSManagedObject, Introspec
 	}
 
 	public final func resetLastImportDate() throws {
-		let transaction = DependencyInjector.get(Database.self).transaction()
+		let transaction = injected(Database.self).transaction()
 		lastImport = nil
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 	}
@@ -138,7 +138,7 @@ public final class IntrospectiveActivityImporterImpl: NSManagedObject, Introspec
 	private final func getAllActivityDefinitions(using transaction: Transaction) throws -> Set<ActivityDefinition> {
 		let definitionsInTransaction = Set(try transaction.query(ActivityDefinition.fetchRequest()))
 		let definitionsInMainContext = Set(
-			try DependencyInjector.get(Database.self)
+			try injected(Database.self)
 				.query(ActivityDefinition.fetchRequest())
 		).filter {
 			let id = $0.objectID
@@ -313,7 +313,7 @@ public final class IntrospectiveActivityImporterImpl: NSManagedObject, Introspec
 			definition.name,
 			startDate as NSDate
 		)
-		let unfinishedActivities = try DependencyInjector.get(Database.self).query(fetchRequest)
+		let unfinishedActivities = try injected(Database.self).query(fetchRequest)
 		if !unfinishedActivities.isEmpty {
 			return unfinishedActivities[0]
 		}
@@ -322,7 +322,7 @@ public final class IntrospectiveActivityImporterImpl: NSManagedObject, Introspec
 
 	private final func getStartDate(from csv: CSVReader) throws -> Date {
 		if let startDateText = csv[Activity.startColumn] {
-			if let startDate = DependencyInjector.get(CalendarUtil.self)
+			if let startDate = injected(CalendarUtil.self)
 				.date(from: startDateText, dateStyle: .full, timeStyle: .full) {
 				return startDate
 			} else {
@@ -336,7 +336,7 @@ public final class IntrospectiveActivityImporterImpl: NSManagedObject, Introspec
 	private final func getEndDate(from csv: CSVReader) throws -> Date? {
 		if let endDateText = csv[Activity.endColumn] {
 			if !endDateText.isEmpty {
-				if let endDate = DependencyInjector.get(CalendarUtil.self)
+				if let endDate = injected(CalendarUtil.self)
 					.date(from: endDateText, dateStyle: .full, timeStyle: .full) {
 					return endDate
 				}
@@ -371,7 +371,7 @@ public final class IntrospectiveActivityImporterImpl: NSManagedObject, Introspec
 		let matchingTags = try transaction.query(tagRequest)
 		let tag: Tag
 		if !matchingTags.isEmpty {
-			tag = try DependencyInjector.get(Database.self).pull(
+			tag = try injected(Database.self).pull(
 				savedObject: matchingTags[0],
 				fromSameContextAs: taggedEntity
 			)

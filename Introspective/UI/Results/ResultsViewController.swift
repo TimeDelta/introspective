@@ -42,9 +42,9 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	// MARK: Presenters
 
-	private static let sortPresenter: Presentr = DependencyInjector.get(UiUtil.self)
+	private static let sortPresenter: Presentr = injected(UiUtil.self)
 		.customPresenter(width: .custom(size: 300), height: .custom(size: 245), center: .center)
-	private static let setDosePresenter: Presentr = DependencyInjector.get(UiUtil.self)
+	private static let setDosePresenter: Presentr = injected(UiUtil.self)
 		.customPresenter(width: .custom(size: 300), height: .custom(size: 250), center: .center)
 
 	// MARK: Logging
@@ -77,7 +77,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				}
 
 				initialSampleSortDone = true
-				DependencyInjector.get(AsyncUtil.self).run(qos: .userInteractive) {
+				injected(AsyncUtil.self).run(qos: .userInteractive) {
 					let dateAttributes = self.samples[0].attributes.filter { $0 is DateAttribute }
 					guard !dateAttributes.isEmpty else {
 						self.viewIsReady()
@@ -92,7 +92,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 					self.viewIsReady()
 				}
 			} else {
-				DependencyInjector.get(AsyncUtil.self).run(qos: .userInteractive) {
+				injected(AsyncUtil.self).run(qos: .userInteractive) {
 					self.filterSamples()
 				}
 			}
@@ -173,7 +173,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 		navigationItem.setRightBarButton(actionsButton, animated: false)
 
-		DependencyInjector.get(UiUtil.self)
+		injected(UiUtil.self)
 			.setBackButton(for: self, title: backButtonTitle ?? "Query", action: #selector(done))
 
 		extendedLayoutIncludesOpaqueBars = true
@@ -415,7 +415,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	}
 
 	private final func getDeleteInformationAction(at indexPath: IndexPath) -> UIContextualAction {
-		DependencyInjector.get(UiUtil.self).contextualAction(
+		injected(UiUtil.self).contextualAction(
 			style: .destructive,
 			title: "🗑️"
 		) { action, view, completion in
@@ -430,19 +430,19 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		selectedSearchNearbySampleDates = samples[indexPath.row].dates()
 		guard selectedSearchNearbySampleDates.count > 0 else { return nil }
 
-		let action = DependencyInjector.get(UiUtil.self).contextualAction(
+		let action = injected(UiUtil.self).contextualAction(
 			style: .normal,
 			title: "🔍 Nearby"
 		) { action, view, completion in
-			let actionSheet = DependencyInjector.get(UiUtil.self).alert(
+			let actionSheet = injected(UiUtil.self).alert(
 				title: "Which data type?",
 				message: "Choose a type of data for which to search.",
 				preferredStyle: .actionSheet
 			)
-			for sampleType in DependencyInjector.get(SampleFactory.self).allTypes() {
+			for sampleType in injected(SampleFactory.self).allTypes() {
 				let dateAttributes = sampleType.attributes.filter { $0 is DateAttribute }
 				guard dateAttributes.count > 0 else { continue }
-				actionSheet.addAction(DependencyInjector.get(UiUtil.self).alertAction(
+				actionSheet.addAction(injected(UiUtil.self).alertAction(
 					title: sampleType.name,
 					style: .default
 				) { _ in
@@ -453,10 +453,10 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 					controller.initialDuration = TimeDuration(30.minutes)
 					controller.notificationToSendOnAccept = Me.choseSearchNearbyDuration
 					self.selectedSearchNearbySampleType = sampleType
-					self.present(controller, using: DependencyInjector.get(UiUtil.self).defaultPresenter)
+					self.present(controller, using: injected(UiUtil.self).defaultPresenter)
 				})
 			}
-			actionSheet.addAction(DependencyInjector.get(UiUtil.self).alertAction(
+			actionSheet.addAction(injected(UiUtil.self).alertAction(
 				title: "Cancel",
 				style: .cancel,
 				handler: nil
@@ -471,7 +471,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		for managedSample: CoreDataSample,
 		at indexPath: IndexPath
 	) -> UIContextualAction {
-		DependencyInjector.get(UiUtil.self).contextualAction(
+		injected(UiUtil.self).contextualAction(
 			style: .destructive,
 			title: "🗑️"
 		) { action, view, completion in
@@ -480,10 +480,10 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				message: nil,
 				preferredStyle: .alert
 			)
-			let yesAction = DependencyInjector.get(UiUtil.self).alertAction(title: "Yes", style: .destructive) { _ in
+			let yesAction = injected(UiUtil.self).alertAction(title: "Yes", style: .destructive) { _ in
 				let goBackAfterDelete = self.filteredSamples.count == 1
 				do {
-					let transaction = DependencyInjector.get(Database.self).transaction()
+					let transaction = injected(Database.self).transaction()
 					try retryOnFail({ try transaction.delete(managedSample) }, maxRetries: 2)
 					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 					if goBackAfterDelete {
@@ -520,7 +520,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				information[editIndex] = selectedInformation!
 				informationValues[editIndex] = nil
 				tableView.reloadRows(at: [IndexPath(row: editIndex, section: 0)], with: .automatic)
-				DependencyInjector.get(AsyncUtil.self).run(qos: .userInteractive) {
+				injected(AsyncUtil.self).run(qos: .userInteractive) {
 					do {
 						self.informationValues[editIndex] =
 							try self.information[editIndex].compute(forSamples: self.filteredSamples)
@@ -565,7 +565,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				// replace with waiting cell until all information is recomputed
 				self.tableView.reloadSections(IndexSet(arrayLiteral: 0), with: .automatic)
 			}
-			DependencyInjector.get(AsyncUtil.self).run(qos: .userInteractive) {
+			injected(AsyncUtil.self).run(qos: .userInteractive) {
 				self.recomputeInformation()
 				DispatchQueue.main.async {
 					self.tableView.reloadSections(IndexSet(arrayLiteral: 0), with: .automatic)
@@ -624,7 +624,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			return
 		}
 		do {
-			var query = try DependencyInjector.get(QueryFactory.self).queryFor(selectedSearchNearbySampleType)
+			var query = try injected(QueryFactory.self).queryFor(selectedSearchNearbySampleType)
 			let start = selectedSearchNearbySampleDates[.start]
 			let end = selectedSearchNearbySampleDates[.end]
 			if let startDate = start, let endDate = end {
@@ -733,29 +733,29 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	@objc private final func presentActions() {
 		actionsController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-		actionsController?.addAction(DependencyInjector.get(UiUtil.self).alertAction(
+		actionsController?.addAction(injected(UiUtil.self).alertAction(
 			title: "Graph",
 			style: .default,
 			handler: { _ in self.graph() }
 		))
 		if samplesAreSortable() {
-			actionsController?.addAction(DependencyInjector.get(UiUtil.self).alertAction(
+			actionsController?.addAction(injected(UiUtil.self).alertAction(
 				title: "Sort",
 				style: .default,
 				handler: { _ in self.setSampleSort() }
 			))
 		}
-		actionsController?.addAction(DependencyInjector.get(UiUtil.self).alertAction(
+		actionsController?.addAction(injected(UiUtil.self).alertAction(
 			title: "Add Information",
 			style: .default,
 			handler: { _ in
-				DependencyInjector.get(AsyncUtil.self).run(qos: .userInteractive) {
+				injected(AsyncUtil.self).run(qos: .userInteractive) {
 					self.addInformation()
 				}
 			}
 		))
 		if let _ = query {
-			actionsController?.addAction(DependencyInjector.get(UiUtil.self).alertAction(
+			actionsController?.addAction(injected(UiUtil.self).alertAction(
 				title: "Refresh",
 				style: .default,
 				handler: { _ in
@@ -764,14 +764,14 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			))
 		}
 		if samplesAreDeletable() {
-			actionsController?.addAction(DependencyInjector.get(UiUtil.self).alertAction(
+			actionsController?.addAction(injected(UiUtil.self).alertAction(
 				title: "Delete these " + samples[0].attributedName.localizedLowercase + " entries",
 				style: .default,
 				handler: { _ in self.deleteAllSamples() }
 			))
 		}
 		actionsController?
-			.addAction(DependencyInjector.get(UiUtil.self).alertAction(title: "Cancel", style: .cancel, handler: nil))
+			.addAction(injected(UiUtil.self).alertAction(title: "Cancel", style: .cancel, handler: nil))
 		present(actionsController!, animated: false, completion: nil)
 	}
 
@@ -802,9 +802,9 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	@objc private final func addInformation() {
 		do {
 			let attribute = type(of: samples[0]).defaultDependentAttribute
-			let applicableTypes = DependencyInjector.get(SampleGroupInformationFactory.self)
+			let applicableTypes = injected(SampleGroupInformationFactory.self)
 				.getApplicableInformationTypes(forAttribute: attribute)
-			let newInformation = DependencyInjector.get(SampleGroupInformationFactory.self)
+			let newInformation = injected(SampleGroupInformationFactory.self)
 				.initInformation(applicableTypes[0], attribute)
 			information.append(newInformation)
 			informationValues.append(nil)
@@ -834,7 +834,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 			DispatchQueue.global(qos: .userInitiated).async {
 				do {
-					let transaction = DependencyInjector.get(Database.self).transaction()
+					let transaction = injected(Database.self).transaction()
 					try transaction.deleteAll(self.samples as! [NSManagedObject])
 					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 					DispatchQueue.main.async {
@@ -948,7 +948,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		DispatchQueue.main.async {
 			self.enableActionsButton()
 		}
-		DependencyInjector.get(AsyncUtil.self).run(qos: .userInteractive) {
+		injected(AsyncUtil.self).run(qos: .userInteractive) {
 			self.recomputeInformation()
 			DispatchQueue.main.async { self.tableView.reloadData() }
 		}

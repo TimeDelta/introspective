@@ -52,10 +52,10 @@ public final class GroupingChooserTableViewControllerImpl: UITableViewController
 		super.viewDidLoad()
 
 		if let limitToAttributes = limitToAttributes {
-			availableGroupers = DependencyInjector.get(SampleGrouperFactory.self)
+			availableGroupers = injected(SampleGrouperFactory.self)
 				.groupersFor(attributes: limitToAttributes)
 		} else {
-			availableGroupers = DependencyInjector.get(SampleGrouperFactory.self).groupersFor(sampleType: sampleType)
+			availableGroupers = injected(SampleGrouperFactory.self).groupersFor(sampleType: sampleType)
 		}
 		guard !availableGroupers.isEmpty else {
 			showNoAvailableGroupersError()
@@ -175,7 +175,7 @@ public final class GroupingChooserTableViewControllerImpl: UITableViewController
 			Me.log.error("Add button pressed when current grouper not AdvancedSampleGrouper")
 			return
 		}
-		let groupDefinition = DependencyInjector.get(SampleGrouperFactory.self).groupDefinition(sampleType)
+		let groupDefinition = injected(SampleGrouperFactory.self).groupDefinition(sampleType)
 		advancedGrouper.groupDefinitions.append(groupDefinition)
 		updateDoneButtonState()
 		tableView.reloadData()

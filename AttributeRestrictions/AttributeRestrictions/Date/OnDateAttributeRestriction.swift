@@ -87,7 +87,7 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatab
 		guard let sampleDate = sampleValue as? Date else {
 			throw TypeMismatchError(attribute: restrictedAttribute, of: sample, wasA: type(of: sampleValue))
 		}
-		return DependencyInjector.get(CalendarUtil.self).date(sampleDate, occursOnSame: .day, as: date)
+		return injected(CalendarUtil.self).date(sampleDate, occursOnSame: .day, as: date)
 	}
 
 	public override func copy() -> AttributeRestriction {
@@ -97,10 +97,10 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatab
 	// MARK: - Boolean Expression Functions
 
 	public override func predicate() -> NSPredicate? {
-		guard !DependencyInjector.get(Settings.self).convertTimeZones else { return nil }
+		guard !injected(Settings.self).convertTimeZones else { return nil }
 		guard let variableName = restrictedAttribute.variableName else { return nil }
-		let minDate = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: date)
-		let maxDate = DependencyInjector.get(CalendarUtil.self).end(of: .day, in: date)
+		let minDate = injected(CalendarUtil.self).start(of: .day, in: date)
+		let maxDate = injected(CalendarUtil.self).end(of: .day, in: date)
 		return NSPredicate(
 			format: "%K >= %@ && %K <= %@",
 			variableName,

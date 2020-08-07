@@ -57,6 +57,6 @@ public class SettingsInjectionProvider: InjectionProvider {
 	}
 
 	private final func database() -> Database {
-		DependencyInjector.get(Database.self)
+		injected(Database.self)
 	}
 }

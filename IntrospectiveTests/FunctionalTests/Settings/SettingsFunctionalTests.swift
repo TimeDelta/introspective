@@ -405,8 +405,8 @@ final class SettingsFunctionalTests: FunctionalTest {
 		try settings.save()
 
 		// then
-		let transaction = DependencyInjector.get(Database.self).transaction()
-		let newSettingsObject = try DependencyInjector.get(Database.self).query(SettingsImpl.fetchRequest())[0]
+		let transaction = injected(Database.self).transaction()
+		let newSettingsObject = try injected(Database.self).query(SettingsImpl.fetchRequest())[0]
 		try transaction.commit()
 		XCTAssertEqual(newSettingsObject.minMood, expectedValue)
 	}
@@ -420,8 +420,8 @@ final class SettingsFunctionalTests: FunctionalTest {
 		try settings.save()
 
 		// then
-		let transaction = DependencyInjector.get(Database.self).transaction()
-		let newSettingsObject = try DependencyInjector.get(Database.self).query(SettingsImpl.fetchRequest())[0]
+		let transaction = injected(Database.self).transaction()
+		let newSettingsObject = try injected(Database.self).query(SettingsImpl.fetchRequest())[0]
 		try transaction.commit()
 		XCTAssertEqual(newSettingsObject.maxMood, expectedValue)
 	}
@@ -435,8 +435,8 @@ final class SettingsFunctionalTests: FunctionalTest {
 		try settings.save()
 
 		// then
-		let transaction = DependencyInjector.get(Database.self).transaction()
-		let newSettingsObject = try DependencyInjector.get(Database.self).query(SettingsImpl.fetchRequest())[0]
+		let transaction = injected(Database.self).transaction()
+		let newSettingsObject = try injected(Database.self).query(SettingsImpl.fetchRequest())[0]
 		try transaction.commit()
 		XCTAssertEqual(newSettingsObject.discreteMoods, expectedValue)
 	}
@@ -450,8 +450,8 @@ final class SettingsFunctionalTests: FunctionalTest {
 		try settings.save()
 
 		// then
-		let transaction = DependencyInjector.get(Database.self).transaction()
-		let newSettingsObject = try DependencyInjector.get(Database.self).query(SettingsImpl.fetchRequest())[0]
+		let transaction = injected(Database.self).transaction()
+		let newSettingsObject = try injected(Database.self).query(SettingsImpl.fetchRequest())[0]
 		try transaction.commit()
 		XCTAssertEqual(newSettingsObject.scaleMoodsOnImport, expectedValue)
 	}
@@ -465,8 +465,8 @@ final class SettingsFunctionalTests: FunctionalTest {
 		try settings.save()
 
 		// then
-		let transaction = DependencyInjector.get(Database.self).transaction()
-		let newSettingsObject = try DependencyInjector.get(Database.self).query(SettingsImpl.fetchRequest())[0]
+		let transaction = injected(Database.self).transaction()
+		let newSettingsObject = try injected(Database.self).query(SettingsImpl.fetchRequest())[0]
 		try transaction.commit()
 		XCTAssertEqual(newSettingsObject.autoIgnoreEnabled, expectedValue)
 	}
@@ -480,8 +480,8 @@ final class SettingsFunctionalTests: FunctionalTest {
 		try settings.save()
 
 		// then
-		let transaction = DependencyInjector.get(Database.self).transaction()
-		let newSettingsObject = try DependencyInjector.get(Database.self).query(SettingsImpl.fetchRequest())[0]
+		let transaction = injected(Database.self).transaction()
+		let newSettingsObject = try injected(Database.self).query(SettingsImpl.fetchRequest())[0]
 		try transaction.commit()
 		XCTAssertEqual(newSettingsObject.autoIgnoreSeconds, expectedValue)
 	}
@@ -495,8 +495,8 @@ final class SettingsFunctionalTests: FunctionalTest {
 		try settings.save()
 
 		// then
-		let transaction = DependencyInjector.get(Database.self).transaction()
-		let newSettingsObject = try DependencyInjector.get(Database.self).query(SettingsImpl.fetchRequest())[0]
+		let transaction = injected(Database.self).transaction()
+		let newSettingsObject = try injected(Database.self).query(SettingsImpl.fetchRequest())[0]
 		try transaction.commit()
 		XCTAssertEqual(newSettingsObject.convertTimeZones, expectedValue)
 	}
@@ -510,8 +510,8 @@ final class SettingsFunctionalTests: FunctionalTest {
 		try settings.save()
 
 		// then
-		let transaction = DependencyInjector.get(Database.self).transaction()
-		let newSettingsObject = try DependencyInjector.get(Database.self).query(SettingsImpl.fetchRequest())[0]
+		let transaction = injected(Database.self).transaction()
+		let newSettingsObject = try injected(Database.self).query(SettingsImpl.fetchRequest())[0]
 		try transaction.commit()
 		XCTAssertEqual(newSettingsObject.autoTrimWhitespaceInActivityNotes, expectedValue)
 	}

@@ -55,7 +55,7 @@ public final class HealthKitUtilImpl: HealthKitUtil {
 	private typealias Me = HealthKitUtilImpl
 	private static let readPermissions: Set<HKObjectType> = {
 		var allPermissions = Set<HKObjectType>()
-		for permissions in DependencyInjector.get(SampleFactory.self).healthKitTypes().map({ $0.readPermissions }) {
+		for permissions in injected(SampleFactory.self).healthKitTypes().map({ $0.readPermissions }) {
 			allPermissions = allPermissions.union(permissions)
 		}
 		return allPermissions
@@ -63,7 +63,7 @@ public final class HealthKitUtilImpl: HealthKitUtil {
 
 	private static let writePermissions: Set<HKSampleType> = {
 		var allPermissions = Set<HKSampleType>()
-		for permissions in DependencyInjector.get(SampleFactory.self).healthKitTypes().map({ $0.writePermissions }) {
+		for permissions in injected(SampleFactory.self).healthKitTypes().map({ $0.writePermissions }) {
 			allPermissions = allPermissions.union(permissions)
 		}
 		return allPermissions
@@ -75,10 +75,10 @@ public final class HealthKitUtilImpl: HealthKitUtil {
 	/// This will convert the given date from the time zone in the given `HKSample` to the current time zone
 	/// if the time zone was recorded and the user has convert time zones enabled.
 	public func setTimeZoneIfApplicable(for date: inout Date, from sample: HKSample) {
-		guard DependencyInjector.get(Settings.self).convertTimeZones else { return }
+		guard injected(Settings.self).convertTimeZones else { return }
 		if let timeZoneId = sample.metadata?[HKMetadataKeyTimeZone] as? String {
 			if let timeZone = TimeZone(identifier: timeZoneId) {
-				date = DependencyInjector.get(CalendarUtil.self)
+				date = injected(CalendarUtil.self)
 					.convert(date, from: timeZone, to: TimeZone.autoupdatingCurrent)
 			}
 		}

@@ -98,7 +98,7 @@ public final class EditAttributeRestrictionViewControllerImpl: UIViewController,
 	private final func updateAttributedChooserViewValues() {
 		let selectedAttribute = currentlySelectedAttribute()
 		var applicableAttributeRestrictionTypes: [AttributeRestriction.Type] = []
-		applicableAttributeRestrictionTypes = DependencyInjector.get(AttributeRestrictionFactory.self)
+		applicableAttributeRestrictionTypes = injected(AttributeRestrictionFactory.self)
 			.typesFor(selectedAttribute)
 		let possibleValues = applicableAttributeRestrictionTypes.map { type in
 			type.init(restrictedAttribute: selectedAttribute)
@@ -121,7 +121,7 @@ public final class EditAttributeRestrictionViewControllerImpl: UIViewController,
 
 	private final func attributeRestrictionMatchesAttribute() -> Bool {
 		attributeRestriction != nil &&
-			DependencyInjector.get(AttributeRestrictionFactory.self).typesFor(currentlySelectedAttribute())
+			injected(AttributeRestrictionFactory.self).typesFor(currentlySelectedAttribute())
 			.contains(where: {
 				$0 == type(of: attributeRestriction!)
 			})

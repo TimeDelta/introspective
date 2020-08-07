@@ -25,7 +25,7 @@ public final class UnifiedDayViewController: DayViewController {
 
 	private final var stopQueryFunctions = [() -> Void]()
 
-	private final let healthKitUtil = DependencyInjector.get(HealthKitUtil.self)
+	private final let healthKitUtil = injected(HealthKitUtil.self)
 
 	// MARK: - DayViewController Overrides
 
@@ -81,7 +81,7 @@ public final class UnifiedDayViewController: DayViewController {
 			NSPredicate(format: "timestamp < %@", endDate as NSDate),
 		])
 		do {
-			let moods = try DependencyInjector.get(Database.self).query(fetchRequest)
+			let moods = try injected(Database.self).query(fetchRequest)
 			if moods.isEmpty {
 				showError(title: "You have no mood ratings during this time period")
 				return
@@ -123,9 +123,9 @@ public final class UnifiedDayViewController: DayViewController {
 			showError(title: "Could not calculate \(description)")
 			return
 		}
-		let startDateText = DependencyInjector.get(CalendarUtil.self)
+		let startDateText = injected(CalendarUtil.self)
 			.string(for: startDate, dateStyle: .none, timeStyle: .short)
-		let endDateText = DependencyInjector.get(CalendarUtil.self)
+		let endDateText = injected(CalendarUtil.self)
 			.string(for: endDate, dateStyle: .none, timeStyle: .short)
 		let message = "Your \(description) from \(startDateText) to \(endDateText) was \(value!)"
 		let alert = UIAlertController(
@@ -152,8 +152,8 @@ public final class UnifiedDayViewController: DayViewController {
 		let startDateKey = CommonSampleAttributes.startDate.variableName!
 		let endDateKey = CommonSampleAttributes.endDate.variableName!
 		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
-		let startOfDate = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: date)
-		let endOfDate = DependencyInjector.get(CalendarUtil.self).end(of: .day, in: date)
+		let startOfDate = injected(CalendarUtil.self).start(of: .day, in: date)
+		let endOfDate = injected(CalendarUtil.self).end(of: .day, in: date)
 		fetchRequest.predicate = NSPredicate(
 			format: "(%K >= %@ AND %K <= %@) OR (%K >= %@ AND %K <= %@)",
 			startDateKey, startOfDate as NSDate,
@@ -162,7 +162,7 @@ public final class UnifiedDayViewController: DayViewController {
 			endDateKey, endOfDate as NSDate
 		)
 		do {
-			return try DependencyInjector.get(Database.self).query(fetchRequest)
+			return try injected(Database.self).query(fetchRequest)
 		} catch {
 			Me.log.error("Failed to query for activities on %@: %@", String(describing: date), errorInfo(error))
 			showError(title: "Something went wrong while loading your activity data", error: error)
@@ -231,9 +231,9 @@ public final class UnifiedDayViewController: DayViewController {
 	}
 
 	private final func getTimeTextFor(_ event: Event) -> String {
-		let startText = DependencyInjector.get(CalendarUtil.self)
+		let startText = injected(CalendarUtil.self)
 			.string(for: event.startDate, dateStyle: .none, timeStyle: .short)
-		let endText = DependencyInjector.get(CalendarUtil.self)
+		let endText = injected(CalendarUtil.self)
 			.string(for: event.endDate, dateStyle: .none, timeStyle: .short)
 		let duration = TimeDuration(start: event.startDate, end: event.endDate)
 		return startText + " - " + endText + " (\(duration.description)))"

@@ -48,7 +48,7 @@ public final class BeforeDateAttributeRestriction: DateAttributeRestriction, Equ
 
 	public final var date: Date {
 		didSet {
-			date = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: date)
+			date = injected(CalendarUtil.self).start(of: .day, in: date)
 		}
 	}
 
@@ -100,7 +100,7 @@ public final class BeforeDateAttributeRestriction: DateAttributeRestriction, Equ
 	// MARK: - Boolean Expression Functions
 
 	public override func predicate() -> NSPredicate? {
-		guard !DependencyInjector.get(Settings.self).convertTimeZones else { return nil }
+		guard !injected(Settings.self).convertTimeZones else { return nil }
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		return NSPredicate(format: "%K < %@", variableName, date as NSDate)
 	}

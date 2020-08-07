@@ -34,7 +34,7 @@ public final class TagDAOImpl: TagDAO {
 	public final func getTag(named name: String) throws -> Tag? {
 		let fetchRequest: NSFetchRequest<Tag> = Tag.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
-		let matchingTags = try DependencyInjector.get(Database.self).query(fetchRequest)
+		let matchingTags = try injected(Database.self).query(fetchRequest)
 		if matchingTags.isEmpty {
 			return nil
 		}
@@ -49,7 +49,7 @@ public final class TagDAOImpl: TagDAO {
 		if let existingTag = try getTag(named: name) {
 			return existingTag
 		}
-		let transaction = DependencyInjector.get(Database.self).transaction()
+		let transaction = injected(Database.self).transaction()
 		let tag = try transaction.new(Tag.self)
 		tag.name = name
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
@@ -57,6 +57,6 @@ public final class TagDAOImpl: TagDAO {
 	}
 
 	public final func getAllTags() throws -> [Tag] {
-		try DependencyInjector.get(Database.self).query(Tag.fetchRequest())
+		try injected(Database.self).query(Tag.fetchRequest())
 	}
 }

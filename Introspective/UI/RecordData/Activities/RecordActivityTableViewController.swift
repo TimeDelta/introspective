@@ -34,7 +34,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	// MARK: Presenters
 
-	private static let presenter = DependencyInjector.get(UiUtil.self).customPresenter(
+	private static let presenter = injected(UiUtil.self).customPresenter(
 		width: .full,
 		height: .custom(size: 300),
 		center: .topCenter
@@ -115,7 +115,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	public final override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
-		if !DependencyInjector.get(UserDefaultsUtil.self).bool(forKey: .recordActivitiesInstructionsShown) {
+		if !injected(UserDefaultsUtil.self).bool(forKey: .recordActivitiesInstructionsShown) {
 			coachMarksController.start(in: .window(over: self))
 		}
 	}
@@ -210,7 +210,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		let definitionsToIndex = Int(definition(at: to).recordScreenIndex)
 		do {
 			let allFetchedResultsController = try getAllFetchedResultsController()
-			let transaction = DependencyInjector.get(Database.self).transaction()
+			let transaction = injected(Database.self).transaction()
 			if definitionsFromIndex < definitionsToIndex {
 				for i in definitionsFromIndex + 1 ... definitionsToIndex {
 					if let definition = allFetchedResultsController.fetchedObjects?[i] {
@@ -276,11 +276,11 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func getViewHistoryActionFor(_ definition: ActivityDefinition) -> UIContextualAction {
-		let action = DependencyInjector.get(UiUtil.self).contextualAction(
+		let action = injected(UiUtil.self).contextualAction(
 			style: .normal,
 			title: "History"
 		) { _, _, completion in
-			let query = DependencyInjector.get(QueryFactory.self).activityQuery()
+			let query = injected(QueryFactory.self).activityQuery()
 			query.expression = EqualToStringAttributeRestriction(
 				restrictedAttribute: Activity.nameAttribute,
 				value: definition.name
@@ -308,7 +308,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func getDeleteActivityActionFor(_ activity: Activity) -> UIContextualAction {
-		let deleteAction = DependencyInjector.get(UiUtil.self).contextualAction(
+		let deleteAction = injected(UiUtil.self).contextualAction(
 			style: .destructive,
 			title: "🗑️ Last"
 		) { _, _, completion in
@@ -320,7 +320,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 			)
 			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 				do {
-					let transaction = DependencyInjector.get(Database.self).transaction()
+					let transaction = injected(Database.self).transaction()
 					try transaction.delete(activity)
 					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 					self.loadActivitiyDefinitions()
@@ -337,7 +337,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func getEditLastActionFor(_ activity: Activity) -> UIContextualAction {
-		let editLast = DependencyInjector.get(UiUtil.self).contextualAction(
+		let editLast = injected(UiUtil.self).contextualAction(
 			style: .normal,
 			title: "✎ Last"
 		) { _, _, completion in
@@ -349,7 +349,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func getAddNewActionFor(_ activityDefinition: ActivityDefinition) -> UIContextualAction {
-		let addNew = DependencyInjector.get(UiUtil.self).contextualAction(
+		let addNew = injected(UiUtil.self).contextualAction(
 			style: .normal,
 			title: "+"
 		) { _, _, completion in
@@ -368,7 +368,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		_ activityDefinition: ActivityDefinition,
 		at _: IndexPath
 	) -> UIContextualAction {
-		DependencyInjector.get(UiUtil.self).contextualAction(
+		injected(UiUtil.self).contextualAction(
 			style: .destructive,
 			title: "🗑️ All"
 		) { _, _, completion in
@@ -379,7 +379,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 			)
 			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 				do {
-					let transaction = DependencyInjector.get(Database.self).transaction()
+					let transaction = injected(Database.self).transaction()
 					try transaction.delete(activityDefinition)
 					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 					self.loadActivitiyDefinitions()
@@ -397,7 +397,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		_ activityDefinition: ActivityDefinition,
 		at indexPath: IndexPath
 	) -> UIContextualAction {
-		let editDefinitionAction = DependencyInjector.get(UiUtil.self).contextualAction(
+		let editDefinitionAction = injected(UiUtil.self).contextualAction(
 			style: .normal,
 			title: "✎ All"
 		) { _, _, completion in
@@ -420,7 +420,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	@objc private final func activityDefinitionCreated(notification: Notification) {
 		if let activityDefinition: ActivityDefinition? = value(for: .activityDefinition, from: notification) {
 			do {
-				let transaction = DependencyInjector.get(Database.self).transaction()
+				let transaction = injected(Database.self).transaction()
 				if let activityDefinition = activityDefinition {
 					let allDefinitionsController = try getAllFetchedResultsController()
 					let newIndex = Int16(allDefinitionsController.fetchedObjects?.count ?? 1) - 1
@@ -458,12 +458,12 @@ public final class RecordActivityTableViewController: UITableViewController {
 		guard let numTimeUnits: Int = value(for: .number, from: notification) else { return }
 		guard let timeUnit: Calendar.Component = value(for: .calendarComponent, from: notification) else { return }
 		do {
-			let transaction = DependencyInjector.get(Database.self).transaction()
+			let transaction = injected(Database.self).transaction()
 			let allDefinitions = try transaction.query(ActivityDefinition.fetchRequest())
 			var counts = [String: Int]()
 			for definition in allDefinitions {
 				let recentActivities: NSFetchRequest<NSFetchRequestResult> = Activity.fetchRequest()
-				let minStartDate = DependencyInjector.get(CalendarUtil.self).ago(numTimeUnits, timeUnit)
+				let minStartDate = injected(CalendarUtil.self).ago(numTimeUnits, timeUnit)
 				recentActivities.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
 					NSPredicate(format: "startDate > %@", minStartDate as NSDate),
 					NSPredicate(format: "definition == %@", definition),
@@ -526,7 +526,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	@IBAction final func stopAllButtonPressed(_ sender: Any) {
 		do {
-			let activitiesToAutoNote = try DependencyInjector.get(ActivityDAO.self).stopAllActivities()
+			let activitiesToAutoNote = try injected(ActivityDAO.self).stopAllActivities()
 			loadActivitiyDefinitions()
 			for activity in activitiesToAutoNote {
 				showEditScreenForActivity(activity, autoFocusNote: true)
@@ -547,7 +547,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		actionsController.addAction(getSortZetabeticallyAction())
 		actionsController.addAction(getManualSortAction())
 		actionsController.addAction(getSortByRecentCountAction())
-		actionsController.addAction(DependencyInjector.get(UiUtil.self).alertAction(
+		actionsController.addAction(injected(UiUtil.self).alertAction(
 			title: "Cancel",
 			style: .cancel,
 			handler: nil
@@ -556,7 +556,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func getSortAlphabeticallyAction() -> UIAlertAction {
-		DependencyInjector.get(UiUtil.self).alertAction(
+		injected(UiUtil.self).alertAction(
 			title: "Sort Alphabetically",
 			style: .default,
 			handler: { _ in
@@ -567,7 +567,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func getSortZetabeticallyAction() -> UIAlertAction {
-		DependencyInjector.get(UiUtil.self).alertAction(
+		injected(UiUtil.self).alertAction(
 			title: "Sort Zetabetically",
 			style: .default,
 			handler: { _ in
@@ -578,7 +578,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func getManualSortAction() -> UIAlertAction {
-		DependencyInjector.get(UiUtil.self).alertAction(
+		injected(UiUtil.self).alertAction(
 			title: "Manual Sort",
 			style: .default,
 			handler: { _ in
@@ -589,7 +589,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func getSortByRecentCountAction() -> UIAlertAction {
-		DependencyInjector.get(UiUtil.self).alertAction(
+		injected(UiUtil.self).alertAction(
 			title: "Permanent Sort by Recent Count",
 			style: .default,
 			handler: { _ in self.presentSortByRecentCountOptions() }
@@ -628,8 +628,8 @@ public final class RecordActivityTableViewController: UITableViewController {
 					showError(title: "Activity named '\(searchText)' already exists.")
 					return
 				}
-				let activityDefinition = try DependencyInjector.get(ActivityDAO.self).createDefinition(name: searchText)
-				try DependencyInjector.get(ActivityDAO.self).createActivity(definition: activityDefinition)
+				let activityDefinition = try injected(ActivityDAO.self).createDefinition(name: searchText)
+				try injected(ActivityDAO.self).createActivity(definition: activityDefinition)
 				searchController.searchBar.text = ""
 				loadActivitiyDefinitions()
 			} catch {
@@ -648,9 +648,9 @@ public final class RecordActivityTableViewController: UITableViewController {
 		cell: RecordActivityDefinitionTableViewCell
 	) {
 		do {
-			try DependencyInjector.get(ActivityDAO.self).startActivity(activityDefinition)
+			try injected(ActivityDAO.self).startActivity(activityDefinition)
 			// just calling updateUiElements here doesn't display the progress indicator for some reason
-			cell.activityDefinition = try DependencyInjector.get(Database.self).pull(savedObject: activityDefinition)
+			cell.activityDefinition = try injected(Database.self).pull(savedObject: activityDefinition)
 		} catch {
 			Me.log.error("Failed to start activity: %@", errorInfo(error))
 			showError(title: "Failed to start activity", error: error)
@@ -659,12 +659,12 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final func stopActivity(_ activity: Activity, associatedCell: RecordActivityDefinitionTableViewCell) {
 		let now = Date()
-		if DependencyInjector.get(ActivityDAO.self).autoIgnoreIfAppropriate(activity, end: now) {
+		if injected(ActivityDAO.self).autoIgnoreIfAppropriate(activity, end: now) {
 			associatedCell.updateUiElements()
 			return
 		}
 		do {
-			let transaction = DependencyInjector.get(Database.self).transaction()
+			let transaction = injected(Database.self).transaction()
 			activity.end = now
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 			associatedCell.updateUiElements()
@@ -682,7 +682,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		if startsToday {
 			timeText = TimeOfDay(activity.start).toString()
 		} else {
-			timeText = DependencyInjector.get(CalendarUtil.self)
+			timeText = injected(CalendarUtil.self)
 				.string(for: activity.start, dateStyle: .short, timeStyle: .short)
 		}
 		if let endDate = activity.end {
@@ -690,7 +690,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 			if startsToday {
 				endDateText = TimeOfDay(endDate).toString()
 			} else {
-				endDateText = DependencyInjector.get(CalendarUtil.self)
+				endDateText = injected(CalendarUtil.self)
 					.string(for: endDate, dateStyle: .short, timeStyle: .short)
 			}
 			return "from " + timeText + " to " + endDateText
@@ -719,7 +719,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		for activityDefinition: ActivityDefinition
 	) -> Activity? {
 		do {
-			return try DependencyInjector.get(ActivityDAO.self)
+			return try injected(ActivityDAO.self)
 				.getMostRecentlyStartedIncompleteActivity(for: activityDefinition)
 		} catch {
 			Me.log.error("Failed to fetch most recent activity: %@", errorInfo(error))
@@ -729,7 +729,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final func getMostRecentActivity(_ activityDefinition: ActivityDefinition) -> Activity? {
 		do {
-			return try DependencyInjector.get(ActivityDAO.self)
+			return try injected(ActivityDAO.self)
 				.getMostRecentlyStartedActivity(for: activityDefinition)
 		} catch {
 			Me.log.error("Failed to fetch activities while retrieving most recent: %@", errorInfo(error))
@@ -742,7 +742,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func activityDefinitionWithNameExists(_ name: String) throws -> Bool {
-		try DependencyInjector.get(ActivityDAO.self).activityDefinitionWithNameExists(name)
+		try injected(ActivityDAO.self).activityDefinitionWithNameExists(name)
 	}
 
 	private final func definition(at indexPath: IndexPath) -> ActivityDefinition {
@@ -765,7 +765,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func setCustomBackButton() {
-		DependencyInjector.get(UiUtil.self).setBackButton(
+		injected(UiUtil.self).setBackButton(
 			for: self,
 			title: "Back",
 			action: #selector(userPressedBackButton)
@@ -782,7 +782,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	private final func resetActiveActivitiesFetchedResultsController() {
 		do {
 			Me.signpost.begin(name: "resetting active fetched results controller")
-			activeActivitiesFetchedResultsController = DependencyInjector.get(Database.self).fetchedResultsController(
+			activeActivitiesFetchedResultsController = injected(Database.self).fetchedResultsController(
 				type: ActivityDefinition.self,
 				sortDescriptors: [currentSort ?? defaultSort],
 				cacheName: "activeDefinitions"
@@ -817,7 +817,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	private final func resetInactiveActivitiesFetchedResultsController() {
 		do {
 			Me.signpost.begin(name: "resetting inactive fetched results controller")
-			inactiveActivitiesFetchedResultsController = DependencyInjector.get(Database.self).fetchedResultsController(
+			inactiveActivitiesFetchedResultsController = injected(Database.self).fetchedResultsController(
 				type: ActivityDefinition.self,
 				sortDescriptors: [currentSort ?? defaultSort],
 				cacheName: "definitions"
@@ -851,7 +851,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final func getAllFetchedResultsController() throws -> NSFetchedResultsController<ActivityDefinition> {
 		Me.signpost.begin(name: "getting all fetched results controller")
-		let controller = DependencyInjector.get(Database.self).fetchedResultsController(
+		let controller = injected(Database.self).fetchedResultsController(
 			type: ActivityDefinition.self,
 			sortDescriptors: [currentSort ?? defaultSort],
 			cacheName: "definitions"
@@ -1035,9 +1035,9 @@ final fileprivate class RecordActivityTableViewControllerCoachMarksDataSourceAnd
 		let definitionFetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
 		definitionFetchRequest.predicate = NSPredicate(format: "name == %@", Me.exampleActivityName)
 		do {
-			let definitions = try DependencyInjector.get(Database.self).query(definitionFetchRequest)
+			let definitions = try injected(Database.self).query(definitionFetchRequest)
 			for definition in definitions {
-				let transaction = DependencyInjector.get(Database.self).transaction()
+				let transaction = injected(Database.self).transaction()
 				try transaction.delete(definition)
 				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 				controller?.loadActivitiyDefinitions()

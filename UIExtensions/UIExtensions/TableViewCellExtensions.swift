@@ -28,39 +28,39 @@ public extension UITableViewCell {
 		from notification: Notification,
 		keyIsOptional: Bool = false
 	) -> Type? {
-		DependencyInjector.get(UiUtil.self).value(for: key, from: notification, keyIsOptional: keyIsOptional)
+		injected(UiUtil.self).value(for: key, from: notification, keyIsOptional: keyIsOptional)
 	}
 
 	/// This is just a pass-through method that will return the input. It is solely for syntactic
 	/// sugar so that you don't have to type out "UserInfoKey." everywhere.
 	final func info(_ info: [UserInfoKey: Any]) -> [AnyHashable: Any] {
-		DependencyInjector.get(UiUtil.self).info(info)
+		injected(UiUtil.self).info(info)
 	}
 
 	final func viewController<Type: UIViewController>(
 		named controllerName: String,
 		fromStoryboard storyboardName: String
 	) -> Type {
-		DependencyInjector.get(UiUtil.self).controller(named: controllerName, from: storyboardName, as: Type.self)
+		injected(UiUtil.self).controller(named: controllerName, from: storyboardName, as: Type.self)
 	}
 
 	final func post(_ name: Notification.Name, object: Any? = self, userInfo: [AnyHashable: Any]? = nil) {
-		DependencyInjector.get(UiUtil.self).post(name: name, object: object, userInfo: userInfo)
+		injected(UiUtil.self).post(name: name, object: object, userInfo: userInfo)
 	}
 
 	final func post(_ name: Notification.Name, object: Any? = self, userInfo: [UserInfoKey: Any]? = nil) {
-		DependencyInjector.get(UiUtil.self).post(name: name, object: object, userInfo: userInfo)
+		injected(UiUtil.self).post(name: name, object: object, userInfo: userInfo)
 	}
 
 	final func post(_ name: NotificationName, object: Any? = self, userInfo: [UserInfoKey: Any]? = nil) {
-		DependencyInjector.get(UiUtil.self).post(name: name, object: object, userInfo: userInfo)
+		injected(UiUtil.self).post(name: name, object: object, userInfo: userInfo)
 	}
 
 	final func syncPost(_ name: NotificationName, object: Any? = self, userInfo: [UserInfoKey: Any]? = nil) {
-		DependencyInjector.get(NotificationUtil.self).post(name, object: object, userInfo: userInfo, qos: nil)
+		injected(NotificationUtil.self).post(name, object: object, userInfo: userInfo, qos: nil)
 	}
 
 	final func syncPost(_ name: Notification.Name, object: Any? = self, userInfo: [UserInfoKey: Any]? = nil) {
-		DependencyInjector.get(NotificationUtil.self).post(name, object: object, userInfo: userInfo, qos: nil)
+		injected(NotificationUtil.self).post(name, object: object, userInfo: userInfo, qos: nil)
 	}
 }

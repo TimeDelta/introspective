@@ -115,7 +115,7 @@ final class RecordMedicationTableViewControllerFunctionalTests: FunctionalTest {
 		let existingMedication1 = MedicationDataTestUtil.createMedication(name: "med 1", recordScreenIndex: 0)
 		let existingMedication2 = MedicationDataTestUtil.createMedication(name: "med 2", recordScreenIndex: 1)
 
-		let importer = try DependencyInjector.get(ImporterFactory.self).easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
+		let importer = try injected(ImporterFactory.self).easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
 		let importedName1 = "imported med 1"
 		let importedName2 = "imported med 2"
 		setUpMedicationImportFileContents([importedName1, importedName2])
@@ -140,7 +140,7 @@ final class RecordMedicationTableViewControllerFunctionalTests: FunctionalTest {
 		let existingMedication1 = MedicationDataTestUtil.createMedication(name: "med 1", recordScreenIndex: 0)
 		let existingMedication2 = MedicationDataTestUtil.createMedication(name: "med 2", recordScreenIndex: 1)
 
-		let importer = try DependencyInjector.get(ImporterFactory.self).easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
+		let importer = try injected(ImporterFactory.self).easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
 		let importedName1 = "imported med 1"
 		let importedName2 = "imported med 2"
 		setUpMedicationImportFileContents([importedName1, importedName2])
@@ -167,7 +167,7 @@ final class RecordMedicationTableViewControllerFunctionalTests: FunctionalTest {
 		let existingMedication1 = MedicationDataTestUtil.createMedication(name: filterString, recordScreenIndex: 0)
 		let existingMedication2 = MedicationDataTestUtil.createMedication(name: "med 2", recordScreenIndex: 1)
 
-		let importer = try DependencyInjector.get(ImporterFactory.self).easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
+		let importer = try injected(ImporterFactory.self).easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
 		let importedName1 = "imported med 1 \(filterString)"
 		let importedName2 = "\(filterString) imported med 2"
 		setUpMedicationImportFileContents([importedName1, importedName2])
@@ -196,7 +196,7 @@ final class RecordMedicationTableViewControllerFunctionalTests: FunctionalTest {
 		let existingMedication1 = MedicationDataTestUtil.createMedication(name: filterString, recordScreenIndex: 0)
 		let existingMedication2 = MedicationDataTestUtil.createMedication(name: "med 2", recordScreenIndex: 1)
 
-		let importer = try DependencyInjector.get(ImporterFactory.self).easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
+		let importer = try injected(ImporterFactory.self).easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
 		let importedName1 = "imported med 1 \(filterString)"
 		let importedName2 = "\(filterString) imported med 2"
 		setUpMedicationImportFileContents([importedName1, importedName2])
@@ -223,7 +223,7 @@ final class RecordMedicationTableViewControllerFunctionalTests: FunctionalTest {
 		let existingMedication1 = MedicationDataTestUtil.createMedication(name: "med 1", recordScreenIndex: 0)
 		let existingMedication2 = MedicationDataTestUtil.createMedication(name: "med 2", recordScreenIndex: 1)
 
-		let importer = try DependencyInjector.get(ImporterFactory.self).easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
+		let importer = try injected(ImporterFactory.self).easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
 		importer.pauseOnRecord = 2
 
 		let importedName1 = "imported med 1"
@@ -261,7 +261,7 @@ final class RecordMedicationTableViewControllerFunctionalTests: FunctionalTest {
 		let existingMedication1 = MedicationDataTestUtil.createMedication(name: "med 1", recordScreenIndex: 0)
 		let existingMedication2 = MedicationDataTestUtil.createMedication(name: "med 2", recordScreenIndex: 1)
 
-		let importer = try DependencyInjector.get(ImporterFactory.self).easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
+		let importer = try injected(ImporterFactory.self).easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
 		importer.pauseOnRecord = 2
 
 		let importedName1 = "imported med 1"

@@ -100,7 +100,7 @@ final class SelectAttributeOrInformationViewController: UIViewController {
 	}
 
 	private final func getApplicableInformationTypesForSelectedAttribute() -> [SampleGroupInformation.Type] {
-		DependencyInjector.get(SampleGroupInformationFactory.self)
+		injected(SampleGroupInformationFactory.self)
 			.getApplicableInformationTypes(forAttribute: attribute)
 	}
 }

@@ -68,7 +68,7 @@ public class AnyInformation: SampleGroupInformation {
 	}
 
 	func filterSamples<Type>(_ samples: [Sample], as _: Type.Type) throws -> [Sample] {
-		let filteredSamples = DependencyInjector.get(SampleUtil.self)
+		let filteredSamples = injected(SampleUtil.self)
 			.getOnly(samples: samples, from: startDate, to: endDate)
 		return try filteredSamples.filter {
 			do {

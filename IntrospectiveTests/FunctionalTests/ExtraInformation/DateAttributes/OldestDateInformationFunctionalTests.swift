@@ -441,6 +441,6 @@ final class OldestDateInformationFunctionalTests: FunctionalTest {
 	// MARK: - Helper Functions
 
 	private func toString(_ date: Date) -> String {
-		return DependencyInjector.get(CalendarUtil.self).string(for: date, dateStyle: .short, timeStyle: .short)
+		return injected(CalendarUtil.self).string(for: date, dateStyle: .short, timeStyle: .short)
 	}
 }

@@ -37,7 +37,7 @@ public final class MoodExporterImpl: BaseExporter, MoodExporter {
 		)
 		super.init(
 			dataTypePluralName: "Moods",
-			url: DependencyInjector.get(ExporterUtil.self).urlOfExportFile(for: MoodImpl.self, in: directory)
+			url: injected(ExporterUtil.self).urlOfExportFile(for: MoodImpl.self, in: directory)
 		)
 	}
 
@@ -59,7 +59,7 @@ public final class MoodExporterImpl: BaseExporter, MoodExporter {
 
 		totalRecordsToExport = moods.count
 
-		csv = try DependencyInjector.get(IOUtil.self).csvWriter(url: url)
+		csv = try injected(IOUtil.self).csvWriter(url: url)
 
 		guard !isPaused else { return }
 		try exportRemaining()
@@ -89,6 +89,6 @@ public final class MoodExporterImpl: BaseExporter, MoodExporter {
 	private final func getMoods() throws {
 		let fetchRequest: NSFetchRequest<MoodImpl> = MoodImpl.fetchRequest()
 		fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: true)]
-		moods = try DependencyInjector.get(Database.self).query(fetchRequest)
+		moods = try injected(Database.self).query(fetchRequest)
 	}
 }
