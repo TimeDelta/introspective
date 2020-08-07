@@ -442,7 +442,7 @@ extension ImportDataTableViewController: UIDocumentPickerDelegate {
 		alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
 		presentView(alert)
 
-		importer =
-			nil // do this in order to make sure no importer type initialization from tableView(didSelectRowAt:) was forgotten
+		// do this in order to make sure no importer type initialization from tableView(didSelectRowAt:) was forgotten
+		importer = nil
 	}
 }
