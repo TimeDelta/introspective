@@ -101,6 +101,12 @@ public final class SampleGroupInformationFactoryImpl: SampleGroupInformationFact
 			applicableInformationTypes.append(MinimumInformation<TimeDuration>.self)
 			applicableInformationTypes.append(MedianInformation<TimeDuration>.self)
 			applicableInformationTypes.append(ModeInformation.self)
+		} else if attribute is DosageAttribute {
+			applicableInformationTypes.append(contentsOf: Me.numericInformationTypes)
+			applicableInformationTypes.append(MaximumInformation<Dosage>.self)
+			applicableInformationTypes.append(MinimumInformation<Dosage>.self)
+			applicableInformationTypes.append(MedianInformation<Dosage>.self)
+			applicableInformationTypes.append(ModeInformation.self)
 		}
 		applicableInformationTypes.append(CountInformation.self)
 		return applicableInformationTypes
