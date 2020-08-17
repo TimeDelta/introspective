@@ -5,11 +5,13 @@ MAIN FEATURES:
 Explore your data in a unique way by querying for exactly the records in which you're interested. Specify complex conditions on any attribute for any supported data type by combining them using "and", "or", and condition groups (full boolean algebra support with grouping). Even better, you can limit your query further by looking at other data types within the query. For example, you can find all moods that were recorded within a half hour of socializing.
 
 - Custom graphs
-You can also create custom graphs using queries to specify exactly which data points you want to show. The following types of graph are currently supported:
+Use custom queries to specify exactly which data points you want to graph. The following graphs are available:
 	- Line Chart
 	- Bar Chart
 	- Scatter Plot
-On all x/y coordinate graphs, you can set a query for each axis individually or set a single query for both axes. You can also specify a way to determine what points should be grouped together into a series and whether or not (/ how) to group multiple entries into a single point.
+Use queries to find trends between two different types of data (i.e. how your heart rate affects your mood).
+Show multiple values (i.e. avg mood, min mood) over time in the same graph.
+Specify how to group data into a single value for each point (i.e. avg mood per hour).
 
 
 - Apple Health integration
@@ -38,7 +40,7 @@ Introspection integrates with a number of data types from the Apple Health app, 
 
 
 - Data Types
-Currently, the following data types are supported (with more to come, guaranteed):
+The following data types are supported (with more to come, guaranteed):
 ? = optional field
 - Activity (what you're doing and when you're doing it)
   - Definition (common to all instances of the activity so that you don't have to constantly type everything)
