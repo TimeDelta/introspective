@@ -1,1 +1,1 @@
-If you have questions about your health that you're having a hard time answering, then this might be the app for you.
+Custom queries and graphs for mood, activities, medications and AppleHealth data. Introspective is a data-driven approach to introspection.
