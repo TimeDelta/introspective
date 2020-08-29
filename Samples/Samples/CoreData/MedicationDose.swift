@@ -19,6 +19,12 @@ import Persistence
 public final class MedicationDose: NSManagedObject, CoreDataSample, SearchableSample {
 	private typealias Me = MedicationDose
 
+	// MARK: - Destructor
+
+	deinit {
+		cleanUp()
+	}
+
 	// MARK: - CoreData Stuff
 
 	public static let entityName = "MedicationDose"

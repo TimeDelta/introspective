@@ -20,6 +20,12 @@ import Persistence
 public final class Medication: NSManagedObject, CoreDataObject, Attributed, Exportable {
 	private typealias Me = Medication
 
+	// MARK: - Destructor
+
+	deinit {
+		cleanUp()
+	}
+
 	// MARK: - CoreData Stuff
 
 	public static let entityName = "Medication"

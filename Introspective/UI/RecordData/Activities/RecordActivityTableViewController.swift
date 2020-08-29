@@ -103,8 +103,6 @@ public final class RecordActivityTableViewController: UITableViewController {
 		observe(selector: #selector(sortByRecentCount), name: .timePeriodChosen)
 		observe(selector: #selector(reloadTableViewData), name: UIApplication.willEnterForegroundNotification)
 
-		setCustomBackButton()
-
 		reorderOnLongPress(allowReorder: { $0.section == 1 && ($1 == nil || $1?.section == 1) })
 
 		coachMarksDataSourceAndDelegate = RecordActivityTableViewControllerCoachMarksDataSourceAndDelegate(self)
@@ -502,20 +500,6 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	// MARK: - Actions
 
-	@objc private final func userPressedBackButton() {
-		if let definitions = activeActivitiesFetchedResultsController.fetchedObjects {
-			for definition in definitions {
-				definition.cleanUp()
-			}
-		}
-		if let definitions = inactiveActivitiesFetchedResultsController.fetchedObjects {
-			for definition in definitions {
-				definition.cleanUp()
-			}
-		}
-		popFromNavigationController()
-	}
-
 	@IBAction final func quickPressAddButton() {
 		showActivityDefinitionCreationScreen()
 	}
@@ -762,14 +746,6 @@ public final class RecordActivityTableViewController: UITableViewController {
 			}
 		}
 		return nil
-	}
-
-	private final func setCustomBackButton() {
-		injected(UiUtil.self).setBackButton(
-			for: self,
-			title: "Back",
-			action: #selector(userPressedBackButton)
-		)
 	}
 
 	// MARK: FetchedResultsController Helpers

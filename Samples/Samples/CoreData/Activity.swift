@@ -67,6 +67,12 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 		.end: CommonSampleAttributes.endDate,
 	]
 
+	// MARK: - Destructor
+
+	deinit {
+		cleanUp()
+	}
+
 	// MARK: - Searching
 
 	public func matchesSearchString(_ searchString: String) -> Bool {
