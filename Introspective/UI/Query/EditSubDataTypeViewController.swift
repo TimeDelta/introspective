@@ -39,7 +39,7 @@ final class EditSubSampleTypeViewController: UIViewController {
 		dataTypePicker.dataSource = self
 		dataTypePicker.delegate = self
 
-		let index = injected(SampleFactory.self).allTypes().index { $0 == sampleType }
+		let index = injected(SampleFactory.self).allTypes().firstIndex { $0 == sampleType }
 		if index != nil {
 			dataTypePicker.selectRow(index!, inComponent: 0, animated: false)
 		}

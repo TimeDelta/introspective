@@ -160,7 +160,7 @@ final class ChooseAttributesToGraphTableViewControllerImpl: UITableViewControlle
 
 	private final func firstUnselectedAttribute() -> Attribute? {
 		for attribute in allowedAttributes {
-			if selectedAttributes.index(where: { $0.equalTo(attribute) }) == nil {
+			if selectedAttributes.firstIndex(where: { $0.equalTo(attribute) }) == nil {
 				return attribute
 			}
 		}

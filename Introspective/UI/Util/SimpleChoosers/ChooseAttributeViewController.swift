@@ -38,7 +38,7 @@ final class ChooseAttributeViewController: UIViewController {
 		attributePicker.delegate = self
 		acceptButton.setTitle(acceptButtonTitle, for: .normal)
 		if selectedAttribute != nil {
-			if let selectedIndex = attributes.index(where: { $0.equalTo(selectedAttribute!) }) {
+			if let selectedIndex = attributes.firstIndex(where: { $0.equalTo(selectedAttribute!) }) {
 				attributePicker.selectRow(selectedIndex, inComponent: 0, animated: false)
 			} else {
 				Me.log.error("Could not find index for specified component")

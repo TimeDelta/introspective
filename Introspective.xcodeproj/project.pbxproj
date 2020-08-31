@@ -2944,6 +2944,7 @@
 				TargetAttributes = {
 					863443B57A8C8D8D1AE1C8636F9821BB = {
 						CreatedOnToolsVersion = 10.3;
+						LastSwiftMigration = 1160;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -2952,6 +2953,7 @@
 					};
 					9730A3626FFFA7D8968C54443F136632 = {
 						CreatedOnToolsVersion = 10.0;
+						LastSwiftMigration = 1160;
 						TestTargetID = BB0A1DC399A7E3FFC11219EB8C00C163;
 					};
 					A5E432A59235FCF8D2DD69F018FA0B8F = {
@@ -2959,7 +2961,7 @@
 					};
 					BB0A1DC399A7E3FFC11219EB8C00C163 = {
 						CreatedOnToolsVersion = 10.0;
-						LastSwiftMigration = 1000;
+						LastSwiftMigration = 1160;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -2980,6 +2982,7 @@
 					};
 					C52F3CA73E4CEB90C2AC84DD7AFF5550 = {
 						CreatedOnToolsVersion = 10.0;
+						LastSwiftMigration = 1160;
 						TestTargetID = BB0A1DC399A7E3FFC11219EB8C00C163;
 					};
 				};
@@ -3065,20 +3068,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		B7CC9104F28FC8F4524CB81C9F4DC2E9 /* SwiftyMocky - Generate Mocks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "SwiftyMocky - Generate Mocks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# only generate mocks if swiftymocky CLI can be found to avoid installing it in the CI build\nif [[ -n `which swiftymocky` ]]; then\n\trake mock\nelse\n\techo \"WARNING: Skipping mock generation. Install SwifyMocky CLI and make sure it is accessible in your PATH to generate mocks when building.\"\nfi\n";
-		};
 		38CB7D3BE010AA2048ABC975FE5D735A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3243,6 +3232,20 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Introspective/Pods-Introspective-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		B7CC9104F28FC8F4524CB81C9F4DC2E9 /* SwiftyMocky - Generate Mocks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "SwiftyMocky - Generate Mocks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# only generate mocks if swiftymocky CLI can be found to avoid installing it in the CI build\nif [[ -n `which swiftymocky` ]]; then\n\trake mock\nelse\n\techo \"WARNING: Skipping mock generation. Install SwifyMocky CLI and make sure it is accessible in your PATH to generate mocks when building.\"\nfi\n";
 		};
 		CB9A470863FA06650F751757EBDE58AA /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3815,7 +3818,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.bnova.Introspective;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
@@ -3865,7 +3868,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.bnova.Introspective.DiscreteMoodWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
@@ -3896,7 +3899,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -3921,7 +3924,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.bnova.Introspective.DiscreteMoodWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -3942,7 +3945,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = bnova.IntrospectiveUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Introspective;
 			};
@@ -4057,7 +4060,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = bnova.IntrospectiveTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Introspective.app/Introspective";
 			};
 			name = Release;
@@ -4084,7 +4087,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = bnova.IntrospectiveTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Introspective.app/Introspective";
 			};
 			name = Debug;
@@ -4105,7 +4108,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = bnova.IntrospectiveUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Introspective;
 			};

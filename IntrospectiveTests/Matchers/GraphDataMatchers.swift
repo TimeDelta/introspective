@@ -109,7 +109,7 @@ func hasSeriesWithDataInAnyOrder(_ expectedDataMatchers: [Matcher<AADataElement>
 					}
 					matcherIndex += 1
 				}
-				if matched.index(of: false) == nil {
+				if matched.firstIndex(of: false) == nil {
 					return .match
 				}
 			}

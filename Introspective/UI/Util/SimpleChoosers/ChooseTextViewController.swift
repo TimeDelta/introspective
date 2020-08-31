@@ -56,7 +56,7 @@ public final class ChooseTextViewControllerImpl: UIViewController, ChooseTextVie
 		picker.dataSource = self
 		picker.delegate = self
 		if let selectedText = selectedText {
-			if let selectedIndex = availableChoices.index(of: selectedText) {
+			if let selectedIndex = availableChoices.firstIndex(of: selectedText) {
 				picker.selectRow(selectedIndex, inComponent: 0, animated: false)
 			} else {
 				Me.log.error("Could not find index for specified component")

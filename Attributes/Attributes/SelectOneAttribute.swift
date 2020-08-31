@@ -95,7 +95,7 @@ open class TypedSelectOneAttribute<Type>: AttributeBase<Type>, SelectOneAttribut
 	public final func indexOf(possibleValue: Any, in values: [Any]? = nil) -> Int? {
 		guard let castedValue = possibleValue as? Type else { return nil }
 		let values: [Type] = (values as? [Type]) ?? typedPossibleValues
-		return values.index(where: { self.areEqual(castedValue, $0) })
+		return values.firstIndex(where: { self.areEqual(castedValue, $0) })
 	}
 
 	// MARK: - Attribute Functions

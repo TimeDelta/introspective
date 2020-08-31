@@ -224,13 +224,13 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 			let controller = viewController(named: "datePicker", fromStoryboard: "Util") as! SelectDateViewController
 			controller.initialDate = startDate
 			controller.notificationToSendOnAccept = Me.startDateChanged
-			controller.lastDate = (try? injected(ActivityDAO.self).getMostRecentActivityEndDate()) ?? nil
+			controller.lastDate = (((try? injected(ActivityDAO.self).getMostRecentActivityEndDate()) as Date??)) ?? nil
 			customPresentViewController(Me.presenter, viewController: controller, animated: false)
 		} else if indexPath == Me.endIndex {
 			let controller = viewController(named: "datePicker", fromStoryboard: "Util") as! SelectDateViewController
 			controller.initialDate = endDate
 			controller.notificationToSendOnAccept = Me.endDateChanged
-			controller.lastDate = (try? injected(ActivityDAO.self).getMostRecentActivityEndDate()) ?? nil
+			controller.lastDate = (((try? injected(ActivityDAO.self).getMostRecentActivityEndDate()) as Date??)) ?? nil
 			customPresentViewController(Me.presenter, viewController: controller, animated: false)
 		} else if indexPath == Me.durationIndex {
 			let controller = viewController(

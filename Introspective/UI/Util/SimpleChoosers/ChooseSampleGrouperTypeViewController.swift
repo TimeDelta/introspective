@@ -40,7 +40,7 @@ public final class ChooseSampleGrouperTypeViewControllerImpl: UIViewController, 
 		picker.dataSource = self
 		picker.delegate = self
 		if let selectedGrouperType = selectedGrouperType {
-			if let selectedIndex = grouperTypes.index(where: { $0 == selectedGrouperType }) {
+			if let selectedIndex = grouperTypes.firstIndex(where: { $0 == selectedGrouperType }) {
 				picker.selectRow(selectedIndex, inComponent: 0, animated: false)
 			} else {
 				Me.log.error("Could not find index for specified component")

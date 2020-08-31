@@ -59,7 +59,7 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 				informationPicker.reloadAllComponents()
 			}
 			let applicableInformationTypes = getApplicableInformationTypesForSelectedAttribute()
-			if let index = applicableInformationTypes.index(where: { $0 == type(of: selectedInformation) }) {
+			if let index = applicableInformationTypes.firstIndex(where: { $0 == type(of: selectedInformation) }) {
 				selectedInformation = applicableInformationTypes[index].init(selectedAttribute)
 			} else if !applicableInformationTypes.isEmpty {
 				selectedInformation = applicableInformationTypes[0].init(selectedAttribute)
@@ -84,7 +84,7 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 		if selectedAttribute == nil {
 			selectedAttribute = attributes[0]
 		}
-		if let selectedAttributeIndex = attributes.index(where: { $0.equalTo(selectedAttribute) }) {
+		if let selectedAttributeIndex = attributes.firstIndex(where: { $0.equalTo(selectedAttribute) }) {
 			attributePicker.selectRow(selectedAttributeIndex, inComponent: 0, animated: false)
 		} else {
 			Me.log.error("Failed to find selected attribute in attributes array")
@@ -163,7 +163,7 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 	private final func indexOfSelectedInformation() -> Int? {
 		if selectedInformation == nil { return nil }
 		return getApplicableInformationTypesForSelectedAttribute()
-			.index(where: { $0.init(selectedAttribute).equalTo(selectedInformation!) })
+			.firstIndex(where: { $0.init(selectedAttribute).equalTo(selectedInformation!) })
 	}
 
 	private final func updateDisplay() {

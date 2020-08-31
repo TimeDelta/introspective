@@ -44,7 +44,7 @@ public extension Sample {
 		if type(of: self) != type(of: otherSample) { return false }
 		if attributes.count != otherSample.attributes.count { return false }
 		for attribute in attributes {
-			let index = otherSample.attributes.index(where: { (a: Attribute) -> Bool in a.equalTo(attribute) })
+			let index = otherSample.attributes.firstIndex(where: { (a: Attribute) -> Bool in a.equalTo(attribute) })
 			if index == nil { return false }
 		}
 		for attribute in attributes {

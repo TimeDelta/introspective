@@ -135,6 +135,7 @@
 				TargetAttributes = {
 					A24F908C234647A70047A11C = {
 						CreatedOnToolsVersion = 10.3;
+						LastSwiftMigration = 1160;
 					};
 				};
 			};
@@ -343,7 +344,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.bnova.Notifications;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -371,7 +372,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.bnova.Notifications;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

@@ -238,7 +238,7 @@ public class XYGraphDataGenerator {
 
 	final func formatNumber(_ value: String) -> String {
 		var copiedValue = value
-		if let decimalIndex = value.index(where: { $0 == "." }) {
+		if let decimalIndex = value.firstIndex(where: { $0 == "." }) {
 			if let lastCharIndex = copiedValue.index(decimalIndex, offsetBy: 3, limitedBy: value.endIndex) {
 				copiedValue.removeSubrange(lastCharIndex ..< value.endIndex)
 			}
@@ -278,7 +278,7 @@ public class XYGraphDataGenerator {
 		in groupValues: [(groupValue: Any, sampleValue: String)],
 		groupedBy grouper: SampleGrouper
 	) -> Int? {
-		groupValues.index(where: {
+		groupValues.firstIndex(where: {
 			do {
 				return try grouper.groupValuesAreEqual($0.groupValue, value)
 			} catch {

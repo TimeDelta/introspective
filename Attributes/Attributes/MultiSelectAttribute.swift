@@ -133,7 +133,7 @@ open class TypedMultiSelectAttribute<ValueType: Hashable>: AttributeBase<ValueTy
 			return nil
 		}
 		let values: [ValueType] = (values as? [ValueType]) ?? typedPossibleValues
-		return values.index(of: castedValue)
+		return values.firstIndex(of: castedValue)
 	}
 
 	public func convertPossibleValueToDisplayableString(_ value: Any) throws -> String {

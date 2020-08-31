@@ -47,7 +47,7 @@ final class SelectAttributeOrInformationViewController: UIViewController {
 		if attribute == nil {
 			attribute = sampleType.attributes[0]
 		} else {
-			if let index = sampleType.attributes.index(where: { $0.equalTo(attribute) }) {
+			if let index = sampleType.attributes.firstIndex(where: { $0.equalTo(attribute) }) {
 				attributePicker.selectRow(index, inComponent: 0, animated: false)
 			} else {
 				Me.log.error("Attribute passed is incompatible with specified sample type")
@@ -60,7 +60,7 @@ final class SelectAttributeOrInformationViewController: UIViewController {
 			typeSelectSegmentedControl.selectedSegmentIndex = 1
 			set(informationPicker, enabled: true)
 			let applicableInformation = getApplicableInformationTypesForSelectedAttribute().map { $0.init(attribute) }
-			if let index = applicableInformation.index(where: { $0.equalTo(information!) }) {
+			if let index = applicableInformation.firstIndex(where: { $0.equalTo(information!) }) {
 				informationPicker.selectRow(index, inComponent: 0, animated: false)
 			}
 		}
@@ -143,7 +143,7 @@ extension SelectAttributeOrInformationViewController: UIPickerViewDelegate {
 			attribute = sampleType.attributes[row]
 			informationPicker.reloadAllComponents()
 			let applicableInformationTypes = getApplicableInformationTypesForSelectedAttribute()
-			if applicableInformationTypes.index(where: { $0 == type(of: information) }) == nil {
+			if applicableInformationTypes.firstIndex(where: { $0 == type(of: information) }) == nil {
 				information = applicableInformationTypes[0].init(attribute)
 			}
 		}

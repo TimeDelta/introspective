@@ -58,7 +58,7 @@ final class SelectSampleGroupInformationViewControllerImpl: UIViewController,
 		if selectedAttribute == nil {
 			selectedAttribute = attributes[0]
 		}
-		if let selectedAttributeIndex = attributes.index(where: { $0.equalTo(selectedAttribute) }) {
+		if let selectedAttributeIndex = attributes.firstIndex(where: { $0.equalTo(selectedAttribute) }) {
 			attributePicker.selectRow(selectedAttributeIndex, inComponent: 0, animated: false)
 		} else {
 			Me.log.error("Failed to find attribute in attributes array")
@@ -106,7 +106,7 @@ final class SelectSampleGroupInformationViewControllerImpl: UIViewController,
 	private final func indexOfSelectedInformation() -> Int? {
 		if selectedInformation == nil { return nil }
 		let index = getApplicableInformationTypesForSelectedAttribute()
-			.index(where: { $0.init(selectedAttribute).equalTo(selectedInformation!) })
+			.firstIndex(where: { $0.init(selectedAttribute).equalTo(selectedInformation!) })
 		if index == nil {
 			Me.log.error("Failed to find information in information array")
 		}
@@ -153,7 +153,7 @@ extension SelectSampleGroupInformationViewControllerImpl: UIPickerViewDelegate {
 			selectedAttribute = attributes[row]
 			informationPicker.reloadAllComponents()
 			let applicableInformationTypes = getApplicableInformationTypesForSelectedAttribute()
-			if let index = applicableInformationTypes.index(where: { $0 == type(of: selectedInformation) }) {
+			if let index = applicableInformationTypes.firstIndex(where: { $0 == type(of: selectedInformation) }) {
 				selectedInformation = applicableInformationTypes[index].init(selectedAttribute)
 			} else {
 				selectedInformation = applicableInformationTypes[0].init(selectedAttribute)

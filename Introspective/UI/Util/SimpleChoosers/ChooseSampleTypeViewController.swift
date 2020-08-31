@@ -41,7 +41,7 @@ final class ChooseSampleTypeViewControllerImpl: UIViewController, ChooseSampleTy
 		sampleTypePicker.delegate = self
 		if selectedSampleType != nil {
 			if let selectedIndex = injected(SampleFactory.self).allTypes()
-				.index(where: { $0 == selectedSampleType }) {
+				.firstIndex(where: { $0 == selectedSampleType }) {
 				sampleTypePicker.selectRow(selectedIndex, inComponent: 0, animated: false)
 			} else {
 				Me.log.error("Could not find index for specified type")

@@ -35,7 +35,7 @@ final class ChooseCalendarComponentViewController: UIViewController {
 		calendarComponentPicker.dataSource = self
 		calendarComponentPicker.delegate = self
 		if let selectedComponent = selectedComponent {
-			if let selectedIndex = applicableComponents.index(of: selectedComponent) {
+			if let selectedIndex = applicableComponents.firstIndex(of: selectedComponent) {
 				calendarComponentPicker.selectRow(selectedIndex, inComponent: 0, animated: false)
 			} else {
 				Me.log.error("Could not find index for specified component")
