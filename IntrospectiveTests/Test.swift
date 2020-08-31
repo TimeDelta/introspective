@@ -107,8 +107,6 @@ class Test: XCTestCase {
 		Matcher.default.register(Optional<SampleGroupInformation>.self) { self.optionalEqualTo($0, $1, { $0.equalTo($1) }) }
 		Matcher.default.register(Optional<Query>.self) { self.optionalEqualTo($0, $1, { $0.equalTo($1) }) }
 		Matcher.default.register(Optional<SampleGrouper>.self) { self.optionalEqualTo($0, $1, { $0.equalTo($1) }) }
-		#warning("see below")
-//		Matcher.default.register(Optional<(UIAlertAction) -> ()>.self) { self.optionalEqualTo($0, $1, { _,_ in true })}
 		Matcher.default.register(QueryFactory.Protocol.self) { _,_ in true }
 		Matcher.default.register(Sample.self) { $0.equalTo($1) }
 		Matcher.default.register(Sample.Type.self) { $0.name == $1.name }
