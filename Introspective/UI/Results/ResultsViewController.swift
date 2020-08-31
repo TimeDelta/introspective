@@ -454,7 +454,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 					controller.initialDuration = TimeDuration(30.minutes)
 					controller.notificationToSendOnAccept = Me.choseSearchNearbyDuration
 					self.selectedSearchNearbySampleType = sampleType
-					self.present(controller, using: injected(UiUtil.self).defaultPresenter)
+					self.present(controller, using: SelectDurationViewControllerImpl.presenter)
 				})
 			}
 			actionSheet.addAction(injected(UiUtil.self).alertAction(

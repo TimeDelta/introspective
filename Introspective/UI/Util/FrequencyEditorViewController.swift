@@ -25,6 +25,12 @@ public final class FrequencyEditorViewController: UIViewController {
 	]
 	private static let defaultTimeUnit: Calendar.Component = .day
 
+	public static let presenter = injected(UiUtil.self).customPresenter(
+		width: .custom(size: 250),
+		height: .custom(size: 265),
+		center: .topCenter
+	)
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var amountTextField: UITextField!

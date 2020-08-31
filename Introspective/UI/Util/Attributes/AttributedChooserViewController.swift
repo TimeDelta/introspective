@@ -259,7 +259,7 @@ final class AttributedChooserViewController: UIViewController {
 			)
 		}
 		NSLayoutConstraint.activate([
-			heightConstraintFor(acceptButton, height: CGFloat(30)),
+			heightConstraintFor(acceptButton, height: CGFloat(45)),
 			acceptButton.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor),
 			acceptButton.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor),
 			topConstraint,

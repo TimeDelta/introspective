@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -16,14 +16,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="z63-CH-TDa">
-                                <rect key="frame" x="0.0" y="0.0" width="300" height="162"/>
+                                <rect key="frame" x="0.0" y="0.0" width="300" height="147"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <accessibility key="accessibilityConfiguration" identifier="data type picker" label="data type picker">
                                     <bool key="isElement" value="YES"/>
                                 </accessibility>
                             </pickerView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KRQ-Me-hOC">
-                                <rect key="frame" x="0.0" y="170" width="300" height="30"/>
+                                <rect key="frame" x="0.0" y="155" width="300" height="45"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <accessibility key="accessibilityConfiguration" identifier="save button" label="save button"/>
@@ -46,7 +46,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xuP-BW-Khp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1939" y="-191"/>
+            <point key="canvasLocation" x="1937.5999999999999" y="-191.6041979010495"/>
         </scene>
         <!--Choose Sample Type-->
         <scene sceneID="RcI-Vp-RGK">
@@ -57,14 +57,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PjO-Az-SgO">
-                                <rect key="frame" x="0.0" y="0.0" width="300" height="162"/>
+                                <rect key="frame" x="0.0" y="0.0" width="300" height="147"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <accessibility key="accessibilityConfiguration" identifier="data type picker" label="data type picker">
                                     <bool key="isElement" value="YES"/>
                                 </accessibility>
                             </pickerView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bOI-Tn-aHf">
-                                <rect key="frame" x="0.0" y="170" width="300" height="30"/>
+                                <rect key="frame" x="0.0" y="155" width="300" height="45"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <accessibility key="accessibilityConfiguration" identifier="save button" label="save button"/>
@@ -100,7 +100,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="KtH-Rf-m6l">
-                                <rect key="frame" x="16" y="146" width="343" height="29"/>
+                                <rect key="frame" x="16" y="136" width="343" height="29"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                 <segments>
                                     <segment title="Attribute"/>
@@ -111,21 +111,21 @@
                                 </connections>
                             </segmentedControl>
                             <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9Ve-df-kPA">
-                                <rect key="frame" x="0.0" y="182" width="375" height="162"/>
+                                <rect key="frame" x="0.0" y="172" width="375" height="162"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <accessibility key="accessibilityConfiguration" identifier="attribute picker" label="attribute picker">
                                     <bool key="isElement" value="YES"/>
                                 </accessibility>
                             </pickerView>
                             <pickerView hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1O4-KU-gu4">
-                                <rect key="frame" x="0.0" y="352" width="375" height="162"/>
+                                <rect key="frame" x="0.0" y="342" width="375" height="162"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <accessibility key="accessibilityConfiguration" identifier="information picker" label="information picker">
                                     <bool key="isElement" value="YES"/>
                                 </accessibility>
                             </pickerView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GTE-qU-De8">
-                                <rect key="frame" x="16" y="522" width="343" height="30"/>
+                                <rect key="frame" x="16" y="512" width="343" height="45"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <accessibility key="accessibilityConfiguration" identifier="save button" label="save button"/>
@@ -160,15 +160,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bZT-ik-YtZ">
-                                <rect key="frame" x="16" y="287" width="343" height="231"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
-                                <accessibility key="accessibilityConfiguration" identifier="grouping method picker" label="grouping method picker">
-                                    <bool key="isElement" value="YES"/>
-                                </accessibility>
-                            </pickerView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jhy-dQ-4dq">
-                                <rect key="frame" x="16" y="526" width="343" height="30"/>
+                                <rect key="frame" x="16" y="510" width="343" height="45"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <accessibility key="accessibilityConfiguration" identifier="save button" label="save button"/>
@@ -183,6 +176,13 @@
                                 <rect key="frame" x="16" y="20" width="343" height="226"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <accessibility key="accessibilityConfiguration" identifier="attribute picker" label="attribute picker">
+                                    <bool key="isElement" value="YES"/>
+                                </accessibility>
+                            </pickerView>
+                            <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bZT-ik-YtZ">
+                                <rect key="frame" x="16" y="277" width="343" height="225"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="grouping method picker" label="grouping method picker">
                                     <bool key="isElement" value="YES"/>
                                 </accessibility>
                             </pickerView>
@@ -210,14 +210,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zc7-S7-QkG">
-                                <rect key="frame" x="0.0" y="0.0" width="300" height="162"/>
+                                <rect key="frame" x="0.0" y="0.0" width="300" height="147"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <accessibility key="accessibilityConfiguration" identifier="time unit picker" label="time unit picker">
                                     <bool key="isElement" value="YES"/>
                                 </accessibility>
                             </pickerView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QaJ-S4-Ik1">
-                                <rect key="frame" x="0.0" y="170" width="300" height="30"/>
+                                <rect key="frame" x="0.0" y="155" width="300" height="45"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <accessibility key="accessibilityConfiguration" identifier="save button" label="save button"/>
@@ -242,7 +242,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="elf-u5-gbQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1394" y="-430"/>
+            <point key="canvasLocation" x="1393.5999999999999" y="-430.88455772113946"/>
         </scene>
         <!--Date Range View Controller Impl-->
         <scene sceneID="TSq-89-Hh7">
@@ -253,7 +253,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="mmE-3q-VO6">
-                                <rect key="frame" x="0.0" y="57" width="375" height="149"/>
+                                <rect key="frame" x="0.0" y="57" width="375" height="135"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                             </datePicker>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uCm-jn-DJM">
@@ -264,27 +264,12 @@
                                     <action selector="fromDateSwitchToggled:" destination="QBn-na-xdj" eventType="valueChanged" id="PEW-EP-wQd"/>
                                 </connections>
                             </switch>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QWc-he-pur">
-                                <rect key="frame" x="104" y="214" width="49" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                <accessibility key="accessibilityConfiguration" hint="Toggle to date on or off" identifier="to date switch" label="to date switch"/>
-                                <connections>
-                                    <action selector="toDateSwitchToggled:" destination="QBn-na-xdj" eventType="valueChanged" id="Aoy-1q-jTj"/>
-                                </connections>
-                            </switch>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="To" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jtX-Ze-Drr">
-                                <rect key="frame" x="178" y="222" width="19" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="d4V-cc-kkr">
-                                <rect key="frame" x="-1" y="251" width="375" height="149"/>
+                                <rect key="frame" x="0.0" y="250" width="375" height="135"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
                             </datePicker>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sco-id-gGv">
-                                <rect key="frame" x="0.0" y="408" width="375" height="30"/>
+                                <rect key="frame" x="0.0" y="393" width="375" height="45"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <accessibility key="accessibilityConfiguration" identifier="save button" label="save button"/>
@@ -306,6 +291,21 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QWc-he-pur">
+                                <rect key="frame" x="104" y="204" width="49" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" hint="Toggle to date on or off" identifier="to date switch" label="to date switch"/>
+                                <connections>
+                                    <action selector="toDateSwitchToggled:" destination="QBn-na-xdj" eventType="valueChanged" id="Aoy-1q-jTj"/>
+                                </connections>
+                            </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="To" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jtX-Ze-Drr">
+                                <rect key="frame" x="178" y="212" width="19" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="sQJ-LD-DW0"/>
@@ -321,7 +321,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4KJ-6A-ptb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="558" y="-1287"/>
+            <point key="canvasLocation" x="557.60000000000002" y="-1287.256371814093"/>
         </scene>
         <!--Choose Activity Definition View Controller Impl-->
         <scene sceneID="OvX-fA-3DO">
@@ -332,11 +332,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fcc-4k-qjA">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="162"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="147"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </pickerView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kyo-aa-YNE">
-                                <rect key="frame" x="0.0" y="170" width="375" height="30"/>
+                                <rect key="frame" x="0.0" y="155" width="375" height="45"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <accessibility key="accessibilityConfiguration" identifier="save button" label="save button"/>
@@ -362,37 +362,24 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NCD-JS-U5K" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1114" y="43"/>
+            <point key="canvasLocation" x="1112.8" y="42.278860569715143"/>
         </scene>
         <!--Select Date View Controller Impl-->
         <scene sceneID="RgX-LB-RsE">
             <objects>
                 <viewController storyboardIdentifier="datePicker" useStoryboardIdentifierAsRestorationIdentifier="YES" id="6Iz-O7-qxY" customClass="SelectDateViewControllerImpl" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tZA-l2-EyB">
-                        <rect key="frame" x="0.0" y="0.0" width="350" height="200"/>
+                        <rect key="frame" x="0.0" y="0.0" width="350" height="225"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="MIp-es-gdi">
-                                <rect key="frame" x="0.0" y="44" width="350" height="118"/>
+                                <rect key="frame" x="0.0" y="44" width="350" height="128"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <connections>
                                     <action selector="datePickerValueChanged:" destination="6Iz-O7-qxY" eventType="valueChanged" id="I7f-pJ-t9v"/>
                                 </connections>
                             </datePicker>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jdD-DW-9Fl">
-                                <rect key="frame" x="0.0" y="170" width="350" height="30"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <color key="backgroundColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <accessibility key="accessibilityConfiguration" identifier="save button" label="save button"/>
-                                <state key="normal" title="Save">
-                                    <color key="titleColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                </state>
-                                <connections>
-                                    <action selector="acceptButtonPressed:" destination="6Iz-O7-qxY" eventType="touchUpInside" id="ZjE-xe-mWS"/>
-                                    <action selector="userPressedAccept:" destination="1Uh-4R-NlM" eventType="touchUpInside" id="tdy-dO-iwb"/>
-                                </connections>
-                            </button>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wxK-bj-fIl">
                                 <rect key="frame" x="0.0" y="0.0" width="350" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
@@ -408,11 +395,24 @@
                                     <barButtonItem title="Now" id="U62-zE-RfO"/>
                                 </items>
                             </toolbar>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jdD-DW-9Fl">
+                                <rect key="frame" x="0.0" y="180" width="350" height="45"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <color key="backgroundColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <accessibility key="accessibilityConfiguration" identifier="save button" label="save button"/>
+                                <state key="normal" title="Save">
+                                    <color key="titleColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="acceptButtonPressed:" destination="6Iz-O7-qxY" eventType="touchUpInside" id="ZjE-xe-mWS"/>
+                                    <action selector="userPressedAccept:" destination="1Uh-4R-NlM" eventType="touchUpInside" id="tdy-dO-iwb"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="Ame-bs-9km"/>
                     </view>
-                    <size key="freeformSize" width="350" height="200"/>
+                    <size key="freeformSize" width="350" height="225"/>
                     <connections>
                         <outlet property="datePicker" destination="MIp-es-gdi" id="7sc-V0-TOQ"/>
                         <outlet property="toolbar" destination="wxK-bj-fIl" id="oBO-Kg-0xq"/>
@@ -420,7 +420,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zj9-ZU-Syd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1677" y="-1366"/>
+            <point key="canvasLocation" x="1676.8" y="-1366.8665667166417"/>
         </scene>
         <!--Edit Mood Table View Controller Impl-->
         <scene sceneID="6gw-x8-cQt">
@@ -806,14 +806,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hu4-TJ-lZl">
-                                <rect key="frame" x="0.0" y="0.0" width="300" height="162"/>
+                                <rect key="frame" x="0.0" y="0.0" width="300" height="147"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <accessibility key="accessibilityConfiguration" identifier="attribute picker" label="attribute picker">
                                     <bool key="isElement" value="YES"/>
                                 </accessibility>
                             </pickerView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6pQ-GJ-llc">
-                                <rect key="frame" x="0.0" y="170" width="300" height="30"/>
+                                <rect key="frame" x="0.0" y="155" width="300" height="45"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <accessibility key="accessibilityConfiguration" identifier="save button" label="save button"/>
@@ -839,14 +839,14 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="maq-iM-4Gw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1394" y="-190"/>
+            <point key="canvasLocation" x="1393.5999999999999" y="-190.70464767616193"/>
         </scene>
         <!--Frequency Editor View Controller-->
         <scene sceneID="tS1-gp-DwV">
             <objects>
                 <viewController storyboardIdentifier="chooseFrequency" useStoryboardIdentifierAsRestorationIdentifier="YES" id="rCb-Gg-DZ9" customClass="FrequencyEditorViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1IE-z9-az6">
-                        <rect key="frame" x="0.0" y="0.0" width="250" height="250"/>
+                        <rect key="frame" x="0.0" y="0.0" width="250" height="265"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uFK-WC-E1k">
@@ -871,7 +871,7 @@
                                 </accessibility>
                             </pickerView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z39-dQ-nyg">
-                                <rect key="frame" x="0.0" y="220" width="250" height="30"/>
+                                <rect key="frame" x="0.0" y="220" width="250" height="45"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <accessibility key="accessibilityConfiguration" identifier="save button" label="save button"/>
@@ -889,7 +889,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="9Ac-L7-72d"/>
                     </view>
-                    <size key="freeformSize" width="250" height="250"/>
+                    <size key="freeformSize" width="250" height="265"/>
                     <connections>
                         <outlet property="amountTextField" destination="uFK-WC-E1k" id="QhR-ud-xcR"/>
                         <outlet property="timeUnitPicker" destination="mZC-Kt-azq" id="aET-K3-t7A"/>
@@ -897,7 +897,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Wb-7G-Ybl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1147" y="-1388"/>
+            <point key="canvasLocation" x="1145.5999999999999" y="-1388.4557721139431"/>
         </scene>
         <!--Description View Controller-->
         <scene sceneID="t7c-u8-VRz">
@@ -933,11 +933,11 @@
             <objects>
                 <viewController storyboardIdentifier="durationChooser" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ehz-9G-4hK" customClass="SelectDurationViewControllerImpl" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Rzf-u3-st5">
-                        <rect key="frame" x="0.0" y="0.0" width="300" height="200"/>
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="215"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Ap-il-OfY">
-                                <rect key="frame" x="0.0" y="170" width="300" height="30"/>
+                                <rect key="frame" x="0.0" y="170" width="300" height="45"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <accessibility key="accessibilityConfiguration" identifier="save button" label="save button"/>
@@ -1006,7 +1006,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="32h-ll-Eqc"/>
                     </view>
-                    <size key="freeformSize" width="300" height="200"/>
+                    <size key="freeformSize" width="300" height="215"/>
                     <connections>
                         <outlet property="daysTextField" destination="hI3-G2-iS9" id="g1O-b1-Gug"/>
                         <outlet property="hoursTextField" destination="Zh5-bH-83I" id="hJR-Zz-DxM"/>
@@ -1016,7 +1016,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XR0-6H-Gs7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1676.8" y="-1123.5382308845578"/>
+            <point key="canvasLocation" x="1676.8" y="-1123.9880059970017"/>
         </scene>
         <!--Choose Sample Grouper Type View Controller Impl-->
         <scene sceneID="Jb0-fe-37W">
@@ -1027,14 +1027,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mHG-Wd-0ic">
-                                <rect key="frame" x="0.0" y="0.0" width="300" height="162"/>
+                                <rect key="frame" x="0.0" y="0.0" width="300" height="147"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <accessibility key="accessibilityConfiguration" identifier="attribute picker" label="attribute picker">
                                     <bool key="isElement" value="YES"/>
                                 </accessibility>
                             </pickerView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gvf-TC-3sD">
-                                <rect key="frame" x="0.0" y="170" width="300" height="30"/>
+                                <rect key="frame" x="0.0" y="155" width="300" height="45"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <accessibility key="accessibilityConfiguration" identifier="save button" label="save button"/>

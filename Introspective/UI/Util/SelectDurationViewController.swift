@@ -9,6 +9,7 @@
 import UIKit
 
 import Common
+import DependencyInjection
 import UIExtensions
 
 public protocol SelectDurationViewController: UIViewController {
@@ -17,6 +18,14 @@ public protocol SelectDurationViewController: UIViewController {
 }
 
 public class SelectDurationViewControllerImpl: UIViewController, SelectDurationViewController {
+	// MARK: - Static Variables
+
+	public static let presenter = injected(UiUtil.self).customPresenter(
+		width: .custom(size: 300),
+		height: .custom(size: 215),
+		center: .topCenter
+	)
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var daysTextField: UITextField!

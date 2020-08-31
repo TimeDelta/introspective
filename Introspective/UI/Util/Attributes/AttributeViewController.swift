@@ -42,7 +42,7 @@ final class AttributeViewController: UIViewController {
 	)
 	private static let defaultPresenter = injected(UiUtil.self).customPresenter(
 		width: .full,
-		height: .custom(size: 200),
+		height: .custom(size: 215),
 		center: .topCenter
 	)
 	private static let descriptionPresenter = injected(UiUtil.self).customPresenter(

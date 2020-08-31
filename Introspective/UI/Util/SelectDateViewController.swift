@@ -30,6 +30,12 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 
 	private static let log = Log()
 
+	public static let presenter = injected(UiUtil.self).customPresenter(
+		width: .custom(size: 350),
+		height: .custom(size: 225),
+		center: .bottomCenter
+	)
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var datePicker: UIDatePicker!
