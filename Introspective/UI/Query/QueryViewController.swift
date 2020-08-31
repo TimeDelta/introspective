@@ -613,8 +613,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		if indexPath != nil {
 			title = "What would you like to change this to?"
 		}
-		let actionSheet = injected(UiUtil.self)
-			.alert(title: title, message: nil, preferredStyle: .actionSheet)
+		let actionSheet = injected(UiUtil.self).alert(title: title, message: nil, preferredStyle: .actionSheet)
 		if indexPath == nil {
 			actionSheet.addAction(UIAlertAction(title: "Data Type", style: .default) { _ in
 				self.addSampleType()
@@ -623,7 +622,9 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		actionSheet.addAction(injected(UiUtil.self).alertAction(
 			title: "Attribute Restriction",
 			style: .default,
-			handler: { _ in self.addOrUpdateAttributeRestrictionFor(indexPath) }
+			handler: { _ in
+				self.addOrUpdateAttributeRestrictionFor(indexPath)
+			}
 		))
 		actionSheet.addAction(injected(UiUtil.self).alertAction(
 			title: "And",

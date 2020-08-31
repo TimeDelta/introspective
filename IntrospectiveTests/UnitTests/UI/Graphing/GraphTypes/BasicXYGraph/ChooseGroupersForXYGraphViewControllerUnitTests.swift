@@ -224,7 +224,7 @@ final class ChooseGroupersForXYGraphViewControllerUnitTests: UnitTest {
 
 		// then
 		let presentedControllerCaptor = ArgumentCaptor<UIViewController>()
-		Verify(mockUiUtil, .present(presentedControllerCaptor.capture(), on: .any, using: .any, animated: .any, completion: .any))
+		Verify(mockUiUtil, .present(.capturing(presentedControllerCaptor), on: .any, using: .any, animated: .any, completion: .any))
 		if let presentedController = presentedControllerCaptor.value {
 			assertThat(presentedController, equalTo(expectedPresentedController))
 		}
@@ -467,7 +467,7 @@ final class ChooseGroupersForXYGraphViewControllerUnitTests: UnitTest {
 
 		// then
 		let userInfoCaptor = ArgumentCaptor<[UserInfoKey: Any]?>()
-		Verify(mockNotificationUtil, .post(.value(.groupersEdited), object: .any, userInfo: userInfoCaptor.capture(), qos: .any))
+		Verify(mockNotificationUtil, .post(.value(.groupersEdited), object: .any, userInfo: .capturing(userInfoCaptor), qos: .any))
 		guard let userInfo = userInfoCaptor.value else {
 			XCTFail("No UserInfo")
 			return
@@ -488,7 +488,7 @@ final class ChooseGroupersForXYGraphViewControllerUnitTests: UnitTest {
 
 		// then
 		let userInfoCaptor = ArgumentCaptor<[UserInfoKey: Any]?>()
-		Verify(mockNotificationUtil, .post(.value(.groupersEdited), object: .any, userInfo: userInfoCaptor.capture(), qos: .any))
+		Verify(mockNotificationUtil, .post(.value(.groupersEdited), object: .any, userInfo: .capturing(userInfoCaptor), qos: .any))
 		guard let userInfo = userInfoCaptor.value else {
 			XCTFail("No UserInfo")
 			return
@@ -509,7 +509,7 @@ final class ChooseGroupersForXYGraphViewControllerUnitTests: UnitTest {
 
 		// then
 		let userInfoCaptor = ArgumentCaptor<[UserInfoKey: Any]?>()
-		Verify(mockNotificationUtil, .post(.value(.groupersEdited), object: .any, userInfo: userInfoCaptor.capture(), qos: .any))
+		Verify(mockNotificationUtil, .post(.value(.groupersEdited), object: .any, userInfo: .capturing(userInfoCaptor), qos: .any))
 		guard let userInfo = userInfoCaptor.value else {
 			XCTFail("No UserInfo")
 			return

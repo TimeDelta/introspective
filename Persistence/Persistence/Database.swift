@@ -12,12 +12,17 @@ import NotificationBannerSwift
 import os
 
 import Common
+import DependencyInjection
 
 // sourcery: AutoMockable
 public protocol Database {
 	/// - Note: `Transaction` objects are only needed for modifications to the database.
 	func transaction() -> Transaction
 
+	/// Set whether or not the CoreData persistence has been modified externally (i.e. by an app extension)
+	func setModifiedExternally(_ modified: Bool)
+	/// Refresh all objects in the CoreData `ManagedObjectContext`
+	/// - Note: Necessary when i.e. an app extension modifies the persistence layer
 	func refreshContext()
 
 	func fetchedResultsController<Type: NSManagedObject>(
@@ -62,6 +67,8 @@ internal class DatabaseImpl: Database {
 	private static let log = Log()
 
 	private final var persistentContainer: NSPersistentContainer
+
+	// MARK: - Initializers
 
 	public init(_ container: NSPersistentContainer) {
 		persistentContainer = container
@@ -188,8 +195,31 @@ internal class DatabaseImpl: Database {
 		return TransactionImpl(context: backgroundContext, mainContext: persistentContainer.viewContext)
 	}
 
+	public final func setModifiedExternally(_ modified: Bool) {
+		do {
+			var sync = try getOrCreateSync()
+			let myTransaction = transaction()
+			sync = try myTransaction.pull(savedObject: sync)
+			sync.externallyModified = modified
+			try retryOnFail({ try myTransaction.commit() }, maxRetries: 2)
+		} catch {
+			Me.log.error("Unable to update core data sync", errorInfo(error))
+		}
+	}
+
 	public final func refreshContext() {
+		do {
+			let sync = try getOrCreateSync()
+			persistentContainer.viewContext.refresh(sync, mergeChanges: true)
+			if !sync.externallyModified {
+				return
+			}
+		} catch {
+			Me.log.error("Failed to check if context should be refreshed: %@", errorInfo(error))
+			// refresh all objects in context on failure
+		}
 		persistentContainer.viewContext.refreshAllObjects()
+		injected(NotificationUtil.self).post(.persistenceLayerWasRefreshed, object: nil, qos: .userInteractive)
 	}
 
 	public final func deleteEverything() throws {
@@ -220,5 +250,17 @@ internal class DatabaseImpl: Database {
 			throw FailedToInstantiateObject(objectTypeName: objectTypeName)
 		}
 		return castedObject
+	}
+
+	private final func getOrCreateSync() throws -> CoreDataSync {
+		let syncRequest: NSFetchRequest<CoreDataSync> = CoreDataSync.fetchRequest()
+		let syncs = try query(syncRequest)
+		guard syncs.count > 0 else {
+			let myTransaction = transaction()
+			let sync = try myTransaction.new(CoreDataSync.self)
+			try myTransaction.commit()
+			return sync
+		}
+		return syncs[0]
 	}
 }

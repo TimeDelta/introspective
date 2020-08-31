@@ -469,7 +469,7 @@ class GroupDefinitionTableViewControllerUnitTests: UnitTest {
 		// when
 		let actions = controller.tableView(tableView, editActionsForRowAt: indexPath)
 		let handlerCaptor = ArgumentCaptor<(UITableViewRowAction, IndexPath) -> Void>()
-		Verify(mockUiUtil, .tableViewRowAction(style: .value(.destructive), title: .any, handler: handlerCaptor.capture()))
+		Verify(mockUiUtil, .tableViewRowAction(style: .value(.destructive), title: .any, handler: .capturing(handlerCaptor)))
 		guard let handler = handlerCaptor.value else {
 			XCTFail("handler was nil")
 			return

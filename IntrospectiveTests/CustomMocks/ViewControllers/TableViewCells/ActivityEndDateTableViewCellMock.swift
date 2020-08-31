@@ -42,6 +42,8 @@ class ActivityEndDateTableViewCellMock: UITableViewCell, ActivityEndDateTableVie
     }
 
 
+
+
     public var notificationToSendOnDateChange: Notification.Name! {
 		get {	invocations.append(.p_notificationToSendOnDateChange_get); return __p_notificationToSendOnDateChange ?? optionalGivenGetterValue(.p_notificationToSendOnDateChange_get, "ActivityEndDateTableViewCellMock - stub value for notificationToSendOnDateChange was not defined") }
 		set {	invocations.append(.p_notificationToSendOnDateChange_set(.value(newValue))); __p_notificationToSendOnDateChange = newValue }
@@ -67,13 +69,12 @@ class ActivityEndDateTableViewCellMock: UITableViewCell, ActivityEndDateTableVie
         case p_endDate_get
 		case p_endDate_set(Parameter<Date?>)
 
-        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
-            switch (lhs, rhs) {
-            case (.p_notificationToSendOnDateChange_get,.p_notificationToSendOnDateChange_get): return true
-			case (.p_notificationToSendOnDateChange_set(let left),.p_notificationToSendOnDateChange_set(let right)): return Parameter<Notification.Name?>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_endDate_get,.p_endDate_get): return true
-			case (.p_endDate_set(let left),.p_endDate_set(let right)): return Parameter<Date?>.compare(lhs: left, rhs: right, with: matcher)
-            default: return false
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {            case (.p_notificationToSendOnDateChange_get,.p_notificationToSendOnDateChange_get): return Matcher.ComparisonResult.match
+			case (.p_notificationToSendOnDateChange_set(let left),.p_notificationToSendOnDateChange_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<Notification.Name?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_endDate_get,.p_endDate_get): return Matcher.ComparisonResult.match
+			case (.p_endDate_set(let left),.p_endDate_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<Date?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            default: return .none
             }
         }
 
@@ -83,6 +84,14 @@ class ActivityEndDateTableViewCellMock: UITableViewCell, ActivityEndDateTableVie
 			case .p_notificationToSendOnDateChange_set(let newValue): return newValue.intValue
             case .p_endDate_get: return 0
 			case .p_endDate_set(let newValue): return newValue.intValue
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .p_notificationToSendOnDateChange_get: return "[get] .notificationToSendOnDateChange"
+			case .p_notificationToSendOnDateChange_set: return "[set] .notificationToSendOnDateChange"
+            case .p_endDate_get: return "[get] .endDate"
+			case .p_endDate_set: return "[set] .endDate"
             }
         }
     }
@@ -129,28 +138,47 @@ class ActivityEndDateTableViewCellMock: UITableViewCell, ActivityEndDateTableVie
     }
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
-        let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
         invocations.append(call)
     }
     private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
         let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
-        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
         guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
         return product
     }
     private func methodPerformValue(_ method: MethodType) -> Any? {
-        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
         return matched?.performs
     }
-    private func matchingCalls(_ method: MethodType) -> [MethodType] {
-        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
     }
-    private func matchingCalls(_ method: Verify) -> Int {
-        return matchingCalls(method.method).count
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
     }
     private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
         do {
@@ -168,10 +196,8 @@ class ActivityEndDateTableViewCellMock: UITableViewCell, ActivityEndDateTableVie
         }
     }
     private func onFatalFailure(_ message: String) {
-        #if Mocky
         guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
-        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
-        #endif
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
     }
 // sourcery:end
 }

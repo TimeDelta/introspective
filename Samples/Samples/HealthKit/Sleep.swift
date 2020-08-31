@@ -225,7 +225,6 @@ extension Sleep: Equatable {
 
 extension Sleep: CustomDebugStringConvertible {
 	public final var debugDescription: String {
-		"Sleep with state \(state) from " + injected(CalendarUtil.self)
-			.string(for: startDate) + " to " + injected(CalendarUtil.self).string(for: endDate)
+		"Sleep with state \(state) from " + startDate.debugDescription + " to " + endDate.debugDescription
 	}
 }

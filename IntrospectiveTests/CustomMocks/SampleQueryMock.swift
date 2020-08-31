@@ -43,6 +43,21 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
         if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
+    private static func isCapturing<T>(_ param: Parameter<T>) -> Bool {
+        switch param {
+            // can't use `case .capturing(_, _):` here because it causes an EXC_BAD_ACCESS error
+            case .value(_):
+                return false
+            case .matching(_):
+                return false
+            case ._:
+                return false
+            default:
+                return true
+        }
+    }
+
+
 
     public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "SampleQueryMock - stub value for mostRecentEntryOnly was not defined") }
@@ -123,28 +138,72 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
         case p_subQuery_get
 		case p_subQuery_set(Parameter<(matcher: SubQueryMatcher, query: Query)?>)
 
-        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
             case (.m_runQuery__callback_callback_1(let lhsCallback), .m_runQuery__callback_callback_1(let rhsCallback)):
-                guard Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher) else { return false } 
-                return true 
+				var noncapturingComparisons: [Bool] = []
+				var comparison: Bool
+				var results: [Matcher.ParameterComparisonResult] = []
+
+				if !isCapturing(lhsCallback) && !isCapturing(rhsCallback) {
+					comparison = Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsCallback, rhsCallback, "callback"))
+				}
+
+				if isCapturing(lhsCallback) || isCapturing(rhsCallback) {
+					comparison = Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsCallback, rhsCallback, "callback"))
+				}
+
+				return Matcher.ComparisonResult(results)
+
             case (.m_runQuery__callback_callback_2(let lhsCallback), .m_runQuery__callback_callback_2(let rhsCallback)):
-                guard Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher) else { return false } 
-                return true 
-            case (.m_stop, .m_stop):
-                return true 
-            case (.m_resetStoppedState, .m_resetStoppedState):
-                return true 
+				var noncapturingComparisons: [Bool] = []
+				var comparison: Bool
+				var results: [Matcher.ParameterComparisonResult] = []
+
+				if !isCapturing(lhsCallback) && !isCapturing(rhsCallback) {
+					comparison = Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsCallback, rhsCallback, "callback"))
+				}
+
+				if isCapturing(lhsCallback) || isCapturing(rhsCallback) {
+					comparison = Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsCallback, rhsCallback, "callback"))
+				}
+
+				return Matcher.ComparisonResult(results)
+
+            case (.m_stop, .m_stop): return .match
+
+            case (.m_resetStoppedState, .m_resetStoppedState): return .match
+
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
-                guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
-                return true 
-            case (.p_mostRecentEntryOnly_get,.p_mostRecentEntryOnly_get): return true
-			case (.p_mostRecentEntryOnly_set(let left),.p_mostRecentEntryOnly_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_expression_get,.p_expression_get): return true
-			case (.p_expression_set(let left),.p_expression_set(let right)): return Parameter<BooleanExpression?>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_subQuery_get,.p_subQuery_get): return true
-			case (.p_subQuery_set(let left),.p_subQuery_set(let right)): return Parameter<(matcher: SubQueryMatcher, query: Query)?>.compare(lhs: left, rhs: right, with: matcher)
-            default: return false
+				var noncapturingComparisons: [Bool] = []
+				var comparison: Bool
+				var results: [Matcher.ParameterComparisonResult] = []
+
+				if !isCapturing(lhsOtherquery) && !isCapturing(rhsOtherquery) {
+					comparison = Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsOtherquery, rhsOtherquery, "_ otherQuery"))
+				}
+
+				if isCapturing(lhsOtherquery) || isCapturing(rhsOtherquery) {
+					comparison = Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsOtherquery, rhsOtherquery, "_ otherQuery"))
+				}
+
+				return Matcher.ComparisonResult(results)
+            case (.p_mostRecentEntryOnly_get,.p_mostRecentEntryOnly_get): return Matcher.ComparisonResult.match
+			case (.p_mostRecentEntryOnly_set(let left),.p_mostRecentEntryOnly_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_expression_get,.p_expression_get): return Matcher.ComparisonResult.match
+			case (.p_expression_set(let left),.p_expression_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<BooleanExpression?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_subQuery_get,.p_subQuery_get): return Matcher.ComparisonResult.match
+			case (.p_subQuery_set(let left),.p_subQuery_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<(matcher: SubQueryMatcher, query: Query)?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            default: return .none
             }
         }
 
@@ -161,6 +220,21 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
 			case .p_expression_set(let newValue): return newValue.intValue
             case .p_subQuery_get: return 0
 			case .p_subQuery_set(let newValue): return newValue.intValue
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .m_runQuery__callback_callback_1: return ".runQuery(callback:)"
+            case .m_runQuery__callback_callback_2: return ".runQuery(callback:)"
+            case .m_stop: return ".stop()"
+            case .m_resetStoppedState: return ".resetStoppedState()"
+            case .m_equalTo__otherQuery: return ".equalTo(_:)"
+            case .p_mostRecentEntryOnly_get: return "[get] .mostRecentEntryOnly"
+			case .p_mostRecentEntryOnly_set: return "[set] .mostRecentEntryOnly"
+            case .p_expression_get: return "[get] .expression"
+			case .p_expression_set: return "[set] .expression"
+            case .p_subQuery_get: return "[get] .subQuery"
+			case .p_subQuery_set: return "[set] .subQuery"
             }
         }
     }
@@ -242,28 +316,47 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
     }
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
-        let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
         invocations.append(call)
     }
     private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
         let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
-        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
         guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
         return product
     }
     private func methodPerformValue(_ method: MethodType) -> Any? {
-        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
         return matched?.performs
     }
-    private func matchingCalls(_ method: MethodType) -> [MethodType] {
-        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
     }
-    private func matchingCalls(_ method: Verify) -> Int {
-        return matchingCalls(method.method).count
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
     }
     private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
         do {
@@ -281,10 +374,8 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
         }
     }
     private func onFatalFailure(_ message: String) {
-        #if Mocky
         guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
-        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
-        #endif
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
     }
 // sourcery:end
 }

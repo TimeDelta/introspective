@@ -99,10 +99,10 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 		// when
 		let actions = controller.tableView(tableView, editActionsForRowAt: indexPath)
 		let deleteHandlerCaptor = ArgumentCaptor<((UITableViewRowAction, IndexPath) -> Void)>()
-		Verify(uiUtil, .tableViewRowAction(style: .any, title: .any, handler: deleteHandlerCaptor.capture()))
+		Verify(uiUtil, .tableViewRowAction(style: .any, title: .any, handler: .capturing(deleteHandlerCaptor)))
 		deleteHandlerCaptor.value!(actions![0], indexPath)
 		let noHandlerCaptor = ArgumentCaptor<((UIAlertAction) -> Void)?>()
-		Verify(uiUtil, .alertAction(title: .value("No"), style: .any, handler: noHandlerCaptor.capture()))
+		Verify(uiUtil, .alertAction(title: .value("No"), style: .any, handler: .capturing(noHandlerCaptor)))
 
 		// then
 		if let _ = noHandlerCaptor.value as? ((UIAlertAction) -> Void) {
@@ -125,11 +125,19 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 		// when
 		let actions = controller.tableView(tableView, editActionsForRowAt: indexPath)
 		let deleteHandlerCaptor = ArgumentCaptor<((UITableViewRowAction, IndexPath) -> Void)>()
-		Verify(uiUtil, .tableViewRowAction(style: .any, title: .any, handler: deleteHandlerCaptor.capture()))
+		Verify(uiUtil, .tableViewRowAction(style: .any, title: .any, handler: .capturing(deleteHandlerCaptor)))
 		deleteHandlerCaptor.value!(actions![0], indexPath)
 		let yesHandlerCaptor = ArgumentCaptor<((UIAlertAction) -> Void)?>()
-		Verify(uiUtil, .alertAction(title: .value("Yes"), style: .any, handler: yesHandlerCaptor.capture()))
-		yesHandlerCaptor.value!!(UIAlertAction())
+		Verify(uiUtil, .alertAction(title: .value("Yes"), style: .any, handler: .capturing(yesHandlerCaptor)))
+		guard yesHandlerCaptor.allValues.count > 0 else {
+			XCTFail("You forgot to use UiUtil to create the alert action")
+			return
+		}
+		guard let yesHandler = yesHandlerCaptor.allValues[0] else {
+			XCTFail("Yes handler was passed as nil")
+			return
+		}
+		yesHandler(UIAlertAction())
 
 		// then
 		let updatedMedication = try injected(Database.self).pull(savedObject: medication)
@@ -163,11 +171,19 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 		// when
 		let actions = controller.tableView(tableView, editActionsForRowAt: indexPath)
 		let deleteHandlerCaptor = ArgumentCaptor<((UITableViewRowAction, IndexPath) -> Void)>()
-		Verify(uiUtil, .tableViewRowAction(style: .any, title: .any, handler: deleteHandlerCaptor.capture()))
+		Verify(uiUtil, .tableViewRowAction(style: .any, title: .any, handler: .capturing(deleteHandlerCaptor)))
 		deleteHandlerCaptor.value!(actions![0], indexPath)
 		let yesHandlerCaptor = ArgumentCaptor<((UIAlertAction) -> Void)?>()
-		Verify(uiUtil, .alertAction(title: .value("Yes"), style: .any, handler: yesHandlerCaptor.capture()))
-		yesHandlerCaptor.value!!(UIAlertAction())
+		Verify(uiUtil, .alertAction(title: .value("Yes"), style: .any, handler: .capturing(yesHandlerCaptor)))
+		guard yesHandlerCaptor.allValues.count > 0 else {
+			XCTFail("You forgot to use UiUtil to create the alert action")
+			return
+		}
+		guard let yesHandler = yesHandlerCaptor.allValues[0] else {
+			XCTFail("Yes handler was passed as nil")
+			return
+		}
+		yesHandler(UIAlertAction())
 
 		// then
 		let updatedMedication = try injected(Database.self).pull(savedObject: medication)

@@ -45,6 +45,8 @@ class ChooseInformationToGraphTableViewControllerMock: UITableViewController, Ch
     }
 
 
+
+
     public var limitToNumericInformation: Bool {
 		get {	invocations.append(.p_limitToNumericInformation_get); return __p_limitToNumericInformation ?? givenGetterValue(.p_limitToNumericInformation_get, "ChooseInformationToGraphTableViewControllerMock - stub value for limitToNumericInformation was not defined") }
 		set {	invocations.append(.p_limitToNumericInformation_set(.value(newValue))); __p_limitToNumericInformation = newValue }
@@ -88,17 +90,16 @@ class ChooseInformationToGraphTableViewControllerMock: UITableViewController, Ch
         case p_chosenInformation_get
 		case p_chosenInformation_set(Parameter<[SampleGroupInformation]>)
 
-        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
-            switch (lhs, rhs) {
-            case (.p_limitToNumericInformation_get,.p_limitToNumericInformation_get): return true
-			case (.p_limitToNumericInformation_set(let left),.p_limitToNumericInformation_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_notificationToSendWhenFinished_get,.p_notificationToSendWhenFinished_get): return true
-			case (.p_notificationToSendWhenFinished_set(let left),.p_notificationToSendWhenFinished_set(let right)): return Parameter<NotificationName?>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_attributes_get,.p_attributes_get): return true
-			case (.p_attributes_set(let left),.p_attributes_set(let right)): return Parameter<[Attribute]?>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_chosenInformation_get,.p_chosenInformation_get): return true
-			case (.p_chosenInformation_set(let left),.p_chosenInformation_set(let right)): return Parameter<[SampleGroupInformation]>.compare(lhs: left, rhs: right, with: matcher)
-            default: return false
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {            case (.p_limitToNumericInformation_get,.p_limitToNumericInformation_get): return Matcher.ComparisonResult.match
+			case (.p_limitToNumericInformation_set(let left),.p_limitToNumericInformation_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_notificationToSendWhenFinished_get,.p_notificationToSendWhenFinished_get): return Matcher.ComparisonResult.match
+			case (.p_notificationToSendWhenFinished_set(let left),.p_notificationToSendWhenFinished_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<NotificationName?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_attributes_get,.p_attributes_get): return Matcher.ComparisonResult.match
+			case (.p_attributes_set(let left),.p_attributes_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<[Attribute]?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_chosenInformation_get,.p_chosenInformation_get): return Matcher.ComparisonResult.match
+			case (.p_chosenInformation_set(let left),.p_chosenInformation_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<[SampleGroupInformation]>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            default: return .none
             }
         }
 
@@ -112,6 +113,18 @@ class ChooseInformationToGraphTableViewControllerMock: UITableViewController, Ch
 			case .p_attributes_set(let newValue): return newValue.intValue
             case .p_chosenInformation_get: return 0
 			case .p_chosenInformation_set(let newValue): return newValue.intValue
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .p_limitToNumericInformation_get: return "[get] .limitToNumericInformation"
+			case .p_limitToNumericInformation_set: return "[set] .limitToNumericInformation"
+            case .p_notificationToSendWhenFinished_get: return "[get] .notificationToSendWhenFinished"
+			case .p_notificationToSendWhenFinished_set: return "[set] .notificationToSendWhenFinished"
+            case .p_attributes_get: return "[get] .attributes"
+			case .p_attributes_set: return "[set] .attributes"
+            case .p_chosenInformation_get: return "[get] .chosenInformation"
+			case .p_chosenInformation_set: return "[set] .chosenInformation"
             }
         }
     }
@@ -168,28 +181,47 @@ class ChooseInformationToGraphTableViewControllerMock: UITableViewController, Ch
     }
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
-        let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
         invocations.append(call)
     }
     private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
         let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
-        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
         guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
         return product
     }
     private func methodPerformValue(_ method: MethodType) -> Any? {
-        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
         return matched?.performs
     }
-    private func matchingCalls(_ method: MethodType) -> [MethodType] {
-        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
     }
-    private func matchingCalls(_ method: Verify) -> Int {
-        return matchingCalls(method.method).count
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
     }
     private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
         do {
@@ -207,10 +239,8 @@ class ChooseInformationToGraphTableViewControllerMock: UITableViewController, Ch
         }
     }
     private func onFatalFailure(_ message: String) {
-        #if Mocky
         guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
-        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
-        #endif
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
     }
 // sourcery:end
 }

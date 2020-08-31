@@ -52,6 +52,21 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
         if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
+    private static func isCapturing<T>(_ param: Parameter<T>) -> Bool {
+        switch param {
+            // can't use `case .capturing(_, _):` here because it causes an EXC_BAD_ACCESS error
+            case .value(_):
+                return false
+            case .matching(_):
+                return false
+            case ._:
+                return false
+            default:
+                return true
+        }
+    }
+
+
 
     public var restrictedAttribute: Attribute {
 		get {	invocations.append(.p_restrictedAttribute_get); return __p_restrictedAttribute ?? givenGetterValue(.p_restrictedAttribute_get, "AttributeRestrictionMock - stub value for restrictedAttribute was not defined") }
@@ -62,24 +77,18 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
 
     public var attributedName: String {
 		get {	invocations.append(.p_attributedName_get); return __p_attributedName ?? givenGetterValue(.p_attributedName_get, "AttributeRestrictionMock - stub value for attributedName was not defined") }
-		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
-		set {	__p_attributedName = newValue }
 	}
 	private var __p_attributedName: (String)?
 
 
     public var attributes: [Attribute] {
 		get {	invocations.append(.p_attributes_get); return __p_attributes ?? givenGetterValue(.p_attributes_get, "AttributeRestrictionMock - stub value for attributes was not defined") }
-		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
-		set {	__p_attributes = newValue }
 	}
 	private var __p_attributes: ([Attribute])?
 
 
     public var debugDescription: String {
 		get {	invocations.append(.p_debugDescription_get); return __p_debugDescription ?? givenGetterValue(.p_debugDescription_get, "AttributeRestrictionMock - stub value for debugDescription was not defined") }
-		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
-		set {	__p_debugDescription = newValue }
 	}
 	private var __p_debugDescription: (String)?
 
@@ -298,48 +307,164 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
         case p_attributes_get
         case p_debugDescription_get
 
-        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
             case (.m_samplePasses__sample(let lhsSample), .m_samplePasses__sample(let rhsSample)):
-                guard Parameter.compare(lhs: lhsSample, rhs: rhsSample, with: matcher) else { return false } 
-                return true 
-            case (.m_copy_1, .m_copy_1):
-                return true 
+				var noncapturingComparisons: [Bool] = []
+				var comparison: Bool
+				var results: [Matcher.ParameterComparisonResult] = []
+
+				if !isCapturing(lhsSample) && !isCapturing(rhsSample) {
+					comparison = Parameter.compare(lhs: lhsSample, rhs: rhsSample, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsSample, rhsSample, "_ sample"))
+				}
+
+				if isCapturing(lhsSample) || isCapturing(rhsSample) {
+					comparison = Parameter.compare(lhs: lhsSample, rhs: rhsSample, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsSample, rhsSample, "_ sample"))
+				}
+
+				return Matcher.ComparisonResult(results)
+
+            case (.m_copy_1, .m_copy_1): return .match
+
             case (.m_equalTo__otherRestriction(let lhsOtherrestriction), .m_equalTo__otherRestriction(let rhsOtherrestriction)):
-                guard Parameter.compare(lhs: lhsOtherrestriction, rhs: rhsOtherrestriction, with: matcher) else { return false } 
-                return true 
+				var noncapturingComparisons: [Bool] = []
+				var comparison: Bool
+				var results: [Matcher.ParameterComparisonResult] = []
+
+				if !isCapturing(lhsOtherrestriction) && !isCapturing(rhsOtherrestriction) {
+					comparison = Parameter.compare(lhs: lhsOtherrestriction, rhs: rhsOtherrestriction, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsOtherrestriction, rhsOtherrestriction, "_ otherRestriction"))
+				}
+
+				if isCapturing(lhsOtherrestriction) || isCapturing(rhsOtherrestriction) {
+					comparison = Parameter.compare(lhs: lhsOtherrestriction, rhs: rhsOtherrestriction, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsOtherrestriction, rhsOtherrestriction, "_ otherRestriction"))
+				}
+
+				return Matcher.ComparisonResult(results)
+
             case (.m_evaluate__parameters(let lhsParameters), .m_evaluate__parameters(let rhsParameters)):
-                guard Parameter.compare(lhs: lhsParameters, rhs: rhsParameters, with: matcher) else { return false } 
-                return true 
-            case (.m_isValid, .m_isValid):
-                return true 
-            case (.m_copy_2, .m_copy_2):
-                return true 
-            case (.m_attributeValuesAreValid, .m_attributeValuesAreValid):
-                return true 
+				var noncapturingComparisons: [Bool] = []
+				var comparison: Bool
+				var results: [Matcher.ParameterComparisonResult] = []
+
+				if !isCapturing(lhsParameters) && !isCapturing(rhsParameters) {
+					comparison = Parameter.compare(lhs: lhsParameters, rhs: rhsParameters, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsParameters, rhsParameters, "_ parameters"))
+				}
+
+				if isCapturing(lhsParameters) || isCapturing(rhsParameters) {
+					comparison = Parameter.compare(lhs: lhsParameters, rhs: rhsParameters, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsParameters, rhsParameters, "_ parameters"))
+				}
+
+				return Matcher.ComparisonResult(results)
+
+            case (.m_isValid, .m_isValid): return .match
+
+            case (.m_copy_2, .m_copy_2): return .match
+
+            case (.m_attributeValuesAreValid, .m_attributeValuesAreValid): return .match
+
             case (.m_value__of_attribute(let lhsAttribute), .m_value__of_attribute(let rhsAttribute)):
-                guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
-                return true 
+				var noncapturingComparisons: [Bool] = []
+				var comparison: Bool
+				var results: [Matcher.ParameterComparisonResult] = []
+
+				if !isCapturing(lhsAttribute) && !isCapturing(rhsAttribute) {
+					comparison = Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsAttribute, rhsAttribute, "of attribute"))
+				}
+
+				if isCapturing(lhsAttribute) || isCapturing(rhsAttribute) {
+					comparison = Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsAttribute, rhsAttribute, "of attribute"))
+				}
+
+				return Matcher.ComparisonResult(results)
+
             case (.m_set__attribute_attributeto_value(let lhsAttribute, let lhsValue), .m_set__attribute_attributeto_value(let rhsAttribute, let rhsValue)):
-                guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
-                guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
-                return true 
+				var noncapturingComparisons: [Bool] = []
+				var comparison: Bool
+				var results: [Matcher.ParameterComparisonResult] = []
+
+				if !isCapturing(lhsAttribute) && !isCapturing(rhsAttribute) {
+					comparison = Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsAttribute, rhsAttribute, "attribute"))
+				}
+
+
+				if !isCapturing(lhsValue) && !isCapturing(rhsValue) {
+					comparison = Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsValue, rhsValue, "to value"))
+				}
+
+				if isCapturing(lhsAttribute) || isCapturing(rhsAttribute) {
+					comparison = Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsAttribute, rhsAttribute, "attribute"))
+				}
+
+
+				if isCapturing(lhsValue) || isCapturing(rhsValue) {
+					comparison = Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsValue, rhsValue, "to value"))
+				}
+
+				return Matcher.ComparisonResult(results)
+
             case (.m_equalTo__otherAttributed(let lhsOtherattributed), .m_equalTo__otherAttributed(let rhsOtherattributed)):
-                guard Parameter.compare(lhs: lhsOtherattributed, rhs: rhsOtherattributed, with: matcher) else { return false } 
-                return true 
+				var noncapturingComparisons: [Bool] = []
+				var comparison: Bool
+				var results: [Matcher.ParameterComparisonResult] = []
+
+				if !isCapturing(lhsOtherattributed) && !isCapturing(rhsOtherattributed) {
+					comparison = Parameter.compare(lhs: lhsOtherattributed, rhs: rhsOtherattributed, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsOtherattributed, rhsOtherattributed, "_ otherAttributed"))
+				}
+
+				if isCapturing(lhsOtherattributed) || isCapturing(rhsOtherattributed) {
+					comparison = Parameter.compare(lhs: lhsOtherattributed, rhs: rhsOtherattributed, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsOtherattributed, rhsOtherattributed, "_ otherAttributed"))
+				}
+
+				return Matcher.ComparisonResult(results)
+
             case (.m_equalTo__other(let lhsOther), .m_equalTo__other(let rhsOther)):
-                guard Parameter.compare(lhs: lhsOther, rhs: rhsOther, with: matcher) else { return false } 
-                return true 
-            case (.m_predicate, .m_predicate):
-                return true 
-            case (.m_evaluate, .m_evaluate):
-                return true 
-            case (.p_restrictedAttribute_get,.p_restrictedAttribute_get): return true
-			case (.p_restrictedAttribute_set(let left),.p_restrictedAttribute_set(let right)): return Parameter<Attribute>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_attributedName_get,.p_attributedName_get): return true
-            case (.p_attributes_get,.p_attributes_get): return true
-            case (.p_debugDescription_get,.p_debugDescription_get): return true
-            default: return false
+				var noncapturingComparisons: [Bool] = []
+				var comparison: Bool
+				var results: [Matcher.ParameterComparisonResult] = []
+
+				if !isCapturing(lhsOther) && !isCapturing(rhsOther) {
+					comparison = Parameter.compare(lhs: lhsOther, rhs: rhsOther, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsOther, rhsOther, "_ other"))
+				}
+
+				if isCapturing(lhsOther) || isCapturing(rhsOther) {
+					comparison = Parameter.compare(lhs: lhsOther, rhs: rhsOther, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsOther, rhsOther, "_ other"))
+				}
+
+				return Matcher.ComparisonResult(results)
+
+            case (.m_predicate, .m_predicate): return .match
+
+            case (.m_evaluate, .m_evaluate): return .match
+            case (.p_restrictedAttribute_get,.p_restrictedAttribute_get): return Matcher.ComparisonResult.match
+			case (.p_restrictedAttribute_set(let left),.p_restrictedAttribute_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<Attribute>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_attributedName_get,.p_attributedName_get): return Matcher.ComparisonResult.match
+            case (.p_attributes_get,.p_attributes_get): return Matcher.ComparisonResult.match
+            case (.p_debugDescription_get,.p_debugDescription_get): return Matcher.ComparisonResult.match
+            default: return .none
             }
         }
 
@@ -363,6 +488,28 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
             case .p_attributedName_get: return 0
             case .p_attributes_get: return 0
             case .p_debugDescription_get: return 0
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .m_samplePasses__sample: return ".samplePasses(_:)"
+            case .m_copy_1: return ".copy()"
+            case .m_equalTo__otherRestriction: return ".equalTo(_:)"
+            case .m_evaluate__parameters: return ".evaluate(_:)"
+            case .m_isValid: return ".isValid()"
+            case .m_copy_2: return ".copy()"
+            case .m_attributeValuesAreValid: return ".attributeValuesAreValid()"
+            case .m_value__of_attribute: return ".value(of:)"
+            case .m_set__attribute_attributeto_value: return ".set(attribute:to:)"
+            case .m_equalTo__otherAttributed: return ".equalTo(_:)"
+            case .m_equalTo__other: return ".equalTo(_:)"
+            case .m_predicate: return ".predicate()"
+            case .m_evaluate: return ".evaluate()"
+            case .p_restrictedAttribute_get: return "[get] .restrictedAttribute"
+			case .p_restrictedAttribute_set: return "[set] .restrictedAttribute"
+            case .p_attributedName_get: return "[get] .attributedName"
+            case .p_attributes_get: return "[get] .attributes"
+            case .p_debugDescription_get: return "[get] .debugDescription"
             }
         }
     }
@@ -610,28 +757,47 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
     }
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
-        let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
         invocations.append(call)
     }
     private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
         let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
-        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
         guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
         return product
     }
     private func methodPerformValue(_ method: MethodType) -> Any? {
-        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
         return matched?.performs
     }
-    private func matchingCalls(_ method: MethodType) -> [MethodType] {
-        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
     }
-    private func matchingCalls(_ method: Verify) -> Int {
-        return matchingCalls(method.method).count
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
     }
     private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
         do {
@@ -649,10 +815,8 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
         }
     }
     private func onFatalFailure(_ message: String) {
-        #if Mocky
         guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
-        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
-        #endif
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
     }
 // sourcery:end
 }

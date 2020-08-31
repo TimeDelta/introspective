@@ -71,7 +71,8 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 					return
 				}
 
-				let countInformation = CountInformation(samples[0].attributes[0])
+				let factory = injected(SampleGroupInformationFactory.self)
+				let countInformation = factory.initInformation(CountInformation.self, samples[0].attributes[0])
 				if !information.contains(where: { $0.name == countInformation.name }) {
 					information.append(countInformation)
 				}

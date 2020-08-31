@@ -29,7 +29,7 @@ public final class OldestDateInformation: AnyInformation {
 
 	// MARK: - Initializers
 
-	public required init(_ attribute: Attribute) {
+	internal required init(_ attribute: Attribute) {
 		super.init(attribute)
 	}
 

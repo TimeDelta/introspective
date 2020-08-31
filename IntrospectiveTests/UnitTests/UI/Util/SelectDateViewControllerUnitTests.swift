@@ -226,7 +226,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 			controller.longPressDecrementByThirty()
 			let actionSheetCaptor = ArgumentCaptor<UIViewController>()
-			Verify(mockUiUtil, .present(.value(controller), actionSheetCaptor.capture(), animated: .any, completion: .any))
+			Verify(mockUiUtil, .present(.value(controller), .capturing(actionSheetCaptor), animated: .any, completion: .any))
 			guard let actionSheet = actionSheetCaptor.value as? UIAlertController else {
 				XCTFail("No action sheet presented")
 				return
@@ -247,7 +247,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 		controller.longPressDecrementByThirty()
 		let actionSheetCaptor = ArgumentCaptor<UIViewController>()
-		Verify(mockUiUtil, .present(.value(controller), actionSheetCaptor.capture(), animated: .any, completion: .any))
+		Verify(mockUiUtil, .present(.value(controller), .capturing(actionSheetCaptor), animated: .any, completion: .any))
 		guard let actionSheet = actionSheetCaptor.value as? UIAlertController else {
 			XCTFail("No action sheet presented")
 			return
@@ -282,7 +282,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 			controller.longPressDecrementByFifteen()
 			let actionSheetCaptor = ArgumentCaptor<UIViewController>()
-			Verify(mockUiUtil, .present(.value(controller), actionSheetCaptor.capture(), animated: .any, completion: .any))
+			Verify(mockUiUtil, .present(.value(controller), .capturing(actionSheetCaptor), animated: .any, completion: .any))
 			guard let actionSheet = actionSheetCaptor.value as? UIAlertController else {
 				XCTFail("No action sheet presented")
 				return
@@ -303,7 +303,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 		controller.longPressDecrementByFifteen()
 		let actionSheetCaptor = ArgumentCaptor<UIViewController>()
-		Verify(mockUiUtil, .present(.value(controller), actionSheetCaptor.capture(), animated: .any, completion: .any))
+		Verify(mockUiUtil, .present(.value(controller), .capturing(actionSheetCaptor), animated: .any, completion: .any))
 		guard let actionSheet = actionSheetCaptor.value as? UIAlertController else {
 			XCTFail("No action sheet presented")
 			return
@@ -338,7 +338,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 			controller.longPressIncrementByFifteen()
 			let actionSheetCaptor = ArgumentCaptor<UIViewController>()
-			Verify(mockUiUtil, .present(.value(controller), actionSheetCaptor.capture(), animated: .any, completion: .any))
+			Verify(mockUiUtil, .present(.value(controller), .capturing(actionSheetCaptor), animated: .any, completion: .any))
 			guard let actionSheet = actionSheetCaptor.value as? UIAlertController else {
 				XCTFail("No action sheet presented")
 				return
@@ -359,7 +359,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 		controller.longPressIncrementByFifteen()
 		let actionSheetCaptor = ArgumentCaptor<UIViewController>()
-		Verify(mockUiUtil, .present(.value(controller), actionSheetCaptor.capture(), animated: .any, completion: .any))
+		Verify(mockUiUtil, .present(.value(controller), .capturing(actionSheetCaptor), animated: .any, completion: .any))
 		guard let actionSheet = actionSheetCaptor.value as? UIAlertController else {
 			XCTFail("No action sheet presented")
 			return
@@ -394,7 +394,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 			controller.longPressIncrementByThirty()
 			let actionSheetCaptor = ArgumentCaptor<UIViewController>()
-			Verify(mockUiUtil, .present(.value(controller), actionSheetCaptor.capture(), animated: .any, completion: .any))
+			Verify(mockUiUtil, .present(.value(controller), .capturing(actionSheetCaptor), animated: .any, completion: .any))
 			guard let actionSheet = actionSheetCaptor.value as? UIAlertController else {
 				XCTFail("No action sheet presented")
 				return
@@ -415,7 +415,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 		controller.longPressIncrementByThirty()
 		let actionSheetCaptor = ArgumentCaptor<UIViewController>()
-		Verify(mockUiUtil, .present(.value(controller), actionSheetCaptor.capture(), animated: .any, completion: .any))
+		Verify(mockUiUtil, .present(.value(controller), .capturing(actionSheetCaptor), animated: .any, completion: .any))
 		guard let actionSheet = actionSheetCaptor.value as? UIAlertController else {
 			XCTFail("No action sheet presented")
 			return
@@ -469,7 +469,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 		// then
 		Verify(mockCalendarUtil, .never, .start(of: .any, in: .value(initialDate)))
 		let userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .any, userInfo: userInfoCaptor.capture()))
+		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .any, userInfo: .capturing(userInfoCaptor)))
 		guard let userInfo = userInfoCaptor.value else {
 			XCTFail("No User Info")
 			return
@@ -490,7 +490,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 		// then
 		Verify(mockCalendarUtil, .never, .start(of: .any, in: .value(lastDate)))
 		let userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .any, userInfo: userInfoCaptor.capture()))
+		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .any, userInfo: .capturing(userInfoCaptor)))
 		guard let userInfo = userInfoCaptor.value else {
 			XCTFail("No User Info")
 			return
@@ -510,7 +510,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 		// then
 		Verify(mockCalendarUtil, .never, .start(of: .any, in: .any))
 		let userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .any, userInfo: userInfoCaptor.capture()))
+		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .any, userInfo: .capturing(userInfoCaptor)))
 		guard let userInfo = userInfoCaptor.value else {
 			XCTFail("No User Info")
 			return
@@ -532,7 +532,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 		// then
 		let userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .any, userInfo: userInfoCaptor.capture()))
+		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .any, userInfo: .capturing(userInfoCaptor)))
 		guard let userInfo = userInfoCaptor.value else {
 			XCTFail("No User Info")
 			return
@@ -554,7 +554,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 		// then
 		let userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .any, userInfo: userInfoCaptor.capture()))
+		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .any, userInfo: .capturing(userInfoCaptor)))
 		guard let userInfo = userInfoCaptor.value else {
 			XCTFail("No User Info")
 			return
@@ -577,7 +577,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 		// then
 		let userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .any, userInfo: userInfoCaptor.capture()))
+		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .any, userInfo: .capturing(userInfoCaptor)))
 		guard let userInfo = userInfoCaptor.value else {
 			XCTFail("No User Info")
 			return
@@ -600,7 +600,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 		// then
 		let userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .any, userInfo: userInfoCaptor.capture()))
+		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .any, userInfo: .capturing(userInfoCaptor)))
 		guard let userInfo = userInfoCaptor.value else {
 			XCTFail("No User Info")
 			return
@@ -623,7 +623,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 		// then
 		let userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .any, userInfo: userInfoCaptor.capture()))
+		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .any, userInfo: .capturing(userInfoCaptor)))
 		guard let userInfo = userInfoCaptor.value else {
 			XCTFail("No User Info")
 			return

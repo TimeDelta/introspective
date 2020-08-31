@@ -134,7 +134,7 @@ final class ActiveExportTableViewCellUnitTests: UnitTest {
 
 		// then
 		let userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(.presentView), object: .any, userInfo: userInfoCaptor.capture()))
+		Verify(mockUiUtil, .post(name: .value(.presentView), object: .any, userInfo: .capturing(userInfoCaptor)))
 		guard let userInfo = userInfoCaptor.value as? UserInfo else {
 			XCTFail("No User Info")
 			return
@@ -147,7 +147,7 @@ final class ActiveExportTableViewCellUnitTests: UnitTest {
 		cell.exporter = setUpMockExporter()
 		cell.cancelExport(cancelButton)
 		var userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(.presentView), object: .any, userInfo: userInfoCaptor.capture()))
+		Verify(mockUiUtil, .post(name: .value(.presentView), object: .any, userInfo: .capturing(userInfoCaptor)))
 		guard let promptUserInfo = userInfoCaptor.value as? UserInfo else {
 			XCTFail("No User Info")
 			return
@@ -162,7 +162,7 @@ final class ActiveExportTableViewCellUnitTests: UnitTest {
 
 		// then
 		userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(.cancelBackgroundTask), object: .any, userInfo: userInfoCaptor.capture()))
+		Verify(mockUiUtil, .post(name: .value(.cancelBackgroundTask), object: .any, userInfo: .capturing(userInfoCaptor)))
 		guard let userInfo = userInfoCaptor.value as? UserInfo else {
 			XCTFail("No User Info")
 			return
@@ -175,7 +175,7 @@ final class ActiveExportTableViewCellUnitTests: UnitTest {
 		cell.exporter = setUpMockExporter()
 		cell.cancelExport(cancelButton)
 		let userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(.presentView), object: .any, userInfo: userInfoCaptor.capture()))
+		Verify(mockUiUtil, .post(name: .value(.presentView), object: .any, userInfo: .capturing(userInfoCaptor)))
 		guard let promptUserInfo = userInfoCaptor.value as? UserInfo else {
 			XCTFail("No User Info")
 			return
@@ -200,7 +200,7 @@ final class ActiveExportTableViewCellUnitTests: UnitTest {
 
 		// then
 		let userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(.shareExportFile), object: .any, userInfo: userInfoCaptor.capture()))
+		Verify(mockUiUtil, .post(name: .value(.shareExportFile), object: .any, userInfo: .capturing(userInfoCaptor)))
 		guard let userInfo = userInfoCaptor.value as? UserInfo else {
 			XCTFail("No User Info")
 			return

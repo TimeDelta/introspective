@@ -155,6 +155,6 @@ extension HeartRate: Equatable {
 
 extension HeartRate: CustomDebugStringConvertible {
 	public final var debugDescription: String {
-		"HeartRate of \(heartRate) at " + injected(CalendarUtil.self).string(for: timestamp)
+		"HeartRate of \(heartRate) at " + timestamp.debugDescription
 	}
 }

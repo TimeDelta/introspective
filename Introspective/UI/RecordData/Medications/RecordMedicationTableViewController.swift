@@ -104,7 +104,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 			name: RecordMedicationTableViewCell.shouldPresentDosesView
 		)
 		observe(selector: #selector(medicationEdited), name: Me.medicationEdited)
-		observe(selector: #selector(reloadTableViewData), name: UIApplication.willEnterForegroundNotification)
+		observe(selector: #selector(reloadTableViewData), name: .persistenceLayerWasRefreshed)
 
 		coachMarksDataSourceAndDelegate = RecordMedicationTableViewControllerCoachMarksDataSourceAndDelegate(self)
 		coachMarksController.dataSource = coachMarksDataSourceAndDelegate
@@ -283,7 +283,9 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	}
 
 	@objc private final func reloadTableViewData(notification _: Notification) {
-		loadMedications()
+		DispatchQueue.main.async { [unowned self] in
+			self.tableView.reloadData()
+		}
 	}
 
 	// MARK: - Button Actions

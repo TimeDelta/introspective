@@ -15,6 +15,11 @@ public enum NotificationName: StringLiteralType {
 	case showRecordMedicationsScreen = "showRecordMedicationsScreen"
 	case showResultsScreen = "showResultsScreen"
 
+	// MARK: - Persistence
+
+	/// This is sent when `Database.refreshContext()` has to refresh every object in the persistence layer because external changes have been made
+	case persistenceLayerWasRefreshed = "persistenceLayerWasRefreshed"
+
 	// MARK: - Background Tasks
 
 	case extendBackgroundTaskTime = "extendBackgroundTaskTime"

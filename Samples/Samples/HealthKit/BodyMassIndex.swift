@@ -152,6 +152,6 @@ extension BodyMassIndex: Equatable {
 
 extension BodyMassIndex: CustomDebugStringConvertible {
 	public final var debugDescription: String {
-		"BodyMassIndex of \(bmi) at " + injected(CalendarUtil.self).string(for: timestamp)
+		"BodyMassIndex of \(bmi) at " + timestamp.debugDescription
 	}
 }

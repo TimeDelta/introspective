@@ -64,7 +64,7 @@ class GroupNameTableViewCellUnitTests: UnitTest {
 		let userInfoCaptor = ArgumentCaptor<[UserInfoKey: Any]?>()
 		Verify(
 			mockNotificationUtil,
-			.post(.value(.groupNameEdited), object: .any, userInfo: userInfoCaptor.capture(), qos: .any))
+			.post(.value(.groupNameEdited), object: .any, userInfo: .capturing(userInfoCaptor), qos: .any))
 		guard let userInfo = userInfoCaptor.value else {
 			XCTFail("No user info")
 			return

@@ -45,6 +45,8 @@ public class XAxisSetupViewControllerMock: UIViewController, XAxisSetupViewContr
     }
 
 
+
+
     public var usePointGroupValue: Bool {
 		get {	invocations.append(.p_usePointGroupValue_get); return __p_usePointGroupValue ?? givenGetterValue(.p_usePointGroupValue_get, "XAxisSetupViewControllerMock - stub value for usePointGroupValue was not defined") }
 		set {	invocations.append(.p_usePointGroupValue_set(.value(newValue))); __p_usePointGroupValue = newValue }
@@ -106,21 +108,20 @@ public class XAxisSetupViewControllerMock: UIViewController, XAxisSetupViewContr
         case p_notificationToSendWhenFinished_get
 		case p_notificationToSendWhenFinished_set(Parameter<NotificationName?>)
 
-        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
-            switch (lhs, rhs) {
-            case (.p_usePointGroupValue_get,.p_usePointGroupValue_get): return true
-			case (.p_usePointGroupValue_set(let left),.p_usePointGroupValue_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_grouped_get,.p_grouped_get): return true
-			case (.p_grouped_set(let left),.p_grouped_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_attributes_get,.p_attributes_get): return true
-			case (.p_attributes_set(let left),.p_attributes_set(let right)): return Parameter<[Attribute]?>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_selectedAttribute_get,.p_selectedAttribute_get): return true
-			case (.p_selectedAttribute_set(let left),.p_selectedAttribute_set(let right)): return Parameter<Attribute?>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_selectedInformation_get,.p_selectedInformation_get): return true
-			case (.p_selectedInformation_set(let left),.p_selectedInformation_set(let right)): return Parameter<SampleGroupInformation?>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_notificationToSendWhenFinished_get,.p_notificationToSendWhenFinished_get): return true
-			case (.p_notificationToSendWhenFinished_set(let left),.p_notificationToSendWhenFinished_set(let right)): return Parameter<NotificationName?>.compare(lhs: left, rhs: right, with: matcher)
-            default: return false
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {            case (.p_usePointGroupValue_get,.p_usePointGroupValue_get): return Matcher.ComparisonResult.match
+			case (.p_usePointGroupValue_set(let left),.p_usePointGroupValue_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_grouped_get,.p_grouped_get): return Matcher.ComparisonResult.match
+			case (.p_grouped_set(let left),.p_grouped_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_attributes_get,.p_attributes_get): return Matcher.ComparisonResult.match
+			case (.p_attributes_set(let left),.p_attributes_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<[Attribute]?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_selectedAttribute_get,.p_selectedAttribute_get): return Matcher.ComparisonResult.match
+			case (.p_selectedAttribute_set(let left),.p_selectedAttribute_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<Attribute?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_selectedInformation_get,.p_selectedInformation_get): return Matcher.ComparisonResult.match
+			case (.p_selectedInformation_set(let left),.p_selectedInformation_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<SampleGroupInformation?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_notificationToSendWhenFinished_get,.p_notificationToSendWhenFinished_get): return Matcher.ComparisonResult.match
+			case (.p_notificationToSendWhenFinished_set(let left),.p_notificationToSendWhenFinished_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<NotificationName?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            default: return .none
             }
         }
 
@@ -138,6 +139,22 @@ public class XAxisSetupViewControllerMock: UIViewController, XAxisSetupViewContr
 			case .p_selectedInformation_set(let newValue): return newValue.intValue
             case .p_notificationToSendWhenFinished_get: return 0
 			case .p_notificationToSendWhenFinished_set(let newValue): return newValue.intValue
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .p_usePointGroupValue_get: return "[get] .usePointGroupValue"
+			case .p_usePointGroupValue_set: return "[set] .usePointGroupValue"
+            case .p_grouped_get: return "[get] .grouped"
+			case .p_grouped_set: return "[set] .grouped"
+            case .p_attributes_get: return "[get] .attributes"
+			case .p_attributes_set: return "[set] .attributes"
+            case .p_selectedAttribute_get: return "[get] .selectedAttribute"
+			case .p_selectedAttribute_set: return "[set] .selectedAttribute"
+            case .p_selectedInformation_get: return "[get] .selectedInformation"
+			case .p_selectedInformation_set: return "[set] .selectedInformation"
+            case .p_notificationToSendWhenFinished_get: return "[get] .notificationToSendWhenFinished"
+			case .p_notificationToSendWhenFinished_set: return "[set] .notificationToSendWhenFinished"
             }
         }
     }
@@ -204,28 +221,47 @@ public class XAxisSetupViewControllerMock: UIViewController, XAxisSetupViewContr
     }
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
-        let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
         invocations.append(call)
     }
     private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
         let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
-        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
         guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
         return product
     }
     private func methodPerformValue(_ method: MethodType) -> Any? {
-        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
         return matched?.performs
     }
-    private func matchingCalls(_ method: MethodType) -> [MethodType] {
-        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
     }
-    private func matchingCalls(_ method: Verify) -> Int {
-        return matchingCalls(method.method).count
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
     }
     private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
         do {
@@ -243,10 +279,8 @@ public class XAxisSetupViewControllerMock: UIViewController, XAxisSetupViewContr
         }
     }
     private func onFatalFailure(_ message: String) {
-        #if Mocky
         guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
-        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
-        #endif
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
     }
 // sourcery:end
 }

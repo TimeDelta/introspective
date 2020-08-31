@@ -44,6 +44,8 @@ class ChooseSampleGrouperTypeViewControllerMock: UIViewController, ChooseSampleG
     }
 
 
+
+
     public var grouperTypes: [SampleGrouper.Type]! {
 		get {	invocations.append(.p_grouperTypes_get); return __p_grouperTypes ?? optionalGivenGetterValue(.p_grouperTypes_get, "ChooseSampleGrouperTypeViewControllerMock - stub value for grouperTypes was not defined") }
 		set {	invocations.append(.p_grouperTypes_set(.value(newValue))); __p_grouperTypes = newValue }
@@ -69,13 +71,12 @@ class ChooseSampleGrouperTypeViewControllerMock: UIViewController, ChooseSampleG
         case p_selectedGrouperType_get
 		case p_selectedGrouperType_set(Parameter<SampleGrouper.Type?>)
 
-        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
-            switch (lhs, rhs) {
-            case (.p_grouperTypes_get,.p_grouperTypes_get): return true
-			case (.p_grouperTypes_set(let left),.p_grouperTypes_set(let right)): return Parameter<[SampleGrouper.Type]?>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_selectedGrouperType_get,.p_selectedGrouperType_get): return true
-			case (.p_selectedGrouperType_set(let left),.p_selectedGrouperType_set(let right)): return Parameter<SampleGrouper.Type?>.compare(lhs: left, rhs: right, with: matcher)
-            default: return false
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {            case (.p_grouperTypes_get,.p_grouperTypes_get): return Matcher.ComparisonResult.match
+			case (.p_grouperTypes_set(let left),.p_grouperTypes_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<[SampleGrouper.Type]?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_selectedGrouperType_get,.p_selectedGrouperType_get): return Matcher.ComparisonResult.match
+			case (.p_selectedGrouperType_set(let left),.p_selectedGrouperType_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<SampleGrouper.Type?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            default: return .none
             }
         }
 
@@ -85,6 +86,14 @@ class ChooseSampleGrouperTypeViewControllerMock: UIViewController, ChooseSampleG
 			case .p_grouperTypes_set(let newValue): return newValue.intValue
             case .p_selectedGrouperType_get: return 0
 			case .p_selectedGrouperType_set(let newValue): return newValue.intValue
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .p_grouperTypes_get: return "[get] .grouperTypes"
+			case .p_grouperTypes_set: return "[set] .grouperTypes"
+            case .p_selectedGrouperType_get: return "[get] .selectedGrouperType"
+			case .p_selectedGrouperType_set: return "[set] .selectedGrouperType"
             }
         }
     }
@@ -131,28 +140,47 @@ class ChooseSampleGrouperTypeViewControllerMock: UIViewController, ChooseSampleG
     }
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
-        let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
         invocations.append(call)
     }
     private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
         let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
-        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
         guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
         return product
     }
     private func methodPerformValue(_ method: MethodType) -> Any? {
-        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
         return matched?.performs
     }
-    private func matchingCalls(_ method: MethodType) -> [MethodType] {
-        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
     }
-    private func matchingCalls(_ method: Verify) -> Int {
-        return matchingCalls(method.method).count
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
     }
     private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
         do {
@@ -170,10 +198,8 @@ class ChooseSampleGrouperTypeViewControllerMock: UIViewController, ChooseSampleG
         }
     }
     private func onFatalFailure(_ message: String) {
-        #if Mocky
         guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
-        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
-        #endif
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
     }
 // sourcery:end
 }

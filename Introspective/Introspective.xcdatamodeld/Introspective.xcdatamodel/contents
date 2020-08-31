@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19F101" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="0">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19G2021" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="0">
     <entity name="Activity" representedClassName="Samples.Activity" syncable="YES">
         <attribute name="endDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="endDateTimeZoneId" optional="YES" attributeType="String"/>
@@ -39,6 +39,9 @@
     </entity>
     <entity name="ATrackerActivityImporter" representedClassName="DataImport.ATrackerActivityImporterImpl" syncable="YES">
         <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
+    <entity name="CoreDataSync" representedClassName="Persistence.CoreDataSync" syncable="YES">
+        <attribute name="externallyModified" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
     </entity>
     <entity name="EasyPillMedicationDoseImporter" representedClassName="DataImport.EasyPillMedicationDoseImporterImpl" syncable="YES">
         <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -105,6 +108,7 @@
         <element name="Activity" positionX="-36" positionY="63" width="128" height="163"/>
         <element name="ActivityDefinition" positionX="-45" positionY="54" width="128" height="30"/>
         <element name="ATrackerActivityImporter" positionX="-36" positionY="72" width="128" height="30"/>
+        <element name="CoreDataSync" positionX="-36" positionY="90" width="128" height="58"/>
         <element name="EasyPillMedicationDoseImporter" positionX="-36" positionY="63" width="128" height="30"/>
         <element name="EasyPillMedicationImporter" positionX="-45" positionY="54" width="128" height="30"/>
         <element name="IntrospectiveActivityImporter" positionX="-36" positionY="90" width="128" height="58"/>

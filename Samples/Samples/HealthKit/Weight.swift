@@ -155,6 +155,6 @@ extension Weight: Equatable {
 
 extension Weight: CustomDebugStringConvertible {
 	public final var debugDescription: String {
-		"Weight of \(weight) at " + injected(CalendarUtil.self).string(for: timestamp)
+		"Weight of \(weight) at " + timestamp.debugDescription
 	}
 }

@@ -114,6 +114,7 @@ public final class StartActivityXAgoIntentHandler: ActivityIntentHandler<StartAc
 			let start = try injected(ActivityDAO.self).getMostRecentActivityEndDate() ?? Date()
 			let activity = try injected(ActivityDAO.self)
 				.createActivity(definition: definition, startDate: start)
+			injected(Database.self).setModifiedExternally(true)
 			completion(StartActivityXAgoIntentResponse.success(
 				activity: ActivityIntentInfo(activity),
 				numTimeUnits: numTimeUnits,

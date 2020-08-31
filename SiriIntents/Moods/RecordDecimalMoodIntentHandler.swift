@@ -59,6 +59,7 @@ public final class RecordDecimalMoodIntentHandler: NSObject, RecordDecimalMoodIn
 				min: mood.minRating,
 				max: mood.maxRating
 			)
+			injected(Database.self).setModifiedExternally(true)
 			completion(RecordDecimalMoodIntentResponse.success(message: message))
 		} catch {
 			if let displayableError = error as? DisplayableError {

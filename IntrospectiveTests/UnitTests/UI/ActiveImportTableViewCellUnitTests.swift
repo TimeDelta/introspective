@@ -107,7 +107,7 @@ final class ActiveImportTableViewCellUnitTests: UnitTest {
 
 		// then
 		let userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(.presentView), object: .any, userInfo: userInfoCaptor.capture()))
+		Verify(mockUiUtil, .post(name: .value(.presentView), object: .any, userInfo: .capturing(userInfoCaptor)))
 		guard let userInfo = userInfoCaptor.value as? UserInfo else {
 			XCTFail("No User Info")
 			return
@@ -120,7 +120,7 @@ final class ActiveImportTableViewCellUnitTests: UnitTest {
 		cell.importer = setUpMockImporter()
 		cell.cancelImport(cancelButton)
 		var userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(.presentView), object: .any, userInfo: userInfoCaptor.capture()))
+		Verify(mockUiUtil, .post(name: .value(.presentView), object: .any, userInfo: .capturing(userInfoCaptor)))
 		guard let promptUserInfo = userInfoCaptor.value as? UserInfo else {
 			XCTFail("No User Info")
 			return
@@ -135,7 +135,7 @@ final class ActiveImportTableViewCellUnitTests: UnitTest {
 
 		// then
 		userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(.cancelBackgroundTask), object: .any, userInfo: userInfoCaptor.capture()))
+		Verify(mockUiUtil, .post(name: .value(.cancelBackgroundTask), object: .any, userInfo: .capturing(userInfoCaptor)))
 		guard let userInfo = userInfoCaptor.value as? UserInfo else {
 			XCTFail("No User Info")
 			return
@@ -148,7 +148,7 @@ final class ActiveImportTableViewCellUnitTests: UnitTest {
 		cell.importer = setUpMockImporter()
 		cell.cancelImport(cancelButton)
 		let userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(.presentView), object: .any, userInfo: userInfoCaptor.capture()))
+		Verify(mockUiUtil, .post(name: .value(.presentView), object: .any, userInfo: .capturing(userInfoCaptor)))
 		guard let promptUserInfo = userInfoCaptor.value as? UserInfo else {
 			XCTFail("No User Info")
 			return

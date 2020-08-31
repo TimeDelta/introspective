@@ -64,6 +64,7 @@ public final class RecordIntegerMoodIntentHandler: NSObject, RecordIntegerMoodIn
 				min: mood.minRating,
 				max: mood.maxRating
 			)
+			injected(Database.self).setModifiedExternally(true)
 			completion(RecordIntegerMoodIntentResponse.success(message: message))
 		} catch {
 			if let displayableError = error as? DisplayableError {

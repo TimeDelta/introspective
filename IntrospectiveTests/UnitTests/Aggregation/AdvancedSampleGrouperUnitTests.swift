@@ -426,6 +426,7 @@ class AdvancedSampleGrouperUnitTests: UnitTest {
 		let definition = GroupDefinitionMock()
 		Given(definition, .name(getter: name))
 		Given(definition, .isValid(willReturn: isValid))
+		Given(definition, .description(getter: ""))
 		if let copy = copy {
 			Given(definition, .copy(willReturn: copy))
 		}

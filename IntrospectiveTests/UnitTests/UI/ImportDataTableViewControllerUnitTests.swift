@@ -150,7 +150,7 @@ final class ImportDataTableViewControllerUnitTests: UnitTest {
 
 		// then
 		let alertCaptor = ArgumentCaptor<UIViewController>()
-		Verify(mockUiUtil, .present(.any, alertCaptor.capture(), animated: .any, completion: .any))
+		Verify(mockUiUtil, .present(.any, .capturing(alertCaptor), animated: .any, completion: .any))
 		guard let alert = alertCaptor.value as? UIAlertController else {
 			XCTFail("Unable to get alert controller")
 			return
@@ -163,7 +163,7 @@ final class ImportDataTableViewControllerUnitTests: UnitTest {
 		Given(mockCalendarUtil, .string(for: .any, dateStyle: .any, timeStyle: .any, willReturn: ""))
 		controller.tableView(tableView, didSelectRowAt: IndexPath(row: 0, section: 0))
 		let alertCaptor = ArgumentCaptor<UIViewController>()
-		Verify(mockUiUtil, .present(.any, alertCaptor.capture(), animated: .any, completion: .any))
+		Verify(mockUiUtil, .present(.any, .capturing(alertCaptor), animated: .any, completion: .any))
 		guard let alert = alertCaptor.value as? UIAlertController else {
 			XCTFail("Unable to get alert controller")
 			return
@@ -200,7 +200,7 @@ final class ImportDataTableViewControllerUnitTests: UnitTest {
 		Verify(
 			mockUiUtil,
 			.sendUserNotification(
-				withContent: contentCaptor.capture(),
+				withContent: .capturing(contentCaptor),
 				id: .value(expectedId),
 				repeats: .value(false),
 				interval: .value(1)))
@@ -231,7 +231,7 @@ final class ImportDataTableViewControllerUnitTests: UnitTest {
 		Verify(
 			mockUiUtil,
 			.sendUserNotification(
-				withContent: contentCaptor.capture(),
+				withContent: .capturing(contentCaptor),
 				id: .value(expectedId),
 				repeats: .value(false),
 				interval: .value(1)))
@@ -293,7 +293,7 @@ final class ImportDataTableViewControllerUnitTests: UnitTest {
 
 		controller.tableView(tableView, didSelectRowAt: IndexPath(row: row, section: section))
 
-		Verify(mockUiUtil, .present(.any, argumentCaptor.capture(), animated: .any, completion: .any))
+		Verify(mockUiUtil, .present(.any, .capturing(argumentCaptor), animated: .any, completion: .any))
 		guard let actionSheet = argumentCaptor.value as? UIAlertController else {
 			XCTFail("Unable to get alert controller")
 			return
@@ -301,7 +301,7 @@ final class ImportDataTableViewControllerUnitTests: UnitTest {
 		try actionSheet.tapButton(withTitle: "Import")
 
 		// wait for the next alert controller to be presented
-		Verify(mockUiUtil, .present(.any, argumentCaptor.capture(), animated: .any, completion: .any))
+		Verify(mockUiUtil, .present(.any, .capturing(argumentCaptor), animated: .any, completion: .any))
 		while argumentCaptor.value == actionSheet {}
 		guard let alert = argumentCaptor.value as? UIAlertController else {
 			XCTFail("Unable to get alert controller")
@@ -310,7 +310,7 @@ final class ImportDataTableViewControllerUnitTests: UnitTest {
 		try alert.tapButton(withTitle: "Yes")
 
 		// wait for the document picker to be presented
-		Verify(mockUiUtil, .present(.any, argumentCaptor.capture(), animated: .any, completion: .any))
+		Verify(mockUiUtil, .present(.any, .capturing(argumentCaptor), animated: .any, completion: .any))
 		while argumentCaptor.value == alert {}
 		guard let documentPicker = argumentCaptor.value as? UIDocumentPickerViewController else {
 			XCTFail("Unable to get document picker")

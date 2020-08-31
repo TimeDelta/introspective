@@ -201,6 +201,6 @@ extension BloodPressure: Equatable {
 
 extension BloodPressure: CustomDebugStringConvertible {
 	public final var debugDescription: String {
-		"BloodPressure of \(diastolic) at " + injected(CalendarUtil.self).string(for: timestamp)
+		"BloodPressure of \(diastolic) at " + timestamp.debugDescription
 	}
 }

@@ -21,6 +21,7 @@
 		A29E1C492343AC86008B4AE9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A29E1C482343AC86008B4AE9 /* CoreData.framework */; };
 		A2A8B0132343E79D00E883CE /* Globals.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2A8B0122343E79D00E883CE /* Globals.framework */; };
 		A2C88ACC23467D63005EAD2A /* SharedPersistentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C88ACB23467D63005EAD2A /* SharedPersistentContainer.swift */; };
+		A2EBFD7D24DDB5A4000B656D /* CoreDataSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EBFD7C24DDB5A4000B656D /* CoreDataSync.swift */; };
 		BA71B70EDC6BE887ECD6D793 /* Pods_Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 114D7D4B8F574499AC7FF8B9 /* Pods_Persistence.framework */; };
 /* End PBXBuildFile section */
 
@@ -43,6 +44,7 @@
 		A29E1C482343AC86008B4AE9 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		A2A8B0122343E79D00E883CE /* Globals.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Globals.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2C88ACB23467D63005EAD2A /* SharedPersistentContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedPersistentContainer.swift; sourceTree = "<group>"; };
+		A2EBFD7C24DDB5A4000B656D /* CoreDataSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSync.swift; sourceTree = "<group>"; };
 		D8A41BC6C00FBD6FB17B7CF8 /* Pods-Persistence.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Persistence.release.xcconfig"; path = "../Pods/Target Support Files/Pods-Persistence/Pods-Persistence.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -94,6 +96,7 @@
 			children = (
 				A231CF6623425A0400CCE625 /* PersistenceInjectionProvider.swift */,
 				A231CF5C234259EC00CCE625 /* CodableStorage.swift */,
+				A2EBFD7C24DDB5A4000B656D /* CoreDataSync.swift */,
 				A231CF5D234259EC00CCE625 /* CoreDataObject.swift */,
 				A231CF5E234259EC00CCE625 /* Database.swift */,
 				A231CF5A234259EB00CCE625 /* DatabaseErrors.swift */,
@@ -223,6 +226,7 @@
 				A29CCF4124D4781C00218CE2 /* NSManagedObjectExtensions.swift in Sources */,
 				A231CF61234259ED00CCE625 /* Transaction.swift in Sources */,
 				A231CF63234259ED00CCE625 /* CoreDataObject.swift in Sources */,
+				A2EBFD7D24DDB5A4000B656D /* CoreDataSync.swift in Sources */,
 				A231CF62234259ED00CCE625 /* CodableStorage.swift in Sources */,
 				A231CF6723425A0400CCE625 /* PersistenceInjectionProvider.swift in Sources */,
 				A231CF65234259ED00CCE625 /* FunctionalTestDatabase.swift in Sources */,

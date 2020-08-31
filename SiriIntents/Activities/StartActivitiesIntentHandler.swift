@@ -60,6 +60,7 @@ public final class StartActivitiesIntentHandler: ActivityIntentHandler<StartActi
 				let activity = try injected(ActivityDAO.self).startActivity(definition)
 				startedActivities.append(activity)
 			}
+			injected(Database.self).setModifiedExternally(true)
 			let activitiesInfo = startedActivities.map { a in ActivityIntentInfo(a) }
 			completion(StartActivitiesIntentResponse.success(activities: activitiesInfo))
 		} catch {

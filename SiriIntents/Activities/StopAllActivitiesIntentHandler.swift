@@ -26,6 +26,7 @@ public final class StopAllActivitiesIntentHandler: ActivityIntentHandler<StopAll
 	) {
 		do {
 			try injected(ActivityDAO.self).stopAllActivities()
+			injected(Database.self).setModifiedExternally(true)
 			completion(StopAllActivitiesIntentResponse(code: .success, userActivity: nil))
 		} catch {
 			Me.log.error("Failed to retrieve ActivityDefinition for StopAllActivitiesIntent: %@", errorInfo(error))

@@ -162,7 +162,7 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 		Verify(
 			mockUiUtil,
 			.sendUserNotification(
-				withContent: contentCaptor.capture(),
+				withContent: .capturing(contentCaptor),
 				id: .value(expectedId),
 				repeats: .value(false),
 				interval: .value(1)))
@@ -193,7 +193,7 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 		Verify(
 			mockUiUtil,
 			.sendUserNotification(
-				withContent: contentCaptor.capture(),
+				withContent: .capturing(contentCaptor),
 				id: .value(expectedId),
 				repeats: .value(false),
 				interval: .value(1)))

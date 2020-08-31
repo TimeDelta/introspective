@@ -94,6 +94,7 @@ public final class TakeMedicationWithDosageIntentHandler: NSObject, TakeMedicati
 				return
 			}
 			try injected(MedicationDAO.self).createDose(medication: medication, dosage: dosage)
+			injected(Database.self).setModifiedExternally(true)
 			completion(TakeMedicationWithDosageIntentResponse.success(dosage: dosageText, medication: medicationName))
 		} catch {
 			Me.log.error(

@@ -72,6 +72,7 @@ public class DiscreteMoodWidget: UIViewController {
 					userInfo: nil,
 					repeats: true
 				)
+				injected(Database.self).setModifiedExternally(true)
 			} catch {
 				let content = UNMutableNotificationContent()
 				content.title = NSString.localizedUserNotificationString(

@@ -39,6 +39,12 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		controller.actionsButton = actionsButton
 
 		Given(mockUiUtil, .setBackButton(for: .any, title: .any, action: .any, willReturn: UIBarButtonItem()))
+
+		let mockInformation = SampleGroupInformationMock()
+		Given(mockInformation, .name(getter: ""))
+		Given(mockInformation, .description(getter: "mock " + UUID().uuidString))
+		Given(mockInformation, .compute(forSamples: .any, willReturn: ""))
+		Given(mockSampleGroupInformationFactory, .initInformation(.any, .any, willReturn: mockInformation))
 	}
 
 	// MARK: - samplesDidSet()
@@ -52,7 +58,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		// when
 		controller.samples = copyArray(samples)
 		let didSetCaptor = ArgumentCaptor<() -> Void>()
-		Verify(mockAsyncUtil, .run(qos: .any, code: didSetCaptor.capture()))
+		Verify(mockAsyncUtil, .run(qos: .any, code: .capturing(didSetCaptor)))
 		guard let didSet = didSetCaptor.value else {
 			XCTFail("No async code for didSet")
 			return
@@ -78,7 +84,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		// when
 		controller.samples = copyArray(samples)
 		let didSetCaptor = ArgumentCaptor<() -> Void>()
-		Verify(mockAsyncUtil, .run(qos: .any, code: didSetCaptor.capture()))
+		Verify(mockAsyncUtil, .run(qos: .any, code: .capturing(didSetCaptor)))
 		guard let didSet = didSetCaptor.value else {
 			XCTFail("No async code for didSet")
 			return
@@ -361,7 +367,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 	func testGivenSection1WithDeletableSampleAtSpecifiedRow_tableViewCanEditRowAt_returnsTrue() {
 		// given
-		let sample = CoreDataSampleMock()
+		let sample = coreDataSampleMock()
 		Given(CoreDataSampleMock.self, .attributes(getter: [HeartRate.heartRate]))
 		Given(sample, .attributes(getter: [HeartRate.heartRate]))
 		Given(mockSampleUtil, .getOnly(samples: .any([Sample].self), from: .any, to: .any, willReturn: [sample]))
@@ -475,7 +481,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		// when
 		let config = controller.tableView(tableView, trailingSwipeActionsConfigurationForRowAt: indexPath)
 		let handlerCaptor = ArgumentCaptor<UIContextualAction.Handler>()
-		Verify(mockUiUtil, .contextualAction(style: .any, title: .any, handler: handlerCaptor.capture()))
+		Verify(mockUiUtil, .contextualAction(style: .any, title: .any, handler: .capturing(handlerCaptor)))
 		guard let handler = handlerCaptor.value else {
 			XCTFail("no handler")
 			return
@@ -547,14 +553,14 @@ final class ResultsViewControllerUnitTests: UnitTest {
 			return
 		}
 		let handlerCaptor = ArgumentCaptor<UIContextualAction.Handler>()
-		Verify(mockUiUtil, .contextualAction(style: .any, title: .value("🗑️"), handler: handlerCaptor.capture()))
+		Verify(mockUiUtil, .contextualAction(style: .any, title: .value("🗑️"), handler: .capturing(handlerCaptor)))
 		guard let handler = handlerCaptor.value else {
 			XCTFail("no handler")
 			return
 		}
 		handler(config.actions[0], UIView(), {_ in})
 		let yesHandlerCaptor = ArgumentCaptor<((UIAlertAction) -> Void)?>()
-		Verify(mockUiUtil, .alertAction(title: .value("Yes"), style: .any, handler: yesHandlerCaptor.capture()))
+		Verify(mockUiUtil, .alertAction(title: .value("Yes"), style: .any, handler: .capturing(yesHandlerCaptor)))
 		guard let yesHandler = yesHandlerCaptor.value as? (UIAlertAction) -> Void else {
 			XCTFail("no yes handler")
 			return
@@ -563,7 +569,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 		// then
 		let deletedObjectCaptor = ArgumentCaptor<CoreDataObject>()
-		Verify(transaction, .delete(deletedObjectCaptor.capture()))
+		Verify(transaction, .delete(.capturing(deletedObjectCaptor)))
 		assertThat(deletedObjectCaptor.allValues, hasItem(sameObject(samples[indexToDelete])))
 		assertThat(deletedObjectCaptor.allValues, not(hasItem(sameObject(samples[abs(indexToDelete - 1)]))))
 	}
@@ -586,14 +592,14 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		// when
 		let config = controller.tableView(tableView, trailingSwipeActionsConfigurationForRowAt: indexPath)
 		let handlerCaptor = ArgumentCaptor<UIContextualAction.Handler>()
-		Verify(mockUiUtil, .contextualAction(style: .any, title: .value("🗑️"), handler: handlerCaptor.capture()))
+		Verify(mockUiUtil, .contextualAction(style: .any, title: .value("🗑️"), handler: .capturing(handlerCaptor)))
 		guard let handler = handlerCaptor.value else {
 			XCTFail("no handler")
 			return
 		}
 		handler(config?.actions[0] ?? UIContextualAction(), UIView(), {_ in})
 		let yesHandlerCaptor = ArgumentCaptor<((UIAlertAction) -> Void)?>()
-		Verify(mockUiUtil, .alertAction(title: .value("Yes"), style: .any, handler: yesHandlerCaptor.capture()))
+		Verify(mockUiUtil, .alertAction(title: .value("Yes"), style: .any, handler: .capturing(yesHandlerCaptor)))
 		guard let yesHandler = yesHandlerCaptor.value as? (UIAlertAction) -> Void else {
 			XCTFail("no yes handler")
 			return
@@ -634,14 +640,14 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		// when
 		let config = controller.tableView(tableView, trailingSwipeActionsConfigurationForRowAt: indexPath)
 		let handlerCaptor = ArgumentCaptor<UIContextualAction.Handler>()
-		Verify(mockUiUtil, .contextualAction(style: .any, title: .value("🗑️"), handler: handlerCaptor.capture()))
+		Verify(mockUiUtil, .contextualAction(style: .any, title: .value("🗑️"), handler: .capturing(handlerCaptor)))
 		guard let handler = handlerCaptor.value else {
 			XCTFail("no handler")
 			return
 		}
 		handler(config?.actions[0] ?? UIContextualAction(), UIView(), {_ in})
 		let yesHandlerCaptor = ArgumentCaptor<((UIAlertAction) -> Void)?>()
-		Verify(mockUiUtil, .alertAction(title: .value("Yes"), style: .any, handler: yesHandlerCaptor.capture()))
+		Verify(mockUiUtil, .alertAction(title: .value("Yes"), style: .any, handler: .capturing(yesHandlerCaptor)))
 		guard let yesHandler = yesHandlerCaptor.value as? (UIAlertAction) -> Void else {
 			XCTFail("no yes handler")
 			return
@@ -650,7 +656,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 		// thens
 		let deletedObjectCaptor = ArgumentCaptor<CoreDataObject>()
-		Verify(transaction, .delete(deletedObjectCaptor.capture()))
+		Verify(transaction, .delete(.capturing(deletedObjectCaptor)))
 		assertThat(deletedObjectCaptor.allValues, not(hasItem(sameObject(otherSample1))))
 		assertThat(deletedObjectCaptor.allValues, hasItem(sameObject(sampleToDelete)))
 		assertThat(deletedObjectCaptor.allValues, not(hasItem(sameObject(otherSample2))))
@@ -707,7 +713,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 		// then
 		let codeCaptor = ArgumentCaptor<() -> Void>()
-		Verify(mockAsyncUtil, .run(qos: .any, code: codeCaptor.capture()))
+		Verify(mockAsyncUtil, .run(qos: .any, code: .capturing(codeCaptor)))
 		guard let code = codeCaptor.value else {
 			XCTFail("no async code ran")
 			return
@@ -769,7 +775,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 			object: controller,
 			userInfo: [UserInfoKey.sample: newSample])
 		let codeCaptor = ArgumentCaptor<() -> Void>()
-		Verify(mockAsyncUtil, .run(qos: .any, code: codeCaptor.capture()))
+		Verify(mockAsyncUtil, .run(qos: .any, code: .capturing(codeCaptor)))
 		guard let code = codeCaptor.value else {
 			XCTFail("no async code ran")
 			return
@@ -866,6 +872,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 	private final func coreDataSampleMock() -> CoreDataSampleMock {
 		let mock = CoreDataSampleMock()
 		Given(mock, .attributedName(getter: ""))
+		Given(mock, .debugDescription(getter: "mock " + UUID().uuidString))
 		Given(mock, .dates(willReturn: [.start: Date()]))
 		Given(mock, .attributes(getter: [TextAttribute(name: "")]))
 		return mock
@@ -874,6 +881,9 @@ final class ResultsViewControllerUnitTests: UnitTest {
 	private final func searchableCoreDataSampleMock(matches: Bool? = nil) -> SearchableCoreDataSampleMock {
 		let mock = SearchableCoreDataSampleMock()
 		Given(mock, .attributedName(getter: ""))
+		let uuid = UUID()
+		mock.description = "mock " + uuid.uuidString
+		Given(mock, .debugDescription(getter: "mock " + uuid.uuidString))
 		Given(mock, .dates(willReturn: [.start: Date()]))
 		if let matches = matches {
 			Given(mock, .matchesSearchString(.any, willReturn: matches))
@@ -892,6 +902,9 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		Given(mock, .minRating(getter: 0))
 		Given(mock, .maxRating(getter: 0))
 		Given(mock, .date(getter: Date()))
+		let uuid = UUID()
+		mock.description = "mock " + uuid.uuidString
+		Given(mock, .debugDescription(getter: "mock " + uuid.uuidString))
 		Given(MoodMock.self, .name(getter: "mood"))
 		return mock
 	}

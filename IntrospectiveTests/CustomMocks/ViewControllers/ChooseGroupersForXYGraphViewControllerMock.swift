@@ -45,6 +45,8 @@ class ChooseGroupersForXYGraphViewControllerMock: UIViewController, ChooseGroupe
     }
 
 
+
+
     public var xSampleType: Sample.Type! {
 		get {	invocations.append(.p_xSampleType_get); return __p_xSampleType ?? optionalGivenGetterValue(.p_xSampleType_get, "ChooseGroupersForXYGraphViewControllerMock - stub value for xSampleType was not defined") }
 		set {	invocations.append(.p_xSampleType_set(.value(newValue))); __p_xSampleType = newValue }
@@ -115,23 +117,22 @@ class ChooseGroupersForXYGraphViewControllerMock: UIViewController, ChooseGroupe
         case p_notificationToSendOnAccept_get
 		case p_notificationToSendOnAccept_set(Parameter<NotificationName?>)
 
-        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
-            switch (lhs, rhs) {
-            case (.p_xSampleType_get,.p_xSampleType_get): return true
-			case (.p_xSampleType_set(let left),.p_xSampleType_set(let right)): return Parameter<Sample.Type?>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_ySampleType_get,.p_ySampleType_get): return true
-			case (.p_ySampleType_set(let left),.p_ySampleType_set(let right)): return Parameter<Sample.Type?>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_navBarTitle_get,.p_navBarTitle_get): return true
-			case (.p_navBarTitle_set(let left),.p_navBarTitle_set(let right)): return Parameter<String?>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_xGrouper_get,.p_xGrouper_get): return true
-			case (.p_xGrouper_set(let left),.p_xGrouper_set(let right)): return Parameter<SampleGrouper?>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_yGrouper_get,.p_yGrouper_get): return true
-			case (.p_yGrouper_set(let left),.p_yGrouper_set(let right)): return Parameter<SampleGrouper?>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_currentAttributeType_get,.p_currentAttributeType_get): return true
-			case (.p_currentAttributeType_set(let left),.p_currentAttributeType_set(let right)): return Parameter<String?>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_notificationToSendOnAccept_get,.p_notificationToSendOnAccept_get): return true
-			case (.p_notificationToSendOnAccept_set(let left),.p_notificationToSendOnAccept_set(let right)): return Parameter<NotificationName?>.compare(lhs: left, rhs: right, with: matcher)
-            default: return false
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {            case (.p_xSampleType_get,.p_xSampleType_get): return Matcher.ComparisonResult.match
+			case (.p_xSampleType_set(let left),.p_xSampleType_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<Sample.Type?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_ySampleType_get,.p_ySampleType_get): return Matcher.ComparisonResult.match
+			case (.p_ySampleType_set(let left),.p_ySampleType_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<Sample.Type?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_navBarTitle_get,.p_navBarTitle_get): return Matcher.ComparisonResult.match
+			case (.p_navBarTitle_set(let left),.p_navBarTitle_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<String?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_xGrouper_get,.p_xGrouper_get): return Matcher.ComparisonResult.match
+			case (.p_xGrouper_set(let left),.p_xGrouper_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<SampleGrouper?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_yGrouper_get,.p_yGrouper_get): return Matcher.ComparisonResult.match
+			case (.p_yGrouper_set(let left),.p_yGrouper_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<SampleGrouper?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_currentAttributeType_get,.p_currentAttributeType_get): return Matcher.ComparisonResult.match
+			case (.p_currentAttributeType_set(let left),.p_currentAttributeType_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<String?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_notificationToSendOnAccept_get,.p_notificationToSendOnAccept_get): return Matcher.ComparisonResult.match
+			case (.p_notificationToSendOnAccept_set(let left),.p_notificationToSendOnAccept_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<NotificationName?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            default: return .none
             }
         }
 
@@ -151,6 +152,24 @@ class ChooseGroupersForXYGraphViewControllerMock: UIViewController, ChooseGroupe
 			case .p_currentAttributeType_set(let newValue): return newValue.intValue
             case .p_notificationToSendOnAccept_get: return 0
 			case .p_notificationToSendOnAccept_set(let newValue): return newValue.intValue
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .p_xSampleType_get: return "[get] .xSampleType"
+			case .p_xSampleType_set: return "[set] .xSampleType"
+            case .p_ySampleType_get: return "[get] .ySampleType"
+			case .p_ySampleType_set: return "[set] .ySampleType"
+            case .p_navBarTitle_get: return "[get] .navBarTitle"
+			case .p_navBarTitle_set: return "[set] .navBarTitle"
+            case .p_xGrouper_get: return "[get] .xGrouper"
+			case .p_xGrouper_set: return "[set] .xGrouper"
+            case .p_yGrouper_get: return "[get] .yGrouper"
+			case .p_yGrouper_set: return "[set] .yGrouper"
+            case .p_currentAttributeType_get: return "[get] .currentAttributeType"
+			case .p_currentAttributeType_set: return "[set] .currentAttributeType"
+            case .p_notificationToSendOnAccept_get: return "[get] .notificationToSendOnAccept"
+			case .p_notificationToSendOnAccept_set: return "[set] .notificationToSendOnAccept"
             }
         }
     }
@@ -222,28 +241,47 @@ class ChooseGroupersForXYGraphViewControllerMock: UIViewController, ChooseGroupe
     }
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
-        let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
         invocations.append(call)
     }
     private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
         let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
-        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
         guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
         return product
     }
     private func methodPerformValue(_ method: MethodType) -> Any? {
-        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
         return matched?.performs
     }
-    private func matchingCalls(_ method: MethodType) -> [MethodType] {
-        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
     }
-    private func matchingCalls(_ method: Verify) -> Int {
-        return matchingCalls(method.method).count
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
     }
     private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
         do {
@@ -261,10 +299,8 @@ class ChooseGroupersForXYGraphViewControllerMock: UIViewController, ChooseGroupe
         }
     }
     private func onFatalFailure(_ message: String) {
-        #if Mocky
         guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
-        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
-        #endif
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
     }
 // sourcery:end
 }

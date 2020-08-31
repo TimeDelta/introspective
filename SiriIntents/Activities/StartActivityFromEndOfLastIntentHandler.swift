@@ -64,6 +64,7 @@ public final class StartActivityFromEndOfLastIntentHandler: ActivityIntentHandle
 				definition: definition,
 				startDate: start
 			)
+			injected(Database.self).setModifiedExternally(true)
 			completion(StartActivityFromEndOfLastIntentResponse.success(activity: ActivityIntentInfo(activity)))
 		} catch {
 			Me.log.error("Failed StartActivityFromEndOfLastIntent: %@", errorInfo(error))

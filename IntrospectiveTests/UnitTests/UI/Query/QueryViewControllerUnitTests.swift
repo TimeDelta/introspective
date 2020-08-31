@@ -1291,7 +1291,7 @@ final class QueryViewControllerUnitTests: UnitTest {
 		// when
 		let actions = controller.tableView(tableView, editActionsForRowAt: indexPath)
 		let handlerCaptor = ArgumentCaptor<(UITableViewRowAction, IndexPath) -> Void>()
-		Verify(mockUiUtil, .tableViewRowAction(style: .value(.destructive), title: .any, handler: handlerCaptor.capture()))
+		Verify(mockUiUtil, .tableViewRowAction(style: .value(.destructive), title: .any, handler: .capturing(handlerCaptor)))
 		guard let handler = handlerCaptor.value else {
 			XCTFail("handler was nil")
 			return
@@ -1335,7 +1335,7 @@ final class QueryViewControllerUnitTests: UnitTest {
 		// when
 		let actions = controller.tableView(tableView, editActionsForRowAt: indexPath)
 		let handlerCaptor = ArgumentCaptor<(UITableViewRowAction, IndexPath) -> Void>()
-		Verify(mockUiUtil, .tableViewRowAction(style: .value(.destructive), title: .any, handler: handlerCaptor.capture()))
+		Verify(mockUiUtil, .tableViewRowAction(style: .value(.destructive), title: .any, handler: .capturing(handlerCaptor)))
 		guard let handler = handlerCaptor.value else {
 			XCTFail("handler was nil")
 			return
@@ -1367,7 +1367,7 @@ final class QueryViewControllerUnitTests: UnitTest {
 		// when
 		let actions = controller.tableView(tableView, editActionsForRowAt: indexPath)
 		let handlerCaptor = ArgumentCaptor<(UITableViewRowAction, IndexPath) -> Void>()
-		Verify(mockUiUtil, .tableViewRowAction(style: .value(.destructive), title: .any, handler: handlerCaptor.capture()))
+		Verify(mockUiUtil, .tableViewRowAction(style: .value(.destructive), title: .any, handler: .capturing(handlerCaptor)))
 		guard let handler = handlerCaptor.value else {
 			XCTFail("handler was nil")
 			return
@@ -1392,7 +1392,7 @@ final class QueryViewControllerUnitTests: UnitTest {
 		// when
 		let actions = controller.tableView(tableView, editActionsForRowAt: indexPath)
 		let handlerCaptor = ArgumentCaptor<(UITableViewRowAction, IndexPath) -> Void>()
-		Verify(mockUiUtil, .tableViewRowAction(style: .value(.destructive), title: .any, handler: handlerCaptor.capture()))
+		Verify(mockUiUtil, .tableViewRowAction(style: .value(.destructive), title: .any, handler: .capturing(handlerCaptor)))
 		guard let handler = handlerCaptor.value else {
 			XCTFail("handler was nil")
 			return
@@ -1419,7 +1419,7 @@ final class QueryViewControllerUnitTests: UnitTest {
 		// when
 		let actions = controller.tableView(tableView, editActionsForRowAt: indexPath)
 		let handlerCaptor = ArgumentCaptor<(UITableViewRowAction, IndexPath) -> Void>()
-		Verify(mockUiUtil, .tableViewRowAction(style: .value(.destructive), title: .any, handler: handlerCaptor.capture()))
+		Verify(mockUiUtil, .tableViewRowAction(style: .value(.destructive), title: .any, handler: .capturing(handlerCaptor)))
 		guard let handler = handlerCaptor.value else {
 			XCTFail("handler was nil")
 			return
@@ -1451,7 +1451,7 @@ final class QueryViewControllerUnitTests: UnitTest {
 		// when
 		let actions = controller.tableView(tableView, editActionsForRowAt: indexPath)
 		let handlerCaptor = ArgumentCaptor<(UITableViewRowAction, IndexPath) -> Void>()
-		Verify(mockUiUtil, .tableViewRowAction(style: .value(.destructive), title: .any, handler: handlerCaptor.capture()))
+		Verify(mockUiUtil, .tableViewRowAction(style: .value(.destructive), title: .any, handler: .capturing(handlerCaptor)))
 		guard let handler = handlerCaptor.value else {
 			XCTFail("handler was nil")
 			return
@@ -1478,7 +1478,7 @@ final class QueryViewControllerUnitTests: UnitTest {
 		// when
 		let actions = controller.tableView(tableView, editActionsForRowAt: indexPath)
 		let handlerCaptor = ArgumentCaptor<(UITableViewRowAction, IndexPath) -> Void>()
-		Verify(mockUiUtil, .tableViewRowAction(style: .value(.destructive), title: .any, handler: handlerCaptor.capture()))
+		Verify(mockUiUtil, .tableViewRowAction(style: .value(.destructive), title: .any, handler: .capturing(handlerCaptor)))
 		guard let handler = handlerCaptor.value else {
 			XCTFail("handler was nil")
 			return
@@ -1551,6 +1551,7 @@ final class QueryViewControllerUnitTests: UnitTest {
 			hasTitle("Attribute Restriction"),
 			hasTitle("And"),
 			hasTitle("Or"),
+			hasTitle("Not"),
 			hasTitle("Condition Group Start"),
 			hasTitle("Condition Group End")))
 		Verify(mockUiUtil, .present(.value(controller), .value(alert), animated: .any, completion: .any))
@@ -1572,7 +1573,14 @@ final class QueryViewControllerUnitTests: UnitTest {
 		// when
 		controller.tableView(tableView, didSelectRowAt: IndexPath(row: 1, section: 0))
 		let handlerCaptor = ArgumentCaptor<((UIAlertAction) -> Void)?>()
-		Verify(mockUiUtil, .alertAction(title: "Attribute Restriction", style: .any, handler: handlerCaptor.capture()))
+		Verify(
+			mockUiUtil,
+			.alertAction(
+				title: .value("Attribute Restriction"),
+				style: .any,
+				handler: .capturing(handlerCaptor)
+			)
+		)
 		guard let handler = handlerCaptor.value as? (UIAlertAction) -> Void else {
 			XCTFail("handler was nil")
 			return
@@ -1580,10 +1588,14 @@ final class QueryViewControllerUnitTests: UnitTest {
 		handler(UIAlertAction())
 
 		// then
-		assertThat(controller.queries, queriesEquals([
-			(sampleTypeInfo: SampleTypeInfo(sampleType), parts: [
-				(type: .expression, expression: restriction),
-			] as [BooleanExpressionPart])]))
+		assertThat(controller.queries, queriesEquals(
+			[(
+				sampleTypeInfo: SampleTypeInfo(sampleType),
+				parts: [
+					(type: .expression, expression: restriction),
+				] as [BooleanExpressionPart]
+			)])
+		)
 	}
 
 	func testGivenUserChoosesOrOnPresentedActionSheet_tableViewDidSelectRowAt_changesSelectedRowToOr() {
@@ -1600,7 +1612,7 @@ final class QueryViewControllerUnitTests: UnitTest {
 		// when
 		controller.tableView(tableView, didSelectRowAt: IndexPath(row: 1, section: 0))
 		let handlerCaptor = ArgumentCaptor<((UIAlertAction) -> Void)?>()
-		Verify(mockUiUtil, .alertAction(title: "Or", style: .any, handler: handlerCaptor.capture()))
+		Verify(mockUiUtil, .alertAction(title: "Or", style: .any, handler: .capturing(handlerCaptor)))
 		guard let handler = handlerCaptor.value as? (UIAlertAction) -> Void else {
 			XCTFail("handler was nil")
 			return
@@ -1628,7 +1640,7 @@ final class QueryViewControllerUnitTests: UnitTest {
 		// when
 		controller.tableView(tableView, didSelectRowAt: IndexPath(row: 1, section: 0))
 		let handlerCaptor = ArgumentCaptor<((UIAlertAction) -> Void)?>()
-		Verify(mockUiUtil, .alertAction(title: "And", style: .any, handler: handlerCaptor.capture()))
+		Verify(mockUiUtil, .alertAction(title: "And", style: .any, handler: .capturing(handlerCaptor)))
 		guard let handler = handlerCaptor.value as? (UIAlertAction) -> Void else {
 			XCTFail("handler was nil")
 			return
@@ -1656,7 +1668,7 @@ final class QueryViewControllerUnitTests: UnitTest {
 		// when
 		controller.tableView(tableView, didSelectRowAt: IndexPath(row: 1, section: 0))
 		let handlerCaptor = ArgumentCaptor<((UIAlertAction) -> Void)?>()
-		Verify(mockUiUtil, .alertAction(title: "Condition Group Start", style: .any, handler: handlerCaptor.capture()))
+		Verify(mockUiUtil, .alertAction(title: "Condition Group Start", style: .any, handler: .capturing(handlerCaptor)))
 		guard let handler = handlerCaptor.value as? (UIAlertAction) -> Void else {
 			XCTFail("handler was nil")
 			return
@@ -1684,7 +1696,7 @@ final class QueryViewControllerUnitTests: UnitTest {
 		// when
 		controller.tableView(tableView, didSelectRowAt: IndexPath(row: 1, section: 0))
 		let handlerCaptor = ArgumentCaptor<((UIAlertAction) -> Void)?>()
-		Verify(mockUiUtil, .alertAction(title: "Condition Group End", style: .any, handler: handlerCaptor.capture()))
+		Verify(mockUiUtil, .alertAction(title: "Condition Group End", style: .any, handler: .capturing(handlerCaptor)))
 		guard let handler = handlerCaptor.value as? (UIAlertAction) -> Void else {
 			XCTFail("handler was nil")
 			return
@@ -1712,7 +1724,7 @@ final class QueryViewControllerUnitTests: UnitTest {
 		// when
 		controller.tableView(tableView, didSelectRowAt: IndexPath(row: 1, section: 0))
 		let handlerCaptor = ArgumentCaptor<((UIAlertAction) -> Void)?>()
-		Verify(mockUiUtil, .alertAction(title: "Or", style: .any, handler: handlerCaptor.capture()))
+		Verify(mockUiUtil, .alertAction(title: "Or", style: .any, handler: .capturing(handlerCaptor)))
 		guard let handler = handlerCaptor.value as? (UIAlertAction) -> Void else {
 			XCTFail("handler was nil")
 			return
@@ -1737,7 +1749,7 @@ final class QueryViewControllerUnitTests: UnitTest {
 		// when
 		controller.tableView(tableView, didSelectRowAt: IndexPath(row: 1, section: 0))
 		let handlerCaptor = ArgumentCaptor<((UIAlertAction) -> Void)?>()
-		Verify(mockUiUtil, .alertAction(title: "Or", style: .any, handler: handlerCaptor.capture()))
+		Verify(mockUiUtil, .alertAction(title: "Or", style: .any, handler: .capturing(handlerCaptor)))
 		guard let handler = handlerCaptor.value as? (UIAlertAction) -> Void else {
 			XCTFail("handler was nil")
 			return

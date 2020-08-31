@@ -29,8 +29,7 @@ public final class StartActivityIntentHandler: ActivityIntentHandler<StartActivi
 			return
 		}
 		do {
-			guard let activityDefinition = try injected(ActivityDAO.self)
-				.getDefinitionWith(name: activityName)
+			guard let activityDefinition = try injected(ActivityDAO.self).getDefinitionWith(name: activityName)
 			else {
 				completion(INStringResolutionResult.needsValue())
 				return
@@ -114,6 +113,7 @@ public final class StartActivityIntentHandler: ActivityIntentHandler<StartActivi
 				note: intent.note,
 				extraTags: try parseTags(intent.extraTags ?? [])
 			)
+			injected(Database.self).setModifiedExternally(true)
 			completion(StartActivityIntentResponse.success(activity: ActivityIntentInfo(activity)))
 		} catch {
 			Me.log.error("Failed StartActivityIntent: %@", errorInfo(error))

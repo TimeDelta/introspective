@@ -44,6 +44,21 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
         if scopes.contains(.given) { methodReturnValues = [] }
         if scopes.contains(.perform) { methodPerformValues = [] }
     }
+
+    private static func isCapturing<T>(_ param: Parameter<T>) -> Bool {
+        switch param {
+            // can't use `case .capturing(_, _):` here because it causes an EXC_BAD_ACCESS error
+            case .value(_):
+                return false
+            case .matching(_):
+                return false
+            case ._:
+                return false
+            default:
+                return true
+        }
+    }
+
     static var matcher: Matcher = Matcher.default
     static var stubbingPolicy: StubbingPolicy = .wrap
     static var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
@@ -52,7 +67,7 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
     static private var methodPerformValues: [StaticPerform] = []
     public typealias StaticPropertyStub = StaticGiven
     public typealias StaticMethodStub = StaticGiven
-    
+
     /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
     public static func resetMock(_ scopes: MockScope...) {
         let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
@@ -64,24 +79,18 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
 
     public var attributedName: String {
 		get {	invocations.append(.p_attributedName_get); return __p_attributedName ?? givenGetterValue(.p_attributedName_get, "CoreDataSampleMock - stub value for attributedName was not defined") }
-		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
-		set {	__p_attributedName = newValue }
 	}
 	private var __p_attributedName: (String)?
 
 
     public var attributes: [Attribute] {
 		get {	invocations.append(.p_attributes_get); return __p_attributes ?? givenGetterValue(.p_attributes_get, "CoreDataSampleMock - stub value for attributes was not defined") }
-		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
-		set {	__p_attributes = newValue }
 	}
 	private var __p_attributes: ([Attribute])?
 
 
     public var debugDescription: String {
 		get {	invocations.append(.p_debugDescription_get); return __p_debugDescription ?? givenGetterValue(.p_debugDescription_get, "CoreDataSampleMock - stub value for debugDescription was not defined") }
-		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
-		set {	__p_debugDescription = newValue }
 	}
 	private var __p_debugDescription: (String)?
 
@@ -89,56 +98,42 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
 
     public static var entityName: String {
 		get {	CoreDataSampleMock.invocations.append(.p_entityName_get); return CoreDataSampleMock.__p_entityName ?? givenGetterValue(.p_entityName_get, "CoreDataSampleMock - stub value for entityName was not defined") }
-		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
-		set {	CoreDataSampleMock.__p_entityName = newValue }
 	}
 	private static var __p_entityName: (String)?
 
 
     public static var exportFileDescription: String {
 		get {	CoreDataSampleMock.invocations.append(.p_exportFileDescription_get); return CoreDataSampleMock.__p_exportFileDescription ?? givenGetterValue(.p_exportFileDescription_get, "CoreDataSampleMock - stub value for exportFileDescription was not defined") }
-		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
-		set {	CoreDataSampleMock.__p_exportFileDescription = newValue }
 	}
 	private static var __p_exportFileDescription: (String)?
 
 
     public static var name: String {
 		get {	CoreDataSampleMock.invocations.append(.p_name_get); return CoreDataSampleMock.__p_name ?? givenGetterValue(.p_name_get, "CoreDataSampleMock - stub value for name was not defined") }
-		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
-		set {	CoreDataSampleMock.__p_name = newValue }
 	}
 	private static var __p_name: (String)?
 
 
     public static var attributes: [Attribute] {
 		get {	CoreDataSampleMock.invocations.append(.p_attributes_get); return CoreDataSampleMock.__p_attributes ?? givenGetterValue(.p_attributes_get, "CoreDataSampleMock - stub value for attributes was not defined") }
-		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
-		set {	CoreDataSampleMock.__p_attributes = newValue }
 	}
 	private static var __p_attributes: ([Attribute])?
 
 
     public static var defaultDependentAttribute: Attribute {
 		get {	CoreDataSampleMock.invocations.append(.p_defaultDependentAttribute_get); return CoreDataSampleMock.__p_defaultDependentAttribute ?? givenGetterValue(.p_defaultDependentAttribute_get, "CoreDataSampleMock - stub value for defaultDependentAttribute was not defined") }
-		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
-		set {	CoreDataSampleMock.__p_defaultDependentAttribute = newValue }
 	}
 	private static var __p_defaultDependentAttribute: (Attribute)?
 
 
     public static var defaultIndependentAttribute: Attribute {
 		get {	CoreDataSampleMock.invocations.append(.p_defaultIndependentAttribute_get); return CoreDataSampleMock.__p_defaultIndependentAttribute ?? givenGetterValue(.p_defaultIndependentAttribute_get, "CoreDataSampleMock - stub value for defaultIndependentAttribute was not defined") }
-		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
-		set {	CoreDataSampleMock.__p_defaultIndependentAttribute = newValue }
 	}
 	private static var __p_defaultIndependentAttribute: (Attribute)?
 
 
     public static var dateAttributes: [DateType: DateAttribute] {
 		get {	CoreDataSampleMock.invocations.append(.p_dateAttributes_get); return CoreDataSampleMock.__p_dateAttributes ?? givenGetterValue(.p_dateAttributes_get, "CoreDataSampleMock - stub value for dateAttributes was not defined") }
-		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
-		set {	CoreDataSampleMock.__p_dateAttributes = newValue }
 	}
 	private static var __p_dateAttributes: ([DateType: DateAttribute])?
 
@@ -295,19 +290,33 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
         case p_defaultIndependentAttribute_get
         case p_dateAttributes_get
 
-        static func compareParameters(lhs: StaticMethodType, rhs: StaticMethodType, matcher: Matcher) -> Bool {
+        static func compareParameters(lhs: StaticMethodType, rhs: StaticMethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
             case (.sm_exportHeaderRow__to_csv(let lhsCsv), .sm_exportHeaderRow__to_csv(let rhsCsv)):
-                guard Parameter.compare(lhs: lhsCsv, rhs: rhsCsv, with: matcher) else { return false } 
-                return true 
-            case (.p_entityName_get,.p_entityName_get): return true
-            case (.p_exportFileDescription_get,.p_exportFileDescription_get): return true
-            case (.p_name_get,.p_name_get): return true
-            case (.p_attributes_get,.p_attributes_get): return true
-            case (.p_defaultDependentAttribute_get,.p_defaultDependentAttribute_get): return true
-            case (.p_defaultIndependentAttribute_get,.p_defaultIndependentAttribute_get): return true
-            case (.p_dateAttributes_get,.p_dateAttributes_get): return true
-            default: return false
+				var noncapturingComparisons: [Bool] = []
+				var comparison: Bool
+				var results: [Matcher.ParameterComparisonResult] = []
+
+				if !isCapturing(lhsCsv) && !isCapturing(rhsCsv) {
+					comparison = Parameter.compare(lhs: lhsCsv, rhs: rhsCsv, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsCsv, rhsCsv, "to csv"))
+				}
+
+				if isCapturing(lhsCsv) || isCapturing(rhsCsv) {
+					comparison = Parameter.compare(lhs: lhsCsv, rhs: rhsCsv, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsCsv, rhsCsv, "to csv"))
+				}
+
+				return Matcher.ComparisonResult(results)
+            case (.p_entityName_get,.p_entityName_get): return Matcher.ComparisonResult.match
+            case (.p_exportFileDescription_get,.p_exportFileDescription_get): return Matcher.ComparisonResult.match
+            case (.p_name_get,.p_name_get): return Matcher.ComparisonResult.match
+            case (.p_attributes_get,.p_attributes_get): return Matcher.ComparisonResult.match
+            case (.p_defaultDependentAttribute_get,.p_defaultDependentAttribute_get): return Matcher.ComparisonResult.match
+            case (.p_defaultIndependentAttribute_get,.p_defaultIndependentAttribute_get): return Matcher.ComparisonResult.match
+            case (.p_dateAttributes_get,.p_dateAttributes_get): return Matcher.ComparisonResult.match
+            default: return .none
             }
         }
 
@@ -321,6 +330,19 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
                 case .p_defaultDependentAttribute_get: return 0
                 case .p_defaultIndependentAttribute_get: return 0
                 case .p_dateAttributes_get: return 0
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .sm_exportHeaderRow__to_csv: return ".exportHeaderRow(to:)"
+            case .p_entityName_get: return "[get] .entityName"
+            case .p_exportFileDescription_get: return "[get] .exportFileDescription"
+            case .p_name_get: return "[get] .name"
+            case .p_attributes_get: return "[get] .attributes"
+            case .p_defaultDependentAttribute_get: return "[get] .defaultDependentAttribute"
+            case .p_defaultIndependentAttribute_get: return "[get] .defaultIndependentAttribute"
+            case .p_dateAttributes_get: return "[get] .dateAttributes"
+
             }
         }
     }
@@ -404,40 +426,180 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
         case p_attributes_get
         case p_debugDescription_get
 
-        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
-            case (.m_attributeValuesAreValid, .m_attributeValuesAreValid):
-                return true 
+            case (.m_attributeValuesAreValid, .m_attributeValuesAreValid): return .match
+
             case (.m_value__of_attribute(let lhsAttribute), .m_value__of_attribute(let rhsAttribute)):
-                guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
-                return true 
+				var noncapturingComparisons: [Bool] = []
+				var comparison: Bool
+				var results: [Matcher.ParameterComparisonResult] = []
+
+				if !isCapturing(lhsAttribute) && !isCapturing(rhsAttribute) {
+					comparison = Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsAttribute, rhsAttribute, "of attribute"))
+				}
+
+				if isCapturing(lhsAttribute) || isCapturing(rhsAttribute) {
+					comparison = Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsAttribute, rhsAttribute, "of attribute"))
+				}
+
+				return Matcher.ComparisonResult(results)
+
             case (.m_set__attribute_attributeto_value(let lhsAttribute, let lhsValue), .m_set__attribute_attributeto_value(let rhsAttribute, let rhsValue)):
-                guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
-                guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
-                return true 
+				var noncapturingComparisons: [Bool] = []
+				var comparison: Bool
+				var results: [Matcher.ParameterComparisonResult] = []
+
+				if !isCapturing(lhsAttribute) && !isCapturing(rhsAttribute) {
+					comparison = Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsAttribute, rhsAttribute, "attribute"))
+				}
+
+
+				if !isCapturing(lhsValue) && !isCapturing(rhsValue) {
+					comparison = Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsValue, rhsValue, "to value"))
+				}
+
+				if isCapturing(lhsAttribute) || isCapturing(rhsAttribute) {
+					comparison = Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsAttribute, rhsAttribute, "attribute"))
+				}
+
+
+				if isCapturing(lhsValue) || isCapturing(rhsValue) {
+					comparison = Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsValue, rhsValue, "to value"))
+				}
+
+				return Matcher.ComparisonResult(results)
+
             case (.m_equalTo__otherAttributed(let lhsOtherattributed), .m_equalTo__otherAttributed(let rhsOtherattributed)):
-                guard Parameter.compare(lhs: lhsOtherattributed, rhs: rhsOtherattributed, with: matcher) else { return false } 
-                return true 
+				var noncapturingComparisons: [Bool] = []
+				var comparison: Bool
+				var results: [Matcher.ParameterComparisonResult] = []
+
+				if !isCapturing(lhsOtherattributed) && !isCapturing(rhsOtherattributed) {
+					comparison = Parameter.compare(lhs: lhsOtherattributed, rhs: rhsOtherattributed, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsOtherattributed, rhsOtherattributed, "_ otherAttributed"))
+				}
+
+				if isCapturing(lhsOtherattributed) || isCapturing(rhsOtherattributed) {
+					comparison = Parameter.compare(lhs: lhsOtherattributed, rhs: rhsOtherattributed, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsOtherattributed, rhsOtherattributed, "_ otherAttributed"))
+				}
+
+				return Matcher.ComparisonResult(results)
+
             case (.m_export__to_csv(let lhsCsv), .m_export__to_csv(let rhsCsv)):
-                guard Parameter.compare(lhs: lhsCsv, rhs: rhsCsv, with: matcher) else { return false } 
-                return true 
+				var noncapturingComparisons: [Bool] = []
+				var comparison: Bool
+				var results: [Matcher.ParameterComparisonResult] = []
+
+				if !isCapturing(lhsCsv) && !isCapturing(rhsCsv) {
+					comparison = Parameter.compare(lhs: lhsCsv, rhs: rhsCsv, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsCsv, rhsCsv, "to csv"))
+				}
+
+				if isCapturing(lhsCsv) || isCapturing(rhsCsv) {
+					comparison = Parameter.compare(lhs: lhsCsv, rhs: rhsCsv, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsCsv, rhsCsv, "to csv"))
+				}
+
+				return Matcher.ComparisonResult(results)
+
             case (.m_graphableValue__of_attribute(let lhsAttribute), .m_graphableValue__of_attribute(let rhsAttribute)):
-                guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
-                return true 
-            case (.m_dates, .m_dates):
-                return true 
+				var noncapturingComparisons: [Bool] = []
+				var comparison: Bool
+				var results: [Matcher.ParameterComparisonResult] = []
+
+				if !isCapturing(lhsAttribute) && !isCapturing(rhsAttribute) {
+					comparison = Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsAttribute, rhsAttribute, "of attribute"))
+				}
+
+				if isCapturing(lhsAttribute) || isCapturing(rhsAttribute) {
+					comparison = Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsAttribute, rhsAttribute, "of attribute"))
+				}
+
+				return Matcher.ComparisonResult(results)
+
+            case (.m_dates, .m_dates): return .match
+
             case (.m_equalTo__otherSample(let lhsOthersample), .m_equalTo__otherSample(let rhsOthersample)):
-                guard Parameter.compare(lhs: lhsOthersample, rhs: rhsOthersample, with: matcher) else { return false } 
-                return true 
+				var noncapturingComparisons: [Bool] = []
+				var comparison: Bool
+				var results: [Matcher.ParameterComparisonResult] = []
+
+				if !isCapturing(lhsOthersample) && !isCapturing(rhsOthersample) {
+					comparison = Parameter.compare(lhs: lhsOthersample, rhs: rhsOthersample, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsOthersample, rhsOthersample, "_ otherSample"))
+				}
+
+				if isCapturing(lhsOthersample) || isCapturing(rhsOthersample) {
+					comparison = Parameter.compare(lhs: lhsOthersample, rhs: rhsOthersample, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsOthersample, rhsOthersample, "_ otherSample"))
+				}
+
+				return Matcher.ComparisonResult(results)
+
             case (.m_safeEqualityCheck__attribute_otherSampleas_as(let lhsAttribute, let lhsOthersample, let lhsAs), .m_safeEqualityCheck__attribute_otherSampleas_as(let rhsAttribute, let rhsOthersample, let rhsAs)):
-                guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
-                guard Parameter.compare(lhs: lhsOthersample, rhs: rhsOthersample, with: matcher) else { return false } 
-                guard Parameter.compare(lhs: lhsAs, rhs: rhsAs, with: matcher) else { return false } 
-                return true 
-            case (.p_attributedName_get,.p_attributedName_get): return true
-            case (.p_attributes_get,.p_attributes_get): return true
-            case (.p_debugDescription_get,.p_debugDescription_get): return true
-            default: return false
+				var noncapturingComparisons: [Bool] = []
+				var comparison: Bool
+				var results: [Matcher.ParameterComparisonResult] = []
+
+				if !isCapturing(lhsAttribute) && !isCapturing(rhsAttribute) {
+					comparison = Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsAttribute, rhsAttribute, "_ attribute"))
+				}
+
+
+				if !isCapturing(lhsOthersample) && !isCapturing(rhsOthersample) {
+					comparison = Parameter.compare(lhs: lhsOthersample, rhs: rhsOthersample, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsOthersample, rhsOthersample, "_ otherSample"))
+				}
+
+
+				if !isCapturing(lhsAs) && !isCapturing(rhsAs) {
+					comparison = Parameter.compare(lhs: lhsAs, rhs: rhsAs, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsAs, rhsAs, "as"))
+				}
+
+				if isCapturing(lhsAttribute) || isCapturing(rhsAttribute) {
+					comparison = Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsAttribute, rhsAttribute, "_ attribute"))
+				}
+
+
+				if isCapturing(lhsOthersample) || isCapturing(rhsOthersample) {
+					comparison = Parameter.compare(lhs: lhsOthersample, rhs: rhsOthersample, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsOthersample, rhsOthersample, "_ otherSample"))
+				}
+
+
+				if isCapturing(lhsAs) || isCapturing(rhsAs) {
+					comparison = Parameter.compare(lhs: lhsAs, rhs: rhsAs, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsAs, rhsAs, "as"))
+				}
+
+				return Matcher.ComparisonResult(results)
+            case (.p_attributedName_get,.p_attributedName_get): return Matcher.ComparisonResult.match
+            case (.p_attributes_get,.p_attributes_get): return Matcher.ComparisonResult.match
+            case (.p_debugDescription_get,.p_debugDescription_get): return Matcher.ComparisonResult.match
+            default: return .none
             }
         }
 
@@ -455,6 +617,22 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
             case .p_attributedName_get: return 0
             case .p_attributes_get: return 0
             case .p_debugDescription_get: return 0
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .m_attributeValuesAreValid: return ".attributeValuesAreValid()"
+            case .m_value__of_attribute: return ".value(of:)"
+            case .m_set__attribute_attributeto_value: return ".set(attribute:to:)"
+            case .m_equalTo__otherAttributed: return ".equalTo(_:)"
+            case .m_export__to_csv: return ".export(to:)"
+            case .m_graphableValue__of_attribute: return ".graphableValue(of:)"
+            case .m_dates: return ".dates()"
+            case .m_equalTo__otherSample: return ".equalTo(_:)"
+            case .m_safeEqualityCheck__attribute_otherSampleas_as: return ".safeEqualityCheck(_:_:as:)"
+            case .p_attributedName_get: return "[get] .attributedName"
+            case .p_attributes_get: return "[get] .attributes"
+            case .p_debugDescription_get: return "[get] .debugDescription"
             }
         }
     }
@@ -635,28 +813,47 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
     }
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
-        let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
         invocations.append(call)
     }
     private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
         let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
-        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
         guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
         return product
     }
     private func methodPerformValue(_ method: MethodType) -> Any? {
-        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
         return matched?.performs
     }
-    private func matchingCalls(_ method: MethodType) -> [MethodType] {
-        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
     }
-    private func matchingCalls(_ method: Verify) -> Int {
-        return matchingCalls(method.method).count
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
     }
     private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
         do {
@@ -674,10 +871,8 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
         }
     }
     private func onFatalFailure(_ message: String) {
-        #if Mocky
         guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
-        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
-        #endif
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
     }
 
     static public func given(_ method: StaticGiven) {
@@ -690,8 +885,21 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
     }
 
     static public func verify(_ method: StaticVerify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
-        let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return StaticMethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
     }
 
     static private func addInvocation(_ call: StaticMethodType) {
@@ -699,19 +907,21 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
     }
     static private func methodReturnValue(_ method: StaticMethodType) throws -> StubProduct {
         let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
-        let matched = candidates.first(where: { $0.isValid && StaticMethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        let matched = candidates.first(where: { $0.isValid && StaticMethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
         guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
         return product
     }
     static private func methodPerformValue(_ method: StaticMethodType) -> Any? {
-        let matched = methodPerformValues.reversed().first { StaticMethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        let matched = methodPerformValues.reversed().first { StaticMethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
         return matched?.performs
     }
-    static private func matchingCalls(_ method: StaticMethodType) -> [StaticMethodType] {
-        return invocations.filter { StaticMethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    static private func matchingCalls(_ method: StaticMethodType, file: StaticString?, line: UInt?) -> [StaticMethodType] {
+        matcher.set(file: file, line: line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { StaticMethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
     }
-    static private func matchingCalls(_ method: StaticVerify) -> Int {
-        return matchingCalls(method.method).count
+    static private func matchingCalls(_ method: StaticVerify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
     }
     static private func givenGetterValue<T>(_ method: StaticMethodType, _ message: String) -> T {
         do {

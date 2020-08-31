@@ -11,6 +11,7 @@ import CoreData
 import Hamcrest
 import SwiftDate
 
+@testable import Common
 @testable import DataImport
 @testable import DependencyInjection
 @testable import Persistence
@@ -289,7 +290,11 @@ class IntrospectiveMoodImporterFunctionalTests: ImporterTest {
 		// given
 		useInput(Me.validInput)
 		DispatchQueue.global(qos: .background).async {
-			try! self.importer.importData(from: self.url)
+			do {
+				try self.importer.importData(from: self.url)
+			} catch {
+				XCTFail("Error thrown: " + errorInfo(error))
+			}
 		}
 		while importer.percentComplete() == 0 {}
 		importer.cancel()

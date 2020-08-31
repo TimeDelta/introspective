@@ -60,6 +60,7 @@ public final class StopActivitiesIntentHandler: ActivityIntentHandler<StopActivi
 					.stopMostRecentlyStartedIncompleteActivity(for: definition)
 				stoppedActivities.append(activity)
 			}
+			injected(Database.self).setModifiedExternally(true)
 			let activitiesInfo = stoppedActivities.map { a in ActivityIntentInfo(a) }
 			completion(StopActivitiesIntentResponse.success(activities: activitiesInfo))
 		} catch {

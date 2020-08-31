@@ -44,6 +44,8 @@ class BasicXYChartViewControllerMock: UIViewController, BasicXYChartViewControll
     }
 
 
+
+
     public var queries: [Query]? {
 		get {	invocations.append(.p_queries_get); return __p_queries ?? optionalGivenGetterValue(.p_queries_get, "BasicXYChartViewControllerMock - stub value for queries was not defined") }
 		set {	invocations.append(.p_queries_set(.value(newValue))); __p_queries = newValue }
@@ -96,19 +98,18 @@ class BasicXYChartViewControllerMock: UIViewController, BasicXYChartViewControll
         case p_categories_get
 		case p_categories_set(Parameter<[String]?>)
 
-        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
-            switch (lhs, rhs) {
-            case (.p_queries_get,.p_queries_get): return true
-			case (.p_queries_set(let left),.p_queries_set(let right)): return Parameter<[Query]?>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_dataSeries_get,.p_dataSeries_get): return true
-			case (.p_dataSeries_set(let left),.p_dataSeries_set(let right)): return Parameter<[AASeriesElement]?>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_displayXAxisValueLabels_get,.p_displayXAxisValueLabels_get): return true
-			case (.p_displayXAxisValueLabels_set(let left),.p_displayXAxisValueLabels_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_chartType_get,.p_chartType_get): return true
-			case (.p_chartType_set(let left),.p_chartType_set(let right)): return Parameter<AAChartType?>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_categories_get,.p_categories_get): return true
-			case (.p_categories_set(let left),.p_categories_set(let right)): return Parameter<[String]?>.compare(lhs: left, rhs: right, with: matcher)
-            default: return false
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {            case (.p_queries_get,.p_queries_get): return Matcher.ComparisonResult.match
+			case (.p_queries_set(let left),.p_queries_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<[Query]?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_dataSeries_get,.p_dataSeries_get): return Matcher.ComparisonResult.match
+			case (.p_dataSeries_set(let left),.p_dataSeries_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<[AASeriesElement]?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_displayXAxisValueLabels_get,.p_displayXAxisValueLabels_get): return Matcher.ComparisonResult.match
+			case (.p_displayXAxisValueLabels_set(let left),.p_displayXAxisValueLabels_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_chartType_get,.p_chartType_get): return Matcher.ComparisonResult.match
+			case (.p_chartType_set(let left),.p_chartType_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<AAChartType?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_categories_get,.p_categories_get): return Matcher.ComparisonResult.match
+			case (.p_categories_set(let left),.p_categories_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<[String]?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            default: return .none
             }
         }
 
@@ -124,6 +125,20 @@ class BasicXYChartViewControllerMock: UIViewController, BasicXYChartViewControll
 			case .p_chartType_set(let newValue): return newValue.intValue
             case .p_categories_get: return 0
 			case .p_categories_set(let newValue): return newValue.intValue
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .p_queries_get: return "[get] .queries"
+			case .p_queries_set: return "[set] .queries"
+            case .p_dataSeries_get: return "[get] .dataSeries"
+			case .p_dataSeries_set: return "[set] .dataSeries"
+            case .p_displayXAxisValueLabels_get: return "[get] .displayXAxisValueLabels"
+			case .p_displayXAxisValueLabels_set: return "[set] .displayXAxisValueLabels"
+            case .p_chartType_get: return "[get] .chartType"
+			case .p_chartType_set: return "[set] .chartType"
+            case .p_categories_get: return "[get] .categories"
+			case .p_categories_set: return "[set] .categories"
             }
         }
     }
@@ -185,28 +200,47 @@ class BasicXYChartViewControllerMock: UIViewController, BasicXYChartViewControll
     }
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
-        let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
         invocations.append(call)
     }
     private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
         let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
-        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
         guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
         return product
     }
     private func methodPerformValue(_ method: MethodType) -> Any? {
-        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
         return matched?.performs
     }
-    private func matchingCalls(_ method: MethodType) -> [MethodType] {
-        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
     }
-    private func matchingCalls(_ method: Verify) -> Int {
-        return matchingCalls(method.method).count
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
     }
     private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
         do {
@@ -224,10 +258,8 @@ class BasicXYChartViewControllerMock: UIViewController, BasicXYChartViewControll
         }
     }
     private func onFatalFailure(_ message: String) {
-        #if Mocky
         guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
-        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
-        #endif
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
     }
 // sourcery:end
 }

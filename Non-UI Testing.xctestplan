@@ -108,6 +108,7 @@
         "argument" : "--functional-testing"
       }
     ],
+    "nsZombieEnabled" : true,
     "targetForVariableExpansion" : {
       "containerPath" : "container:Introspective.xcodeproj",
       "identifier" : "BB0A1DC399A7E3FFC11219EB8C00C163",
