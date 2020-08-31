@@ -62,6 +62,7 @@ public protocol UiUtil {
 		style: UIAlertAction.Style,
 		handler: ((UIAlertAction) -> Void)?
 	) -> UIAlertAction
+	func cancelAlertAction(handler: ((UIAlertAction) -> Void)?) -> UIAlertAction
 	func contextualAction(
 		style: UIContextualAction.Style,
 		title: String?,
@@ -117,6 +118,10 @@ public extension UiUtil {
 		center: ModalCenterPosition = .center
 	) -> Presentr {
 		customPresenter(width: width, height: height, center: center)
+	}
+
+	func cancelAlertAction(handler: ((UIAlertAction) -> Void)? = nil) -> UIAlertAction {
+		cancelAlertAction(handler: handler)
 	}
 
 	func setView(_ view: UIView, enabled: Bool? = nil, hidden: Bool? = nil) {
@@ -316,6 +321,10 @@ public final class UiUtilImpl: UiUtil {
 		handler: ((UIAlertAction) -> Void)?
 	) -> UIAlertAction {
 		UIAlertAction(title: title, style: style, handler: handler)
+	}
+
+	public func cancelAlertAction(handler: ((UIAlertAction) -> Void)?) -> UIAlertAction {
+		alertAction(title: "Cancel", style: .cancel, handler: handler)
 	}
 
 	public func contextualAction(

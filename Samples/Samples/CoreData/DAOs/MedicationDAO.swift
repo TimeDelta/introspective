@@ -15,6 +15,8 @@ import Persistence
 
 // sourcery: AutoMockable
 public protocol MedicationDAO {
+	func allMedications() throws -> [Medication]
+
 	func medicationExists(withName name: String, using transaction: Transaction?) throws -> Bool
 	/// - Returns: The medication with the provided name if it exists. Otherwise, nil.
 	func medicationNamed(_ name: String) throws -> Medication?
@@ -92,6 +94,10 @@ extension MedicationDAO {
 }
 
 public final class MedicationDAOImpl: MedicationDAO {
+	public final func allMedications() throws -> [Medication] {
+		try injected(Database.self).query(Medication.fetchRequest())
+	}
+
 	public final func medicationExists(withName name: String, using transaction: Transaction?) throws -> Bool {
 		let transaction = transaction ?? injected(Database.self).transaction()
 		let fetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()

@@ -13431,6 +13431,22 @@ open class MedicationDAOMock: MedicationDAO, Mock {
 
 
 
+    open func allMedications() throws -> [Medication] {
+        addInvocation(.m_allMedications)
+		let perform = methodPerformValue(.m_allMedications) as? () -> Void
+		perform?()
+		var __value: [Medication]
+		do {
+		    __value = try methodReturnValue(.m_allMedications).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for allMedications(). Use given")
+			Failure("Stub return value not specified for allMedications(). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
     open func medicationExists(withName name: String, using transaction: Transaction?) throws -> Bool {
         addInvocation(.m_medicationExists__withName_nameusing_transaction(Parameter<String>.value(`name`), Parameter<Transaction?>.value(`transaction`)))
 		let perform = methodPerformValue(.m_medicationExists__withName_nameusing_transaction(Parameter<String>.value(`name`), Parameter<Transaction?>.value(`transaction`))) as? (String, Transaction?) -> Void
@@ -13530,6 +13546,7 @@ open class MedicationDAOMock: MedicationDAO, Mock {
 
 
     fileprivate enum MethodType {
+        case m_allMedications
         case m_medicationExists__withName_nameusing_transaction(Parameter<String>, Parameter<Transaction?>)
         case m_medicationNamed__name(Parameter<String>)
         case m_takeMedicationUsingDefaultDosage__medication(Parameter<Medication>)
@@ -13539,6 +13556,8 @@ open class MedicationDAOMock: MedicationDAO, Mock {
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
+            case (.m_allMedications, .m_allMedications): return .match
+
             case (.m_medicationExists__withName_nameusing_transaction(let lhsName, let lhsTransaction), .m_medicationExists__withName_nameusing_transaction(let rhsName, let rhsTransaction)):
 				var noncapturingComparisons: [Bool] = []
 				var comparison: Bool
@@ -13808,6 +13827,7 @@ open class MedicationDAOMock: MedicationDAO, Mock {
 
         func intValue() -> Int {
             switch self {
+            case .m_allMedications: return 0
             case let .m_medicationExists__withName_nameusing_transaction(p0, p1): return p0.intValue + p1.intValue
             case let .m_medicationNamed__name(p0): return p0.intValue
             case let .m_takeMedicationUsingDefaultDosage__medication(p0): return p0.intValue
@@ -13818,6 +13838,7 @@ open class MedicationDAOMock: MedicationDAO, Mock {
         }
         func assertionName() -> String {
             switch self {
+            case .m_allMedications: return ".allMedications()"
             case .m_medicationExists__withName_nameusing_transaction: return ".medicationExists(withName:using:)"
             case .m_medicationNamed__name: return ".medicationNamed(_:)"
             case .m_takeMedicationUsingDefaultDosage__medication: return ".takeMedicationUsingDefaultDosage(_:)"
@@ -13837,6 +13858,9 @@ open class MedicationDAOMock: MedicationDAO, Mock {
         }
 
 
+        public static func allMedications(willReturn: [Medication]...) -> MethodStub {
+            return Given(method: .m_allMedications, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func medicationExists(withName name: Parameter<String>, using transaction: Parameter<Transaction?>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_medicationExists__withName_nameusing_transaction(`name`, `transaction`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
@@ -13857,6 +13881,16 @@ open class MedicationDAOMock: MedicationDAO, Mock {
         @discardableResult
 		public static func createDose(medication: Parameter<Medication>, dosage: Parameter<Dosage?>, timestamp: Parameter<Date>, source: Parameter<Sources.MedicationSourceNum>, using transaction: Parameter<Transaction?>, willReturn: MedicationDose...) -> MethodStub {
             return Given(method: .m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(`medication`, `dosage`, `timestamp`, `source`, `transaction`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func allMedications(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_allMedications, products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func allMedications(willProduce: (StubberThrows<[Medication]>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_allMedications, products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: ([Medication]).self)
+			willProduce(stubber)
+			return given
         }
         public static func medicationExists(withName name: Parameter<String>, using transaction: Parameter<Transaction?>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_medicationExists__withName_nameusing_transaction(`name`, `transaction`), products: willThrow.map({ StubProduct.throw($0) }))
@@ -13926,6 +13960,7 @@ open class MedicationDAOMock: MedicationDAO, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
+        public static func allMedications() -> Verify { return Verify(method: .m_allMedications)}
         public static func medicationExists(withName name: Parameter<String>, using transaction: Parameter<Transaction?>) -> Verify { return Verify(method: .m_medicationExists__withName_nameusing_transaction(`name`, `transaction`))}
         public static func medicationNamed(_ name: Parameter<String>) -> Verify { return Verify(method: .m_medicationNamed__name(`name`))}
         @discardableResult
@@ -13941,6 +13976,9 @@ open class MedicationDAOMock: MedicationDAO, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
+        public static func allMedications(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_allMedications, performs: perform)
+        }
         public static func medicationExists(withName name: Parameter<String>, using transaction: Parameter<Transaction?>, perform: @escaping (String, Transaction?) -> Void) -> Perform {
             return Perform(method: .m_medicationExists__withName_nameusing_transaction(`name`, `transaction`), performs: perform)
         }
@@ -26154,6 +26192,20 @@ open class UiUtilMock: UiUtil, Mock {
 		return __value
     }
 
+    open func cancelAlertAction(handler: ((UIAlertAction) -> Void)?) -> UIAlertAction {
+        addInvocation(.m_cancelAlertAction__handler_handler(Parameter<((UIAlertAction) -> Void)?>.value(`handler`)))
+		let perform = methodPerformValue(.m_cancelAlertAction__handler_handler(Parameter<((UIAlertAction) -> Void)?>.value(`handler`))) as? (((UIAlertAction) -> Void)?) -> Void
+		perform?(`handler`)
+		var __value: UIAlertAction
+		do {
+		    __value = try methodReturnValue(.m_cancelAlertAction__handler_handler(Parameter<((UIAlertAction) -> Void)?>.value(`handler`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for cancelAlertAction(handler: ((UIAlertAction) -> Void)?). Use given")
+			Failure("Stub return value not specified for cancelAlertAction(handler: ((UIAlertAction) -> Void)?). Use given")
+		}
+		return __value
+    }
+
     open func contextualAction(		style: UIContextualAction.Style,		title: String?,		handler: @escaping UIContextualAction.Handler	) -> UIContextualAction {
         addInvocation(.m_contextualAction__style_styletitle_titlehandler_handler(Parameter<UIContextualAction.Style>.value(`style`), Parameter<String?>.value(`title`), Parameter<UIContextualAction.Handler>.value(`handler`)))
 		let perform = methodPerformValue(.m_contextualAction__style_styletitle_titlehandler_handler(Parameter<UIContextualAction.Style>.value(`style`), Parameter<String?>.value(`title`), Parameter<UIContextualAction.Handler>.value(`handler`))) as? (UIContextualAction.Style, String?, @escaping UIContextualAction.Handler) -> Void
@@ -26233,6 +26285,7 @@ open class UiUtilMock: UiUtil, Mock {
         case m_alert__title_titlemessage_messagepreferredStyle_preferredStyle(Parameter<String?>, Parameter<String?>, Parameter<UIAlertController.Style>)
         case m_tableViewRowAction__style_styletitle_titlehandler_handler(Parameter<UITableViewRowAction.Style>, Parameter<String?>, Parameter<(UITableViewRowAction, IndexPath) -> Void>)
         case m_alertAction__title_titlestyle_stylehandler_handler(Parameter<String?>, Parameter<UIAlertAction.Style>, Parameter<((UIAlertAction) -> Void)?>)
+        case m_cancelAlertAction__handler_handler(Parameter<((UIAlertAction) -> Void)?>)
         case m_contextualAction__style_styletitle_titlehandler_handler(Parameter<UIContextualAction.Style>, Parameter<String?>, Parameter<UIContextualAction.Handler>)
         case m_stopObserving__observername_nameobject_object(Parameter<Any>, Parameter<NotificationName?>, Parameter<Any?>)
         case m_post__name_nameobject_objectuserInfo_userInfo_1(Parameter<Notification.Name>, Parameter<Any?>, Parameter<[AnyHashable: Any]?>)
@@ -26881,6 +26934,24 @@ open class UiUtilMock: UiUtil, Mock {
 
 				return Matcher.ComparisonResult(results)
 
+            case (.m_cancelAlertAction__handler_handler(let lhsHandler), .m_cancelAlertAction__handler_handler(let rhsHandler)):
+				var noncapturingComparisons: [Bool] = []
+				var comparison: Bool
+				var results: [Matcher.ParameterComparisonResult] = []
+
+				if !isCapturing(lhsHandler) && !isCapturing(rhsHandler) {
+					comparison = Parameter.compare(lhs: lhsHandler, rhs: rhsHandler, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsHandler, rhsHandler, "handler"))
+				}
+
+				if isCapturing(lhsHandler) || isCapturing(rhsHandler) {
+					comparison = Parameter.compare(lhs: lhsHandler, rhs: rhsHandler, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsHandler, rhsHandler, "handler"))
+				}
+
+				return Matcher.ComparisonResult(results)
+
             case (.m_contextualAction__style_styletitle_titlehandler_handler(let lhsStyle, let lhsTitle, let lhsHandler), .m_contextualAction__style_styletitle_titlehandler_handler(let rhsStyle, let rhsTitle, let rhsHandler)):
 				var noncapturingComparisons: [Bool] = []
 				var comparison: Bool
@@ -27338,6 +27409,7 @@ open class UiUtilMock: UiUtil, Mock {
             case let .m_alert__title_titlemessage_messagepreferredStyle_preferredStyle(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_tableViewRowAction__style_styletitle_titlehandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_alertAction__title_titlestyle_stylehandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_cancelAlertAction__handler_handler(p0): return p0.intValue
             case let .m_contextualAction__style_styletitle_titlehandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_stopObserving__observername_nameobject_object(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_post__name_nameobject_objectuserInfo_userInfo_1(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
@@ -27368,6 +27440,7 @@ open class UiUtilMock: UiUtil, Mock {
             case .m_alert__title_titlemessage_messagepreferredStyle_preferredStyle: return ".alert(title:message:preferredStyle:)"
             case .m_tableViewRowAction__style_styletitle_titlehandler_handler: return ".tableViewRowAction(style:title:handler:)"
             case .m_alertAction__title_titlestyle_stylehandler_handler: return ".alertAction(title:style:handler:)"
+            case .m_cancelAlertAction__handler_handler: return ".cancelAlertAction(handler:)"
             case .m_contextualAction__style_styletitle_titlehandler_handler: return ".contextualAction(style:title:handler:)"
             case .m_stopObserving__observername_nameobject_object: return ".stopObserving(_:name:object:)"
             case .m_post__name_nameobject_objectuserInfo_userInfo_1: return ".post(name:object:userInfo:)"
@@ -27431,6 +27504,9 @@ open class UiUtilMock: UiUtil, Mock {
         }
         public static func alertAction(title: Parameter<String?>, style: Parameter<UIAlertAction.Style>, handler: Parameter<((UIAlertAction) -> Void)?>, willReturn: UIAlertAction...) -> MethodStub {
             return Given(method: .m_alertAction__title_titlestyle_stylehandler_handler(`title`, `style`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func cancelAlertAction(handler: Parameter<((UIAlertAction) -> Void)?>, willReturn: UIAlertAction...) -> MethodStub {
+            return Given(method: .m_cancelAlertAction__handler_handler(`handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func contextualAction(style: Parameter<UIContextualAction.Style>, title: Parameter<String?>, handler: Parameter<UIContextualAction.Handler>, willReturn: UIContextualAction...) -> MethodStub {
             return Given(method: .m_contextualAction__style_styletitle_titlehandler_handler(`style`, `title`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
@@ -27512,6 +27588,13 @@ open class UiUtilMock: UiUtil, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func cancelAlertAction(handler: Parameter<((UIAlertAction) -> Void)?>, willProduce: (Stubber<UIAlertAction>) -> Void) -> MethodStub {
+            let willReturn: [UIAlertAction] = []
+			let given: Given = { return Given(method: .m_cancelAlertAction__handler_handler(`handler`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (UIAlertAction).self)
+			willProduce(stubber)
+			return given
+        }
         public static func contextualAction(style: Parameter<UIContextualAction.Style>, title: Parameter<String?>, handler: Parameter<UIContextualAction.Handler>, willProduce: (Stubber<UIContextualAction>) -> Void) -> MethodStub {
             let willReturn: [UIContextualAction] = []
 			let given: Given = { return Given(method: .m_contextualAction__style_styletitle_titlehandler_handler(`style`, `title`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
@@ -27540,6 +27623,7 @@ open class UiUtilMock: UiUtil, Mock {
         public static func alert(title: Parameter<String?>, message: Parameter<String?>, preferredStyle: Parameter<UIAlertController.Style>) -> Verify { return Verify(method: .m_alert__title_titlemessage_messagepreferredStyle_preferredStyle(`title`, `message`, `preferredStyle`))}
         public static func tableViewRowAction(style: Parameter<UITableViewRowAction.Style>, title: Parameter<String?>, handler: Parameter<(UITableViewRowAction, IndexPath) -> Void>) -> Verify { return Verify(method: .m_tableViewRowAction__style_styletitle_titlehandler_handler(`style`, `title`, `handler`))}
         public static func alertAction(title: Parameter<String?>, style: Parameter<UIAlertAction.Style>, handler: Parameter<((UIAlertAction) -> Void)?>) -> Verify { return Verify(method: .m_alertAction__title_titlestyle_stylehandler_handler(`title`, `style`, `handler`))}
+        public static func cancelAlertAction(handler: Parameter<((UIAlertAction) -> Void)?>) -> Verify { return Verify(method: .m_cancelAlertAction__handler_handler(`handler`))}
         public static func contextualAction(style: Parameter<UIContextualAction.Style>, title: Parameter<String?>, handler: Parameter<UIContextualAction.Handler>) -> Verify { return Verify(method: .m_contextualAction__style_styletitle_titlehandler_handler(`style`, `title`, `handler`))}
         public static func stopObserving(_ observer: Parameter<Any>, name: Parameter<NotificationName?>, object: Parameter<Any?>) -> Verify { return Verify(method: .m_stopObserving__observername_nameobject_object(`observer`, `name`, `object`))}
         public static func post(name: Parameter<Notification.Name>, object: Parameter<Any?>, userInfo: Parameter<[AnyHashable: Any]?>) -> Verify { return Verify(method: .m_post__name_nameobject_objectuserInfo_userInfo_1(`name`, `object`, `userInfo`))}
@@ -27602,6 +27686,9 @@ open class UiUtilMock: UiUtil, Mock {
         }
         public static func alertAction(title: Parameter<String?>, style: Parameter<UIAlertAction.Style>, handler: Parameter<((UIAlertAction) -> Void)?>, perform: @escaping (String?, UIAlertAction.Style, ((UIAlertAction) -> Void)?) -> Void) -> Perform {
             return Perform(method: .m_alertAction__title_titlestyle_stylehandler_handler(`title`, `style`, `handler`), performs: perform)
+        }
+        public static func cancelAlertAction(handler: Parameter<((UIAlertAction) -> Void)?>, perform: @escaping (((UIAlertAction) -> Void)?) -> Void) -> Perform {
+            return Perform(method: .m_cancelAlertAction__handler_handler(`handler`), performs: perform)
         }
         public static func contextualAction(style: Parameter<UIContextualAction.Style>, title: Parameter<String?>, handler: Parameter<UIContextualAction.Handler>, perform: @escaping (UIContextualAction.Style, String?, @escaping UIContextualAction.Handler) -> Void) -> Perform {
             return Perform(method: .m_contextualAction__style_styletitle_titlehandler_handler(`style`, `title`, `handler`), performs: perform)

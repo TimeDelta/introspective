@@ -142,4 +142,60 @@ public final class Dosage: NSObject, NSSecureCoding, Codable, Comparable {
 			|| unit.localizedLowercase == "ul"
 			|| unit.localizedLowercase.starts(with: "micro")
 	}
+
+	// MARK: - Math
+
+	// MARK: Multiplication
+
+	public static func * (lhs: Dosage, rhs: Int) -> Dosage {
+		let newAmount = lhs.amount * Double(rhs)
+		return Dosage(newAmount, lhs.unit)
+	}
+
+	public static func * (lhs: Dosage, rhs: Double) -> Dosage {
+		let newAmount = lhs.amount * rhs
+		return Dosage(newAmount, lhs.unit)
+	}
+
+	public static func * (lhs: Int, rhs: Dosage) -> Dosage {
+		let newAmount = rhs.amount * Double(lhs)
+		return Dosage(newAmount, rhs.unit)
+	}
+
+	public static func * (lhs: Double, rhs: Dosage) -> Dosage {
+		let newAmount = rhs.amount * lhs
+		return Dosage(newAmount, rhs.unit)
+	}
+
+	// MARK: Multiplicative Assignment
+
+	public static func *= (lhs: inout Dosage, rhs: Int) {
+		lhs = lhs * rhs
+	}
+
+	public static func *= (lhs: inout Dosage, rhs: Double) {
+		lhs = lhs * rhs
+	}
+
+	// MARK: Division
+
+	public static func / (lhs: Dosage, rhs: Int) -> Dosage {
+		let newAmount = lhs.amount / Double(rhs)
+		return Dosage(newAmount, lhs.unit)
+	}
+
+	public static func / (lhs: Dosage, rhs: Double) -> Dosage {
+		let newAmount = lhs.amount / rhs
+		return Dosage(newAmount, lhs.unit)
+	}
+
+	// MARK: Division Assignment
+
+	public static func /= (lhs: inout Dosage, rhs: Int) {
+		lhs = lhs / rhs
+	}
+
+	public static func /= (lhs: inout Dosage, rhs: Double) {
+		lhs = lhs / rhs
+	}
 }
