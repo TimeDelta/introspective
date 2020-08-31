@@ -248,8 +248,8 @@ public final class RecordActivityTableViewController: UITableViewController {
 		let activityDefinition = definition(at: indexPath)
 
 		var actions = [
-			getDeleteActivityDefinitionActionFor(activityDefinition, at: indexPath),
 			getEditActivityDefinitionActionFor(activityDefinition, at: indexPath),
+			getDeleteActivityDefinitionActionFor(activityDefinition, at: indexPath),
 		]
 		if activityDefinition.activities.count > 0 {
 			actions.append(getViewHistoryActionFor(activityDefinition))
@@ -263,12 +263,11 @@ public final class RecordActivityTableViewController: UITableViewController {
 	) -> UISwipeActionsConfiguration? {
 		let activityDefinition = definition(at: indexPath)
 
-		var actions = [UIContextualAction]()
+		var actions: [UIContextualAction] = [getAddNewActionFor(activityDefinition)]
 		if let activity = getMostRecentActivity(activityDefinition) {
-			actions.append(getDeleteActivityActionFor(activity))
 			actions.append(getEditLastActionFor(activity))
+			actions.append(getDeleteActivityActionFor(activity))
 		}
-		actions.append(getAddNewActionFor(activityDefinition))
 
 		return UISwipeActionsConfiguration(actions: actions)
 	}
