@@ -74,6 +74,7 @@ public extension Calendar.Component {
 		case .nanosecond: return 13
 		case .calendar: return 14
 		case .timeZone: return 15
+		@unknown default: fatalError("You forgot self")
 		}
 	}
 
@@ -95,6 +96,7 @@ public extension Calendar.Component {
 		case .minute: return "Minutes"
 		case .second: return "Seconds"
 		case .nanosecond: return "Nanoseconds"
+		@unknown default: fatalError("You forgot self")
 		}
 	}
 
@@ -116,6 +118,7 @@ public extension Calendar.Component {
 		case .minute: return "Minute"
 		case .second: return "Second"
 		case .nanosecond: return "Nanosecond"
+		@unknown default: fatalError("You forgot self")
 		}
 	}
 
