@@ -17,6 +17,8 @@ public final class GeneralSettingsViewController: UIViewController {
 
 	private typealias Me = GeneralSettingsViewController
 
+	private static let choseDefaultSearchNearbyDuration = Notification.Name("choseDefaultSearchNearbyDuration")
+
 	private static let descriptionPresenter = injected(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
@@ -28,11 +30,18 @@ public final class GeneralSettingsViewController: UIViewController {
 	// MARK: - IBOutlets
 
 	@IBOutlet final var convertTimeZonesSwitch: UISwitch!
+	@IBOutlet final var defaultSearchNearbyDurationButton: UIButton!
+
+	// MARK: - Instance Variables
+
+	private final var defaultSearchNearbyDuration: TimeDuration!
 
 	// MARK: - UIViewController Overrides
 
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
+
+		defaultSearchNearbyDuration = injected(Settings.self).defaultSearchNearbyDuration
 
 		updateUI()
 		navigationItem.rightBarButtonItem = UIBarButtonItem(
@@ -43,6 +52,8 @@ public final class GeneralSettingsViewController: UIViewController {
 		)
 
 		injected(UiUtil.self).setBackButton(for: self, title: "Settings", action: #selector(done))
+
+		observe(selector: #selector(choseDefaultSearchNearbyDuration), name: Me.choseDefaultSearchNearbyDuration)
 	}
 
 	// MARK: - Actions
@@ -78,6 +89,16 @@ public final class GeneralSettingsViewController: UIViewController {
 		present(controller, using: Me.descriptionPresenter)
 	}
 
+	@IBAction func chooseDefaultSearchNearbyDuration() {
+		let controller = viewController(
+			named: "durationChooser",
+			fromStoryboard: "Util"
+		) as! SelectDurationViewController
+		controller.initialDuration = defaultSearchNearbyDuration
+		controller.notificationToSendOnAccept = Me.choseDefaultSearchNearbyDuration
+		present(controller, using: SelectDurationViewControllerImpl.presenter)
+	}
+
 	@objc private final func reset(_: Any) {
 		injected(Settings.self).reset()
 		updateUI()
@@ -85,7 +106,16 @@ public final class GeneralSettingsViewController: UIViewController {
 
 	@objc private final func done(_: Any) {
 		injected(Settings.self).setConvertTimeZones(convertTimeZonesSwitch.isOn)
+		injected(Settings.self).setDefaultSearchNearbyDuration(defaultSearchNearbyDuration)
 		saveAndGoBackToSettings()
+	}
+
+	// MARK: - Received Notifications
+
+	@objc private final func choseDefaultSearchNearbyDuration(notification: Notification) {
+		guard let duration: TimeDuration = value(for: .duration, from: notification) else { return }
+		defaultSearchNearbyDuration = duration
+		updateUI()
 	}
 
 	// MARK: - Helper Functions
@@ -102,6 +132,8 @@ public final class GeneralSettingsViewController: UIViewController {
 
 	private final func updateUI() {
 		convertTimeZonesSwitch.isOn = injected(Settings.self).convertTimeZones
+		let currentDefaultSearchNearbyDuration = injected(Settings.self).defaultSearchNearbyDuration
+		defaultSearchNearbyDurationButton.setTitle(currentDefaultSearchNearbyDuration.description, for: .normal)
 	}
 
 	private final func getTargetTimeZone(_ currentTimeZone: TimeZone) -> TimeZone? {
