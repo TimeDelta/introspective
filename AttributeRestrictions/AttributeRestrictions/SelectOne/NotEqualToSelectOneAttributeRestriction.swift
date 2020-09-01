@@ -55,7 +55,7 @@ public final class NotEqualToSelectOneAttributeRestriction: NotEqualToAttributeR
 	// MARK: - Boolean Expression Functions
 
 	public override func predicate() -> NSPredicate? {
-		return nil
+		nil
 	}
 
 	// MARK: - Other
