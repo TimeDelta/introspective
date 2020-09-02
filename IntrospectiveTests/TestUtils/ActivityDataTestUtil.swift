@@ -15,6 +15,19 @@ import Foundation
 public final class ActivityDataTestUtil {
 
 	@discardableResult
+	public static func createActivityDefinition(_ info: ActivityDefinitionInfo) -> ActivityDefinition {
+		let tags = TagDataTestUtil.createTags(names: info.tags)
+		return createActivityDefinition(
+			name: info.name,
+			description: info.description,
+			tags: tags,
+			source: info.source,
+			recordScreenIndex: info.recordScreenIndex,
+			autoNote: info.autoNote
+		)
+	}
+
+	@discardableResult
 	public static func createActivityDefinition(
 		name: String = "",
 		description: String? = nil,
@@ -34,6 +47,25 @@ public final class ActivityDataTestUtil {
 		definition.autoNote = autoNote
 		try! transaction.commit()
 		return try! injected(Database.self).pull(savedObject: definition)
+	}
+
+	@discardableResult
+	public static func createActivity(_ info: ActivityInfo) -> Activity {
+		let definition = createActivityDefinition(info.definition)
+		var tags = [Tag]()
+		if let tagNames = info.tags {
+			tags = TagDataTestUtil.createTags(names: tagNames)
+		}
+		return createActivity(
+			definition: definition,
+			startDate: info.startDate,
+			startTimeZone: info.startTimeZone,
+			endDate: info.endDate,
+			endTimeZone: info.endTimeZone,
+			note: info.note,
+			source: info.source,
+			tags: tags
+		)
 	}
 
 	@discardableResult
