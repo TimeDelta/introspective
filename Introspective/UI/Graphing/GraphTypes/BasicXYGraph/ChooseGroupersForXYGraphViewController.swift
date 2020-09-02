@@ -22,7 +22,7 @@ public protocol ChooseGroupersForXYGraphViewController: UIViewController {
 	var xGrouper: SampleGrouper! { get set }
 	var yGrouper: SampleGrouper! { get set }
 	var currentAttributeType: String! { get set }
-	var notificationToSendOnAccept: NotificationName! { get set }
+	var notificationToSendOnAccept: NotificationName { get set }
 }
 
 public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
@@ -56,7 +56,8 @@ public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
 		didSet { waitUntilLoaded { self.attributeTypeSet() } }
 	}
 
-	public final var notificationToSendOnAccept: NotificationName!
+	/// Default: `.groupersEdited`
+	public final var notificationToSendOnAccept: NotificationName = .groupersEdited
 
 	private final var xAttributeTypeToAttributes = [String: [Attribute]]()
 	private final var yAttributeTypeToAttributes = [String: [Attribute]]()
@@ -171,7 +172,7 @@ public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
 
 	@IBAction final func saveButtonPressed(_: Any) {
 		syncPost(
-			.groupersEdited,
+			notificationToSendOnAccept,
 			userInfo: [
 				.attribute: currentAttributeType,
 				.x: xGrouper,

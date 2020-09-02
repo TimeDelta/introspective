@@ -89,8 +89,8 @@ class ChooseGroupersForXYGraphViewControllerMock: UIViewController, ChooseGroupe
 	private var __p_currentAttributeType: (String)?
 
 
-    public var notificationToSendOnAccept: NotificationName! {
-		get {	invocations.append(.p_notificationToSendOnAccept_get); return __p_notificationToSendOnAccept ?? optionalGivenGetterValue(.p_notificationToSendOnAccept_get, "ChooseGroupersForXYGraphViewControllerMock - stub value for notificationToSendOnAccept was not defined") }
+    public var notificationToSendOnAccept: NotificationName {
+		get {	invocations.append(.p_notificationToSendOnAccept_get); return __p_notificationToSendOnAccept ?? givenGetterValue(.p_notificationToSendOnAccept_get, "ChooseGroupersForXYGraphViewControllerMock - stub value for notificationToSendOnAccept was not defined") }
 		set {	invocations.append(.p_notificationToSendOnAccept_set(.value(newValue))); __p_notificationToSendOnAccept = newValue }
 	}
 	private var __p_notificationToSendOnAccept: (NotificationName)?
@@ -115,7 +115,7 @@ class ChooseGroupersForXYGraphViewControllerMock: UIViewController, ChooseGroupe
         case p_currentAttributeType_get
 		case p_currentAttributeType_set(Parameter<String?>)
         case p_notificationToSendOnAccept_get
-		case p_notificationToSendOnAccept_set(Parameter<NotificationName?>)
+		case p_notificationToSendOnAccept_set(Parameter<NotificationName>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {            case (.p_xSampleType_get,.p_xSampleType_get): return Matcher.ComparisonResult.match
@@ -131,7 +131,7 @@ class ChooseGroupersForXYGraphViewControllerMock: UIViewController, ChooseGroupe
             case (.p_currentAttributeType_get,.p_currentAttributeType_get): return Matcher.ComparisonResult.match
 			case (.p_currentAttributeType_set(let left),.p_currentAttributeType_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<String?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
             case (.p_notificationToSendOnAccept_get,.p_notificationToSendOnAccept_get): return Matcher.ComparisonResult.match
-			case (.p_notificationToSendOnAccept_set(let left),.p_notificationToSendOnAccept_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<NotificationName?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+			case (.p_notificationToSendOnAccept_set(let left),.p_notificationToSendOnAccept_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<NotificationName>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
             default: return .none
             }
         }
@@ -200,7 +200,7 @@ class ChooseGroupersForXYGraphViewControllerMock: UIViewController, ChooseGroupe
         public static func currentAttributeType(getter defaultValue: String?...) -> PropertyStub {
             return Given(method: .p_currentAttributeType_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func notificationToSendOnAccept(getter defaultValue: NotificationName?...) -> PropertyStub {
+        public static func notificationToSendOnAccept(getter defaultValue: NotificationName...) -> PropertyStub {
             return Given(method: .p_notificationToSendOnAccept_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
@@ -222,7 +222,7 @@ class ChooseGroupersForXYGraphViewControllerMock: UIViewController, ChooseGroupe
         public static var currentAttributeType: Verify { return Verify(method: .p_currentAttributeType_get) }
 		public static func currentAttributeType(set newValue: Parameter<String?>) -> Verify { return Verify(method: .p_currentAttributeType_set(newValue)) }
         public static var notificationToSendOnAccept: Verify { return Verify(method: .p_notificationToSendOnAccept_get) }
-		public static func notificationToSendOnAccept(set newValue: Parameter<NotificationName?>) -> Verify { return Verify(method: .p_notificationToSendOnAccept_set(newValue)) }
+		public static func notificationToSendOnAccept(set newValue: Parameter<NotificationName>) -> Verify { return Verify(method: .p_notificationToSendOnAccept_set(newValue)) }
     }
 
     public struct Perform {

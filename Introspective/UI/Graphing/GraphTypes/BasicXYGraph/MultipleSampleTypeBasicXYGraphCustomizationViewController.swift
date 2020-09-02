@@ -260,25 +260,29 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	// MARK: - Received Notifications
 
 	@objc private final func seriesGroupersChanged(notification: Notification) {
-		stopObserving(.groupersEdited)
+		// swiftformat:disable all
 		if
 			let xGrouper: SampleGrouper? = value(for: .x, from: notification),
 			let yGrouper: SampleGrouper? = value(for: .y, from: notification),
-			let currentAttributeType: String? = value(for: .attribute, from: notification) {
+			let currentAttributeType: String? = value(for: .attribute, from: notification)
+		{
 			seriesGroupers = MultipleSampleTypeXYGraphDataGenerator.Groupers(x: xGrouper!, y: yGrouper!)
 			seriesGrouperAttributeType = currentAttributeType
 		}
+		// swiftformat:enable all
 	}
 
 	@objc private final func pointGroupersChanged(notification: Notification) {
-		stopObserving(.groupersEdited)
+		// swiftformat:disable all
 		if
 			let xGrouper: SampleGrouper? = value(for: .x, from: notification),
 			let yGrouper: SampleGrouper? = value(for: .y, from: notification),
-			let currentAttributeType: String? = value(for: .attribute, from: notification) {
+			let currentAttributeType: String? = value(for: .attribute, from: notification)
+		{
 			pointGroupers = MultipleSampleTypeXYGraphDataGenerator.Groupers(x: xGrouper!, y: yGrouper!)
 			pointGrouperAttributeType = currentAttributeType
 		}
+		// swiftformat:enable all
 	}
 
 	@objc private final func xAxisSampleTypeChanged(notification: Notification) {

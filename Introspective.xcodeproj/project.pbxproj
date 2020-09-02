@@ -3230,11 +3230,14 @@
 			inputPaths = (
 			);
 			name = "SwiftyMocky - Generate Mocks";
+			outputFileListPaths = (
+			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# only generate mocks if swiftymocky CLI can be found to avoid installing it in the CI build\nif [[ -n `which swiftymocky` ]]; then\n\trake mock\nelse\n\techo \"WARNING: Skipping mock generation. Install SwifyMocky CLI and make sure it is accessible in your PATH to generate mocks when building.\"\nfi\n";
+			showEnvVarsInLog = 0;
 		};
 		CB9A470863FA06650F751757EBDE58AA /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
