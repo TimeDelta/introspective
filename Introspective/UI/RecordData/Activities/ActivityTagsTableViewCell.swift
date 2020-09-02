@@ -33,7 +33,7 @@ public final class ActivityTagsTableViewCellImpl: UITableViewCell, ActivityTagsT
 			guard let tagsField = tagsField else { return }
 			tagsField.spaceBetweenLines = 20
 			tagsField.contentInset = .init(top: 8, left: 0, bottom: 0, right: 0)
-			tagsField.returnKeyType = .next
+			tagsField.textField.returnKeyType = .next
 			tagsField.onDidAddTag = addedTag
 			tagsField.onDidRemoveTag = removedTag
 			tagsField.textField.accessibilityLabel = "activity tags"
