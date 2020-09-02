@@ -74,7 +74,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		let presentedController = mockGroupingChooserTableViewController()
 
 		// when
-		controller.chooseSeriesGroupingButtonPressed(chooseSeriesGrouperButton)
+		controller.chooseSeriesGroupingButtonPressed(chooseSeriesGrouperButton as Any)
 
 		// then
 		assertThat(presentedController.sampleType, equals(HeartRate.self))
@@ -97,7 +97,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		let presentedController = mockGroupingChooserTableViewController()
 
 		// when
-		controller.chooseSeriesGroupingButtonPressed(chooseSeriesGrouperButton)
+		controller.chooseSeriesGroupingButtonPressed(chooseSeriesGrouperButton as Any)
 
 		// then
 		assertThat(presentedController.currentGrouper, sameObject(seriesGrouperCopy))
@@ -110,7 +110,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		let presentedController = mockGroupingChooserTableViewController()
 
 		// when
-		controller.chooseSeriesGroupingButtonPressed(chooseSeriesGrouperButton)
+		controller.chooseSeriesGroupingButtonPressed(chooseSeriesGrouperButton as Any)
 
 		// then
 		assertThat(presentedController.title, equalTo("Series Grouping"))
@@ -124,11 +124,11 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		setSeriesGrouper(mockSampleGrouper())
 
 		// when
-		controller.clearSeriesGroupingButtonPressed(clearSeriesGrouperButton)
+		controller.clearSeriesGroupingButtonPressed(clearSeriesGrouperButton as Any)
 
 		// then
 		let presentedController = mockGroupingChooserTableViewController()
-		controller.chooseSeriesGroupingButtonPressed(chooseSeriesGrouperButton)
+		controller.chooseSeriesGroupingButtonPressed(chooseSeriesGrouperButton as Any)
 		Verify(presentedController, .currentGrouper(set: .value(nil)))
 	}
 
@@ -141,7 +141,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		let presentedController = mockGroupingChooserTableViewController()
 
 		// when
-		controller.choosePointGroupingButtonPressed(chooseSeriesGrouperButton)
+		controller.choosePointGroupingButtonPressed(chooseSeriesGrouperButton as Any)
 
 		// then
 		assertThat(presentedController.sampleType, equals(HeartRate.self))
@@ -164,7 +164,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		let presentedController = mockGroupingChooserTableViewController()
 
 		// when
-		controller.choosePointGroupingButtonPressed(chooseSeriesGrouperButton)
+		controller.choosePointGroupingButtonPressed(chooseSeriesGrouperButton as Any)
 
 		// then
 		assertThat(presentedController.currentGrouper, sameObject(pointGrouperCopy))
@@ -177,7 +177,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		let presentedController = mockGroupingChooserTableViewController()
 
 		// when
-		controller.choosePointGroupingButtonPressed(chooseSeriesGrouperButton)
+		controller.choosePointGroupingButtonPressed(chooseSeriesGrouperButton as Any)
 
 		// then
 		assertThat(presentedController.title, equalTo("Point Grouping"))
@@ -192,11 +192,11 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		setPointGrouper(mockSampleGrouper())
 
 		// when
-		controller.clearPointGroupingButtonPressed(clearPointGrouperButton)
+		controller.clearPointGroupingButtonPressed(clearPointGrouperButton as Any)
 
 		// then
 		let presentedController = mockGroupingChooserTableViewController()
-		controller.choosePointGroupingButtonPressed(choosePointGrouperButton)
+		controller.choosePointGroupingButtonPressed(choosePointGrouperButton as Any)
 		Verify(presentedController, .currentGrouper(set: .value(nil)))
 	}
 
@@ -211,7 +211,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		setXAxis(expectedAttribute)
 
 		// when
-		controller.editXAxis(xAxisButton)
+		controller.editXAxis(xAxisButton as Any)
 
 		// then
 		assertThat(presentedController.selectedAttribute, equals(expectedAttribute))
@@ -226,7 +226,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		setXAxis(expectedInformation)
 
 		// when
-		controller.editXAxis(xAxisButton)
+		controller.editXAxis(xAxisButton as Any)
 
 		// then
 		assertThat(presentedController.selectedInformation, equals(expectedInformation))
@@ -241,7 +241,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		let presentedController = mockXAxisSetupController()
 
 		// when
-		controller.editXAxis(xAxisButton)
+		controller.editXAxis(xAxisButton as Any)
 
 		// then
 		XCTAssert(presentedController.grouped)
@@ -250,11 +250,11 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 	func testGivenPointGrouperIsNil_editXAxis_setsGroupedToFalseOnPresentedController() {
 		// given
 		setRandomSamples()
-		controller.clearPointGroupingButtonPressed(clearPointGrouperButton)
+		controller.clearPointGroupingButtonPressed(clearPointGrouperButton as Any)
 		let presentedController = mockXAxisSetupController()
 
 		// when
-		controller.editXAxis(xAxisButton)
+		controller.editXAxis(xAxisButton as Any)
 
 		// then
 		XCTAssertFalse(presentedController.grouped)
@@ -268,7 +268,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		let presentedController = mockXAxisSetupController()
 
 		// when
-		controller.editXAxis(xAxisButton)
+		controller.editXAxis(xAxisButton as Any)
 
 		// then
 		XCTAssert(presentedController.usePointGroupValue)
@@ -280,7 +280,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		let presentedController = mockXAxisSetupController()
 
 		// when
-		controller.editXAxis(xAxisButton)
+		controller.editXAxis(xAxisButton as Any)
 
 		// then
 		assertThat(presentedController.notificationToSendWhenFinished, equalTo(.xAxisInformationChanged))
@@ -305,7 +305,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		let presentedController = mockChooseAttributesToGraphController()
 
 		// when
-		controller.editYAxis(yAxisButton)
+		controller.editYAxis(yAxisButton as Any)
 
 		// then
 		assertThat(
@@ -325,7 +325,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		let presentedController = mockChooseAttributesToGraphController()
 
 		// when
-		controller.editYAxis(yAxisButton)
+		controller.editYAxis(yAxisButton as Any)
 
 		// then
 		assertThat(presentedController.selectedAttributes, arrayHasExactly(attributes, areEqual: { $0.equalTo($1) }))
@@ -337,7 +337,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		let presentedController = mockChooseAttributesToGraphController()
 
 		// when
-		controller.editYAxis(yAxisButton)
+		controller.editYAxis(yAxisButton as Any)
 
 		// then
 		assertThat(presentedController.notificationToSendWhenFinished, equalTo(.yAxisInformationChanged))
@@ -351,7 +351,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		let presentedController = mockChooseInformationToGraphViewController()
 
 		// when
-		controller.editYAxis(yAxisButton)
+		controller.editYAxis(yAxisButton as Any)
 
 		// then
 		XCTAssert(presentedController.limitToNumericInformation)
@@ -370,7 +370,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		let presentedController = mockChooseInformationToGraphViewController()
 
 		// when
-		controller.editYAxis(yAxisButton)
+		controller.editYAxis(yAxisButton as Any)
 
 		// then
 		assertThat(presentedController.chosenInformation, arrayHasExactly(information, areEqual: { $0.equalTo($1) }))
@@ -384,7 +384,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		let presentedController = mockChooseInformationToGraphViewController()
 
 		// when
-		controller.editYAxis(yAxisButton)
+		controller.editYAxis(yAxisButton as Any)
 
 		// then
 		assertThat(presentedController.notificationToSendWhenFinished, equalTo(.yAxisInformationChanged))
@@ -458,7 +458,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		setPointGrouper(mockSampleGrouper())
 
 		// when
-		controller.clearPointGroupingButtonPressed(clearPointGrouperButton)
+		controller.clearPointGroupingButtonPressed(clearPointGrouperButton as Any)
 
 		// then
 		assertThat(yAxisButton, hasTitle("Choose y-axis information"))
@@ -527,7 +527,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		mockGroupingChooserTableViewController()
 
 		// when
-		controller.clearSeriesGroupingButtonPressed(clearSeriesGrouperButton)
+		controller.clearSeriesGroupingButtonPressed(clearSeriesGrouperButton as Any)
 
 		// then
 		Verify(mockUiUtil, .setButton(.value(clearSeriesGrouperButton), enabled: .value(false), hidden: .value(true)))
@@ -541,7 +541,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		mockGroupingChooserTableViewController()
 
 		// when
-		controller.clearSeriesGroupingButtonPressed(clearSeriesGrouperButton)
+		controller.clearSeriesGroupingButtonPressed(clearSeriesGrouperButton as Any)
 
 		// then
 		assertThat(chooseSeriesGrouperButton, hasTitle("Choose series grouping (optional)"))
@@ -584,7 +584,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 		// then
 		let presentedController = mockXAxisSetupController()
-		controller.editXAxis(xAxisButton)
+		controller.editXAxis(xAxisButton as Any)
 		Verify(presentedController, .selectedAttribute(set: .value(nil)))
 		Verify(presentedController, .selectedInformation(set: .value(nil)))
 	}
@@ -600,7 +600,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 		// then
 		let presentedController = mockChooseInformationToGraphViewController()
-		controller.editYAxis(yAxisButton)
+		controller.editYAxis(yAxisButton as Any)
 		Verify(presentedController, .never, .chosenInformation(set: .any))
 	}
 
@@ -618,7 +618,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 		// then
 		let presentedController = mockXAxisSetupController()
-		controller.editXAxis(xAxisButton)
+		controller.editXAxis(xAxisButton as Any)
 		Verify(presentedController, .selectedAttribute(set: .notNil))
 	}
 
@@ -637,7 +637,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 		// then
 		let presentedController = mockChooseInformationToGraphViewController()
-		controller.editYAxis(yAxisButton)
+		controller.editYAxis(yAxisButton as Any)
 		Verify(presentedController, .chosenInformation(set: .value(yAxis)))
 	}
 
@@ -649,7 +649,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		setPointGrouper(pointGrouper)
 
 		// when
-		controller.clearPointGroupingButtonPressed(clearPointGrouperButton)
+		controller.clearPointGroupingButtonPressed(clearPointGrouperButton as Any)
 
 		// then
 		Verify(mockUiUtil, .setButton(.value(clearPointGrouperButton), enabled: .value(false), hidden: .value(true)))
@@ -663,7 +663,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		setPointGrouper(pointGrouper)
 
 		// when
-		controller.clearPointGroupingButtonPressed(clearPointGrouperButton)
+		controller.clearPointGroupingButtonPressed(clearPointGrouperButton as Any)
 
 		// then
 		assertThat(choosePointGrouperButton, hasTitle("Choose point grouping (optional)"))
@@ -678,11 +678,11 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		setPointGrouper(pointGrouper)
 
 		// when
-		controller.clearPointGroupingButtonPressed(clearPointGrouperButton)
+		controller.clearPointGroupingButtonPressed(clearPointGrouperButton as Any)
 
 		// then
 		let presentedController = mockXAxisSetupController()
-		controller.editXAxis(xAxisButton)
+		controller.editXAxis(xAxisButton as Any)
 		Verify(presentedController, .selectedAttribute(set: .value(nil)))
 		Verify(presentedController, .selectedInformation(set: .value(nil)))
 	}
@@ -696,11 +696,11 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		setPointGrouper(pointGrouper)
 
 		// when
-		controller.clearPointGroupingButtonPressed(clearPointGrouperButton)
+		controller.clearPointGroupingButtonPressed(clearPointGrouperButton as Any)
 
 		// then
 		let presentedController = mockChooseAttributesToGraphController()
-		controller.editYAxis(yAxisButton)
+		controller.editYAxis(yAxisButton as Any)
 		Verify(presentedController, .selectedAttributes(set: .value(nil)))
 	}
 
@@ -711,11 +711,11 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		setXAxis(TextAttribute(name: "a"))
 
 		// when
-		controller.clearPointGroupingButtonPressed(clearPointGrouperButton)
+		controller.clearPointGroupingButtonPressed(clearPointGrouperButton as Any)
 
 		// then
 		let presentedController = mockXAxisSetupController()
-		controller.editXAxis(xAxisButton)
+		controller.editXAxis(xAxisButton as Any)
 		Verify(presentedController, .selectedAttribute(set: .notNil))
 	}
 
@@ -727,11 +727,11 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		setYAxis(yAxis)
 
 		// when
-		controller.clearPointGroupingButtonPressed(clearPointGrouperButton)
+		controller.clearPointGroupingButtonPressed(clearPointGrouperButton as Any)
 
 		// then
 		let presentedController = mockChooseAttributesToGraphController()
-		controller.editYAxis(yAxisButton)
+		controller.editYAxis(yAxisButton as Any)
 		Verify(presentedController, .selectedAttributes(set: .value(yAxis)))
 	}
 
