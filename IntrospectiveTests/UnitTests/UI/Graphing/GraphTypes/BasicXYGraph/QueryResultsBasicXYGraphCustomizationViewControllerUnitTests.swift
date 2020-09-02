@@ -264,6 +264,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		// given
 		controller.viewDidLoad()
 		setRandomSamples()
+		setPointGrouper(mockSampleGrouper())
 		setXAxis(usePointGroupValue: true)
 		let presentedController = mockXAxisSetupController()
 
@@ -395,12 +396,24 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 	func testGivenXAxisSetToNilAndUsePointGroupValueTrue_xAxisSet_setsCorrectTitleForXAxisButton() {
 		// given
 		controller.viewDidLoad()
+		setPointGrouper(mockSampleGrouper())
 
 		// when
 		setXAxis(usePointGroupValue: true)
 
 		// then
 		assertThat(xAxisButton, hasTitle("X-Axis: Use point group value"))
+	}
+
+	func testGivenXAxisSetToNilAndNoPointGrouper_xAxisSet_setsCorrectTitleForXAxisButton() {
+		// given
+		controller.viewDidLoad()
+
+		// when
+		setXAxis(usePointGroupValue: true)
+
+		// then
+		assertThat(xAxisButton, hasTitle("Choose x-axis information"))
 	}
 
 	func testGivenXAxisSetToNilAndUsePointGroupValueFalse_xAxisSet_setsCorrectTitleForXAxisButton() {
@@ -740,6 +753,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 	func testGivenAllRequirementsSetWithUsePointGroupValue_updateShowGraphButtonState_enablesShowGraphButton() {
 		// given
 		controller.viewDidLoad()
+		setPointGrouper(mockSampleGrouper())
 		setXAxis(usePointGroupValue: true)
 		setYAxis([TextAttribute(name: "")])
 
