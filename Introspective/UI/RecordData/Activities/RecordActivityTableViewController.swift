@@ -494,9 +494,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	@objc private final func reloadTableViewData(notification _: Notification) {
-		DispatchQueue.main.async { [unowned self] in
-			self.tableView.reloadData()
-		}
+		loadActivitiyDefinitions()
 	}
 
 	// MARK: - Actions
