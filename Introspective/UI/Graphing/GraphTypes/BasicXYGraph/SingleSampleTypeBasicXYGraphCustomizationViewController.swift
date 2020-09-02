@@ -369,9 +369,10 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 
 	private final func xAxisSet() {
 		if xAxis == nil {
-			if usePointGroupValueForXAxis {
+			if usePointGroupValueForXAxis && pointGrouper != nil {
 				xAxisButton.setTitle("X-Axis: Use point group value", for: .normal)
 			} else {
+				usePointGroupValueForXAxis = false
 				xAxisButton.setTitle("Choose x-axis information", for: .normal)
 			}
 		} else if let attribute = xAxis?.attribute {

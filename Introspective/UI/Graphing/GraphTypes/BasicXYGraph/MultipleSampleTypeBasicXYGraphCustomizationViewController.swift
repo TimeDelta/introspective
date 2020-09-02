@@ -497,7 +497,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 
 	private final func xAxisInformationSet() {
 		if xAxisInformation == nil {
-			if usePointGroupValueForXAxis {
+			if usePointGroupValueForXAxis { // point grouper is required for this screen
 				chooseXAxisInformationButton.setTitle("Use point group value", for: .normal)
 			} else {
 				chooseXAxisInformationButton.setTitle("Choose information", for: .normal)
