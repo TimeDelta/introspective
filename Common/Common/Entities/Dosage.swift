@@ -9,7 +9,7 @@
 import Foundation
 import os
 
-public final class Dosage: NSObject, NSSecureCoding, Codable, Comparable {
+public final class Dosage: NSObject, NSSecureCoding, Comparable {
 	// MARK: - Enums
 
 	private enum CodingKeys: String, CodingKey {
@@ -197,5 +197,20 @@ public final class Dosage: NSObject, NSSecureCoding, Codable, Comparable {
 
 	public static func /= (lhs: inout Dosage, rhs: Double) {
 		lhs = lhs / rhs
+	}
+}
+
+@objc(DosageValueTransformer)
+public final class DosageValueTransformer: NSSecureUnarchiveFromDataTransformer {
+	/// The name of the transformer. This is the name used to register the transformer using `ValueTransformer.setValueTrandformer(_"forName:)`.
+	public static let name = NSValueTransformerName(rawValue: String(describing: DosageValueTransformer.self))
+
+	public static override var allowedTopLevelClasses: [AnyClass] {
+		[Dosage.self]
+	}
+
+	/// Registers the transformer.
+	public static func register() {
+		ValueTransformer.setValueTransformer(DosageValueTransformer(), forName: name)
 	}
 }

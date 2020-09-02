@@ -10,7 +10,7 @@ import Foundation
 
 import DependencyInjection
 
-public final class Frequency: NSObject, NSSecureCoding, Codable, Comparable {
+public final class Frequency: NSObject, NSSecureCoding, Comparable {
 	// MARK: - Enums
 
 	public enum Errors: String, Error {
@@ -275,5 +275,20 @@ public final class Frequency: NSObject, NSSecureCoding, Codable, Comparable {
 		} catch {
 			return frequency
 		}
+	}
+}
+
+@objc(FrequencyValueTransformer)
+public final class FrequencyValueTransformer: NSSecureUnarchiveFromDataTransformer {
+	/// The name of the transformer. This is the name used to register the transformer using `ValueTransformer.setValueTrandformer(_"forName:)`.
+	public static let name = NSValueTransformerName(rawValue: String(describing: FrequencyValueTransformer.self))
+
+	public static override var allowedTopLevelClasses: [AnyClass] {
+		[Frequency.self]
+	}
+
+	/// Registers the transformer.
+	public static func register() {
+		ValueTransformer.setValueTransformer(FrequencyValueTransformer(), forName: name)
 	}
 }

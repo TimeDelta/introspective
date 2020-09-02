@@ -9,7 +9,7 @@
 import Foundation
 import SwiftDate
 
-public final class TimeDuration: NSObject, NSSecureCoding, Codable, Comparable {
+public final class TimeDuration: NSObject, NSSecureCoding, Comparable {
 	// MARK: - Static Variables
 
 	private typealias Me = TimeDuration
@@ -79,12 +79,7 @@ public final class TimeDuration: NSObject, NSSecureCoding, Codable, Comparable {
 		interval = tempInterval
 	}
 
-	public init(from decoder: Decoder) throws {
-		let values = try decoder.container(keyedBy: CodingKeys.self)
-		interval = try values.decode(Double.self, forKey: .interval)
-	}
-
-	public init(coder decoder: NSCoder) {
+	public init?(coder decoder: NSCoder) {
 		interval = decoder.decodeDouble(forKey: CodingKeys.interval.rawValue)
 	}
 
@@ -95,18 +90,13 @@ public final class TimeDuration: NSObject, NSSecureCoding, Codable, Comparable {
 		return self == other
 	}
 
-	// MARK: - NSSecureCoding / Codable
+	// MARK: - NSSecureCoding
 
 	private enum CodingKeys: String, CodingKey {
 		case interval
 	}
 
 	public static let supportsSecureCoding = true
-
-	public final func encode(to encoder: Encoder) throws {
-		var container = encoder.container(keyedBy: CodingKeys.self)
-		try container.encode(interval, forKey: .interval)
-	}
 
 	public final func encode(with encoder: NSCoder) {
 		encoder.encode(interval, forKey: CodingKeys.interval.rawValue)
@@ -273,5 +263,20 @@ public final class TimeDuration: NSObject, NSSecureCoding, Codable, Comparable {
 
 	public static func *= (lhs: inout TimeDuration, rhs: Double) {
 		lhs = lhs * rhs
+	}
+}
+
+@objc(TimeDurationValueTransformer)
+public final class TimeDurationValueTransformer: NSSecureUnarchiveFromDataTransformer {
+	/// The name of the transformer. This is the name used to register the transformer using `ValueTransformer.setValueTrandformer(_"forName:)`.
+	public static let name = NSValueTransformerName(rawValue: String(describing: TimeDurationValueTransformer.self))
+
+	public static override var allowedTopLevelClasses: [AnyClass] {
+		[TimeDuration.self]
+	}
+
+	/// Registers the transformer.
+	public static func register() {
+		ValueTransformer.setValueTransformer(TimeDurationValueTransformer(), forName: name)
 	}
 }

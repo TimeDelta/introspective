@@ -59,8 +59,8 @@
         <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
     <entity name="Medication" representedClassName="Samples.Medication" syncable="YES" coreSpotlightDisplayNameExpression="Medication">
-        <attribute name="dosage" optional="YES" attributeType="Transformable"/>
-        <attribute name="frequency" optional="YES" attributeType="Transformable" customClassName=".Frequency"/>
+        <attribute name="dosage" optional="YES" attributeType="Transformable" valueTransformerName="DosageValueTransformer"/>
+        <attribute name="frequency" optional="YES" attributeType="Transformable" valueTransformerName="FrequencyValueTransformer" customClassName=".Frequency"/>
         <attribute name="name" attributeType="String"/>
         <attribute name="notes" optional="YES" attributeType="String" spotlightIndexingEnabled="YES"/>
         <attribute name="recordScreenIndex" attributeType="Integer 16" minValueString="0" usesScalarValueType="YES"/>
@@ -70,7 +70,7 @@
         <relationship name="doses" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="MedicationDose" inverseName="medication" inverseEntity="MedicationDose"/>
     </entity>
     <entity name="MedicationDose" representedClassName="Samples.MedicationDose" syncable="YES">
-        <attribute name="dosage" optional="YES" attributeType="Transformable"/>
+        <attribute name="dosage" optional="YES" attributeType="Transformable" valueTransformerName="DosageValueTransformer"/>
         <attribute name="source" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="timestampTimeZoneId" optional="YES" attributeType="String"/>
@@ -90,7 +90,7 @@
         <attribute name="storedAutoIgnoreSeconds" attributeType="Integer 64" defaultValueString="15" usesScalarValueType="YES"/>
         <attribute name="storedAutoTrimWhitespaceInActivityNotes" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
         <attribute name="storedConvertTimeZones" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
-        <attribute name="storedDefaultSearchNearbyDuration" optional="YES" attributeType="Transformable" customClassName="TimeDuration"/>
+        <attribute name="storedDefaultSearchNearbyDuration" optional="YES" attributeType="Transformable" valueTransformerName="TimeDurationValueTransformer" customClassName="TimeDuration"/>
         <attribute name="storedDiscreteMoods" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="storedMaxMood" attributeType="Double" defaultValueString="10" usesScalarValueType="YES"/>
         <attribute name="storedMinMood" attributeType="Double" defaultValueString="1" usesScalarValueType="YES"/>
@@ -114,8 +114,8 @@
         <element name="IntrospectiveActivityImporter" positionX="-36" positionY="90" width="128" height="58"/>
         <element name="IntrospectiveMedicationImporter" positionX="-9" positionY="117" width="128" height="58"/>
         <element name="IntrospectiveMoodImporter" positionX="0" positionY="126" width="128" height="58"/>
-        <element name="Medication" positionX="-54" positionY="9" width="128" height="30"/>
-        <element name="MedicationDose" positionX="-45" positionY="45" width="128" height="30"/>
+        <element name="Medication" positionX="-54" positionY="9" width="128" height="178"/>
+        <element name="MedicationDose" positionX="-45" positionY="45" width="128" height="118"/>
         <element name="Mood" positionX="-63" positionY="-18" width="128" height="30"/>
         <element name="Settings" positionX="-63" positionY="9" width="128" height="178"/>
         <element name="Tag" positionX="-18" positionY="81" width="128" height="30"/>
