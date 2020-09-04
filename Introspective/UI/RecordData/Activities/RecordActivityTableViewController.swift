@@ -52,8 +52,10 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final var finishedLoading = false {
 		didSet {
-			searchController.searchBar.isUserInteractionEnabled = finishedLoading
-			tableView.reloadData()
+			DispatchQueue.main.async {
+				self.searchController.searchBar.isUserInteractionEnabled = self.finishedLoading
+				self.tableView.reloadData()
+			}
 		}
 	}
 
@@ -101,7 +103,8 @@ public final class RecordActivityTableViewController: UITableViewController {
 		observe(selector: #selector(activityEditedOrCreated), name: Me.activityEditedOrCreated, object: nil)
 		observe(selector: #selector(activityDefinitionEdited), name: Me.activityDefinitionEdited, object: nil)
 		observe(selector: #selector(sortByRecentCount), name: .timePeriodChosen)
-		observe(selector: #selector(reloadTableViewData), name: .persistenceLayerWasRefreshed)
+		observe(selector: #selector(persistenceLayerDidRefresh), name: .persistenceLayerDidRefresh)
+		observe(selector: #selector(persistenceLayerWillRefresh), name: .persistenceLayerWillRefresh)
 
 		reorderOnLongPress(allowReorder: { $0.section == 1 && ($1 == nil || $1?.section == 1) })
 
@@ -493,8 +496,12 @@ public final class RecordActivityTableViewController: UITableViewController {
 		}
 	}
 
-	@objc private final func reloadTableViewData(notification _: Notification) {
+	@objc private final func persistenceLayerDidRefresh(notification _: Notification) {
 		loadActivitiyDefinitions()
+	}
+
+	@objc private final func persistenceLayerWillRefresh(notification _: Notification) {
+		finishedLoading = false
 	}
 
 	// MARK: - Actions
@@ -591,7 +598,6 @@ public final class RecordActivityTableViewController: UITableViewController {
 	final fileprivate func loadActivitiyDefinitions() {
 		resetFetchedResultsControllers()
 		finishedLoading = true
-		tableView.reloadData()
 	}
 
 	private final func getSearchTextPredicate(_ searchText: String) -> NSPredicate {

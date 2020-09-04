@@ -17,8 +17,10 @@ public enum NotificationName: StringLiteralType {
 
 	// MARK: - Persistence
 
-	/// This is sent when `Database.refreshContext()` has to refresh every object in the persistence layer because external changes have been made
-	case persistenceLayerWasRefreshed = "persistenceLayerWasRefreshed"
+	/// This is sent when `Database.refreshContext()` had to refresh every object in the persistence layer because external changes have been made
+	case persistenceLayerDidRefresh = "persistenceLayerDidRefresh"
+	/// This is sent when `Database.refreshContext()` is about to refresh every object in the persistence layer because external changes have been made
+	case persistenceLayerWillRefresh = "persistenceLayerWillRefresh"
 
 	// MARK: - Background Tasks
 

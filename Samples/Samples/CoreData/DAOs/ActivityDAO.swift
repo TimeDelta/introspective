@@ -127,12 +127,7 @@ public class ActivityDAOImpl: ActivityDAO {
 
 	public final func getAllActivitiesForToday(_ activityDefinition: ActivityDefinition) throws -> [Activity] {
 		let signpostName: StaticString = "getAllActivitiesForToday"
-		Me.signpost.begin(
-			name: signpostName,
-			idObject: activityDefinition,
-			"estimated # activities: %d",
-			activityDefinition.activities.count
-		)
+		Me.signpost.begin(name: signpostName, idObject: activityDefinition)
 
 		let startOfDay = injected(CalendarUtil.self).start(of: .day, in: Date()) as NSDate
 		let endOfDay = injected(CalendarUtil.self).end(of: .day, in: Date()) as NSDate
@@ -147,7 +142,7 @@ public class ActivityDAOImpl: ActivityDAO {
 			),
 		])
 		let activities = try injected(Database.self).query(fetchRequest)
-		Me.signpost.end(name: signpostName, idObject: activityDefinition, "actual # activities: %d", activities.count)
+		Me.signpost.end(name: signpostName, idObject: activityDefinition, "# activities fetched: %d", activities.count)
 		return activities
 	}
 
@@ -164,12 +159,7 @@ public class ActivityDAOImpl: ActivityDAO {
 
 	public final func getMostRecentlyStartedActivity(for activityDefinition: ActivityDefinition) throws -> Activity? {
 		let signpostName: StaticString = "getMostRecentlyStartedActivity"
-		Me.signpost.begin(
-			name: signpostName,
-			idObject: activityDefinition,
-			"estimated # activities: %d",
-			activityDefinition.activities.count
-		)
+		Me.signpost.begin(name: signpostName, idObject: activityDefinition)
 
 		let keyName = CommonSampleAttributes.startDate.variableName!
 		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
@@ -180,7 +170,7 @@ public class ActivityDAOImpl: ActivityDAO {
 		Me.signpost.end(
 			name: signpostName,
 			idObject: activityDefinition,
-			"actual # activities: %d",
+			"# activities fetched: %d",
 			activities.count
 		)
 

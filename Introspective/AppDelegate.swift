@@ -94,8 +94,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 			// essentially this is needed in case persisted objects were modified by app extension (SiriIntent / widget)
 			injected(AsyncUtil.self).run(qos: .userInteractive) {
 				injected(Database.self).refreshContext()
-				// make sure that next call to Database.refreshContext() only refreshes if necessary
-				injected(Database.self).setModifiedExternally(false)
 			}
 		}
 		Me.wasInBackground = false

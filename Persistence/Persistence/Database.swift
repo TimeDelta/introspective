@@ -218,8 +218,11 @@ internal class DatabaseImpl: Database {
 			Me.log.error("Failed to check if context should be refreshed: %@", errorInfo(error))
 			// refresh all objects in context on failure
 		}
+		injected(NotificationUtil.self).post(.persistenceLayerWillRefresh, object: nil)
 		persistentContainer.viewContext.refreshAllObjects()
-		injected(NotificationUtil.self).post(.persistenceLayerWasRefreshed, object: nil, qos: .userInteractive)
+		// make sure that next call to refreshContext() only refreshes if necessary
+		setModifiedExternally(false)
+		injected(NotificationUtil.self).post(.persistenceLayerDidRefresh, object: nil, qos: .userInteractive)
 	}
 
 	public final func deleteEverything() throws {

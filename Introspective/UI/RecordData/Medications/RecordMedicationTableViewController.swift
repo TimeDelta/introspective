@@ -57,8 +57,10 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	final fileprivate let searchController = UISearchController(searchResultsController: nil)
 	private final var finishedLoading = false {
 		didSet {
-			searchController.searchBar.isUserInteractionEnabled = finishedLoading
-			tableView.reloadData()
+			DispatchQueue.main.async {
+				self.searchController.searchBar.isUserInteractionEnabled = self.finishedLoading
+				self.tableView.reloadData()
+			}
 		}
 	}
 
@@ -104,7 +106,8 @@ public final class RecordMedicationTableViewController: UITableViewController {
 			name: RecordMedicationTableViewCell.shouldPresentDosesView
 		)
 		observe(selector: #selector(medicationEdited), name: Me.medicationEdited)
-		observe(selector: #selector(reloadTableViewData), name: .persistenceLayerWasRefreshed)
+		observe(selector: #selector(persistenceLayerDidRefresh), name: .persistenceLayerDidRefresh)
+		observe(selector: #selector(persistenceLayerWillRefresh), name: .persistenceLayerWillRefresh)
 
 		coachMarksDataSourceAndDelegate = RecordMedicationTableViewControllerCoachMarksDataSourceAndDelegate(self)
 		coachMarksController.dataSource = coachMarksDataSourceAndDelegate
@@ -282,10 +285,12 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		}
 	}
 
-	@objc private final func reloadTableViewData(notification _: Notification) {
-		DispatchQueue.main.async { [unowned self] in
-			self.tableView.reloadData()
-		}
+	@objc private final func persistenceLayerDidRefresh(notification _: Notification) {
+		finishedLoading = true
+	}
+
+	@objc private final func persistenceLayerWillRefresh(notification _: Notification) {
+		finishedLoading = false
 	}
 
 	// MARK: - Button Actions
@@ -380,7 +385,6 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	final fileprivate func loadMedications() {
 		resetFetchedResultsController()
 		finishedLoading = true
-		tableView.reloadData()
 	}
 
 	private final func resetFetchedResultsController() {
