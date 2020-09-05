@@ -128,4 +128,188 @@ class ActivityDAOFunctionalTests: FunctionalTest {
 		// then
 		assertThat(result, nilValue())
 	}
+
+	func testGivenOnlyActivitiesForOtherDefinition_getMostRecentlyStartedActivity_returnsNil() throws {
+		// given
+		let targetDefinition = ActivityDataTestUtil.createActivityDefinition(Me.definitionInfo)
+		let otherDefinition = ActivityDataTestUtil.createActivityDefinition(name: "other")
+		ActivityDataTestUtil.createActivity(definition: otherDefinition)
+
+		// when
+		let result = try dao.getMostRecentlyStartedActivity(for: targetDefinition)
+
+		// then
+		assertThat(result, nilValue())
+	}
+
+	func testGivenMultipleUnfinishedActivitiesForDefinition_getMostRecentlyStartedActivity_returnsMostRecentlyStarted() throws {
+		// given
+		let definition = ActivityDataTestUtil.createActivityDefinition(Me.definitionInfo)
+		ActivityDataTestUtil.createActivity(definition: definition)
+		let newerActivity = ActivityDataTestUtil.createActivity(definition: definition)
+
+		// when
+		let result = try dao.getMostRecentlyStartedActivity(for: definition)
+
+		// then
+		assertThat(result, equals(newerActivity))
+	}
+
+	func testGivenMultipleFinishedActivitiesForDefinition_getMostRecentlyStartedActivity_returnsMostRecentlyStarted() throws {
+		// given
+		let definition = ActivityDataTestUtil.createActivityDefinition(Me.definitionInfo)
+		ActivityDataTestUtil.createActivity(definition: definition, startDate: Date() - 1.days, endDate: Date())
+		let newerActivity = ActivityDataTestUtil.createActivity(
+			definition: definition,
+			startDate: Date() - 1.days,
+			endDate: Date()
+		)
+
+		// when
+		let result = try dao.getMostRecentlyStartedActivity(for: definition)
+
+		// then
+		assertThat(result, equals(newerActivity))
+	}
+
+	func testGivenMixedActivitiesForDefinition_getMostRecentlyStartedActivity_returnsMostRecentlyStarted() throws {
+		// given
+		let definition = ActivityDataTestUtil.createActivityDefinition(Me.definitionInfo)
+		ActivityDataTestUtil.createActivity(definition: definition)
+		ActivityDataTestUtil.createActivity(definition: definition, endDate: Date())
+		let newestActivity = ActivityDataTestUtil.createActivity(definition: definition, endDate: Date())
+
+		// when
+		let result = try dao.getMostRecentlyStartedActivity(for: definition)
+
+		// then
+		assertThat(result, equals(newestActivity))
+	}
+
+	// MARK: - getMostRecentlyStartedIncompleteActivity(definition:)
+
+
+	func testGivenNoActivities_getMostRecentlyStartedIncompleteActivity_returnsNil() throws {
+		// given
+		let definition = ActivityDataTestUtil.createActivityDefinition(Me.definitionInfo)
+
+		// when
+		let result = try dao.getMostRecentlyStartedIncompleteActivity(for: definition)
+
+		// then
+		assertThat(result, nilValue())
+	}
+
+	func testGivenOnlyActivitiesForOtherDefinition_getMostRecentlyStartedIncompleteActivity_returnsNil() throws {
+		// given
+		let targetDefinition = ActivityDataTestUtil.createActivityDefinition(Me.definitionInfo)
+		let otherDefinition = ActivityDataTestUtil.createActivityDefinition(name: "other")
+		ActivityDataTestUtil.createActivity(definition: otherDefinition)
+
+		// when
+		let result = try dao.getMostRecentlyStartedIncompleteActivity(for: targetDefinition)
+
+		// then
+		assertThat(result, nilValue())
+	}
+
+	func testGivenOnlyCompletedActivities_getMostRecentlyStartedIncompleteActivity_returnsNil() throws {
+		// given
+		let definition = ActivityDataTestUtil.createActivityDefinition(Me.definitionInfo)
+		ActivityDataTestUtil.createActivity(definition: definition, endDate: Date())
+
+		// when
+		let result = try dao.getMostRecentlyStartedIncompleteActivity(for: definition)
+
+		// then
+		assertThat(result, nilValue())
+	}
+
+	func testGivenMultipleIncompleteActivities_getMostRecentlyStartedIncompleteActivity_returnsMostRecent() throws {
+		// given
+		let definition = ActivityDataTestUtil.createActivityDefinition(Me.definitionInfo)
+		ActivityDataTestUtil.createActivity(definition: definition)
+		let newerActivity = ActivityDataTestUtil.createActivity(definition: definition)
+
+		// when
+		let result = try dao.getMostRecentlyStartedIncompleteActivity(for: definition)
+
+		// then
+		assertThat(result, equals(newerActivity))
+	}
+
+	// MARK: - getDefinitionWith(name:)
+
+	func testGivenNoDefinitionWithName_getDefinitionWith_returnsNil() throws {
+		// given
+		ActivityDataTestUtil.createActivityDefinition(Me.definitionInfo)
+
+		// when
+		let result = try dao.getDefinitionWith(name: "doesn't exist")
+
+		// then
+		assertThat(result, nilValue())
+	}
+
+	func testGivenDefinitionWithNameExists_getDefinitionWith_returnsThatDefinition() throws {
+		// given
+		let definition = ActivityDataTestUtil.createActivityDefinition(Me.definitionInfo)
+
+		// when
+		let result = try dao.getDefinitionWith(name: definition.name)
+
+		// then
+		assertThat(result, equals(definition))
+	}
+
+	// MARK: - activityDefinitionWithNameExists()
+
+	func testGivenNoDefinitionWithName_activityDefinitionWithNameExists_returnsFalse() throws {
+		// given
+		ActivityDataTestUtil.createActivityDefinition(Me.definitionInfo)
+
+		// when
+		let result = try dao.activityDefinitionWithNameExists("doesn't exist")
+
+		// then
+		XCTAssertFalse(result)
+	}
+
+	func testGivenDefinitionWithNameExists_activityDefinitionWithNameExists_returnsTrue() throws {
+		// given
+		let definition = ActivityDataTestUtil.createActivityDefinition(Me.definitionInfo)
+
+		// when
+		let result = try dao.activityDefinitionWithNameExists(definition.name)
+
+		// then
+		XCTAssert(result)
+	}
+
+	// MARK: - hasUnfinishedActivity()
+
+	func testGivenNoUnfinishedActivitiesForDefinition_hasUnfinishedActivity_returnsFalse() throws {
+		// given
+		let targetDefinition = ActivityDataTestUtil.createActivityDefinition(Me.definitionInfo)
+		let otherDefinition = ActivityDataTestUtil.createActivityDefinition(name: "other")
+		ActivityDataTestUtil.createActivity(definition: otherDefinition)
+
+		// when
+		let result = try dao.hasUnfinishedActivity(targetDefinition)
+
+		// then
+		XCTAssertFalse(result)
+	}
+
+	func testGivenUnfinishedActivity_hasUnfinishedActivity_returnsTrue() throws {
+		// given
+		let definition = ActivityDataTestUtil.createActivityDefinition(Me.definitionInfo)
+		ActivityDataTestUtil.createActivity(definition: definition)
+
+		// when
+		let result = try dao.hasUnfinishedActivity(definition)
+
+		// then
+		XCTAssert(result)
+	}
 }
