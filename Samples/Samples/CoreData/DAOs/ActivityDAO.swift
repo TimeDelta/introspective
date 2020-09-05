@@ -245,9 +245,11 @@ public class ActivityDAOImpl: ActivityDAO {
 	public final func startActivity(_ definition: ActivityDefinition, withNote note: String?) throws -> Activity {
 		let transaction = injected(Database.self).transaction()
 		let activity = try transaction.new(Activity.self)
+		let definition = try injected(Database.self).pull(
+			savedObject: definition,
+			fromSameContextAs: activity
+		)
 		activity.setSource(.introspective)
-		let definition = try injected(Database.self)
-			.pull(savedObject: definition, fromSameContextAs: activity)
 		activity.definition = definition
 		activity.start = Date()
 		activity.note = note
