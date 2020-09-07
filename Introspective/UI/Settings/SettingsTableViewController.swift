@@ -27,7 +27,6 @@ public final class SettingsTableViewController: UITableViewController {
 				"general",
 				"activitySettings",
 				"moodSettings",
-				"results",
 			]
 		),
 		(
