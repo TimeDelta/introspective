@@ -59,8 +59,7 @@ public func errorInfo(_ error: Error) -> String {
 	if let customError = error as? GenericError {
 		errorDescription = customError.description
 	}
-	let version = GIT_SHA_VERSION + (UNCOMMITTED_CHANGES ? "*" : "")
-	return String(format: "(%@) %@ %@", version, errorDescription, (error as NSError).userInfo)
+	return String(format: "(%@) %@ %@", versionString(), errorDescription, (error as NSError).userInfo)
 }
 
 public func copyArray<Type>(_ array: [Type]) -> [Type] {
@@ -70,10 +69,11 @@ public func copyArray<Type>(_ array: [Type]) -> [Type] {
 }
 
 public func versionString() -> String {
+	let gitStuff = GIT_SHA_VERSION + (UNCOMMITTED_CHANGES ? "*" : "")
 	if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
-		return version + " " + GIT_SHA_VERSION
+		return version + " " + gitStuff
 	} else {
-		return GIT_SHA_VERSION
+		return gitStuff
 	}
 }
 
