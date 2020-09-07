@@ -284,7 +284,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	private final class StartActivityEvent: Event {
 		init(for activity: Activity) {
 			var descriptions = [
-				"Started " + activity.definition.name,
+				"⏱ Started " + activity.definition.name,
 			]
 			if let note = activity.note {
 				descriptions.append("- Note: " + note)
@@ -297,7 +297,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		init?(for activity: Activity) {
 			guard let end = activity.end else { return nil }
 			let descriptions = [
-				"Stopped " + activity.definition.name,
+				"⏱ Stopped " + activity.definition.name,
 				"- Total Duration: " + activity.duration.description,
 			]
 			super.init(at: end, for: activity, descriptions: descriptions)
@@ -309,7 +309,8 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	private final class BloodPressureEvent: Event {
 		init(for bloodPressure: BloodPressure) {
 			let descriptions = [
-				"Blood Pressure: " + formatValue(bloodPressure.systolic) + " / " + formatValue(bloodPressure.diastolic),
+				"🩸 Blood Pressure: " + formatValue(bloodPressure.systolic) + " / " +
+					formatValue(bloodPressure.diastolic),
 			]
 			super.init(at: bloodPressure.timestamp, for: bloodPressure, descriptions: descriptions)
 		}
@@ -320,7 +321,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	private final class BodyMassIndexEvent: Event {
 		init(for bodyMassIndex: BodyMassIndex) {
 			let descriptions = [
-				"Body Mass Index: " + bodyMassIndex.description,
+				"⚖️ Body Mass Index: " + bodyMassIndex.description,
 			]
 			super.init(at: bodyMassIndex.timestamp, for: bodyMassIndex, descriptions: descriptions)
 		}
@@ -331,7 +332,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	private final class HeartRateEvent: Event {
 		init(for heartRate: HeartRate) {
 			let descriptions = [
-				"Heart Rate: " + formatValue(heartRate.heartRate),
+				"❤️ Heart Rate: " + formatValue(heartRate.heartRate),
 			]
 			super.init(at: heartRate.timestamp, for: heartRate, descriptions: descriptions)
 		}
@@ -342,7 +343,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	private final class LeanBodyMassEvent: Event {
 		init(for leanBodyMass: LeanBodyMass) {
 			let descriptions = [
-				"Lean Body Mass: " + formatValue(leanBodyMass.leanBodyMass),
+				"⚖️ Lean Body Mass: " + formatValue(leanBodyMass.leanBodyMass),
 			]
 			super.init(at: leanBodyMass.timestamp, for: leanBodyMass, descriptions: descriptions)
 		}
@@ -356,7 +357,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			let max = injected(MoodUiUtil.self).valueToString(mood.maxRating)
 			let scaleText = min + " - " + max
 			var descriptions = [
-				"Mood: " + injected(MoodUiUtil.self).valueToString(mood.rating) + " (scale of \(scaleText))",
+				"🧠 Mood: " + injected(MoodUiUtil.self).valueToString(mood.rating) + " (scale of \(scaleText))",
 			]
 			if let note = mood.note, !note.isEmpty {
 				descriptions.append("- Note: " + note)
@@ -370,7 +371,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	private final class TookMedicationEvent: Event {
 		init(for dose: MedicationDose) {
 			var descriptions = [
-				"Took " + dose.medication.name,
+				"℞ Took " + dose.medication.name,
 			]
 			if let dosage = dose.dosage {
 				descriptions.append("- Dosage: " + dosage.description)
@@ -384,7 +385,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	private final class RestingHeartRateEvent: Event {
 		init(for restingHeartRate: RestingHeartRate) {
 			let descriptions = [
-				"Resting Heart Rate: " + formatValue(restingHeartRate.restingHeartRate),
+				"❤️ Resting Heart Rate: " + formatValue(restingHeartRate.restingHeartRate),
 			]
 			super.init(at: restingHeartRate.timestamp, for: restingHeartRate, descriptions: descriptions)
 		}
@@ -395,7 +396,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	private final class SexualActivityEvent: Event {
 		init(for sexualActivity: SexualActivity) {
 			let descriptions = [
-				"Sexual Activity: " + sexualActivity.protectionUsed.description,
+				"🍆 Sexual Activity: " + sexualActivity.protectionUsed.description,
 			]
 			super.init(at: sexualActivity.timestamp, for: sexualActivity, descriptions: descriptions)
 		}
@@ -409,7 +410,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 				return nil
 			}
 			let descriptions = [
-				"Went to bed",
+				"🛌 Went to bed",
 			]
 			super.init(at: sleep.startDate, for: sleep, descriptions: descriptions)
 		}
@@ -421,7 +422,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 				return nil
 			}
 			let descriptions = [
-				"Fell asleep",
+				"💤 Fell asleep",
 			]
 			super.init(at: sleep.startDate, for: sleep, descriptions: descriptions)
 		}
@@ -433,7 +434,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 				return nil
 			}
 			let descriptions = [
-				"Woke up",
+				"🥱 Woke up",
 				"- Slept for " + sleep.duration.description,
 			]
 			super.init(at: sleep.endDate, for: sleep, descriptions: descriptions)
@@ -446,7 +447,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 				return nil
 			}
 			let descriptions = [
-				"Got out of bed",
+				"🛏 Got out of bed",
 				"- In bed for " + sleep.duration.description,
 			]
 			super.init(at: sleep.endDate, for: sleep, descriptions: descriptions)
@@ -458,7 +459,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	private final class WeightEvent: Event {
 		init(for weight: Weight) {
 			let descriptions = [
-				"Weight: " + formatValue(weight.weight),
+				"⚖️ Weight: " + formatValue(weight.weight),
 			]
 			super.init(at: weight.timestamp, for: weight, descriptions: descriptions)
 		}
