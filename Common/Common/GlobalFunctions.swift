@@ -59,7 +59,8 @@ public func errorInfo(_ error: Error) -> String {
 	if let customError = error as? GenericError {
 		errorDescription = customError.description
 	}
-	return String(format: "%@ %@", errorDescription, (error as NSError).userInfo)
+	let version = GIT_SHA_VERSION + (UNCOMMITTED_CHANGES ? "*" : "")
+	return String(format: "(%@) %@ %@", version, errorDescription, (error as NSError).userInfo)
 }
 
 public func copyArray<Type>(_ array: [Type]) -> [Type] {
