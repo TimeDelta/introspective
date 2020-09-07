@@ -355,27 +355,26 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 
 	private final func resetDateRangeButtonTitle() {
 		var dateText: String
-		if minDate == nil && maxDate == nil {
-			dateText = "Filter Dates"
-		} else if maxDate == minDate {
-			dateText = "On "
-			dateText += injected(CalendarUtil.self)
-				.string(for: minDate!, dateStyle: .medium, timeStyle: .none)
-		} else if maxDate == nil {
+		if let minDate = minDate, let maxDate = maxDate {
+			let startOfMin = injected(CalendarUtil.self).start(of: .day, in: minDate)
+			let startOfMax = injected(CalendarUtil.self).start(of: .day, in: maxDate)
+			if startOfMin == startOfMax {
+				dateText = "On "
+				dateText += injected(CalendarUtil.self).string(for: minDate, dateStyle: .medium, timeStyle: .none)
+			} else {
+				dateText = "From "
+				dateText += injected(CalendarUtil.self).string(for: minDate, dateStyle: .short, timeStyle: .none)
+				dateText += " to "
+				dateText += injected(CalendarUtil.self).string(for: maxDate, dateStyle: .short, timeStyle: .none)
+			}
+		} else if let minDate = minDate {
 			dateText = "After "
-			dateText += injected(CalendarUtil.self)
-				.string(for: minDate!, dateStyle: .medium, timeStyle: .none)
-		} else if minDate == nil {
+			dateText += injected(CalendarUtil.self).string(for: minDate, dateStyle: .medium, timeStyle: .none)
+		} else if let maxDate = maxDate {
 			dateText = "Before "
-			dateText += injected(CalendarUtil.self)
-				.string(for: maxDate!, dateStyle: .medium, timeStyle: .none)
+			dateText += injected(CalendarUtil.self).string(for: maxDate, dateStyle: .medium, timeStyle: .none)
 		} else {
-			dateText = "From "
-			dateText += injected(CalendarUtil.self)
-				.string(for: minDate!, dateStyle: .short, timeStyle: .none)
-			dateText += " to "
-			dateText += injected(CalendarUtil.self)
-				.string(for: maxDate!, dateStyle: .short, timeStyle: .none)
+			dateText = "Filter Dates"
 		}
 		dateRangeButton.title = dateText
 		dateRangeButton.accessibilityValue = dateText
