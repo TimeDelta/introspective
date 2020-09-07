@@ -229,7 +229,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		var eventsByDay = [(day: Date, events: [Event])]()
 		var eventsForCurrentDay = [Event]()
 		var currentDay: Date?
-		for event in events.sorted(by: { $0.date < $1.date }) {
+		for event in events.sorted(by: { $0.date > $1.date }) {
 			let newDay = injected(CalendarUtil.self).start(of: .day, in: event.date)
 			if newDay != currentDay {
 				if let currentDay = currentDay {
