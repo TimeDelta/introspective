@@ -7,6 +7,7 @@
 //
 
 import CoreData
+import Presentr
 import SwiftDate
 import UIKit
 
@@ -24,9 +25,32 @@ public protocol TimelineTableViewController: UITableViewController {
 }
 
 public final class TimelineTableViewControllerImpl: UITableViewController, TimelineTableViewController {
+	// MARK: - Static Variables
+
 	private typealias Me = TimelineTableViewControllerImpl
 
 	private static let log = Log()
+
+	// MARK: Notification Names
+
+	static let dateRangeSet = Notification.Name("medicationDosesTableDateRangeSet")
+	static let medicationDoseEdited = Notification.Name("medicationDoseEdited")
+
+	// MARK: Presenters
+
+	private static let dateFilterPresenter: Presentr = {
+		let customType = PresentationType.custom(width: .default, height: .custom(size: 438), center: .center)
+		let customPresenter = Presentr(presentationType: customType)
+		customPresenter.dismissTransitionType = .crossDissolve
+		customPresenter.roundCorners = true
+		return customPresenter
+	}()
+
+	// MARK: - IBOutlets
+
+	@IBOutlet final var previousDateRangeButton: UIBarButtonItem!
+	@IBOutlet final var dateRangeButton: UIBarButtonItem!
+	@IBOutlet final var nextDateRangeButton: UIBarButtonItem!
 
 	// MARK: - Instance Variables
 
@@ -47,7 +71,11 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		injected(SampleFetcherFactory.self).weightSampleFetcher(),
 	]
 
-	private var eventBuckets: [(day: Date, events: [Event])]?
+	private var eventBuckets: [(day: Date, events: [Event])]? {
+		didSet {
+			DispatchQueue.main.async { self.tableView.reloadData() }
+		}
+	}
 
 	private static let valueFormatter: NumberFormatter = {
 		let formatter = NumberFormatter()
@@ -62,6 +90,8 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 
 		tableView.rowHeight = UITableView.automaticDimension
 		tableView.estimatedRowHeight = 88
+
+		dateRangeButton.accessibilityLabel = "filter dates button"
 
 		fetchSamples()
 	}
@@ -102,6 +132,64 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		cell.date = event.date
 		cell.descriptions = event.descriptions
 		return cell
+	}
+
+	// MARK: - Actions
+
+	@IBAction final func filterDatesButtonPressed(_: Any) {
+		let controller = viewController(named: "dateRangeChooser", fromStoryboard: "Util") as! DateRangeViewController
+		controller.initialFromDate = minDate
+		controller.initialToDate = maxDate
+		controller.datePickerMode = .date
+		controller.notificationToSendOnAccept = Me.dateRangeSet
+		customPresentViewController(Me.dateFilterPresenter, viewController: controller, animated: false)
+	}
+
+	@IBAction final func previousDateRangeButtonPressed(_: Any) {
+		if minDate == maxDate {
+			minDate = minDate! - 1.days
+			maxDate = maxDate! - 1.days
+		} else if minDate == nil {
+			maxDate = maxDate! - 1.days
+		} else if maxDate == nil {
+			minDate = minDate! - 1.days
+		} else {
+			let difference = maxDate! - minDate!
+			minDate = minDate! - difference
+			maxDate = maxDate! - difference
+		}
+		resetDateRangeButtonTitle()
+		fetchSamples()
+	}
+
+	@IBAction final func nextDateRangeButtonPressed(_: Any) {
+		if minDate == maxDate {
+			minDate = minDate! + 1.days
+			maxDate = maxDate! + 1.days
+		} else if minDate == nil {
+			maxDate = maxDate! + 1.days
+		} else if maxDate == nil {
+			minDate = minDate! + 1.days
+		} else {
+			let difference = maxDate! - minDate!
+			minDate = minDate! + difference
+			maxDate = maxDate! + difference
+		}
+		resetDateRangeButtonTitle()
+		fetchSamples()
+	}
+
+	// MARK: - Received Notifications
+
+	@objc private final func dateRangeSet(notification: Notification) {
+		minDate = value(for: .fromDate, from: notification)
+		maxDate = value(for: .toDate, from: notification)
+		let enablePreviousAndNextButtons = minDate != nil || maxDate != nil
+		previousDateRangeButton.isEnabled = enablePreviousAndNextButtons
+		nextDateRangeButton.isEnabled = enablePreviousAndNextButtons
+		fetchSamples()
+		tableView.reloadData()
+		resetDateRangeButtonTitle()
 	}
 
 	// MARK: - Helper Functions
@@ -263,6 +351,37 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 
 	private static func formatValue(_ value: Double) -> String {
 		Me.valueFormatter.string(from: NSNumber(value: value))!
+	}
+
+	private final func resetDateRangeButtonTitle() {
+		var dateText: String
+		if minDate == nil && maxDate == nil {
+			dateText = "Filter Dates"
+		} else if maxDate == minDate {
+			dateText = "On "
+			dateText += injected(CalendarUtil.self)
+				.string(for: minDate!, dateStyle: .medium, timeStyle: .none)
+		} else if maxDate == nil {
+			dateText = "After "
+			dateText += injected(CalendarUtil.self)
+				.string(for: minDate!, dateStyle: .medium, timeStyle: .none)
+		} else if minDate == nil {
+			dateText = "Before "
+			dateText += injected(CalendarUtil.self)
+				.string(for: maxDate!, dateStyle: .medium, timeStyle: .none)
+		} else {
+			dateText = "From "
+			dateText += injected(CalendarUtil.self)
+				.string(for: minDate!, dateStyle: .short, timeStyle: .none)
+			dateText += " to "
+			dateText += injected(CalendarUtil.self)
+				.string(for: maxDate!, dateStyle: .short, timeStyle: .none)
+		}
+		dateRangeButton.title = dateText
+		dateRangeButton.accessibilityValue = dateText
+		dateRangeButton.accessibilityIdentifier = "filter dates button"
+		dateRangeButton.accessibilityLabel = "filter dates button"
+		dateRangeButton.accessibilityHint = "Filter the displayed data by date range"
 	}
 
 	// MARK: - Helper Classes

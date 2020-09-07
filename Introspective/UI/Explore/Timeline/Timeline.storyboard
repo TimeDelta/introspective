@@ -2,7 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="C7c-az-R7P">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16097.2"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -14,9 +14,32 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="725"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <toolbar key="tableHeaderView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="vVq-Tk-tER">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                            <items>
+                                <barButtonItem style="plain" systemItem="flexibleSpace" id="EEa-pU-Nne"/>
+                                <barButtonItem enabled="NO" title="&lt;" id="2zR-cN-K2T">
+                                    <connections>
+                                        <action selector="previousDateRangeButtonPressed:" destination="C7c-az-R7P" id="ceP-NF-BJr"/>
+                                    </connections>
+                                </barButtonItem>
+                                <barButtonItem title="Filter Dates" id="lIB-0x-XPa">
+                                    <connections>
+                                        <action selector="filterDatesButtonPressed:" destination="C7c-az-R7P" id="Jyc-YQ-Eq7"/>
+                                    </connections>
+                                </barButtonItem>
+                                <barButtonItem enabled="NO" title="&gt;" id="orK-Fj-TcQ">
+                                    <connections>
+                                        <action selector="nextDateRangeButtonPressed:" destination="C7c-az-R7P" id="YTQ-JI-Iom"/>
+                                    </connections>
+                                </barButtonItem>
+                                <barButtonItem style="plain" systemItem="flexibleSpace" id="T4f-ui-IEZ"/>
+                            </items>
+                        </toolbar>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="timelineCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="timelineCell" rowHeight="75" id="FRB-O1-K5Y" customClass="TimelineTableViewCellImpl" customModule="Introspective" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="414" height="75"/>
+                                <rect key="frame" x="0.0" y="72" width="414" height="75"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="FRB-O1-K5Y" id="XK7-lW-huf">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="75"/>
@@ -64,7 +87,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="wait" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="wait" rowHeight="75" id="RVg-li-aVs" customClass="TimelineTableViewCellImpl" customModule="Introspective" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="103" width="414" height="75"/>
+                                <rect key="frame" x="0.0" y="147" width="414" height="75"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="RVg-li-aVs" id="z4J-Di-WG3">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="75"/>
@@ -85,6 +108,11 @@
                     </tableView>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
+                    <connections>
+                        <outlet property="dateRangeButton" destination="lIB-0x-XPa" id="CSE-I7-iG9"/>
+                        <outlet property="nextDateRangeButton" destination="orK-Fj-TcQ" id="04i-90-9kq"/>
+                        <outlet property="previousDateRangeButton" destination="2zR-cN-K2T" id="ShO-qz-8ao"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4zD-26-Sfu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
