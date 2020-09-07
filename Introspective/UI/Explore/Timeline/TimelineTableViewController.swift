@@ -95,8 +95,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 
 		observe(selector: #selector(dateRangeSet), name: Me.dateRangeSet)
 
-		fetchSamples()
 		resetDateRangeButtonTitle()
+		injected(AsyncUtil.self).run(qos: .userInitiated) {
+			self.fetchSamples()
+		}
 	}
 
 	// MARK: - Table view data source
@@ -202,27 +204,23 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 
 	private func fetchSamples() {
 		eventBuckets = nil // let ARC start cleaning up
-//		let fetchSync = DispatchGroup()
-//		let writeSync = DispatchGroup()
+		let fetchSync = DispatchGroup()
 		var samples = [Sample]()
 		for fetcher in fetchers {
-//			fetchSync.enter()
-//			injected(AsyncUtil.self).run(qos: .userInitiated) {
-			do {
-				let newSamples = try fetcher.getSamples(from: minDate, to: maxDate)
-//					writeSync.wait()
-//					writeSync.enter()
-				samples.append(contentsOf: newSamples)
-//					writeSync.leave()
-//					fetchSync.leave()
-			} catch {
-				if !(error is Sample) {
-					showError(title: "Unable to retrieve \(fetcher.sampleTypePluralName)", error: error)
+			fetchSync.enter()
+			injected(AsyncUtil.self).run(qos: .userInitiated) {
+				do {
+					let newSamples = try fetcher.getSamples(from: self.minDate, to: self.maxDate)
+					samples.append(contentsOf: newSamples)
+					fetchSync.leave()
+				} catch {
+					if !(error is Sample) {
+						self.showError(title: "Unable to retrieve \(fetcher.sampleTypePluralName)", error: error)
+					}
 				}
 			}
-//			}
 		}
-//		fetchSync.wait()
+		fetchSync.wait()
 
 		var events = [Event]()
 		for sample in samples {
