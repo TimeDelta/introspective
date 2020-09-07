@@ -20,7 +20,7 @@ public class SingleDateSampleDAO<SampleType: CoreDataSample> {
 	internal final func dateSpanPredicate(from minDate: NSDate?, to maxDate: NSDate?) -> NSPredicate {
 		let fieldName = dateAttribute.variableName!
 		if let min = minDate, let max = maxDate {
-			return NSPredicate(format: "%@ >= %K AND %K <= %@", min, fieldName, fieldName, max)
+			return NSPredicate(format: "%@ <= %K AND %K <= %@", min, fieldName, fieldName, max)
 		} else if let min = minDate {
 			return NSPredicate(format: "%@ >= %K", min, fieldName)
 		} else if let max = maxDate {
