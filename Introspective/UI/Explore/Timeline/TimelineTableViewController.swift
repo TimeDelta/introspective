@@ -93,7 +93,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 
 		dateRangeButton.accessibilityLabel = "filter dates button"
 
+		observe(selector: #selector(dateRangeSet), name: Me.dateRangeSet)
+
 		fetchSamples()
+		resetDateRangeButtonTitle()
 	}
 
 	// MARK: - Table view data source
@@ -188,7 +191,6 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		previousDateRangeButton.isEnabled = enablePreviousAndNextButtons
 		nextDateRangeButton.isEnabled = enablePreviousAndNextButtons
 		fetchSamples()
-		tableView.reloadData()
 		resetDateRangeButtonTitle()
 	}
 
