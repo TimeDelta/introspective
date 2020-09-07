@@ -29,6 +29,9 @@
       location = "group:Samples/Samples.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:SampleFetchers/SampleFetchers.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:SampleGroupers/SampleGroupers.xcodeproj">
    </FileRef>
    <FileRef

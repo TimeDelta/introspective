@@ -132,6 +132,18 @@ target 'Samples' do
   pod 'CSV.swift', '~> 2.3.1'
 end
 
+target 'SampleFetchers' do
+  project 'SampleFetchers/SampleFetchers'
+  use_frameworks!
+
+  pod 'Sourcery'
+  pod 'SwiftDate', '6.0.3'
+  pod 'MarqueeLabel'
+  pod 'CSV.swift', '~> 2.3.1'
+  pod 'NotificationBannerSwift'
+  pod 'Presentr'
+end
+
 target 'SampleGroupers' do
   project 'SampleGroupers/SampleGroupers'
   use_frameworks!

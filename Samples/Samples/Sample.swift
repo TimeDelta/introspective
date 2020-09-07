@@ -100,9 +100,13 @@ public extension Sample {
 	) -> Bool {
 		do {
 			let myValue = try value(of: attribute)
-			if !(myValue is Type) && !(myValue is Optional < Type> && attribute.optional) { return false }
+			if !(myValue is Type) && !(myValue is Optional < Type> && attribute.optional) {
+				return false
+			}
 			let otherValue = try otherSample.value(of: attribute)
-			if !(otherValue is Type) && !(otherValue is Optional < Type> && attribute.optional) { return false }
+			if !(otherValue is Type) && !(otherValue is Optional < Type> && attribute.optional) {
+				return false
+			}
 			return myValue as? Type == otherValue as? Type
 		} catch {
 			os_log("Failed to safely check equality of sample attribute '%@': %@", attribute.name, errorInfo(error))

@@ -17,6 +17,7 @@ import Settings
 
 // sourcery: AutoMockable
 public protocol ActivityDAO {
+	func getActivities(from minDate: Date?, to maxDate: Date?) throws -> [Activity]
 	/// Retrieve all activites for the given `definition` that either started today and have not ended or ended today. This should cover all cases except: started before today and not stopped
 	func getAllActivitiesForToday(_ activityDefinition: ActivityDefinition) throws -> [Activity]
 	func getMostRecentActivityEndDate() throws -> Date?
@@ -124,6 +125,18 @@ public class ActivityDAOImpl: ActivityDAO {
 		Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "ActivityDAO"))
 
 	// MARK: - Getters
+
+	public final func getActivities(from minDate: Date?, to maxDate: Date?) throws -> [Activity] {
+		let signpostName: StaticString = "getActivitiesFromTo"
+		Me.signpost.begin(name: signpostName)
+
+		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
+		fetchRequest.predicate = dateSpanPredicate(from: minDate as NSDate?, to: maxDate as NSDate?)
+
+		let activities = try injected(Database.self).query(fetchRequest)
+		Me.signpost.end(name: signpostName, "# activities fetched: %d", activities.count)
+		return activities
+	}
 
 	public final func getAllActivitiesForToday(_ activityDefinition: ActivityDefinition) throws -> [Activity] {
 		let signpostName: StaticString = "getAllActivitiesForToday"
@@ -413,5 +426,28 @@ public class ActivityDAOImpl: ActivityDAO {
 		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "definition.name == %@", activityDefinition.name)
 		return fetchRequest
+	}
+
+	private final func dateSpanPredicate(from min: NSDate?, to max: NSDate?) -> NSPredicate {
+		var startDateBounds = [NSPredicate]()
+		var endDateBounds: [NSPredicate] = [NSPredicate(format: "endDate != nil")]
+		var startedNotFinishedBounds: [NSPredicate] = [NSPredicate(format: "endDate == nil")]
+		if let min = min {
+			startDateBounds.append(NSPredicate(format: "%@ < startDate", min))
+			endDateBounds.append(NSPredicate(format: "%@ < endDate", min))
+		}
+		if let max = max {
+			startDateBounds.append(NSPredicate(format: "startDate < %@", max))
+			endDateBounds.append(NSPredicate(format: "endDate < %@", max))
+			startedNotFinishedBounds.append(NSPredicate(format: "startDate < %@", max))
+		}
+		var cases = [NSPredicate]()
+		if !startDateBounds.isEmpty {
+			cases.append(NSCompoundPredicate(andPredicateWithSubpredicates: startDateBounds))
+		}
+		cases.append(NSCompoundPredicate(andPredicateWithSubpredicates: endDateBounds))
+		cases.append(NSCompoundPredicate(andPredicateWithSubpredicates: startedNotFinishedBounds))
+
+		return NSCompoundPredicate(orPredicateWithSubpredicates: cases)
 	}
 }

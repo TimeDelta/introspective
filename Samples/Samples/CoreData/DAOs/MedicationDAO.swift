@@ -8,6 +8,7 @@
 
 import CoreData
 import Foundation
+import os
 
 import Common
 import DependencyInjection
@@ -16,6 +17,7 @@ import Persistence
 // sourcery: AutoMockable
 public protocol MedicationDAO {
 	func allMedications() throws -> [Medication]
+	func getMedicationDoses(from minDate: Date?, to maxDate: Date?) throws -> [MedicationDose]
 
 	func medicationExists(withName name: String, using transaction: Transaction?) throws -> Bool
 	/// - Returns: The medication with the provided name if it exists. Otherwise, nil.
@@ -93,7 +95,28 @@ extension MedicationDAO {
 	}
 }
 
-public final class MedicationDAOImpl: MedicationDAO {
+public final class MedicationDAOImpl: SingleDateSampleDAO<MedicationDose>, MedicationDAO {
+	private typealias Me = MedicationDAOImpl
+
+	private static let signpost =
+		Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "MedicationDAO"))
+
+	internal init() {
+		super.init(dateAttribute: CommonSampleAttributes.timestamp)
+	}
+
+	public func getMedicationDoses(from minDate: Date?, to maxDate: Date?) throws -> [MedicationDose] {
+		let signpostName: StaticString = "getMedicationDosesFromTo"
+		Me.signpost.begin(name: signpostName)
+
+		let fetchRequest: NSFetchRequest<MedicationDose> = MedicationDose.fetchRequest()
+		fetchRequest.predicate = dateSpanPredicate(from: minDate as NSDate?, to: maxDate as NSDate?)
+
+		let doses = try injected(Database.self).query(fetchRequest)
+		Me.signpost.end(name: signpostName, "# doses fetched: %d", doses.count)
+		return doses
+	}
+
 	public final func allMedications() throws -> [Medication] {
 		try injected(Database.self).query(Medication.fetchRequest())
 	}

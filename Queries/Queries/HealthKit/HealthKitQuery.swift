@@ -63,21 +63,16 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 			queryDone(nil, error)
 			return
 		}
-		if originalSamples == nil || originalSamples!.isEmpty {
+		guard let originalSamples = originalSamples else {
 			queryDone(nil, NoHealthKitSamplesFoundQueryError(sampleType: SampleType.self))
 			return
 		}
 
-		let mappedSamples = originalSamples!.map { self.initFromHKSample($0) }
+		let mappedSamples = originalSamples.map { self.initFromHKSample($0) }
 		do {
 			let filteredSamples = try mappedSamples.filter(samplePassesFilters)
 
 			if !stopped {
-				if filteredSamples.isEmpty {
-					queryDone(nil, NoHealthKitSamplesFoundQueryError(sampleType: SampleType.self))
-					return
-				}
-
 				let result = SampleQueryResult<SampleType>(filteredSamples)
 				finishedQuery = true
 				queryDone(result, nil)

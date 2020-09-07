@@ -19,6 +19,7 @@ final class ExploreCollectionViewController: UICollectionViewController {
 	private static let queryCellReuseIdentifier = "query"
 	private static let graphCellReuseIdentifier = "graph"
 	private static let unifiedViewCellReuseIdentifier = "unifiedView"
+	private static let timelineCellReuseIdentifier = "timeline"
 
 	private static let log = Log()
 
@@ -40,7 +41,7 @@ final class ExploreCollectionViewController: UICollectionViewController {
 	}
 
 	final override func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
-		2
+		3
 	}
 
 	final override func collectionView(
@@ -52,6 +53,12 @@ final class ExploreCollectionViewController: UICollectionViewController {
 		}
 		if indexPath.row == 1 {
 			return collectionView.dequeueReusableCell(withReuseIdentifier: Me.graphCellReuseIdentifier, for: indexPath)
+		}
+		if indexPath.row == 2 {
+			return collectionView.dequeueReusableCell(
+				withReuseIdentifier: Me.timelineCellReuseIdentifier,
+				for: indexPath
+			)
 		}
 
 		Me.log.error("Unknown row when trying to create UICollectionViewCell: %d", indexPath.row)

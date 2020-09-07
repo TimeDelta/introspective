@@ -20,6 +20,7 @@ import Globals
 import Notifications
 import Persistence
 import Queries
+import SampleFetchers
 import SampleGroupers
 import SampleGroupInformation
 import Samples
@@ -114,6 +115,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 			PersistenceInjectionProvider(ObjectModelContainer.objectModel),
 			QueriesInjectionProvider(),
 			SamplesInjectionProvider(),
+			SampleFetchersInjectionProvider(),
 			SampleGroupersInjectionProvider(),
 			SampleGroupInformationInjectionProvider(),
 			SettingsInjectionProvider(),

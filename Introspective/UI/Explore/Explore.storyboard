@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="HhP-pL-N9G">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="HhP-pL-N9G">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -121,6 +122,34 @@
                                     <segue destination="SBE-IY-80o" kind="show" id="AMi-aS-u6T"/>
                                 </connections>
                             </collectionViewCell>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="timeline" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="timeline" id="eSq-wa-EeS">
+                                <rect key="frame" x="300" y="10" width="65" height="65"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="PgY-rp-ARt">
+                                    <rect key="frame" x="0.0" y="0.0" width="65" height="65"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Timeline" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gwC-ML-bMx">
+                                            <rect key="frame" x="0.0" y="50" width="66" height="15"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="⌛" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="84B-yd-C7H">
+                                            <rect key="frame" x="1" y="0.0" width="65" height="48"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" red="0.91548211239999999" green="0.9100001835" blue="0.92096404119999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                </collectionViewCellContentView>
+                                <connections>
+                                    <segue destination="obq-eT-TZQ" kind="show" id="rBn-hx-FJs"/>
+                                </connections>
+                            </collectionViewCell>
                         </cells>
                         <connections>
                             <outlet property="dataSource" destination="JdR-QO-RE4" id="IFl-yL-hnG"/>
@@ -139,7 +168,7 @@
                 <viewControllerPlaceholder storyboardIdentifier="Query" storyboardName="Query" referencedIdentifier="queryView" id="MQD-xw-RuU" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lFO-5t-T4q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="660" y="-220"/>
+            <point key="canvasLocation" x="686" y="-291"/>
         </scene>
         <!--graphSetup-->
         <scene sceneID="Nh1-u3-VLX">
@@ -147,7 +176,17 @@
                 <viewControllerPlaceholder storyboardName="GraphSetup" referencedIdentifier="graphSetup" id="4Gb-TS-ozl" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2wg-SC-3Ld" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="914" y="-220"/>
+            <point key="canvasLocation" x="690" y="-266"/>
+        </scene>
+        <!--Timeline-->
+        <scene sceneID="DCQ-X9-wZI">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Timeline" id="obq-eT-TZQ" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="Jbx-cz-cQT"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4sW-Kj-GRU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="675" y="-214"/>
         </scene>
         <!--UnifiedView-->
         <scene sceneID="Jhd-cQ-7CI">
@@ -155,7 +194,7 @@
                 <viewControllerPlaceholder storyboardName="UnifiedView" id="SBE-IY-80o" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eyh-bj-hbt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1162" y="-220"/>
+            <point key="canvasLocation" x="692" y="-240"/>
         </scene>
         <!--Explore-->
         <scene sceneID="CRr-7A-BlU">

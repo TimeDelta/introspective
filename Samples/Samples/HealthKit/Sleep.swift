@@ -8,6 +8,7 @@
 
 import Foundation
 import HealthKit
+import SwiftDate
 
 import Attributes
 import Common
@@ -79,7 +80,8 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitStartDate
 	public final var attributes: [Attribute] { Me.attributes }
 	public static var dateAttributes: [DateType: DateAttribute] = [
-		.start: CommonSampleAttributes.healthKitTimestamp,
+		.start: CommonSampleAttributes.healthKitStartDate,
+		.end: CommonSampleAttributes.healthKitEndDate,
 	]
 
 	// MARK: - Searching
@@ -95,6 +97,9 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 	public final var startDate: Date
 	public final var endDate: Date
 	public final var state: State
+	public final var duration: TimeDuration {
+		TimeDuration(endDate - startDate)
+	}
 
 	// MARK: - Initializers
 

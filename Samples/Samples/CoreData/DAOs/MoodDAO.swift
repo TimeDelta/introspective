@@ -6,7 +6,9 @@
 //  Copyright © 2020 Bryan Nova. All rights reserved.
 //
 
+import CoreData
 import Foundation
+import os
 
 import Common
 import DependencyInjection
@@ -15,6 +17,7 @@ import Settings
 
 // sourcery: AutoMockable
 public protocol MoodDAO {
+	func getMoods(from minDate: Date?, to maxDate: Date?) throws -> [Mood]
 	func createMood(timestamp: Date, rating: Double, min: Double?, max: Double?, note: String?) throws -> Mood
 }
 
@@ -30,7 +33,28 @@ extension MoodDAO {
 	}
 }
 
-public final class MoodDAOImpl: MoodDAO {
+public final class MoodDAOImpl: SingleDateSampleDAO<MoodImpl>, MoodDAO {
+	private typealias Me = MoodDAOImpl
+
+	private static let signpost =
+		Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "MoodDAO"))
+
+	internal init() {
+		super.init(dateAttribute: CommonSampleAttributes.timestamp)
+	}
+
+	public func getMoods(from minDate: Date?, to maxDate: Date?) throws -> [Mood] {
+		let signpostName: StaticString = "getMoodsFromTo"
+		Me.signpost.begin(name: signpostName)
+
+		let fetchRequest: NSFetchRequest<MoodImpl> = MoodImpl.fetchRequest()
+		fetchRequest.predicate = dateSpanPredicate(from: minDate as NSDate?, to: maxDate as NSDate?)
+
+		let moods = try injected(Database.self).query(fetchRequest)
+		Me.signpost.end(name: signpostName, "# moods fetched: %d", moods.count)
+		return moods
+	}
+
 	@discardableResult
 	public final func createMood(
 		timestamp _: Date,

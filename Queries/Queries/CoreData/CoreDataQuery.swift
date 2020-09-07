@@ -29,11 +29,6 @@ public class CoreDataQuery<SampleType: NSManagedObject & CoreDataSample>: Sample
 			let filteredSamples = try samples.filter(samplePassesFilters)
 
 			if !stopped {
-				if filteredSamples.isEmpty {
-					queryDone(nil, NoSamplesFoundQueryError(sampleType: SampleType.self))
-					return
-				}
-
 				let result = SampleQueryResult<SampleType>(filteredSamples)
 				queryDone(result, nil)
 			}
