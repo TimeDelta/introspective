@@ -11,6 +11,7 @@ import Presentr
 import SwiftDate
 import UIKit
 
+import Attributes
 import Common
 import DependencyInjection
 import SampleFetchers
@@ -34,17 +35,20 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	// MARK: Notification Names
 
 	static let dateRangeSet = Notification.Name("medicationDosesTableDateRangeSet")
-	static let medicationDoseEdited = Notification.Name("medicationDoseEdited")
+	static let enabledDataTypesChanged = Notification.Name("enabledDataTypesChanged")
 
 	// MARK: Presenters
 
-	private static let dateFilterPresenter: Presentr = {
-		let customType = PresentationType.custom(width: .default, height: .custom(size: 438), center: .center)
-		let customPresenter = Presentr(presentationType: customType)
-		customPresenter.dismissTransitionType = .crossDissolve
-		customPresenter.roundCorners = true
-		return customPresenter
-	}()
+	private static let dateFilterPresenter: Presentr = injected(UiUtil.self).customPresenter(
+		width: .full,
+		height: .custom(size: 438),
+		center: .topCenter
+	)
+	private static let enabledSampleTypesPresenter: Presentr = injected(UiUtil.self).customPresenter(
+		width: .full,
+		height: .custom(size: 400),
+		center: .topCenter
+	)
 
 	// MARK: - IBOutlets
 
@@ -57,18 +61,43 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	public final var minDate: Date? = injected(CalendarUtil.self).start(of: .day, in: Date())
 	public final var maxDate: Date? = injected(CalendarUtil.self).end(of: .day, in: Date())
 
-	private final let fetchers: [SampleFetcher] = [
-		injected(SampleFetcherFactory.self).activitySampleFetcher(),
-		injected(SampleFetcherFactory.self).bloodPressureSampleFetcher(),
-		injected(SampleFetcherFactory.self).bodyMassIndexSampleFetcher(),
-		injected(SampleFetcherFactory.self).heartRateSampleFetcher(),
-		injected(SampleFetcherFactory.self).leanBodyMassSampleFetcher(),
-		injected(SampleFetcherFactory.self).medicationDoseSampleFetcher(),
-		injected(SampleFetcherFactory.self).moodSampleFetcher(),
-		injected(SampleFetcherFactory.self).restingHeartRateSampleFetcher(),
-		injected(SampleFetcherFactory.self).sexualActivitySampleFetcher(),
-		injected(SampleFetcherFactory.self).sleepSampleFetcher(),
-		injected(SampleFetcherFactory.self).weightSampleFetcher(),
+	private final let fetchers: [(type: Sample.Type, fetcher: SampleFetcher)] = [
+		(type: Activity.self, fetcher: injected(SampleFetcherFactory.self).activitySampleFetcher()),
+		(type: BloodPressure.self, fetcher: injected(SampleFetcherFactory.self).bloodPressureSampleFetcher()),
+		(type: BodyMassIndex.self, fetcher: injected(SampleFetcherFactory.self).bodyMassIndexSampleFetcher()),
+		(type: HeartRate.self, fetcher: injected(SampleFetcherFactory.self).heartRateSampleFetcher()),
+		(type: LeanBodyMass.self, fetcher: injected(SampleFetcherFactory.self).leanBodyMassSampleFetcher()),
+		(type: MedicationDose.self, fetcher: injected(SampleFetcherFactory.self).medicationDoseSampleFetcher()),
+		(type: MoodImpl.self, fetcher: injected(SampleFetcherFactory.self).moodSampleFetcher()),
+		(type: RestingHeartRate.self, fetcher: injected(SampleFetcherFactory.self).restingHeartRateSampleFetcher()),
+		(type: SexualActivity.self, fetcher: injected(SampleFetcherFactory.self).sexualActivitySampleFetcher()),
+		(type: Sleep.self, fetcher: injected(SampleFetcherFactory.self).sleepSampleFetcher()),
+		(type: Weight.self, fetcher: injected(SampleFetcherFactory.self).weightSampleFetcher()),
+	]
+
+	private final var enabledSampleTypes: [String: Bool] = [
+		String(describing: Activity.self):
+			injected(UserDefaultsUtil.self).bool(forKey: .activityEnabledOnTimeline),
+		String(describing: BloodPressure.self):
+			injected(UserDefaultsUtil.self).bool(forKey: .bloodPressureEnabledOnTimeline),
+		String(describing: BodyMassIndex.self):
+			injected(UserDefaultsUtil.self).bool(forKey: .bodyMassIndexEnabledOnTimeline),
+		String(describing: HeartRate.self):
+			injected(UserDefaultsUtil.self).bool(forKey: .heartRateEnabledOnTimeline),
+		String(describing: LeanBodyMass.self):
+			injected(UserDefaultsUtil.self).bool(forKey: .leanBodyMassEnabledOnTimeline),
+		String(describing: MedicationDose.self):
+			injected(UserDefaultsUtil.self).bool(forKey: .medicationDoseEnabledOnTimeline),
+		String(describing: Mood.self):
+			injected(UserDefaultsUtil.self).bool(forKey: .moodEnabledOnTimeline),
+		String(describing: RestingHeartRate.self):
+			injected(UserDefaultsUtil.self).bool(forKey: .restingHeartRateEnabledOnTimeline),
+		String(describing: SexualActivity.self):
+			injected(UserDefaultsUtil.self).bool(forKey: .sexualActivityEnabledOnTimeline),
+		String(describing: Sleep.self):
+			injected(UserDefaultsUtil.self).bool(forKey: .sleepEnabledOnTimeline),
+		String(describing: Weight.self):
+			injected(UserDefaultsUtil.self).bool(forKey: .weightEnabledOnTimeline),
 	]
 
 	private var eventBuckets: [(day: Date, events: [Event])]? {
@@ -94,6 +123,16 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		dateRangeButton.accessibilityLabel = "filter dates button"
 
 		observe(selector: #selector(dateRangeSet), name: Me.dateRangeSet)
+		observe(selector: #selector(enabledDataTypesChanged), name: Me.enabledDataTypesChanged)
+
+		let chooseDataTypesButton = barButton(title: "☑️ Data Types", action: #selector(chooseDataTypesButtonPressed))
+		navigationItem.rightBarButtonItem = chooseDataTypesButton
+
+		injected(UiUtil.self).setBackButton(
+			for: self,
+			title: navigationItem.backBarButtonItem?.title ?? "Back",
+			action: #selector(goBack)
+		)
 
 		resetDateRangeButtonTitle()
 		injected(AsyncUtil.self).run(qos: .userInitiated) {
@@ -184,16 +223,92 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		fetchSamples()
 	}
 
+	@IBAction final func chooseDataTypesButtonPressed(_: Any) {
+		let controller: MultiSelectAttributeValueViewController = viewController(
+			named: "multiSelectAttribute",
+			fromStoryboard: "AttributeList"
+		)
+		controller.multiSelectAttribute = TypedMultiSelectAttribute<String>(
+			name: "Data Types",
+			possibleValues: { injected(SampleFactory.self).allTypes().map { String(describing: $0) } },
+			possibleValueToString: { $0 }
+		)
+		controller.initialValue = enabledSampleTypes.filter { $0.value }.map { $0.key }
+		controller.notificationToSendOnAccept = Me.enabledDataTypesChanged
+		present(controller, using: Me.enabledSampleTypesPresenter)
+	}
+
+	@objc final func goBack() {
+		injected(UserDefaultsUtil.self).setUserDefault(
+			enabledSampleTypes[String(describing: Activity.self)],
+			forKey: .activityEnabledOnTimeline
+		)
+		injected(UserDefaultsUtil.self).setUserDefault(
+			enabledSampleTypes[String(describing: BloodPressure.self)],
+			forKey: .bloodPressureEnabledOnTimeline
+		)
+		injected(UserDefaultsUtil.self).setUserDefault(
+			enabledSampleTypes[String(describing: BodyMassIndex.self)],
+			forKey: .bodyMassIndexEnabledOnTimeline
+		)
+		injected(UserDefaultsUtil.self).setUserDefault(
+			enabledSampleTypes[String(describing: HeartRate.self)],
+			forKey: .heartRateEnabledOnTimeline
+		)
+		injected(UserDefaultsUtil.self).setUserDefault(
+			enabledSampleTypes[String(describing: LeanBodyMass.self)],
+			forKey: .leanBodyMassEnabledOnTimeline
+		)
+		injected(UserDefaultsUtil.self).setUserDefault(
+			enabledSampleTypes[String(describing: MedicationDose.self)],
+			forKey: .medicationDoseEnabledOnTimeline
+		)
+		injected(UserDefaultsUtil.self).setUserDefault(
+			enabledSampleTypes[String(describing: Mood.self)],
+			forKey: .moodEnabledOnTimeline
+		)
+		injected(UserDefaultsUtil.self).setUserDefault(
+			enabledSampleTypes[String(describing: RestingHeartRate.self)],
+			forKey: .restingHeartRateEnabledOnTimeline
+		)
+		injected(UserDefaultsUtil.self).setUserDefault(
+			enabledSampleTypes[String(describing: SexualActivity.self)],
+			forKey: .sexualActivityEnabledOnTimeline
+		)
+		injected(UserDefaultsUtil.self).setUserDefault(
+			enabledSampleTypes[String(describing: Sleep.self)],
+			forKey: .sleepEnabledOnTimeline
+		)
+		injected(UserDefaultsUtil.self).setUserDefault(
+			enabledSampleTypes[String(describing: Weight.self)],
+			forKey: .weightEnabledOnTimeline
+		)
+	}
+
 	// MARK: - Received Notifications
 
-	@objc private final func dateRangeSet(notification: Notification) {
+	@objc private func dateRangeSet(notification: Notification) {
 		minDate = value(for: .fromDate, from: notification)
 		maxDate = value(for: .toDate, from: notification)
 		let enablePreviousAndNextButtons = minDate != nil || maxDate != nil
 		previousDateRangeButton.isEnabled = enablePreviousAndNextButtons
 		nextDateRangeButton.isEnabled = enablePreviousAndNextButtons
-		fetchSamples()
+		injected(AsyncUtil.self).run(qos: .userInitiated) { [weak self] in
+			self?.fetchSamples()
+		}
 		resetDateRangeButtonTitle()
+	}
+
+	@objc private func enabledDataTypesChanged(notification: Notification) {
+		if let enabledTypes: [String] = value(for: .attributeValue, from: notification) {
+			enabledSampleTypes = [String: Bool]()
+			for type in enabledTypes {
+				enabledSampleTypes[type] = true
+			}
+			injected(AsyncUtil.self).run(qos: .userInitiated) { [weak self] in
+				self?.fetchSamples()
+			}
+		}
 	}
 
 	// MARK: - Helper Functions
@@ -206,7 +321,8 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		eventBuckets = nil // let ARC start cleaning up
 		let fetchSync = DispatchGroup()
 		var samples = [Sample]()
-		for fetcher in fetchers {
+		for (type, fetcher) in fetchers {
+			guard enabledSampleTypes[String(describing: type)] == true else { continue }
 			fetchSync.enter()
 			injected(AsyncUtil.self).run(qos: .userInitiated) {
 				do {

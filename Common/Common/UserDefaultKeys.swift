@@ -15,4 +15,18 @@ public enum UserDefaultKey: String {
 	case recordActivitiesInstructionsShown
 	case recordMedicationsInstructionsShown
 	case selectDateViewInstructionsShown
+
+	// MARK: - Enabled Timeline Data Sources
+
+	case activityEnabledOnTimeline
+	case bloodPressureEnabledOnTimeline
+	case bodyMassIndexEnabledOnTimeline
+	case heartRateEnabledOnTimeline
+	case leanBodyMassEnabledOnTimeline
+	case medicationDoseEnabledOnTimeline
+	case moodEnabledOnTimeline
+	case restingHeartRateEnabledOnTimeline
+	case sexualActivityEnabledOnTimeline
+	case sleepEnabledOnTimeline
+	case weightEnabledOnTimeline
 }
