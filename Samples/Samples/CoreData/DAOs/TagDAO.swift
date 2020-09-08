@@ -31,10 +31,11 @@ public final class TagDAOImpl: TagDAO {
 
 	private static let log = Log()
 
-	public final func getTag(named name: String) throws -> Tag? {
+	public final func getTag(named name: String, using transaction: Transaction?) throws -> Tag? {
+		let transaction = transaction ?? injected(Database.self).transaction()
 		let fetchRequest: NSFetchRequest<Tag> = Tag.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
-		let matchingTags = try injected(Database.self).query(fetchRequest)
+		let matchingTags = try transaction.query(fetchRequest)
 		if matchingTags.isEmpty {
 			return nil
 		}
