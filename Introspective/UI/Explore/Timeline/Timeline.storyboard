@@ -19,7 +19,7 @@
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             <items>
                                 <barButtonItem style="plain" systemItem="flexibleSpace" id="EEa-pU-Nne"/>
-                                <barButtonItem enabled="NO" title="&lt;" id="2zR-cN-K2T">
+                                <barButtonItem title="&lt;" id="2zR-cN-K2T">
                                     <connections>
                                         <action selector="previousDateRangeButtonPressed:" destination="C7c-az-R7P" id="ceP-NF-BJr"/>
                                     </connections>
@@ -29,7 +29,7 @@
                                         <action selector="filterDatesButtonPressed:" destination="C7c-az-R7P" id="Jyc-YQ-Eq7"/>
                                     </connections>
                                 </barButtonItem>
-                                <barButtonItem enabled="NO" title="&gt;" id="orK-Fj-TcQ">
+                                <barButtonItem title="&gt;" id="orK-Fj-TcQ">
                                     <connections>
                                         <action selector="nextDateRangeButtonPressed:" destination="C7c-az-R7P" id="YTQ-JI-Iom"/>
                                     </connections>
