@@ -135,11 +135,13 @@ public extension UIViewController {
 		injected(UiUtil.self).present(self, viewController, animated: animated, completion: completion)
 	}
 
+	/// push to the navigation controller in a testable way
 	final func pushToNavigationController(_ controller: UIViewController, animated: Bool = false) {
 		injected(UiUtil.self)
 			.push(controller: controller, toNavigationController: navigationController, animated: animated)
 	}
 
+	/// pop from the navigation controller (if present) in a testable way
 	final func popFromNavigationController(animated: Bool = false) {
 		injected(UiUtil.self).popFrom(navigationController, animated: animated)
 	}
