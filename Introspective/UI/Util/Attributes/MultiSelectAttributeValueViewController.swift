@@ -27,7 +27,6 @@ public final class MultiSelectAttributeValueViewController: UIViewController {
 
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
-		extendedLayoutIncludesOpaqueBars = true
 		createAndInstallSubViewController()
 	}
 

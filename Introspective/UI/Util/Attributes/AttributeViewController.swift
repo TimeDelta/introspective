@@ -38,7 +38,7 @@ final class AttributeViewController: UIViewController {
 	private static let multiSelectPresenter = injected(UiUtil.self).customPresenter(
 		width: .full,
 		height: .fluid(percentage: 0.45),
-		center: .topCenter
+		center: .center
 	)
 	private static let defaultPresenter = injected(UiUtil.self).customPresenter(
 		width: .full,
