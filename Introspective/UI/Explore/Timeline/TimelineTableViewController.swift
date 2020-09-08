@@ -203,7 +203,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			maxDate = maxDate! - difference
 		}
 		resetDateRangeButtonTitle()
-		fetchSamples()
+		injected(AsyncUtil.self).run(qos: .userInitiated) { [weak self] in self?.fetchSamples() }
 	}
 
 	@IBAction final func nextDateRangeButtonPressed(_: Any) {
@@ -220,7 +220,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			maxDate = maxDate! + difference
 		}
 		resetDateRangeButtonTitle()
-		fetchSamples()
+		injected(AsyncUtil.self).run(qos: .userInitiated) { [weak self] in self?.fetchSamples() }
 	}
 
 	@IBAction final func chooseDataTypesButtonPressed(_: Any) {
