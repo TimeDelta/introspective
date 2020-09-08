@@ -42,12 +42,12 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	private static let dateFilterPresenter: Presentr = injected(UiUtil.self).customPresenter(
 		width: .full,
 		height: .custom(size: 438),
-		center: .topCenter
+		center: .center
 	)
 	private static let enabledSampleTypesPresenter: Presentr = injected(UiUtil.self).customPresenter(
 		width: .full,
-		height: .custom(size: 400),
-		center: .topCenter
+		height: .fluid(percentage: 0.5),
+		center: .center
 	)
 
 	// MARK: - IBOutlets
@@ -283,6 +283,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			enabledSampleTypes[String(describing: Weight.self)],
 			forKey: .weightEnabledOnTimeline
 		)
+		popFromNavigationController()
 	}
 
 	// MARK: - Received Notifications
