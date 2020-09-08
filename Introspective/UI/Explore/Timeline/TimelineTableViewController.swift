@@ -240,47 +240,47 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 
 	@objc final func goBack() {
 		injected(UserDefaultsUtil.self).setUserDefault(
-			enabledSampleTypes[String(describing: Activity.self)],
+			enabledSampleTypes[String(describing: Activity.self)] ?? false,
 			forKey: .activityEnabledOnTimeline
 		)
 		injected(UserDefaultsUtil.self).setUserDefault(
-			enabledSampleTypes[String(describing: BloodPressure.self)],
+			enabledSampleTypes[String(describing: BloodPressure.self)] ?? false,
 			forKey: .bloodPressureEnabledOnTimeline
 		)
 		injected(UserDefaultsUtil.self).setUserDefault(
-			enabledSampleTypes[String(describing: BodyMassIndex.self)],
+			enabledSampleTypes[String(describing: BodyMassIndex.self)] ?? false,
 			forKey: .bodyMassIndexEnabledOnTimeline
 		)
 		injected(UserDefaultsUtil.self).setUserDefault(
-			enabledSampleTypes[String(describing: HeartRate.self)],
+			enabledSampleTypes[String(describing: HeartRate.self)] ?? false,
 			forKey: .heartRateEnabledOnTimeline
 		)
 		injected(UserDefaultsUtil.self).setUserDefault(
-			enabledSampleTypes[String(describing: LeanBodyMass.self)],
+			enabledSampleTypes[String(describing: LeanBodyMass.self)] ?? false,
 			forKey: .leanBodyMassEnabledOnTimeline
 		)
 		injected(UserDefaultsUtil.self).setUserDefault(
-			enabledSampleTypes[String(describing: MedicationDose.self)],
+			enabledSampleTypes[String(describing: MedicationDose.self)] ?? false,
 			forKey: .medicationDoseEnabledOnTimeline
 		)
 		injected(UserDefaultsUtil.self).setUserDefault(
-			enabledSampleTypes[String(describing: Mood.self)],
+			enabledSampleTypes[String(describing: Mood.self)] ?? false,
 			forKey: .moodEnabledOnTimeline
 		)
 		injected(UserDefaultsUtil.self).setUserDefault(
-			enabledSampleTypes[String(describing: RestingHeartRate.self)],
+			enabledSampleTypes[String(describing: RestingHeartRate.self)] ?? false,
 			forKey: .restingHeartRateEnabledOnTimeline
 		)
 		injected(UserDefaultsUtil.self).setUserDefault(
-			enabledSampleTypes[String(describing: SexualActivity.self)],
+			enabledSampleTypes[String(describing: SexualActivity.self)] ?? false,
 			forKey: .sexualActivityEnabledOnTimeline
 		)
 		injected(UserDefaultsUtil.self).setUserDefault(
-			enabledSampleTypes[String(describing: Sleep.self)],
+			enabledSampleTypes[String(describing: Sleep.self)] ?? false,
 			forKey: .sleepEnabledOnTimeline
 		)
 		injected(UserDefaultsUtil.self).setUserDefault(
-			enabledSampleTypes[String(describing: Weight.self)],
+			enabledSampleTypes[String(describing: Weight.self)] ?? false,
 			forKey: .weightEnabledOnTimeline
 		)
 		popFromNavigationController()
