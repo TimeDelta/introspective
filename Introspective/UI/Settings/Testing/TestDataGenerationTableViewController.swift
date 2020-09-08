@@ -88,7 +88,11 @@ final class TestDataGenerationTableViewController: UITableViewController {
 			target: self,
 			action: #selector(generateTestData)
 		)
-		navigationItem.setRightBarButton(generateTestDataButton, animated: false)
+		let enableAllButton = barButton(title: "☑️ All", action: #selector(enableAllDataTypes))
+		navigationItem.rightBarButtonItems = [
+			generateTestDataButton,
+			enableAllButton,
+		]
 
 		observe(selector: #selector(samplesPerHourChanged), name: Me.samplesPerHourChanged)
 		observe(selector: #selector(numberOfDaysChanged), name: Me.numberOfDaysChanged)
@@ -167,6 +171,13 @@ final class TestDataGenerationTableViewController: UITableViewController {
 	}
 
 	// MARK: - Button Actions
+
+	@objc private func enableAllDataTypes(_: Any) {
+		for type in injected(SampleFactory.self).allTypes() {
+			setShouldGenerate(for: type, to: true)
+		}
+		DispatchQueue.main.async { self.tableView.reloadData() }
+	}
 
 	@objc private final func generateTestData(_: Any) {
 		generateTestDataButton.isEnabled = false
