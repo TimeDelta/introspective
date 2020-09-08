@@ -44,11 +44,6 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		height: .custom(size: 438),
 		center: .center
 	)
-	private static let enabledSampleTypesPresenter: Presentr = injected(UiUtil.self).customPresenter(
-		width: .full,
-		height: .fluid(percentage: 0.5),
-		center: .center
-	)
 
 	// MARK: - IBOutlets
 
@@ -237,7 +232,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		)
 		controller.initialValue = enabledSampleTypes.filter { $0.value }.map { $0.key }
 		controller.notificationToSendOnAccept = Me.enabledDataTypesChanged
-		present(controller, using: Me.enabledSampleTypesPresenter)
+		pushToNavigationController(controller)
 	}
 
 	@objc final func goBack() {

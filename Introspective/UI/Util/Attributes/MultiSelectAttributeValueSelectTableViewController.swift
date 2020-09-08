@@ -32,6 +32,8 @@ public final class MultiSelectAttributeValueSelectTableViewController: UITableVi
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
+		setTableViewInsetsForTabBar()
+
 		filteredValues = multiSelectAttribute.possibleValues
 		if let initialValue = initialValue {
 			do {

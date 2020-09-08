@@ -43,6 +43,7 @@ public final class MultiSelectAttributeValueViewController: UIViewController {
 			)
 		}
 		dismiss(animated: false, completion: nil)
+		popFromNavigationController()
 	}
 
 	// MARK: - Helper Functions
