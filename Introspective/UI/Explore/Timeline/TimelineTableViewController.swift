@@ -131,6 +131,8 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			action: #selector(goBack)
 		)
 
+		updatePreviousAndNextButtons()
+
 		resetDateRangeButtonTitle()
 		injected(AsyncUtil.self).run(qos: .userInitiated) { [weak self] in
 			self?.fetchSamples()
@@ -187,34 +189,42 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	}
 
 	@IBAction final func previousDateRangeButtonPressed(_: Any) {
-		if minDate == maxDate {
-			minDate = minDate! - 1.days
-			maxDate = maxDate! - 1.days
-		} else if minDate == nil {
-			maxDate = maxDate! - 1.days
-		} else if maxDate == nil {
-			minDate = minDate! - 1.days
-		} else {
-			let difference = maxDate! - minDate!
-			minDate = minDate! - difference
-			maxDate = maxDate! - difference
+		if let minDate = minDate, let maxDate = maxDate {
+			let startOfMin = injected(CalendarUtil.self).start(of: .day, in: minDate)
+			let startOfMax = injected(CalendarUtil.self).start(of: .day, in: maxDate)
+			if startOfMin == startOfMax {
+				self.minDate = minDate - 1.days
+				self.maxDate = maxDate - 1.days
+			} else {
+				let difference = maxDate - minDate
+				self.minDate = minDate - difference
+				self.maxDate = maxDate - difference
+			}
+		} else if let maxDate = maxDate {
+			self.maxDate = maxDate - 1.days
+		} else if let minDate = minDate {
+			self.minDate = minDate - 1.days
 		}
 		resetDateRangeButtonTitle()
 		injected(AsyncUtil.self).run(qos: .userInitiated) { [weak self] in self?.fetchSamples() }
 	}
 
 	@IBAction final func nextDateRangeButtonPressed(_: Any) {
-		if minDate == maxDate {
-			minDate = minDate! + 1.days
-			maxDate = maxDate! + 1.days
-		} else if minDate == nil {
-			maxDate = maxDate! + 1.days
-		} else if maxDate == nil {
-			minDate = minDate! + 1.days
-		} else {
-			let difference = maxDate! - minDate!
-			minDate = minDate! + difference
-			maxDate = maxDate! + difference
+		if let minDate = minDate, let maxDate = maxDate {
+			let startOfMin = injected(CalendarUtil.self).start(of: .day, in: minDate)
+			let startOfMax = injected(CalendarUtil.self).start(of: .day, in: maxDate)
+			if startOfMin == startOfMax {
+				self.minDate = minDate + 1.days
+				self.maxDate = maxDate + 1.days
+			} else {
+				let difference = maxDate - minDate
+				self.minDate = minDate + difference
+				self.maxDate = maxDate + difference
+			}
+		} else if let maxDate = maxDate {
+			self.maxDate = maxDate + 1.days
+		} else if let minDate = minDate {
+			self.minDate = minDate + 1.days
 		}
 		resetDateRangeButtonTitle()
 		injected(AsyncUtil.self).run(qos: .userInitiated) { [weak self] in self?.fetchSamples() }
@@ -301,11 +311,9 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			self.minDate = injected(CalendarUtil.self).start(of: .day, in: minDate)
 		}
 		if let maxDate: Date = value(for: .toDate, from: notification) {
-			self.maxDate = injected(CalendarUtil.self).start(of: .day, in: maxDate + 1.days)
+			self.maxDate = injected(CalendarUtil.self).end(of: .day, in: maxDate)
 		}
-		let enablePreviousAndNextButtons = minDate != nil || maxDate != nil
-		previousDateRangeButton.isEnabled = enablePreviousAndNextButtons
-		nextDateRangeButton.isEnabled = enablePreviousAndNextButtons
+		updatePreviousAndNextButtons()
 		injected(AsyncUtil.self).run(qos: .userInitiated) { [weak self] in
 			self?.fetchSamples()
 		}
@@ -332,6 +340,12 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 
 	private static func enabledString(for type: Sample.Type) -> String {
 		type.name
+	}
+
+	private func updatePreviousAndNextButtons() {
+		let enablePreviousAndNextButtons = minDate != nil || maxDate != nil
+		previousDateRangeButton.isEnabled = enablePreviousAndNextButtons
+		nextDateRangeButton.isEnabled = enablePreviousAndNextButtons
 	}
 
 	private func fetchSamples() {
