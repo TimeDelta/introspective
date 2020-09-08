@@ -119,6 +119,8 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 
 		observe(selector: #selector(dateRangeSet), name: Me.dateRangeSet)
 		observe(selector: #selector(enabledDataTypesChanged), name: Me.enabledDataTypesChanged)
+		observe(selector: #selector(persistenceLayerDidRefresh), name: .persistenceLayerDidRefresh)
+		observe(selector: #selector(persistenceLayerWillRefresh), name: .persistenceLayerWillRefresh)
 
 		let chooseDataTypesButton = barButton(title: "☑️ Data Types", action: #selector(chooseDataTypesButtonPressed))
 		navigationItem.rightBarButtonItem = chooseDataTypesButton
@@ -284,6 +286,15 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	}
 
 	// MARK: - Received Notifications
+
+	@objc private final func persistenceLayerDidRefresh(notification _: Notification) {
+		injected(AsyncUtil.self).run(qos: .userInteractive) { self.fetchSamples() }
+	}
+
+	@objc private final func persistenceLayerWillRefresh(notification _: Notification) {
+		// all CoreData objects will soon be faults that cause exceptions
+		eventBuckets = nil
+	}
 
 	@objc private func dateRangeSet(notification: Notification) {
 		minDate = value(for: .fromDate, from: notification)
