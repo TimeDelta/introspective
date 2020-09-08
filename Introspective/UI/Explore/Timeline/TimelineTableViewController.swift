@@ -132,8 +132,8 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		)
 
 		resetDateRangeButtonTitle()
-		injected(AsyncUtil.self).run(qos: .userInitiated) {
-			self.fetchSamples()
+		injected(AsyncUtil.self).run(qos: .userInitiated) { [weak self] in
+			self?.fetchSamples()
 		}
 	}
 
@@ -297,8 +297,12 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	}
 
 	@objc private func dateRangeSet(notification: Notification) {
-		minDate = value(for: .fromDate, from: notification)
-		maxDate = value(for: .toDate, from: notification)
+		if let minDate: Date = value(for: .fromDate, from: notification) {
+			self.minDate = injected(CalendarUtil.self).start(of: .day, in: minDate)
+		}
+		if let maxDate: Date = value(for: .toDate, from: notification) {
+			self.maxDate = injected(CalendarUtil.self).start(of: .day, in: maxDate + 1.days)
+		}
 		let enablePreviousAndNextButtons = minDate != nil || maxDate != nil
 		previousDateRangeButton.isEnabled = enablePreviousAndNextButtons
 		nextDateRangeButton.isEnabled = enablePreviousAndNextButtons
@@ -335,16 +339,16 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		let fetchSync = DispatchGroup()
 		var samples = [Sample]()
 		for (type, fetcher) in fetchers {
-			guard enabledSampleTypes[String(describing: type)] == true else { continue }
+			guard enabledSampleTypes[Me.enabledString(for: type)] == true else { continue }
 			fetchSync.enter()
-			injected(AsyncUtil.self).run(qos: .userInitiated) {
+			injected(AsyncUtil.self).run(qos: .userInitiated) { [weak self] in
 				do {
-					let newSamples = try fetcher.getSamples(from: self.minDate, to: self.maxDate)
+					let newSamples = try fetcher.getSamples(from: self?.minDate, to: self?.maxDate)
 					samples.append(contentsOf: newSamples)
 					fetchSync.leave()
 				} catch {
 					if !(error is Sample) {
-						self.showError(title: "Unable to retrieve \(fetcher.sampleTypePluralName)", error: error)
+						self?.showError(title: "Unable to retrieve \(fetcher.sampleTypePluralName)", error: error)
 					}
 				}
 			}
