@@ -8,12 +8,30 @@
 
 import UIKit
 
-class MedicationDoseTimelineTableViewCellDelegate: TimelineTableViewCellDelegate {
-	func isEditable() -> Bool {
-		false
-	}
+import Common
+import DependencyInjection
+import Samples
 
-	func editController() -> UIViewController? {
-		nil
+class MedicationDoseTimelineTableViewCellDelegate: TimelineTableViewCellDelegate {
+	private typealias Me = MedicationDoseTimelineTableViewCellDelegate
+
+	private static let log = Log()
+
+	func editController(for sample: Sample) -> UIViewController? {
+		guard let dose = sample as? MedicationDose else {
+			Me.log.error(
+				"Wrong type of sample passed to retrieve edit controller for medication dose: %@",
+				sample.attributedName
+			)
+			return nil
+		}
+		let controller = injected(UiUtil.self).controller(
+			named: "medicationDoseEditor",
+			from: "RecordData",
+			as: MedicationDoseEditorViewControllerImpl.self
+		)
+		controller.medicationDose = dose
+//		controller.notificationToSendOnAccept =
+		return controller
 	}
 }

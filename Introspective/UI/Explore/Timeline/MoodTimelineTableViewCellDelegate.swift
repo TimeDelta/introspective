@@ -8,12 +8,10 @@
 
 import UIKit
 
-class MoodTimelineTableViewCellDelegate: TimelineTableViewCellDelegate {
-	func isEditable() -> Bool {
-		false
-	}
+import Samples
 
-	func editController() -> UIViewController? {
+class MoodTimelineTableViewCellDelegate: TimelineTableViewCellDelegate {
+	func editController(for sample: Sample) -> UIViewController? {
 		nil
 	}
 }

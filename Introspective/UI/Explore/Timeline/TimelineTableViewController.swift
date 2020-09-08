@@ -177,6 +177,16 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		return cell
 	}
 
+	public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		guard let event = event(at: indexPath) else {
+			tableView.deselectRow(at: indexPath, animated: false)
+			return
+		}
+		if let controller = event.delegate.editController(for: event.sample) {
+			pushToNavigationController(controller)
+		}
+	}
+
 	// MARK: - Actions
 
 	@IBAction final func filterDatesButtonPressed(_: Any) {
@@ -544,6 +554,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	private class Event {
 		var date: Date
 		var sample: Sample
+		var delegate: TimelineTableViewCellDelegate {
+			fatalError("forgot to override delegate")
+		}
+
 		var descriptions: [String]
 
 		init(at date: Date, for sample: Sample, descriptions: [String]) {
@@ -556,6 +570,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	// MARK: Activity Events
 
 	private final class StartActivityEvent: Event {
+		override var delegate: TimelineTableViewCellDelegate {
+			ActivityTimelineTableViewCellDelegate()
+		}
+
 		init(for activity: Activity) {
 			var descriptions = [
 				"⏱ Started " + activity.definition.name,
@@ -568,6 +586,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	}
 
 	private final class StopActivityEvent: Event {
+		override var delegate: TimelineTableViewCellDelegate {
+			ActivityTimelineTableViewCellDelegate()
+		}
+
 		init?(for activity: Activity) {
 			guard let end = activity.end else { return nil }
 			let descriptions = [
@@ -581,6 +603,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	// MARK: BloodPressure Events
 
 	private final class BloodPressureEvent: Event {
+		override var delegate: TimelineTableViewCellDelegate {
+			BloodPressureTimelineTableViewCellDelegate()
+		}
+
 		init(for bloodPressure: BloodPressure) {
 			let descriptions = [
 				"🩸 Blood Pressure: " + formatValue(bloodPressure.systolic) + " / " +
@@ -593,6 +619,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	// MARK: BodyMassIndex Events
 
 	private final class BodyMassIndexEvent: Event {
+		override var delegate: TimelineTableViewCellDelegate {
+			BodyMassIndexTimelineTableViewCellDelegate()
+		}
+
 		init(for bodyMassIndex: BodyMassIndex) {
 			let descriptions = [
 				"⚖️ Body Mass Index: " + bodyMassIndex.description,
@@ -604,6 +634,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	// MARK: HeartRate Events
 
 	private final class HeartRateEvent: Event {
+		override var delegate: TimelineTableViewCellDelegate {
+			HeartRateTimelineTableViewCellDelegate()
+		}
+
 		init(for heartRate: HeartRate) {
 			let descriptions = [
 				"❤️ Heart Rate: " + formatValue(heartRate.heartRate),
@@ -615,6 +649,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	// MARK: LeanBodyMass Events
 
 	private final class LeanBodyMassEvent: Event {
+		override var delegate: TimelineTableViewCellDelegate {
+			LeanBodyMassTimelineTableViewCellDelegate()
+		}
+
 		init(for leanBodyMass: LeanBodyMass) {
 			let descriptions = [
 				"⚖️ Lean Body Mass: " + formatValue(leanBodyMass.leanBodyMass),
@@ -626,6 +664,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	// MARK: Mood Events
 
 	private final class MoodEvent: Event {
+		override var delegate: TimelineTableViewCellDelegate {
+			MoodTimelineTableViewCellDelegate()
+		}
+
 		init(for mood: Mood) {
 			let min = injected(MoodUiUtil.self).valueToString(mood.minRating)
 			let max = injected(MoodUiUtil.self).valueToString(mood.maxRating)
@@ -643,6 +685,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	// MARK: MedicationDose Events
 
 	private final class TookMedicationEvent: Event {
+		override var delegate: TimelineTableViewCellDelegate {
+			MedicationDoseTimelineTableViewCellDelegate()
+		}
+
 		init(for dose: MedicationDose) {
 			var descriptions = [
 				"℞ Took " + dose.medication.name,
@@ -657,6 +703,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	// MARK: RestingHeartRate Events
 
 	private final class RestingHeartRateEvent: Event {
+		override var delegate: TimelineTableViewCellDelegate {
+			RestingHeartRateTimelineTableViewCellDelegate()
+		}
+
 		init(for restingHeartRate: RestingHeartRate) {
 			let descriptions = [
 				"❤️ Resting Heart Rate: " + formatValue(restingHeartRate.restingHeartRate),
@@ -668,6 +718,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	// MARK: SexualActivity Events
 
 	private final class SexualActivityEvent: Event {
+		override var delegate: TimelineTableViewCellDelegate {
+			SexualActivityTimelineTableViewCellDelegate()
+		}
+
 		init(for sexualActivity: SexualActivity) {
 			let descriptions = [
 				"🍆 Sexual Activity: " + sexualActivity.protectionUsed.description,
@@ -679,6 +733,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	// MARK: Sleep Events
 
 	private final class WentToBedEvent: Event {
+		override var delegate: TimelineTableViewCellDelegate {
+			SleepTimelineTableViewCellDelegate()
+		}
+
 		init?(for sleep: Sleep) {
 			guard sleep.state == .inBed else {
 				return nil
@@ -691,6 +749,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	}
 
 	private final class FellAsleepEvent: Event {
+		override var delegate: TimelineTableViewCellDelegate {
+			SleepTimelineTableViewCellDelegate()
+		}
+
 		init?(for sleep: Sleep) {
 			guard sleep.state == .asleep else {
 				return nil
@@ -703,6 +765,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	}
 
 	private final class WokeUpEvent: Event {
+		override var delegate: TimelineTableViewCellDelegate {
+			SleepTimelineTableViewCellDelegate()
+		}
+
 		init?(for sleep: Sleep) {
 			guard sleep.state == .asleep else {
 				return nil
@@ -716,6 +782,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	}
 
 	private final class GotOutOfBedEvent: Event {
+		override var delegate: TimelineTableViewCellDelegate {
+			SleepTimelineTableViewCellDelegate()
+		}
+
 		init?(for sleep: Sleep) {
 			guard sleep.state == .inBed else {
 				return nil
@@ -731,6 +801,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	// MARK: Weight Events
 
 	private final class WeightEvent: Event {
+		override var delegate: TimelineTableViewCellDelegate {
+			WeightTimelineTableViewCellDelegate()
+		}
+
 		init(for weight: Weight) {
 			let descriptions = [
 				"⚖️ Weight: " + formatValue(weight.weight),

@@ -8,12 +8,10 @@
 
 import UIKit
 
-class RestingHeartRateTimelineTableViewCellDelegate: TimelineTableViewCellDelegate {
-	func isEditable() -> Bool {
-		false
-	}
+import Samples
 
-	func editController() -> UIViewController? {
+class RestingHeartRateTimelineTableViewCellDelegate: TimelineTableViewCellDelegate {
+	func editController(for sample: Sample) -> UIViewController? {
 		nil
 	}
 }

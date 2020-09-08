@@ -8,12 +8,10 @@
 
 import UIKit
 
-class BloodPressureTimelineTableViewCellDelegate: TimelineTableViewCellDelegate {
-	func isEditable() -> Bool {
-		false
-	}
+import Samples
 
-	func editController() -> UIViewController? {
+class BloodPressureTimelineTableViewCellDelegate: TimelineTableViewCellDelegate {
+	func editController(for sample: Sample) -> UIViewController? {
 		nil
 	}
 }

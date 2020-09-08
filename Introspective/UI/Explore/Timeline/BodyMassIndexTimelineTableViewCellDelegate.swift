@@ -8,12 +8,10 @@
 
 import UIKit
 
-class BodyMassIndexTimelineTableViewCellDelegate: TimelineTableViewCellDelegate {
-	func isEditable() -> Bool {
-		false
-	}
+import Samples
 
-	func editController() -> UIViewController? {
+class BodyMassIndexTimelineTableViewCellDelegate: TimelineTableViewCellDelegate {
+	func editController(for sample: Sample) -> UIViewController? {
 		nil
 	}
 }

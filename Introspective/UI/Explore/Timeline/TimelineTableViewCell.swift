@@ -10,11 +10,11 @@ import UIKit
 
 import Common
 import DependencyInjection
+import Samples
 
 protocol TimelineTableViewCellDelegate {
-	func isEditable() -> Bool
-	/// If `isEditable()` returns true, this function should return a controller capable of allowing the user to edit the associated sample
-	func editController() -> UIViewController?
+	/// If applicable, this function should return a controller capable of allowing the user to edit the given sample
+	func editController(for sample: Sample) -> UIViewController?
 }
 
 protocol TimelineTableViewCell: UITableViewCell {
