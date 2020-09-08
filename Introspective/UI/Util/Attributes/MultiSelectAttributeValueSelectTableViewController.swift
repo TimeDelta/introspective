@@ -124,7 +124,9 @@ extension MultiSelectAttributeValueSelectTableViewController: UISearchResultsUpd
 				}
 			}
 		}
-		tableView.reloadData()
-		selectRowsForValues(selectedValues)
+		DispatchQueue.main.async { [weak self] in
+			self?.tableView.reloadData()
+			self?.selectRowsForValues(self?.selectedValues ?? [])
+		}
 	}
 }
