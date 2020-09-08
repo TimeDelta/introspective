@@ -377,6 +377,12 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		var eventsForCurrentDay = [Event]()
 		var currentDay: Date?
 		for event in events.sorted(by: { $0.date > $1.date }) {
+			if let minDate = minDate {
+				guard event.date >= minDate else { continue }
+			}
+			if let maxDate = maxDate {
+				guard event.date <= maxDate else { continue }
+			}
 			let newDay = injected(CalendarUtil.self).start(of: .day, in: event.date)
 			if newDay != currentDay {
 				if let currentDay = currentDay {
@@ -386,6 +392,9 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 				currentDay = newDay
 			}
 			eventsForCurrentDay.append(event)
+		}
+		if let currentDay = currentDay {
+			eventsByDay.append((day: currentDay, events: eventsForCurrentDay))
 		}
 		eventBuckets = eventsByDay
 	}
