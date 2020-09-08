@@ -76,27 +76,27 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	]
 
 	private final var enabledSampleTypes: [String: Bool] = [
-		String(describing: Activity.self):
+		enabledString(for: Activity.self):
 			injected(UserDefaultsUtil.self).bool(forKey: .activityEnabledOnTimeline),
-		String(describing: BloodPressure.self):
+		enabledString(for: BloodPressure.self):
 			injected(UserDefaultsUtil.self).bool(forKey: .bloodPressureEnabledOnTimeline),
-		String(describing: BodyMassIndex.self):
+		enabledString(for: BodyMassIndex.self):
 			injected(UserDefaultsUtil.self).bool(forKey: .bodyMassIndexEnabledOnTimeline),
-		String(describing: HeartRate.self):
+		enabledString(for: HeartRate.self):
 			injected(UserDefaultsUtil.self).bool(forKey: .heartRateEnabledOnTimeline),
-		String(describing: LeanBodyMass.self):
+		enabledString(for: LeanBodyMass.self):
 			injected(UserDefaultsUtil.self).bool(forKey: .leanBodyMassEnabledOnTimeline),
-		String(describing: MedicationDose.self):
+		enabledString(for: MedicationDose.self):
 			injected(UserDefaultsUtil.self).bool(forKey: .medicationDoseEnabledOnTimeline),
-		String(describing: Mood.self):
+		enabledString(for: MoodImpl.self):
 			injected(UserDefaultsUtil.self).bool(forKey: .moodEnabledOnTimeline),
-		String(describing: RestingHeartRate.self):
+		enabledString(for: RestingHeartRate.self):
 			injected(UserDefaultsUtil.self).bool(forKey: .restingHeartRateEnabledOnTimeline),
-		String(describing: SexualActivity.self):
+		enabledString(for: SexualActivity.self):
 			injected(UserDefaultsUtil.self).bool(forKey: .sexualActivityEnabledOnTimeline),
-		String(describing: Sleep.self):
+		enabledString(for: Sleep.self):
 			injected(UserDefaultsUtil.self).bool(forKey: .sleepEnabledOnTimeline),
-		String(describing: Weight.self):
+		enabledString(for: Weight.self):
 			injected(UserDefaultsUtil.self).bool(forKey: .weightEnabledOnTimeline),
 	]
 
@@ -230,7 +230,9 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		)
 		controller.multiSelectAttribute = TypedMultiSelectAttribute<String>(
 			name: "Data Types",
-			possibleValues: { injected(SampleFactory.self).allTypes().map { String(describing: $0) } },
+			possibleValues: {
+				injected(SampleFactory.self).allTypes().map { Me.enabledString(for: $0) }
+			},
 			possibleValueToString: { $0 }
 		)
 		controller.initialValue = enabledSampleTypes.filter { $0.value }.map { $0.key }
@@ -240,47 +242,47 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 
 	@objc final func goBack() {
 		injected(UserDefaultsUtil.self).setUserDefault(
-			enabledSampleTypes[String(describing: Activity.self)] ?? false,
+			enabledSampleTypes[Me.enabledString(for: Activity.self)] ?? false,
 			forKey: .activityEnabledOnTimeline
 		)
 		injected(UserDefaultsUtil.self).setUserDefault(
-			enabledSampleTypes[String(describing: BloodPressure.self)] ?? false,
+			enabledSampleTypes[Me.enabledString(for: BloodPressure.self)] ?? false,
 			forKey: .bloodPressureEnabledOnTimeline
 		)
 		injected(UserDefaultsUtil.self).setUserDefault(
-			enabledSampleTypes[String(describing: BodyMassIndex.self)] ?? false,
+			enabledSampleTypes[Me.enabledString(for: BodyMassIndex.self)] ?? false,
 			forKey: .bodyMassIndexEnabledOnTimeline
 		)
 		injected(UserDefaultsUtil.self).setUserDefault(
-			enabledSampleTypes[String(describing: HeartRate.self)] ?? false,
+			enabledSampleTypes[Me.enabledString(for: HeartRate.self)] ?? false,
 			forKey: .heartRateEnabledOnTimeline
 		)
 		injected(UserDefaultsUtil.self).setUserDefault(
-			enabledSampleTypes[String(describing: LeanBodyMass.self)] ?? false,
+			enabledSampleTypes[Me.enabledString(for: LeanBodyMass.self)] ?? false,
 			forKey: .leanBodyMassEnabledOnTimeline
 		)
 		injected(UserDefaultsUtil.self).setUserDefault(
-			enabledSampleTypes[String(describing: MedicationDose.self)] ?? false,
+			enabledSampleTypes[Me.enabledString(for: MedicationDose.self)] ?? false,
 			forKey: .medicationDoseEnabledOnTimeline
 		)
 		injected(UserDefaultsUtil.self).setUserDefault(
-			enabledSampleTypes[String(describing: Mood.self)] ?? false,
+			enabledSampleTypes[Me.enabledString(for: MoodImpl.self)] ?? false,
 			forKey: .moodEnabledOnTimeline
 		)
 		injected(UserDefaultsUtil.self).setUserDefault(
-			enabledSampleTypes[String(describing: RestingHeartRate.self)] ?? false,
+			enabledSampleTypes[Me.enabledString(for: RestingHeartRate.self)] ?? false,
 			forKey: .restingHeartRateEnabledOnTimeline
 		)
 		injected(UserDefaultsUtil.self).setUserDefault(
-			enabledSampleTypes[String(describing: SexualActivity.self)] ?? false,
+			enabledSampleTypes[Me.enabledString(for: SexualActivity.self)] ?? false,
 			forKey: .sexualActivityEnabledOnTimeline
 		)
 		injected(UserDefaultsUtil.self).setUserDefault(
-			enabledSampleTypes[String(describing: Sleep.self)] ?? false,
+			enabledSampleTypes[Me.enabledString(for: Sleep.self)] ?? false,
 			forKey: .sleepEnabledOnTimeline
 		)
 		injected(UserDefaultsUtil.self).setUserDefault(
-			enabledSampleTypes[String(describing: Weight.self)] ?? false,
+			enabledSampleTypes[Me.enabledString(for: Weight.self)] ?? false,
 			forKey: .weightEnabledOnTimeline
 		)
 		popFromNavigationController()
@@ -316,6 +318,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 
 	private func event(at indexPath: IndexPath) -> Event? {
 		eventBuckets?[indexPath.section].events[indexPath.row]
+	}
+
+	private static func enabledString(for type: Sample.Type) -> String {
+		type.name
 	}
 
 	private func fetchSamples() {
