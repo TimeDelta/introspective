@@ -274,8 +274,7 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 			endDate = (value as! Date?)
 			if source == Sources.ActivitySourceNum.introspective.rawValue
 				&& endDateTimeZoneId == nil
-				&& endDate != nil
-			{
+				&& endDate != nil {
 				endDateTimeZoneId = injected(CalendarUtil.self).currentTimeZone().identifier
 			}
 			if endDate == nil {
