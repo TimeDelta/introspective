@@ -61,7 +61,7 @@ public final class AverageInformation: AnyInformation {
 			"Unknown attribute type (%@) for attribute named '%@' of sample type '%@'",
 			String(describing: type(of: attribute)),
 			attribute.name,
-			String(describing: type(of: samples[0]))
+			samples.count > 0 ? type(of: samples[0]).name : "No samples available"
 		)
 		return ""
 	}
@@ -94,7 +94,7 @@ public final class AverageInformation: AnyInformation {
 			"Unknown attribute type (%@) for attribute named '%@' of sample type '%@'",
 			String(describing: type(of: attribute)),
 			attribute.name,
-			String(describing: type(of: samples[0]))
+			samples.count > 0 ? type(of: samples[0]).name : "No samples available"
 		)
 		return ""
 	}
