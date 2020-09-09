@@ -250,15 +250,11 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 			}
 
-			let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
-			fetchRequest.predicate = NSPredicate(format: "name == %@", castedValue)
-			let matchingDefinitions = try injected(Database.self).query(fetchRequest)
-			if matchingDefinitions.isEmpty {
+			guard let newDefinition = try injected(ActivityDAO.self).getDefinitionWith(name: castedValue) else {
 				throw UnsupportedValueError(attribute: attribute, of: self, is: value)
 			}
 
-			definition = try injected(Database.self)
-				.pull(savedObject: matchingDefinitions[0], fromSameContextAs: self)
+			definition = try injected(Database.self).pull(savedObject: newDefinition, fromSameContextAs: self)
 			return
 		}
 		if attribute.equalTo(CommonSampleAttributes.startDate) {
