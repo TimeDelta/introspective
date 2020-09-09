@@ -8,7 +8,6 @@
 
 import CoreData
 import Instructions
-import os
 import Presentr
 import UIKit
 
@@ -47,8 +46,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	// MARK: Logging / Performance
 
 	private static let log = Log()
-	private static let signpost =
-		Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Medication Display"))
+	private static let signpost = Signpost(log: Log(category: "Medication Display"))
 
 	// MARK: - Instance Variables
 
