@@ -30,21 +30,17 @@ final class BloodPressureQueryFunctionalTests: QueryFunctionalTest {
 		super.tearDown()
 	}
 
-	func testGivenNoBloodPressuresInHealthKit_runQuery_returnsNoSamplesFoundError() {
+	func testGivenNoBloodPressuresInHealthKit_runQuery_returnsEmptyArray() {
 		// when
 		query.runQuery(callback: queryComplete)
 
 		// then
 		waitForExpectations(timeout: 0.1) { (waitError) in
 			XCTAssert(waitError == nil)
-			var message = ""
-			if self.error == nil && self.result != nil {
-				message = "Found " + String(self.samples.count) + " samples"
-			} else if self.error == nil {
-				message = "Probably have to delete the app from the simulator, including its data"
+			if let error = self.error {
+				XCTFail(error.localizedDescription)
 			}
-			XCTAssert(self.error != nil, message)
-			XCTAssert(self.error is NoHealthKitSamplesFoundQueryError, self.error?.localizedDescription ?? "")
+			assertThat(self.samples, hasCount(0))
 		}
 	}
 
