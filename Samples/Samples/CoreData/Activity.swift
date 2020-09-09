@@ -272,8 +272,10 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 			}
 			endDate = (value as! Date?)
-			if source == Sources.ActivitySourceNum.introspective
-				.rawValue && endDateTimeZoneId == nil && endDate != nil {
+			if source == Sources.ActivitySourceNum.introspective.rawValue
+				&& endDateTimeZoneId == nil
+				&& endDate != nil
+			{
 				endDateTimeZoneId = injected(CalendarUtil.self).currentTimeZone().identifier
 			}
 			if endDate == nil {
