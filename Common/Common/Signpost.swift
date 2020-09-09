@@ -17,6 +17,10 @@ public final class Signpost {
 		self.log = log
 	}
 
+	public convenience init(log: Log) {
+		self.init(log: log.osLog)
+	}
+
 	public final func begin(name: StaticString, dso: UnsafeRawPointer = #dsohandle, idObject: AnyObject? = nil) {
 		if #available(iOS 12.0, *) {
 			signpost(.begin, dso: dso, name: name, idObject: idObject)

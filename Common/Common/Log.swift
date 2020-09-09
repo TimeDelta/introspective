@@ -13,12 +13,16 @@ import os
 public final class Log {
 	// MARK: - Instance Variables
 
-	private final var osLog: OSLog
+	internal final let osLog: OSLog
 
 	// MARK: - Initializers
 
 	public init() {
 		osLog = .default
+	}
+
+	public init(subsystem: String = Bundle.main.bundleIdentifier!, category: String) {
+		osLog = OSLog(subsystem: subsystem, category: category)
 	}
 
 	public init(_ log: OSLog) {
