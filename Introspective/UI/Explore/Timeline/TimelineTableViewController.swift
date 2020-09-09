@@ -30,7 +30,8 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 
 	private typealias Me = TimelineTableViewControllerImpl
 
-	private static let log = Log()
+	private static let log = Log(category: "Timeline")
+	private static let signpost = Signpost(log: log)
 
 	// MARK: Notification Names
 
@@ -359,6 +360,8 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	}
 
 	private func fetchSamples() {
+		let signpostName1: StaticString = "Fetching samples"
+		Me.signpost.begin(name: signpostName1)
 		eventBuckets = nil // let ARC start cleaning up
 		let fetchSync = DispatchGroup()
 		var samples = [Sample]()
@@ -378,7 +381,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			}
 		}
 		fetchSync.wait()
+		Me.signpost.end(name: signpostName1, "Fetched %d samples", samples.count)
 
+		let signpostName2: StaticString = "Determining events"
+		Me.signpost.begin(name: signpostName2)
 		var events = [Event]()
 		for sample in samples {
 			appendEvents(for: sample, to: &events)
@@ -406,6 +412,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		if let currentDay = currentDay {
 			eventsByDay.append((day: currentDay, events: eventsForCurrentDay))
 		}
+		Me.signpost.end(name: signpostName2, "Processed %d events", events.count)
 		eventBuckets = eventsByDay
 	}
 
