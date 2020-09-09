@@ -610,6 +610,22 @@ open class ActivityDAOMock: ActivityDAO, Mock {
 
 
 
+    open func getActivities(from minDate: Date?, to maxDate: Date?) throws -> [Activity] {
+        addInvocation(.m_getActivities__from_minDateto_maxDate(Parameter<Date?>.value(`minDate`), Parameter<Date?>.value(`maxDate`)))
+		let perform = methodPerformValue(.m_getActivities__from_minDateto_maxDate(Parameter<Date?>.value(`minDate`), Parameter<Date?>.value(`maxDate`))) as? (Date?, Date?) -> Void
+		perform?(`minDate`, `maxDate`)
+		var __value: [Activity]
+		do {
+		    __value = try methodReturnValue(.m_getActivities__from_minDateto_maxDate(Parameter<Date?>.value(`minDate`), Parameter<Date?>.value(`maxDate`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for getActivities(from minDate: Date?, to maxDate: Date?). Use given")
+			Failure("Stub return value not specified for getActivities(from minDate: Date?, to maxDate: Date?). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
     open func getAllActivitiesForToday(_ activityDefinition: ActivityDefinition) throws -> [Activity] {
         addInvocation(.m_getAllActivitiesForToday__activityDefinition(Parameter<ActivityDefinition>.value(`activityDefinition`)))
 		let perform = methodPerformValue(.m_getAllActivitiesForToday__activityDefinition(Parameter<ActivityDefinition>.value(`activityDefinition`))) as? (ActivityDefinition) -> Void
@@ -836,6 +852,7 @@ open class ActivityDAOMock: ActivityDAO, Mock {
 
 
     fileprivate enum MethodType {
+        case m_getActivities__from_minDateto_maxDate(Parameter<Date?>, Parameter<Date?>)
         case m_getAllActivitiesForToday__activityDefinition(Parameter<ActivityDefinition>)
         case m_getMostRecentActivityEndDate
         case m_getMostRecentlyStartedActivity__for_activityDefinition(Parameter<ActivityDefinition>)
@@ -853,6 +870,37 @@ open class ActivityDAOMock: ActivityDAO, Mock {
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
+            case (.m_getActivities__from_minDateto_maxDate(let lhsMindate, let lhsMaxdate), .m_getActivities__from_minDateto_maxDate(let rhsMindate, let rhsMaxdate)):
+				var noncapturingComparisons: [Bool] = []
+				var comparison: Bool
+				var results: [Matcher.ParameterComparisonResult] = []
+
+				if !isCapturing(lhsMindate) && !isCapturing(rhsMindate) {
+					comparison = Parameter.compare(lhs: lhsMindate, rhs: rhsMindate, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsMindate, rhsMindate, "from minDate"))
+				}
+
+
+				if !isCapturing(lhsMaxdate) && !isCapturing(rhsMaxdate) {
+					comparison = Parameter.compare(lhs: lhsMaxdate, rhs: rhsMaxdate, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsMaxdate, rhsMaxdate, "to maxDate"))
+				}
+
+				if isCapturing(lhsMindate) || isCapturing(rhsMindate) {
+					comparison = Parameter.compare(lhs: lhsMindate, rhs: rhsMindate, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsMindate, rhsMindate, "from minDate"))
+				}
+
+
+				if isCapturing(lhsMaxdate) || isCapturing(rhsMaxdate) {
+					comparison = Parameter.compare(lhs: lhsMaxdate, rhs: rhsMaxdate, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsMaxdate, rhsMaxdate, "to maxDate"))
+				}
+
+				return Matcher.ComparisonResult(results)
+
             case (.m_getAllActivitiesForToday__activityDefinition(let lhsActivitydefinition), .m_getAllActivitiesForToday__activityDefinition(let rhsActivitydefinition)):
 				var noncapturingComparisons: [Bool] = []
 				var comparison: Bool
@@ -1231,6 +1279,7 @@ open class ActivityDAOMock: ActivityDAO, Mock {
 
         func intValue() -> Int {
             switch self {
+            case let .m_getActivities__from_minDateto_maxDate(p0, p1): return p0.intValue + p1.intValue
             case let .m_getAllActivitiesForToday__activityDefinition(p0): return p0.intValue
             case .m_getMostRecentActivityEndDate: return 0
             case let .m_getMostRecentlyStartedActivity__for_activityDefinition(p0): return p0.intValue
@@ -1249,6 +1298,7 @@ open class ActivityDAOMock: ActivityDAO, Mock {
         }
         func assertionName() -> String {
             switch self {
+            case .m_getActivities__from_minDateto_maxDate: return ".getActivities(from:to:)"
             case .m_getAllActivitiesForToday__activityDefinition: return ".getAllActivitiesForToday(_:)"
             case .m_getMostRecentActivityEndDate: return ".getMostRecentActivityEndDate()"
             case .m_getMostRecentlyStartedActivity__for_activityDefinition: return ".getMostRecentlyStartedActivity(for:)"
@@ -1276,6 +1326,9 @@ open class ActivityDAOMock: ActivityDAO, Mock {
         }
 
 
+        public static func getActivities(from minDate: Parameter<Date?>, to maxDate: Parameter<Date?>, willReturn: [Activity]...) -> MethodStub {
+            return Given(method: .m_getActivities__from_minDateto_maxDate(`minDate`, `maxDate`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func getAllActivitiesForToday(_ activityDefinition: Parameter<ActivityDefinition>, willReturn: [Activity]...) -> MethodStub {
             return Given(method: .m_getAllActivitiesForToday__activityDefinition(`activityDefinition`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
@@ -1328,6 +1381,16 @@ open class ActivityDAOMock: ActivityDAO, Mock {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_autoIgnoreIfAppropriate__activityend_end(`activity`, `end`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func getActivities(from minDate: Parameter<Date?>, to maxDate: Parameter<Date?>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_getActivities__from_minDateto_maxDate(`minDate`, `maxDate`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func getActivities(from minDate: Parameter<Date?>, to maxDate: Parameter<Date?>, willProduce: (StubberThrows<[Activity]>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_getActivities__from_minDateto_maxDate(`minDate`, `maxDate`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: ([Activity]).self)
 			willProduce(stubber)
 			return given
         }
@@ -1472,6 +1535,7 @@ open class ActivityDAOMock: ActivityDAO, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
+        public static func getActivities(from minDate: Parameter<Date?>, to maxDate: Parameter<Date?>) -> Verify { return Verify(method: .m_getActivities__from_minDateto_maxDate(`minDate`, `maxDate`))}
         public static func getAllActivitiesForToday(_ activityDefinition: Parameter<ActivityDefinition>) -> Verify { return Verify(method: .m_getAllActivitiesForToday__activityDefinition(`activityDefinition`))}
         public static func getMostRecentActivityEndDate() -> Verify { return Verify(method: .m_getMostRecentActivityEndDate)}
         public static func getMostRecentlyStartedActivity(for activityDefinition: Parameter<ActivityDefinition>) -> Verify { return Verify(method: .m_getMostRecentlyStartedActivity__for_activityDefinition(`activityDefinition`))}
@@ -1498,6 +1562,9 @@ open class ActivityDAOMock: ActivityDAO, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
+        public static func getActivities(from minDate: Parameter<Date?>, to maxDate: Parameter<Date?>, perform: @escaping (Date?, Date?) -> Void) -> Perform {
+            return Perform(method: .m_getActivities__from_minDateto_maxDate(`minDate`, `maxDate`), performs: perform)
+        }
         public static func getAllActivitiesForToday(_ activityDefinition: Parameter<ActivityDefinition>, perform: @escaping (ActivityDefinition) -> Void) -> Perform {
             return Perform(method: .m_getAllActivitiesForToday__activityDefinition(`activityDefinition`), performs: perform)
         }
@@ -13447,6 +13514,22 @@ open class MedicationDAOMock: MedicationDAO, Mock {
 		return __value
     }
 
+    open func getMedicationDoses(from minDate: Date?, to maxDate: Date?) throws -> [MedicationDose] {
+        addInvocation(.m_getMedicationDoses__from_minDateto_maxDate(Parameter<Date?>.value(`minDate`), Parameter<Date?>.value(`maxDate`)))
+		let perform = methodPerformValue(.m_getMedicationDoses__from_minDateto_maxDate(Parameter<Date?>.value(`minDate`), Parameter<Date?>.value(`maxDate`))) as? (Date?, Date?) -> Void
+		perform?(`minDate`, `maxDate`)
+		var __value: [MedicationDose]
+		do {
+		    __value = try methodReturnValue(.m_getMedicationDoses__from_minDateto_maxDate(Parameter<Date?>.value(`minDate`), Parameter<Date?>.value(`maxDate`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for getMedicationDoses(from minDate: Date?, to maxDate: Date?). Use given")
+			Failure("Stub return value not specified for getMedicationDoses(from minDate: Date?, to maxDate: Date?). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
     open func medicationExists(withName name: String, using transaction: Transaction?) throws -> Bool {
         addInvocation(.m_medicationExists__withName_nameusing_transaction(Parameter<String>.value(`name`), Parameter<Transaction?>.value(`transaction`)))
 		let perform = methodPerformValue(.m_medicationExists__withName_nameusing_transaction(Parameter<String>.value(`name`), Parameter<Transaction?>.value(`transaction`))) as? (String, Transaction?) -> Void
@@ -13547,6 +13630,7 @@ open class MedicationDAOMock: MedicationDAO, Mock {
 
     fileprivate enum MethodType {
         case m_allMedications
+        case m_getMedicationDoses__from_minDateto_maxDate(Parameter<Date?>, Parameter<Date?>)
         case m_medicationExists__withName_nameusing_transaction(Parameter<String>, Parameter<Transaction?>)
         case m_medicationNamed__name(Parameter<String>)
         case m_takeMedicationUsingDefaultDosage__medication(Parameter<Medication>)
@@ -13557,6 +13641,37 @@ open class MedicationDAOMock: MedicationDAO, Mock {
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
             case (.m_allMedications, .m_allMedications): return .match
+
+            case (.m_getMedicationDoses__from_minDateto_maxDate(let lhsMindate, let lhsMaxdate), .m_getMedicationDoses__from_minDateto_maxDate(let rhsMindate, let rhsMaxdate)):
+				var noncapturingComparisons: [Bool] = []
+				var comparison: Bool
+				var results: [Matcher.ParameterComparisonResult] = []
+
+				if !isCapturing(lhsMindate) && !isCapturing(rhsMindate) {
+					comparison = Parameter.compare(lhs: lhsMindate, rhs: rhsMindate, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsMindate, rhsMindate, "from minDate"))
+				}
+
+
+				if !isCapturing(lhsMaxdate) && !isCapturing(rhsMaxdate) {
+					comparison = Parameter.compare(lhs: lhsMaxdate, rhs: rhsMaxdate, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsMaxdate, rhsMaxdate, "to maxDate"))
+				}
+
+				if isCapturing(lhsMindate) || isCapturing(rhsMindate) {
+					comparison = Parameter.compare(lhs: lhsMindate, rhs: rhsMindate, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsMindate, rhsMindate, "from minDate"))
+				}
+
+
+				if isCapturing(lhsMaxdate) || isCapturing(rhsMaxdate) {
+					comparison = Parameter.compare(lhs: lhsMaxdate, rhs: rhsMaxdate, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsMaxdate, rhsMaxdate, "to maxDate"))
+				}
+
+				return Matcher.ComparisonResult(results)
 
             case (.m_medicationExists__withName_nameusing_transaction(let lhsName, let lhsTransaction), .m_medicationExists__withName_nameusing_transaction(let rhsName, let rhsTransaction)):
 				var noncapturingComparisons: [Bool] = []
@@ -13828,6 +13943,7 @@ open class MedicationDAOMock: MedicationDAO, Mock {
         func intValue() -> Int {
             switch self {
             case .m_allMedications: return 0
+            case let .m_getMedicationDoses__from_minDateto_maxDate(p0, p1): return p0.intValue + p1.intValue
             case let .m_medicationExists__withName_nameusing_transaction(p0, p1): return p0.intValue + p1.intValue
             case let .m_medicationNamed__name(p0): return p0.intValue
             case let .m_takeMedicationUsingDefaultDosage__medication(p0): return p0.intValue
@@ -13839,6 +13955,7 @@ open class MedicationDAOMock: MedicationDAO, Mock {
         func assertionName() -> String {
             switch self {
             case .m_allMedications: return ".allMedications()"
+            case .m_getMedicationDoses__from_minDateto_maxDate: return ".getMedicationDoses(from:to:)"
             case .m_medicationExists__withName_nameusing_transaction: return ".medicationExists(withName:using:)"
             case .m_medicationNamed__name: return ".medicationNamed(_:)"
             case .m_takeMedicationUsingDefaultDosage__medication: return ".takeMedicationUsingDefaultDosage(_:)"
@@ -13860,6 +13977,9 @@ open class MedicationDAOMock: MedicationDAO, Mock {
 
         public static func allMedications(willReturn: [Medication]...) -> MethodStub {
             return Given(method: .m_allMedications, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func getMedicationDoses(from minDate: Parameter<Date?>, to maxDate: Parameter<Date?>, willReturn: [MedicationDose]...) -> MethodStub {
+            return Given(method: .m_getMedicationDoses__from_minDateto_maxDate(`minDate`, `maxDate`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func medicationExists(withName name: Parameter<String>, using transaction: Parameter<Transaction?>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_medicationExists__withName_nameusing_transaction(`name`, `transaction`), products: willReturn.map({ StubProduct.return($0 as Any) }))
@@ -13889,6 +14009,16 @@ open class MedicationDAOMock: MedicationDAO, Mock {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_allMedications, products: willThrow.map({ StubProduct.throw($0) })) }()
 			let stubber = given.stubThrows(for: ([Medication]).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func getMedicationDoses(from minDate: Parameter<Date?>, to maxDate: Parameter<Date?>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_getMedicationDoses__from_minDateto_maxDate(`minDate`, `maxDate`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func getMedicationDoses(from minDate: Parameter<Date?>, to maxDate: Parameter<Date?>, willProduce: (StubberThrows<[MedicationDose]>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_getMedicationDoses__from_minDateto_maxDate(`minDate`, `maxDate`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: ([MedicationDose]).self)
 			willProduce(stubber)
 			return given
         }
@@ -13961,6 +14091,7 @@ open class MedicationDAOMock: MedicationDAO, Mock {
         fileprivate var method: MethodType
 
         public static func allMedications() -> Verify { return Verify(method: .m_allMedications)}
+        public static func getMedicationDoses(from minDate: Parameter<Date?>, to maxDate: Parameter<Date?>) -> Verify { return Verify(method: .m_getMedicationDoses__from_minDateto_maxDate(`minDate`, `maxDate`))}
         public static func medicationExists(withName name: Parameter<String>, using transaction: Parameter<Transaction?>) -> Verify { return Verify(method: .m_medicationExists__withName_nameusing_transaction(`name`, `transaction`))}
         public static func medicationNamed(_ name: Parameter<String>) -> Verify { return Verify(method: .m_medicationNamed__name(`name`))}
         @discardableResult
@@ -13978,6 +14109,9 @@ open class MedicationDAOMock: MedicationDAO, Mock {
 
         public static func allMedications(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_allMedications, performs: perform)
+        }
+        public static func getMedicationDoses(from minDate: Parameter<Date?>, to maxDate: Parameter<Date?>, perform: @escaping (Date?, Date?) -> Void) -> Perform {
+            return Perform(method: .m_getMedicationDoses__from_minDateto_maxDate(`minDate`, `maxDate`), performs: perform)
         }
         public static func medicationExists(withName name: Parameter<String>, using transaction: Parameter<Transaction?>, perform: @escaping (String, Transaction?) -> Void) -> Perform {
             return Perform(method: .m_medicationExists__withName_nameusing_transaction(`name`, `transaction`), performs: perform)
@@ -14869,6 +15003,22 @@ open class MoodDAOMock: MoodDAO, Mock {
 
 
 
+    open func getMoods(from minDate: Date?, to maxDate: Date?) throws -> [Mood] {
+        addInvocation(.m_getMoods__from_minDateto_maxDate(Parameter<Date?>.value(`minDate`), Parameter<Date?>.value(`maxDate`)))
+		let perform = methodPerformValue(.m_getMoods__from_minDateto_maxDate(Parameter<Date?>.value(`minDate`), Parameter<Date?>.value(`maxDate`))) as? (Date?, Date?) -> Void
+		perform?(`minDate`, `maxDate`)
+		var __value: [Mood]
+		do {
+		    __value = try methodReturnValue(.m_getMoods__from_minDateto_maxDate(Parameter<Date?>.value(`minDate`), Parameter<Date?>.value(`maxDate`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for getMoods(from minDate: Date?, to maxDate: Date?). Use given")
+			Failure("Stub return value not specified for getMoods(from minDate: Date?, to maxDate: Date?). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
     open func createMood(timestamp: Date, rating: Double, min: Double?, max: Double?, note: String?) throws -> Mood {
         addInvocation(.m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(Parameter<Date>.value(`timestamp`), Parameter<Double>.value(`rating`), Parameter<Double?>.value(`min`), Parameter<Double?>.value(`max`), Parameter<String?>.value(`note`)))
 		let perform = methodPerformValue(.m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(Parameter<Date>.value(`timestamp`), Parameter<Double>.value(`rating`), Parameter<Double?>.value(`min`), Parameter<Double?>.value(`max`), Parameter<String?>.value(`note`))) as? (Date, Double, Double?, Double?, String?) -> Void
@@ -14887,10 +15037,42 @@ open class MoodDAOMock: MoodDAO, Mock {
 
 
     fileprivate enum MethodType {
+        case m_getMoods__from_minDateto_maxDate(Parameter<Date?>, Parameter<Date?>)
         case m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(Parameter<Date>, Parameter<Double>, Parameter<Double?>, Parameter<Double?>, Parameter<String?>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
+            case (.m_getMoods__from_minDateto_maxDate(let lhsMindate, let lhsMaxdate), .m_getMoods__from_minDateto_maxDate(let rhsMindate, let rhsMaxdate)):
+				var noncapturingComparisons: [Bool] = []
+				var comparison: Bool
+				var results: [Matcher.ParameterComparisonResult] = []
+
+				if !isCapturing(lhsMindate) && !isCapturing(rhsMindate) {
+					comparison = Parameter.compare(lhs: lhsMindate, rhs: rhsMindate, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsMindate, rhsMindate, "from minDate"))
+				}
+
+
+				if !isCapturing(lhsMaxdate) && !isCapturing(rhsMaxdate) {
+					comparison = Parameter.compare(lhs: lhsMaxdate, rhs: rhsMaxdate, with: matcher)
+					noncapturingComparisons.append(comparison)
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsMaxdate, rhsMaxdate, "to maxDate"))
+				}
+
+				if isCapturing(lhsMindate) || isCapturing(rhsMindate) {
+					comparison = Parameter.compare(lhs: lhsMindate, rhs: rhsMindate, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsMindate, rhsMindate, "from minDate"))
+				}
+
+
+				if isCapturing(lhsMaxdate) || isCapturing(rhsMaxdate) {
+					comparison = Parameter.compare(lhs: lhsMaxdate, rhs: rhsMaxdate, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
+					results.append(Matcher.ParameterComparisonResult(comparison, lhsMaxdate, rhsMaxdate, "to maxDate"))
+				}
+
+				return Matcher.ComparisonResult(results)
+
             case (.m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(let lhsTimestamp, let lhsRating, let lhsMin, let lhsMax, let lhsNote), .m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(let rhsTimestamp, let rhsRating, let rhsMin, let rhsMax, let rhsNote)):
 				var noncapturingComparisons: [Bool] = []
 				var comparison: Bool
@@ -14960,16 +15142,19 @@ open class MoodDAOMock: MoodDAO, Mock {
 				}
 
 				return Matcher.ComparisonResult(results)
+            default: return .none
             }
         }
 
         func intValue() -> Int {
             switch self {
+            case let .m_getMoods__from_minDateto_maxDate(p0, p1): return p0.intValue + p1.intValue
             case let .m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(p0, p1, p2, p3, p4): return p0.intValue + p1.intValue + p2.intValue + p3.intValue + p4.intValue
             }
         }
         func assertionName() -> String {
             switch self {
+            case .m_getMoods__from_minDateto_maxDate: return ".getMoods(from:to:)"
             case .m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note: return ".createMood(timestamp:rating:min:max:note:)"
             }
         }
@@ -14984,8 +15169,21 @@ open class MoodDAOMock: MoodDAO, Mock {
         }
 
 
+        public static func getMoods(from minDate: Parameter<Date?>, to maxDate: Parameter<Date?>, willReturn: [Mood]...) -> MethodStub {
+            return Given(method: .m_getMoods__from_minDateto_maxDate(`minDate`, `maxDate`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func createMood(timestamp: Parameter<Date>, rating: Parameter<Double>, min: Parameter<Double?>, max: Parameter<Double?>, note: Parameter<String?>, willReturn: Mood...) -> MethodStub {
             return Given(method: .m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(`timestamp`, `rating`, `min`, `max`, `note`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func getMoods(from minDate: Parameter<Date?>, to maxDate: Parameter<Date?>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_getMoods__from_minDateto_maxDate(`minDate`, `maxDate`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func getMoods(from minDate: Parameter<Date?>, to maxDate: Parameter<Date?>, willProduce: (StubberThrows<[Mood]>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_getMoods__from_minDateto_maxDate(`minDate`, `maxDate`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: ([Mood]).self)
+			willProduce(stubber)
+			return given
         }
         public static func createMood(timestamp: Parameter<Date>, rating: Parameter<Double>, min: Parameter<Double?>, max: Parameter<Double?>, note: Parameter<String?>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(`timestamp`, `rating`, `min`, `max`, `note`), products: willThrow.map({ StubProduct.throw($0) }))
@@ -15002,6 +15200,7 @@ open class MoodDAOMock: MoodDAO, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
+        public static func getMoods(from minDate: Parameter<Date?>, to maxDate: Parameter<Date?>) -> Verify { return Verify(method: .m_getMoods__from_minDateto_maxDate(`minDate`, `maxDate`))}
         public static func createMood(timestamp: Parameter<Date>, rating: Parameter<Double>, min: Parameter<Double?>, max: Parameter<Double?>, note: Parameter<String?>) -> Verify { return Verify(method: .m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(`timestamp`, `rating`, `min`, `max`, `note`))}
     }
 
@@ -15009,6 +15208,9 @@ open class MoodDAOMock: MoodDAO, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
+        public static func getMoods(from minDate: Parameter<Date?>, to maxDate: Parameter<Date?>, perform: @escaping (Date?, Date?) -> Void) -> Perform {
+            return Perform(method: .m_getMoods__from_minDateto_maxDate(`minDate`, `maxDate`), performs: perform)
+        }
         public static func createMood(timestamp: Parameter<Date>, rating: Parameter<Double>, min: Parameter<Double?>, max: Parameter<Double?>, note: Parameter<String?>, perform: @escaping (Date, Double, Double?, Double?, String?) -> Void) -> Perform {
             return Perform(method: .m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(`timestamp`, `rating`, `min`, `max`, `note`), performs: perform)
         }
