@@ -243,7 +243,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 			}
 			let presenter = injected(UiUtil.self).customPresenter(
 				width: .custom(size: 300),
-				height: .custom(size: 200),
+				height: .custom(size: 215),
 				center: .center
 			)
 			customPresentViewController(presenter, viewController: controller, animated: false)
