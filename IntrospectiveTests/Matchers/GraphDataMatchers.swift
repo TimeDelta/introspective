@@ -20,7 +20,19 @@ func hasSeries(_ seriesMatcher: Matcher<AASeriesElement>) -> Matcher<GraphData> 
 				return matchResult
 			}
 		}
-		return .mismatch(nil)
+		let mismatchMessage = "GOT: [\n\t"
+			+ graphData.map{ series -> String in
+				let label = series.name ?? "data"
+				let data: [String] = series.data?.map{ value -> String in
+					if let element = value as? AADataElement {
+						return element.toJSON() ?? element.toDic()?.description ?? "no description available"
+					}
+					return String(describing: value)
+				} ?? [""]
+				return label + ": [" + data.joined(separator: ", ") + "]"
+			}.joined(separator: "\n\t")
+			+ "\n]"
+		return .mismatch(mismatchMessage)
 	}
 }
 
