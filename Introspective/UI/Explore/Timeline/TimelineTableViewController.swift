@@ -392,7 +392,8 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		var eventsByDay = [(day: Date, events: [Event])]()
 		var eventsForCurrentDay = [Event]()
 		var currentDay: Date?
-		for event in events.sorted(by: { $0.date > $1.date }) {
+		let sortedEvents = sortEventsByMostRecentFirst(events)
+		for event in sortedEvents {
 			if let minDate = minDate {
 				guard event.date >= minDate else { continue }
 			}
@@ -414,6 +415,19 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		}
 		Me.signpost.end(name: signpostName2, "Processed %d events", events.count)
 		eventBuckets = eventsByDay
+	}
+
+	private func sortEventsByMostRecentFirst(_ events: [Event]) -> [Event] {
+		events.sorted(by: {
+			let firstIsMoreRecent = $0.date > $1.date
+			let stopEventFollowedByStartEventWithSameDate = $0.date == $1.date && $0 is StartEvent && $1 is StopEvent
+			let wentToBedFollowedByFellAsleep = $0.date == $1.date && $0 is FellAsleepEvent && $1 is WentToBedEvent
+			let wokeUpAndGotOPutOfBed = $0.date == $1.date && $0 is GotOutOfBedEvent && $1 is WokeUpEvent
+			return firstIsMoreRecent ||
+				stopEventFollowedByStartEventWithSameDate ||
+				wentToBedFollowedByFellAsleep ||
+				wokeUpAndGotOPutOfBed
+		})
 	}
 
 	private func appendEvents(for sample: Sample, to events: inout [Event]) {
@@ -574,9 +588,15 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		}
 	}
 
+	/// Just so we can order everything such that any two events with the same timestamp show the stopping of the first before the starting of the next.
+	private class StartEvent: Event {}
+
+	/// Just so we can order everything such that any two events with the same timestamp show the stopping of the first before the starting of the next.
+	private class StopEvent: Event {}
+
 	// MARK: Activity Events
 
-	private final class StartActivityEvent: Event {
+	private final class StartActivityEvent: StartEvent {
 		override var delegate: TimelineTableViewCellDelegate {
 			ActivityTimelineTableViewCellDelegate()
 		}
@@ -592,7 +612,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		}
 	}
 
-	private final class StopActivityEvent: Event {
+	private final class StopActivityEvent: StopEvent {
 		override var delegate: TimelineTableViewCellDelegate {
 			ActivityTimelineTableViewCellDelegate()
 		}
@@ -739,7 +759,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 
 	// MARK: Sleep Events
 
-	private final class WentToBedEvent: Event {
+	private final class WentToBedEvent: StartEvent {
 		override var delegate: TimelineTableViewCellDelegate {
 			SleepTimelineTableViewCellDelegate()
 		}
@@ -755,7 +775,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		}
 	}
 
-	private final class FellAsleepEvent: Event {
+	private final class FellAsleepEvent: StartEvent {
 		override var delegate: TimelineTableViewCellDelegate {
 			SleepTimelineTableViewCellDelegate()
 		}
@@ -771,7 +791,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		}
 	}
 
-	private final class WokeUpEvent: Event {
+	private final class WokeUpEvent: StopEvent {
 		override var delegate: TimelineTableViewCellDelegate {
 			SleepTimelineTableViewCellDelegate()
 		}
@@ -788,7 +808,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		}
 	}
 
-	private final class GotOutOfBedEvent: Event {
+	private final class GotOutOfBedEvent: StopEvent {
 		override var delegate: TimelineTableViewCellDelegate {
 			SleepTimelineTableViewCellDelegate()
 		}
