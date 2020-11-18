@@ -91,7 +91,7 @@ The following data types are supported (with more to come, guaranteed):
 
 ## Getting Started
 ### Code Formatting
-Code formatting is done via [SwiftFormat](https://github.com/nicklockwood/SwiftFormat). You _**must**_ install this for the build to work because all non-test code is automatically formatted during the build process.
+Code formatting is done via [SwiftFormat](https://github.com/nicklockwood/SwiftFormat). You _**must**_ [install it](https://github.com/nicklockwood/SwiftFormat#how-do-i-install-it) for the build to work because all non-test code is automatically formatted during the build process.
 #### Links
 - [Rule Descriptions](https://github.com/nicklockwood/SwiftFormat/blob/master/Rules.md)
 - [Enabled Code Formatting Rules](config/enabled-code-format-rules.txt)
