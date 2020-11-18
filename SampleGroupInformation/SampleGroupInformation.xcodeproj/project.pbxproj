@@ -24,6 +24,7 @@
 		A29700F02344FCAF004B97E6 /* Attributes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A29700EF2344FCAF004B97E6 /* Attributes.framework */; };
 		A29700F22344FCB4004B97E6 /* DependencyInjection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A29700F12344FCB4004B97E6 /* DependencyInjection.framework */; };
 		A297705F234519EC004E2C35 /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A297705E234519EC004E2C35 /* Common.framework */; };
+		A2D6277D2543867C00506D8F /* StandardDeviationInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D6277C2543867C00506D8F /* StandardDeviationInformation.swift */; };
 		FCDB8068ACF99470C192C026 /* Pods_SampleGroupInformation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A144C6E22EE9F9915F69847 /* Pods_SampleGroupInformation.framework */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +50,7 @@
 		A29700EF2344FCAF004B97E6 /* Attributes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Attributes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A29700F12344FCB4004B97E6 /* DependencyInjection.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DependencyInjection.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A297705E234519EC004E2C35 /* Common.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Common.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2D6277C2543867C00506D8F /* StandardDeviationInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardDeviationInformation.swift; sourceTree = "<group>"; };
 		EC1C54B1A36A0632328F7EC0 /* Pods-SampleGroupInformation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SampleGroupInformation.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-SampleGroupInformation/Pods-SampleGroupInformation.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -143,6 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				A29700DD2344F9AD004B97E6 /* AverageInformation.swift */,
+				A2D6277C2543867C00506D8F /* StandardDeviationInformation.swift */,
 				A29700DE2344F9AD004B97E6 /* SumInformation.swift */,
 			);
 			path = NumericAttributes;
@@ -263,6 +266,7 @@
 			files = (
 				A29700E72344F9AD004B97E6 /* MedianInformation.swift in Sources */,
 				A29700E22344F9AD004B97E6 /* CountInformation.swift in Sources */,
+				A2D6277D2543867C00506D8F /* StandardDeviationInformation.swift in Sources */,
 				A29700E42344F9AD004B97E6 /* SampleGroupInformation.swift in Sources */,
 				A29700EB2344FB57004B97E6 /* SampleGroupInformationInjectionProvider.swift in Sources */,
 				A29700E92344F9AD004B97E6 /* SumInformation.swift in Sources */,

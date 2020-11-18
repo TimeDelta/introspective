@@ -34,6 +34,7 @@ public final class SampleGroupInformationFactoryImpl: SampleGroupInformationFact
 	private static let numericInformationTypes: [SampleGroupInformation.Type] = [
 		AverageInformation.self,
 		SumInformation.self,
+		StandardDeviationInformation.self,
 	]
 
 	private static let dateInformationTypes: [SampleGroupInformation.Type] = [
@@ -58,18 +59,16 @@ public final class SampleGroupInformationFactoryImpl: SampleGroupInformationFact
 		} else if attribute is DateAttribute {
 			applicableInformationTypes.append(contentsOf: Me.dateInformationTypes)
 		} else if attribute is DosageAttribute {
+			applicableInformationTypes.append(contentsOf: Me.numericInformationTypes)
 			applicableInformationTypes.append(MaximumInformation<Dosage>.self)
 			applicableInformationTypes.append(MinimumInformation<Dosage>.self)
 			applicableInformationTypes.append(MedianInformation<Dosage>.self)
-			applicableInformationTypes.append(SumInformation.self)
-			applicableInformationTypes.append(AverageInformation.self)
 		} else if attribute is FrequencyAttribute {
 			applicableInformationTypes.append(MaximumInformation<Frequency>.self)
 			applicableInformationTypes.append(MinimumInformation<Frequency>.self)
 			applicableInformationTypes.append(MedianInformation<Frequency>.self)
 		} else if attribute is DurationAttribute {
-			applicableInformationTypes.append(SumInformation.self)
-			applicableInformationTypes.append(AverageInformation.self)
+			applicableInformationTypes.append(contentsOf: Me.numericInformationTypes)
 			applicableInformationTypes.append(MaximumInformation<TimeDuration>.self)
 			applicableInformationTypes.append(MinimumInformation<TimeDuration>.self)
 			applicableInformationTypes.append(MedianInformation<TimeDuration>.self)
