@@ -1,7 +1,7 @@
 # Introspective: A data-driven approach to introspection
 
 ## What is this?
-This is an iOS app that is focused on both mntal and physical health. For a detailed description, [read this](https://github.com/TimeDelta/introspective/blob/master/app-store/app-description.txt). This has been a passion project of mine for a few years now and I have recently decided to make it open source instead of trying to sell it one day. I decided this even after starting an LLC to sell it on the App Store because I think that it has a lot of potential to help people and because I have other responsibilities (like a full time job) that don't leave enough room for where I want this to go so I need help with it.
+This is an iOS app that is focused on both mntal and physical health. For a detailed description, [read the app description](https://github.com/TimeDelta/introspective/blob/master/app-store/app-description.txt). This has been a passion project of mine for a few years now and I have recently decided to make it open source instead of trying to sell it one day. I decided this even after starting an LLC to sell it on the App Store because I think that it has a lot of potential to help people and because I have other responsibilities (like a full time job) that don't leave enough room for where I want this to go so I need help with it.
 
 ## Getting Started
 ### Code Formatting
