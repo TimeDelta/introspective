@@ -1,7 +1,85 @@
 # Introspective: A data-driven approach to introspection
 
 ## What is this?
-This is an iOS app that is focused on both mental and physical health. For a detailed description, [read the app description](https://github.com/TimeDelta/introspective/blob/master/app-store/app-description.txt). This has been a passion project of mine for a few years now and I have recently decided to make it open source instead of trying to sell it one day. I decided this even after starting an LLC to sell it on the App Store because I think that it has a lot of potential to help people and because I have other responsibilities (like a full time job) that don't leave enough room for where I want this to go so I need help with it.
+Introspective is an iOS app that is focused on both mental and physical health. It is a new way to explore your health data. It allows you to write custom (easy-to-understand) queries against your data and create custom graphs that can show the relationship between different pieces of your health data. This has been a passion project of mine for a few years now and I have recently decided to make it open source instead of trying to sell it one day. I decided this even after starting an LLC to sell it on the App Store because I think that it has a lot of potential to help people and because I have other responsibilities (like a full time job) that don't leave enough room for where I want this to go so I need help with it.
+
+### Main Features
+#### Custom queries
+Explore your data in a unique way by querying for exactly the records in which you're interested. Specify complex conditions on any attribute for any supported data type by combining them using "and", "or", and condition groups (full boolean algebra support with grouping). Even better, you can limit your query further by looking at other data types within the query. For example, you can find all moods that were recorded within a half hour of socializing.
+
+#### Custom graphs
+Use custom queries to specify exactly which data points you want to graph. The following graphs are available:
+  - Line Chart
+  - Bar Chart
+  - Scatter Plot
+Use queries to find trends between two different types of data (i.e. how your heart rate affects your mood).
+Show multiple values (i.e. avg mood, min mood) over time in the same graph.
+Specify how to group data into a single value for each point (i.e. avg mood per hour).
+
+
+#### Apple Health integration
+Introspection integrates with a number of data types from the Apple Health app, allowing you to query against them. For a full list of supported data types, see the list below.
+
+#### Siri integration (Shortcuts app)
+  - Record mood (decimal)
+  - Record mood (integer)
+  - Start activities
+  - Start activity
+  - Start activity from end of last stopped activity
+  - Start activity [number] [time-units] ago
+  - Stop activities
+  - Stop all activities
+  - Stop last started activity
+  - Take a medication using default dosage
+  - Take a medication with specific dosage
+  - Is [date] a weekday
+
+#### Data import / export
+  - import activity data from "ATracker"
+  - import medication history from "EasyPill"
+  - import moods from "Wellness"
+  - import from Introspective export
+  - export activities, medications or moods to CSV file
+
+
+#### Data Types
+The following data types are supported (with more to come, guaranteed):
+? = optional field
+  - Activity (what you're doing and when you're doing it)
+    - Definition (common to all instances of the activity so that you don't have to constantly type everything)
+      - Name
+      - Description ?
+      - Common Tags ?
+      - Source (the name of the app that generated this record - automatically recorded)
+    - Start Time (with time zone)
+    - End Time ? (with time zone)
+    - Additional Tags ? (only appear on this instance of the activity)
+    - Note ?
+    - Source (the name of the app that generated this record - automatically recorded)
+  - Blood Pressure
+  - Body Mass Index
+  - Heart Rate
+  - Lean Body Mass
+  - Medication Dose
+    - Medication Definition (common to all doses of this medication)
+      - Name
+      - Started On ? (when did you start taking this medication)
+      - Frequency ? (how frequently are you supposed to take this medication)
+      - Default Dosage ? (use this dosage every time you quick take this medication)
+      - Notes ? (anything else you want to remember about this medication)
+      - Source (the name of the app that generated this record - automatically recorded)
+    - Timestamp (with time zone)
+    - Dosage ? (how much of this medication you took this time)
+    - Source (the name of the app that generated this record - automatically recorded)
+  - Mood (with customizable scale)
+    - Timestamp (with time zone)
+    - Rating
+    - Note
+    - Source (the name of the app that generated this record - automatically recorded)
+  - Resting Heart Rate
+  - Sexual Activity
+  - Sleep
+  - Weight
 
 ## Getting Started
 ### Code Formatting
@@ -58,3 +136,7 @@ All FunctionalTest classes should now run properly on the target simulator.
 
 ### Mocks
 This project uses [SwiftyMocky](https://github.com/MakeAWishFoundation/SwiftyMocky) for mocking. This is why you will sometimes find `//sourcery: AutoMockable` on some protocols. As part of the build process, `rake mock` is ran in a Run Script Build Phase. Running `rake mock` in the root project directory will search for and regenerate any mockable protocols (marked with the previously mentioned comment) and any custom mocks that are in the [CustomMocks directory](IntrospectiveTests/CustomMocks) as defined by the [Rakefile](./Rakefile) and the [SwiftyMocky config generation script](./gen-swifty-mocky-config-files.sh).
+
+
+## Privacy Policy
+From the very beginning of this project, I decided that privacy and security were the number one priorities. As such, any and all of your data NEVER leaves your phone (unless you export it). Don't believe me? Look at the source code yourself.
