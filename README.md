@@ -6,6 +6,7 @@
 - [Dependencies](#dependencies)
 - [Build Targets](#build-targets)
 - [Tests](#tests)
+- [Future Plans](#future-plans)
 - [Privacy Policy](#privacy-policy)
 
 ## What is this?
@@ -145,6 +146,9 @@ All FunctionalTest classes should now run properly on the target simulator.
 ### Mocks
 This project uses [SwiftyMocky](https://github.com/MakeAWishFoundation/SwiftyMocky) for mocking. This is why you will sometimes find `//sourcery: AutoMockable` on some protocols. As part of the build process, `rake mock` is ran in a Run Script Build Phase. Running `rake mock` in the root project directory will search for and regenerate any mockable protocols (marked with the previously mentioned comment) and any custom mocks that are in the [CustomMocks directory](IntrospectiveTests/CustomMocks) as defined by the [Rakefile](./Rakefile) and the [SwiftyMocky config generation script](./gen-swifty-mocky-config-files.sh).
 
+
+## Future Plans
+Currently, this project uses a public [Trello board](https://trello.com/b/jmYSr5bx/introspective), though this may be migrated to something else in the future. Feel free to take a look.
 
 ## Privacy Policy
 From the very beginning of this project, I decided that privacy and security were the number one priorities. As such, any and all of your data NEVER leaves your phone (unless you export it). Don't believe me? Look at the source code yourself.
