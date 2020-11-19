@@ -21,6 +21,7 @@ Use custom queries to specify exactly which data points you want to graph. The f
   - Line Chart
   - Bar Chart
   - Scatter Plot
+
 Use queries to find trends between two different types of data (i.e. how your heart rate affects your mood).
 Show multiple values (i.e. avg mood, min mood) over time in the same graph.
 Specify how to group data into a single value for each point (i.e. avg mood per hour).
