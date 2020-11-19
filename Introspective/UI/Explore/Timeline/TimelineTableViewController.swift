@@ -320,9 +320,13 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	@objc private func dateRangeSet(notification: Notification) {
 		if let minDate: Date = value(for: .fromDate, from: notification) {
 			self.minDate = injected(CalendarUtil.self).start(of: .day, in: minDate)
+		} else {
+			minDate = nil
 		}
 		if let maxDate: Date = value(for: .toDate, from: notification) {
 			self.maxDate = injected(CalendarUtil.self).end(of: .day, in: maxDate)
+		} else {
+			maxDate = nil
 		}
 		updatePreviousAndNextButtons()
 		injected(AsyncUtil.self).run(qos: .userInitiated) { [weak self] in
