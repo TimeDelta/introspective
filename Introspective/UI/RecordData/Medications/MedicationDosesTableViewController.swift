@@ -34,7 +34,11 @@ public final class MedicationDosesTableViewController: UITableViewController {
 	// MARK: Presenters
 
 	private static let dateFilterPresenter: Presentr = {
-		let customType = PresentationType.custom(width: .default, height: .custom(size: 438), center: .center)
+		let customType = PresentationType.custom(
+			width: .default,
+			height: .custom(size: 300),
+			center: .center
+		)
 		let customPresenter = Presentr(presentationType: customType)
 		customPresenter.dismissTransitionType = .crossDissolve
 		customPresenter.roundCorners = true
