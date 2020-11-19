@@ -26,6 +26,10 @@ public extension Date {
 		get(.backward, dayOfWeek)
 	}
 
+	func start(of component: Calendar.Component) -> Date {
+		injected(CalendarUtil.self).start(of: component, in: self)
+	}
+
 	private func get(_ direction: Calendar.SearchDirection, _ dayOfWeek: DayOfWeek) -> Date {
 		let dayIndex = dayOfWeek.intValue
 		let calendar = Calendar(identifier: .gregorian)
