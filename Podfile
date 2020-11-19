@@ -20,9 +20,10 @@ target 'Introspective' do
   pod 'Instructions', '~> 1.2.2'
 
   target 'IntrospectiveTests' do
+    use_frameworks!
     inherit! :search_paths
     pod "SwiftyMocky"
-    pod 'SwiftHamcrest', '~> 2.1.1'
+    pod 'SwiftHamcrest', '~> 2.2.1'
   end
 
   target 'IntrospectiveUITests' do
