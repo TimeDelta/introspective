@@ -31,7 +31,7 @@ public protocol Exporter {
 public extension Exporter {
 	func equalTo(_ other: Exporter) -> Bool {
 		guard type(of: self) == type(of: other) else { return false }
-		return withUnsafePointer(to: self) { me in
+		return withUnsafePointer(to: self) { (me: UnsafePointer<Exporter>) in
 			withUnsafePointer(to: other) { them in
 				me == them
 			}
