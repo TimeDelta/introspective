@@ -223,8 +223,16 @@ public final class MedicationDosesTableViewController: UITableViewController {
 	// MARK: - Received Notifications
 
 	@objc private final func dateRangeSet(notification: Notification) {
-		filterStartDate = value(for: .fromDate, from: notification)
-		filterEndDate = value(for: .toDate, from: notification)
+		if let filterStartDate: Date = value(for: .fromDate, from: notification) {
+			self.filterStartDate = injected(CalendarUtil.self).start(of: .day, in: filterStartDate)
+		} else {
+			filterStartDate = nil
+		}
+		if let filterEndDate: Date = value(for: .toDate, from: notification) {
+			self.filterEndDate = injected(CalendarUtil.self).start(of: .day, in: filterEndDate)
+		} else {
+			filterEndDate = nil
+		}
 		let enablePreviousAndNextButtons = filterStartDate != nil || filterEndDate != nil
 		previousDateRangeButton.isEnabled = enablePreviousAndNextButtons
 		nextDateRangeButton.isEnabled = enablePreviousAndNextButtons
