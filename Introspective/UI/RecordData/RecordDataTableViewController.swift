@@ -11,6 +11,7 @@ import UIKit
 
 import Common
 import DependencyInjection
+import Samples
 import Settings
 
 final class RecordDataTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
@@ -95,6 +96,17 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		}
 	}
 
+	final override func tableView(
+		_ tableView: UITableView,
+		trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath
+	) -> UISwipeActionsConfiguration? {
+		var actions: [UIContextualAction] = []
+		if let _ = try? injected(MoodDAO.self).getMostRecentMood() {
+			actions.append(getEditLastMoodAction())
+		}
+		return UISwipeActionsConfiguration(actions: actions)
+	}
+
 	// MARK: - Received Notifications
 
 	@objc private final func showViewController(notification: Notification) {
@@ -156,5 +168,30 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 			}
 		}
 		return id
+	}
+
+	private final func getEditLastMoodAction() -> UIContextualAction {
+		let action = injected(UiUtil.self).contextualAction(
+			style: .normal,
+			title: "✎ Last"
+		) { _, _, completion in
+			do {
+				guard let mood = try injected(MoodDAO.self).getMostRecentMood() else {
+					Me.log.error("Edit last mood action triggered with no mood records")
+					completion(false)
+					return
+				}
+				let controller = self.viewController(
+					named: "editMood",
+					fromStoryboard: "Util"
+				) as! EditMoodTableViewController
+				controller.mood = mood
+				self.pushToNavigationController(controller)
+			} catch {
+				self.showError(title: "Failed to retrieve most recent mood entry", error: error)
+			}
+		}
+		action.backgroundColor = .orange
+		return action
 	}
 }

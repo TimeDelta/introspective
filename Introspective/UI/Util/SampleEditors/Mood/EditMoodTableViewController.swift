@@ -16,7 +16,8 @@ import Samples
 import Settings
 
 public protocol EditMoodTableViewController: UITableViewController {
-	var notificationToSendOnAccept: Notification.Name! { get set }
+	/// If nil, no notification will be sent
+	var notificationToSendOnAccept: Notification.Name? { get set }
 	var userInfoKey: UserInfoKey { get set }
 	var mood: Mood? { get set }
 }
@@ -51,7 +52,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 
 	// MARK: - Instance Variables
 
-	public final var notificationToSendOnAccept: Notification.Name!
+	public final var notificationToSendOnAccept: Notification.Name?
 	public final var userInfoKey: UserInfoKey = .mood
 	public final var mood: Mood? {
 		didSet {
@@ -201,16 +202,15 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 			} else { // otherwise mood is a Mock and we're testing
 				Me.log.debug("Mood not pulled from database")
 			}
-			DispatchQueue.main.async {
-				NotificationCenter.default.post(
-					name: self.notificationToSendOnAccept,
-					object: self,
-					userInfo: self.info([
-						self.userInfoKey: mood as Any,
-					])
+			if let notificationToSendOnAccept = notificationToSendOnAccept {
+				post(
+					notificationToSendOnAccept,
+					userInfo: [
+						userInfoKey: mood as Any,
+					]
 				)
 			}
-			navigationController?.popViewController(animated: false)
+			popFromNavigationController()
 		} catch {
 			Me.log.error("Failed to save create or save mood: %@", errorInfo(error))
 			showError(title: "Failed to save mood", error: error)

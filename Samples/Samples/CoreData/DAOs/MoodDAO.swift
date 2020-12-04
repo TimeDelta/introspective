@@ -19,6 +19,8 @@ import Settings
 public protocol MoodDAO {
 	func getMoods(from minDate: Date?, to maxDate: Date?) throws -> [Mood]
 	func createMood(timestamp: Date, rating: Double, min: Double?, max: Double?, note: String?) throws -> Mood
+	/// - Returns: The most recently recorded mood or nil if no mood records are present.
+	func getMostRecentMood() throws -> Mood?
 }
 
 extension MoodDAO {
@@ -73,5 +75,13 @@ public final class MoodDAOImpl: SingleDateSampleDAO<MoodImpl>, MoodDAO {
 		mood.setSource(.introspective)
 		try transaction.commit()
 		return try injected(Database.self).pull(savedObject: mood)
+	}
+
+	public final func getMostRecentMood() throws -> Mood? {
+		let fetchRequest: NSFetchRequest<MoodImpl> = MoodImpl.fetchRequest()
+		fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+		let moods = try injected(Database.self).query(fetchRequest)
+		guard moods.count > 0 else { return nil }
+		return moods[0]
 	}
 }
