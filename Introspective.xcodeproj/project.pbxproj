@@ -1139,7 +1139,6 @@
 		FBE6ECD78EA5462C958834A9308F15FD /* ActivityHasOneOfTagAttributeRestrictionFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityHasOneOfTagAttributeRestrictionFunctionalTests.swift; sourceTree = "<group>"; };
 		FBFE73AE2BEF10935B5E9528BCDF8D33 /* HasOneOfTagAttributeRestrictionFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasOneOfTagAttributeRestrictionFunctionalTests.swift; sourceTree = "<group>"; };
 		FC087CBF28C36F34570292903B6A6A62 /* ArgumentCaptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgumentCaptor.swift; sourceTree = "<group>"; };
-		FC481D5CCBB697201AC5457CEC3B142D /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		FCA0632CC41BBCB29867D9485F1E21C0 /* TagInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagInfo.swift; sourceTree = "<group>"; };
 		FCC1F87C400CE195DE27C92FCD07710E /* SexualActivityQueryFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SexualActivityQueryFunctionalTests.swift; sourceTree = "<group>"; };
 		FCD8471D67B4548F1EF7099E359D512B /* SelectDateViewControllerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectDateViewControllerMock.swift; sourceTree = "<group>"; };
@@ -1462,7 +1461,6 @@
 				3304AC4E4C3B7DBD5C7AC53D48561D59 /* Assets.xcassets */,
 				5B0232D84BF6CE1C7F6C9D4074D07106 /* Introspective.entitlements */,
 				B0368D1DF231C9DCB97EF42A2B8065D5 /* Info.plist */,
-				FC481D5CCBB697201AC5457CEC3B142D /* README.md */,
 			);
 			path = Introspective;
 			sourceTree = "<group>";

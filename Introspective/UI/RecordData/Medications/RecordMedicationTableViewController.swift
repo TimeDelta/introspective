@@ -100,8 +100,8 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		)
 		observe(selector: #selector(errorOccurred), name: RecordMedicationTableViewCell.errorOccurred)
 		observe(
-			selector: #selector(presentMedicationDosesTableView),
-			name: RecordMedicationTableViewCell.shouldPresentDosesView
+			selector: #selector(presentLastDoseView),
+			name: RecordMedicationTableViewCell.shouldPresentLastDoseView
 		)
 		observe(selector: #selector(medicationEdited), name: Me.medicationEdited)
 		observe(selector: #selector(persistenceLayerDidRefresh), name: .persistenceLayerDidRefresh)
@@ -172,41 +172,21 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 	public final override func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
 		guard finishedLoading else { return }
-		let controller: EditMedicationViewController = viewController(named: "editMedication")
-		controller.notificationToSendOnAccept = Me.medicationEdited
+		let controller: MedicationDosesTableViewController = viewController(named: "medicationDoses")
 		controller.medication = fetchedResultsController.object(at: indexPath)
-		navigationController?.pushViewController(controller, animated: false)
+		pushToNavigationController(controller, animated: false)
 	}
 
 	// MARK: - Table view editing
 
 	public final override func tableView(
 		_: UITableView,
-		editActionsForRowAt indexPath: IndexPath
-	) -> [UITableViewRowAction]? {
-		let delete = UITableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
-			let medication = self.fetchedResultsController.object(at: indexPath)
-			let alert = UIAlertController(
-				title: "Are you sure you want to delete \(medication.name)?",
-				message: "This will delete all history for this medication.",
-				preferredStyle: .alert
-			)
-			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
-				do {
-					let transaction = injected(Database.self).transaction()
-					try transaction.delete(medication)
-					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-					self.loadMedications()
-				} catch {
-					Me.log.error("Failed to delete medication: %@", errorInfo(error))
-					self.showError(title: "Failed to delete medication", error: error)
-				}
-			})
-			alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-			self.present(alert, animated: false, completion: nil)
-		}
-
-		return [delete]
+		trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath
+	) -> UISwipeActionsConfiguration? {
+		UISwipeActionsConfiguration(actions: [
+			getEditAction(for: indexPath),
+			getDeleteAction(for: indexPath),
+		])
 	}
 
 	public final override func tableView(_: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
@@ -258,22 +238,40 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	}
 
 	@objc private final func presentSetDoseView(notification: Notification) {
+		// swiftformat:disable all
 		if
 			let notificationToSend: Notification.Name = value(for: .notificationName, from: notification),
-			let medication: Medication = value(for: .medication, from: notification) {
+			let medication: Medication = value(for: .medication, from: notification)
+		{
 			let controller = viewController(named: "medicationDoseEditor") as! MedicationDoseEditorViewController
 			controller.notificationToSendOnAccept = notificationToSend
 			controller.medication = medication
 			customPresentViewController(Me.setDosePresenter, viewController: controller, animated: false)
 		}
+		// swiftformat:enable all
 	}
 
-	@objc private final func presentMedicationDosesTableView(notification: Notification) {
-		if let medication: Medication = value(for: .medication, from: notification) {
-			let controller: MedicationDosesTableViewController = viewController(named: "medicationDoses")
-			controller.medication = medication
-			navigationController?.pushViewController(controller, animated: false)
+	@objc private final func presentLastDoseView(notification: Notification) {
+		// swiftformat:disable all
+		if
+			let notificationToSend: Notification.Name = value(for: .notificationName, from: notification),
+			let medication: Medication = value(for: .medication, from: notification)
+		{
+			do {
+				guard let mostRecentDose = try injected(MedicationDAO.self).mostRecentDoseOf(medication) else {
+					Me.log.error("tried to present most recent dose editor for medication that has never been taken")
+					return
+				}
+				let controller = viewController(named: "medicationDoseEditor") as! MedicationDoseEditorViewController
+				controller.notificationToSendOnAccept = notificationToSend
+				controller.medication = medication
+				controller.medicationDose = mostRecentDose
+				customPresentViewController(Me.setDosePresenter, viewController: controller, animated: false)
+			} catch {
+				showError(title: "Failed to get most recent dose of \(medication.name)", error: error)
+			}
 		}
+		// swiftformat:enable all
 	}
 
 	@objc private final func errorOccurred(notification: Notification) {
@@ -369,6 +367,42 @@ public final class RecordMedicationTableViewController: UITableViewController {
 			style: .default,
 			handler: { _ in self.presentSortByRecentCountOptions() }
 		)
+	}
+
+	private final func getDeleteAction(for indexPath: IndexPath) -> UIContextualAction {
+		injected(UiUtil.self).contextualAction(style: .destructive, title: "🗑️") { _, _, completion in
+			let medication = self.fetchedResultsController.object(at: indexPath)
+			let alert = UIAlertController(
+				title: "Are you sure you want to delete \(medication.name)?",
+				message: "This will delete all history for this medication.",
+				preferredStyle: .alert
+			)
+			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
+				do {
+					let transaction = injected(Database.self).transaction()
+					try transaction.delete(medication)
+					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+					self.loadMedications()
+				} catch {
+					Me.log.error("Failed to delete medication: %@", errorInfo(error))
+					self.showError(title: "Failed to delete medication", error: error)
+				}
+			})
+			alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+			self.present(alert, animated: false, completion: { completion(true) })
+		}
+	}
+
+	private final func getEditAction(for indexPath: IndexPath) -> UIContextualAction {
+		let edit = injected(UiUtil.self).contextualAction(style: .normal, title: "Edit") { _, _, completion in
+			let controller: EditMedicationViewController = self.viewController(named: "editMedication")
+			controller.notificationToSendOnAccept = Me.medicationEdited
+			controller.medication = self.fetchedResultsController.object(at: indexPath)
+			completion(true)
+			self.pushToNavigationController(controller)
+		}
+		edit.backgroundColor = .orange
+		return edit
 	}
 
 	// MARK: - Helper Functions
@@ -515,7 +549,7 @@ final fileprivate class RecordMedicationTableViewControllerCoachMarksDataSourceA
 			view: { self.controller?.navigationItem.rightBarButtonItem?.value(forKey: "view") as? UIView }
 		),
 		CoachMarkInfo(
-			hint: "This is the name of the medication. Tap it to edit the medication.",
+			hint: "This is the name of the medication. Tap it to view dose history.",
 			useArrow: true,
 			view: { self.getExampleMedicationCell()?.medicationNameLabel },
 			setup: {
@@ -532,7 +566,7 @@ final fileprivate class RecordMedicationTableViewControllerCoachMarksDataSourceA
 			view: { self.getExampleMedicationCell()?.takeButton }
 		),
 		CoachMarkInfo(
-			hint: "This displays the most recent date and time that this medication was taken. Tap to display the full history for this medication.",
+			hint: "This displays the most recent date and time that this medication was taken. Tap to edit the most recent dose.",
 			useArrow: true,
 			view: { self.getExampleMedicationCell()?.lastTakenOnDateButton }
 		),

@@ -21,7 +21,7 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 
 	public static let errorOccurred = Notification.Name("recordMedicationErrorOcurred")
 	public static let shouldPresentMedicationDoseView = Notification.Name("shouldPresentDoseViewFromRecordScreen")
-	public static let shouldPresentDosesView = Notification.Name("shouldPresentDosesViewFromRecordScreen")
+	public static let shouldPresentLastDoseView = Notification.Name("shouldPresentLastDoseViewFromRecordScreen")
 
 	private static let log = Log()
 
@@ -46,10 +46,17 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 			// have to remove old observers here because table view cells get reused
 			NotificationCenter.default.removeObserver(self)
 			observe(selector: #selector(doseCreated), name: uniqueNotificationNameForMedication)
+			observe(selector: #selector(updateLastTakenButton), name: lastDoseEdited)
 		}
 	}
 
-	private final var uniqueNotificationNameForMedication: Notification.Name!
+	private final var uniqueNotificationNameForMedication: Notification.Name! {
+		didSet {
+			lastDoseEdited = Notification.Name("editedLast" + uniqueNotificationNameForMedication.rawValue)
+		}
+	}
+
+	private final var lastDoseEdited: Notification.Name!
 	private final var dateThatTakenButtonWasPressed: Date?
 
 	// MARK: - Received Notifications
@@ -80,8 +87,8 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 				post(
 					Me.shouldPresentMedicationDoseView,
 					userInfo: [
-						.notificationName: uniqueNotificationNameForMedication,
-						.medication: medication,
+						.notificationName: uniqueNotificationNameForMedication as Any,
+						.medication: medication as Any,
 					]
 				)
 			}
@@ -92,27 +99,29 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 
 	@IBAction final func lastTakenButtonPressed(_: Any) {
 		post(
-			Me.shouldPresentDosesView,
+			Me.shouldPresentLastDoseView,
 			userInfo: [
-				.medication: medication,
+				.notificationName: uniqueNotificationNameForMedication as Any,
+				.medication: medication as Any,
 			]
 		)
 	}
 
 	// MARK: - Helper Functions
 
-	private final func updateLastTakenButton() {
-		var lastTakenText = "Never taken"
+	@objc private final func updateLastTakenButton() {
+		var lastTakenText: String
 		do {
 			if let mostRecentDose = try injected(MedicationDAO.self).mostRecentDoseOf(medication) {
-				lastTakenText = "Last taken: "
+				lastTakenText = ""
 				if let dosage = mostRecentDose.dosage {
-					lastTakenText += dosage.description + " on "
+					lastTakenText += dosage.description + "; "
 				}
 				lastTakenText += injected(CalendarUtil.self)
-					.string(for: mostRecentDose.date, dateStyle: .medium, timeStyle: .short)
+					.string(for: mostRecentDose.date, dateStyle: .short, timeStyle: .short)
 				injected(UiUtil.self).setButton(lastTakenOnDateButton, enabled: true, hidden: false)
 			} else {
+				lastTakenText = "Never taken"
 				injected(UiUtil.self).setButton(lastTakenOnDateButton, enabled: false, hidden: false)
 			}
 		} catch {
