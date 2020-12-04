@@ -1092,11 +1092,11 @@
             <objects>
                 <viewController storyboardIdentifier="medicationDoseEditor" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Q2N-tG-6dG" customClass="MedicationDoseEditorViewControllerImpl" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="DEZ-Yi-zsY">
-                        <rect key="frame" x="0.0" y="0.0" width="300" height="350"/>
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="250"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E7v-99-JT8">
-                                <rect key="frame" x="0.0" y="305" width="300" height="45"/>
+                                <rect key="frame" x="0.0" y="205" width="300" height="45"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" systemColor="labelColor"/>
                                 <accessibility key="accessibilityConfiguration" identifier="save dose button" label="save dose button"/>
@@ -1186,7 +1186,7 @@
                                 </items>
                             </toolbar>
                             <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="RJ8-4o-Ya0">
-                                <rect key="frame" x="0.0" y="135" width="300" height="162"/>
+                                <rect key="frame" x="0.0" y="135" width="300" height="62"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <connections>
                                     <action selector="datePickerValueChanged:" destination="Q2N-tG-6dG" eventType="valueChanged" id="RrC-Gg-9MS"/>
@@ -1196,7 +1196,7 @@
                         <viewLayoutGuide key="safeArea" id="4rH-WX-mYE"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <size key="freeformSize" width="300" height="350"/>
+                    <size key="freeformSize" width="300" height="250"/>
                     <connections>
                         <outlet property="datePicker" destination="RJ8-4o-Ya0" id="LuF-Nv-gtI"/>
                         <outlet property="dateToolbar" destination="Yfs-wC-idO" id="bij-I1-3bg"/>

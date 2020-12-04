@@ -48,6 +48,11 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 		height: .fluid(percentage: 0.4),
 		center: .bottomCenter
 	)
+	private static let datePresenter: Presentr = injected(UiUtil.self).customPresenter(
+		width: .full,
+		height: .custom(size: 150),
+		center: .bottomCenter
+	)
 
 	// MARK: Notification Names
 
@@ -225,13 +230,13 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 			controller.initialDate = startDate
 			controller.notificationToSendOnAccept = Me.startDateChanged
 			controller.lastDate = ((try? injected(ActivityDAO.self).getMostRecentActivityEndDate()) as Date??) ?? nil
-			customPresentViewController(Me.presenter, viewController: controller, animated: false)
+			customPresentViewController(Me.datePresenter, viewController: controller, animated: false)
 		} else if indexPath == Me.endIndex {
 			let controller = viewController(named: "datePicker", fromStoryboard: "Util") as! SelectDateViewController
 			controller.initialDate = endDate
 			controller.notificationToSendOnAccept = Me.endDateChanged
 			controller.lastDate = ((try? injected(ActivityDAO.self).getMostRecentActivityEndDate()) as Date??) ?? nil
-			customPresentViewController(Me.presenter, viewController: controller, animated: false)
+			customPresentViewController(Me.datePresenter, viewController: controller, animated: false)
 		} else if indexPath == Me.durationIndex {
 			let controller = viewController(
 				named: "durationChooser",

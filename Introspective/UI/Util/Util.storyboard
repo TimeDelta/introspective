@@ -371,11 +371,11 @@
             <objects>
                 <viewController storyboardIdentifier="datePicker" useStoryboardIdentifierAsRestorationIdentifier="YES" id="6Iz-O7-qxY" customClass="SelectDateViewControllerImpl" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tZA-l2-EyB">
-                        <rect key="frame" x="0.0" y="0.0" width="350" height="225"/>
+                        <rect key="frame" x="0.0" y="0.0" width="350" height="150"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="MIp-es-gdi">
-                                <rect key="frame" x="0.0" y="44" width="350" height="128"/>
+                                <rect key="frame" x="0.0" y="44" width="350" height="53"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <connections>
@@ -398,7 +398,7 @@
                                 </items>
                             </toolbar>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jdD-DW-9Fl">
-                                <rect key="frame" x="0.0" y="180" width="350" height="45"/>
+                                <rect key="frame" x="0.0" y="105" width="350" height="45"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" systemColor="labelColor"/>
                                 <accessibility key="accessibilityConfiguration" identifier="save button" label="save button"/>
@@ -414,7 +414,7 @@
                         <viewLayoutGuide key="safeArea" id="Ame-bs-9km"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <size key="freeformSize" width="350" height="225"/>
+                    <size key="freeformSize" width="350" height="150"/>
                     <connections>
                         <outlet property="datePicker" destination="MIp-es-gdi" id="7sc-V0-TOQ"/>
                         <outlet property="toolbar" destination="wxK-bj-fIl" id="oBO-Kg-0xq"/>
