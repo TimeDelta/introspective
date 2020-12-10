@@ -591,6 +591,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		case is Activity.Type: return try injected(QueryFactory.self).activityQuery(parts)
 		case is BloodPressure.Type: return try injected(QueryFactory.self).bloodPressureQuery(parts)
 		case is BodyMassIndex.Type: return try injected(QueryFactory.self).bmiQuery(parts)
+		case is Fatigue.Type: return try injected(QueryFactory.self).fatigueQuery(parts)
 		case is HeartRate.Type: return try injected(QueryFactory.self).heartRateQuery(parts)
 		case is LeanBodyMass.Type: return try injected(QueryFactory.self).leanBodyMassQuery(parts)
 		case is MedicationDose.Type: return try injected(QueryFactory.self).medicationDoseQuery(parts)

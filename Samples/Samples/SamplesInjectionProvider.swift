@@ -15,6 +15,7 @@ public class SamplesInjectionProvider: InjectionProvider {
 	private typealias Me = SamplesInjectionProvider
 	private static let activityDAO = ActivityDAOImpl()
 	private static let coreDataSampleUtil = CoreDataSampleUtilImpl()
+	private static let fatigueDAO = FatigueDAOImpl()
 	private static let healthKitUtil = HealthKitUtilImpl()
 	private static let medicationDAO = MedicationDAOImpl()
 	private static let moodDAO = MoodDAOImpl()
@@ -28,6 +29,7 @@ public class SamplesInjectionProvider: InjectionProvider {
 		ActivityDAO.self,
 		ActivityExporter.self,
 		CoreDataSampleUtil.self,
+		FatigueDAO.self,
 		HealthKitUtil.self,
 		MedicationDAO.self,
 		MedicationExporter.self,
@@ -50,6 +52,8 @@ public class SamplesInjectionProvider: InjectionProvider {
 			return try ActivityExporterImpl() as! Type
 		case is CoreDataSampleUtil.Protocol:
 			return Me.coreDataSampleUtil as! Type
+		case is FatigueDAO.Protocol:
+			return Me.fatigueDAO as! Type
 		case is HealthKitUtil.Protocol:
 			return Me.healthKitUtil as! Type
 		case is MedicationDAO.Protocol:

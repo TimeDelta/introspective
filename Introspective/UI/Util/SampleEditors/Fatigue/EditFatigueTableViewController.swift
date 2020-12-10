@@ -1,9 +1,9 @@
 //
-//  EditMoodTableViewController.swift
+//  EditFatigueTableViewController.swift
 //  Introspective
 //
-//  Created by Bryan Nova on 12/10/18.
-//  Copyright © 2018 Bryan Nova. All rights reserved.
+//  Created by Bryan Nova on 12/8/20.
+//  Copyright © 2020 Bryan Nova. All rights reserved.
 //
 
 import Presentr
@@ -15,22 +15,22 @@ import Persistence
 import Samples
 import Settings
 
-public protocol EditMoodTableViewController: UITableViewController {
+public protocol EditFatigueTableViewController: UITableViewController {
 	/// If nil, no notification will be sent
 	var notificationToSendOnAccept: Notification.Name? { get set }
 	var userInfoKey: UserInfoKey { get set }
-	var mood: Mood? { get set }
+	var fatigue: Fatigue? { get set }
 }
 
-public final class EditMoodTableViewControllerImpl: UITableViewController, EditMoodTableViewController {
+public final class EditFatigueTableViewControllerImpl: UITableViewController, EditFatigueTableViewController {
 	// MARK: - Static Variables
 
-	private typealias Me = EditMoodTableViewControllerImpl
+	private typealias Me = EditFatigueTableViewControllerImpl
 
 	// MARK: Notification Names
 
-	private static let timestampChanged = Notification.Name("moodTimestampChanged")
-	private static let noteChanged = Notification.Name("moodNoteChanged")
+	private static let timestampChanged = Notification.Name("fatigueTimestampChanged")
+	private static let noteChanged = Notification.Name("fatigueNoteChanged")
 
 	// MARK: IndexPaths
 
@@ -53,22 +53,23 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 	// MARK: - Instance Variables
 
 	public final var notificationToSendOnAccept: Notification.Name?
-	public final var userInfoKey: UserInfoKey = .mood
-	public final var mood: Mood? {
+	/// The user info key to use when sending back the edited fatigue record
+	public final var userInfoKey: UserInfoKey = .fatigue
+	public final var fatigue: Fatigue? {
 		didSet {
-			guard let mood = mood else { return }
-			timestamp = mood.date
-			rating = mood.rating
-			minRating = mood.minRating
-			maxRating = mood.maxRating
-			note = mood.note
+			guard let fatigue = fatigue else { return }
+			timestamp = fatigue.date
+			rating = fatigue.rating
+			minRating = fatigue.minRating
+			maxRating = fatigue.maxRating
+			note = fatigue.note
 		}
 	}
 
 	private final var timestamp: Date = Date()
 	private final var rating: Double = 0
-	private final var minRating: Double = injected(Settings.self).minMood
-	private final var maxRating: Double = injected(Settings.self).maxMood
+	private final var minRating: Double = injected(Settings.self).minFatigue
+	private final var maxRating: Double = injected(Settings.self).maxFatigue
 	private final var note: String?
 
 	// MARK: - UIViewController Overrides
@@ -84,9 +85,9 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 		)
 
 		observe(selector: #selector(timestampChanged), name: Me.timestampChanged)
-		observe(selector: #selector(ratingChanged), name: .moodRatingChanged)
+		observe(selector: #selector(ratingChanged), name: .fatigueRatingChanged)
 		observe(selector: #selector(noteChanged), name: Me.noteChanged)
-		observe(selector: #selector(useDiscreteMoodChanged), name: MoodUiUtilImpl.useDiscreteMoodChanged)
+		observe(selector: #selector(useDiscreteFatigueChanged), name: FatigueUiUtilImpl.useDiscreteFatigueChanged)
 
 		hideKeyboardOnTapNonTextInput()
 	}
@@ -127,12 +128,15 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 		} else if indexPath == Me.ratingIndex {
 			return getRatingCell(for: indexPath)
 		} else if indexPath == Me.noteIndex {
-			let cell = tableView.dequeueReusableCell(withIdentifier: "note", for: indexPath) as! MoodNoteTableViewCell
+			let cell = tableView.dequeueReusableCell(
+				withIdentifier: "note",
+				for: indexPath
+			) as! FatigueNoteTableViewCell
 			cell.note = note
 			cell.notificationToSendOnChange = Me.noteChanged
 			return cell
 		}
-		Me.log.error("Missing cell customization case for edit mood")
+		Me.log.error("Missing cell customization case for edit fatigue")
 		return UITableViewCell()
 	}
 
@@ -173,7 +177,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 		note = value(for: .text, from: notification)
 	}
 
-	@objc private final func useDiscreteMoodChanged(notification _: Notification) {
+	@objc private final func useDiscreteFatigueChanged(notification _: Notification) {
 		tableView.reloadData()
 	}
 
@@ -182,49 +186,48 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 	@objc private final func saveButtonPressed(_: Any) {
 		do {
 			let transaction = injected(Database.self).transaction()
-			var mood: Mood! = self.mood
-			if let localMood = mood {
-				if let localMood = localMood as? MoodImpl {
-					mood = try transaction.pull(savedObject: localMood)
-				} else { // otherwise mood is a Mock and we're testing
-					Me.log.debug("Mood not pulled from transaction")
+			var fatigue: Fatigue! = self.fatigue
+			if let localFatigue = fatigue {
+				if let localFatigue = localFatigue as? FatigueImpl {
+					fatigue = try transaction.pull(savedObject: localFatigue)
+				} else { // otherwise fatigue is a Mock and we're testing
+					Me.log.debug("Fatigue not pulled from transaction")
 				}
 			} else {
-				mood = try transaction.new(MoodImpl.self)
-				mood.setSource(.introspective)
+				fatigue = try transaction.new(FatigueImpl.self)
 			}
-			mood.date = timestamp
-			mood.rating = rating
-			mood.note = note
+			fatigue.date = timestamp
+			fatigue.rating = rating
+			fatigue.note = note
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-			if let localMood = mood as? MoodImpl {
-				mood = try injected(Database.self).pull(savedObject: localMood)
-			} else { // otherwise mood is a Mock and we're testing
-				Me.log.debug("Mood not pulled from database")
+			if let localFatigue = fatigue as? FatigueImpl {
+				fatigue = try injected(Database.self).pull(savedObject: localFatigue)
+			} else { // otherwise fatigue is a Mock and we're testing
+				Me.log.debug("Fatigue not pulled from database")
 			}
 			if let notificationToSendOnAccept = notificationToSendOnAccept {
 				post(
 					notificationToSendOnAccept,
 					userInfo: [
-						userInfoKey: mood as Any,
+						userInfoKey: fatigue as Any,
 					]
 				)
 			}
 			popFromNavigationController()
 		} catch {
-			Me.log.error("Failed to save create or save mood: %@", errorInfo(error))
-			showError(title: "Failed to save mood", error: error)
+			Me.log.error("Failed to save create or save fatigue: %@", errorInfo(error))
+			showError(title: "Failed to save fatigue", error: error)
 		}
 	}
 
 	// MARK: - Helper Functions
 
 	private final func getRatingCell(for indexPath: IndexPath) -> UITableViewCell {
-		if injected(Settings.self).discreteMoods {
+		if injected(Settings.self).discreteFatigue {
 			let cell = tableView.dequeueReusableCell(
 				withIdentifier: "integerRating",
 				for: indexPath
-			) as! DiscreteMoodRatingTableViewCell
+			) as! DiscreteFatigueRatingTableViewCell
 			cell.rating = Int(rating)
 			cell.minRating = Int(minRating)
 			cell.maxRating = Int(maxRating)
@@ -233,7 +236,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 		let cell = tableView.dequeueReusableCell(
 			withIdentifier: "rating",
 			for: indexPath
-		) as! ContinuousMoodRatingTableViewCell
+		) as! ContinuousFatigueRatingTableViewCell
 		cell.rating = rating
 		cell.minRating = minRating
 		cell.maxRating = maxRating

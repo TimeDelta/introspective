@@ -1,5 +1,5 @@
 //
-//  RecordMoodTableViewCell.swift
+//  RecordContinuousMoodTableViewCell.swift
 //  Introspective
 //
 //  Created by Bryan Nova on 8/11/18.
@@ -15,10 +15,10 @@ import Persistence
 import Samples
 import Settings
 
-final class RecordMoodTableViewCell: UITableViewCell {
+final class RecordContinuousMoodTableViewCell: UITableViewCell {
 	// MARK: - Static Variables
 
-	private typealias Me = RecordMoodTableViewCell
+	private typealias Me = RecordContinuousMoodTableViewCell
 
 	private static let notePresenter: Presentr = injected(UiUtil.self)
 		.customPresenter(width: .custom(size: 300), height: .custom(size: 200), center: .topCenter)
@@ -26,6 +26,7 @@ final class RecordMoodTableViewCell: UITableViewCell {
 		.customPresenter(width: .custom(size: 300), height: .custom(size: 70), center: .topCenter)
 
 	private static let ratingChanged = Notification.Name("moodRatingChanged")
+	private static let noteChangedNotification = Notification.Name("moodNoteChanged")
 
 	private static let log = Log()
 
@@ -52,7 +53,7 @@ final class RecordMoodTableViewCell: UITableViewCell {
 		super.awakeFromNib()
 		reset()
 		updateUI()
-		observe(selector: #selector(noteSaved), name: MoodNoteViewController.noteSavedNotification)
+		observe(selector: #selector(noteSaved), name: Me.noteChangedNotification)
 		observe(selector: #selector(ratingSaved), name: Me.ratingChanged)
 		observe(selector: #selector(updateUI), name: MoodUiUtilImpl.minRatingChanged)
 		observe(selector: #selector(updateUI), name: MoodUiUtilImpl.maxRatingChanged)
@@ -71,11 +72,13 @@ final class RecordMoodTableViewCell: UITableViewCell {
 	}
 
 	@IBAction final func setRating(_: Any) {
-		let controller: RecordMoodRatingViewController = viewController(
-			named: "moodRating",
+		let controller: RecordNumberViewController = viewController(
+			named: "recordNumber",
 			fromStoryboard: "RecordData"
 		)
-		controller.rating = rating
+		controller.number = rating
+		controller.min = injected(Settings.self).minMood
+		controller.max = injected(Settings.self).maxMood
 		controller.notificationToSendOnAccept = Me.ratingChanged
 		NotificationCenter.default.post(
 			name: RecordDataTableViewController.showViewController,
@@ -88,8 +91,9 @@ final class RecordMoodTableViewCell: UITableViewCell {
 	}
 
 	@IBAction final func presentMoodNoteController(_: Any) {
-		let controller: MoodNoteViewController = viewController(named: "moodNote", fromStoryboard: "RecordData")
+		let controller: NoteViewController = viewController(named: "recordNote", fromStoryboard: "RecordData")
 		controller.note = note ?? ""
+		controller.noteSavedNotification = Me.noteChangedNotification
 		NotificationCenter.default.post(
 			name: RecordDataTableViewController.showViewController,
 			object: self,

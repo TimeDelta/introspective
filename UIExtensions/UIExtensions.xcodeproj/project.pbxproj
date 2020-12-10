@@ -16,7 +16,7 @@
 		A2E2C4BF234799E500840BEA /* LongPressReorderGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E2C4B7234799E400840BEA /* LongPressReorderGestureRecognizer.swift */; };
 		A2E2C4C0234799E500840BEA /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E2C4B8234799E400840BEA /* UIViewControllerExtensions.swift */; };
 		A2E2C4C1234799E500840BEA /* TableViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E2C4B9234799E400840BEA /* TableViewExtensions.swift */; };
-		A2E2C4C2234799E500840BEA /* RecordMoodScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E2C4BA234799E400840BEA /* RecordMoodScrollView.swift */; };
+		A2E2C4C2234799E500840BEA /* RecordDiscreteNumberScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E2C4BA234799E400840BEA /* RecordDiscreteNumberScrollView.swift */; };
 		A2E2C4C3234799E500840BEA /* TableViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E2C4BB234799E500840BEA /* TableViewControllerExtensions.swift */; };
 		A2E2C4C623479A1500840BEA /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2E2C4C523479A1500840BEA /* Common.framework */; };
 		A2E2C4C823479A1900840BEA /* DependencyInjection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2E2C4C723479A1900840BEA /* DependencyInjection.framework */; };
@@ -36,7 +36,7 @@
 		A2E2C4B7234799E400840BEA /* LongPressReorderGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LongPressReorderGestureRecognizer.swift; sourceTree = "<group>"; };
 		A2E2C4B8234799E400840BEA /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		A2E2C4B9234799E400840BEA /* TableViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewExtensions.swift; sourceTree = "<group>"; };
-		A2E2C4BA234799E400840BEA /* RecordMoodScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordMoodScrollView.swift; sourceTree = "<group>"; };
+		A2E2C4BA234799E400840BEA /* RecordDiscreteNumberScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordDiscreteNumberScrollView.swift; sourceTree = "<group>"; };
 		A2E2C4BB234799E500840BEA /* TableViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewControllerExtensions.swift; sourceTree = "<group>"; };
 		A2E2C4C523479A1500840BEA /* Common.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Common.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2E2C4C723479A1900840BEA /* DependencyInjection.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DependencyInjection.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -83,7 +83,7 @@
 				A2E2C4B4234799E300840BEA /* ScrollViewExtensions.swift */,
 				A2E2C4B5234799E400840BEA /* TableViewCellExtensions.swift */,
 				A2E2C4B6234799E400840BEA /* UIColorExtensions.swift */,
-				A2E2C4BA234799E400840BEA /* RecordMoodScrollView.swift */,
+				A2E2C4BA234799E400840BEA /* RecordDiscreteNumberScrollView.swift */,
 				A2E2C4B7234799E400840BEA /* LongPressReorderGestureRecognizer.swift */,
 				A29D44A523479C0300D41E1C /* CoachMarkSkipViewConstraint.swift */,
 				A2E2C4AC234799BD00840BEA /* UIExtensions.h */,
@@ -217,7 +217,7 @@
 				A2E2C4C0234799E500840BEA /* UIViewControllerExtensions.swift in Sources */,
 				A29D44A623479C0300D41E1C /* CoachMarkSkipViewConstraint.swift in Sources */,
 				A2E2C4BC234799E500840BEA /* ScrollViewExtensions.swift in Sources */,
-				A2E2C4C2234799E500840BEA /* RecordMoodScrollView.swift in Sources */,
+				A2E2C4C2234799E500840BEA /* RecordDiscreteNumberScrollView.swift in Sources */,
 				A2E2C4C3234799E500840BEA /* TableViewControllerExtensions.swift in Sources */,
 				A2E2C4BD234799E500840BEA /* TableViewCellExtensions.swift in Sources */,
 				A2E2C4C1234799E500840BEA /* TableViewExtensions.swift in Sources */,

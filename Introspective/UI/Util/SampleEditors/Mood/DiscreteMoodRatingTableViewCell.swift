@@ -1,5 +1,5 @@
 //
-//  DiscreteRatingTableViewCell.swift
+//  DiscreteMoodRatingTableViewCell.swift
 //  Introspective
 //
 //  Created by Bryan Nova on 4/3/19.
@@ -12,10 +12,10 @@ import Common
 import DependencyInjection
 import Settings
 
-public final class DiscreteRatingTableViewCell: UITableViewCell {
+public final class DiscreteMoodRatingTableViewCell: UITableViewCell {
 	// MARK: - Static Variables
 
-	private typealias Me = DiscreteRatingTableViewCell
+	private typealias Me = DiscreteMoodRatingTableViewCell
 
 	private static let log = Log()
 

@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" restorationIdentifier="continuousMood" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="continuousMood" rowHeight="145" id="fJm-WJ-Cyf" customClass="RecordMoodTableViewCell" customModule="Introspective" customModuleProvider="target">
+                            <tableViewCell contentMode="scaleToFill" restorationIdentifier="continuousMood" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="continuousMood" rowHeight="145" id="fJm-WJ-Cyf" customClass="RecordContinuousMoodTableViewCell" customModule="Introspective" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="145"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fJm-WJ-Cyf" id="WhK-EM-rdy">
@@ -117,7 +117,7 @@
                                                 <action selector="doneButtonPressed:" destination="VYs-Kk-cJw" eventType="touchUpInside" id="fER-XS-kBb"/>
                                             </connections>
                                         </button>
-                                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="redraw" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gFO-JW-crE" customClass="RecordMoodScrollView" customModule="UIExtensions">
+                                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="redraw" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gFO-JW-crE" customClass="RecordDiscreteNumberScrollView" customModule="UIExtensions">
                                             <rect key="frame" x="16" y="42" width="343" height="40"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="500" verticalCompressionResistancePriority="500" translatesAutoresizingMaskIntoConstraints="NO" id="AP7-3C-e06">
@@ -162,12 +162,160 @@
                                     <outlet property="addNoteButton" destination="kTS-5Q-5j2" id="2Uz-81-xpf"/>
                                     <outlet property="doneButton" destination="kQs-XG-QPP" id="f1N-iO-NTq"/>
                                     <outlet property="feedbackLabel" destination="Qh3-Pz-Qpq" id="mdW-ok-grz"/>
-                                    <outlet property="moodContentView" destination="AP7-3C-e06" id="djS-TK-z8s"/>
+                                    <outlet property="moodContentView" destination="AP7-3C-e06" id="8ZW-cz-e64"/>
                                     <outlet property="scrollView" destination="gFO-JW-crE" id="Jhh-xa-JSb"/>
                                 </connections>
                             </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" restorationIdentifier="continuousFatigue" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="continuousFatigue" rowHeight="145" id="3yz-Lq-Jd3" customClass="RecordContinuousFatigueTableViewCell" customModule="Introspective" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="318" width="375" height="145"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3yz-Lq-Jd3" id="gRm-3r-8pa">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="145"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" buttonType="system" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="Iky-EB-IJe">
+                                            <rect key="frame" x="16" y="86" width="343" height="49"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <accessibility key="accessibilityConfiguration" hint="Add a note about your mood" identifier="set mood note button" label="set mood note button"/>
+                                            <state key="normal" title="Add Note"/>
+                                            <connections>
+                                                <action selector="presentFatigueNoteController:" destination="3yz-Lq-Jd3" eventType="touchUpInside" id="N6M-Qv-Igs"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FGM-hG-1PE">
+                                            <rect key="frame" x="16" y="11" width="343" height="34"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                            <accessibility key="accessibilityConfiguration" hint="Save this mood rating" identifier="save mood button" label="save mood button"/>
+                                            <state key="normal" title="Save Fatigue"/>
+                                            <connections>
+                                                <action selector="doneButtonPressed:" destination="3yz-Lq-Jd3" eventType="touchUpInside" id="3xs-a3-4Fd"/>
+                                            </connections>
+                                        </button>
+                                        <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="S2D-GS-Mnk">
+                                            <rect key="frame" x="14" y="53" width="201" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                            <color key="tintColor" red="0.7137303948" green="0.71371680500000001" blue="0.71372604370000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="mood slider" label="mood slider"/>
+                                            <connections>
+                                                <action selector="ratingChanged:" destination="3yz-Lq-Jd3" eventType="valueChanged" id="SDr-gV-DXt"/>
+                                            </connections>
+                                        </slider>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="/ max" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t6g-Kq-o3L">
+                                            <rect key="frame" x="302" y="57" width="57" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="rating range" label="rating range"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="arg-dq-72Y">
+                                            <rect key="frame" x="221" y="53" width="73" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="set mood button" label="set mood button"/>
+                                            <state key="normal" title="rating"/>
+                                            <connections>
+                                                <action selector="setRating:" destination="3yz-Lq-Jd3" eventType="touchUpInside" id="FpS-qB-DeL"/>
+                                            </connections>
+                                        </button>
+                                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o9g-Bz-bCM">
+                                            <rect key="frame" x="16" y="11" width="343" height="123"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                            <fontDescription key="fontDescription" name="Noteworthy-Bold" family="Noteworthy" pointSize="24"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="addNoteButton" destination="Iky-EB-IJe" id="sMS-bu-0Pm"/>
+                                    <outlet property="doneButton" destination="FGM-hG-1PE" id="1GU-lo-w2w"/>
+                                    <outlet property="feedbackLabel" destination="o9g-Bz-bCM" id="rC7-rv-Y8K"/>
+                                    <outlet property="ratingButton" destination="arg-dq-72Y" id="f56-ip-jgY"/>
+                                    <outlet property="ratingRangeLabel" destination="t6g-Kq-o3L" id="L1V-if-C0p"/>
+                                    <outlet property="ratingSlider" destination="S2D-GS-Mnk" id="Fcc-4C-OCK"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" restorationIdentifier="discreteFatigue" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="discreteFatigue" rowHeight="145" id="bNB-Lr-7pK" customClass="RecordDiscreteFatigueTableViewCell" customModule="Introspective" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="463" width="375" height="145"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="bNB-Lr-7pK" id="K3b-GF-9QI">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="145"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" buttonType="system" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="iAM-je-1QG">
+                                            <rect key="frame" x="16" y="90" width="343" height="44"/>
+                                            <accessibility key="accessibilityConfiguration" hint="Add a note about your mood" identifier="set mood note button" label="set mood note button"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="44" id="v1K-wH-DQ6"/>
+                                            </constraints>
+                                            <state key="normal" title="Add Note"/>
+                                            <connections>
+                                                <action selector="presentMoodNoteController:" destination="bNB-Lr-7pK" eventType="touchUpInside" id="tzP-Ix-dy4"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ad4-Yy-UQA">
+                                            <rect key="frame" x="5" y="0.0" width="365" height="34"/>
+                                            <accessibility key="accessibilityConfiguration" hint="Save this mood rating" identifier="save mood button" label="save mood button"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="34" id="ftS-RZ-Zyg"/>
+                                            </constraints>
+                                            <state key="normal" title="Save Fatigue"/>
+                                            <connections>
+                                                <action selector="doneButtonPressed:" destination="bNB-Lr-7pK" eventType="touchUpInside" id="EDP-7V-O8T"/>
+                                            </connections>
+                                        </button>
+                                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="redraw" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GKD-uh-EhV" customClass="RecordDiscreteNumberScrollView" customModule="UIExtensions">
+                                            <rect key="frame" x="16" y="42" width="343" height="40"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="500" verticalCompressionResistancePriority="500" translatesAutoresizingMaskIntoConstraints="NO" id="6oW-L7-JjJ">
+                                                    <rect key="frame" x="0.0" y="0.0" width="343" height="40"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="40" placeholder="YES" id="oCe-Lp-s1j"/>
+                                                    </constraints>
+                                                </view>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="6oW-L7-JjJ" firstAttribute="centerY" secondItem="GKD-uh-EhV" secondAttribute="centerY" id="6iz-MC-4tx"/>
+                                                <constraint firstItem="6oW-L7-JjJ" firstAttribute="centerX" secondItem="GKD-uh-EhV" secondAttribute="centerX" placeholder="YES" id="BIB-pJ-oJx"/>
+                                                <constraint firstItem="6oW-L7-JjJ" firstAttribute="bottom" secondItem="GKD-uh-EhV" secondAttribute="bottom" id="Isj-Pc-0hB"/>
+                                                <constraint firstItem="6oW-L7-JjJ" firstAttribute="top" secondItem="GKD-uh-EhV" secondAttribute="top" id="LCn-Rm-EhB"/>
+                                                <constraint firstAttribute="trailing" secondItem="6oW-L7-JjJ" secondAttribute="trailing" priority="999" id="iCM-Rn-Xy9"/>
+                                                <constraint firstItem="6oW-L7-JjJ" firstAttribute="leading" secondItem="GKD-uh-EhV" secondAttribute="leading" priority="999" id="p5D-Bt-cXx"/>
+                                            </constraints>
+                                        </scrollView>
+                                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mxx-Oc-VbO">
+                                            <rect key="frame" x="16" y="11" width="343" height="123"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                            <fontDescription key="fontDescription" name="Noteworthy-Bold" family="Noteworthy" pointSize="24"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="GKD-uh-EhV" firstAttribute="leading" secondItem="K3b-GF-9QI" secondAttribute="leadingMargin" id="7hB-Tz-NpC"/>
+                                        <constraint firstItem="iAM-je-1QG" firstAttribute="leading" secondItem="K3b-GF-9QI" secondAttribute="leadingMargin" id="GOS-ZK-Tyc"/>
+                                        <constraint firstAttribute="trailing" secondItem="ad4-Yy-UQA" secondAttribute="trailing" constant="5" id="Ra3-T6-ew8"/>
+                                        <constraint firstItem="ad4-Yy-UQA" firstAttribute="top" secondItem="K3b-GF-9QI" secondAttribute="top" id="aEx-xh-YhV"/>
+                                        <constraint firstItem="iAM-je-1QG" firstAttribute="bottom" secondItem="K3b-GF-9QI" secondAttribute="bottomMargin" id="auI-Po-00C"/>
+                                        <constraint firstItem="iAM-je-1QG" firstAttribute="trailing" secondItem="K3b-GF-9QI" secondAttribute="trailingMargin" id="bHL-jM-sr0"/>
+                                        <constraint firstItem="ad4-Yy-UQA" firstAttribute="leading" secondItem="K3b-GF-9QI" secondAttribute="leading" constant="5" id="evU-aB-Mj2"/>
+                                        <constraint firstItem="GKD-uh-EhV" firstAttribute="trailing" secondItem="K3b-GF-9QI" secondAttribute="trailingMargin" id="hqB-Qz-CiL"/>
+                                        <constraint firstItem="GKD-uh-EhV" firstAttribute="top" secondItem="ad4-Yy-UQA" secondAttribute="bottom" constant="8" symbolic="YES" id="vxH-SW-RsC"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="addNoteButton" destination="iAM-je-1QG" id="hW6-jL-wKE"/>
+                                    <outlet property="doneButton" destination="ad4-Yy-UQA" id="kWd-wt-3Xz"/>
+                                    <outlet property="fatigueContentView" destination="6oW-L7-JjJ" id="474-45-pD2"/>
+                                    <outlet property="feedbackLabel" destination="Mxx-Oc-VbO" id="z5D-jb-p9t"/>
+                                    <outlet property="scrollView" destination="GKD-uh-EhV" id="zWV-jz-OLw"/>
+                                </connections>
+                            </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" restorationIdentifier="medication" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="medication" textLabel="oJ9-rO-oaB" rowHeight="52" style="IBUITableViewCellStyleDefault" id="Ywy-Tl-NSz">
-                                <rect key="frame" x="0.0" y="318" width="375" height="52"/>
+                                <rect key="frame" x="0.0" y="608" width="375" height="52"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ywy-Tl-NSz" id="hAu-TZ-T5A">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="52"/>
@@ -184,7 +332,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" restorationIdentifier="activity" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="activity" textLabel="gSR-ok-bB5" rowHeight="52" style="IBUITableViewCellStyleDefault" id="GBc-t4-D0b">
-                                <rect key="frame" x="0.0" y="370" width="375" height="52"/>
+                                <rect key="frame" x="0.0" y="660" width="375" height="52"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="GBc-t4-D0b" id="H7M-EF-ehu">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="52"/>
@@ -608,10 +756,10 @@
             </objects>
             <point key="canvasLocation" x="1352.8" y="900.89955022488766"/>
         </scene>
-        <!--Record Mood Rating View Controller-->
+        <!--Record Number View Controller-->
         <scene sceneID="Tpp-aC-vDb">
             <objects>
-                <viewController storyboardIdentifier="moodRating" useStoryboardIdentifierAsRestorationIdentifier="YES" id="JZO-cg-S9m" customClass="RecordMoodRatingViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="recordNumber" useStoryboardIdentifierAsRestorationIdentifier="YES" id="JZO-cg-S9m" customClass="RecordNumberViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="NX4-yB-onP">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="70"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -632,17 +780,17 @@
                     </view>
                     <size key="freeformSize" width="300" height="70"/>
                     <connections>
-                        <outlet property="ratingTextField" destination="tSc-X7-Eay" id="2A2-s5-Yni"/>
+                        <outlet property="numberTextField" destination="tSc-X7-Eay" id="Pw0-Jq-2dh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ex9-Jl-6Ft" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1353.5999999999999" y="-1091.1544227886059"/>
         </scene>
-        <!--Mood Note View Controller-->
+        <!--Note View Controller-->
         <scene sceneID="bqf-BF-Buc">
             <objects>
-                <viewController storyboardIdentifier="moodNote" autoresizesArchivedViewToFullSize="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="LVc-Ma-5Ja" customClass="MoodNoteViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="recordNote" autoresizesArchivedViewToFullSize="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="LVc-Ma-5Ja" customClass="NoteViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EGw-fL-akw">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="200"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

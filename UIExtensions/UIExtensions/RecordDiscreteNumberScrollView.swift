@@ -1,5 +1,5 @@
 //
-//  RecordMoodScrollView.swift
+//  RecordDiscreteNumberScrollView.swift
 //  Introspective
 //
 //  Created by Bryan Nova on 3/20/19.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-public final class RecordMoodScrollView: UIScrollView {
+public final class RecordDiscreteNumberScrollView: UIScrollView {
 	public override func touchesShouldCancel(in view: UIView) -> Bool {
 		if view is UIButton {
 			return false

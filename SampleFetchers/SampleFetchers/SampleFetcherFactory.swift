@@ -12,6 +12,7 @@ public protocol SampleFetcherFactory {
 	func activitySampleFetcher() -> SampleFetcher
 	func bloodPressureSampleFetcher() -> SampleFetcher
 	func bodyMassIndexSampleFetcher() -> SampleFetcher
+	func fatigueSampleFetcher() -> SampleFetcher
 	func heartRateSampleFetcher() -> SampleFetcher
 	func leanBodyMassSampleFetcher() -> SampleFetcher
 	func medicationDoseSampleFetcher() -> SampleFetcher
@@ -33,6 +34,10 @@ public final class SampleFetcherFactoryImpl: SampleFetcherFactory {
 
 	public func bodyMassIndexSampleFetcher() -> SampleFetcher {
 		BodyMassIndexSampleFetcher()
+	}
+
+	public func fatigueSampleFetcher() -> SampleFetcher {
+		FatigueSampleFetcher()
 	}
 
 	public func heartRateSampleFetcher() -> SampleFetcher {

@@ -26,20 +26,30 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 	private static let continuousMoodId = "continuousMood"
 	private static let discreteMoodId = "discreteMood"
 
+	private static let fatigueId = "fatigue"
+	private static let continuousFatigueId = "continuousFatigue"
+	private static let discreteFatigueId = "discreteFatigue"
+
+	private static let medicationId = "medication"
+	private static let activityId = "activity"
+
 	private static let log = Log()
 
 	// MARK: - Instance Variables
 
 	private final var viewOrder = [
 		Me.moodId,
-		"medication",
-		"activity",
+		Me.fatigueId,
+		Me.medicationId,
+		Me.activityId,
 	]
 	private final var viewHeights: [String: CGFloat] = [
 		Me.continuousMoodId: 145,
 		Me.discreteMoodId: 145,
-		"medication": 52,
-		"activity": 52,
+		Me.continuousFatigueId: 145,
+		Me.discreteFatigueId: 145,
+		Me.medicationId: 52,
+		Me.activityId: 52,
 	]
 
 	// MARK: - UIViewController Overrides
@@ -51,6 +61,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		observe(selector: #selector(showRecordActivitiesScreen), name: .showRecordActivitiesScreen)
 		observe(selector: #selector(showRecordMedicationsScreen), name: .showRecordMedicationsScreen)
 		observe(selector: #selector(useDiscreteMoodChanged), name: MoodUiUtilImpl.useDiscreteMoodChanged)
+		observe(selector: #selector(useDiscreteFatigueChanged), name: FatigueUiUtilImpl.useDiscreteFatigueChanged)
 	}
 
 	deinit {
@@ -89,9 +100,9 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 	}
 
 	final override func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
-		if indexPath.row == 1 {
+		if indexPath.row == viewOrder.firstIndex(of: Me.medicationId) {
 			navigationController?.pushViewController(viewController(named: "medicationsTable"), animated: false)
-		} else if indexPath.row == 2 {
+		} else if indexPath.row == viewOrder.firstIndex(of: Me.activityId) {
 			navigationController?.pushViewController(viewController(named: "activitiesTable"), animated: false)
 		}
 	}
@@ -103,6 +114,9 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		var actions: [UIContextualAction] = []
 		if let _ = try? injected(MoodDAO.self).getMostRecentMood() {
 			actions.append(getEditLastMoodAction())
+		}
+		if let _ = try? injected(FatigueDAO.self).getMostRecentFatigue() {
+			actions.append(getEditLastFatigueAction())
 		}
 		return UISwipeActionsConfiguration(actions: actions)
 	}
@@ -156,16 +170,25 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		tableView.reloadData()
 	}
 
+	@objc private final func useDiscreteFatigueChanged(notification _: Notification) {
+		tableView.reloadData()
+	}
+
 	// MARK: - Helper Functions
 
 	private final func getIdFor(_ indexPath: IndexPath) -> String {
-		var id = viewOrder[indexPath.row]
+		let id = viewOrder[indexPath.row]
 		if id == Me.moodId {
 			if injected(Settings.self).discreteMoods {
-				id = Me.discreteMoodId
-			} else {
-				id = Me.continuousMoodId
+				return Me.discreteMoodId
 			}
+			return Me.continuousMoodId
+		}
+		if id == Me.fatigueId {
+			if injected(Settings.self).discreteFatigue {
+				return Me.discreteFatigueId
+			}
+			return Me.continuousFatigueId
 		}
 		return id
 	}
@@ -189,6 +212,31 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 				self.pushToNavigationController(controller)
 			} catch {
 				self.showError(title: "Failed to retrieve most recent mood entry", error: error)
+			}
+		}
+		action.backgroundColor = .orange
+		return action
+	}
+
+	private final func getEditLastFatigueAction() -> UIContextualAction {
+		let action = injected(UiUtil.self).contextualAction(
+			style: .normal,
+			title: "✎ Last"
+		) { _, _, completion in
+			do {
+				guard let fatigue = try injected(FatigueDAO.self).getMostRecentFatigue() else {
+					Me.log.error("Edit last fatigue action triggered with no fatigue records")
+					completion(false)
+					return
+				}
+				let controller = self.viewController(
+					named: "editFatigue",
+					fromStoryboard: "Util"
+				) as! EditFatigueTableViewController
+				controller.fatigue = fatigue
+				self.pushToNavigationController(controller)
+			} catch {
+				self.showError(title: "Failed to retrieve most recent fatigue entry", error: error)
 			}
 		}
 		action.backgroundColor = .orange

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19G2021" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="0">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17511" systemVersion="20B29" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="0">
     <entity name="Activity" representedClassName="Samples.Activity" syncable="YES">
         <attribute name="endDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="endDateTimeZoneId" optional="YES" attributeType="String"/>
@@ -49,6 +49,14 @@
     <entity name="EasyPillMedicationImporter" representedClassName="DataImport.EasyPillMedicationImporterImpl" syncable="YES">
         <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
+    <entity name="Fatigue" representedClassName="Samples.FatigueImpl" syncable="YES">
+        <attribute name="maxRating" attributeType="Double" defaultValueString="6" usesScalarValueType="YES"/>
+        <attribute name="minRating" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="note" optional="YES" attributeType="String"/>
+        <attribute name="rating" attributeType="Double" usesScalarValueType="YES"/>
+        <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="timestampTimeZoneId" optional="YES" attributeType="String"/>
+    </entity>
     <entity name="IntrospectiveActivityImporter" representedClassName="DataImport.IntrospectiveActivityImporterImpl" syncable="YES">
         <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
@@ -91,8 +99,11 @@
         <attribute name="storedAutoTrimWhitespaceInActivityNotes" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
         <attribute name="storedConvertTimeZones" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="storedDefaultSearchNearbyDuration" optional="YES" attributeType="Transformable" valueTransformerName="TimeDurationValueTransformer" customClassName="TimeDuration"/>
+        <attribute name="storedDiscreteFatigue" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="storedDiscreteMoods" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="storedMaxFatigue" attributeType="Double" defaultValueString="6" usesScalarValueType="YES"/>
         <attribute name="storedMaxMood" attributeType="Double" defaultValueString="10" usesScalarValueType="YES"/>
+        <attribute name="storedMinFatigue" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="storedMinMood" attributeType="Double" defaultValueString="1" usesScalarValueType="YES"/>
         <attribute name="storedScaleMoodsOnImport" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
     </entity>
@@ -117,8 +128,9 @@
         <element name="Medication" positionX="-54" positionY="9" width="128" height="178"/>
         <element name="MedicationDose" positionX="-45" positionY="45" width="128" height="118"/>
         <element name="Mood" positionX="-63" positionY="-18" width="128" height="30"/>
-        <element name="Settings" positionX="-63" positionY="9" width="128" height="178"/>
+        <element name="Settings" positionX="-63" positionY="9" width="128" height="209"/>
         <element name="Tag" positionX="-18" positionY="81" width="128" height="30"/>
         <element name="WellnessMoodImporter" positionX="-54" positionY="18" width="128" height="30"/>
+        <element name="Fatigue" positionX="-27" positionY="90" width="128" height="119"/>
     </elements>
 </model>

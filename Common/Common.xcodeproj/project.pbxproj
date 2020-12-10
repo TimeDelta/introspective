@@ -12,6 +12,7 @@
 		A22CF09B23464A11003751E1 /* MoodUiUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22CF09A23464A11003751E1 /* MoodUiUtil.swift */; };
 		A231CEBD23415CE500CCE625 /* DependencyInjection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A231CEBC23415CE500CCE625 /* DependencyInjection.framework */; };
 		A231CEC523424F2F00CCE625 /* CommonInjectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A231CEC423424F2F00CCE625 /* CommonInjectionProvider.swift */; };
+		A287DEA225804F63000B8166 /* FatigueUiUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A287DEA125804F63000B8166 /* FatigueUiUtil.swift */; };
 		A29CCF3F24D2307B00218CE2 /* WeakRef.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29CCF3E24D2307B00218CE2 /* WeakRef.swift */; };
 		A29F689C233EA4B700B8DFDB /* SearchUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29F6894233EA4B600B8DFDB /* SearchUtil.swift */; };
 		A29F689D233EA4B700B8DFDB /* IOUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29F6895233EA4B600B8DFDB /* IOUtil.swift */; };
@@ -45,6 +46,7 @@
 		A22CF09A23464A11003751E1 /* MoodUiUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodUiUtil.swift; sourceTree = "<group>"; };
 		A231CEBC23415CE500CCE625 /* DependencyInjection.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DependencyInjection.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A231CEC423424F2F00CCE625 /* CommonInjectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonInjectionProvider.swift; sourceTree = "<group>"; };
+		A287DEA125804F63000B8166 /* FatigueUiUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FatigueUiUtil.swift; sourceTree = "<group>"; };
 		A29CCF3E24D2307B00218CE2 /* WeakRef.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakRef.swift; sourceTree = "<group>"; };
 		A29F6894233EA4B600B8DFDB /* SearchUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchUtil.swift; sourceTree = "<group>"; };
 		A29F6895233EA4B600B8DFDB /* IOUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IOUtil.swift; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 				A29F6899233EA4B600B8DFDB /* UserDefaultsUtil.swift */,
 				A2FF5752234524AC0018255C /* UiUtil.swift */,
 				A22CF09A23464A11003751E1 /* MoodUiUtil.swift */,
+				A287DEA125804F63000B8166 /* FatigueUiUtil.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -305,6 +308,7 @@
 				A29F68B1233EA8D400B8DFDB /* NotificationName.swift in Sources */,
 				A29CCF3F24D2307B00218CE2 /* WeakRef.swift in Sources */,
 				A2B88B68233EA04F00E37728 /* Signpost.swift in Sources */,
+				A287DEA225804F63000B8166 /* FatigueUiUtil.swift in Sources */,
 				A2B88B64233EA04F00E37728 /* UserDefaultKeys.swift in Sources */,
 				A29F68B3233EA94700B8DFDB /* UserInfoKey.swift in Sources */,
 				A2FF5753234524AD0018255C /* UiUtil.swift in Sources */,

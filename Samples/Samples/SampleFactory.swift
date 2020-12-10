@@ -17,6 +17,7 @@ public protocol SampleFactory {
 	func healthKitTypes() -> [HealthKitSample.Type]
 
 	func activity(using transaction: Transaction) throws -> Activity
+	func fatigue(using transaction: Transaction) throws -> Fatigue
 	func heartRate(_ value: Double, _ date: Date) -> HeartRate
 	func heartRate(value: Double) -> HeartRate
 	func heartRate(_ sample: HKQuantitySample) -> HeartRate
@@ -30,6 +31,7 @@ public final class SampleFactoryImpl: SampleFactory {
 		Activity.self,
 		BloodPressure.self,
 		BodyMassIndex.self,
+		FatigueImpl.self,
 		HeartRate.self,
 		LeanBodyMass.self,
 		MedicationDose.self,
@@ -60,6 +62,10 @@ public final class SampleFactoryImpl: SampleFactory {
 
 	public final func activity(using transaction: Transaction) throws -> Activity {
 		try transaction.new(Activity.self)
+	}
+
+	public final func fatigue(using transaction: Transaction) throws -> Fatigue {
+		try transaction.new(FatigueImpl.self)
 	}
 
 	public final func heartRate(_ value: Double, _ date: Date) -> HeartRate {

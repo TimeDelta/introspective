@@ -1,5 +1,5 @@
 //
-//  MoodNoteViewController.swift
+//  NoteViewController.swift
 //  Introspective
 //
 //  Created by Bryan Nova on 8/11/18.
@@ -11,12 +11,7 @@ import UIKit
 import Common
 import DependencyInjection
 
-final class MoodNoteViewController: UIViewController {
-	// MARK: - Static Variables
-
-	private typealias Me = MoodNoteViewController
-	public static let noteSavedNotification = Notification.Name("moodNoteSaved")
-
+final class NoteViewController: UIViewController {
 	// MARK: - IBOutlets
 
 	@IBOutlet final var textView: UITextView!
@@ -24,6 +19,8 @@ final class MoodNoteViewController: UIViewController {
 	// MARK: - Instance Variables
 
 	public final var note: String!
+	/// Must be set before view loads
+	public final var noteSavedNotification: Notification.Name!
 
 	// MARK: - UIViewController Overrides
 
@@ -33,20 +30,22 @@ final class MoodNoteViewController: UIViewController {
 			textView.text = note
 		}
 
-		injected(UiUtil.self)
-			.addSaveButtonToKeyboardFor(textView, target: self, action: #selector(saveClicked))
+		injected(UiUtil.self).addSaveButtonToKeyboardFor(
+			textView,
+			target: self,
+			action: #selector(saveTapped)
+		)
 		textView.becomeFirstResponder()
 	}
 
 	// MARK: - Actions
 
-	@objc private final func saveClicked() {
-		NotificationCenter.default.post(
-			name: Me.noteSavedNotification,
-			object: self,
-			userInfo: info([
-				.text: textView.text,
-			])
+	@objc private final func saveTapped() {
+		post(
+			noteSavedNotification,
+			userInfo: [
+				.text: textView.text as Any,
+			]
 		)
 		dismiss(animated: false, completion: nil)
 	}

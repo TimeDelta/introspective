@@ -1,5 +1,5 @@
 //
-//  MoodRatingTableViewCell.swift
+//  ContinuousMoodRatingTableViewCell.swift
 //  Introspective
 //
 //  Created by Bryan Nova on 12/10/18.
@@ -13,7 +13,7 @@ import DependencyInjection
 import Settings
 import UIExtensions
 
-public final class MoodRatingTableViewCell: UITableViewCell {
+public final class ContinuousMoodRatingTableViewCell: UITableViewCell {
 	// MARK: - IBOutlets
 
 	@IBOutlet final var ratingSlider: UISlider!

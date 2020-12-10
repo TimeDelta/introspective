@@ -21,7 +21,7 @@ final class RecordMoodTableViewCellUnitTests: UnitTest {
 	private var ratingButton: UIButton!
 	private var feedbackLabel: UILabel!
 
-	private var cell: RecordMoodTableViewCell!
+	private var cell: RecordContinuousMoodTableViewCell!
 	private var mockMood: MoodMock!
 
 	override func setUp() {
@@ -47,7 +47,7 @@ final class RecordMoodTableViewCellUnitTests: UnitTest {
 		ratingButton = UIButton()
 		feedbackLabel = UILabel()
 
-		cell = RecordMoodTableViewCell()
+		cell = RecordContinuousMoodTableViewCell()
 		cell.ratingSlider = ratingSlider
 		cell.addNoteButton = addNoteButton
 		cell.doneButton = doneButton

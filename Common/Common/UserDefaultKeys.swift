@@ -21,6 +21,7 @@ public enum UserDefaultKey: String {
 	case activityEnabledOnTimeline
 	case bloodPressureEnabledOnTimeline
 	case bodyMassIndexEnabledOnTimeline
+	case fatigueEnabledOnTimeline
 	case heartRateEnabledOnTimeline
 	case leanBodyMassEnabledOnTimeline
 	case medicationDoseEnabledOnTimeline

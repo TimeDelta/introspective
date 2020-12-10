@@ -29,6 +29,7 @@ public enum UserInfoKey: StringLiteralType, Hashable, CustomStringConvertible {
 	case dose = "dose"
 	case duration = "duration"
 	case error = "error"
+	case fatigue = "fatigue"
 	case frequency = "frequency"
 	case fromDate = "fromDate"
 	case graphType = "graphType"

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		6AF997F9CF3F11C8A423F271 /* Pods_SampleFetchers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F25BB2B82F7872272C6BDA /* Pods_SampleFetchers.framework */; };
 		A21B1CBE2505BFAA00169CA1 /* SampleFetchersInjectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21B1CBD2505BFAA00169CA1 /* SampleFetchersInjectionProvider.swift */; };
+		A287DED925816370000B8166 /* FatigueSampleFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A287DED825816370000B8166 /* FatigueSampleFetcher.swift */; };
 		A2A2433925055B5000FE18CA /* SampleFetchers.h in Headers */ = {isa = PBXBuildFile; fileRef = A2A2433725055B5000FE18CA /* SampleFetchers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A2A2434625055BF900FE18CA /* DependencyInjection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2A2434525055BF900FE18CA /* DependencyInjection.framework */; };
 		A2A2434A25055C0600FE18CA /* Samples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2A2434925055C0600FE18CA /* Samples.framework */; };
@@ -36,6 +37,7 @@
 		27779F8FE2911FE886249515 /* Pods-SampleFetchers.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SampleFetchers.debug.xcconfig"; path = "Target Support Files/Pods-SampleFetchers/Pods-SampleFetchers.debug.xcconfig"; sourceTree = "<group>"; };
 		396C110F754257C264AAE79E /* Pods-SampleFetchers.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SampleFetchers.release.xcconfig"; path = "Target Support Files/Pods-SampleFetchers/Pods-SampleFetchers.release.xcconfig"; sourceTree = "<group>"; };
 		A21B1CBD2505BFAA00169CA1 /* SampleFetchersInjectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleFetchersInjectionProvider.swift; sourceTree = "<group>"; };
+		A287DED825816370000B8166 /* FatigueSampleFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FatigueSampleFetcher.swift; sourceTree = "<group>"; };
 		A2A2433425055B5000FE18CA /* SampleFetchers.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SampleFetchers.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2A2433725055B5000FE18CA /* SampleFetchers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SampleFetchers.h; sourceTree = "<group>"; };
 		A2A2433825055B5000FE18CA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 				A2A2434025055B6F00FE18CA /* ActivitySampleFetcher.swift */,
 				A2A2434225055B6F00FE18CA /* BloodPressureSampleFetcher.swift */,
 				A2A2434F25055CBA00FE18CA /* BodyMassIndexSampleFetcher.swift */,
+				A287DED825816370000B8166 /* FatigueSampleFetcher.swift */,
 				A2A2435125055CCE00FE18CA /* HeartRateSampleFetcher.swift */,
 				A2A2435325055CDF00FE18CA /* LeanBodyMassSampleFetcher.swift */,
 				A2A2435525055CF100FE18CA /* MedicationDoseSampleFetcher.swift */,
@@ -265,6 +268,7 @@
 				A2A2435C25055D2700FE18CA /* SexualActivitySampleFetcher.swift in Sources */,
 				A2A2435825055D0500FE18CA /* MoodSampleFetcher.swift in Sources */,
 				A2A2436225055D8B00FE18CA /* SingleDateHealthKitSampleFetcher.swift in Sources */,
+				A287DED925816370000B8166 /* FatigueSampleFetcher.swift in Sources */,
 				A2A2436F250565FD00FE18CA /* BloodPressureSampleFetcher.swift in Sources */,
 				A2A2435E25055D3500FE18CA /* SleepSampleFetcher.swift in Sources */,
 			);

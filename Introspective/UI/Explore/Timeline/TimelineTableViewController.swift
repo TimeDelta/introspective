@@ -78,6 +78,8 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			injected(UserDefaultsUtil.self).bool(forKey: .bloodPressureEnabledOnTimeline),
 		enabledString(for: BodyMassIndex.self):
 			injected(UserDefaultsUtil.self).bool(forKey: .bodyMassIndexEnabledOnTimeline),
+		enabledString(for: FatigueImpl.self):
+			injected(UserDefaultsUtil.self).bool(forKey: .fatigueEnabledOnTimeline),
 		enabledString(for: HeartRate.self):
 			injected(UserDefaultsUtil.self).bool(forKey: .heartRateEnabledOnTimeline),
 		enabledString(for: LeanBodyMass.self):
@@ -447,6 +449,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			appendBodyMassIndexEvents(for: bodyMassIndex, to: &events)
 			return
 		}
+		if let fatigue = sample as? Fatigue {
+			appendFatigueEvents(for: fatigue, to: &events)
+			return
+		}
 		if let heartRate = sample as? HeartRate {
 			appendHeartRateEvents(for: heartRate, to: &events)
 			return
@@ -495,6 +501,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 
 	private func appendBodyMassIndexEvents(for bodyMassIndex: BodyMassIndex, to events: inout [Event]) {
 		events.append(BodyMassIndexEvent(for: bodyMassIndex))
+	}
+
+	private func appendFatigueEvents(for fatigue: Fatigue, to events: inout [Event]) {
+		events.append(FatigueEvent(for: fatigue))
 	}
 
 	private func appendHeartRateEvents(for heartRate: HeartRate, to events: inout [Event]) {
@@ -659,6 +669,27 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 				"⚖️ Body Mass Index: " + bodyMassIndex.description,
 			]
 			super.init(at: bodyMassIndex.timestamp, for: bodyMassIndex, descriptions: descriptions)
+		}
+	}
+
+	// MARK: Fatigue Events
+
+	private final class FatigueEvent: Event {
+		override var delegate: TimelineTableViewCellDelegate {
+			FatigueTimelineTableViewCellDelegate()
+		}
+
+		init(for fatigue: Fatigue) {
+			let min = injected(FatigueUiUtil.self).valueToString(fatigue.minRating)
+			let max = injected(FatigueUiUtil.self).valueToString(fatigue.maxRating)
+			let scaleText = min + " - " + max
+			var descriptions = [
+				"😫 Fatigue: " + injected(MoodUiUtil.self).valueToString(fatigue.rating) + " (scale of \(scaleText))",
+			]
+			if let note = fatigue.note, !note.isEmpty {
+				descriptions.append("- Note: " + note)
+			}
+			super.init(at: fatigue.date, for: fatigue, descriptions: descriptions)
 		}
 	}
 

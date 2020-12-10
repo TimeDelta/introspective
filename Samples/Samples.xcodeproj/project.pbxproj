@@ -38,6 +38,8 @@
 		A22D627A234398D90023470F /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A22D6279234398D90023470F /* Common.framework */; };
 		A22D627C234398DD0023470F /* DependencyInjection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A22D627B234398DD0023470F /* DependencyInjection.framework */; };
 		A26BD7A2249D3DDD0083C9FC /* MedicationDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26BD7A1249D3DDD0083C9FC /* MedicationDAO.swift */; };
+		A287DEAE2580615E000B8166 /* FatigueDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A287DEAD2580615E000B8166 /* FatigueDAO.swift */; };
+		A287DEB325806183000B8166 /* Fatigue.swift in Sources */ = {isa = PBXBuildFile; fileRef = A287DEB225806183000B8166 /* Fatigue.swift */; };
 		A29700FD2344FE42004B97E6 /* ActivityDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29700FB2344FE41004B97E6 /* ActivityDAO.swift */; };
 		A29E1C452343AC6A008B4AE9 /* DataExport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A29E1C442343AC6A008B4AE9 /* DataExport.framework */; };
 		A29E1C472343AC73008B4AE9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A29E1C462343AC73008B4AE9 /* CoreData.framework */; };
@@ -99,6 +101,8 @@
 		A22D6279234398D90023470F /* Common.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Common.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A22D627B234398DD0023470F /* DependencyInjection.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DependencyInjection.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A26BD7A1249D3DDD0083C9FC /* MedicationDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDAO.swift; sourceTree = "<group>"; };
+		A287DEAD2580615E000B8166 /* FatigueDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FatigueDAO.swift; sourceTree = "<group>"; };
+		A287DEB225806183000B8166 /* Fatigue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fatigue.swift; sourceTree = "<group>"; };
 		A29700FB2344FE41004B97E6 /* ActivityDAO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityDAO.swift; sourceTree = "<group>"; };
 		A29E1C442343AC6A008B4AE9 /* DataExport.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DataExport.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A29E1C462343AC73008B4AE9 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -204,6 +208,7 @@
 				A22D6246234398AE0023470F /* Mood.swift */,
 				A2AF1FF02343C63900E04517 /* Tag.swift */,
 				A2A0E75A2498FF24006C0A6E /* SearchableCoreDataSample.swift */,
+				A287DEB225806183000B8166 /* Fatigue.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -249,6 +254,7 @@
 			children = (
 				A2A24370250566BD00FE18CA /* SingleDateSampleDAO.swift */,
 				A29700FB2344FE41004B97E6 /* ActivityDAO.swift */,
+				A287DEAD2580615E000B8166 /* FatigueDAO.swift */,
 				A26BD7A1249D3DDD0083C9FC /* MedicationDAO.swift */,
 				A2034F1624A700F200557F69 /* MoodDAO.swift */,
 				A2034F8024ADB58700557F69 /* TagDAO.swift */,
@@ -400,12 +406,14 @@
 				A2AF1FE22343C27C00E04517 /* MedicationExporter.swift in Sources */,
 				A22D625A234398AF0023470F /* AnySample.swift in Sources */,
 				A22D626E234398AF0023470F /* HealthKitSample.swift in Sources */,
+				A287DEAE2580615E000B8166 /* FatigueDAO.swift in Sources */,
 				A22D6277234398C40023470F /* SamplesInjectionProvider.swift in Sources */,
 				A22D6268234398AF0023470F /* HeartRate.swift in Sources */,
 				A22D6270234398AF0023470F /* HealthKitQuantitySample.swift in Sources */,
 				A22D6265234398AF0023470F /* CoreDataSample.swift in Sources */,
 				A22D6273234398AF0023470F /* Sample.swift in Sources */,
 				A22D6275234398AF0023470F /* SampleFactory.swift in Sources */,
+				A287DEB325806183000B8166 /* Fatigue.swift in Sources */,
 				A2AF1FDB2343C12100E04517 /* TagsAttribute.swift in Sources */,
 				A22D626F234398AF0023470F /* Sleep.swift in Sources */,
 				A22D625F234398AF0023470F /* Medication.swift in Sources */,

@@ -20,7 +20,7 @@ import Common
 ///
 /// - Note: It is impossible to set up the dependency injection system
 ///         properly before the app starts, which means that the record
-///         screen will trigger the awakeFromNib on `RecordMoodTableViewCell`
+///         screen will trigger the awakeFromNib on `RecordContinuousMoodTableViewCell`
 ///         or `RecordDiscreteMoodTableViewCell` immediately after app finishes
 ///         loading, which accesses the Settings object, requiring an
 ///         instantiation of Database in order to create a settings object.
@@ -47,6 +47,21 @@ public final class DummySettings: Settings {
 	public final let scaleMoodsOnImport: Bool = true
 	public final func setScaleMoodsOnImport(_: Bool) {
 		log.error("tried to set ScaleMoodsOnImport")
+	}
+
+	public final let minFatigue: Double = 2
+	public final func setMinFatigue(_: Double) {
+		log.error("tried to set MinFatigue")
+	}
+
+	public final let maxFatigue: Double = 2
+	public final func setMaxFatigue(_: Double) {
+		log.error("tried to set MaxFatigue")
+	}
+
+	public final let discreteFatigue: Bool = true
+	public final func setDiscreteFatigue(_: Bool) {
+		log.error("tried to set DiscreteFatigue")
 	}
 
 	public final let autoIgnoreEnabled: Bool = true

@@ -292,14 +292,18 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				cell.activity = (sample as! Activity)
 				return cell
 			case is BloodPressure:
-				let cell = (
-					tableView
-						.dequeueReusableCell(
-							withIdentifier: "bloodPressureCell",
-							for: indexPath
-						) as! BloodPressureTableViewCell
-				)
+				let cell = (tableView.dequeueReusableCell(
+					withIdentifier: "bloodPressureCell",
+					for: indexPath
+				) as! BloodPressureTableViewCell)
 				cell.sample = (sample as! BloodPressure)
+				return cell
+			case is Fatigue:
+				let cell = (tableView.dequeueReusableCell(
+					withIdentifier: "fatigueCell",
+					for: indexPath
+				) as! FatigueTableViewCell)
+				cell.fatigue = (sample as! Fatigue)
 				return cell
 			case is HealthKitQuantitySample:
 				let cell = (tableView.dequeueReusableCell(

@@ -14,6 +14,7 @@ public class CommonInjectionProvider: InjectionProvider {
 
 	private static let asyncUtil = AsyncUtilImpl()
 	private static let calendarUtil = CalendarUtilImpl()
+	private static let fatigueUiUtil = FatigueUiUtilImpl()
 	private static let ioUtil = IOUtilImpl()
 	private static let moodUiUtil = MoodUiUtilImpl()
 	private static let notificationUtil = NotificationUtilImpl()
@@ -26,6 +27,7 @@ public class CommonInjectionProvider: InjectionProvider {
 	public let types: [Any.Type] = [
 		AsyncUtil.self,
 		CalendarUtil.self,
+		FatigueUiUtil.self,
 		IOUtil.self,
 		MoodUiUtil.self,
 		NotificationUtil.self,
@@ -44,6 +46,8 @@ public class CommonInjectionProvider: InjectionProvider {
 			return Me.asyncUtil as! Type
 		case is CalendarUtil.Protocol:
 			return Me.calendarUtil as! Type
+		case is FatigueUiUtil.Protocol:
+			return Me.fatigueUiUtil as! Type
 		case is IOUtil.Protocol:
 			return Me.ioUtil as! Type
 		case is MoodUiUtil.Protocol:

@@ -36,6 +36,10 @@ public enum NotificationName: StringLiteralType {
 
 	case moodRatingChanged = "moodRatingChanged"
 
+	// MARK: - Fatigue Value Changes
+
+	case fatigueRatingChanged = "fatigueeRatingChanged"
+
 	// MARK: - General UI
 
 	case presentView = "presentView"

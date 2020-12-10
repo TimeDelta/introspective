@@ -18,7 +18,7 @@ public enum Setting {
 	/// The minimum rating value for a mood.
 	/// - Tag: minMood
 	case minMood
-	/// The minimum rating value for a mood.
+	/// The maximum rating value for a mood.
 	/// - Tag: maxMood
 	case maxMood
 	/// Whether or not to use discrete mood ratings.
@@ -27,6 +27,16 @@ public enum Setting {
 	/// Whether or not imported mood ratings should automatically be scaled to the current min / max ratings
 	/// - Tag: scaleMoodsOnImport
 	case scaleMoodsOnImport
+
+	/// The minimum rating value for a fatigue entry.
+	/// - Tag: minFatigue
+	case minFatigue
+	/// The maximum rating value for a fatigue entry.
+	/// - Tag: maxFatigue
+	case maxFatigue
+	/// Whether or not to use discrete fatigue ratings.
+	/// - Tag: discreteFatigue
+	case discreteFatigue
 
 	/// Whether or not to ignore stopped activities with duration less than [autoIgnoreSeconds](x-source-tag://autoIgnoreSeconds).
 	/// - Tag: autoIgnoreEnabled
@@ -66,6 +76,18 @@ public protocol Settings: CoreDataObject {
 	/// - See [scaleMoodsOnImport](x-source-tag://scaleMoodsOnImport)
 	var scaleMoodsOnImport: Bool { get }
 	func setScaleMoodsOnImport(_ value: Bool)
+
+	/// - See [minFatigue](x-source-tag://minFatigue)
+	var minFatigue: Double { get }
+	func setMinFatigue(_ value: Double)
+
+	/// - See [maxFatigue](x-source-tag://maxFatigue)
+	var maxFatigue: Double { get }
+	func setMaxFatigue(_ value: Double)
+
+	/// - See [discreteFatigue](x-source-tag://discreteFatigue)
+	var discreteFatigue: Bool { get }
+	func setDiscreteFatigue(_ value: Bool)
 
 	/// - See [autoIgnoreEnabled](x-source-tag://autoIgnoreEnabled)
 	var autoIgnoreEnabled: Bool { get }
@@ -153,6 +175,47 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		}
 	}
 
+	// MARK: - Fatigue
+
+	// MARK: Min Fatigue
+
+	private final var newMinFatigue: Double?
+	public final var minFatigue: Double {
+		newMinFatigue ?? storedMinFatigue
+	}
+
+	public final func setMinFatigue(_ value: Double) {
+		if value != storedMinFatigue {
+			newMinFatigue = value
+		}
+	}
+
+	// MARK: Max Fatigue
+
+	private final var newMaxFatigue: Double?
+	public final var maxFatigue: Double {
+		newMaxFatigue ?? storedMaxFatigue
+	}
+
+	public final func setMaxFatigue(_ value: Double) {
+		if value != storedMaxFatigue {
+			newMaxFatigue = value
+		}
+	}
+
+	// MARK: Discrete Fatigue Ratings
+
+	private final var newDiscreteFatigue: Bool?
+	public final var discreteFatigue: Bool {
+		newDiscreteFatigue ?? storedDiscreteFatigue
+	}
+
+	public final func setDiscreteFatigue(_ value: Bool) {
+		if value != storedDiscreteFatigue {
+			newDiscreteFatigue = value
+		}
+	}
+
 	// MARK: - Activities
 
 	// MARK: Auto Ignore Enabled
@@ -233,6 +296,9 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		case .maxMood: return newMaxMood != nil
 		case .discreteMoods: return newDiscreteMoods != nil
 		case .scaleMoodsOnImport: return newScaleMoodsOnImport != nil
+		case .minFatigue: return newMinFatigue != nil
+		case .maxFatigue: return newMaxFatigue != nil
+		case .discreteFatigue: return newDiscreteFatigue != nil
 		case .autoIgnoreEnabled: return newAutoIgnoreEnabled != nil
 		case .autoIgnoreSeconds: return newAutoIgnoreSeconds != nil
 		case .autoTrimWhitespaceInActivityNotes: return newAutoTrimWhitespaceInActivityNotes != nil
@@ -246,6 +312,10 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		newMaxMood = nil
 		newDiscreteMoods = nil
 		newScaleMoodsOnImport = nil
+
+		newMinFatigue = nil
+		newMaxFatigue = nil
+		newDiscreteFatigue = nil
 
 		newAutoIgnoreEnabled = nil
 		newAutoIgnoreSeconds = nil
@@ -262,6 +332,10 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		storedMaxMood = maxMood
 		storedDiscreteMoods = discreteMoods
 		storedScaleMoodsOnImport = scaleMoodsOnImport
+
+		storedMinFatigue = minFatigue
+		storedMaxFatigue = maxFatigue
+		storedDiscreteFatigue = discreteFatigue
 
 		storedAutoIgnoreEnabled = autoIgnoreEnabled
 		storedAutoIgnoreSeconds = autoIgnoreSeconds
@@ -286,6 +360,10 @@ public extension SettingsImpl {
 	@NSManaged fileprivate var storedMaxMood: Double
 	@NSManaged fileprivate var storedDiscreteMoods: Bool
 	@NSManaged fileprivate var storedScaleMoodsOnImport: Bool
+
+	@NSManaged fileprivate var storedMinFatigue: Double
+	@NSManaged fileprivate var storedMaxFatigue: Double
+	@NSManaged fileprivate var storedDiscreteFatigue: Bool
 
 	@NSManaged fileprivate var storedAutoIgnoreEnabled: Bool
 	@NSManaged fileprivate var storedAutoIgnoreSeconds: Int

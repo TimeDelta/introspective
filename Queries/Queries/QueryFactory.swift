@@ -21,6 +21,8 @@ public protocol QueryFactory {
 	func bloodPressureQuery(_ parts: [BooleanExpressionPart]) throws -> BloodPressureQuery
 	func bmiQuery() -> BodyMassIndexQuery
 	func bmiQuery(_ parts: [BooleanExpressionPart]) throws -> BodyMassIndexQuery
+	func fatigueQuery() -> FatigueQuery
+	func fatigueQuery(_ parts: [BooleanExpressionPart]) throws -> FatigueQuery
 	func heartRateQuery() -> HeartRateQuery
 	func heartRateQuery(_ parts: [BooleanExpressionPart]) throws -> HeartRateQuery
 	func leanBodyMassQuery() -> LeanBodyMassQuery
@@ -63,6 +65,14 @@ public final class QueryFactoryImpl: QueryFactory {
 
 	public final func bmiQuery(_ parts: [BooleanExpressionPart]) throws -> BodyMassIndexQuery {
 		try BodyMassIndexQueryImpl(parts: parts)
+	}
+
+	public final func fatigueQuery() -> FatigueQuery {
+		FatigueQueryImpl()
+	}
+
+	public final func fatigueQuery(_ parts: [BooleanExpressionPart]) throws -> FatigueQuery {
+		try FatigueQueryImpl(parts: parts)
 	}
 
 	public final func heartRateQuery() -> HeartRateQuery {

@@ -1,9 +1,9 @@
 //
-//  RecordDiscreteMoodTableViewCell.swift
+//  RecordDiscreteFatigueTableViewCell.swift
 //  Introspective
 //
-//  Created by Bryan Nova on 3/19/19.
-//  Copyright © 2019 Bryan Nova. All rights reserved.
+//  Created by Bryan Nova on 12/5/20.
+//  Copyright © 2020 Bryan Nova. All rights reserved.
 //
 
 import Presentr
@@ -15,18 +15,18 @@ import Persistence
 import Samples
 import Settings
 
-public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
+public final class RecordDiscreteFatigueTableViewCell: UITableViewCell {
 	// MARK: - Static Variables
 
-	private typealias Me = RecordDiscreteMoodTableViewCell
+	private typealias Me = RecordDiscreteFatigueTableViewCell
 
 	private static let notePresenter: Presentr = injected(UiUtil.self)
 		.customPresenter(width: .custom(size: 300), height: .custom(size: 200), center: .topCenter)
 	private static let ratingPresenter: Presentr = injected(UiUtil.self)
 		.customPresenter(width: .custom(size: 300), height: .custom(size: 70), center: .topCenter)
 
-	private static let ratingChanged = Notification.Name("moodRatingChanged")
-	private static let noteChangedNotification = Notification.Name("moodNoteChanged")
+	private static let ratingChanged = Notification.Name("fatigueRatingChanged")
+	private static let noteChangedNotification = Notification.Name("fatigueNoteChanged")
 
 	private static let log = Log()
 
@@ -35,14 +35,14 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 	@IBOutlet final var doneButton: UIButton!
 	@IBOutlet final var addNoteButton: UIButton!
 	@IBOutlet final var scrollView: UIScrollView!
-	@IBOutlet final var moodContentView: UIView!
+	@IBOutlet final var fatigueContentView: UIView!
 	@IBOutlet final var feedbackLabel: UILabel!
 
 	// MARK: - Instance Variables
 
 	/// This is not made private solely for testing purposes
 	final var note: String?
-	private final var rating: Int = Int(injected(Settings.self).maxMood)
+	private final var rating: Int = Int(injected(Settings.self).maxFatigue)
 	private final var ratingButtons = [UIButton]()
 
 	private final let spacingBetweenRatingButtons: CGFloat = 5
@@ -53,8 +53,8 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 		super.awakeFromNib()
 		reset()
 		observe(selector: #selector(noteSaved), name: Me.noteChangedNotification)
-		observe(selector: #selector(resetAndUpdateUI), name: MoodUiUtilImpl.minRatingChanged)
-		observe(selector: #selector(resetAndUpdateUI), name: MoodUiUtilImpl.maxRatingChanged)
+		observe(selector: #selector(resetAndUpdateUI), name: FatigueUiUtilImpl.minRatingChanged)
+		observe(selector: #selector(resetAndUpdateUI), name: FatigueUiUtilImpl.maxRatingChanged)
 	}
 
 	public final override func layoutSubviews() {
@@ -81,19 +81,18 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 	@IBAction final func doneButtonPressed(_: Any) {
 		do {
 			let transaction = injected(Database.self).transaction()
-			let mood = try injected(SampleFactory.self).mood(using: transaction)
-			mood.date = Date()
-			mood.rating = Double(rating)
-			mood.note = note
-			mood.minRating = injected(Settings.self).minMood
-			mood.maxRating = injected(Settings.self).maxMood
-			mood.setSource(.introspective)
+			let fatigue = try injected(SampleFactory.self).fatigue(using: transaction)
+			fatigue.date = Date()
+			fatigue.rating = Double(rating)
+			fatigue.note = note
+			fatigue.minRating = injected(Settings.self).minFatigue
+			fatigue.maxRating = injected(Settings.self).maxFatigue
 			try transaction.commit()
 
-			feedbackLabel.text = injected(MoodUiUtil.self).feedbackMessage(
+			feedbackLabel.text = injected(FatigueUiUtil.self).feedbackMessage(
 				for: Double(rating),
-				min: mood.minRating,
-				max: mood.maxRating
+				min: fatigue.minRating,
+				max: fatigue.maxRating
 			)
 			feedbackLabel.isHidden = false
 			Timer.scheduledTimer(
@@ -107,22 +106,21 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 			reset()
 			updateUI()
 		} catch {
-			Me.log.error("Failed to create or save mood: %@", errorInfo(error))
+			Me.log.error("Failed to create or save fatigue: %@", errorInfo(error))
 			NotificationCenter.default.post(
 				name: RecordDataTableViewController.showErrorMessage,
 				object: self,
 				userInfo: info([
-					.title: "Failed to save mood rating",
+					.title: "Failed to save fatigue rating",
 					.error: error,
 				])
 			)
 		}
 	}
 
-	@IBAction final func presentMoodNoteController(_: Any) {
+	@IBAction final func presentFatigueNoteController(_: Any) {
 		let controller: NoteViewController = viewController(named: "recordNote", fromStoryboard: "RecordData")
 		controller.note = note ?? ""
-		controller.noteSavedNotification = Me.noteChangedNotification
 		NotificationCenter.default.post(
 			name: RecordDataTableViewController.showViewController,
 			object: self,
@@ -133,7 +131,7 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 		)
 	}
 
-	@objc private final func moodRatingButtonPressed(_ button: UIButton) {
+	@objc private final func fatigueRatingButtonPressed(_ button: UIButton) {
 		if let title = button.currentTitle {
 			if let rating = Int(title) {
 				let oldRatingButton = getRatingButton(forRating: self.rating)
@@ -147,7 +145,7 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 				Me.log.error("Unable to get rating from button title")
 			}
 		} else {
-			Me.log.error("Missing title for mood rating button")
+			Me.log.error("Missing title for fatigue rating button")
 		}
 	}
 
@@ -161,8 +159,8 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 	private final func reset() {
 		note = nil
 		addNoteButton.setTitle("Add Note", for: .normal)
-		let min = injected(Settings.self).minMood
-		let max = injected(Settings.self).maxMood
+		let min = injected(Settings.self).minFatigue
+		let max = injected(Settings.self).maxFatigue
 		rating = Int((max - min) / 2 + min)
 	}
 
@@ -171,46 +169,46 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 	}
 
 	private final func updateUI() {
-		removeExistingMoodButtons()
+		removeExistingFatigueButtons()
 
-		let min = injected(Settings.self).minMood
-		let max = injected(Settings.self).maxMood
+		let min = injected(Settings.self).minFatigue
+		let max = injected(Settings.self).maxFatigue
 		var lastView: UIView?
 		for i in Int(min) ... Int(max) {
 			let ratingButton = createButtonForRating(i)
 			ratingButtons.append(ratingButton)
-			moodContentView.addSubview(ratingButton)
+			fatigueContentView.addSubview(ratingButton)
 			addConstraintsForRatingButton(ratingButton, lastView)
 			lastView = ratingButton
 		}
 		if let lastView = lastView {
-			moodContentView.trailingAnchor.constraint(equalTo: lastView.trailingAnchor).isActive = true
+			fatigueContentView.trailingAnchor.constraint(equalTo: lastView.trailingAnchor).isActive = true
 		}
 		let ratingButton = getRatingButton(forRating: rating)
 		selectRatingButton(ratingButton)
 	}
 
-	private final func removeExistingMoodButtons() {
+	private final func removeExistingFatigueButtons() {
 		ratingButtons = [UIButton]()
-		for subView in moodContentView.subviews {
-			moodContentView.willRemoveSubview(subView)
+		for subView in fatigueContentView.subviews {
+			fatigueContentView.willRemoveSubview(subView)
 			subView.removeFromSuperview()
 		}
 	}
 
 	private final func createButtonForRating(_ rating: Int) -> UIButton {
-		let min = injected(Settings.self).minMood
-		let max = injected(Settings.self).maxMood
+		let min = injected(Settings.self).minFatigue
+		let max = injected(Settings.self).maxFatigue
 		let button = UIButton(type: .custom)
-		button.addTarget(self, action: #selector(moodRatingButtonPressed), for: .touchUpInside)
-		button.backgroundColor = injected(MoodUiUtil.self)
-			.colorForMood(rating: Double(rating), minRating: min, maxRating: max)
+		button.addTarget(self, action: #selector(fatigueRatingButtonPressed), for: .touchUpInside)
+		button.backgroundColor = injected(FatigueUiUtil.self)
+			.colorForFatigue(rating: Double(rating), minRating: min, maxRating: max)
 		let titleColor = button.backgroundColor?.highContrast()
 		button.setTitleColor(titleColor, for: .normal)
 		button.setTitle("\(rating)", for: .normal)
 		button.translatesAutoresizingMaskIntoConstraints = false
-		button.accessibilityIdentifier = "set mood to \(rating) button"
-		button.accessibilityLabel = "set mood to \(rating) button"
+		button.accessibilityIdentifier = "set fatigue to \(rating) button"
+		button.accessibilityLabel = "set fatigue to \(rating) button"
 		return button
 	}
 
@@ -221,34 +219,34 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 				constant: spacingBetweenRatingButtons
 			).isActive = true
 		} else {
-			ratingButton.leadingAnchor.constraint(equalTo: moodContentView.leadingAnchor).isActive = true
+			ratingButton.leadingAnchor.constraint(equalTo: fatigueContentView.leadingAnchor).isActive = true
 		}
 		widthConstraint(for: ratingButton, width: getBaseWidth()).isActive = true
-		ratingButton.topAnchor.constraint(equalTo: moodContentView.topAnchor, constant: 5).isActive = true
-		ratingButton.bottomAnchor.constraint(equalTo: moodContentView.bottomAnchor, constant: -5).isActive = true
+		ratingButton.topAnchor.constraint(equalTo: fatigueContentView.topAnchor, constant: 5).isActive = true
+		ratingButton.bottomAnchor.constraint(equalTo: fatigueContentView.bottomAnchor, constant: -5).isActive = true
 	}
 
 	private final func getRatingButton(forRating rating: Int) -> UIButton {
-		let buttonIndex = rating - Int(injected(Settings.self).minMood)
+		let buttonIndex = rating - Int(injected(Settings.self).minFatigue)
 		return ratingButtons[buttonIndex]
 	}
 
 	private final func selectRatingButton(_ ratingButton: UIButton) {
 		removeTopBottomAndWidthConstraintsFor(ratingButton)
 		widthConstraint(for: ratingButton, width: getBaseWidth() + spacingBetweenRatingButtons).isActive = true
-		ratingButton.topAnchor.constraint(equalTo: moodContentView.topAnchor).isActive = true
-		ratingButton.bottomAnchor.constraint(equalTo: moodContentView.bottomAnchor).isActive = true
+		ratingButton.topAnchor.constraint(equalTo: fatigueContentView.topAnchor).isActive = true
+		ratingButton.bottomAnchor.constraint(equalTo: fatigueContentView.bottomAnchor).isActive = true
 	}
 
 	private final func deselectRatingButton(_ ratingButton: UIButton) {
 		removeTopBottomAndWidthConstraintsFor(ratingButton)
 		widthConstraint(for: ratingButton, width: getBaseWidth()).isActive = true
-		ratingButton.topAnchor.constraint(equalTo: moodContentView.topAnchor, constant: 5).isActive = true
-		ratingButton.bottomAnchor.constraint(equalTo: moodContentView.bottomAnchor, constant: -5).isActive = true
+		ratingButton.topAnchor.constraint(equalTo: fatigueContentView.topAnchor, constant: 5).isActive = true
+		ratingButton.bottomAnchor.constraint(equalTo: fatigueContentView.bottomAnchor, constant: -5).isActive = true
 	}
 
 	private final func removeTopBottomAndWidthConstraintsFor(_ ratingButton: UIButton) {
-		for constraint in moodContentView.constraints {
+		for constraint in fatigueContentView.constraints {
 			let involvesRatingButton = thisConstraint(constraint, involves: ratingButton)
 			if involvesRatingButton && [.top, .bottom].contains(constraint.secondAttribute) {
 				constraint.isActive = false
@@ -274,13 +272,13 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 
 	private final func getBaseWidth() -> CGFloat {
 		let minWidth: CGFloat = 30
-		let numberOfMoods = CGFloat(
-			injected(Settings.self).maxMood - DependencyInjector
-				.get(Settings.self).minMood + 1
+		let numberOfFatigues = CGFloat(
+			injected(Settings.self).maxFatigue - DependencyInjector
+				.get(Settings.self).minFatigue + 1
 		)
-		// not -1 because need to account for one mood always being selected, which adds 1 spacing
-		let totalSpacingRequired = spacingBetweenRatingButtons * numberOfMoods
-		let proportionalWidth = (scrollView.frame.width - totalSpacingRequired) / numberOfMoods
+		// not -1 because need to account for one fatigue always being selected, which adds 1 spacing
+		let totalSpacingRequired = spacingBetweenRatingButtons * numberOfFatigues
+		let proportionalWidth = (scrollView.frame.width - totalSpacingRequired) / numberOfFatigues
 		if proportionalWidth > minWidth {
 			return proportionalWidth
 		}
