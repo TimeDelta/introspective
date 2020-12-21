@@ -22,7 +22,7 @@ target 'Introspective' do
   target 'IntrospectiveTests' do
     use_frameworks!
     inherit! :search_paths
-    pod "SwiftyMocky"
+    pod "SwiftyMocky", :git => 'https://github.com/MakeAWishFoundation/SwiftyMocky.git', :commit => 'a431fa7d5d322fab57503beef97d8e429766c188'
     pod 'SwiftHamcrest', '~> 2.2.1'
   end
 
