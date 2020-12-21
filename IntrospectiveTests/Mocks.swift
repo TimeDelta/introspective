@@ -15035,10 +15035,26 @@ open class MoodDAOMock: MoodDAO, Mock {
 		return __value
     }
 
+    open func getMostRecentMood() throws -> Mood? {
+        addInvocation(.m_getMostRecentMood)
+		let perform = methodPerformValue(.m_getMostRecentMood) as? () -> Void
+		perform?()
+		var __value: Mood? = nil
+		do {
+		    __value = try methodReturnValue(.m_getMostRecentMood).casted()
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
 
     fileprivate enum MethodType {
         case m_getMoods__from_minDateto_maxDate(Parameter<Date?>, Parameter<Date?>)
         case m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(Parameter<Date>, Parameter<Double>, Parameter<Double?>, Parameter<Double?>, Parameter<String?>)
+        case m_getMostRecentMood
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
@@ -15142,6 +15158,8 @@ open class MoodDAOMock: MoodDAO, Mock {
 				}
 
 				return Matcher.ComparisonResult(results)
+
+            case (.m_getMostRecentMood, .m_getMostRecentMood): return .match
             default: return .none
             }
         }
@@ -15150,12 +15168,14 @@ open class MoodDAOMock: MoodDAO, Mock {
             switch self {
             case let .m_getMoods__from_minDateto_maxDate(p0, p1): return p0.intValue + p1.intValue
             case let .m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(p0, p1, p2, p3, p4): return p0.intValue + p1.intValue + p2.intValue + p3.intValue + p4.intValue
+            case .m_getMostRecentMood: return 0
             }
         }
         func assertionName() -> String {
             switch self {
             case .m_getMoods__from_minDateto_maxDate: return ".getMoods(from:to:)"
             case .m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note: return ".createMood(timestamp:rating:min:max:note:)"
+            case .m_getMostRecentMood: return ".getMostRecentMood()"
             }
         }
     }
@@ -15174,6 +15194,9 @@ open class MoodDAOMock: MoodDAO, Mock {
         }
         public static func createMood(timestamp: Parameter<Date>, rating: Parameter<Double>, min: Parameter<Double?>, max: Parameter<Double?>, note: Parameter<String?>, willReturn: Mood...) -> MethodStub {
             return Given(method: .m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(`timestamp`, `rating`, `min`, `max`, `note`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func getMostRecentMood(willReturn: Mood?...) -> MethodStub {
+            return Given(method: .m_getMostRecentMood, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func getMoods(from minDate: Parameter<Date?>, to maxDate: Parameter<Date?>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_getMoods__from_minDateto_maxDate(`minDate`, `maxDate`), products: willThrow.map({ StubProduct.throw($0) }))
@@ -15195,6 +15218,16 @@ open class MoodDAOMock: MoodDAO, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func getMostRecentMood(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_getMostRecentMood, products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func getMostRecentMood(willProduce: (StubberThrows<Mood?>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_getMostRecentMood, products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Mood?).self)
+			willProduce(stubber)
+			return given
+        }
     }
 
     public struct Verify {
@@ -15202,6 +15235,7 @@ open class MoodDAOMock: MoodDAO, Mock {
 
         public static func getMoods(from minDate: Parameter<Date?>, to maxDate: Parameter<Date?>) -> Verify { return Verify(method: .m_getMoods__from_minDateto_maxDate(`minDate`, `maxDate`))}
         public static func createMood(timestamp: Parameter<Date>, rating: Parameter<Double>, min: Parameter<Double?>, max: Parameter<Double?>, note: Parameter<String?>) -> Verify { return Verify(method: .m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(`timestamp`, `rating`, `min`, `max`, `note`))}
+        public static func getMostRecentMood() -> Verify { return Verify(method: .m_getMostRecentMood)}
     }
 
     public struct Perform {
@@ -15213,6 +15247,9 @@ open class MoodDAOMock: MoodDAO, Mock {
         }
         public static func createMood(timestamp: Parameter<Date>, rating: Parameter<Double>, min: Parameter<Double?>, max: Parameter<Double?>, note: Parameter<String?>, perform: @escaping (Date, Double, Double?, Double?, String?) -> Void) -> Perform {
             return Perform(method: .m_createMood__timestamp_timestamprating_ratingmin_minmax_maxnote_note(`timestamp`, `rating`, `min`, `max`, `note`), performs: perform)
+        }
+        public static func getMostRecentMood(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_getMostRecentMood, performs: perform)
         }
     }
 
