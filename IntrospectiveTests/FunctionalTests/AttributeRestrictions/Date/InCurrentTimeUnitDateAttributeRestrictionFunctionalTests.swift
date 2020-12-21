@@ -143,8 +143,8 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	func testGivenDateWithTargetDayFromWrongMonthOrYear_samplePasses_returnsFalse() throws {
 		// given
-		let targetDay = Date().component(.day)
-		let sampleDate = Date(year: 2019, month: 1, day: targetDay)
+		let targetDay = Date().dateComponents[.day]!
+		let sampleDate = Date(year: 2019, month: 1, day: targetDay, hour: 0, minute: 0)
 		restriction.timeUnit = .day
 		let sample = SampleCreatorTestUtil.createSample(withValue: sampleDate, for: Me.restrictedAttribute)
 
