@@ -46,7 +46,7 @@ public class EditMoodTableViewControllerMock: UITableViewController, EditMoodTab
 
 
 
-    public var notificationToSendOnAccept: Notification.Name! {
+    public var notificationToSendOnAccept: Notification.Name? {
 		get {	invocations.append(.p_notificationToSendOnAccept_get); return __p_notificationToSendOnAccept ?? optionalGivenGetterValue(.p_notificationToSendOnAccept_get, "EditMoodTableViewControllerMock - stub value for notificationToSendOnAccept was not defined") }
 		set {	invocations.append(.p_notificationToSendOnAccept_set(.value(newValue))); __p_notificationToSendOnAccept = newValue }
 	}
