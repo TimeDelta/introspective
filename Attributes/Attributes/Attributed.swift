@@ -10,7 +10,8 @@ import Foundation
 
 import Common
 
-public protocol Attributed: AnyObject, CustomStringConvertible, CustomDebugStringConvertible {
+// sourcery: AutoMockable
+public protocol Attributed: Describable {
 	var attributedName: String { get }
 	var attributes: [Attribute] { get }
 

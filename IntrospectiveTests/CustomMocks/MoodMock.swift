@@ -118,22 +118,11 @@ class MoodMock: Mood, Mock, StaticMock {
 	private var __p_date: (Date)?
 
 
-    public var attributedName: String {
-		get {	invocations.append(.p_attributedName_get); return __p_attributedName ?? givenGetterValue(.p_attributedName_get, "MoodMock - stub value for attributedName was not defined") }
+    public var timeZone: TimeZone? {
+		get {	invocations.append(.p_timeZone_get); return __p_timeZone ?? optionalGivenGetterValue(.p_timeZone_get, "MoodMock - stub value for timeZone was not defined") }
+		set {	invocations.append(.p_timeZone_set(.value(newValue))); __p_timeZone = newValue }
 	}
-	private var __p_attributedName: (String)?
-
-
-    public var attributes: [Attribute] {
-		get {	invocations.append(.p_attributes_get); return __p_attributes ?? givenGetterValue(.p_attributes_get, "MoodMock - stub value for attributes was not defined") }
-	}
-	private var __p_attributes: ([Attribute])?
-
-
-    public var debugDescription: String {
-		get {	invocations.append(.p_debugDescription_get); return __p_debugDescription ?? givenGetterValue(.p_debugDescription_get, "MoodMock - stub value for debugDescription was not defined") }
-	}
-	private var __p_debugDescription: (String)?
+	private var __p_timeZone: (TimeZone)?
 
 
 
@@ -153,18 +142,6 @@ class MoodMock: Mood, Mock, StaticMock {
 		get {	MoodMock.invocations.append(.p_note_get); return MoodMock.__p_note ?? givenGetterValue(.p_note_get, "MoodMock - stub value for note was not defined") }
 	}
 	private static var __p_note: (TextAttribute)?
-
-
-    public static var entityName: String {
-		get {	MoodMock.invocations.append(.p_entityName_get); return MoodMock.__p_entityName ?? givenGetterValue(.p_entityName_get, "MoodMock - stub value for entityName was not defined") }
-	}
-	private static var __p_entityName: (String)?
-
-
-    public static var exportFileDescription: String {
-		get {	MoodMock.invocations.append(.p_exportFileDescription_get); return MoodMock.__p_exportFileDescription ?? givenGetterValue(.p_exportFileDescription_get, "MoodMock - stub value for exportFileDescription was not defined") }
-	}
-	private static var __p_exportFileDescription: (String)?
 
 
     public static var name: String {
@@ -200,92 +177,10 @@ class MoodMock: Mood, Mock, StaticMock {
 
 
 
-    public static func exportHeaderRow(to csv: CSVWriter) throws {
-        addInvocation(.sm_exportHeaderRow__to_csv(Parameter<CSVWriter>.value(`csv`)))
-		let perform = methodPerformValue(.sm_exportHeaderRow__to_csv(Parameter<CSVWriter>.value(`csv`))) as? (CSVWriter) -> Void
-		perform?(`csv`)
-		do {
-		    _ = try methodReturnValue(.sm_exportHeaderRow__to_csv(Parameter<CSVWriter>.value(`csv`))).casted() as Void
-		} catch MockError.notStubed {
-			// do nothing
-		} catch {
-		    throw error
-		}
-    }
-
     open func setSource(_ source: Sources.MoodSourceNum) {
         addInvocation(.m_setSource__source(Parameter<Sources.MoodSourceNum>.value(`source`)))
 		let perform = methodPerformValue(.m_setSource__source(Parameter<Sources.MoodSourceNum>.value(`source`))) as? (Sources.MoodSourceNum) -> Void
 		perform?(`source`)
-    }
-
-    open func attributeValuesAreValid() -> Bool {
-        addInvocation(.m_attributeValuesAreValid)
-		let perform = methodPerformValue(.m_attributeValuesAreValid) as? () -> Void
-		perform?()
-		var __value: Bool
-		do {
-		    __value = try methodReturnValue(.m_attributeValuesAreValid).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for attributeValuesAreValid(). Use given")
-			Failure("Stub return value not specified for attributeValuesAreValid(). Use given")
-		}
-		return __value
-    }
-
-    open func value(of attribute: Attribute) throws -> Any? {
-        addInvocation(.m_value__of_attribute(Parameter<Attribute>.value(`attribute`)))
-		let perform = methodPerformValue(.m_value__of_attribute(Parameter<Attribute>.value(`attribute`))) as? (Attribute) -> Void
-		perform?(`attribute`)
-		var __value: Any? = nil
-		do {
-		    __value = try methodReturnValue(.m_value__of_attribute(Parameter<Attribute>.value(`attribute`))).casted()
-		} catch MockError.notStubed {
-			// do nothing
-		} catch {
-		    throw error
-		}
-		return __value
-    }
-
-    open func set(attribute: Attribute, to value: Any?) throws {
-        addInvocation(.m_set__attribute_attributeto_value(Parameter<Attribute>.value(`attribute`), Parameter<Any?>.value(`value`)))
-		let perform = methodPerformValue(.m_set__attribute_attributeto_value(Parameter<Attribute>.value(`attribute`), Parameter<Any?>.value(`value`))) as? (Attribute, Any?) -> Void
-		perform?(`attribute`, `value`)
-		do {
-		    _ = try methodReturnValue(.m_set__attribute_attributeto_value(Parameter<Attribute>.value(`attribute`), Parameter<Any?>.value(`value`))).casted() as Void
-		} catch MockError.notStubed {
-			// do nothing
-		} catch {
-		    throw error
-		}
-    }
-
-    open func equalTo(_ otherAttributed: Attributed) -> Bool {
-        addInvocation(.m_equalTo__otherAttributed(Parameter<Attributed>.value(`otherAttributed`)))
-		let perform = methodPerformValue(.m_equalTo__otherAttributed(Parameter<Attributed>.value(`otherAttributed`))) as? (Attributed) -> Void
-		perform?(`otherAttributed`)
-		var __value: Bool
-		do {
-		    __value = try methodReturnValue(.m_equalTo__otherAttributed(Parameter<Attributed>.value(`otherAttributed`))).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for equalTo(_ otherAttributed: Attributed). Use given")
-			Failure("Stub return value not specified for equalTo(_ otherAttributed: Attributed). Use given")
-		}
-		return __value
-    }
-
-    open func export(to csv: CSVWriter) throws {
-        addInvocation(.m_export__to_csv(Parameter<CSVWriter>.value(`csv`)))
-		let perform = methodPerformValue(.m_export__to_csv(Parameter<CSVWriter>.value(`csv`))) as? (CSVWriter) -> Void
-		perform?(`csv`)
-		do {
-		    _ = try methodReturnValue(.m_export__to_csv(Parameter<CSVWriter>.value(`csv`))).casted() as Void
-		} catch MockError.notStubed {
-			// do nothing
-		} catch {
-		    throw error
-		}
     }
 
     open func graphableValue(of attribute: Attribute) throws -> Any? {
@@ -360,12 +255,9 @@ class MoodMock: Mood, Mock, StaticMock {
     }
 
     fileprivate enum StaticMethodType {
-        case sm_exportHeaderRow__to_csv(Parameter<CSVWriter>)
         case p_rating_get
         case p_maxRating_get
         case p_note_get
-        case p_entityName_get
-        case p_exportFileDescription_get
         case p_name_get
         case p_attributes_get
         case p_defaultDependentAttribute_get
@@ -373,29 +265,9 @@ class MoodMock: Mood, Mock, StaticMock {
         case p_dateAttributes_get
 
         static func compareParameters(lhs: StaticMethodType, rhs: StaticMethodType, matcher: Matcher) -> Matcher.ComparisonResult {
-            switch (lhs, rhs) {
-            case (.sm_exportHeaderRow__to_csv(let lhsCsv), .sm_exportHeaderRow__to_csv(let rhsCsv)):
-				var noncapturingComparisons: [Bool] = []
-				var comparison: Bool
-				var results: [Matcher.ParameterComparisonResult] = []
-
-				if !isCapturing(lhsCsv) && !isCapturing(rhsCsv) {
-					comparison = Parameter.compare(lhs: lhsCsv, rhs: rhsCsv, with: matcher)
-					noncapturingComparisons.append(comparison)
-					results.append(Matcher.ParameterComparisonResult(comparison, lhsCsv, rhsCsv, "to csv"))
-				}
-
-				if isCapturing(lhsCsv) || isCapturing(rhsCsv) {
-					comparison = Parameter.compare(lhs: lhsCsv, rhs: rhsCsv, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
-					results.append(Matcher.ParameterComparisonResult(comparison, lhsCsv, rhsCsv, "to csv"))
-				}
-
-				return Matcher.ComparisonResult(results)
-            case (.p_rating_get,.p_rating_get): return Matcher.ComparisonResult.match
+            switch (lhs, rhs) {            case (.p_rating_get,.p_rating_get): return Matcher.ComparisonResult.match
             case (.p_maxRating_get,.p_maxRating_get): return Matcher.ComparisonResult.match
             case (.p_note_get,.p_note_get): return Matcher.ComparisonResult.match
-            case (.p_entityName_get,.p_entityName_get): return Matcher.ComparisonResult.match
-            case (.p_exportFileDescription_get,.p_exportFileDescription_get): return Matcher.ComparisonResult.match
             case (.p_name_get,.p_name_get): return Matcher.ComparisonResult.match
             case (.p_attributes_get,.p_attributes_get): return Matcher.ComparisonResult.match
             case (.p_defaultDependentAttribute_get,.p_defaultDependentAttribute_get): return Matcher.ComparisonResult.match
@@ -407,12 +279,9 @@ class MoodMock: Mood, Mock, StaticMock {
 
         func intValue() -> Int {
             switch self {
-                case let .sm_exportHeaderRow__to_csv(p0): return p0.intValue
                 case .p_rating_get: return 0
                 case .p_maxRating_get: return 0
                 case .p_note_get: return 0
-                case .p_entityName_get: return 0
-                case .p_exportFileDescription_get: return 0
                 case .p_name_get: return 0
                 case .p_attributes_get: return 0
                 case .p_defaultDependentAttribute_get: return 0
@@ -422,12 +291,9 @@ class MoodMock: Mood, Mock, StaticMock {
         }
         func assertionName() -> String {
             switch self {
-            case .sm_exportHeaderRow__to_csv: return ".exportHeaderRow(to:)"
             case .p_rating_get: return "[get] .rating"
             case .p_maxRating_get: return "[get] .maxRating"
             case .p_note_get: return "[get] .note"
-            case .p_entityName_get: return "[get] .entityName"
-            case .p_exportFileDescription_get: return "[get] .exportFileDescription"
             case .p_name_get: return "[get] .name"
             case .p_attributes_get: return "[get] .attributes"
             case .p_defaultDependentAttribute_get: return "[get] .defaultDependentAttribute"
@@ -455,12 +321,6 @@ class MoodMock: Mood, Mock, StaticMock {
         public static func note(getter defaultValue: TextAttribute...) -> StaticPropertyStub {
             return StaticGiven(method: .p_note_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func entityName(getter defaultValue: String...) -> StaticPropertyStub {
-            return StaticGiven(method: .p_entityName_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func exportFileDescription(getter defaultValue: String...) -> StaticPropertyStub {
-            return StaticGiven(method: .p_exportFileDescription_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
-        }
         public static func name(getter defaultValue: String...) -> StaticPropertyStub {
             return StaticGiven(method: .p_name_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
@@ -477,27 +337,14 @@ class MoodMock: Mood, Mock, StaticMock {
             return StaticGiven(method: .p_dateAttributes_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
-        public static func exportHeaderRow(to csv: Parameter<CSVWriter>, willThrow: Error...) -> StaticMethodStub {
-            return StaticGiven(method: .sm_exportHeaderRow__to_csv(`csv`), products: willThrow.map({ StubProduct.throw($0) }))
-        }
-        public static func exportHeaderRow(to csv: Parameter<CSVWriter>, willProduce: (StubberThrows<Void>) -> Void) -> StaticMethodStub {
-            let willThrow: [Error] = []
-			let given: StaticGiven = { return StaticGiven(method: .sm_exportHeaderRow__to_csv(`csv`), products: willThrow.map({ StubProduct.throw($0) })) }()
-			let stubber = given.stubThrows(for: (Void).self)
-			willProduce(stubber)
-			return given
-        }
     }
 
     public struct StaticVerify {
         fileprivate var method: StaticMethodType
 
-        public static func exportHeaderRow(to csv: Parameter<CSVWriter>) -> StaticVerify { return StaticVerify(method: .sm_exportHeaderRow__to_csv(`csv`))}
         public static var rating: StaticVerify { return StaticVerify(method: .p_rating_get) }
         public static var maxRating: StaticVerify { return StaticVerify(method: .p_maxRating_get) }
         public static var note: StaticVerify { return StaticVerify(method: .p_note_get) }
-        public static var entityName: StaticVerify { return StaticVerify(method: .p_entityName_get) }
-        public static var exportFileDescription: StaticVerify { return StaticVerify(method: .p_exportFileDescription_get) }
         public static var name: StaticVerify { return StaticVerify(method: .p_name_get) }
         public static var attributes: StaticVerify { return StaticVerify(method: .p_attributes_get) }
         public static var defaultDependentAttribute: StaticVerify { return StaticVerify(method: .p_defaultDependentAttribute_get) }
@@ -509,19 +356,11 @@ class MoodMock: Mood, Mock, StaticMock {
         fileprivate var method: StaticMethodType
         var performs: Any
 
-        public static func exportHeaderRow(to csv: Parameter<CSVWriter>, perform: @escaping (CSVWriter) -> Void) -> StaticPerform {
-            return StaticPerform(method: .sm_exportHeaderRow__to_csv(`csv`), performs: perform)
-        }
     }
 
     
     fileprivate enum MethodType {
         case m_setSource__source(Parameter<Sources.MoodSourceNum>)
-        case m_attributeValuesAreValid
-        case m_value__of_attribute(Parameter<Attribute>)
-        case m_set__attribute_attributeto_value(Parameter<Attribute>, Parameter<Any?>)
-        case m_equalTo__otherAttributed(Parameter<Attributed>)
-        case m_export__to_csv(Parameter<CSVWriter>)
         case m_graphableValue__of_attribute(Parameter<Attribute>)
         case m_dates
         case m_equalTo__otherSample(Parameter<Sample>)
@@ -537,9 +376,8 @@ class MoodMock: Mood, Mock, StaticMock {
 		case p_note_set(Parameter<String?>)
         case p_date_get
 		case p_date_set(Parameter<Date>)
-        case p_attributedName_get
-        case p_attributes_get
-        case p_debugDescription_get
+        case p_timeZone_get
+		case p_timeZone_set(Parameter<TimeZone?>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
@@ -557,93 +395,6 @@ class MoodMock: Mood, Mock, StaticMock {
 				if isCapturing(lhsSource) || isCapturing(rhsSource) {
 					comparison = Parameter.compare(lhs: lhsSource, rhs: rhsSource, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
 					results.append(Matcher.ParameterComparisonResult(comparison, lhsSource, rhsSource, "_ source"))
-				}
-
-				return Matcher.ComparisonResult(results)
-
-            case (.m_attributeValuesAreValid, .m_attributeValuesAreValid): return .match
-
-            case (.m_value__of_attribute(let lhsAttribute), .m_value__of_attribute(let rhsAttribute)):
-				var noncapturingComparisons: [Bool] = []
-				var comparison: Bool
-				var results: [Matcher.ParameterComparisonResult] = []
-
-				if !isCapturing(lhsAttribute) && !isCapturing(rhsAttribute) {
-					comparison = Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher)
-					noncapturingComparisons.append(comparison)
-					results.append(Matcher.ParameterComparisonResult(comparison, lhsAttribute, rhsAttribute, "of attribute"))
-				}
-
-				if isCapturing(lhsAttribute) || isCapturing(rhsAttribute) {
-					comparison = Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
-					results.append(Matcher.ParameterComparisonResult(comparison, lhsAttribute, rhsAttribute, "of attribute"))
-				}
-
-				return Matcher.ComparisonResult(results)
-
-            case (.m_set__attribute_attributeto_value(let lhsAttribute, let lhsValue), .m_set__attribute_attributeto_value(let rhsAttribute, let rhsValue)):
-				var noncapturingComparisons: [Bool] = []
-				var comparison: Bool
-				var results: [Matcher.ParameterComparisonResult] = []
-
-				if !isCapturing(lhsAttribute) && !isCapturing(rhsAttribute) {
-					comparison = Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher)
-					noncapturingComparisons.append(comparison)
-					results.append(Matcher.ParameterComparisonResult(comparison, lhsAttribute, rhsAttribute, "attribute"))
-				}
-
-
-				if !isCapturing(lhsValue) && !isCapturing(rhsValue) {
-					comparison = Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher)
-					noncapturingComparisons.append(comparison)
-					results.append(Matcher.ParameterComparisonResult(comparison, lhsValue, rhsValue, "to value"))
-				}
-
-				if isCapturing(lhsAttribute) || isCapturing(rhsAttribute) {
-					comparison = Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
-					results.append(Matcher.ParameterComparisonResult(comparison, lhsAttribute, rhsAttribute, "attribute"))
-				}
-
-
-				if isCapturing(lhsValue) || isCapturing(rhsValue) {
-					comparison = Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
-					results.append(Matcher.ParameterComparisonResult(comparison, lhsValue, rhsValue, "to value"))
-				}
-
-				return Matcher.ComparisonResult(results)
-
-            case (.m_equalTo__otherAttributed(let lhsOtherattributed), .m_equalTo__otherAttributed(let rhsOtherattributed)):
-				var noncapturingComparisons: [Bool] = []
-				var comparison: Bool
-				var results: [Matcher.ParameterComparisonResult] = []
-
-				if !isCapturing(lhsOtherattributed) && !isCapturing(rhsOtherattributed) {
-					comparison = Parameter.compare(lhs: lhsOtherattributed, rhs: rhsOtherattributed, with: matcher)
-					noncapturingComparisons.append(comparison)
-					results.append(Matcher.ParameterComparisonResult(comparison, lhsOtherattributed, rhsOtherattributed, "_ otherAttributed"))
-				}
-
-				if isCapturing(lhsOtherattributed) || isCapturing(rhsOtherattributed) {
-					comparison = Parameter.compare(lhs: lhsOtherattributed, rhs: rhsOtherattributed, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
-					results.append(Matcher.ParameterComparisonResult(comparison, lhsOtherattributed, rhsOtherattributed, "_ otherAttributed"))
-				}
-
-				return Matcher.ComparisonResult(results)
-
-            case (.m_export__to_csv(let lhsCsv), .m_export__to_csv(let rhsCsv)):
-				var noncapturingComparisons: [Bool] = []
-				var comparison: Bool
-				var results: [Matcher.ParameterComparisonResult] = []
-
-				if !isCapturing(lhsCsv) && !isCapturing(rhsCsv) {
-					comparison = Parameter.compare(lhs: lhsCsv, rhs: rhsCsv, with: matcher)
-					noncapturingComparisons.append(comparison)
-					results.append(Matcher.ParameterComparisonResult(comparison, lhsCsv, rhsCsv, "to csv"))
-				}
-
-				if isCapturing(lhsCsv) || isCapturing(rhsCsv) {
-					comparison = Parameter.compare(lhs: lhsCsv, rhs: rhsCsv, with: matcher, nonCapturingParamsMatch: noncapturingComparisons.allSatisfy({$0}))
-					results.append(Matcher.ParameterComparisonResult(comparison, lhsCsv, rhsCsv, "to csv"))
 				}
 
 				return Matcher.ComparisonResult(results)
@@ -757,9 +508,8 @@ class MoodMock: Mood, Mock, StaticMock {
 			case (.p_note_set(let left),.p_note_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<String?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
             case (.p_date_get,.p_date_get): return Matcher.ComparisonResult.match
 			case (.p_date_set(let left),.p_date_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<Date>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
-            case (.p_attributedName_get,.p_attributedName_get): return Matcher.ComparisonResult.match
-            case (.p_attributes_get,.p_attributes_get): return Matcher.ComparisonResult.match
-            case (.p_debugDescription_get,.p_debugDescription_get): return Matcher.ComparisonResult.match
+            case (.p_timeZone_get,.p_timeZone_get): return Matcher.ComparisonResult.match
+			case (.p_timeZone_set(let left),.p_timeZone_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<TimeZone?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
             default: return .none
             }
         }
@@ -767,11 +517,6 @@ class MoodMock: Mood, Mock, StaticMock {
         func intValue() -> Int {
             switch self {
             case let .m_setSource__source(p0): return p0.intValue
-            case .m_attributeValuesAreValid: return 0
-            case let .m_value__of_attribute(p0): return p0.intValue
-            case let .m_set__attribute_attributeto_value(p0, p1): return p0.intValue + p1.intValue
-            case let .m_equalTo__otherAttributed(p0): return p0.intValue
-            case let .m_export__to_csv(p0): return p0.intValue
             case let .m_graphableValue__of_attribute(p0): return p0.intValue
             case .m_dates: return 0
             case let .m_equalTo__otherSample(p0): return p0.intValue
@@ -787,19 +532,13 @@ class MoodMock: Mood, Mock, StaticMock {
 			case .p_note_set(let newValue): return newValue.intValue
             case .p_date_get: return 0
 			case .p_date_set(let newValue): return newValue.intValue
-            case .p_attributedName_get: return 0
-            case .p_attributes_get: return 0
-            case .p_debugDescription_get: return 0
+            case .p_timeZone_get: return 0
+			case .p_timeZone_set(let newValue): return newValue.intValue
             }
         }
         func assertionName() -> String {
             switch self {
             case .m_setSource__source: return ".setSource(_:)"
-            case .m_attributeValuesAreValid: return ".attributeValuesAreValid()"
-            case .m_value__of_attribute: return ".value(of:)"
-            case .m_set__attribute_attributeto_value: return ".set(attribute:to:)"
-            case .m_equalTo__otherAttributed: return ".equalTo(_:)"
-            case .m_export__to_csv: return ".export(to:)"
             case .m_graphableValue__of_attribute: return ".graphableValue(of:)"
             case .m_dates: return ".dates()"
             case .m_equalTo__otherSample: return ".equalTo(_:)"
@@ -815,9 +554,8 @@ class MoodMock: Mood, Mock, StaticMock {
 			case .p_note_set: return "[set] .note"
             case .p_date_get: return "[get] .date"
 			case .p_date_set: return "[set] .date"
-            case .p_attributedName_get: return "[get] .attributedName"
-            case .p_attributes_get: return "[get] .attributes"
-            case .p_debugDescription_get: return "[get] .debugDescription"
+            case .p_timeZone_get: return "[get] .timeZone"
+			case .p_timeZone_set: return "[set] .timeZone"
             }
         }
     }
@@ -845,25 +583,10 @@ class MoodMock: Mood, Mock, StaticMock {
         public static func date(getter defaultValue: Date...) -> PropertyStub {
             return Given(method: .p_date_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func attributedName(getter defaultValue: String...) -> PropertyStub {
-            return Given(method: .p_attributedName_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func attributes(getter defaultValue: [Attribute]...) -> PropertyStub {
-            return Given(method: .p_attributes_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func debugDescription(getter defaultValue: String...) -> PropertyStub {
-            return Given(method: .p_debugDescription_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        public static func timeZone(getter defaultValue: TimeZone?...) -> PropertyStub {
+            return Given(method: .p_timeZone_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
-        public static func attributeValuesAreValid(willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_attributeValuesAreValid, products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func value(of attribute: Parameter<Attribute>, willReturn: Any?...) -> MethodStub {
-            return Given(method: .m_value__of_attribute(`attribute`), products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func equalTo(_ otherAttributed: Parameter<Attributed>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
         public static func graphableValue(of attribute: Parameter<Attribute>, willReturn: Any?...) -> MethodStub {
             return Given(method: .m_graphableValue__of_attribute(`attribute`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
@@ -878,20 +601,6 @@ class MoodMock: Mood, Mock, StaticMock {
         }
         public static func matchesSearchString(_ searchString: Parameter<String>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_matchesSearchString__searchString(`searchString`), products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func attributeValuesAreValid(willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
-            let willReturn: [Bool] = []
-			let given: Given = { return Given(method: .m_attributeValuesAreValid, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (Bool).self)
-			willProduce(stubber)
-			return given
-        }
-        public static func equalTo(_ otherAttributed: Parameter<Attributed>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
-            let willReturn: [Bool] = []
-			let given: Given = { return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (Bool).self)
-			willProduce(stubber)
-			return given
         }
         public static func dates(willProduce: (Stubber<[DateType: Date]>) -> Void) -> MethodStub {
             let willReturn: [[DateType: Date]] = []
@@ -921,36 +630,6 @@ class MoodMock: Mood, Mock, StaticMock {
 			willProduce(stubber)
 			return given
         }
-        public static func value(of attribute: Parameter<Attribute>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_value__of_attribute(`attribute`), products: willThrow.map({ StubProduct.throw($0) }))
-        }
-        public static func value(of attribute: Parameter<Attribute>, willProduce: (StubberThrows<Any?>) -> Void) -> MethodStub {
-            let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_value__of_attribute(`attribute`), products: willThrow.map({ StubProduct.throw($0) })) }()
-			let stubber = given.stubThrows(for: (Any?).self)
-			willProduce(stubber)
-			return given
-        }
-        public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_set__attribute_attributeto_value(`attribute`, `value`), products: willThrow.map({ StubProduct.throw($0) }))
-        }
-        public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
-            let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_set__attribute_attributeto_value(`attribute`, `value`), products: willThrow.map({ StubProduct.throw($0) })) }()
-			let stubber = given.stubThrows(for: (Void).self)
-			willProduce(stubber)
-			return given
-        }
-        public static func export(to csv: Parameter<CSVWriter>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_export__to_csv(`csv`), products: willThrow.map({ StubProduct.throw($0) }))
-        }
-        public static func export(to csv: Parameter<CSVWriter>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
-            let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_export__to_csv(`csv`), products: willThrow.map({ StubProduct.throw($0) })) }()
-			let stubber = given.stubThrows(for: (Void).self)
-			willProduce(stubber)
-			return given
-        }
         public static func graphableValue(of attribute: Parameter<Attribute>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_graphableValue__of_attribute(`attribute`), products: willThrow.map({ StubProduct.throw($0) }))
         }
@@ -967,11 +646,6 @@ class MoodMock: Mood, Mock, StaticMock {
         fileprivate var method: MethodType
 
         public static func setSource(_ source: Parameter<Sources.MoodSourceNum>) -> Verify { return Verify(method: .m_setSource__source(`source`))}
-        public static func attributeValuesAreValid() -> Verify { return Verify(method: .m_attributeValuesAreValid)}
-        public static func value(of attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_value__of_attribute(`attribute`))}
-        public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>) -> Verify { return Verify(method: .m_set__attribute_attributeto_value(`attribute`, `value`))}
-        public static func equalTo(_ otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
-        public static func export(to csv: Parameter<CSVWriter>) -> Verify { return Verify(method: .m_export__to_csv(`csv`))}
         public static func graphableValue(of attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_graphableValue__of_attribute(`attribute`))}
         public static func dates() -> Verify { return Verify(method: .m_dates)}
         public static func equalTo(_ otherSample: Parameter<Sample>) -> Verify { return Verify(method: .m_equalTo__otherSample(`otherSample`))}
@@ -987,9 +661,8 @@ class MoodMock: Mood, Mock, StaticMock {
 		public static func note(set newValue: Parameter<String?>) -> Verify { return Verify(method: .p_note_set(newValue)) }
         public static var date: Verify { return Verify(method: .p_date_get) }
 		public static func date(set newValue: Parameter<Date>) -> Verify { return Verify(method: .p_date_set(newValue)) }
-        public static var attributedName: Verify { return Verify(method: .p_attributedName_get) }
-        public static var attributes: Verify { return Verify(method: .p_attributes_get) }
-        public static var debugDescription: Verify { return Verify(method: .p_debugDescription_get) }
+        public static var timeZone: Verify { return Verify(method: .p_timeZone_get) }
+		public static func timeZone(set newValue: Parameter<TimeZone?>) -> Verify { return Verify(method: .p_timeZone_set(newValue)) }
     }
 
     public struct Perform {
@@ -998,21 +671,6 @@ class MoodMock: Mood, Mock, StaticMock {
 
         public static func setSource(_ source: Parameter<Sources.MoodSourceNum>, perform: @escaping (Sources.MoodSourceNum) -> Void) -> Perform {
             return Perform(method: .m_setSource__source(`source`), performs: perform)
-        }
-        public static func attributeValuesAreValid(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_attributeValuesAreValid, performs: perform)
-        }
-        public static func value(of attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
-            return Perform(method: .m_value__of_attribute(`attribute`), performs: perform)
-        }
-        public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>, perform: @escaping (Attribute, Any?) -> Void) -> Perform {
-            return Perform(method: .m_set__attribute_attributeto_value(`attribute`, `value`), performs: perform)
-        }
-        public static func equalTo(_ otherAttributed: Parameter<Attributed>, perform: @escaping (Attributed) -> Void) -> Perform {
-            return Perform(method: .m_equalTo__otherAttributed(`otherAttributed`), performs: perform)
-        }
-        public static func export(to csv: Parameter<CSVWriter>, perform: @escaping (CSVWriter) -> Void) -> Perform {
-            return Perform(method: .m_export__to_csv(`csv`), performs: perform)
         }
         public static func graphableValue(of attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
             return Perform(method: .m_graphableValue__of_attribute(`attribute`), performs: perform)

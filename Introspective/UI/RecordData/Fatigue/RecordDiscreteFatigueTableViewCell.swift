@@ -71,7 +71,14 @@ public final class RecordDiscreteFatigueTableViewCell: UITableViewCell {
 	@objc private final func noteSaved(notification: Notification) {
 		if let note: String = value(for: .text, from: notification) {
 			self.note = note
-			addNoteButton.setTitle(note, for: .normal)
+			if !note.isEmpty {
+				addNoteButton.setTitle(note, for: .normal)
+				addNoteButton.accessibilityValue = "Change note"
+			} else {
+				addNoteButton.setTitle("Add Note", for: .normal)
+				addNoteButton.accessibilityValue = "Add Note"
+			}
+		} else {
 			addNoteButton.accessibilityValue = "Add Note"
 		}
 	}
@@ -81,7 +88,7 @@ public final class RecordDiscreteFatigueTableViewCell: UITableViewCell {
 	@IBAction final func doneButtonPressed(_: Any) {
 		do {
 			let transaction = injected(Database.self).transaction()
-			let fatigue = try injected(SampleFactory.self).fatigue(using: transaction)
+			var fatigue = try injected(SampleFactory.self).fatigue(using: transaction)
 			fatigue.date = Date()
 			fatigue.rating = Double(rating)
 			fatigue.note = note
@@ -121,6 +128,7 @@ public final class RecordDiscreteFatigueTableViewCell: UITableViewCell {
 	@IBAction final func presentFatigueNoteController(_: Any) {
 		let controller: NoteViewController = viewController(named: "recordNote", fromStoryboard: "RecordData")
 		controller.note = note ?? ""
+		controller.noteSavedNotification = Me.noteChangedNotification
 		NotificationCenter.default.post(
 			name: RecordDataTableViewController.showViewController,
 			object: self,

@@ -145,7 +145,7 @@ public final class IntrospectiveMoodImporterImpl: NSManagedObject, Introspective
 		using transaction: Transaction
 	)
 		throws {
-		let currentMood = try transaction.new(MoodImpl.self)
+		var currentMood: Mood = try transaction.new(MoodImpl.self)
 
 		guard let minRatingString = csv[MoodImpl.minRatingColumn] else {
 			throw MissingRequiredFieldError(MoodImpl.minRatingColumn, recordNumber: recordNumber)
@@ -169,7 +169,7 @@ public final class IntrospectiveMoodImporterImpl: NSManagedObject, Introspective
 		currentMood.setSource(try getSource())
 		currentMood.timeZone = getTimeZone()
 		if injected(Settings.self).scaleMoodsOnImport {
-			injected(MoodUtil.self).scaleMood(currentMood)
+			injected(MoodUtil.self).scaleMood(&currentMood)
 		}
 	}
 

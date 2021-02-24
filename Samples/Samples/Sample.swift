@@ -18,6 +18,7 @@ public enum DateType {
 	case end
 }
 
+// sourcery: AutoMockable
 public protocol Sample: Attributed {
 	static var name: String { get }
 

@@ -411,7 +411,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	private final func updateAttributeRestrictionsForSampleType(at sampleTypeIndex: Int) {
 		for i in 0 ..< queries[sampleTypeIndex].parts.count {
-			if let attributeRestriction = queries[sampleTypeIndex].parts[i].expression as? AttributeRestriction {
+			if var attributeRestriction = queries[sampleTypeIndex].parts[i].expression as? AttributeRestriction {
 				let attribute = attributeRestriction.restrictedAttribute
 				let sampleType = queries[sampleTypeIndex].sampleTypeInfo.sampleType
 				if let attributeIndex = sampleType.attributes.firstIndex(where: { $0.equalTo(attribute) }) {
@@ -479,7 +479,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	}
 
 	private final func ensureValidExpression(at indexPath: IndexPath) {
-		guard let attributeRestriction = getPartFor(indexPath)?.expression as? AttributeRestriction else {
+		guard var attributeRestriction = getPartFor(indexPath)?.expression as? AttributeRestriction else {
 			Me.log.error("Expected attribute restriction while ensuring valid expression")
 			return
 		}

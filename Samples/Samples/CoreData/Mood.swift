@@ -24,6 +24,7 @@ public protocol Mood: CoreDataSample, SearchableSample {
 	var rating: Double { get set }
 	var note: String? { get set }
 	var date: Date { get set }
+	var timeZone: TimeZone? { get set }
 
 	func setSource(_ source: Sources.MoodSourceNum)
 }

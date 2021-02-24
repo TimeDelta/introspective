@@ -138,9 +138,8 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 		rating: Double,
 		andNote note: String?,
 		using transaction: Transaction
-	)
-		throws {
-		let currentMood = try transaction.new(MoodImpl.self)
+	) throws {
+		var currentMood: Mood = try transaction.new(MoodImpl.self)
 		currentMood.date = date
 		currentMood.minRating = 1
 		currentMood.maxRating = 7
@@ -148,7 +147,7 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 		currentMood.note = note
 		currentMood.setSource(.wellness)
 		if injected(Settings.self).scaleMoodsOnImport {
-			injected(MoodUtil.self).scaleMood(currentMood)
+			injected(MoodUtil.self).scaleMood(&currentMood)
 		}
 	}
 

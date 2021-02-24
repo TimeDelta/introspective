@@ -112,11 +112,16 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath
 	) -> UISwipeActionsConfiguration? {
 		var actions: [UIContextualAction] = []
-		if let _ = try? injected(MoodDAO.self).getMostRecentMood() {
-			actions.append(getEditLastMoodAction())
+		let id = getIdFor(indexPath)
+		if isMoodId(id) {
+			if let _ = try? injected(MoodDAO.self).getMostRecentMood() {
+				actions.append(getEditLastMoodAction())
+			}
 		}
-		if let _ = try? injected(FatigueDAO.self).getMostRecentFatigue() {
-			actions.append(getEditLastFatigueAction())
+		if isFatigueId(id) {
+			if let _ = try? injected(FatigueDAO.self).getMostRecentFatigue() {
+				actions.append(getEditLastFatigueAction())
+			}
 		}
 		return UISwipeActionsConfiguration(actions: actions)
 	}
@@ -191,6 +196,14 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 			return Me.continuousFatigueId
 		}
 		return id
+	}
+
+	private final func isMoodId(_ id: String) -> Bool {
+		id == Me.discreteMoodId || id == Me.continuousMoodId || id == Me.moodId
+	}
+
+	private final func isFatigueId(_ id: String) -> Bool {
+		id == Me.discreteFatigueId || id == Me.continuousFatigueId || id == Me.fatigueId
 	}
 
 	private final func getEditLastMoodAction() -> UIContextualAction {

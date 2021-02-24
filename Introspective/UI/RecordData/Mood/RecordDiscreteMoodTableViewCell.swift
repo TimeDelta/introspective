@@ -71,7 +71,14 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 	@objc private final func noteSaved(notification: Notification) {
 		if let note: String = value(for: .text, from: notification) {
 			self.note = note
-			addNoteButton.setTitle(note, for: .normal)
+			if !note.isEmpty {
+				addNoteButton.setTitle(note, for: .normal)
+				addNoteButton.accessibilityValue = "Change note"
+			} else {
+				addNoteButton.setTitle("Add Note", for: .normal)
+				addNoteButton.accessibilityValue = "Add Note"
+			}
+		} else {
 			addNoteButton.accessibilityValue = "Add Note"
 		}
 	}
@@ -81,7 +88,7 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 	@IBAction final func doneButtonPressed(_: Any) {
 		do {
 			let transaction = injected(Database.self).transaction()
-			let mood = try injected(SampleFactory.self).mood(using: transaction)
+			var mood = try injected(SampleFactory.self).mood(using: transaction)
 			mood.date = Date()
 			mood.rating = Double(rating)
 			mood.note = note

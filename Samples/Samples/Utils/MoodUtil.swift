@@ -16,7 +16,7 @@ import Settings
 // sourcery: AutoMockable
 public protocol MoodUtil {
 	func scaleMoods() throws
-	func scaleMood(_ mood: Mood)
+	func scaleMood(_ mood: inout Mood)
 }
 
 public final class MoodUtilImpl: MoodUtil {
@@ -28,8 +28,8 @@ public final class MoodUtilImpl: MoodUtil {
 		do {
 			let transaction = injected(Database.self).transaction()
 			let moods = try transaction.query(MoodImpl.fetchRequest())
-			for mood in moods {
-				scaleMood(mood)
+			for var mood: Mood in moods {
+				scaleMood(&mood)
 			}
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 		} catch {
@@ -39,7 +39,7 @@ public final class MoodUtilImpl: MoodUtil {
 	}
 
 	/// - Note: This method will not save the database.
-	public final func scaleMood(_ mood: Mood) {
+	public final func scaleMood(_ mood: inout Mood) {
 		let oldMin = mood.minRating
 		let oldMax = mood.maxRating
 		let oldRating = mood.rating

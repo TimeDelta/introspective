@@ -24,6 +24,7 @@
 		A29F68A3233EA4B700B8DFDB /* StringUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29F689B233EA4B700B8DFDB /* StringUtil.swift */; };
 		A29F68B1233EA8D400B8DFDB /* NotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29F68B0233EA8D400B8DFDB /* NotificationName.swift */; };
 		A29F68B3233EA94700B8DFDB /* UserInfoKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29F68B2233EA94700B8DFDB /* UserInfoKey.swift */; };
+		A2AA1DA925D996D800179F3B /* Describable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AA1DA825D996D800179F3B /* Describable.swift */; };
 		A2AF1FD12343AFEE00E04517 /* TimeOfDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AF1FCC2343AFEE00E04517 /* TimeOfDay.swift */; };
 		A2AF1FD22343AFEE00E04517 /* Dosage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AF1FCD2343AFEE00E04517 /* Dosage.swift */; };
 		A2AF1FD32343AFEE00E04517 /* DayOfWeek.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AF1FCE2343AFEE00E04517 /* DayOfWeek.swift */; };
@@ -58,6 +59,7 @@
 		A29F689B233EA4B700B8DFDB /* StringUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringUtil.swift; sourceTree = "<group>"; };
 		A29F68B0233EA8D400B8DFDB /* NotificationName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationName.swift; sourceTree = "<group>"; };
 		A29F68B2233EA94700B8DFDB /* UserInfoKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoKey.swift; sourceTree = "<group>"; };
+		A2AA1DA825D996D800179F3B /* Describable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Describable.swift; sourceTree = "<group>"; };
 		A2AF1FCC2343AFEE00E04517 /* TimeOfDay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeOfDay.swift; sourceTree = "<group>"; };
 		A2AF1FCD2343AFEE00E04517 /* Dosage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dosage.swift; sourceTree = "<group>"; };
 		A2AF1FCE2343AFEE00E04517 /* DayOfWeek.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayOfWeek.swift; sourceTree = "<group>"; };
@@ -157,6 +159,7 @@
 				A29CCF3E24D2307B00218CE2 /* WeakRef.swift */,
 				A2B88B57233EA02A00E37728 /* Common.h */,
 				A2B88B58233EA02A00E37728 /* Info.plist */,
+				A2AA1DA825D996D800179F3B /* Describable.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -306,6 +309,7 @@
 				A2AF1FD12343AFEE00E04517 /* TimeOfDay.swift in Sources */,
 				A29F68A3233EA4B700B8DFDB /* StringUtil.swift in Sources */,
 				A29F68B1233EA8D400B8DFDB /* NotificationName.swift in Sources */,
+				A2AA1DA925D996D800179F3B /* Describable.swift in Sources */,
 				A29CCF3F24D2307B00218CE2 /* WeakRef.swift in Sources */,
 				A2B88B68233EA04F00E37728 /* Signpost.swift in Sources */,
 				A287DEA225804F63000B8166 /* FatigueUiUtil.swift in Sources */,

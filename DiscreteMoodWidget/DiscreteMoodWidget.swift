@@ -57,7 +57,7 @@ public class DiscreteMoodWidget: UIViewController {
 		if let rating: Int? = value(for: .mood, from: notification) {
 			do {
 				let transaction = injected(Database.self).transaction()
-				let mood = try injected(SampleFactory.self).mood(using: transaction)
+				var mood = try injected(SampleFactory.self).mood(using: transaction)
 				mood.date = Date()
 				mood.rating = Double(rating!)
 				mood.minRating = injected(Settings.self).minMood

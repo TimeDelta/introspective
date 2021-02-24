@@ -495,7 +495,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 						self.navigationController?.popViewController(animated: false)
 					} else {
 						let toRemove = self.filteredSamples.remove(at: indexPath.row)
-						self.samples.removeAll(where: { $0 === toRemove })
+						self.samples.removeAll(where: { $0.equalTo(toRemove) })
 						self.tableView.deleteRows(at: [indexPath], with: .fade)
 						self.recomputeInformation()
 						self.tableView.reloadData()
