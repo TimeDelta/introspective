@@ -684,7 +684,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			let max = injected(FatigueUiUtil.self).valueToString(fatigue.maxRating)
 			let scaleText = min + " - " + max
 			var descriptions = [
-				"😫 Fatigue: " + injected(MoodUiUtil.self).valueToString(fatigue.rating) + " (scale of \(scaleText))",
+				"🥱 Fatigue: " + injected(MoodUiUtil.self).valueToString(fatigue.rating) + " (scale of \(scaleText))",
 			]
 			if let note = fatigue.note, !note.isEmpty {
 				descriptions.append("- Note: " + note)
