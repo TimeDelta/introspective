@@ -38,4 +38,8 @@ public final class ActivityTableViewCell: UITableViewCell {
 			noteLabel.text = activity.note
 		}
 	}
+
+	deinit {
+		activity?.cleanUp()
+	}
 }

@@ -25,8 +25,8 @@ final class RecordContinuousFatigueTableViewCell: UITableViewCell {
 	private static let ratingPresenter: Presentr = injected(UiUtil.self)
 		.customPresenter(width: .custom(size: 300), height: .custom(size: 70), center: .topCenter)
 
-	private static let ratingChanged = Notification.Name("fatigueRatingChanged")
-	private static let noteChangedNotification = Notification.Name("fatigueNoteChanged")
+	private static let ratingChanged = Notification.Name("recortdFatigueRatingChanged")
+	private static let noteChangedNotification = Notification.Name("recortdFatigueNoteChanged")
 
 	private static let log = Log()
 

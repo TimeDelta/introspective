@@ -25,8 +25,8 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 	private static let ratingPresenter: Presentr = injected(UiUtil.self)
 		.customPresenter(width: .custom(size: 300), height: .custom(size: 70), center: .topCenter)
 
-	private static let ratingChanged = Notification.Name("moodRatingChanged")
-	private static let noteChangedNotification = Notification.Name("moodNoteChanged")
+	private static let ratingChanged = Notification.Name("recordMoodRatingChanged")
+	private static let noteChangedNotification = Notification.Name("recordMoodNoteChanged")
 
 	private static let log = Log()
 
