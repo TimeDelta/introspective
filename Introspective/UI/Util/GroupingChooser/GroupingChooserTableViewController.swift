@@ -166,7 +166,7 @@ public final class GroupingChooserTableViewControllerImpl: UITableViewController
 	// MARK: - Button Actions
 
 	@IBAction final func doneButtonPressed(_: Any) {
-		syncPost(notificationToSendOnAccept, userInfo: [.sampleGrouper: currentGrouper])
+		syncPost(notificationToSendOnAccept, userInfo: [.sampleGrouper: currentGrouper!])
 		popFromNavigationController()
 	}
 
