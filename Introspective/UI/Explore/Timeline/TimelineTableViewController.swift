@@ -61,6 +61,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		(type: Activity.self, fetcher: injected(SampleFetcherFactory.self).activitySampleFetcher()),
 		(type: BloodPressure.self, fetcher: injected(SampleFetcherFactory.self).bloodPressureSampleFetcher()),
 		(type: BodyMassIndex.self, fetcher: injected(SampleFetcherFactory.self).bodyMassIndexSampleFetcher()),
+		(type: FatigueImpl.self, fetcher: injected(SampleFetcherFactory.self).fatigueSampleFetcher()),
 		(type: HeartRate.self, fetcher: injected(SampleFetcherFactory.self).heartRateSampleFetcher()),
 		(type: LeanBodyMass.self, fetcher: injected(SampleFetcherFactory.self).leanBodyMassSampleFetcher()),
 		(type: MedicationDose.self, fetcher: injected(SampleFetcherFactory.self).medicationDoseSampleFetcher()),
