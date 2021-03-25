@@ -59,6 +59,7 @@
 		A2AF1FE32343C27C00E04517 /* MoodExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AF1FE02343C27C00E04517 /* MoodExporter.swift */; };
 		A2AF1FF22343C63900E04517 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AF1FF02343C63900E04517 /* Tag.swift */; };
 		A2AF201F2343C85300E04517 /* Settings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2AF201E2343C85300E04517 /* Settings.framework */; };
+		A2B160B9260D25D000C69C89 /* FatigueExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B160B8260D25D000C69C89 /* FatigueExporter.swift */; };
 		A2DEB93223439D5200551E0B /* Attributes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2DEB93123439D5200551E0B /* Attributes.framework */; };
 		A2DEB93C23439F4800551E0B /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2DEB93B23439F4800551E0B /* Persistence.framework */; };
 		D965E6C4E68635A121CEC18D /* Pods_Samples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FD9205055C3D47CACA310F2 /* Pods_Samples.framework */; };
@@ -123,6 +124,7 @@
 		A2AF1FE02343C27C00E04517 /* MoodExporter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoodExporter.swift; sourceTree = "<group>"; };
 		A2AF1FF02343C63900E04517 /* Tag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		A2AF201E2343C85300E04517 /* Settings.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Settings.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2B160B8260D25D000C69C89 /* FatigueExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FatigueExporter.swift; sourceTree = "<group>"; };
 		A2DEB93123439D5200551E0B /* Attributes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Attributes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2DEB93B23439F4800551E0B /* Persistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Persistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -289,6 +291,7 @@
 				A2AF1FDE2343C27C00E04517 /* ActivityExporter.swift */,
 				A2AF1FDF2343C27C00E04517 /* MedicationExporter.swift */,
 				A2AF1FE02343C27C00E04517 /* MoodExporter.swift */,
+				A2B160B8260D25D000C69C89 /* FatigueExporter.swift */,
 			);
 			path = Exporters;
 			sourceTree = "<group>";
@@ -412,6 +415,7 @@
 				A22D6270234398AF0023470F /* HealthKitQuantitySample.swift in Sources */,
 				A22D6265234398AF0023470F /* CoreDataSample.swift in Sources */,
 				A22D6273234398AF0023470F /* Sample.swift in Sources */,
+				A2B160B9260D25D000C69C89 /* FatigueExporter.swift in Sources */,
 				A22D6275234398AF0023470F /* SampleFactory.swift in Sources */,
 				A287DEB325806183000B8166 /* Fatigue.swift in Sources */,
 				A2AF1FDB2343C12100E04517 /* TagsAttribute.swift in Sources */,

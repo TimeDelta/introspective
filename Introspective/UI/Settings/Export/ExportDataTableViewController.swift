@@ -30,6 +30,7 @@ public final class ExportDataTableViewController: UITableViewController {
 	/// All exportable sample types
 	private static let sampleTypes: [CoreDataSample.Type] = [
 		Activity.self,
+		FatigueImpl.self,
 		MedicationDose.self,
 		MoodImpl.self,
 	]
@@ -274,6 +275,9 @@ public final class ExportDataTableViewController: UITableViewController {
 		let type = Me.sampleTypes[indexPath.row]
 		if type == Activity.self || type == ActivityDefinition.self {
 			return injected(ActivityExporter.self)
+		}
+		if type == FatigueImpl.self {
+			return injected(FatigueExporter.self)
 		}
 		if type == MedicationDose.self || type == Medication.self {
 			return injected(MedicationExporter.self)

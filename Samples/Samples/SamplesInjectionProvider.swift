@@ -54,6 +54,8 @@ public class SamplesInjectionProvider: InjectionProvider {
 			return Me.coreDataSampleUtil as! Type
 		case is FatigueDAO.Protocol:
 			return Me.fatigueDAO as! Type
+		case is FatigueExporter.Protocol:
+			return try FatigueExporterImpl() as! Type
 		case is HealthKitUtil.Protocol:
 			return Me.healthKitUtil as! Type
 		case is MedicationDAO.Protocol:

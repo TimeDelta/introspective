@@ -63,6 +63,7 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 	// MARK: Export
 
 	public static let finishedExportingActivities = basicCategory(id: "finished exporting activities")
+	public static let finishedExportingFatigue = basicCategory(id: "finished exporting fatigue")
 	public static let finishedExportingMedications = basicCategory(id: "finished exporting medications")
 	public static let finishedExportingMoods = basicCategory(id: "finished exporting moods")
 
@@ -70,6 +71,7 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 		generalError,
 		timeExpired,
 		finishedImportingActivities,
+		finishedExportingFatigue,
 		finishedImportingMedications,
 		finishedImportingMoods,
 	])
