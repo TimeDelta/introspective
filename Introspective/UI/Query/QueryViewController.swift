@@ -72,6 +72,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	@IBOutlet final var addPartButton: UIBarButtonItem!
 	@IBOutlet final var finishedButton: UIBarButtonItem!
 	@IBOutlet final var editButton: UIBarButtonItem!
+	@IBOutlet final var speechToQueryButton: UIBarButtonItem!
 	@IBOutlet final var toolbar: UIToolbar!
 
 	// MARK: - Instance Variables
@@ -99,6 +100,9 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 		editButton.target = self
 		editButton.action = #selector(editButtonPressed)
+
+		speechToQueryButton.target = self
+		speechToQueryButton.action = #selector(speechToQueryButtonPressed)
 
 		finishedButton.title = finishedButtonTitle
 
@@ -346,6 +350,10 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	@objc private final func editButtonPressed() {
 		editButton.title = isEditing ? "Edit" : "Done"
 		_ = editButtonItem.target?.perform(editButtonItem.action)
+	}
+
+	@objc private final func speechToQueryButtonPressed() {
+		
 	}
 
 	// MARK: - Navigation

@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:Speech2Query/Speech2Query/Speech2Query.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:Introspective.xcodeproj">
    </FileRef>
    <FileRef

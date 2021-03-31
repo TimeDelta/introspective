@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ak2-fA-4ld">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ak2-fA-4ld">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -17,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <toolbar key="tableFooterView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="a8Y-9T-RMg">
-                            <rect key="frame" x="0.0" y="137" width="375" height="44"/>
+                            <rect key="frame" x="0.0" y="230" width="375" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             <items>
                                 <barButtonItem systemItem="add" id="z9J-Hy-7FO">
@@ -132,18 +133,21 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="uW4-4U-hFU">
-                        <barButtonItem key="rightBarButtonItem" id="dRp-3Q-svk">
-                            <button key="customView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="lDj-8x-ExV">
-                                <rect key="frame" x="334" y="10" width="25" height="24"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <rightBarButtonItems>
+                            <barButtonItem id="dRp-3Q-svk">
+                                <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="lDj-8x-ExV">
+                                    <rect key="frame" x="334" y="10" width="25" height="24"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <connections>
+                                        <action selector="infoButtonPressed:" destination="WJ9-gy-FSd" eventType="touchUpInside" id="tKL-oq-YaF"/>
+                                    </connections>
+                                </button>
                                 <connections>
-                                    <action selector="infoButtonPressed:" destination="WJ9-gy-FSd" eventType="touchUpInside" id="tKL-oq-YaF"/>
+                                    <action selector="infoButtonPressed:" destination="WJ9-gy-FSd" id="P7g-Ox-aQf"/>
                                 </connections>
-                            </button>
-                            <connections>
-                                <action selector="infoButtonPressed:" destination="WJ9-gy-FSd" id="P7g-Ox-aQf"/>
-                            </connections>
-                        </barButtonItem>
+                            </barButtonItem>
+                            <barButtonItem image="mic" catalog="system" id="503-L4-dSh"/>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
@@ -151,6 +155,7 @@
                         <outlet property="addPartButton" destination="z9J-Hy-7FO" id="8nM-t4-y8L"/>
                         <outlet property="editButton" destination="LVd-yT-HTy" id="H3F-dP-8ki"/>
                         <outlet property="finishedButton" destination="3Kp-MA-kPR" id="K29-Q2-BVa"/>
+                        <outlet property="speechToQueryButton" destination="503-L4-dSh" id="fOr-lW-IhY"/>
                         <outlet property="toolbar" destination="a8Y-9T-RMg" id="b2N-V4-s3L"/>
                     </connections>
                 </tableViewController>
@@ -168,14 +173,15 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mbg-CO-KsO">
                                 <rect key="frame" x="0.0" y="224" width="375" height="350"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <pickerView contentMode="scaleToFill" restorationIdentifier="dataTypePicker" translatesAutoresizingMaskIntoConstraints="NO" id="3yu-Wc-bpb">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="216"/>
                                 <accessibility key="accessibilityConfiguration" identifier="data type" label="data type"/>
                             </pickerView>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="3mF-KX-9KV"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="mbg-CO-KsO" firstAttribute="leading" secondItem="3mF-KX-9KV" secondAttribute="leading" id="69D-Gg-UDf"/>
                             <constraint firstItem="3yu-Wc-bpb" firstAttribute="leading" secondItem="3mF-KX-9KV" secondAttribute="leading" id="7Us-GK-Py2"/>
@@ -185,7 +191,6 @@
                             <constraint firstItem="mbg-CO-KsO" firstAttribute="top" secondItem="3yu-Wc-bpb" secondAttribute="bottom" constant="8" symbolic="YES" id="qsl-SD-001"/>
                             <constraint firstItem="3yu-Wc-bpb" firstAttribute="top" secondItem="3mF-KX-9KV" secondAttribute="top" id="tdl-0H-g1u"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="3mF-KX-9KV"/>
                     </view>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
@@ -208,7 +213,7 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ik2-6N-gHU">
                                 <rect key="frame" x="0.0" y="224" width="375" height="350"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ND4-V8-b6U">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="216"/>
@@ -217,7 +222,8 @@
                                 </accessibility>
                             </pickerView>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="Ids-Km-t5A"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="ik2-6N-gHU" firstAttribute="top" secondItem="ND4-V8-b6U" secondAttribute="bottom" constant="8" symbolic="YES" id="2Hy-kn-Krq"/>
                             <constraint firstItem="ND4-V8-b6U" firstAttribute="leading" secondItem="Ids-Km-t5A" secondAttribute="leading" id="Rge-I2-qPi"/>
@@ -227,7 +233,6 @@
                             <constraint firstItem="ik2-6N-gHU" firstAttribute="leading" secondItem="Ids-Km-t5A" secondAttribute="leading" id="sQk-An-2cH"/>
                             <constraint firstItem="ND4-V8-b6U" firstAttribute="top" secondItem="Ids-Km-t5A" secondAttribute="top" id="wni-ko-YEj"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="Ids-Km-t5A"/>
                     </view>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
@@ -261,4 +266,10 @@
             <point key="canvasLocation" x="1308" y="-836"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="mic" catalog="system" width="108" height="128"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
 </document>
