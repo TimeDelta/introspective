@@ -26,6 +26,14 @@ public final class RecordIntegerMoodIntentHandler: NSObject, RecordIntegerMoodIn
 			completion(RecordIntegerMoodRatingResolutionResult.needsValue())
 			return
 		}
+		guard rating <= Int(injected(Settings.self).maxMood) else {
+			completion(RecordIntegerMoodRatingResolutionResult.unsupported(forReason: .greaterThanMaximumValue))
+			return
+		}
+		guard rating >= Int(injected(Settings.self).minMood) else {
+			completion(RecordIntegerMoodRatingResolutionResult.unsupported(forReason: .lessThanMinimumValue))
+			return
+		}
 		completion(RecordIntegerMoodRatingResolutionResult.success(with: rating))
 	}
 
@@ -35,6 +43,14 @@ public final class RecordIntegerMoodIntentHandler: NSObject, RecordIntegerMoodIn
 	) {
 		guard let rating = intent.rating as? Int else {
 			completion(INIntegerResolutionResult.needsValue())
+			return
+		}
+		guard rating <= Int(injected(Settings.self).maxMood) else {
+			completion(INIntegerResolutionResult.unsupported())
+			return
+		}
+		guard rating >= Int(injected(Settings.self).minMood) else {
+			completion(INIntegerResolutionResult.unsupported())
 			return
 		}
 		completion(INIntegerResolutionResult.success(with: rating))
