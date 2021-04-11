@@ -97,7 +97,7 @@ public final class SumInformation: AnyInformation {
 		if attribute is DosageAttribute {
 			let filteredSamples = try filterSamples(samples, as: Dosage.self)
 			if filteredSamples.isEmpty { throw GenericDisplayableError(title: "No samples match filter") }
-			return try getSumOfDosageAttribute(filteredSamples)
+			return try getGraphableSumOfDosageAttribute(filteredSamples)
 		}
 		if attribute is DurationAttribute {
 			let filteredSamples = try filterSamples(samples, as: TimeDuration.self)
@@ -122,9 +122,18 @@ public final class SumInformation: AnyInformation {
 	private final func getSumOfDosageAttribute(_ filteredSamples: [Sample]) throws -> String {
 		let dosage: Dosage? = try getFirstNonNilDosage(from: filteredSamples)
 		if let unit = dosage?.unit {
-			return Dosage(try dosageSum(over: filteredSamples, in: unit), unit).description
+			return Dosage(try dosageSumWithUnits(over: filteredSamples, in: unit), unit).description
 		} else {
-			return "0"
+			return String(try dosageSumWithoutUnits(over: filteredSamples))
+		}
+	}
+
+	private final func getGraphableSumOfDosageAttribute(_ filteredSamples: [Sample]) throws -> String {
+		let dosage: Dosage? = try getFirstNonNilDosage(from: filteredSamples)
+		if let unit = dosage?.unit {
+			return String(try dosageSumWithUnits(over: filteredSamples, in: unit))
+		} else {
+			return String(try dosageSumWithoutUnits(over: filteredSamples))
 		}
 	}
 
@@ -141,11 +150,21 @@ public final class SumInformation: AnyInformation {
 		return dosage
 	}
 
-	private final func dosageSum(over filteredSamples: [Sample], in unit: String) throws -> Double {
+	private final func dosageSumWithUnits(over filteredSamples: [Sample], in unit: String) throws -> Double {
 		var totalDosage = 0.0
 		for sample in filteredSamples {
 			if let dosage = try sample.value(of: attribute) as? Dosage {
 				totalDosage += dosage.inUnits(unit)
+			}
+		}
+		return totalDosage
+	}
+
+	private final func dosageSumWithoutUnits(over filteredSamples: [Sample]) throws -> Double {
+		var totalDosage = 0.0
+		for sample in filteredSamples {
+			if let dosage = try sample.value(of: attribute) as? Dosage {
+				totalDosage += dosage.amount
 			}
 		}
 		return totalDosage
