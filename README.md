@@ -54,42 +54,43 @@ Introspection integrates with a number of data types from the Apple Health app, 
 
 #### Data Types
 The following data types are supported (with more to come, guaranteed):
-? = optional field
+
+**?** = optional field
   - Activity (what you're doing and when you're doing it)
     - Definition (common to all instances of the activity so that you don't have to constantly type everything)
       - Name
-      - Description ?
-      - Common Tags ?
+      - Description **?**
+      - Common Tags **?**
       - Source (the name of the app that generated this record - automatically recorded)
     - Start Time (with time zone)
-    - End Time ? (with time zone)
-    - Additional Tags ? (only appear on this instance of the activity)
-    - Note ?
+    - End Time **?** (with time zone)
+    - Additional Tags **?** (only appear on this instance of the activity)
+    - Note **?**
     - Source (the name of the app that generated this record - automatically recorded)
   - Blood Pressure (from Apple Health app)
   - Body Mass Index (from Apple Health app)
   - Fatigue (with customizable scale)
     - Timestamp (with time zone)
     - Rating
-    - Note ?
+    - Note **?**
     - Source (the name of the app that generated this record - automatically recorded)
   - Heart Rate (from Apple Health app)
   - Lean Body Mass (from Apple Health app)
   - Medication Dose
     - Medication Definition (common to all doses of this medication)
       - Name
-      - Started On ? (when did you start taking this medication)
-      - Frequency ? (how frequently are you supposed to take this medication)
-      - Default Dosage ? (use this dosage every time you quick take this medication)
-      - Notes ? (anything else you want to remember about this medication)
+      - Started On **?** (when did you start taking this medication)
+      - Frequency **?** (how frequently are you supposed to take this medication)
+      - Default Dosage **?** (use this dosage every time you quick take this medication)
+      - Notes **?** (anything else you want to remember about this medication)
       - Source (the name of the app that generated this record - automatically recorded)
     - Timestamp (with time zone)
-    - Dosage ? (how much of this medication you took this time)
+    - Dosage **?** (how much of this medication you took this time)
     - Source (the name of the app that generated this record - automatically recorded)
   - Mood (with customizable scale)
     - Timestamp (with time zone)
     - Rating
-    - Note ?
+    - Note **?**
     - Source (the name of the app that generated this record - automatically recorded)
   - Resting Heart Rate (from Apple Health app)
   - Sexual Activity (from Apple Health app)
