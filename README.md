@@ -66,10 +66,15 @@ The following data types are supported (with more to come, guaranteed):
     - Additional Tags ? (only appear on this instance of the activity)
     - Note ?
     - Source (the name of the app that generated this record - automatically recorded)
-  - Blood Pressure
-  - Body Mass Index
-  - Heart Rate
-  - Lean Body Mass
+  - Blood Pressure (from Apple Health app)
+  - Body Mass Index (from Apple Health app)
+  - Fatigue (with customizable scale)
+    - Timestamp (with time zone)
+    - Rating
+    - Note ?
+    - Source (the name of the app that generated this record - automatically recorded)
+  - Heart Rate (from Apple Health app)
+  - Lean Body Mass (from Apple Health app)
   - Medication Dose
     - Medication Definition (common to all doses of this medication)
       - Name
@@ -84,12 +89,12 @@ The following data types are supported (with more to come, guaranteed):
   - Mood (with customizable scale)
     - Timestamp (with time zone)
     - Rating
-    - Note
+    - Note ?
     - Source (the name of the app that generated this record - automatically recorded)
-  - Resting Heart Rate
-  - Sexual Activity
-  - Sleep
-  - Weight
+  - Resting Heart Rate (from Apple Health app)
+  - Sexual Activity (from Apple Health app)
+  - Sleep (from Apple Health app)
+  - Weight (from Apple Health app)
 
 ## Getting Started
 ### Code Formatting
