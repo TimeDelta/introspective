@@ -1,1 +1,1 @@
-Custom queries and graphs for mood, activities, medications and AppleHealth data. Introspective is a data-driven approach to introspection.
+Custom queries and graphs for mood, activities, medications and AppleHealth data. Introspective is a data-driven approach to health.
