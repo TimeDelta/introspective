@@ -149,6 +149,12 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
+
+		guard samples.count > 0 else {
+			showError(title: "No results", message: nil, onDismiss: { _ in self.popFromNavigationController() })
+			return
+		}
+
 		setTableViewInsetsForTabBar()
 
 		actionsButton.target = self
