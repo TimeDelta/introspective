@@ -300,6 +300,8 @@ public final class SampleUtilImpl: SampleUtil {
 			}
 	}
 
+	#warning("this doesn't return negative values, so WithinXCalendarUnitsBeforeSubQueryMatcher won't work")
+	#warning("also, this looks at end dates, which shouldn't be for WithinXCalendarUnitsBeforeSubQueryMatcher")
 	public final func distance(
 		between sample1: Sample,
 		and sample2: Sample,
