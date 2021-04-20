@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A20675912625CB5A00AA86C0 /* WithinXCalendarUnitsBeforeSubQueryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20675902625CB5A00AA86C0 /* WithinXCalendarUnitsBeforeSubQueryMatcher.swift */; };
 		A24E2E8F23451CE500A7707D /* Queries.h in Headers */ = {isa = PBXBuildFile; fileRef = A24E2E8D23451CE500A7707D /* Queries.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A24E2E9723451CF500A7707D /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A24E2E9623451CF500A7707D /* Common.framework */; };
 		A24E2E9923451CFA00A7707D /* DependencyInjection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A24E2E9823451CFA00A7707D /* DependencyInjection.framework */; };
@@ -45,6 +46,7 @@
 /* Begin PBXFileReference section */
 		627A4CECE02EEC6128B44450 /* Pods_Queries.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Queries.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DDA82AE26229DC5EBB7AB9B /* Pods-Queries.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Queries.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-Queries/Pods-Queries.debug.xcconfig"; sourceTree = "<group>"; };
+		A20675902625CB5A00AA86C0 /* WithinXCalendarUnitsBeforeSubQueryMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithinXCalendarUnitsBeforeSubQueryMatcher.swift; sourceTree = "<group>"; };
 		A24E2E8A23451CE500A7707D /* Queries.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Queries.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A24E2E8D23451CE500A7707D /* Queries.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Queries.h; sourceTree = "<group>"; };
 		A24E2E8E23451CE500A7707D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -158,6 +160,7 @@
 				A24E2EA623451D4A00A7707D /* SameStartDatesSubQueryMatcher.swift */,
 				A24E2EA523451D4A00A7707D /* SameEndDatesSubQueryMatcher.swift */,
 				A24E2EA723451D4A00A7707D /* WithinXCalendarUnitsSubQueryMatcher.swift */,
+				A20675902625CB5A00AA86C0 /* WithinXCalendarUnitsBeforeSubQueryMatcher.swift */,
 			);
 			path = SubQueryMatchers;
 			sourceTree = "<group>";
@@ -321,6 +324,7 @@
 				A24E2EC423451D4B00A7707D /* HealthKitQuery.swift in Sources */,
 				A24E2ED323451D4B00A7707D /* ActivityQuery.swift in Sources */,
 				A24E2ECC23451D4B00A7707D /* BodyMassIndexQuery.swift in Sources */,
+				A20675912625CB5A00AA86C0 /* WithinXCalendarUnitsBeforeSubQueryMatcher.swift in Sources */,
 				A24E2ED123451D4B00A7707D /* CoreDataQuery.swift in Sources */,
 				A24E2EBF23451D4B00A7707D /* SubQueryMatcherFactory.swift in Sources */,
 				A24E2EC623451D4B00A7707D /* RestingHeartRateQuery.swift in Sources */,

@@ -19,7 +19,7 @@ public protocol SearchUtil {
 	/// - Returns: `nil` if the input array is empty, otherwise the index of the item with closest distance
 	func closestItem<T>(to targetItem: T, in items: [T], distance: (T, T) -> Int) -> T
 	/// - Precondition: input array is not empty and is sorted in ascending order based on the given distance function (distance can be negative and this will find the closest to 0).
-	/// - Returns: `nil` if the input array is empty, otherwise the index of the item with closest distance
+	/// - Returns: the index of the item with closest distance.
 	func binarySearchForClosest<T>(to targetItem: T, in items: [T], distance: (T, T) -> Int) -> Int
 }
 
@@ -82,7 +82,7 @@ public final class SearchUtilImpl: SearchUtil {
 	}
 
 	/// - Precondition: input array is not empty and is sorted in ascending order based on the given distance function (distance can be negative and this will find the closest to 0).
-	/// - Returns: `nil` if the input array is empty, otherwise the index of the item with closest distance
+	/// - Returns: the index of the item with closest distance.
 	public final func binarySearchForClosest<T>(to targetItem: T, in items: [T], distance: (T, T) -> Int) -> Int {
 		precondition(items.count > 0)
 
@@ -92,7 +92,7 @@ public final class SearchUtilImpl: SearchUtil {
 		var closestDistance = Int.max
 		var closestDistanceIndex = 0
 
-		// use iterative version instead of recursiv to avoid stack overflow
+		// use iterative version instead of recursive to avoid stack overflow
 		while true {
 			let currentIndex = (lowerIndex + upperIndex) / 2
 			let distance = distance(items[currentIndex], targetItem)
