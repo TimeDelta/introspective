@@ -1,9 +1,9 @@
 //
-//  WithinXCalendarUnitsSubQueryMatch.swift
+//  WithinXCalendarUnitsBeforeSubQueryMatcher.swift
 //  Introspective
 //
-//  Created by Bryan Nova on 7/16/18.
-//  Copyright © 2018 Bryan Nova. All rights reserved.
+//  Created by Bryan Nova on 4/20/21.
+//  Copyright © 2021 Bryan Nova. All rights reserved.
 //
 
 import Foundation
@@ -89,9 +89,7 @@ public final class WithinXCalendarUnitsBeforeSubQueryMatcher: SubQueryMatcher, E
 				querySample: sample,
 				subQuerySample: subQuerySamples[closestSubQuerySampleIndex]
 			)
-			#warning(
-				"look into whether the distance function rounds down / up. depeending on this, might want to consider only using <= when time unit is nanoseconds"
-			)
+
 			if closestDistance <= numberOfTimeUnits {
 				matchingSamples.append(sample)
 			}
@@ -199,14 +197,16 @@ public final class WithinXCalendarUnitsBeforeSubQueryMatcher: SubQueryMatcher, E
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
-		if !(otherAttributed is WithinXCalendarUnitsSubQueryMatcher) { return false }
-		let other = otherAttributed as! WithinXCalendarUnitsSubQueryMatcher
+		guard let other = otherAttributed as? WithinXCalendarUnitsBeforeSubQueryMatcher else {
+			return false
+		}
 		return equalTo(other)
 	}
 
 	public final func equalTo(_ otherMatcher: SubQueryMatcher) -> Bool {
-		if !(otherMatcher is WithinXCalendarUnitsSubQueryMatcher) { return false }
-		let other = otherMatcher as! WithinXCalendarUnitsSubQueryMatcher
+		guard let other = otherMatcher as? WithinXCalendarUnitsBeforeSubQueryMatcher else {
+			return false
+		}
 		return equalTo(other)
 	}
 
