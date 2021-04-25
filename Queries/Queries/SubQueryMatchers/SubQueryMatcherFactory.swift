@@ -12,6 +12,7 @@ import Foundation
 public protocol SubQueryMatcherFactory {
 	func withinXCalendarUnitsSubQueryMatcher() -> WithinXCalendarUnitsSubQueryMatcher
 	func withinXCalendarUnitsBeforeSubQueryMatcher() -> WithinXCalendarUnitsBeforeSubQueryMatcher
+	func withinXCalendarUnitsAfterSubQueryMatcher() -> WithinXCalendarUnitsAfterSubQueryMatcher
 	func inSameCalendarUnitSubQueryMatcher() -> InSameCalendarUnitSubQueryMatcher
 	func sameDatesSubQueryMatcher() -> SameDatesSubQueryMatcher
 	func sameStartDatesSubQueryMatcher() -> SameStartDatesSubQueryMatcher
@@ -22,6 +23,7 @@ public final class SubQueryMatcherFactoryImpl: SubQueryMatcherFactory {
 	public static var allMatcherTypes: [SubQueryMatcher.Type] = [
 		WithinXCalendarUnitsSubQueryMatcher.self,
 		WithinXCalendarUnitsBeforeSubQueryMatcher.self,
+		WithinXCalendarUnitsAfterSubQueryMatcher.self,
 		InSameCalendarUnitSubQueryMatcher.self,
 		SameDatesSubQueryMatcher.self,
 		SameStartDatesSubQueryMatcher.self,
@@ -34,6 +36,10 @@ public final class SubQueryMatcherFactoryImpl: SubQueryMatcherFactory {
 
 	public final func withinXCalendarUnitsBeforeSubQueryMatcher() -> WithinXCalendarUnitsBeforeSubQueryMatcher {
 		WithinXCalendarUnitsBeforeSubQueryMatcher()
+	}
+
+	public final func withinXCalendarUnitsAfterSubQueryMatcher() -> WithinXCalendarUnitsAfterSubQueryMatcher {
+		WithinXCalendarUnitsAfterSubQueryMatcher()
 	}
 
 	public final func inSameCalendarUnitSubQueryMatcher() -> InSameCalendarUnitSubQueryMatcher {

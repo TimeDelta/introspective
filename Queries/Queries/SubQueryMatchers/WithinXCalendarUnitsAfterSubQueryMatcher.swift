@@ -1,10 +1,12 @@
 //
-//  WithinXCalendarUnitsBeforeSubQueryMatcher.swift
-//  Introspective
+//  WithinXCalendarUnitsAfterSubQueryMatcher.swift
+//  Queries
 //
-//  Created by Bryan Nova on 4/20/21.
+//  Created by Bryan Nova on 4/21/21.
 //  Copyright © 2021 Bryan Nova. All rights reserved.
 //
+
+import Foundation
 
 import Foundation
 
@@ -13,8 +15,8 @@ import Common
 import DependencyInjection
 import Samples
 
-public final class WithinXCalendarUnitsBeforeSubQueryMatcher: SubQueryMatcher, Equatable {
-	private typealias Me = WithinXCalendarUnitsBeforeSubQueryMatcher
+public final class WithinXCalendarUnitsAfterSubQueryMatcher: SubQueryMatcher, Equatable {
+	private typealias Me = WithinXCalendarUnitsAfterSubQueryMatcher
 
 	// MARK: - Attributes
 
@@ -36,9 +38,9 @@ public final class WithinXCalendarUnitsBeforeSubQueryMatcher: SubQueryMatcher, E
 
 	// MARK: - Display Information
 
-	public final let attributedName: String = "Within <number> <time_unit>s before"
+	public final let attributedName: String = "Within <number> <time_unit>s after"
 	public final var description: String {
-		var text = "Within " + String(numberOfTimeUnits) + " " + timeUnit.description.lowercased() + "s before"
+		var text = "Within " + String(numberOfTimeUnits) + " " + timeUnit.description.lowercased() + "s after"
 		if mostRecentOnly {
 			text += " most recent"
 		}
@@ -63,7 +65,7 @@ public final class WithinXCalendarUnitsBeforeSubQueryMatcher: SubQueryMatcher, E
 
 	// MARK: - SubQueryMatcher Functions
 
-	/// Grab only the provided samples that start within `numberOfCalendarUnits` `calendarUnit` before a sub-query sample
+	/// Grab only the provided samples that start within `numberOfCalendarUnits` `calendarUnit` after a sub-query sample
 	public final func getSamples<QuerySampleType: Sample>(
 		from querySamples: [QuerySampleType],
 		matching subQuerySamples: [Sample]
@@ -73,16 +75,22 @@ public final class WithinXCalendarUnitsBeforeSubQueryMatcher: SubQueryMatcher, E
 		}
 
 		var matchingSamples = [QuerySampleType]()
+		var applicableSubQuerySamples: [Sample]
+		if type(of: subQuerySamples[0]).dateAttributes.count > 1 {
+			applicableSubQuerySamples = injected(SampleUtil.self)
+				.sort(samples: subQuerySamples, by: .end, in: .orderedAscending)
+		} else {
+			applicableSubQuerySamples = injected(SampleUtil.self)
+				.sort(samples: subQuerySamples, by: .start, in: .orderedAscending)
+		}
 
-		var applicableSubQuerySamples = injected(SampleUtil.self)
-			.sort(samples: subQuerySamples, by: .start, in: .orderedAscending)
 		if mostRecentOnly {
 			applicableSubQuerySamples = [applicableSubQuerySamples[applicableSubQuerySamples.count - 1]]
 		}
 
 		for sample in querySamples {
-			// do binary search for the minimum distance since they are ordered by start date
-			// and we only care about the before case
+			// do binary search for the minimum distance since they are ordered by end date
+			// and we only care about the after case
 			// we do this by looking for the gradient change in distance to target sample
 			var closestSubQuerySampleIndex = binarySearchForClosestSample(to: sample, in: applicableSubQuerySamples)
 			var closestDistance = distance(
@@ -90,15 +98,15 @@ public final class WithinXCalendarUnitsBeforeSubQueryMatcher: SubQueryMatcher, E
 				subQuerySample: subQuerySamples[closestSubQuerySampleIndex]
 			)
 
-			if closestDistance > 0 && closestSubQuerySampleIndex > 0 {
-				closestSubQuerySampleIndex -= 1 // previous index will have negative distance, meaning BEFORE
+			if closestDistance < 0 && closestSubQuerySampleIndex < subQuerySamples.count - 1 {
+				closestSubQuerySampleIndex += 1 // next index will be positive distance, meaning AFTER
 				closestDistance = distance(
 					querySample: sample,
 					subQuerySample: subQuerySamples[closestSubQuerySampleIndex]
 				)
 			}
 
-			if closestDistance < 0 && abs(closestDistance) <= numberOfTimeUnits {
+			if closestDistance > 0 && abs(closestDistance) <= numberOfTimeUnits {
 				matchingSamples.append(sample)
 			}
 		}
@@ -142,14 +150,20 @@ public final class WithinXCalendarUnitsBeforeSubQueryMatcher: SubQueryMatcher, E
 		let querySampleStart = querySample.dates()[.start]!
 		let subQuerySampleStart = subQuerySample.dates()[.start]!
 
-		guard let startDistance = try? injected(CalendarUtil.self)
-			.distance(from: querySampleStart, to: subQuerySampleStart, in: timeUnit) else {
+		guard let startDistance = try? injected(CalendarUtil.self).distance(
+			from: querySampleStart,
+			to: subQuerySampleStart,
+			in: timeUnit
+		) else {
 			return Int.max
 		}
 
-		if let querySampleEnd = querySample.dates()[.end] {
-			guard let endDistance = try? injected(CalendarUtil.self)
-				.distance(from: querySampleEnd, to: subQuerySampleStart, in: timeUnit) else {
+		if let subQuerySampleEnd = subQuerySample.dates()[.end] {
+			guard let endDistance = try? injected(CalendarUtil.self).distance(
+				from: subQuerySampleEnd,
+				to: querySampleStart,
+				in: timeUnit
+			) else {
 				return startDistance
 			}
 			if abs(endDistance) < abs(startDistance) {
@@ -198,27 +212,27 @@ public final class WithinXCalendarUnitsBeforeSubQueryMatcher: SubQueryMatcher, E
 	// MARK: - Equality
 
 	public static func == (
-		lhs: WithinXCalendarUnitsBeforeSubQueryMatcher,
-		rhs: WithinXCalendarUnitsBeforeSubQueryMatcher
+		lhs: WithinXCalendarUnitsAfterSubQueryMatcher,
+		rhs: WithinXCalendarUnitsAfterSubQueryMatcher
 	) -> Bool {
 		lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
-		guard let other = otherAttributed as? WithinXCalendarUnitsBeforeSubQueryMatcher else {
+		guard let other = otherAttributed as? WithinXCalendarUnitsAfterSubQueryMatcher else {
 			return false
 		}
 		return equalTo(other)
 	}
 
 	public final func equalTo(_ otherMatcher: SubQueryMatcher) -> Bool {
-		guard let other = otherMatcher as? WithinXCalendarUnitsBeforeSubQueryMatcher else {
+		guard let other = otherMatcher as? WithinXCalendarUnitsAfterSubQueryMatcher else {
 			return false
 		}
 		return equalTo(other)
 	}
 
-	public final func equalTo(_ other: WithinXCalendarUnitsBeforeSubQueryMatcher) -> Bool {
+	public final func equalTo(_ other: WithinXCalendarUnitsAfterSubQueryMatcher) -> Bool {
 		numberOfTimeUnits == other.numberOfTimeUnits && timeUnit == other.timeUnit && mostRecentOnly == other
 			.mostRecentOnly
 	}
