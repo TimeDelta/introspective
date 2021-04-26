@@ -374,19 +374,27 @@ public final class RecordActivityTableViewController: UITableViewController {
 		) { _, _, completion in
 			let alert = UIAlertController(
 				title: "Are you sure you want to delete \(activityDefinition.name)?",
-				message: "This will delete all history for this activity.",
+				message: "This will delete all history for this activity and cannot be undone.",
 				preferredStyle: .alert
 			)
 			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
-				do {
-					let transaction = injected(Database.self).transaction()
-					try transaction.delete(activityDefinition)
-					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-					self.loadActivitiyDefinitions()
-				} catch {
-					Me.log.error("Failed to delete activity definition: %@", errorInfo(error))
-					self.showError(title: "Failed to delete activity", error: error)
-				}
+				let secondAlert = UIAlertController(
+					title: "Are you sure you want to delete \(activityDefinition.name)?",
+					message: "This will delete all history for this activity and cannot be undone.",
+					preferredStyle: .alert
+				)
+				secondAlert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
+					do {
+						let transaction = injected(Database.self).transaction()
+						try transaction.delete(activityDefinition)
+						try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+						self.loadActivitiyDefinitions()
+					} catch {
+						Me.log.error("Failed to delete activity definition: %@", errorInfo(error))
+						self.showError(title: "Failed to delete activity", error: error)
+					}
+				})
+				secondAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 			})
 			alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
 			self.present(alert, animated: false, completion: { completion(true) })
