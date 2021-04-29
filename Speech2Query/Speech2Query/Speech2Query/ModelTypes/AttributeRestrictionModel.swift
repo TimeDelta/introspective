@@ -10,9 +10,11 @@ import Foundation
 import AttributeRestrictions
 
 // sourcery: AutoMockable
-protocol AttributeRestrictionModel {
+internal protocol AttributeRestrictionModel {
 
-	static associatedtype RestrictionClass: AttributeRestriction
+	// do it this way insteead of using an associated type to avoid having to
+	// use type erasure pattern to hold an array of AttributeRestrictionModel
+	static var restrictionClass: AttributeRestriction.Type
 
 	/// - Returns: Whether or not each token is relevant for this type of restriction.
 	func predict(for tokens: [String]) -> [Bool]

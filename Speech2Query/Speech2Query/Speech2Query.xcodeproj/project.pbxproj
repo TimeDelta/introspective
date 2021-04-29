@@ -14,6 +14,8 @@
 		A22443892639D25900108346 /* TextToQueryParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22443882639D25900108346 /* TextToQueryParser.swift */; };
 		A224438D2639E38D00108346 /* AttributeRestrictionModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A224438C2639E38D00108346 /* AttributeRestrictionModelFactory.swift */; };
 		A22443902639E6AE00108346 /* BidirectionalLSTMAttributeRestrictionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A224438F2639E6AE00108346 /* BidirectionalLSTMAttributeRestrictionModel.swift */; };
+		A2244395263B1AC900108346 /* SampleTypeClassifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2244394263B1AC900108346 /* SampleTypeClassifier.swift */; };
+		A22443A0263B241D00108346 /* SampleTypeClassifierFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A224439F263B241D00108346 /* SampleTypeClassifierFactory.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +28,8 @@
 		A22443882639D25900108346 /* TextToQueryParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextToQueryParser.swift; sourceTree = "<group>"; };
 		A224438C2639E38D00108346 /* AttributeRestrictionModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeRestrictionModelFactory.swift; sourceTree = "<group>"; };
 		A224438F2639E6AE00108346 /* BidirectionalLSTMAttributeRestrictionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BidirectionalLSTMAttributeRestrictionModel.swift; sourceTree = "<group>"; };
+		A2244394263B1AC900108346 /* SampleTypeClassifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleTypeClassifier.swift; sourceTree = "<group>"; };
+		A224439F263B241D00108346 /* SampleTypeClassifierFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleTypeClassifierFactory.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,13 +65,23 @@
 				A22443832639D0DC00108346 /* Speech2QueryInjectionProvider.swift */,
 				A22443882639D25900108346 /* TextToQueryParser.swift */,
 				A22443772637356C00108346 /* ModelTaxonomy.swift */,
-				A224438C2639E38D00108346 /* AttributeRestrictionModelFactory.swift */,
-				A224437A263735E800108346 /* AttributeRestrictionModel.swift */,
-				A224438F2639E6AE00108346 /* BidirectionalLSTMAttributeRestrictionModel.swift */,
+				A2244397263B1B1900108346 /* ModelTypes */,
 				A224436E263734E400108346 /* Speech2Query.h */,
 				A224436F263734E400108346 /* Info.plist */,
 			);
 			path = Speech2Query;
+			sourceTree = "<group>";
+		};
+		A2244397263B1B1900108346 /* ModelTypes */ = {
+			isa = PBXGroup;
+			children = (
+				A224439F263B241D00108346 /* SampleTypeClassifierFactory.swift */,
+				A2244394263B1AC900108346 /* SampleTypeClassifier.swift */,
+				A224438C2639E38D00108346 /* AttributeRestrictionModelFactory.swift */,
+				A224437A263735E800108346 /* AttributeRestrictionModel.swift */,
+				A224438F2639E6AE00108346 /* BidirectionalLSTMAttributeRestrictionModel.swift */,
+			);
+			path = ModelTypes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -155,6 +169,8 @@
 				A22443782637356C00108346 /* ModelTaxonomy.swift in Sources */,
 				A224438D2639E38D00108346 /* AttributeRestrictionModelFactory.swift in Sources */,
 				A224437B263735E800108346 /* AttributeRestrictionModel.swift in Sources */,
+				A2244395263B1AC900108346 /* SampleTypeClassifier.swift in Sources */,
+				A22443A0263B241D00108346 /* SampleTypeClassifierFactory.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

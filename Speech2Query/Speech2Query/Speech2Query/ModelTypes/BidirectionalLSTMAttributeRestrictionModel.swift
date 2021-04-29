@@ -10,7 +10,10 @@ import CoreML
 
 import AttributeRestrictions
 
-public class BidirectionalLSTMAttributeRestrictionModel: AttributeRestrictionModel {
+/// Use Bi-LSTM instead of something like a transformer to keep the number of learned parameters low
+internal class BidirectionalLSTMAttributeRestrictionModel<RestrictionType>: AttributeRestrictionModel {
+
+	public static var restrictionClass = RestrictionType.self
 
 	public init() {
 

@@ -15,7 +15,8 @@ internal protocol AttributeRestrictionModelFactory {
 
 internal class AttributeRestrictionModelFactoryImpl: AttributeRestrictionModelFactory {
 
-	private static let allModels: [AttributeRestrictionModel] = []
+	private static let allModels: [AttributeRestrictionModel] = [
+	]
 
 	func getAllAttributeRestrictionModels() -> [AttributeRestrictionModel] {
 		allModels
