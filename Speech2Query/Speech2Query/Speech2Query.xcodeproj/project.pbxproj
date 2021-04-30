@@ -16,6 +16,7 @@
 		A22443902639E6AE00108346 /* BidirectionalLSTMAttributeRestrictionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A224438F2639E6AE00108346 /* BidirectionalLSTMAttributeRestrictionModel.swift */; };
 		A2244395263B1AC900108346 /* SampleTypeClassifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2244394263B1AC900108346 /* SampleTypeClassifier.swift */; };
 		A22443A0263B241D00108346 /* SampleTypeClassifierFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A224439F263B241D00108346 /* SampleTypeClassifierFactory.swift */; };
+		A226C398263C5BEC00FEBA10 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = A226C397263C5BEC00FEBA10 /* Token.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		A224438F2639E6AE00108346 /* BidirectionalLSTMAttributeRestrictionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BidirectionalLSTMAttributeRestrictionModel.swift; sourceTree = "<group>"; };
 		A2244394263B1AC900108346 /* SampleTypeClassifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleTypeClassifier.swift; sourceTree = "<group>"; };
 		A224439F263B241D00108346 /* SampleTypeClassifierFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleTypeClassifierFactory.swift; sourceTree = "<group>"; };
+		A226C397263C5BEC00FEBA10 /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +67,7 @@
 				A22443832639D0DC00108346 /* Speech2QueryInjectionProvider.swift */,
 				A22443882639D25900108346 /* TextToQueryParser.swift */,
 				A22443772637356C00108346 /* ModelTaxonomy.swift */,
+				A226C397263C5BEC00FEBA10 /* Token.swift */,
 				A2244397263B1B1900108346 /* ModelTypes */,
 				A224436E263734E400108346 /* Speech2Query.h */,
 				A224436F263734E400108346 /* Info.plist */,
@@ -163,6 +166,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A226C398263C5BEC00FEBA10 /* Token.swift in Sources */,
 				A22443902639E6AE00108346 /* BidirectionalLSTMAttributeRestrictionModel.swift in Sources */,
 				A22443842639D0DC00108346 /* Speech2QueryInjectionProvider.swift in Sources */,
 				A22443892639D25900108346 /* TextToQueryParser.swift in Sources */,

@@ -12,7 +12,7 @@ import AttributeRestrictions
 // sourcery: AutoMockable
 internal protocol AttributeRestrictionModel {
 
-	// do it this way insteead of using an associated type to avoid having to
+	// do it this way instead of using an associated type to avoid having to
 	// use type erasure pattern to hold an array of AttributeRestrictionModel
 	static var restrictionClass: AttributeRestriction.Type
 

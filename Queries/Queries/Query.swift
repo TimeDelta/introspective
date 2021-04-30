@@ -11,6 +11,7 @@ import Foundation
 import BooleanAlgebra
 
 // sourcery: AutoMockable
+/// Currently queries cannot have a brother or sister, only a direct subquery
 public protocol Query: AnyObject {
 	/// - Throws: If a valid query cannot be made from the provided parts
 	init(parts: [BooleanExpressionPart]) throws
