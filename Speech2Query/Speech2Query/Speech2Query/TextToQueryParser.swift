@@ -8,6 +8,7 @@
 import Foundation
 
 import AttributeRestrictions
+import Common
 import DependencyInjection
 import Queries
 import Samples
@@ -25,12 +26,14 @@ public protocol TextToQueryParser {
 ///   - It does not do re-ordering of the query stack.
 public final class TextToQueryParserImpl: TextToQueryParser {
 
+	private static let log = Log()
+
 	public final func parseQuery(from text: String) -> Query? {
 		let tokens = tokenize(text)
 
 		let sampleTypeClassifierModel = injected(SampleTypeClassifierFactory.self).getModel()
 		let sampleTypePerToken = sampleTypeClassifierModel.classify(tokens)
-		var query: Query
+		var query: Query?
 
 		// split tokens based on same contiguous sample type so that
 		// we can assume there is only one query in provided tokens
@@ -40,6 +43,14 @@ public final class TextToQueryParserImpl: TextToQueryParser {
 		for i in 0..<sampleTypePerToken.count {
 			if let currentTokenSampleType = sampleTypePerToken[i] {
 				if currentTokenSampleType != currentRunSampleType && !currentTokenRun.isEmpty {
+					if let currentRunSampleType = currentRunSampleType {
+						do {
+							try addToQuery(&query, currentRunSampleType)
+						} catch {
+							log.error("Failed to add query for %@: %@", currentRunSampleType.name, errorInfo(error))
+							return nil
+						}
+					}
 					tokensSplitByQuery.append(currentTokenRun)
 					currentTokenRun = [Token]()
 				}
@@ -58,6 +69,16 @@ public final class TextToQueryParserImpl: TextToQueryParser {
 
 	private func tokenize(_ text: String) -> [Token] {
 
+	}
+
+	private func addToQuery(_ query: inout Query?, _ sampleType: Sample.Type) throws {
+		if let query = query {
+			if let subQuery = query.subQuery {
+				addToQuery(subQuery, sampleType)
+			} else {
+				query.subQuery = try injected(QueryFactory.self).queryFor(sampleType)
+			}
+		}
 	}
 
 	private func parseAttributeRestrictions(for tokens: [Token]) {
