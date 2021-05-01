@@ -17,7 +17,38 @@
 		A2244395263B1AC900108346 /* SampleTypeClassifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2244394263B1AC900108346 /* SampleTypeClassifier.swift */; };
 		A22443A0263B241D00108346 /* SampleTypeClassifierFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A224439F263B241D00108346 /* SampleTypeClassifierFactory.swift */; };
 		A226C398263C5BEC00FEBA10 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = A226C397263C5BEC00FEBA10 /* Token.swift */; };
+		A226C39B263DD38D00FEBA10 /* AttributeRestrictions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A226C39A263DD38D00FEBA10 /* AttributeRestrictions.framework */; };
+		A226C39C263DD38D00FEBA10 /* AttributeRestrictions.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A226C39A263DD38D00FEBA10 /* AttributeRestrictions.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A226C39F263DD39200FEBA10 /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A226C39E263DD39200FEBA10 /* Common.framework */; };
+		A226C3A0263DD39200FEBA10 /* Common.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A226C39E263DD39200FEBA10 /* Common.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A226C3A2263DD39700FEBA10 /* DependencyInjection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A226C3A1263DD39700FEBA10 /* DependencyInjection.framework */; };
+		A226C3A3263DD39700FEBA10 /* DependencyInjection.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A226C3A1263DD39700FEBA10 /* DependencyInjection.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A226C3A5263DD3A400FEBA10 /* Queries.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A226C3A4263DD3A400FEBA10 /* Queries.framework */; };
+		A226C3A6263DD3A400FEBA10 /* Queries.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A226C3A4263DD3A400FEBA10 /* Queries.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A226C3A8263DD3AC00FEBA10 /* Samples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A226C3A7263DD3AC00FEBA10 /* Samples.framework */; };
+		A226C3A9263DD3AC00FEBA10 /* Samples.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A226C3A7263DD3AC00FEBA10 /* Samples.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A226C3AB263DD44200FEBA10 /* BooleanAlgebra.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A226C3AA263DD44200FEBA10 /* BooleanAlgebra.framework */; };
+		A226C3AC263DD44200FEBA10 /* BooleanAlgebra.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A226C3AA263DD44200FEBA10 /* BooleanAlgebra.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A226C39D263DD38D00FEBA10 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A226C3A3263DD39700FEBA10 /* DependencyInjection.framework in Embed Frameworks */,
+				A226C39C263DD38D00FEBA10 /* AttributeRestrictions.framework in Embed Frameworks */,
+				A226C3AC263DD44200FEBA10 /* BooleanAlgebra.framework in Embed Frameworks */,
+				A226C3A9263DD3AC00FEBA10 /* Samples.framework in Embed Frameworks */,
+				A226C3A0263DD39200FEBA10 /* Common.framework in Embed Frameworks */,
+				A226C3A6263DD3A400FEBA10 /* Queries.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		A224436B263734E400108346 /* Speech2Query.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Speech2Query.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -32,6 +63,12 @@
 		A2244394263B1AC900108346 /* SampleTypeClassifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleTypeClassifier.swift; sourceTree = "<group>"; };
 		A224439F263B241D00108346 /* SampleTypeClassifierFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleTypeClassifierFactory.swift; sourceTree = "<group>"; };
 		A226C397263C5BEC00FEBA10 /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
+		A226C39A263DD38D00FEBA10 /* AttributeRestrictions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AttributeRestrictions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A226C39E263DD39200FEBA10 /* Common.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Common.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A226C3A1263DD39700FEBA10 /* DependencyInjection.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DependencyInjection.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A226C3A4263DD3A400FEBA10 /* Queries.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Queries.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A226C3A7263DD3AC00FEBA10 /* Samples.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Samples.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A226C3AA263DD44200FEBA10 /* BooleanAlgebra.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BooleanAlgebra.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,6 +76,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A226C3A2263DD39700FEBA10 /* DependencyInjection.framework in Frameworks */,
+				A226C39B263DD38D00FEBA10 /* AttributeRestrictions.framework in Frameworks */,
+				A226C3AB263DD44200FEBA10 /* BooleanAlgebra.framework in Frameworks */,
+				A226C3A8263DD3AC00FEBA10 /* Samples.framework in Frameworks */,
+				A226C39F263DD39200FEBA10 /* Common.framework in Frameworks */,
+				A226C3A5263DD3A400FEBA10 /* Queries.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -50,6 +93,7 @@
 			children = (
 				A224436D263734E400108346 /* Speech2Query */,
 				A224436C263734E400108346 /* Products */,
+				A226C399263DD38D00FEBA10 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -87,6 +131,19 @@
 			path = ModelTypes;
 			sourceTree = "<group>";
 		};
+		A226C399263DD38D00FEBA10 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A226C3AA263DD44200FEBA10 /* BooleanAlgebra.framework */,
+				A226C3A7263DD3AC00FEBA10 /* Samples.framework */,
+				A226C3A4263DD3A400FEBA10 /* Queries.framework */,
+				A226C3A1263DD39700FEBA10 /* DependencyInjection.framework */,
+				A226C39E263DD39200FEBA10 /* Common.framework */,
+				A226C39A263DD38D00FEBA10 /* AttributeRestrictions.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -109,6 +166,7 @@
 				A2244367263734E400108346 /* Sources */,
 				A2244368263734E400108346 /* Frameworks */,
 				A2244369263734E400108346 /* Resources */,
+				A226C39D263DD38D00FEBA10 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

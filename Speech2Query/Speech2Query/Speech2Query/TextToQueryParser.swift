@@ -8,6 +8,7 @@
 import Foundation
 
 import AttributeRestrictions
+import BooleanAlgebra
 import Common
 import DependencyInjection
 import Queries
@@ -28,12 +29,14 @@ public final class TextToQueryParserImpl: TextToQueryParser {
 
 	private static let log = Log()
 
+	private var query: Query?
+
 	public final func parseQuery(from text: String) -> Query? {
+		query = nil
 		let tokens = tokenize(text)
 
 		let sampleTypeClassifierModel = injected(SampleTypeClassifierFactory.self).getModel()
 		let sampleTypePerToken = sampleTypeClassifierModel.classify(tokens)
-		var query: Query?
 
 		// split tokens based on same contiguous sample type so that
 		// we can assume there is only one query in provided tokens
@@ -45,7 +48,7 @@ public final class TextToQueryParserImpl: TextToQueryParser {
 				if currentTokenSampleType != currentRunSampleType && !currentTokenRun.isEmpty {
 					if let currentRunSampleType = currentRunSampleType {
 						do {
-							try addToQuery(&query, currentRunSampleType)
+							try addToQuery(currentRunSampleType)
 						} catch {
 							log.error("Failed to add query for %@: %@", currentRunSampleType.name, errorInfo(error))
 							return nil
@@ -63,7 +66,11 @@ public final class TextToQueryParserImpl: TextToQueryParser {
 		}
 
 		for i in 0..<tokensSplitByQuery.count {
-			parseAttributeRestrictions(for: tokensSplitByQuery[i])
+			guard let queryToPopuplate = getQueryWithIndex(i, from: query) else {
+				log.error("Failed to get query with index %d", i)
+				return nil
+			}
+			parseAttributeRestrictions(for: tokensSplitByQuery[i], into: &queryToPopulate)
 		}
 	}
 
@@ -71,7 +78,7 @@ public final class TextToQueryParserImpl: TextToQueryParser {
 
 	}
 
-	private func addToQuery(_ query: inout Query?, _ sampleType: Sample.Type) throws {
+	private func addToQuery(_ sampleType: Sample.Type) throws {
 		if let query = query {
 			if let subQuery = query.subQuery {
 				addToQuery(subQuery, sampleType)
@@ -81,7 +88,7 @@ public final class TextToQueryParserImpl: TextToQueryParser {
 		}
 	}
 
-	private func parseAttributeRestrictions(for tokens: [Token]) {
+	private func parseAttributeRestrictions(for tokens: [Token], into queryToPopulate: Query) {
 		let attributeRestrictionModels = injected(AttributeRestrictionModelFactory.self).getAllAttributeRestrictionModels()
 		for attributeRestrictionModel in attributeRestrictionModels {
 			var tokenRunsForCurrentRestrictionType = [[Token]]()
@@ -98,7 +105,19 @@ public final class TextToQueryParserImpl: TextToQueryParser {
 
 			for tokenRun in tokenRunsForCurrentRestrictionType {
 				let restrictionClass = type(of: attributeRestrictionModel).RestrictionClass
+				injected(AttributeRestrictionFactory.self).init(for: )
 			}
 		}
+	}
+
+	private func getQueryWithIndex(_ index: Int, from query: Query?) -> Query? {
+		guard let query = query else { return nil }
+		if index == 0 {
+			return query
+		}
+		if let subQuery = query.subQuery {
+			return getQueryWithIndex(index - 1, from: subQuery)
+		}
+		return nil
 	}
 }
