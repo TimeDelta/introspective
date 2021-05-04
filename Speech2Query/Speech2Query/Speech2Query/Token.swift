@@ -10,11 +10,8 @@ import Foundation
 internal struct Token {
 
 	var text: String
-	/// index of this token within the original tokenized text. (Might be useful as a feature if normalized)
-	var index: Int
 
-	init(text: String, index: Int) {
+	init(text: String) {
 		self.text = text
-		self.index = index
 	}
 }

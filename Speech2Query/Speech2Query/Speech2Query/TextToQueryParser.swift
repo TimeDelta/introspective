@@ -25,6 +25,7 @@ public protocol TextToQueryParser {
 ///     a more complex implementation.
 ///   - It does not do coreference resolution in order to determine for which query in the stack an attribute restriction applies.
 ///   - It does not do re-ordering of the query stack.
+///   - breaking example: "look at my meds and give me all moods within 5 mins of taking X"
 public final class TextToQueryParserImpl: TextToQueryParser {
 
 	private static let log = Log()
@@ -61,16 +62,15 @@ public final class TextToQueryParserImpl: TextToQueryParser {
 			currentTokenRun.append(token)
 		}
 
-		guard let query = query else { // no sample types detected
+		guard var currentQuery = query else { // no sample types detected
 			return nil
 		}
 
-		for i in 0..<tokensSplitByQuery.count {
-			guard let queryToPopuplate = getQueryWithIndex(i, from: query) else {
-				log.error("Failed to get query with index %d", i)
-				return nil
+		for tokensForCurrentQuery in tokensSplitByQuery {
+			parseAttributeRestrictions(for: tokensForCurrentQuery, into: &currentQuery)
+			if let subQuery = currentQuery.subQuery {
+				currentQuery = subQuery
 			}
-			parseAttributeRestrictions(for: tokensSplitByQuery[i], into: &queryToPopulate)
 		}
 	}
 
@@ -99,13 +99,13 @@ public final class TextToQueryParserImpl: TextToQueryParser {
 					currentTokenRun.append(tokens[i])
 				} else if currentTokenRun.count > 0 {
 					tokenRunsForCurrentRestrictionType.append(currentTokenRun)
-					currentTokenRun = [String]();
+					currentTokenRun = [Token]();
 				}
 			}
 
 			for tokenRun in tokenRunsForCurrentRestrictionType {
-				let restrictionClass = type(of: attributeRestrictionModel).RestrictionClass
-				injected(AttributeRestrictionFactory.self).init(for: )
+				let restrictionClass = type(of: attributeRestrictionModel).restrictionClass
+				injected(AttributeRestrictionFactory.self).initialize(type: restrictionClass, forAttribute: ) -> AttributeRestriction
 			}
 		}
 	}
