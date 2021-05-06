@@ -34,6 +34,7 @@ public enum NotificationName: StringLiteralType {
 
 	// MARK: - Mood Value Changes
 
+	case moodCreated = "moodCreated"
 	case moodRatingChanged = "moodRatingChanged"
 
 	// MARK: - Fatigue Value Changes

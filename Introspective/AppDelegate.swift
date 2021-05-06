@@ -16,6 +16,7 @@ import Common
 import DataExport
 import DataImport
 import DependencyInjection
+import EventListeners
 import Globals
 import Notifications
 import Persistence
@@ -70,6 +71,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 			}
 		}
 
+		injected(EventListenerInitializer.self).setUpListeners()
+
 		return true
 	}
 
@@ -111,6 +114,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 			CommonInjectionProvider(),
 			DataExportInjectionProvider(),
 			DataImportInjectionProvider(),
+			EventListenersInjectionProvider(),
 			IntrospectiveInjectionProvider(),
 			PersistenceInjectionProvider(ObjectModelContainer.objectModel),
 			QueriesInjectionProvider(),

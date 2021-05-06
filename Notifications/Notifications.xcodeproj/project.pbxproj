@@ -12,7 +12,6 @@
 		A24F9099234647B80047A11C /* UserNotificationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24F9098234647B80047A11C /* UserNotificationDelegate.swift */; };
 		A24F909C234647CB0047A11C /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A24F909B234647CB0047A11C /* Common.framework */; };
 		A24F909E234647CF0047A11C /* DependencyInjection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A24F909D234647CF0047A11C /* DependencyInjection.framework */; };
-		A24F90A0234647D30047A11C /* Queries.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A24F909F234647D30047A11C /* Queries.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,7 +32,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A24F90A0234647D30047A11C /* Queries.framework in Frameworks */,
 				A24F909E234647CF0047A11C /* DependencyInjection.framework in Frameworks */,
 				A24F909C234647CB0047A11C /* Common.framework in Frameworks */,
 				6C08D2CB0901860F80CAEBE1 /* Pods_Notifications.framework in Frameworks */,

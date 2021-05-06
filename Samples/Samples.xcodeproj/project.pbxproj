@@ -37,6 +37,8 @@
 		A22D6277234398C40023470F /* SamplesInjectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22D6276234398C40023470F /* SamplesInjectionProvider.swift */; };
 		A22D627A234398D90023470F /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A22D6279234398D90023470F /* Common.framework */; };
 		A22D627C234398DD0023470F /* DependencyInjection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A22D627B234398DD0023470F /* DependencyInjection.framework */; };
+		A25697C326420BB300B0F0AB /* Notifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A25697C226420BB300B0F0AB /* Notifications.framework */; };
+		A25697C426420BB300B0F0AB /* Notifications.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A25697C226420BB300B0F0AB /* Notifications.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A26BD7A2249D3DDD0083C9FC /* MedicationDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26BD7A1249D3DDD0083C9FC /* MedicationDAO.swift */; };
 		A287DEAE2580615E000B8166 /* FatigueDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A287DEAD2580615E000B8166 /* FatigueDAO.swift */; };
 		A287DEB325806183000B8166 /* Fatigue.swift in Sources */ = {isa = PBXBuildFile; fileRef = A287DEB225806183000B8166 /* Fatigue.swift */; };
@@ -63,6 +65,20 @@
 		A2DEB93C23439F4800551E0B /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2DEB93B23439F4800551E0B /* Persistence.framework */; };
 		D965E6C4E68635A121CEC18D /* Pods_Samples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FD9205055C3D47CACA310F2 /* Pods_Samples.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A25697C526420BB300B0F0AB /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A25697C426420BB300B0F0AB /* Notifications.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0FD9205055C3D47CACA310F2 /* Pods_Samples.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Samples.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -100,6 +116,7 @@
 		A22D6276234398C40023470F /* SamplesInjectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplesInjectionProvider.swift; sourceTree = "<group>"; };
 		A22D6279234398D90023470F /* Common.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Common.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A22D627B234398DD0023470F /* DependencyInjection.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DependencyInjection.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A25697C226420BB300B0F0AB /* Notifications.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Notifications.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A26BD7A1249D3DDD0083C9FC /* MedicationDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDAO.swift; sourceTree = "<group>"; };
 		A287DEAD2580615E000B8166 /* FatigueDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FatigueDAO.swift; sourceTree = "<group>"; };
 		A287DEB225806183000B8166 /* Fatigue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fatigue.swift; sourceTree = "<group>"; };
@@ -133,6 +150,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A2A8B0152343E7AC00E883CE /* Globals.framework in Frameworks */,
+				A25697C326420BB300B0F0AB /* Notifications.framework in Frameworks */,
 				A2AF201F2343C85300E04517 /* Settings.framework in Frameworks */,
 				A29E1C472343AC73008B4AE9 /* CoreData.framework in Frameworks */,
 				A29E1C452343AC6A008B4AE9 /* DataExport.framework in Frameworks */,
@@ -235,6 +253,7 @@
 		A22D6278234398D90023470F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A25697C226420BB300B0F0AB /* Notifications.framework */,
 				A2A8B0142343E7AC00E883CE /* Globals.framework */,
 				A2AF201E2343C85300E04517 /* Settings.framework */,
 				A2AF1FC92343AFAD00E04517 /* CommonCoreDataEntities.framework */,
@@ -316,6 +335,7 @@
 				A22D622A2343983E0023470F /* Sources */,
 				A22D622B2343983E0023470F /* Frameworks */,
 				A22D622C2343983E0023470F /* Resources */,
+				A25697C526420BB300B0F0AB /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

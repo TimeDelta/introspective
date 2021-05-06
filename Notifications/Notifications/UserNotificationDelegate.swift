@@ -6,13 +6,13 @@
 //  Copyright © 2019 Bryan Nova. All rights reserved.
 //
 
+import Intents
 import NotificationBannerSwift
 import UIKit
 import UserNotifications
 
 import Common
 import DependencyInjection
-import Queries
 
 public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
 	// MARK: - Static Variables
@@ -65,6 +65,19 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 	public static let finishedExportingActivities = basicCategory(id: "finished exporting activities")
 	public static let finishedExportingMedications = basicCategory(id: "finished exporting medications")
 	public static let finishedExportingMoods = basicCategory(id: "finished exporting moods")
+
+	// MARK: Other
+
+	public static let callSuicidePreventionHotline = UNNotificationAction(
+		identifier: "callSuicideHotline",
+		title: "Call Suicide Prevention Hotline",
+		options: []
+	)
+	public static let feelingSuicidal = UNNotificationCategory(
+		identifier: "feeling suicidal?",
+		actions: [callSuicidePreventionHotline],
+		intentIdentifiers: [INStartAudioCallIntentIdentifier]
+	)
 
 	public static let categories = Set([
 		generalError,
@@ -120,9 +133,6 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 		case Me.showMedicationHistory.identifier:
 			showMedicationHistory()
 			break
-		case Me.showMoodHistory.identifier:
-			showMoodHistory()
-			break
 		case Me.extendTime.identifier:
 			let content = response.notification.request.content
 			sendNotificationForTimeExpiredAction(.extendBackgroundTaskTime, content)
@@ -130,6 +140,9 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 		case Me.cancelTask.identifier:
 			let content = response.notification.request.content
 			sendNotificationForTimeExpiredAction(.cancelBackgroundTask, content)
+			break
+		case Me.callSuicidePreventionHotline.identifier:
+			call(phoneNumber: "8002738255")
 			break
 		default:
 			Me.log.error("Unknown response action identifier: %@", actionIdentifier)
@@ -173,10 +186,6 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 		injected(NotificationUtil.self).post(.showRecordMedicationsScreen, object: self)
 	}
 
-	private final func showMoodHistory() {
-		showResultsScreenWith(forQuery: MoodQueryImpl())
-	}
-
 	// MARK: - Helper Functions
 
 	private final func sendNotificationForTimeExpiredAction(
@@ -196,11 +205,6 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 
 	private final func showRecordDataScreen() {
 		setTabBarIndex(0)
-	}
-
-	private final func showResultsScreenWith(forQuery query: Query) {
-		setTabBarIndex(1)
-		injected(NotificationUtil.self).post(.showResultsScreen, object: self, userInfo: [.query: query])
 	}
 
 	private final func setTabBarIndex(_ index: Int) {
@@ -226,5 +230,14 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 				.hiddenPreviewsShowSubtitle,
 			]
 		)
+	}
+
+	private func call(phoneNumber: String) {
+		if let phoneCallURL = URL(string: "tel://\(phoneNumber)") {
+			let application: UIApplication = UIApplication.shared
+			if application.canOpenURL(phoneCallURL) {
+				application.open(phoneCallURL, options: [:], completionHandler: nil)
+			}
+		}
 	}
 }

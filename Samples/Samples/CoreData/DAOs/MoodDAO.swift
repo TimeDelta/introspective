@@ -12,6 +12,7 @@ import os
 
 import Common
 import DependencyInjection
+import Notifications
 import Persistence
 import Settings
 
@@ -74,6 +75,7 @@ public final class MoodDAOImpl: SingleDateSampleDAO<MoodImpl>, MoodDAO {
 		mood.maxRating = max ?? injected(Settings.self).maxMood
 		mood.setSource(.introspective)
 		try transaction.commit()
+		injected(NotificationUtil.self).post(.moodCreated, object: self, userInfo: [.mood: mood], qos: .background)
 		return try injected(Database.self).pull(savedObject: mood)
 	}
 

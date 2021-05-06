@@ -186,6 +186,7 @@
 		5865D15FA1A4516DFAB83D0F40F876CE /* TimeOfDayAttributeFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3874F8C8D37A0B0FB7C55DDAC0A45410 /* TimeOfDayAttributeFunctionalTests.swift */; };
 		58D11B40202C767ED3EA580F58160CC0 /* GroupingChooserTableViewControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B53C5523046A6A47AAAA78B0BBC9177 /* GroupingChooserTableViewControllerMock.swift */; };
 		59A33964A17373688CD5ACF23E72D6EF /* EditAttributeRestrictionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4CBB7B41499754C5234A1BC949DD2AC /* EditAttributeRestrictionViewController.swift */; };
+		59FA97A0CF79DA6DD55B05B013C8097A /* EventListeners.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 492C8DDE9DC7043B3CFCD3DA71B701CB /* EventListeners.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5A0971F6C2758B25C1F44D16EAC23218 /* ChooseAttributesToGraphTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809BEB786B6E3A771CFFA8A7ED5FA2D2 /* ChooseAttributesToGraphTableViewController.swift */; };
 		5A3E08605EF9D2FAA4B959848B4EA190 /* FatigueTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A0D3C25211D4B33ACF172D7855D39A /* FatigueTableViewCell.swift */; };
 		5A7C9952C940C6E5F4E40F7CF5053610 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 2FF2B5DE5BC01F2C87D469E2E2098E62 /* README.md */; };
@@ -267,6 +268,7 @@
 		771041A34B6F16E1A9CBDA78FF6BCCEF /* MedicationDAOFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DBFC5E195B0A25364A62082A004DF2 /* MedicationDAOFunctionalTests.swift */; };
 		7748D9C98A7EF00680F1E80E26A479F3 /* SampleGroupInformationTableViewCellUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512C33704C8FCB7593E08FF2F731EBEB /* SampleGroupInformationTableViewCellUnitTests.swift */; };
 		77AA8DA138798243DC4A989D9AE6889E /* MedicationDoseEditorViewControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E5D2FBBDA9B83DCDEA4F041627DD05 /* MedicationDoseEditorViewControllerMock.swift */; };
+		7802E5005EC9AA123BAC67BCA9B6D287 /* EventListeners.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 492C8DDE9DC7043B3CFCD3DA71B701CB /* EventListeners.framework */; };
 		783654CB2E4DFCE5A0733B0B08716230 /* EditActivityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C8B5AE7A83209B865D6BC8170C1A09A /* EditActivityTableViewController.swift */; };
 		785074384A5F977EBCA3ACE0A22917FD /* NotEmptyStringAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7214620EA9E32A83763C27F2E499BAF5 /* NotEmptyStringAttributeRestrictionUnitTests.swift */; };
 		78F81CB4F18A2A12318EA6133198EDAF /* EditFatigueTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8FD82841A7730960514DA179FD2965 /* EditFatigueTableViewController.swift */; };
@@ -602,6 +604,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		10293E7C37BF4A711A87E65F59A055C4 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				59FA97A0CF79DA6DD55B05B013C8097A /* EventListeners.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E4C06609875C69A2DD4ECBD5A173CDF2 /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -781,6 +794,7 @@
 		487BCD6FFB5D7F9BAB7231595CDB000A /* DeleteCoreDataTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteCoreDataTableViewCell.swift; sourceTree = "<group>"; };
 		488FBBEAC0EF9616AF94F766921C210B /* SampleGrouperMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleGrouperMock.swift; sourceTree = "<group>"; };
 		48BFA94B71E96ABEE54B0DB185CCDA36 /* AttributeDescriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeDescriptionViewController.swift; sourceTree = "<group>"; };
+		492C8DDE9DC7043B3CFCD3DA71B701CB /* EventListeners.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EventListeners.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A9B578AC7E4A60838469C4189C08A5C /* MostRecentDateInformationFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MostRecentDateInformationFunctionalTests.swift; sourceTree = "<group>"; };
 		4B20DD516309EF7503CCD06B35C67947 /* ActivitySettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitySettingsTableViewController.swift; sourceTree = "<group>"; };
 		4B53C5523046A6A47AAAA78B0BBC9177 /* GroupingChooserTableViewControllerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupingChooserTableViewControllerMock.swift; sourceTree = "<group>"; };
@@ -1225,6 +1239,7 @@
 				DD60174EB861318BEC7610381F69D34D /* Common.framework in Frameworks */,
 				A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */,
 				A9077F5891A802754C04F1A31BFF7E99 /* Pods_Introspective.framework in Frameworks */,
+				7802E5005EC9AA123BAC67BCA9B6D287 /* EventListeners.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1453,6 +1468,7 @@
 		1AF62CA606F9BCE4BA6BF9F957AE714C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				492C8DDE9DC7043B3CFCD3DA71B701CB /* EventListeners.framework */,
 				10ED0ED86FB240910D785C100FE44B58 /* SampleFetchers.framework */,
 				DB6131ACDD7AF379FD1E0AF93FBAD927 /* SwiftDate.framework */,
 				A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */,
@@ -3055,6 +3071,7 @@
 				98059E3C1A4EB06EC76869AA9E6318CC /* Resources */,
 				A283D3D03CC94103E4BC71021C2D5EC7 /* [CP] Embed Pods Frameworks */,
 				E4C06609875C69A2DD4ECBD5A173CDF2 /* Embed App Extensions */,
+				10293E7C37BF4A711A87E65F59A055C4 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -4020,7 +4037,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = Introspective/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -4103,7 +4120,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = Introspective/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

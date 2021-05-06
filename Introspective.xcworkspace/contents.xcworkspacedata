@@ -5,10 +5,31 @@
       location = "group:Introspective.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:DependencyInjection/DependencyInjection.xcodeproj">
+      location = "group:Attributes/Attributes.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:AttributeRestrictions/AttributeRestrictions.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:BooleanAlgebra/BooleanAlgebra.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Common/Common.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:DataImport/DataImport.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:DataExport/DataExport.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:DependencyInjection/DependencyInjection.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:EventListeners/EventListeners.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Globals/Globals.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Notifications/Notifications.xcodeproj">
@@ -17,13 +38,7 @@
       location = "group:Persistence/Persistence.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Settings/Settings.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:Attributes/Attributes.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:AttributeRestrictions/AttributeRestrictions.xcodeproj">
+      location = "group:Queries/Queries.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Samples/Samples.xcodeproj">
@@ -38,19 +53,7 @@
       location = "group:SampleGroupInformation/SampleGroupInformation.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Queries/Queries.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:BooleanAlgebra/BooleanAlgebra.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:DataImport/DataImport.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:DataExport/DataExport.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:Globals/Globals.xcodeproj">
+      location = "group:Settings/Settings.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:UIExtensions/UIExtensions.xcodeproj">

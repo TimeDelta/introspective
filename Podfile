@@ -101,6 +101,17 @@ target 'DependencyInjection' do
   pod 'Sourcery'
 end
 
+target 'EventListeners' do
+  project 'EventListeners/EventListeners'
+  use_frameworks!
+
+  pod 'Sourcery'
+  pod 'CSV.swift', '~> 2.3.1'
+  pod 'Presentr'
+  pod 'NotificationBannerSwift'
+  pod 'SwiftDate', '6.0.3'
+end
+
 target 'Notifications' do
   project 'Notifications/Notifications'
   use_frameworks!
