@@ -10,7 +10,7 @@
 - [Privacy Policy](#privacy-policy)
 
 ## What is this?
-Introspective is an iOS app that is focused on both mental and physical health. It is a new way to explore your health data. It allows you to write custom (easy-to-understand) queries against your data and create custom graphs that can show the relationship between different pieces of your health data. This app is available for free download at https://apps.apple.com/us/app/introspective/id1521706312. Self-tracking, as it is sometimes called, has a lot of potential value to offer. This tool helps you harness that value.
+Introspective is an iOS app that is focused on both mental and physical health. It is a new way to explore your health data. It allows you to write custom (easy-to-understand) queries against your data and create custom graphs that can show the relationship between different pieces of your health data. Self-tracking, as it is sometimes called, has a lot of potential value to offer. This tool helps you harness that value. It is available to download for free on the App Store at https://apps.apple.com/us/app/introspective/id1521706312
 
 ### Main Features
 #### Custom queries
