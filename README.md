@@ -10,7 +10,7 @@
 - [Privacy Policy](#privacy-policy)
 
 ## What is this?
-Introspective is an iOS app that is focused on both mental and physical health. It is a new way to explore your health data. It allows you to write custom (easy-to-understand) queries against your data and create custom graphs that can show the relationship between different pieces of your health data. This app is available for download at https://apps.apple.com/us/app/introspective/id1521706312. This has been a passion project of mine for a few years now and I recently decided to make it open source instead of trying to sell it one day. I decided this even after starting an LLC to sell it on the App Store because I think that it has a lot of potential to help people and because I have other responsibilities (like a full time job) that don't leave enough room for where I want this to go so I need help with it.
+Introspective is an iOS app that is focused on both mental and physical health. It is a new way to explore your health data. It allows you to write custom (easy-to-understand) queries against your data and create custom graphs that can show the relationship between different pieces of your health data. This app is available for download at https://apps.apple.com/us/app/introspective/id1521706312. Self-tracking, as it is sometimes called, has a lot of potential value to offer. This tool helps you harness that value.
 
 ### Main Features
 #### Custom queries
@@ -97,7 +97,7 @@ The following data types are supported (with more to come, guaranteed):
   - Sleep (from Apple Health app)
   - Weight (from Apple Health app)
 
-## Getting Started
+## Getting Started with contributing
 ### Code Formatting
 Code formatting is done via [SwiftFormat](https://github.com/nicklockwood/SwiftFormat). You _**must**_ [install it](https://github.com/nicklockwood/SwiftFormat#how-do-i-install-it) for the build to work because all non-test code is automatically formatted during the build process.
 #### Links
