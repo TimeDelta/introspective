@@ -30,7 +30,7 @@ public final class PainUiUtilImpl: PainUiUtil {
 		"Got it. You're at a %@",
 	]
 	private static let lowPainMessages = [
-		"Yay! You're at a %@. I'm glad you have energy.",
+		"Yay! You're at a %@. I'm glad you're feeling well.",
 	]
 
 	public static let minRatingChanged = Notification.Name("minimumPainRatingChanged")
