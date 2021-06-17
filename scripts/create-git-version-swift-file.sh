@@ -11,7 +11,7 @@ echo "//  Created on $curdate." >> GitVersion.swift
 echo "//" >> GitVersion.swift
 echo "//" >> GitVersion.swift
 echo "public let GIT_SHA_VERSION = \"$version\"" >> GitVersion.swift
-uncommitted_changes="`git status --porcelain`"
+uncommitted_changes="`git status --porcelain | egrep -v '^\?\?'`"
 if [[ -z $uncommitted_changes ]]; then
 	echo "public let UNCOMMITTED_CHANGES = false" >> GitVersion.swift
 else
