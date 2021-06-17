@@ -1,10 +1,12 @@
 //
-//  RecordContinuousFatigueTableViewCell.swift
+//  RecordContinuousPainTableViewCell.swift
 //  Introspective
 //
-//  Created by Bryan Nova on 12/8/20.
-//  Copyright © 2020 Bryan Nova. All rights reserved.
+//  Created by Bryan Nova on 6/16/21.
+//  Copyright © 2021 Bryan Nova. All rights reserved.
 //
+
+import UIKit
 
 import Presentr
 import UIKit
@@ -15,18 +17,18 @@ import Persistence
 import Samples
 import Settings
 
-final class RecordContinuousFatigueTableViewCell: UITableViewCell {
+final class RecordContinuousPainTableViewCell: UITableViewCell {
 	// MARK: - Static Variables
 
-	private typealias Me = RecordContinuousFatigueTableViewCell
+	private typealias Me = RecordContinuousPainTableViewCell
 
 	private static let notePresenter: Presentr = injected(UiUtil.self)
 		.customPresenter(width: .custom(size: 300), height: .custom(size: 200), center: .topCenter)
 	private static let ratingPresenter: Presentr = injected(UiUtil.self)
 		.customPresenter(width: .custom(size: 300), height: .custom(size: 70), center: .topCenter)
 
-	private static let ratingChanged = Notification.Name("recordFatigueRatingChanged")
-	private static let noteChangedNotification = Notification.Name("recordFatigueNoteChanged")
+	private static let ratingChangedNotification = Notification.Name("recordPainRatingChanged")
+	private static let noteChangedNotification = Notification.Name("recordPainNoteChanged")
 
 	private static let log = Log()
 
@@ -35,15 +37,15 @@ final class RecordContinuousFatigueTableViewCell: UITableViewCell {
 	@IBOutlet final var ratingSlider: UISlider!
 	@IBOutlet final var ratingRangeLabel: UILabel!
 	@IBOutlet final var doneButton: UIButton!
+	@IBOutlet final var locationTextField: UITextField!
 	@IBOutlet final var addNoteButton: UIButton!
 	@IBOutlet final var ratingButton: UIButton!
 	@IBOutlet final var feedbackLabel: UILabel!
 
 	// MARK: - Instance Variables
 
-	/// This is not made private solely for testing purposes
-	final var note: String?
-	private final var rating: Double = injected(Settings.self).maxFatigue / 2 {
+	private var note: String?
+	private var rating: Double = injected(Settings.self).maxPain / 2 {
 		didSet { updateUI() }
 	}
 
@@ -54,9 +56,9 @@ final class RecordContinuousFatigueTableViewCell: UITableViewCell {
 		reset()
 		updateUI()
 		observe(selector: #selector(noteSaved), name: Me.noteChangedNotification)
-		observe(selector: #selector(ratingSaved), name: Me.ratingChanged)
-		observe(selector: #selector(updateUI), name: FatigueUiUtilImpl.minRatingChanged)
-		observe(selector: #selector(updateUI), name: FatigueUiUtilImpl.maxRatingChanged)
+		observe(selector: #selector(ratingSaved), name: Me.ratingChangedNotification)
+		observe(selector: #selector(updateUI), name: PainUiUtilImpl.minRatingChanged)
+		observe(selector: #selector(updateUI), name: PainUiUtilImpl.maxRatingChanged)
 	}
 
 	deinit {
@@ -66,8 +68,8 @@ final class RecordContinuousFatigueTableViewCell: UITableViewCell {
 	// MARK: - Actions
 
 	@IBAction final func ratingChanged(_: Any) {
-		let min = injected(Settings.self).minFatigue
-		let max = injected(Settings.self).maxFatigue
+		let min = injected(Settings.self).minPain
+		let max = injected(Settings.self).maxPain
 		rating = Double(ratingSlider.value) * (max - min) + min
 	}
 
@@ -76,10 +78,10 @@ final class RecordContinuousFatigueTableViewCell: UITableViewCell {
 			named: "recordNumber",
 			fromStoryboard: "RecordData"
 		)
-		controller.min = injected(Settings.self).minFatigue
-		controller.max = injected(Settings.self).maxFatigue
+		controller.min = injected(Settings.self).minPain
+		controller.max = injected(Settings.self).maxPain
 		controller.number = rating
-		controller.notificationToSendOnAccept = Me.ratingChanged
+		controller.notificationToSendOnAccept = Me.ratingChangedNotification
 		NotificationCenter.default.post(
 			name: RecordDataTableViewController.showViewController,
 			object: self,
@@ -90,7 +92,7 @@ final class RecordContinuousFatigueTableViewCell: UITableViewCell {
 		)
 	}
 
-	@IBAction final func presentFatigueNoteController(_: Any) {
+	@IBAction final func presentPainNoteController(_: Any) {
 		let controller: NoteViewController = viewController(named: "recordNote", fromStoryboard: "RecordData")
 		controller.note = note ?? ""
 		controller.noteSavedNotification = Me.noteChangedNotification
@@ -106,12 +108,16 @@ final class RecordContinuousFatigueTableViewCell: UITableViewCell {
 
 	@IBAction final func doneButtonPressed(_: Any) {
 		do {
-			let fatigue = try injected(FatigueDAO.self).createFatigue(rating: rating, note: note)
+			let pain = try injected(PainDAO.self).createPain(
+				rating: rating,
+				location: locationTextField.text,
+				note: note
+			)
 
-			feedbackLabel.text = injected(FatigueUiUtil.self).feedbackMessage(
+			feedbackLabel.text = injected(PainUiUtil.self).feedbackMessage(
 				for: rating,
-				min: fatigue.minRating,
-				max: fatigue.maxRating
+				min: pain.minRating,
+				max: pain.maxRating
 			)
 			feedbackLabel.isHidden = false
 			Timer.scheduledTimer(
@@ -124,15 +130,17 @@ final class RecordContinuousFatigueTableViewCell: UITableViewCell {
 
 			reset()
 		} catch {
-			Me.log.error("Failed to create or save fatigue: %@", errorInfo(error))
-			NotificationCenter.default.post(
-				name: RecordDataTableViewController.showErrorMessage,
-				object: self,
-				userInfo: info([
-					.title: "Failed to save fatigue rating",
-					.error: error,
-				])
-			)
+			Me.log.error("Failed to create or save Pain: %@", errorInfo(error))
+			DispatchQueue.main.async {
+				injected(NotificationUtil.self).post(
+					RecordDataTableViewController.showErrorMessage,
+					object: self,
+					userInfo: [
+						.title: "Failed to save Pain rating",
+						.error: error,
+					]
+				)
+			}
 		}
 	}
 
@@ -155,9 +163,10 @@ final class RecordContinuousFatigueTableViewCell: UITableViewCell {
 
 	private final func reset() {
 		note = nil
+		locationTextField.text = nil
 		addNoteButton.setTitle("Add Note", for: .normal)
-		let min = injected(Settings.self).minFatigue
-		let max = injected(Settings.self).maxFatigue
+		let min = injected(Settings.self).minPain
+		let max = injected(Settings.self).maxPain
 		rating = (max - min) / 2 + min
 	}
 
@@ -166,15 +175,15 @@ final class RecordContinuousFatigueTableViewCell: UITableViewCell {
 	}
 
 	@objc private final func updateUI() {
-		let min = injected(Settings.self).minFatigue
-		let max = injected(Settings.self).maxFatigue
+		let min = injected(Settings.self).minPain
+		let max = injected(Settings.self).maxPain
 		ratingSlider.setValue(Float((rating - min) / (max - min)), animated: false)
-		ratingSlider.thumbTintColor = injected(FatigueUiUtil.self)
-			.colorForFatigue(rating: rating, minRating: min, maxRating: max)
-		ratingButton.setTitle(injected(FatigueUiUtil.self).valueToString(rating), for: .normal)
-		ratingButton.accessibilityValue = injected(FatigueUiUtil.self).valueToString(rating)
+		ratingSlider.thumbTintColor = injected(PainUiUtil.self)
+			.colorForPain(rating: rating, minRating: min, maxRating: max)
+		ratingButton.setTitle(injected(PainUiUtil.self).valueToString(rating), for: .normal)
+		ratingButton.accessibilityValue = injected(PainUiUtil.self).valueToString(rating)
 		ratingRangeLabel
 			.text =
-			"(\(injected(FatigueUiUtil.self).valueToString(min))-\(injected(FatigueUiUtil.self).valueToString(max)))"
+			"(\(injected(PainUiUtil.self).valueToString(min))-\(injected(PainUiUtil.self).valueToString(max)))"
 	}
 }

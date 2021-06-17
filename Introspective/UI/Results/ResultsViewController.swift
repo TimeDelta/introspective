@@ -329,6 +329,10 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				let cell = tableViewCell(withIdentifier: "moodSampleCell", for: indexPath) as! MoodTableViewCell
 				cell.mood = (sample as! Mood)
 				return cell
+			case is Pain:
+				let cell = tableViewCell(withIdentifier: "painCell", for: indexPath) as! PainTableViewCell
+				cell.pain = (sample as! Pain)
+				return cell
 			case is SexualActivity:
 				let cell = (
 					tableView

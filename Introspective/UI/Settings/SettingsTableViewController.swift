@@ -26,8 +26,9 @@ public final class SettingsTableViewController: UITableViewController {
 			rows: [
 				"general",
 				"activitySettings",
-				"moodSettings",
 				"fatigueSettings",
+				"moodSettings",
+				"painSettings",
 			]
 		),
 		(

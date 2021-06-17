@@ -40,6 +40,7 @@ public enum UserInfoKey: StringLiteralType, Hashable, CustomStringConvertible {
 	case mood = "mood"
 	case notificationName = "notificationName"
 	case number = "number"
+	case pain = "pain"
 	case presenter = "presenter"
 	case query = "query"
 	case sample = "sample"

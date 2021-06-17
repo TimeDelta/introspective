@@ -21,6 +21,7 @@ public class SamplesInjectionProvider: InjectionProvider {
 	private static let moodDAO = MoodDAOImpl()
 	private static let moodUtil = MoodUtilImpl()
 	private static let numericSampleUtil = NumericSampleUtilImpl()
+	private static let painDAO = PainDAOImpl()
 	private static let sampleFactory = SampleFactoryImpl()
 	private static let sampleUtil = SampleUtilImpl()
 	private static let tagDAO = TagDAOImpl()
@@ -36,6 +37,7 @@ public class SamplesInjectionProvider: InjectionProvider {
 		MoodDAO.self,
 		MoodExporter.self,
 		MoodUtil.self,
+		PainDAO.self,
 		NumericSampleUtil.self,
 		SampleFactory.self,
 		SampleUtil.self,
@@ -68,6 +70,8 @@ public class SamplesInjectionProvider: InjectionProvider {
 			return Me.moodUtil as! Type
 		case is NumericSampleUtil.Protocol:
 			return Me.numericSampleUtil as! Type
+		case is PainDAO.Protocol:
+			return Me.painDAO as! Type
 		case is SampleFactory.Protocol:
 			return Me.sampleFactory as! Type
 		case is SampleUtil.Protocol:

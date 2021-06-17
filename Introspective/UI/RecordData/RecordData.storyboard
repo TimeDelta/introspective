@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="81h-K0-B6G">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="81h-K0-B6G">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -19,7 +19,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" restorationIdentifier="continuousMood" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="continuousMood" rowHeight="145" id="fJm-WJ-Cyf" customClass="RecordContinuousMoodTableViewCell" customModule="Introspective" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="375" height="145"/>
+                                <rect key="frame" x="0.0" y="24.5" width="375" height="145"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fJm-WJ-Cyf" id="WhK-EM-rdy">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="145"/>
@@ -89,7 +89,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" restorationIdentifier="discreteMood" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="discreteMood" rowHeight="145" id="VYs-Kk-cJw" customClass="RecordDiscreteMoodTableViewCell" customModule="Introspective" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="173" width="375" height="145"/>
+                                <rect key="frame" x="0.0" y="169.5" width="375" height="145"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="VYs-Kk-cJw" id="9hk-z4-IxR">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="145"/>
@@ -167,7 +167,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" restorationIdentifier="continuousFatigue" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="continuousFatigue" rowHeight="145" id="3yz-Lq-Jd3" customClass="RecordContinuousFatigueTableViewCell" customModule="Introspective" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="318" width="375" height="145"/>
+                                <rect key="frame" x="0.0" y="314.5" width="375" height="145"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3yz-Lq-Jd3" id="gRm-3r-8pa">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="145"/>
@@ -195,7 +195,7 @@
                                             <rect key="frame" x="14" y="53" width="201" height="30"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                             <color key="tintColor" red="0.7137303948" green="0.71371680500000001" blue="0.71372604370000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                            <accessibility key="accessibilityConfiguration" identifier="mood slider" label="mood slider"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="fatigue slider" label="fatigue slider"/>
                                             <connections>
                                                 <action selector="ratingChanged:" destination="3yz-Lq-Jd3" eventType="valueChanged" id="SDr-gV-DXt"/>
                                             </connections>
@@ -203,7 +203,7 @@
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="/ max" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t6g-Kq-o3L">
                                             <rect key="frame" x="302" y="57" width="57" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                            <accessibility key="accessibilityConfiguration" identifier="rating range" label="rating range"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="fatigue rating range" label="fatigue rating range"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -237,7 +237,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" restorationIdentifier="discreteFatigue" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="discreteFatigue" rowHeight="145" id="bNB-Lr-7pK" customClass="RecordDiscreteFatigueTableViewCell" customModule="Introspective" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="463" width="375" height="145"/>
+                                <rect key="frame" x="0.0" y="459.5" width="375" height="145"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="bNB-Lr-7pK" id="K3b-GF-9QI">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="145"/>
@@ -245,7 +245,7 @@
                                     <subviews>
                                         <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" buttonType="system" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="iAM-je-1QG">
                                             <rect key="frame" x="16" y="90" width="343" height="44"/>
-                                            <accessibility key="accessibilityConfiguration" hint="Add a note about your mood" identifier="set mood note button" label="set mood note button"/>
+                                            <accessibility key="accessibilityConfiguration" hint="Add a note about your fatigue" identifier="set fatigue note button" label="set fatigue note button"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="44" id="v1K-wH-DQ6"/>
                                             </constraints>
@@ -256,7 +256,7 @@
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ad4-Yy-UQA">
                                             <rect key="frame" x="5" y="0.0" width="365" height="34"/>
-                                            <accessibility key="accessibilityConfiguration" hint="Save this mood rating" identifier="save mood button" label="save mood button"/>
+                                            <accessibility key="accessibilityConfiguration" hint="Save this fatigue rating" identifier="save fatigue button" label="save fatigue button"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="34" id="ftS-RZ-Zyg"/>
                                             </constraints>
@@ -315,7 +315,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" restorationIdentifier="medication" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="medication" textLabel="oJ9-rO-oaB" rowHeight="52" style="IBUITableViewCellStyleDefault" id="Ywy-Tl-NSz">
-                                <rect key="frame" x="0.0" y="608" width="375" height="52"/>
+                                <rect key="frame" x="0.0" y="604.5" width="375" height="52"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ywy-Tl-NSz" id="hAu-TZ-T5A">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="52"/>
@@ -332,7 +332,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" restorationIdentifier="activity" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="activity" textLabel="gSR-ok-bB5" rowHeight="52" style="IBUITableViewCellStyleDefault" id="GBc-t4-D0b">
-                                <rect key="frame" x="0.0" y="660" width="375" height="52"/>
+                                <rect key="frame" x="0.0" y="656.5" width="375" height="52"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="GBc-t4-D0b" id="H7M-EF-ehu">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="52"/>
@@ -347,6 +347,182 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" restorationIdentifier="continuousPain" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="continuousPain" rowHeight="180" id="ttE-SM-hdD" customClass="RecordContinuousPainTableViewCell" customModule="Introspective" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="708.5" width="375" height="180"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ttE-SM-hdD" id="dUn-0w-gzO">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="180"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" buttonType="system" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="JqH-9D-vvv">
+                                            <rect key="frame" x="16" y="128" width="343" height="42"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <accessibility key="accessibilityConfiguration" hint="Add a note about your pain" identifier="set pain note button" label="set pain note button"/>
+                                            <state key="normal" title="Add Note"/>
+                                            <connections>
+                                                <action selector="presentPainNoteController:" destination="ttE-SM-hdD" eventType="touchUpInside" id="N7S-vQ-8nN"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nPp-rj-HLS">
+                                            <rect key="frame" x="16" y="11" width="343" height="34"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                            <accessibility key="accessibilityConfiguration" hint="Save this pain rating" identifier="save pain button" label="save pain button"/>
+                                            <state key="normal" title="Save Pain"/>
+                                            <connections>
+                                                <action selector="doneButtonPressed:" destination="ttE-SM-hdD" eventType="touchUpInside" id="8XN-9y-5ey"/>
+                                            </connections>
+                                        </button>
+                                        <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="ZCm-qa-o6z">
+                                            <rect key="frame" x="14" y="53" width="201" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                            <color key="tintColor" red="0.7137303948" green="0.71371680500000001" blue="0.71372604370000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="pain slider" label="pain slider"/>
+                                            <connections>
+                                                <action selector="ratingChanged:" destination="ttE-SM-hdD" eventType="valueChanged" id="KYq-J4-MQe"/>
+                                            </connections>
+                                        </slider>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="/ max" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xn1-dB-Bvp">
+                                            <rect key="frame" x="302" y="57" width="57" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="pain rating range" label="pain rating range"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0BA-tu-Ia7">
+                                            <rect key="frame" x="221" y="53" width="73" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="set pain button" label="set pain button"/>
+                                            <state key="normal" title="rating"/>
+                                            <connections>
+                                                <action selector="setRating:" destination="ttE-SM-hdD" eventType="touchUpInside" id="3y6-mZ-TJJ"/>
+                                            </connections>
+                                        </button>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Location:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kxp-nb-Kgp">
+                                            <rect key="frame" x="16" y="92" width="70" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="W3r-5W-xJ7">
+                                            <rect key="frame" x="94" y="86" width="265" height="34"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits"/>
+                                        </textField>
+                                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NfO-iZ-jqg">
+                                            <rect key="frame" x="16" y="10" width="343" height="158"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                            <fontDescription key="fontDescription" name="Noteworthy-Bold" family="Noteworthy" pointSize="24"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="addNoteButton" destination="JqH-9D-vvv" id="Lzb-cI-rWe"/>
+                                    <outlet property="doneButton" destination="nPp-rj-HLS" id="qtx-o5-8DW"/>
+                                    <outlet property="feedbackLabel" destination="NfO-iZ-jqg" id="5tl-i1-Wxw"/>
+                                    <outlet property="locationTextField" destination="W3r-5W-xJ7" id="lbu-Bk-Fg2"/>
+                                    <outlet property="ratingButton" destination="0BA-tu-Ia7" id="Vlk-Nh-iwK"/>
+                                    <outlet property="ratingRangeLabel" destination="Xn1-dB-Bvp" id="AIE-gb-O8Y"/>
+                                    <outlet property="ratingSlider" destination="ZCm-qa-o6z" id="UG7-OB-Zsm"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" restorationIdentifier="discretePain" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="discretePain" rowHeight="180" id="pEC-Hb-7LJ" customClass="RecordDiscretePainTableViewCell" customModule="Introspective" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="888.5" width="375" height="180"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="pEC-Hb-7LJ" id="j85-Th-zDD">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="180"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" buttonType="system" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="49q-Zk-jvw">
+                                            <rect key="frame" x="16" y="125" width="343" height="44"/>
+                                            <accessibility key="accessibilityConfiguration" hint="Add a note about your pain" identifier="set pain note button" label="set pain note button"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="44" id="MtT-b1-H7C"/>
+                                            </constraints>
+                                            <state key="normal" title="Add Note"/>
+                                            <connections>
+                                                <action selector="presentPainNoteController:" destination="pEC-Hb-7LJ" eventType="touchUpInside" id="TnQ-fP-uXR"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vor-2Z-Mt2">
+                                            <rect key="frame" x="5" y="0.0" width="365" height="34"/>
+                                            <accessibility key="accessibilityConfiguration" hint="Save this pain rating" identifier="save pain button" label="save pain button"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="34" id="mFc-mo-xHa"/>
+                                            </constraints>
+                                            <state key="normal" title="Save Pain"/>
+                                            <connections>
+                                                <action selector="doneButtonPressed:" destination="pEC-Hb-7LJ" eventType="touchUpInside" id="n7r-t3-xDH"/>
+                                            </connections>
+                                        </button>
+                                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="redraw" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uJZ-ee-qAE" customClass="RecordDiscreteNumberScrollView" customModule="UIExtensions">
+                                            <rect key="frame" x="16" y="42" width="343" height="40"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="500" verticalCompressionResistancePriority="500" translatesAutoresizingMaskIntoConstraints="NO" id="gVW-AV-S12">
+                                                    <rect key="frame" x="0.0" y="0.0" width="343" height="40"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="40" placeholder="YES" id="keI-n8-6rN"/>
+                                                    </constraints>
+                                                </view>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="gVW-AV-S12" firstAttribute="leading" secondItem="uJZ-ee-qAE" secondAttribute="leading" priority="999" id="62j-Mh-ZEJ"/>
+                                                <constraint firstItem="gVW-AV-S12" firstAttribute="bottom" secondItem="uJZ-ee-qAE" secondAttribute="bottom" id="BHO-fW-lHJ"/>
+                                                <constraint firstAttribute="trailing" secondItem="gVW-AV-S12" secondAttribute="trailing" priority="999" id="WKQ-cI-Adj"/>
+                                                <constraint firstItem="gVW-AV-S12" firstAttribute="centerX" secondItem="uJZ-ee-qAE" secondAttribute="centerX" placeholder="YES" id="hRy-Iw-QBX"/>
+                                                <constraint firstItem="gVW-AV-S12" firstAttribute="centerY" secondItem="uJZ-ee-qAE" secondAttribute="centerY" id="tWp-UW-cNd"/>
+                                                <constraint firstItem="gVW-AV-S12" firstAttribute="top" secondItem="uJZ-ee-qAE" secondAttribute="top" id="w3H-uH-Rm1"/>
+                                            </constraints>
+                                        </scrollView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Location:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PYR-eN-KHE">
+                                            <rect key="frame" x="16" y="96" width="70" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Sdt-jE-xnw">
+                                            <rect key="frame" x="94" y="89" width="265" height="34"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits"/>
+                                        </textField>
+                                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2yM-2Z-XYE">
+                                            <rect key="frame" x="16" y="10" width="343" height="158"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                            <fontDescription key="fontDescription" name="Noteworthy-Bold" family="Noteworthy" pointSize="24"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="Vor-2Z-Mt2" firstAttribute="leading" secondItem="j85-Th-zDD" secondAttribute="leading" constant="5" id="BsQ-MG-VET"/>
+                                        <constraint firstItem="uJZ-ee-qAE" firstAttribute="trailing" secondItem="j85-Th-zDD" secondAttribute="trailingMargin" id="K55-aC-vmH"/>
+                                        <constraint firstItem="uJZ-ee-qAE" firstAttribute="leading" secondItem="j85-Th-zDD" secondAttribute="leadingMargin" id="MGp-Uf-3Hd"/>
+                                        <constraint firstItem="49q-Zk-jvw" firstAttribute="trailing" secondItem="j85-Th-zDD" secondAttribute="trailingMargin" id="NuU-W9-gc2"/>
+                                        <constraint firstItem="uJZ-ee-qAE" firstAttribute="top" secondItem="Vor-2Z-Mt2" secondAttribute="bottom" constant="8" symbolic="YES" id="gvX-JZ-fYw"/>
+                                        <constraint firstItem="49q-Zk-jvw" firstAttribute="leading" secondItem="j85-Th-zDD" secondAttribute="leadingMargin" id="ibo-6v-1A2"/>
+                                        <constraint firstItem="Vor-2Z-Mt2" firstAttribute="top" secondItem="j85-Th-zDD" secondAttribute="top" id="m9f-l8-Dsr"/>
+                                        <constraint firstItem="49q-Zk-jvw" firstAttribute="bottom" secondItem="j85-Th-zDD" secondAttribute="bottomMargin" id="oIR-y7-wIG"/>
+                                        <constraint firstAttribute="trailing" secondItem="Vor-2Z-Mt2" secondAttribute="trailing" constant="5" id="xef-42-8by"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="addNoteButton" destination="49q-Zk-jvw" id="HJZ-T8-TmA"/>
+                                    <outlet property="doneButton" destination="Vor-2Z-Mt2" id="luw-jW-mkD"/>
+                                    <outlet property="feedbackLabel" destination="2yM-2Z-XYE" id="0hw-qH-Vuj"/>
+                                    <outlet property="locationTextField" destination="Sdt-jE-xnw" id="7vc-1G-DfJ"/>
+                                    <outlet property="painContentView" destination="gVW-AV-S12" id="8v1-Xi-NW7"/>
+                                    <outlet property="scrollView" destination="uJZ-ee-qAE" id="FXX-zE-Gcd"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -370,7 +546,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="activity" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="activity" rowHeight="57" id="X06-7m-J1o" customClass="RecordActivityDefinitionTableViewCell" customModule="Introspective" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="375" height="57"/>
+                                <rect key="frame" x="0.0" y="24.5" width="375" height="57"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="X06-7m-J1o" id="Lgm-Ec-JzO">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="57"/>
@@ -423,7 +599,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="waiting" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="waiting" rowHeight="57" id="0bk-4y-Deo">
-                                <rect key="frame" x="0.0" y="85" width="375" height="57"/>
+                                <rect key="frame" x="0.0" y="81.5" width="375" height="57"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="0bk-4y-Deo" id="QgD-bj-Ogi">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="57"/>
@@ -460,14 +636,14 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="name" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="name" rowHeight="50" id="9ii-cE-b01" customClass="ActivityDefinitionNameTableViewCell" customModule="Introspective" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="375" height="50"/>
+                                <rect key="frame" x="0.0" y="24.5" width="375" height="50"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="9ii-cE-b01" id="z7i-L7-DI2">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Kau-cG-Kkj">
-                                            <rect key="frame" x="74" y="9" width="285" height="30"/>
+                                            <rect key="frame" x="74" y="8" width="285" height="30"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                             <accessibility key="accessibilityConfiguration" identifier="activity name" label="activity name"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -481,7 +657,7 @@
                                             </connections>
                                         </textField>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Name:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gdv-bi-S8a">
-                                            <rect key="frame" x="16" y="14" width="50" height="21"/>
+                                            <rect key="frame" x="16" y="13" width="50" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="1" green="0.058155415100000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -495,7 +671,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="description" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="description" rowHeight="131" id="zsY-cr-cgX" customClass="ActivityDefinitionDescriptionTableViewCell" customModule="Introspective" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="78" width="375" height="131"/>
+                                <rect key="frame" x="0.0" y="74.5" width="375" height="131"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="zsY-cr-cgX" id="96l-Rv-Tcx">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="131"/>
@@ -517,7 +693,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="tags" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="tags" rowHeight="131" id="Lba-1c-PIe" customClass="ActivityDefinitionTagsTableViewCell" customModule="Introspective" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="209" width="375" height="131"/>
+                                <rect key="frame" x="0.0" y="205.5" width="375" height="131"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Lba-1c-PIe" id="lAc-Kk-eUJ">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="131"/>
@@ -535,7 +711,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="autoNote" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="autoNote" rowHeight="50" id="giB-Zd-9F3" customClass="ActivityDefinitionAutoNoteTableViewCell" customModule="Introspective" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="340" width="375" height="50"/>
+                                <rect key="frame" x="0.0" y="336.5" width="375" height="50"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="giB-Zd-9F3" id="1Gm-TM-O9h">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
@@ -557,7 +733,7 @@
                                             </connections>
                                         </button>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Auto-Note on completion" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zYc-uh-jCH">
-                                            <rect key="frame" x="46" y="14" width="258" height="21"/>
+                                            <rect key="frame" x="46" y="13" width="258" height="21"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
                                             <nil key="textColor"/>
@@ -592,7 +768,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="activity" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="activity" textLabel="q5x-ls-NiE" detailTextLabel="X9q-Df-4Dg" style="IBUITableViewCellStyleValue1" id="7Ke-92-s8o">
-                                <rect key="frame" x="0.0" y="28" width="375" height="43.5"/>
+                                <rect key="frame" x="0.0" y="24.5" width="375" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7Ke-92-s8o" id="596-pJ-wOc">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -616,7 +792,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="start" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="start" textLabel="OUT-2M-SSV" detailTextLabel="6nQ-8q-ow0" style="IBUITableViewCellStyleValue1" id="ifx-U0-bVz">
-                                <rect key="frame" x="0.0" y="71.5" width="375" height="43.5"/>
+                                <rect key="frame" x="0.0" y="68" width="375" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ifx-U0-bVz" id="jdq-4k-EZz">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -640,7 +816,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="end" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="end" rowHeight="44" id="vQH-6v-H84" customClass="ActivityEndDateTableViewCellImpl" customModule="Introspective" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="115" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="111.5" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="vQH-6v-H84" id="lpK-7v-4DY">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -679,7 +855,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="duration" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="duration" textLabel="PwE-rG-ulE" detailTextLabel="WHm-5s-Usz" style="IBUITableViewCellStyleValue1" id="aYC-Ee-32F">
-                                <rect key="frame" x="0.0" y="159" width="375" height="43.5"/>
+                                <rect key="frame" x="0.0" y="155.5" width="375" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="aYC-Ee-32F" id="J9j-pz-D4h">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -703,7 +879,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="note" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="note" rowHeight="131" id="Djz-l3-c9V" customClass="ActivityNoteTableViewCellImpl" customModule="Introspective" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="202.5" width="375" height="131"/>
+                                <rect key="frame" x="0.0" y="199" width="375" height="131"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Djz-l3-c9V" id="tHJ-mt-4dQ">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="131"/>
@@ -725,7 +901,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="tags" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="tags" rowHeight="131" id="Iwe-n6-Zgr" customClass="ActivityTagsTableViewCellImpl" customModule="Introspective" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="333.5" width="375" height="131"/>
+                                <rect key="frame" x="0.0" y="330" width="375" height="131"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Iwe-n6-Zgr" id="GQE-gD-Kp9">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="131"/>
@@ -828,7 +1004,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="recordMedication" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="recordMedication" rowHeight="81" id="ra1-6I-wRd" customClass="RecordMedicationTableViewCell" customModule="Introspective" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="375" height="81"/>
+                                <rect key="frame" x="0.0" y="24.5" width="375" height="81"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ra1-6I-wRd" id="8FA-LX-I5T">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="81"/>
@@ -875,7 +1051,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="waiting" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="waiting" id="AK6-bD-Ky0">
-                                <rect key="frame" x="0.0" y="109" width="375" height="43.5"/>
+                                <rect key="frame" x="0.0" y="105.5" width="375" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="AK6-bD-Ky0" id="12K-xM-ehN">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -1186,7 +1362,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <toolbar key="tableHeaderView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="PVx-Hz-nHg">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                            <rect key="frame" x="0.0" y="-93" width="375" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             <items>
                                 <barButtonItem style="plain" systemItem="flexibleSpace" id="bhO-xk-zoo"/>
@@ -1210,7 +1386,7 @@
                         </toolbar>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="dose" id="u1R-xE-Smv">
-                                <rect key="frame" x="0.0" y="72" width="375" height="43.5"/>
+                                <rect key="frame" x="0.0" y="68.5" width="375" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="u1R-xE-Smv" id="5g7-bO-ZNs">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>

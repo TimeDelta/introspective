@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		783F1CE4A185E3B4FB2AB76F /* Pods_Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A825662DDC9FD7206084851 /* Pods_Common.framework */; };
 		A2034F2C24A909AA00557F69 /* GitVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2034F2B24A909A900557F69 /* GitVersion.swift */; };
+		A224F67A267A4137007C3577 /* PainUiUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A224F679267A4137007C3577 /* PainUiUtil.swift */; };
 		A22CF09B23464A11003751E1 /* MoodUiUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22CF09A23464A11003751E1 /* MoodUiUtil.swift */; };
 		A231CEBD23415CE500CCE625 /* DependencyInjection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A231CEBC23415CE500CCE625 /* DependencyInjection.framework */; };
 		A231CEC523424F2F00CCE625 /* CommonInjectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A231CEC423424F2F00CCE625 /* CommonInjectionProvider.swift */; };
@@ -44,6 +45,7 @@
 /* Begin PBXFileReference section */
 		4A825662DDC9FD7206084851 /* Pods_Common.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Common.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2034F2B24A909A900557F69 /* GitVersion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GitVersion.swift; sourceTree = "<group>"; };
+		A224F679267A4137007C3577 /* PainUiUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainUiUtil.swift; sourceTree = "<group>"; };
 		A22CF09A23464A11003751E1 /* MoodUiUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodUiUtil.swift; sourceTree = "<group>"; };
 		A231CEBC23415CE500CCE625 /* DependencyInjection.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DependencyInjection.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A231CEC423424F2F00CCE625 /* CommonInjectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonInjectionProvider.swift; sourceTree = "<group>"; };
@@ -105,8 +107,9 @@
 				A29F6897233EA4B600B8DFDB /* TextNormalizationUtil.swift */,
 				A29F6899233EA4B600B8DFDB /* UserDefaultsUtil.swift */,
 				A2FF5752234524AC0018255C /* UiUtil.swift */,
-				A22CF09A23464A11003751E1 /* MoodUiUtil.swift */,
 				A287DEA125804F63000B8166 /* FatigueUiUtil.swift */,
+				A22CF09A23464A11003751E1 /* MoodUiUtil.swift */,
+				A224F679267A4137007C3577 /* PainUiUtil.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -295,6 +298,7 @@
 				A2B88B78233EA14400E37728 /* CalendarComponentExtension.swift in Sources */,
 				A29F689D233EA4B700B8DFDB /* IOUtil.swift in Sources */,
 				A29F689F233EA4B700B8DFDB /* TextNormalizationUtil.swift in Sources */,
+				A224F67A267A4137007C3577 /* PainUiUtil.swift in Sources */,
 				A2AF1FD32343AFEE00E04517 /* DayOfWeek.swift in Sources */,
 				A231CEC523424F2F00CCE625 /* CommonInjectionProvider.swift in Sources */,
 				A2B88B79233EA14400E37728 /* DateExtension.swift in Sources */,

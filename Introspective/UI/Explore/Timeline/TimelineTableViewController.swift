@@ -66,6 +66,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		(type: LeanBodyMass.self, fetcher: injected(SampleFetcherFactory.self).leanBodyMassSampleFetcher()),
 		(type: MedicationDose.self, fetcher: injected(SampleFetcherFactory.self).medicationDoseSampleFetcher()),
 		(type: MoodImpl.self, fetcher: injected(SampleFetcherFactory.self).moodSampleFetcher()),
+		(type: PainImpl.self, fetcher: injected(SampleFetcherFactory.self).painSampleFetcher()),
 		(type: RestingHeartRate.self, fetcher: injected(SampleFetcherFactory.self).restingHeartRateSampleFetcher()),
 		(type: SexualActivity.self, fetcher: injected(SampleFetcherFactory.self).sexualActivitySampleFetcher()),
 		(type: Sleep.self, fetcher: injected(SampleFetcherFactory.self).sleepSampleFetcher()),
@@ -89,6 +90,8 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			injected(UserDefaultsUtil.self).bool(forKey: .medicationDoseEnabledOnTimeline),
 		enabledString(for: MoodImpl.self):
 			injected(UserDefaultsUtil.self).bool(forKey: .moodEnabledOnTimeline),
+		enabledString(for: PainImpl.self):
+			injected(UserDefaultsUtil.self).bool(forKey: .painEnabledOnTimeline),
 		enabledString(for: RestingHeartRate.self):
 			injected(UserDefaultsUtil.self).bool(forKey: .restingHeartRateEnabledOnTimeline),
 		enabledString(for: SexualActivity.self):
@@ -470,6 +473,9 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			appendMedicationDoseEvents(for: medicationDose, to: &events)
 			return
 		}
+		if let pain = sample as? Pain {
+			appendPainEvents(for: pain, to: &events)
+		}
 		if let restingHeartRate = sample as? RestingHeartRate {
 			appendRestingHeartRateEvents(for: restingHeartRate, to: &events)
 			return
@@ -522,6 +528,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 
 	private func appendMedicationDoseEvents(for medicationDose: MedicationDose, to events: inout [Event]) {
 		events.append(TookMedicationEvent(for: medicationDose))
+	}
+
+	private func appendPainEvents(for pain: Pain, to events: inout [Event]) {
+		events.append(PainEvent(for: pain))
 	}
 
 	private func appendRestingHeartRateEvents(for restingHeartRate: RestingHeartRate, to events: inout [Event]) {
@@ -760,6 +770,30 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 				descriptions.append("- Dosage: " + dosage.description)
 			}
 			super.init(at: dose.date, for: dose, descriptions: descriptions)
+		}
+	}
+
+	// MARK: Pain Events
+
+	private final class PainEvent: Event {
+		override var delegate: TimelineTableViewCellDelegate {
+			FatigueTimelineTableViewCellDelegate()
+		}
+
+		init(for pain: Pain) {
+			let min = injected(PainUiUtil.self).valueToString(pain.minRating)
+			let max = injected(PainUiUtil.self).valueToString(pain.maxRating)
+			let scaleText = min + " - " + max
+			var descriptions = [
+				"🤕 Pain: " + injected(PainUiUtil.self).valueToString(pain.rating) + " (scale of \(scaleText))",
+			]
+			if let location = pain.location, !location.isEmpty {
+				descriptions.append("- Location: " + (pain.location ?? ""))
+			}
+			if let note = pain.note, !note.isEmpty {
+				descriptions.append("- Note: " + note)
+			}
+			super.init(at: pain.date, for: pain, descriptions: descriptions)
 		}
 	}
 

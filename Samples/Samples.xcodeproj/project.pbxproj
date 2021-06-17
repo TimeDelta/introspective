@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		A2034F1724A700F200557F69 /* MoodDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2034F1624A700F200557F69 /* MoodDAO.swift */; };
 		A2034F8124ADB58800557F69 /* TagDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2034F8024ADB58700557F69 /* TagDAO.swift */; };
+		A224F6662679BB0A007C3577 /* Pain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A224F6652679BB0A007C3577 /* Pain.swift */; };
+		A224F668267A3711007C3577 /* PainDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A224F667267A3711007C3577 /* PainDAO.swift */; };
 		A22D62332343983E0023470F /* Samples.h in Headers */ = {isa = PBXBuildFile; fileRef = A22D62312343983E0023470F /* Samples.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A22D625A234398AF0023470F /* AnySample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22D623B234398AE0023470F /* AnySample.swift */; };
 		A22D625B234398AF0023470F /* MedicationDose.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22D623D234398AE0023470F /* MedicationDose.swift */; };
@@ -70,6 +72,8 @@
 		9A03171CF18F3FF66913B6CC /* Pods-Samples.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Samples.release.xcconfig"; path = "../Pods/Target Support Files/Pods-Samples/Pods-Samples.release.xcconfig"; sourceTree = "<group>"; };
 		A2034F1624A700F200557F69 /* MoodDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodDAO.swift; sourceTree = "<group>"; };
 		A2034F8024ADB58700557F69 /* TagDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagDAO.swift; sourceTree = "<group>"; };
+		A224F6652679BB0A007C3577 /* Pain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pain.swift; sourceTree = "<group>"; };
+		A224F667267A3711007C3577 /* PainDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainDAO.swift; sourceTree = "<group>"; };
 		A22D622E2343983E0023470F /* Samples.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Samples.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A22D62312343983E0023470F /* Samples.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Samples.h; sourceTree = "<group>"; };
 		A22D62322343983E0023470F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -199,16 +203,17 @@
 			children = (
 				A29700F52344FE01004B97E6 /* DAOs */,
 				A22D6248234398AE0023470F /* CoreDataSample.swift */,
+				A2A0E75A2498FF24006C0A6E /* SearchableCoreDataSample.swift */,
 				A22D6240234398AE0023470F /* Sources.swift */,
 				A22D623E234398AE0023470F /* ActivityDefinition.swift */,
 				A22D6249234398AE0023470F /* ActivityDefinition+CoreDataProperties.swift */,
 				A22D6245234398AE0023470F /* Activity.swift */,
+				A287DEB225806183000B8166 /* Fatigue.swift */,
 				A22D6241234398AE0023470F /* Medication.swift */,
 				A22D623D234398AE0023470F /* MedicationDose.swift */,
 				A22D6246234398AE0023470F /* Mood.swift */,
+				A224F6652679BB0A007C3577 /* Pain.swift */,
 				A2AF1FF02343C63900E04517 /* Tag.swift */,
-				A2A0E75A2498FF24006C0A6E /* SearchableCoreDataSample.swift */,
-				A287DEB225806183000B8166 /* Fatigue.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -257,6 +262,7 @@
 				A287DEAD2580615E000B8166 /* FatigueDAO.swift */,
 				A26BD7A1249D3DDD0083C9FC /* MedicationDAO.swift */,
 				A2034F1624A700F200557F69 /* MoodDAO.swift */,
+				A224F667267A3711007C3577 /* PainDAO.swift */,
 				A2034F8024ADB58700557F69 /* TagDAO.swift */,
 			);
 			path = DAOs;
@@ -421,6 +427,7 @@
 				A2AF1FDC2343C12100E04517 /* TagAttribute.swift in Sources */,
 				A22D6266234398AF0023470F /* ActivityDefinition+CoreDataProperties.swift in Sources */,
 				A2A24371250566BD00FE18CA /* SingleDateSampleDAO.swift in Sources */,
+				A224F6662679BB0A007C3577 /* Pain.swift in Sources */,
 				A2A8AFF82343E59100E883CE /* SampleUtil.swift in Sources */,
 				A22D6262234398AF0023470F /* Activity.swift in Sources */,
 				A2AF1FE32343C27C00E04517 /* MoodExporter.swift in Sources */,
@@ -436,6 +443,7 @@
 				A22D6274234398AF0023470F /* SampleErrors.swift in Sources */,
 				A2034F8124ADB58800557F69 /* TagDAO.swift in Sources */,
 				A22D6269234398AF0023470F /* RestingHeartRate.swift in Sources */,
+				A224F668267A3711007C3577 /* PainDAO.swift in Sources */,
 				A22D6267234398AF0023470F /* SexualActivity.swift in Sources */,
 				A2A8AFFA2343E59100E883CE /* HealthKitUtil.swift in Sources */,
 				A22D626D234398AF0023470F /* HealthKitCorrelationSample.swift in Sources */,

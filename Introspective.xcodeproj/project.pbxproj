@@ -358,6 +358,15 @@
 		A0ACDA46E85F2ECEFBDA115171002AEF /* MoodMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE301C2F2247DBBEDE6822A654DD4F1 /* MoodMock.swift */; };
 		A108D51984F45F433488927376B4A95A /* RecordDecimalMoodIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C624D2A8E2DF0D653F2E4CF507F9BC09 /* RecordDecimalMoodIntentHandler.swift */; };
 		A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FC569196ECE6B2231D16543528A687 /* UITest.swift */; };
+		40E4CBD19F9324FC01E77B6F7163B5C8 /* PainSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25D08E3C5E59C0EC152317C412139BD /* PainSettingsViewController.swift */; };
+		F80FE40D898AED55320F83B7AD846D7F /* PainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0A6ACC65601E3613FF27F754F63039 /* PainTableViewCell.swift */; };
+		005B2E844D1AAFF178F4C9A7422B201B /* RecordDiscretePainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87B3D69C66413E2297C032F25B0DD73 /* RecordDiscretePainTableViewCell.swift */; };
+		DB7747367D919E3B80AD13FECFC74A5A /* RecordContinuousPainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A254A029FEFC43660C4B99A34ABAB46A /* RecordContinuousPainTableViewCell.swift */; };
+		B1340259C1888E4105785C762DB55821 /* EditPainTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C28F2CB06A12E801126CD24D80EDD0 /* EditPainTableViewController.swift */; };
+		5C48C4E4A84505C30B33ABC93876936A /* PainNoteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C363176BF177E7B5BB8AD86B379803E8 /* PainNoteTableViewCell.swift */; };
+		6A60CDDD355F91FEA14817F140B2F523 /* ContinuousPainRatingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFFFDDC96C3013AA0A966930B4BCDA8 /* ContinuousPainRatingTableViewCell.swift */; };
+		6F6BE420D1C1F022EEE5DC54760F28E7 /* DiscretePainRatingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CD859D40B8E5DA81D5AD3E6615ADE4 /* DiscretePainRatingTableViewCell.swift */; };
+		49E9764712EA14E68A33E2AA746DE670 /* PainLocationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940F200750834EAEAD9E2162AEDD2317 /* PainLocationTableViewCell.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A26589F32BFC0527881D20D03E4CB48C /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
@@ -980,6 +989,15 @@
 		A1776B090DE0D9396B6A50F70152A55C /* EqualToFrequencyAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToFrequencyAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A1B93F7FE435E06819E4BF152382DAA9 /* EqualToDurationAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToDurationAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphType.swift; sourceTree = "<group>"; };
+		A25D08E3C5E59C0EC152317C412139BD /* PainSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainSettingsViewController.swift; sourceTree = "<group>"; };
+		DC0A6ACC65601E3613FF27F754F63039 /* PainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainTableViewCell.swift; sourceTree = "<group>"; };
+		C87B3D69C66413E2297C032F25B0DD73 /* RecordDiscretePainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordDiscretePainTableViewCell.swift; sourceTree = "<group>"; };
+		A254A029FEFC43660C4B99A34ABAB46A /* RecordContinuousPainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordContinuousPainTableViewCell.swift; sourceTree = "<group>"; };
+		23C28F2CB06A12E801126CD24D80EDD0 /* EditPainTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPainTableViewController.swift; sourceTree = "<group>"; };
+		C363176BF177E7B5BB8AD86B379803E8 /* PainNoteTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainNoteTableViewCell.swift; sourceTree = "<group>"; };
+		1AFFFDDC96C3013AA0A966930B4BCDA8 /* ContinuousPainRatingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinuousPainRatingTableViewCell.swift; sourceTree = "<group>"; };
+		E1CD859D40B8E5DA81D5AD3E6615ADE4 /* DiscretePainRatingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscretePainRatingTableViewCell.swift; sourceTree = "<group>"; };
+		940F200750834EAEAD9E2162AEDD2317 /* PainLocationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainLocationTableViewCell.swift; sourceTree = "<group>"; };
 		A22D5ACFE86EF6F1ED02801B02A60A14 /* DiscreteFatigueRatingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscreteFatigueRatingTableViewCell.swift; sourceTree = "<group>"; };
 		A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
@@ -1324,6 +1342,7 @@
 			children = (
 				435B75B1D07BF09C6E2DD965F2310ED9 /* Fatigue */,
 				418507629B5C82550B621940090C2F14 /* Mood */,
+				79001391E68DCEC9C7E2BA599BCEC5CC /* Pain */,
 			);
 			path = SampleEditors;
 			sourceTree = "<group>";
@@ -1854,6 +1873,7 @@
 				5A133E176A02EE48F676DB7C62801AAE /* MedicationDoseTableTableViewCell.swift */,
 				F2410974EED9054C1C38F79B00B85110 /* ActivityTableViewCell.swift */,
 				25A0D3C25211D4B33ACF172D7855D39A /* FatigueTableViewCell.swift */,
+				DC0A6ACC65601E3613FF27F754F63039 /* PainTableViewCell.swift */,
 			);
 			path = Results;
 			sourceTree = "<group>";
@@ -2395,6 +2415,35 @@
 			path = Testing;
 			sourceTree = "<group>";
 		};
+		422EDD7447871F236AAAC4D50CD11F0E /* Pain */ = {
+			isa = PBXGroup;
+			children = (
+				A25D08E3C5E59C0EC152317C412139BD /* PainSettingsViewController.swift */,
+			);
+			path = Pain;
+			sourceTree = "<group>";
+		};
+		83A6C6B91A02DB42D07751D823FD0C05 /* Pain */ = {
+			isa = PBXGroup;
+			children = (
+				C87B3D69C66413E2297C032F25B0DD73 /* RecordDiscretePainTableViewCell.swift */,
+				A254A029FEFC43660C4B99A34ABAB46A /* RecordContinuousPainTableViewCell.swift */,
+			);
+			path = Pain;
+			sourceTree = "<group>";
+		};
+		79001391E68DCEC9C7E2BA599BCEC5CC /* Pain */ = {
+			isa = PBXGroup;
+			children = (
+				23C28F2CB06A12E801126CD24D80EDD0 /* EditPainTableViewController.swift */,
+				C363176BF177E7B5BB8AD86B379803E8 /* PainNoteTableViewCell.swift */,
+				940F200750834EAEAD9E2162AEDD2317 /* PainLocationTableViewCell.swift */,
+				1AFFFDDC96C3013AA0A966930B4BCDA8 /* ContinuousPainRatingTableViewCell.swift */,
+				E1CD859D40B8E5DA81D5AD3E6615ADE4 /* DiscretePainRatingTableViewCell.swift */,
+			);
+			path = Pain;
+			sourceTree = "<group>";
+		};
 		A42A3755C14DFA73187CC83B596D96EF /* RecordData */ = {
 			isa = PBXGroup;
 			children = (
@@ -2402,10 +2451,11 @@
 				9D30BBB7762C78F1AE39E5BE06C181B7 /* RecordDataTableViewController.swift */,
 				F7843D62808AC15694FAE1AC3DF8BE94 /* NoteViewController.swift */,
 				92C1670E4E1C91090E6E419B5EEF03F8 /* RecordNumberViewController.swift */,
-				1EF7A757C225AD35B7B50813EEF342FE /* Mood */,
+				AB85F1B2C0412AFB422F1CA7EADA370D /* Activities */,
 				5E3F789B730C7BF47C5B6852EFCB12BA /* Fatigue */,
 				D2CA5721E87BAFF1C6DB6D38557175FD /* Medications */,
-				AB85F1B2C0412AFB422F1CA7EADA370D /* Activities */,
+				1EF7A757C225AD35B7B50813EEF342FE /* Mood */,
+				83A6C6B91A02DB42D07751D823FD0C05 /* Pain */,
 			);
 			path = RecordData;
 			sourceTree = "<group>";
@@ -2419,8 +2469,9 @@
 				1A958A24D33360AFB07C50E8312A454A /* VersionTableViewCell.swift */,
 				A1C3BA50256120CCFACDB2D1FEE43656 /* Testing */,
 				F9AB63B1F298037E8D52463C642E3483 /* Activity */,
-				0F45F75F4B0E27A298765AFDA0E9CED4 /* Mood */,
 				684D8C3D880117E3D6AFADC30E571BEB /* Fatigue */,
+				0F45F75F4B0E27A298765AFDA0E9CED4 /* Mood */,
+				422EDD7447871F236AAAC4D50CD11F0E /* Pain */,
 				17E824EEE9A9F681BA987F4D8972C027 /* Export */,
 			);
 			path = Settings;
@@ -3819,6 +3870,7 @@
 				63914E13EBC3DB6F066712E8EDA91688 /* ChooseGroupersForXYGraphViewController.swift in Sources */,
 				02AFC64FC60CF2F1CED5023977E6A03A /* SexualActivityTableViewCell.swift in Sources */,
 				4D97132298C095C1A9A98A914EB7D810 /* SortResultsViewController.swift in Sources */,
+				DB7747367D919E3B80AD13FECFC74A5A /* RecordContinuousPainTableViewCell.swift in Sources */,
 				1D18EAED02072F435D338692AC791669 /* AttributeRestrictionTableViewCell.swift in Sources */,
 				7544EB454D37F100EC383F4CE480E34C /* SingleSampleTypeXYGraphDataGenerator.swift in Sources */,
 				23AA61F265C423120A50BE18ABC24C26 /* SettingsTableViewController.swift in Sources */,
@@ -3831,6 +3883,7 @@
 				123A4E5F3408702BE0F95E952F005877 /* ContinuousMoodRatingTableViewCell.swift in Sources */,
 				998637560F26827A56A207121E42D18D /* ActivityNoteTableViewCell.swift in Sources */,
 				9B7724FFAA37C3921012756E9891D652 /* TimelineTableViewController.swift in Sources */,
+				49E9764712EA14E68A33E2AA746DE670 /* PainLocationTableViewCell.swift in Sources */,
 				3E52968BA2E57529A4709E68E37CA9AE /* StopLastStartedActivityIntentHandler.swift in Sources */,
 				BBA903D2E3F810D5229D108043164D51 /* RecordContinuousFatigueTableViewCell.swift in Sources */,
 				75E5834894536821228DED5FF926A881 /* ActivityDefinitionNameTableViewCell.swift in Sources */,
@@ -3854,19 +3907,23 @@
 				7DB57004D2DDDE944DB3351DF027007D /* ActivityDefinitionTagsTableViewCell.swift in Sources */,
 				758C1C7C797F448FEADD3951EFEAF553 /* MoodNoteTableViewCell.swift in Sources */,
 				BAA14F41C7A32B338ABB746A683CDC97 /* SelectDateViewController.swift in Sources */,
+				B1340259C1888E4105785C762DB55821 /* EditPainTableViewController.swift in Sources */,
 				98A66C0B0DAFC4B7D9067D6E9A7A6E99 /* IntrospectiveInjectionProvider.swift in Sources */,
 				E24A9340261B6F5B692A09FCDDC69400 /* MainIntentHandler.swift in Sources */,
 				D1769DDA4A1408559456CEE74379A76A /* GraphTypeSetupViewController.swift in Sources */,
 				C87B919700D4CB99417F1983D497F110 /* EditActivityDefinitionTableViewController.swift in Sources */,
 				544E59073D331AAD48DE97BD8038D441 /* QueryResultsBasicXYGraphCustomizationViewController.swift in Sources */,
 				0C0D5CCD8C5FB706CBA1BF0C1C3CB19F /* QueryResultsGraphCustomizationViewController.swift in Sources */,
+				6F6BE420D1C1F022EEE5DC54760F28E7 /* DiscretePainRatingTableViewCell.swift in Sources */,
 				CCE84C56FAE535605BFAD253B3E2592E /* XYGraphDataGenerator.swift in Sources */,
 				F641368F9AE3497038F98FCE941FE5C8 /* MultipleSampleTypeXYGraphDataGenerator.swift in Sources */,
 				C8C7EA5082F78C5B404EFDF5B6DD381D /* TakeMedicationIntentHandler.swift in Sources */,
 				B16636FF19A5054942F6E23ED446D678 /* FatigueSettingsViewController.swift in Sources */,
 				06FF10E422A2B6F2CADF8CABAC9F86DC /* DateOrTimeAttributeValueViewController.swift in Sources */,
+				40E4CBD19F9324FC01E77B6F7163B5C8 /* PainSettingsViewController.swift in Sources */,
 				754E4858B1BC2A46537CA603F26B0F11 /* VersionTableViewCell.swift in Sources */,
 				9B1F01C84B1A10CAE4EEAADAC9B4C122 /* FrequencyEditorViewController.swift in Sources */,
+				5C48C4E4A84505C30B33ABC93876936A /* PainNoteTableViewCell.swift in Sources */,
 				02E5AD13C3696C1EA620CB3A7F1DF173 /* CoachMarkFactory.swift in Sources */,
 				0BC3C58EE48EB339C523FD62F5E1B894 /* StopActivitiesIntentHandler.swift in Sources */,
 				A093F349E7B2A92A9A9684B3CDED0566 /* ActivityDefinitionAutoNoteTableViewCell.swift in Sources */,
@@ -3883,6 +3940,7 @@
 				3C9CD8D23E25FBE45193397DAB8D0823 /* DateRangeViewController.swift in Sources */,
 				302DDB4EE17223590EC63554ACB4EB3E /* DurationAttributeValueViewController.swift in Sources */,
 				3D66F117513EA5D039521FBA99169D94 /* RecordDiscreteFatigueTableViewCell.swift in Sources */,
+				F80FE40D898AED55320F83B7AD846D7F /* PainTableViewCell.swift in Sources */,
 				BE24FA988597362EAB7FADF5C1970EE9 /* WeightTimelineTableViewCellDelegate.swift in Sources */,
 				3026B07E143F5908592A57EFA5C69AD6 /* GroupDefinitionTableViewController.swift in Sources */,
 				FB6BEBCF0CBBEA7BE17034F2AE8956ED /* SampleGroupInformationTableViewCell.swift in Sources */,
@@ -3906,6 +3964,7 @@
 				CC30E45D60B928BCC111DF8D8E332A62 /* SetMedicationDosageViewController.swift in Sources */,
 				CA67758753096D177B324A041B342B9D /* ActivityIntentInfoHelper.swift in Sources */,
 				D3A8FDD8BC9581123293A75FE086F131 /* BloodPressureTimelineTableViewCellDelegate.swift in Sources */,
+				6A60CDDD355F91FEA14817F140B2F523 /* ContinuousPainRatingTableViewCell.swift in Sources */,
 				C82FE0C2157E79F67378E37E721A48C5 /* MultiSelectAttributeValueViewController.swift in Sources */,
 				2D45C222CEA3CE55123AF26537E4D7FC /* GraphSetupViewController.swift in Sources */,
 				CCFD1A7BEB758C0EA9553D0AFDAF4F4A /* QueryViewController.swift in Sources */,
@@ -3929,6 +3988,7 @@
 				F61F8DFEFC7373E2E8993D1E22A11CC3 /* QueryResultsGraphSetupViewController.swift in Sources */,
 				8E0A6B05631C180050D3998A8C87B2EB /* GroupDefinitionTableViewCell.swift in Sources */,
 				3E9B7167D0C90A21513F5F6FADC06B34 /* LeanBodyMassTimelineTableViewCellDelegate.swift in Sources */,
+				005B2E844D1AAFF178F4C9A7422B201B /* RecordDiscretePainTableViewCell.swift in Sources */,
 				E2CA9C3AABFCB06D3555FDF4A66144DA /* ActiveExportTableViewCell.swift in Sources */,
 				86E1DD3CAF3C785C528D358A67180381 /* ActiveImportTableViewCell.swift in Sources */,
 				F6B9FE3D7A2C303234ED43EA2CC36638 /* GroupNameTableViewCell.swift in Sources */,

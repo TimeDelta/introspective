@@ -26,6 +26,7 @@ public enum UserDefaultKey: String {
 	case leanBodyMassEnabledOnTimeline
 	case medicationDoseEnabledOnTimeline
 	case moodEnabledOnTimeline
+	case painEnabledOnTimeline
 	case restingHeartRateEnabledOnTimeline
 	case sexualActivityEnabledOnTimeline
 	case sleepEnabledOnTimeline

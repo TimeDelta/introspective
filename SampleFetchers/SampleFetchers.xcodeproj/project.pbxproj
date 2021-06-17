@@ -10,6 +10,7 @@
 		6AF997F9CF3F11C8A423F271 /* Pods_SampleFetchers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F25BB2B82F7872272C6BDA /* Pods_SampleFetchers.framework */; };
 		A21B1CBE2505BFAA00169CA1 /* SampleFetchersInjectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21B1CBD2505BFAA00169CA1 /* SampleFetchersInjectionProvider.swift */; };
 		A287DED925816370000B8166 /* FatigueSampleFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A287DED825816370000B8166 /* FatigueSampleFetcher.swift */; };
+		A28CCE66267BF33000A590E6 /* PainSampleFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28CCE65267BF33000A590E6 /* PainSampleFetcher.swift */; };
 		A2A2433925055B5000FE18CA /* SampleFetchers.h in Headers */ = {isa = PBXBuildFile; fileRef = A2A2433725055B5000FE18CA /* SampleFetchers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A2A2434625055BF900FE18CA /* DependencyInjection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2A2434525055BF900FE18CA /* DependencyInjection.framework */; };
 		A2A2434A25055C0600FE18CA /* Samples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2A2434925055C0600FE18CA /* Samples.framework */; };
@@ -38,6 +39,7 @@
 		396C110F754257C264AAE79E /* Pods-SampleFetchers.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SampleFetchers.release.xcconfig"; path = "Target Support Files/Pods-SampleFetchers/Pods-SampleFetchers.release.xcconfig"; sourceTree = "<group>"; };
 		A21B1CBD2505BFAA00169CA1 /* SampleFetchersInjectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleFetchersInjectionProvider.swift; sourceTree = "<group>"; };
 		A287DED825816370000B8166 /* FatigueSampleFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FatigueSampleFetcher.swift; sourceTree = "<group>"; };
+		A28CCE65267BF33000A590E6 /* PainSampleFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainSampleFetcher.swift; sourceTree = "<group>"; };
 		A2A2433425055B5000FE18CA /* SampleFetchers.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SampleFetchers.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2A2433725055B5000FE18CA /* SampleFetchers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SampleFetchers.h; sourceTree = "<group>"; };
 		A2A2433825055B5000FE18CA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -113,6 +115,7 @@
 		A2A2433625055B5000FE18CA /* SampleFetchers */ = {
 			isa = PBXGroup;
 			children = (
+				A21B1CBD2505BFAA00169CA1 /* SampleFetchersInjectionProvider.swift */,
 				A2A2433F25055B6F00FE18CA /* SampleFetcher.swift */,
 				A2A2434125055B6F00FE18CA /* SampleFetcherFactory.swift */,
 				A2A2436125055D8B00FE18CA /* SingleDateHealthKitSampleFetcher.swift */,
@@ -124,13 +127,13 @@
 				A2A2435325055CDF00FE18CA /* LeanBodyMassSampleFetcher.swift */,
 				A2A2435525055CF100FE18CA /* MedicationDoseSampleFetcher.swift */,
 				A2A2435725055D0500FE18CA /* MoodSampleFetcher.swift */,
+				A28CCE65267BF33000A590E6 /* PainSampleFetcher.swift */,
 				A2A2435925055D1500FE18CA /* RestingHeartRateSampleFetcher.swift */,
 				A2A2435B25055D2700FE18CA /* SexualActivitySampleFetcher.swift */,
 				A2A2435D25055D3500FE18CA /* SleepSampleFetcher.swift */,
 				A2A2435F25055D3E00FE18CA /* WeightSampleFetcher.swift */,
 				A2A2433725055B5000FE18CA /* SampleFetchers.h */,
 				A2A2433825055B5000FE18CA /* Info.plist */,
-				A21B1CBD2505BFAA00169CA1 /* SampleFetchersInjectionProvider.swift */,
 			);
 			path = SampleFetchers;
 			sourceTree = "<group>";
@@ -260,6 +263,7 @@
 				A2A2435A25055D1500FE18CA /* RestingHeartRateSampleFetcher.swift in Sources */,
 				A2A2435625055CF100FE18CA /* MedicationDoseSampleFetcher.swift in Sources */,
 				A2A2436E250565FD00FE18CA /* ActivitySampleFetcher.swift in Sources */,
+				A28CCE66267BF33000A590E6 /* PainSampleFetcher.swift in Sources */,
 				A2A2435025055CBA00FE18CA /* BodyMassIndexSampleFetcher.swift in Sources */,
 				A2A2436D250565FD00FE18CA /* SampleFetcher.swift in Sources */,
 				A21B1CBE2505BFAA00169CA1 /* SampleFetchersInjectionProvider.swift in Sources */,

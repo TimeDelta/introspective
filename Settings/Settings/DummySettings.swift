@@ -64,6 +64,21 @@ public final class DummySettings: Settings {
 		log.error("tried to set DiscreteFatigue")
 	}
 
+	public final let minPain: Double = 2
+	public final func setMinPain(_: Double) {
+		log.error("tried to set MinPain")
+	}
+
+	public final let maxPain: Double = 2
+	public final func setMaxPain(_: Double) {
+		log.error("tried to set MaxPain")
+	}
+
+	public final let discretePain: Bool = true
+	public final func setDiscretePain(_: Bool) {
+		log.error("tried to set DiscretePain")
+	}
+
 	public final let autoIgnoreEnabled: Bool = true
 	public final func setAutoIgnoreEnabled(_: Bool) {
 		log.error("tried to set AutoIgnoreEnabled")

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		A20675912625CB5A00AA86C0 /* WithinXCalendarUnitsBeforeSubQueryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20675902625CB5A00AA86C0 /* WithinXCalendarUnitsBeforeSubQueryMatcher.swift */; };
 		A20675982630A5C500AA86C0 /* WithinXCalendarUnitsAfterSubQueryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20675972630A5C500AA86C0 /* WithinXCalendarUnitsAfterSubQueryMatcher.swift */; };
+		A224F66A267A3B11007C3577 /* PainQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A224F669267A3B11007C3577 /* PainQuery.swift */; };
 		A24E2E8F23451CE500A7707D /* Queries.h in Headers */ = {isa = PBXBuildFile; fileRef = A24E2E8D23451CE500A7707D /* Queries.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A24E2E9723451CF500A7707D /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A24E2E9623451CF500A7707D /* Common.framework */; };
 		A24E2E9923451CFA00A7707D /* DependencyInjection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A24E2E9823451CFA00A7707D /* DependencyInjection.framework */; };
@@ -49,6 +50,7 @@
 		7DDA82AE26229DC5EBB7AB9B /* Pods-Queries.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Queries.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-Queries/Pods-Queries.debug.xcconfig"; sourceTree = "<group>"; };
 		A20675902625CB5A00AA86C0 /* WithinXCalendarUnitsBeforeSubQueryMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithinXCalendarUnitsBeforeSubQueryMatcher.swift; sourceTree = "<group>"; };
 		A20675972630A5C500AA86C0 /* WithinXCalendarUnitsAfterSubQueryMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithinXCalendarUnitsAfterSubQueryMatcher.swift; sourceTree = "<group>"; };
+		A224F669267A3B11007C3577 /* PainQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainQuery.swift; sourceTree = "<group>"; };
 		A24E2E8A23451CE500A7707D /* Queries.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Queries.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A24E2E8D23451CE500A7707D /* Queries.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Queries.h; sourceTree = "<group>"; };
 		A24E2E8E23451CE500A7707D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -189,9 +191,10 @@
 			children = (
 				A24E2EB823451D4B00A7707D /* CoreDataQuery.swift */,
 				A24E2EBA23451D4B00A7707D /* ActivityQuery.swift */,
+				A287DED525816299000B8166 /* FatigueQuery.swift */,
 				A24E2EB723451D4B00A7707D /* MedicationDoseQuery.swift */,
 				A24E2EB923451D4B00A7707D /* MoodQuery.swift */,
-				A287DED525816299000B8166 /* FatigueQuery.swift */,
+				A224F669267A3B11007C3577 /* PainQuery.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -306,6 +309,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A224F66A267A3B11007C3577 /* PainQuery.swift in Sources */,
 				A24E2EBD23451D4B00A7707D /* SubQueryMatcher.swift in Sources */,
 				A24E2ECD23451D4B00A7707D /* SampleQueryResult.swift in Sources */,
 				A24E2EBC23451D4B00A7707D /* SameDatesSubQueryMatcher.swift in Sources */,

@@ -31,6 +31,8 @@ public protocol QueryFactory {
 	func medicationDoseQuery(_ parts: [BooleanExpressionPart]) throws -> MedicationDoseQuery
 	func moodQuery() -> MoodQuery
 	func moodQuery(_ parts: [BooleanExpressionPart]) throws -> MoodQuery
+	func painQuery() -> PainQuery
+	func painQuery(_ parts: [BooleanExpressionPart]) throws -> PainQuery
 	func restingHeartRateQuery() -> RestingHeartRateQuery
 	func restingHeartRateQuery(_ parts: [BooleanExpressionPart]) throws -> RestingHeartRateQuery
 	func sexualActivityQuery() -> SexualActivityQuery
@@ -107,6 +109,14 @@ public final class QueryFactoryImpl: QueryFactory {
 		try MoodQueryImpl(parts: parts)
 	}
 
+	public final func painQuery() -> PainQuery {
+		PainQueryImpl()
+	}
+
+	public final func painQuery(_ parts: [BooleanExpressionPart]) throws -> PainQuery {
+		try PainQueryImpl(parts: parts)
+	}
+
 	public final func restingHeartRateQuery() -> RestingHeartRateQuery {
 		RestingHeartRateQueryImpl()
 	}
@@ -148,6 +158,7 @@ public final class QueryFactoryImpl: QueryFactory {
 		case is LeanBodyMass.Type: return leanBodyMassQuery()
 		case is MedicationDose.Type: return medicationDoseQuery()
 		case is Mood.Type: return moodQuery()
+		case is Pain.Type: return painQuery()
 		case is RestingHeartRate.Type: return restingHeartRateQuery()
 		case is SexualActivity.Type: return sexualActivityQuery()
 		case is Sleep.Type: return sleepQuery()

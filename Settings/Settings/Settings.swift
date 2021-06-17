@@ -38,6 +38,16 @@ public enum Setting {
 	/// - Tag: discreteFatigue
 	case discreteFatigue
 
+	/// The minimum rating value for a pain entry.
+	/// - Tag: minPain
+	case minPain
+	/// The maximum rating value for a pain entry.
+	/// - Tag: maxPain
+	case maxPain
+	/// Whether or not to use discrete pain ratings.
+	/// - Tag: discretePain
+	case discretePain
+
 	/// Whether or not to ignore stopped activities with duration less than [autoIgnoreSeconds](x-source-tag://autoIgnoreSeconds).
 	/// - Tag: autoIgnoreEnabled
 	case autoIgnoreEnabled
@@ -88,6 +98,18 @@ public protocol Settings: CoreDataObject {
 	/// - See [discreteFatigue](x-source-tag://discreteFatigue)
 	var discreteFatigue: Bool { get }
 	func setDiscreteFatigue(_ value: Bool)
+
+	/// - See [minPain](x-source-tag://minPain)
+	var minPain: Double { get }
+	func setMinPain(_ value: Double)
+
+	/// - See [maxPain](x-source-tag://maxPain)
+	var maxPain: Double { get }
+	func setMaxPain(_ value: Double)
+
+	/// - See [discretePains](x-source-tag://discretePains)
+	var discretePain: Bool { get }
+	func setDiscretePain(_ value: Bool)
 
 	/// - See [autoIgnoreEnabled](x-source-tag://autoIgnoreEnabled)
 	var autoIgnoreEnabled: Bool { get }
@@ -216,6 +238,47 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		}
 	}
 
+	// MARK: - Pain
+
+	// MARK: Minimum Pain
+
+	private final var newMinPain: Double?
+	public final var minPain: Double {
+		newMinPain ?? storedMinPain
+	}
+
+	public final func setMinPain(_ value: Double) {
+		if value != storedMinPain {
+			newMinPain = value
+		}
+	}
+
+	// MARK: Maximum Pain
+
+	private final var newMaxPain: Double?
+	public final var maxPain: Double {
+		newMaxPain ?? storedMaxPain
+	}
+
+	public final func setMaxPain(_ value: Double) {
+		if value != storedMaxPain {
+			newMaxPain = value
+		}
+	}
+
+	// MARK: Discrete Pain Ratings
+
+	private final var newDiscretePain: Bool?
+	public final var discretePain: Bool {
+		newDiscretePain ?? storedDiscretePain
+	}
+
+	public final func setDiscretePain(_ value: Bool) {
+		if value != storedDiscretePain {
+			newDiscretePain = value
+		}
+	}
+
 	// MARK: - Activities
 
 	// MARK: Auto Ignore Enabled
@@ -299,6 +362,9 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		case .minFatigue: return newMinFatigue != nil
 		case .maxFatigue: return newMaxFatigue != nil
 		case .discreteFatigue: return newDiscreteFatigue != nil
+		case .minPain: return newMinPain != nil
+		case .maxPain: return newMaxPain != nil
+		case .discretePain: return newDiscretePain != nil
 		case .autoIgnoreEnabled: return newAutoIgnoreEnabled != nil
 		case .autoIgnoreSeconds: return newAutoIgnoreSeconds != nil
 		case .autoTrimWhitespaceInActivityNotes: return newAutoTrimWhitespaceInActivityNotes != nil
@@ -316,6 +382,10 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		newMinFatigue = nil
 		newMaxFatigue = nil
 		newDiscreteFatigue = nil
+
+		newMinPain = nil
+		newMaxPain = nil
+		newDiscretePain = nil
 
 		newAutoIgnoreEnabled = nil
 		newAutoIgnoreSeconds = nil
@@ -336,6 +406,10 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		storedMinFatigue = minFatigue
 		storedMaxFatigue = maxFatigue
 		storedDiscreteFatigue = discreteFatigue
+
+		storedMinPain = minPain
+		storedMaxPain = maxPain
+		storedDiscretePain = discretePain
 
 		storedAutoIgnoreEnabled = autoIgnoreEnabled
 		storedAutoIgnoreSeconds = autoIgnoreSeconds
@@ -364,6 +438,10 @@ public extension SettingsImpl {
 	@NSManaged fileprivate var storedMinFatigue: Double
 	@NSManaged fileprivate var storedMaxFatigue: Double
 	@NSManaged fileprivate var storedDiscreteFatigue: Bool
+
+	@NSManaged fileprivate var storedMinPain: Double
+	@NSManaged fileprivate var storedMaxPain: Double
+	@NSManaged fileprivate var storedDiscretePain: Bool
 
 	@NSManaged fileprivate var storedAutoIgnoreEnabled: Bool
 	@NSManaged fileprivate var storedAutoIgnoreSeconds: Int

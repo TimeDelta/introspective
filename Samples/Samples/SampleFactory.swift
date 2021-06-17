@@ -36,6 +36,7 @@ public final class SampleFactoryImpl: SampleFactory {
 		LeanBodyMass.self,
 		MedicationDose.self,
 		MoodImpl.self,
+		PainImpl.self,
 		RestingHeartRate.self,
 		SexualActivity.self,
 		Sleep.self,

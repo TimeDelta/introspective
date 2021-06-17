@@ -8,7 +8,6 @@
 
 import Foundation
 
-import NotificationBannerSwift
 import Presentr
 import UIKit
 

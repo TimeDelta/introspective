@@ -30,6 +30,10 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 	private static let continuousFatigueId = "continuousFatigue"
 	private static let discreteFatigueId = "discreteFatigue"
 
+	private static let painId = "pain"
+	private static let continuousPainId = "continuousPain"
+	private static let discretePainId = "discretePain"
+
 	private static let medicationId = "medication"
 	private static let activityId = "activity"
 
@@ -39,6 +43,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 
 	private final var viewOrder = [
 		Me.moodId,
+		Me.painId,
 		Me.fatigueId,
 		Me.medicationId,
 		Me.activityId,
@@ -48,6 +53,8 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		Me.discreteMoodId: 145,
 		Me.continuousFatigueId: 145,
 		Me.discreteFatigueId: 145,
+		Me.continuousPainId: 180,
+		Me.discretePainId: 180,
 		Me.medicationId: 52,
 		Me.activityId: 52,
 	]
@@ -60,8 +67,11 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		observe(selector: #selector(showErrorMessage), name: Me.showErrorMessage)
 		observe(selector: #selector(showRecordActivitiesScreen), name: .showRecordActivitiesScreen)
 		observe(selector: #selector(showRecordMedicationsScreen), name: .showRecordMedicationsScreen)
-		observe(selector: #selector(useDiscreteMoodChanged), name: MoodUiUtilImpl.useDiscreteMoodChanged)
-		observe(selector: #selector(useDiscreteFatigueChanged), name: FatigueUiUtilImpl.useDiscreteFatigueChanged)
+		observe(selector: #selector(reloadData), name: MoodUiUtilImpl.useDiscreteMoodChanged)
+		observe(selector: #selector(reloadData), name: FatigueUiUtilImpl.useDiscreteFatigueChanged)
+		observe(selector: #selector(reloadData), name: PainUiUtilImpl.useDiscretePainChanged)
+
+		hideKeyboardOnTapNonTextInput()
 	}
 
 	deinit {
@@ -123,6 +133,11 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 				actions.append(getEditLastFatigueAction())
 			}
 		}
+		if isPainId(id) {
+			if let _ = try? injected(PainDAO.self).getMostRecentPain() {
+				actions.append(getEditLastPainAction())
+			}
+		}
 		return UISwipeActionsConfiguration(actions: actions)
 	}
 
@@ -171,11 +186,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		}
 	}
 
-	@objc private final func useDiscreteMoodChanged(notification _: Notification) {
-		tableView.reloadData()
-	}
-
-	@objc private final func useDiscreteFatigueChanged(notification _: Notification) {
+	@objc private func reloadData(notification _: Notification) {
 		tableView.reloadData()
 	}
 
@@ -195,6 +206,12 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 			}
 			return Me.continuousFatigueId
 		}
+		if id == Me.painId {
+			if injected(Settings.self).discretePain {
+				return Me.discretePainId
+			}
+			return Me.continuousPainId
+		}
 		return id
 	}
 
@@ -204,6 +221,10 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 
 	private final func isFatigueId(_ id: String) -> Bool {
 		id == Me.discreteFatigueId || id == Me.continuousFatigueId || id == Me.fatigueId
+	}
+
+	private func isPainId(_ id: String) -> Bool {
+		id == Me.discretePainId || id == Me.continuousPainId || id == Me.painId
 	}
 
 	private final func getEditLastMoodAction() -> UIContextualAction {
@@ -250,6 +271,31 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 				self.pushToNavigationController(controller)
 			} catch {
 				self.showError(title: "Failed to retrieve most recent fatigue entry", error: error)
+			}
+		}
+		action.backgroundColor = .orange
+		return action
+	}
+
+	private func getEditLastPainAction() -> UIContextualAction {
+		let action = injected(UiUtil.self).contextualAction(
+			style: .normal,
+			title: "✎ Last"
+		) { _, _, completion in
+			do {
+				guard let pain = try injected(PainDAO.self).getMostRecentPain() else {
+					Me.log.error("Edit last pain action triggered with no pain records")
+					completion(false)
+					return
+				}
+				let controller = self.viewController(
+					named: "editPain",
+					fromStoryboard: "Util"
+				) as! EditPainTableViewController
+				controller.pain = pain
+				self.pushToNavigationController(controller)
+			} catch {
+				self.showError(title: "Failed to retrieve most recent pain entry", error: error)
 			}
 		}
 		action.backgroundColor = .orange

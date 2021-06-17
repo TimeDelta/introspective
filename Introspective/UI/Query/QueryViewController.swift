@@ -504,10 +504,12 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		case is ActivityQuery: addQuerySampleType(Activity.self, matcher); break
 		case is BloodPressureQuery: addQuerySampleType(BloodPressure.self, matcher); break
 		case is BodyMassIndexQuery: addQuerySampleType(BodyMassIndex.self, matcher); break
+		case is FatigueQuery: addQuerySampleType(FatigueImpl.self, matcher); break
 		case is HeartRateQuery: addQuerySampleType(HeartRate.self, matcher); break
 		case is LeanBodyMassQuery: addQuerySampleType(LeanBodyMass.self, matcher); break
 		case is MedicationDoseQuery: addQuerySampleType(MedicationDose.self, matcher); break
 		case is MoodQuery: addQuerySampleType(MoodImpl.self, matcher); break
+		case is PainQuery: addQuerySampleType(PainImpl.self, matcher); break
 		case is RestingHeartRateQuery: addQuerySampleType(RestingHeartRate.self, matcher); break
 		case is SexualActivityQuery: addQuerySampleType(SexualActivity.self, matcher); break
 		case is SleepQuery: addQuerySampleType(Sleep.self, matcher); break
@@ -596,6 +598,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		case is LeanBodyMass.Type: return try injected(QueryFactory.self).leanBodyMassQuery(parts)
 		case is MedicationDose.Type: return try injected(QueryFactory.self).medicationDoseQuery(parts)
 		case is MoodImpl.Type: return try injected(QueryFactory.self).moodQuery(parts)
+		case is PainImpl.Type: return try injected(QueryFactory.self).painQuery(parts)
 		case is RestingHeartRate.Type: return try injected(QueryFactory.self).restingHeartRateQuery(parts)
 		case is SexualActivity.Type: return try injected(QueryFactory.self).sexualActivityQuery(parts)
 		case is Sleep.Type: return try injected(QueryFactory.self).sleepQuery(parts)

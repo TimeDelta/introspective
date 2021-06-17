@@ -18,6 +18,7 @@ public class CommonInjectionProvider: InjectionProvider {
 	private static let ioUtil = IOUtilImpl()
 	private static let moodUiUtil = MoodUiUtilImpl()
 	private static let notificationUtil = NotificationUtilImpl()
+	private static let painUiUtil = PainUiUtilImpl()
 	private static let searchUtil = SearchUtilImpl()
 	private static let stringUtil = StringUtilImpl()
 	private static let textNormalizationUtil = TextNormalizationUtilImpl()
@@ -31,6 +32,7 @@ public class CommonInjectionProvider: InjectionProvider {
 		IOUtil.self,
 		MoodUiUtil.self,
 		NotificationUtil.self,
+		PainUiUtil.self,
 		SearchUtil.self,
 		StringUtil.self,
 		TextNormalizationUtil.self,
@@ -54,6 +56,8 @@ public class CommonInjectionProvider: InjectionProvider {
 			return Me.moodUiUtil as! Type
 		case is NotificationUtil.Protocol:
 			return Me.notificationUtil as! Type
+		case is PainUiUtil.Protocol:
+			return Me.painUiUtil as! Type
 		case is SearchUtil.Protocol:
 			return Me.searchUtil as! Type
 		case is StringUtil.Protocol:
