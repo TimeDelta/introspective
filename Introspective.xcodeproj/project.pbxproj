@@ -11,6 +11,7 @@
 		00351062FC0728C1E4DF5B5AA7AC39DE /* RecordActivityTableViewControllerFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DE9D31516B68C3DC254B112DD5CE26 /* RecordActivityTableViewControllerFunctionalTests.swift */; };
 		003F8D34118DC91DE69E6133A54CCBEF /* GlobalsMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09891C9CC2849CFB15995EBA47FB169B /* GlobalsMocks.swift */; };
 		0054AFC6779D26FED41B3AAF415793CF /* QueryViewControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D5FDC857165C8FE1BC0D0445C535BA /* QueryViewControllerMock.swift */; };
+		005B2E844D1AAFF178F4C9A7422B201B /* RecordDiscretePainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87B3D69C66413E2297C032F25B0DD73 /* RecordDiscretePainTableViewCell.swift */; };
 		00FA7524428B26FA545D01046BE9E904 /* ActivityAutoIgnoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBD04483430BFC6D7F467D48F8C4749 /* ActivityAutoIgnoreTableViewCell.swift */; };
 		017C160D5E07C14874C35851277B56BA /* AttributeRestrictionMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3ECEEB16A462CE1D8A8DD7A409B2D58 /* AttributeRestrictionMatchers.swift */; };
 		019E2BF79E955C7193F06804DB36B325 /* ContinuousFatigueRatingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB4F9A2E498334F75BACE409B31C6C2D /* ContinuousFatigueRatingTableViewCell.swift */; };
@@ -135,6 +136,7 @@
 		4055690B3EB5EB046D44B9AB8FA9F801 /* MedicationFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C4B550FFD974458EB56C21773B8359 /* MedicationFunctionalTests.swift */; };
 		40719B40A590873A642813E862AFC722 /* SearchUtilUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF12E0E1923C8E864C89BCABDEB6AD5 /* SearchUtilUnitTests.swift */; };
 		408A83C375FE0587E2754D78723A42C2 /* DateMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07858BCDEB59C70879DC25B275F72A32 /* DateMatchers.swift */; };
+		40E4CBD19F9324FC01E77B6F7163B5C8 /* PainSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25D08E3C5E59C0EC152317C412139BD /* PainSettingsViewController.swift */; };
 		41413F8FA184F57C958DA1C72A9B0CC1 /* QueryFunctionalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B0C510FF593ABB3663EDE18DAA324F /* QueryFunctionalTest.swift */; };
 		414BAEA79FE4C0594FA618DD33CD9FDF /* ActivityDoesNotHaveOneOfTagAttributeRestrictionFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E874A5F76C5E178B1BCA608294CA4A /* ActivityDoesNotHaveOneOfTagAttributeRestrictionFunctionalTests.swift */; };
 		419D65D4AA99B43F718FD47A53F025E4 /* Pods_DiscreteMoodWidget.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 735311D8769F386D18F7F446E8C30424 /* Pods_DiscreteMoodWidget.framework */; };
@@ -152,6 +154,7 @@
 		4865035F8E4B42843B8B83C2F5A73B6F /* UIEventTestStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42F6610281D3D8ADE5515450045B947C /* UIEventTestStub.swift */; };
 		490C0D3FA4D6EE2E8A306EB3AC7EDF9E /* BooleanAttributeUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7101E48641C88190FE068611D5B91169 /* BooleanAttributeUnitTests.swift */; };
 		4960852638EE6B0F323A529BFED38DE2 /* GreaterThanDosageAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45023704FA7C502C319AF5A352B3389E /* GreaterThanDosageAttributeRestrictionUnitTests.swift */; };
+		49E9764712EA14E68A33E2AA746DE670 /* PainLocationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940F200750834EAEAD9E2162AEDD2317 /* PainLocationTableViewCell.swift */; };
 		4B4819F1A9E64ACEE6C044ECB96C82F7 /* AttributeMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E5A0F683213377F87B6133A255256F /* AttributeMatchers.swift */; };
 		4B4E96A4F1838CC9EE35B82AF6996342 /* LessThanOrEqualToDoubleAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F5520C36CC47F240EA90932BADB19CB /* LessThanOrEqualToDoubleAttributeRestrictionUnitTests.swift */; };
 		4C041D35499169405D4608BF3946FAD5 /* RestingHeartRateUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67A8547614DB904386FE0C5057A28F1 /* RestingHeartRateUnitTests.swift */; };
@@ -193,6 +196,7 @@
 		5B068CA96FAB6EC519DFA3E882B915BC /* QueriesMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C355B0AAD252CCF9D7A2C1B4BADEFA /* QueriesMocks.swift */; };
 		5B869E4825C3616ED3C250C311D4EC1A /* PickerMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD71FA3FAB9E75505AA5F1F382EBF59 /* PickerMatchers.swift */; };
 		5BE2D38612042D7874C22A05A3221ABD /* RestingHeartRateQueryFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC35BA576759FA61B15F904C42335C0 /* RestingHeartRateQueryFunctionalTests.swift */; };
+		5C48C4E4A84505C30B33ABC93876936A /* PainNoteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C363176BF177E7B5BB8AD86B379803E8 /* PainNoteTableViewCell.swift */; };
 		5C98E0B7A29297921CA9E5E8A1C5D3BD /* SexualActivityUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB78CB6A69BA21B3A5B7DD707CD88EA /* SexualActivityUnitTests.swift */; };
 		5D910ABBDE3929E728E8669A9E5E2F4B /* SampleGrouperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488FBBEAC0EF9616AF94F766921C210B /* SampleGrouperMock.swift */; };
 		5D9111AF67D78FB88A5DC0DEE852A6A1 /* MedicationDoseFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36D7B96C629BC275FD91AFB33B62F02 /* MedicationDoseFunctionalTests.swift */; };
@@ -232,12 +236,14 @@
 		69E265A755C68E1EF1F00AAD8431E71D /* Introspective.xcodeprojMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7034BDBE5233EE0EE6568DFAE4A7ABD /* Introspective.xcodeprojMocks.swift */; };
 		69EA6E223717DB166F5CB977A5DDCEFF /* BasicXYGraphSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B548BD54DFF6B47A609E95D7414C1BA5 /* BasicXYGraphSetupViewController.swift */; };
 		6A2A7C40045363587C843CE6A12F0F21 /* Samples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A0010DEF24F98D6EFC8B867ED2212CD1 /* Samples.framework */; };
+		6A60CDDD355F91FEA14817F140B2F523 /* ContinuousPainRatingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFFFDDC96C3013AA0A966930B4BCDA8 /* ContinuousPainRatingTableViewCell.swift */; };
 		6B162FE11D3AA83005D79AF00B43A1AC /* InThePastXTimeUnitsDateAttributeRestrictionFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4AC0281090E39F5FC2024186F0BCCE /* InThePastXTimeUnitsDateAttributeRestrictionFunctionalTests.swift */; };
 		6B7EF7E3A80A4130DE4928C34DF4B43D /* GreaterThanOrEqualToDosageAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636D04B8536DCB3C1948BCAA2B9CCC5B /* GreaterThanOrEqualToDosageAttributeRestrictionUnitTests.swift */; };
 		6BC39865F7C37F639220609946D97925 /* HealthKitQuantitySampleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D710678B640CDFD572A3D063F3B0572F /* HealthKitQuantitySampleTableViewCell.swift */; };
 		6C26724E3168DD26A1335B38E1C17B0A /* StartActivityFromEndOfLastIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97D626EC97945D4C7491D67B0AA1CA9A /* StartActivityFromEndOfLastIntentHandler.swift */; };
 		6C92710823185693AC4F46730CD63B15 /* TestDataGenerationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF95B526BDD3B050C960D09F8EDA298A /* TestDataGenerationTableViewController.swift */; };
 		6F331A4F7B7EA606AFDF5DF5B0E46E77 /* SampleInformationMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFCE31F415F635A2C9AD9A76E9C47AD /* SampleInformationMocks.swift */; };
+		6F6BE420D1C1F022EEE5DC54760F28E7 /* DiscretePainRatingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CD859D40B8E5DA81D5AD3E6615ADE4 /* DiscretePainRatingTableViewCell.swift */; };
 		6F90C7DFED5E34346EF8C3635F46D94E /* ContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFCB36B18C64CA9C305527217C2B36D /* ContainerView.swift */; };
 		6FE12584510A2E073283F8A80F72764B /* ChooseSampleGrouperTypeViewControllerUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E8ADDDE9BED06A839DEEDFFF1D98D8 /* ChooseSampleGrouperTypeViewControllerUnitTests.swift */; };
 		70146D3AA67C8249E8AC24D4E717FB8C /* DeleteCoreDataTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487BCD6FFB5D7F9BAB7231595CDB000A /* DeleteCoreDataTableViewCell.swift */; };
@@ -358,15 +364,6 @@
 		A0ACDA46E85F2ECEFBDA115171002AEF /* MoodMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE301C2F2247DBBEDE6822A654DD4F1 /* MoodMock.swift */; };
 		A108D51984F45F433488927376B4A95A /* RecordDecimalMoodIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C624D2A8E2DF0D653F2E4CF507F9BC09 /* RecordDecimalMoodIntentHandler.swift */; };
 		A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FC569196ECE6B2231D16543528A687 /* UITest.swift */; };
-		40E4CBD19F9324FC01E77B6F7163B5C8 /* PainSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25D08E3C5E59C0EC152317C412139BD /* PainSettingsViewController.swift */; };
-		F80FE40D898AED55320F83B7AD846D7F /* PainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0A6ACC65601E3613FF27F754F63039 /* PainTableViewCell.swift */; };
-		005B2E844D1AAFF178F4C9A7422B201B /* RecordDiscretePainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87B3D69C66413E2297C032F25B0DD73 /* RecordDiscretePainTableViewCell.swift */; };
-		DB7747367D919E3B80AD13FECFC74A5A /* RecordContinuousPainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A254A029FEFC43660C4B99A34ABAB46A /* RecordContinuousPainTableViewCell.swift */; };
-		B1340259C1888E4105785C762DB55821 /* EditPainTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C28F2CB06A12E801126CD24D80EDD0 /* EditPainTableViewController.swift */; };
-		5C48C4E4A84505C30B33ABC93876936A /* PainNoteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C363176BF177E7B5BB8AD86B379803E8 /* PainNoteTableViewCell.swift */; };
-		6A60CDDD355F91FEA14817F140B2F523 /* ContinuousPainRatingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFFFDDC96C3013AA0A966930B4BCDA8 /* ContinuousPainRatingTableViewCell.swift */; };
-		6F6BE420D1C1F022EEE5DC54760F28E7 /* DiscretePainRatingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CD859D40B8E5DA81D5AD3E6615ADE4 /* DiscretePainRatingTableViewCell.swift */; };
-		49E9764712EA14E68A33E2AA746DE670 /* PainLocationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940F200750834EAEAD9E2162AEDD2317 /* PainLocationTableViewCell.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A26589F32BFC0527881D20D03E4CB48C /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
@@ -399,6 +396,7 @@
 		B05AF5BF43D0BEFE530278433255B6BC /* SampleQueryMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9AD32F1EE1369EDE699A6AAF6B8A98 /* SampleQueryMock.swift */; };
 		B0613F92F645982D50060D3C2EF657AB /* ObjectModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D063C2E0D27A1D0716B69A501909AAE /* ObjectModelContainer.swift */; };
 		B08BA6CC7E7059C71E56950D48ACFADD /* ChooseTextViewControllerUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC31F6A85F4BB41C8A92FB22E06D1FE6 /* ChooseTextViewControllerUnitTests.swift */; };
+		B1340259C1888E4105785C762DB55821 /* EditPainTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C28F2CB06A12E801126CD24D80EDD0 /* EditPainTableViewController.swift */; };
 		B16636FF19A5054942F6E23ED446D678 /* FatigueSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A12B4FAE6A8C0774C4A5406D79CEF8 /* FatigueSettingsViewController.swift */; };
 		B2E3F8F0CE6013587C54BDFE33FD99FA /* UIAlertControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78812D5DB1B89F9F928BF6018E59942 /* UIAlertControllerExtension.swift */; };
 		B3524F47C097361C4029CF5527727E77 /* GeneralResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDF01F769863A9123FEED8DBF775E9C /* GeneralResultsUITests.swift */; };
@@ -504,6 +502,7 @@
 		D9BF9DA390CFB9D88ED051E485240AB4 /* EditSubDataTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00DE3A8CC4C204EC257C34A20769422 /* EditSubDataTypeViewController.swift */; };
 		DB3583F25F7D025514354A21A1A5B1BA /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA3D6B068562191EA6DE7DD2EB7EAB52 /* NotificationCenter.framework */; };
 		DB4DAFCA45E34D089BAFFF943E08E069 /* AfterDateAndTimeAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0EC5B5502507197F03C261F11DBEC6 /* AfterDateAndTimeAttributeRestrictionUnitTests.swift */; };
+		DB7747367D919E3B80AD13FECFC74A5A /* RecordContinuousPainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A254A029FEFC43660C4B99A34ABAB46A /* RecordContinuousPainTableViewCell.swift */; };
 		DD536BA8B33319ED9E5EF71F5A734532 /* SameDatesSubQueryMatcherFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DD3D79EE3D78A7B993F10FA5CA5F2E /* SameDatesSubQueryMatcherFunctionalTests.swift */; };
 		DD60174EB861318BEC7610381F69D34D /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCD120AFB3D2858AE4607749992A55B2 /* Common.framework */; };
 		DD91E8B7DC39A2D7A04464D0E5986A2C /* FatigueNoteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7C5934FCCAE5C66A71C57964F4B3E5 /* FatigueNoteTableViewCell.swift */; };
@@ -558,6 +557,7 @@
 		F64C63191C6A32E74344114A3A0B85EB /* ChooseActivityDefinitionViewControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DB92D624DE5C36603AD4927E56B6F0 /* ChooseActivityDefinitionViewControllerMock.swift */; };
 		F6B9FE3D7A2C303234ED43EA2CC36638 /* GroupNameTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7C56F13AF43DCE40380200AE879483 /* GroupNameTableViewCell.swift */; };
 		F7FE8601CE47B849FFB96EACCFD5E4E8 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4325DED2EAFF86050E1F748EC15C7C50 /* IntentHandler.swift */; };
+		F80FE40D898AED55320F83B7AD846D7F /* PainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0A6ACC65601E3613FF27F754F63039 /* PainTableViewCell.swift */; };
 		F81C80395A04E18AC1DFCC6103A13D53 /* CoachMarkInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB714E335842B677F8979FDF725CF6 /* CoachMarkInfo.swift */; };
 		FAFC70DA9F3EEF6339F86BF0E5D679D7 /* ActivityHasOneOfTagAttributeRestrictionFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE6ECD78EA5462C958834A9308F15FD /* ActivityHasOneOfTagAttributeRestrictionFunctionalTests.swift */; };
 		FB0094CDF6C803D10DDD57ED990E0A29 /* ActivityMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5986C27B6F628C0DD9383AAF1323228 /* ActivityMatchers.swift */; };
@@ -678,6 +678,7 @@
 		1969B992090C203B02DB85EB1005D9F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		19BD2C5FCC3DA79FCD58742DCAC8122A /* QueryResultsGraphCustomizationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryResultsGraphCustomizationViewController.swift; sourceTree = "<group>"; };
 		1A958A24D33360AFB07C50E8312A454A /* VersionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionTableViewCell.swift; sourceTree = "<group>"; };
+		1AFFFDDC96C3013AA0A966930B4BCDA8 /* ContinuousPainRatingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinuousPainRatingTableViewCell.swift; sourceTree = "<group>"; };
 		1BBA5C806D2CB850992E9E1E60A8E687 /* RecordActivityTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordActivityTableViewController.swift; sourceTree = "<group>"; };
 		1BE45F44E63A95907474965403C38F72 /* DateOnlyAttributeUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateOnlyAttributeUnitTests.swift; sourceTree = "<group>"; };
 		1C8B5AE7A83209B865D6BC8170C1A09A /* EditActivityTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditActivityTableViewController.swift; sourceTree = "<group>"; };
@@ -695,6 +696,7 @@
 		21EAFE7DB5AA63EC61ED4EA1F5225B71 /* RecordActivityDefinitionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordActivityDefinitionTableViewCell.swift; sourceTree = "<group>"; };
 		2279C57CF37E82D894D25B4C9842E580 /* AttributeValueViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributeValueViewController.swift; sourceTree = "<group>"; };
 		23C0748CFAA17C63833134DA662F307D /* ChooseSampleTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseSampleTypeViewController.swift; sourceTree = "<group>"; };
+		23C28F2CB06A12E801126CD24D80EDD0 /* EditPainTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPainTableViewController.swift; sourceTree = "<group>"; };
 		2477DABFDEE85D98CF3DF32C5697894B /* ActivityNoteTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityNoteTableViewCell.swift; sourceTree = "<group>"; };
 		24860675491417756F0C45E4780CBAE4 /* GlobalFunctionsUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalFunctionsUnitTests.swift; sourceTree = "<group>"; };
 		248E176082B68C00032ACC2B00F50222 /* BooleanAlgebra.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BooleanAlgebra.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -951,6 +953,7 @@
 		93C8EAD831164B17E8AA299FA9FE6D6F /* InSameCalendarUnitSubQueryMatcherFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InSameCalendarUnitSubQueryMatcherFunctionalTests.swift; sourceTree = "<group>"; };
 		93DB6DB41B08B37E821A6CD7E76786DE /* Pods_SiriIntents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SiriIntents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		93E0A93AAA9776F795153CBC94B78F92 /* EndsWithStringAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndsWithStringAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
+		940F200750834EAEAD9E2162AEDD2317 /* PainLocationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainLocationTableViewCell.swift; sourceTree = "<group>"; };
 		945E8797DDA6505CB341D70B46229032 /* LessThanOrEqualToFrequencyAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanOrEqualToFrequencyAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		949F55BA108C7F3F9253144543B9DA85 /* EditMedicationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMedicationViewController.swift; sourceTree = "<group>"; };
 		95283CE739AA64CB16BBDA5FD37EDA53 /* MoodIntents.intentdefinition */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.intentdefinition; path = MoodIntents.intentdefinition; sourceTree = "<group>"; };
@@ -989,19 +992,12 @@
 		A1776B090DE0D9396B6A50F70152A55C /* EqualToFrequencyAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToFrequencyAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A1B93F7FE435E06819E4BF152382DAA9 /* EqualToDurationAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToDurationAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphType.swift; sourceTree = "<group>"; };
-		A25D08E3C5E59C0EC152317C412139BD /* PainSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainSettingsViewController.swift; sourceTree = "<group>"; };
-		DC0A6ACC65601E3613FF27F754F63039 /* PainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainTableViewCell.swift; sourceTree = "<group>"; };
-		C87B3D69C66413E2297C032F25B0DD73 /* RecordDiscretePainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordDiscretePainTableViewCell.swift; sourceTree = "<group>"; };
-		A254A029FEFC43660C4B99A34ABAB46A /* RecordContinuousPainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordContinuousPainTableViewCell.swift; sourceTree = "<group>"; };
-		23C28F2CB06A12E801126CD24D80EDD0 /* EditPainTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPainTableViewController.swift; sourceTree = "<group>"; };
-		C363176BF177E7B5BB8AD86B379803E8 /* PainNoteTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainNoteTableViewCell.swift; sourceTree = "<group>"; };
-		1AFFFDDC96C3013AA0A966930B4BCDA8 /* ContinuousPainRatingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinuousPainRatingTableViewCell.swift; sourceTree = "<group>"; };
-		E1CD859D40B8E5DA81D5AD3E6615ADE4 /* DiscretePainRatingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscretePainRatingTableViewCell.swift; sourceTree = "<group>"; };
-		940F200750834EAEAD9E2162AEDD2317 /* PainLocationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainLocationTableViewCell.swift; sourceTree = "<group>"; };
 		A22D5ACFE86EF6F1ED02801B02A60A14 /* DiscreteFatigueRatingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscreteFatigueRatingTableViewCell.swift; sourceTree = "<group>"; };
 		A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		A2505FFD3F0233815468AA6A0A4B96FE /* CoreDataSampleMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSampleMock.swift; sourceTree = "<group>"; };
+		A254A029FEFC43660C4B99A34ABAB46A /* RecordContinuousPainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordContinuousPainTableViewCell.swift; sourceTree = "<group>"; };
+		A25D08E3C5E59C0EC152317C412139BD /* PainSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainSettingsViewController.swift; sourceTree = "<group>"; };
 		A30C94F0D3F3F560B5DF8EF74A77E1E9 /* RestingHeartRateTimelineTableViewCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestingHeartRateTimelineTableViewCellDelegate.swift; sourceTree = "<group>"; };
 		A3E36FCC87EF505C8D25E7E1C0AFB644 /* UnifiedView.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = UnifiedView.storyboard; sourceTree = "<group>"; };
 		A455D3386BC23DDD4E8C89EF40475474 /* LessThanDoubleAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanDoubleAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
@@ -1071,6 +1067,7 @@
 		C3240661B79AB4FF69D5D569E161F5C8 /* DataExport.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DataExport.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3439338891593EF14221EAF27ADF208 /* DayOfWeekAttributeUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOfWeekAttributeUnitTests.swift; sourceTree = "<group>"; };
 		C35A8F670EF0CCCC2E60B8FE50EDE920 /* Pods-IntrospectiveTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IntrospectiveTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-IntrospectiveTests/Pods-IntrospectiveTests.debug.xcconfig"; sourceTree = "<group>"; };
+		C363176BF177E7B5BB8AD86B379803E8 /* PainNoteTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainNoteTableViewCell.swift; sourceTree = "<group>"; };
 		C36D7B96C629BC275FD91AFB33B62F02 /* MedicationDoseFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDoseFunctionalTests.swift; sourceTree = "<group>"; };
 		C3F16C661EBD25F49D6A67E37C26B69B /* ChooseCalendarComponentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseCalendarComponentViewController.swift; sourceTree = "<group>"; };
 		C47C6482E5A9805465F922E51E9597AE /* WeightTimelineTableViewCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightTimelineTableViewCellDelegate.swift; sourceTree = "<group>"; };
@@ -1081,6 +1078,7 @@
 		C78FADAC07D9E98E737F6785B57A805B /* EasyPillMedicationImporterFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyPillMedicationImporterFunctionalTests.swift; sourceTree = "<group>"; };
 		C7E807FBF799286E402E2271B57AC1B2 /* AutoCodable.swifttemplate */ = {isa = PBXFileReference; lastKnownFileType = text; path = AutoCodable.swifttemplate; sourceTree = "<group>"; };
 		C8450BA4318E00311CC52C0F996526B5 /* GreaterThanFrequencyAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreaterThanFrequencyAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
+		C87B3D69C66413E2297C032F25B0DD73 /* RecordDiscretePainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordDiscretePainTableViewCell.swift; sourceTree = "<group>"; };
 		C8B71785BF8FFA3BB51F199255B4979D /* Pods-SiriIntents.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SiriIntents.release.xcconfig"; path = "Pods/Target Support Files/Pods-SiriIntents/Pods-SiriIntents.release.xcconfig"; sourceTree = "<group>"; };
 		C8B8C7658E5B7E329DFB88897C433916 /* SelectDateViewControllerUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectDateViewControllerUnitTests.swift; sourceTree = "<group>"; };
 		C93F285EA1182B34FB4431C83C36D363 /* QueryResultsBasicXYGraphCustomizationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryResultsBasicXYGraphCustomizationViewController.swift; sourceTree = "<group>"; };
@@ -1125,12 +1123,14 @@
 		DA881EBF397B59BCFC55FF888D1D5FE0 /* TagAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		DAC2CA192FCDA203493CCBCF0A55FF03 /* FrequencyAttributeUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrequencyAttributeUnitTests.swift; sourceTree = "<group>"; };
 		DB6131ACDD7AF379FD1E0AF93FBAD927 /* SwiftDate.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwiftDate.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DC0A6ACC65601E3613FF27F754F63039 /* PainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainTableViewCell.swift; sourceTree = "<group>"; };
 		DC1B862D5325AA85A9E16272886E0962 /* TakeMedicationIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TakeMedicationIntentHandler.swift; sourceTree = "<group>"; };
 		DC31F6A85F4BB41C8A92FB22E06D1FE6 /* ChooseTextViewControllerUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseTextViewControllerUnitTests.swift; sourceTree = "<group>"; };
 		DC895FFB270263B7E591BBBBB535B0D2 /* SampleGroupInformation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SampleGroupInformation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDA3B5C6DDC454AA4F45895C09CB26D6 /* HeartRateUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateUnitTests.swift; sourceTree = "<group>"; };
 		DF4AE2AF490B95F56856306DCFDA7677 /* SampleUtilUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleUtilUnitTests.swift; sourceTree = "<group>"; };
 		E0A600C5CDB5FA3E1AE7BD2677FD9502 /* GreaterThanOrEqualToDoubleAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreaterThanOrEqualToDoubleAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
+		E1CD859D40B8E5DA81D5AD3E6615ADE4 /* DiscretePainRatingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscretePainRatingTableViewCell.swift; sourceTree = "<group>"; };
 		E2B7EADC414E7602ACFDC20A2A80D09E /* DosageUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DosageUnitTests.swift; sourceTree = "<group>"; };
 		E399F0A5F95193DF1DC17989EE29EB77 /* EqualToSelectOneAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToSelectOneAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		E3D0D80E7E86D4500CCF74A48C82EDD7 /* SubSampleTypeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubSampleTypeTableViewCell.swift; sourceTree = "<group>"; };
@@ -1767,6 +1767,14 @@
 			path = Double;
 			sourceTree = "<group>";
 		};
+		422EDD7447871F236AAAC4D50CD11F0E /* Pain */ = {
+			isa = PBXGroup;
+			children = (
+				A25D08E3C5E59C0EC152317C412139BD /* PainSettingsViewController.swift */,
+			);
+			path = Pain;
+			sourceTree = "<group>";
+		};
 		435B75B1D07BF09C6E2DD965F2310ED9 /* Fatigue */ = {
 			isa = PBXGroup;
 			children = (
@@ -2187,6 +2195,18 @@
 			path = Export;
 			sourceTree = "<group>";
 		};
+		79001391E68DCEC9C7E2BA599BCEC5CC /* Pain */ = {
+			isa = PBXGroup;
+			children = (
+				23C28F2CB06A12E801126CD24D80EDD0 /* EditPainTableViewController.swift */,
+				C363176BF177E7B5BB8AD86B379803E8 /* PainNoteTableViewCell.swift */,
+				940F200750834EAEAD9E2162AEDD2317 /* PainLocationTableViewCell.swift */,
+				1AFFFDDC96C3013AA0A966930B4BCDA8 /* ContinuousPainRatingTableViewCell.swift */,
+				E1CD859D40B8E5DA81D5AD3E6615ADE4 /* DiscretePainRatingTableViewCell.swift */,
+			);
+			path = Pain;
+			sourceTree = "<group>";
+		};
 		806EFC2E9F641F18905434B2EDEDA174 /* Matchers */ = {
 			isa = PBXGroup;
 			children = (
@@ -2208,6 +2228,15 @@
 				9A139AF0363C3776B210F9D516546B7E /* CoreDataMatchers.swift */,
 			);
 			path = Matchers;
+			sourceTree = "<group>";
+		};
+		83A6C6B91A02DB42D07751D823FD0C05 /* Pain */ = {
+			isa = PBXGroup;
+			children = (
+				C87B3D69C66413E2297C032F25B0DD73 /* RecordDiscretePainTableViewCell.swift */,
+				A254A029FEFC43660C4B99A34ABAB46A /* RecordContinuousPainTableViewCell.swift */,
+			);
+			path = Pain;
 			sourceTree = "<group>";
 		};
 		876DFA471A78CFBE8A23B2F36401B713 /* Graphing */ = {
@@ -2413,35 +2442,6 @@
 				BB3F3239D5DA24E154657AC2EC4C6F16 /* TestDataCreationSampleTypeTableViewCell.swift */,
 			);
 			path = Testing;
-			sourceTree = "<group>";
-		};
-		422EDD7447871F236AAAC4D50CD11F0E /* Pain */ = {
-			isa = PBXGroup;
-			children = (
-				A25D08E3C5E59C0EC152317C412139BD /* PainSettingsViewController.swift */,
-			);
-			path = Pain;
-			sourceTree = "<group>";
-		};
-		83A6C6B91A02DB42D07751D823FD0C05 /* Pain */ = {
-			isa = PBXGroup;
-			children = (
-				C87B3D69C66413E2297C032F25B0DD73 /* RecordDiscretePainTableViewCell.swift */,
-				A254A029FEFC43660C4B99A34ABAB46A /* RecordContinuousPainTableViewCell.swift */,
-			);
-			path = Pain;
-			sourceTree = "<group>";
-		};
-		79001391E68DCEC9C7E2BA599BCEC5CC /* Pain */ = {
-			isa = PBXGroup;
-			children = (
-				23C28F2CB06A12E801126CD24D80EDD0 /* EditPainTableViewController.swift */,
-				C363176BF177E7B5BB8AD86B379803E8 /* PainNoteTableViewCell.swift */,
-				940F200750834EAEAD9E2162AEDD2317 /* PainLocationTableViewCell.swift */,
-				1AFFFDDC96C3013AA0A966930B4BCDA8 /* ContinuousPainRatingTableViewCell.swift */,
-				E1CD859D40B8E5DA81D5AD3E6615ADE4 /* DiscretePainRatingTableViewCell.swift */,
-			);
-			path = Pain;
 			sourceTree = "<group>";
 		};
 		A42A3755C14DFA73187CC83B596D96EF /* RecordData */ = {
@@ -4085,7 +4085,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bnova.Introspective;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4168,7 +4168,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bnova.Introspective;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
