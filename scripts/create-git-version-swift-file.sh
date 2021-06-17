@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 version=$(git rev-parse --verify HEAD | cut -c 1-7)
 curdate=$(date +"%Y-%m-%d")
