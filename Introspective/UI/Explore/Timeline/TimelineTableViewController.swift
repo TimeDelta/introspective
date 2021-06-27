@@ -61,6 +61,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		(type: Activity.self, fetcher: injected(SampleFetcherFactory.self).activitySampleFetcher()),
 		(type: BloodPressure.self, fetcher: injected(SampleFetcherFactory.self).bloodPressureSampleFetcher()),
 		(type: BodyMassIndex.self, fetcher: injected(SampleFetcherFactory.self).bodyMassIndexSampleFetcher()),
+		(type: DietarySugar.self, fetcher: injected(SampleFetcherFactory.self).dietarySugarSampleFetcher()),
 		(type: FatigueImpl.self, fetcher: injected(SampleFetcherFactory.self).fatigueSampleFetcher()),
 		(type: HeartRate.self, fetcher: injected(SampleFetcherFactory.self).heartRateSampleFetcher()),
 		(type: LeanBodyMass.self, fetcher: injected(SampleFetcherFactory.self).leanBodyMassSampleFetcher()),
@@ -80,6 +81,8 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			injected(UserDefaultsUtil.self).bool(forKey: .bloodPressureEnabledOnTimeline),
 		enabledString(for: BodyMassIndex.self):
 			injected(UserDefaultsUtil.self).bool(forKey: .bodyMassIndexEnabledOnTimeline),
+		enabledString(for: DietarySugar.self):
+			injected(UserDefaultsUtil.self).bool(forKey: .dietarySugarEnabledOnTimeline),
 		enabledString(for: FatigueImpl.self):
 			injected(UserDefaultsUtil.self).bool(forKey: .fatigueEnabledOnTimeline),
 		enabledString(for: HeartRate.self):
@@ -276,6 +279,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		injected(UserDefaultsUtil.self).setUserDefault(
 			enabledSampleTypes[Me.enabledString(for: BodyMassIndex.self)] ?? false,
 			forKey: .bodyMassIndexEnabledOnTimeline
+		)
+		injected(UserDefaultsUtil.self).setUserDefault(
+			enabledSampleTypes[Me.enabledString(for: DietarySugar.self)] ?? false,
+			forKey: .dietarySugarEnabledOnTimeline
 		)
 		injected(UserDefaultsUtil.self).setUserDefault(
 			enabledSampleTypes[Me.enabledString(for: HeartRate.self)] ?? false,
@@ -694,7 +701,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 
 	private final class DietarySugarEvent: Event {
 		override var delegate: TimelineTableViewCellDelegate {
-			FatigueTimelineTableViewCellDelegate()
+			DietarySugarTimelineTableViewCellDelegate()
 		}
 
 		init(for dietarySugar: DietarySugar) {
