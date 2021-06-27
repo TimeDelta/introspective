@@ -364,6 +364,7 @@
 		A0ACDA46E85F2ECEFBDA115171002AEF /* MoodMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE301C2F2247DBBEDE6822A654DD4F1 /* MoodMock.swift */; };
 		A108D51984F45F433488927376B4A95A /* RecordDecimalMoodIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C624D2A8E2DF0D653F2E4CF507F9BC09 /* RecordDecimalMoodIntentHandler.swift */; };
 		A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FC569196ECE6B2231D16543528A687 /* UITest.swift */; };
+		29A896A79536E54FBE7D4F016DE6F4FC /* DietarySugarTimelineTableViewCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F533DAA0DD0E635225923F9BDE06D39D /* DietarySugarTimelineTableViewCellDelegate.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A26589F32BFC0527881D20D03E4CB48C /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
@@ -995,6 +996,7 @@
 		A22D5ACFE86EF6F1ED02801B02A60A14 /* DiscreteFatigueRatingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscreteFatigueRatingTableViewCell.swift; sourceTree = "<group>"; };
 		A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
+		F533DAA0DD0E635225923F9BDE06D39D /* DietarySugarTimelineTableViewCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DietarySugarTimelineTableViewCellDelegate.swift; sourceTree = "<group>"; };
 		A2505FFD3F0233815468AA6A0A4B96FE /* CoreDataSampleMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSampleMock.swift; sourceTree = "<group>"; };
 		A254A029FEFC43660C4B99A34ABAB46A /* RecordContinuousPainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordContinuousPainTableViewCell.swift; sourceTree = "<group>"; };
 		A25D08E3C5E59C0EC152317C412139BD /* PainSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainSettingsViewController.swift; sourceTree = "<group>"; };
@@ -2053,6 +2055,7 @@
 				89FF1BB29C49C672D34FCE7492495D8F /* ActivityTimelineTableViewCellDelegate.swift */,
 				F81AB93C2FDC2C92D3012730C9E010E1 /* BloodPressureTimelineTableViewCellDelegate.swift */,
 				528A8986713CFB7D994DBC170517AE98 /* BodyMassIndexTimelineTableViewCellDelegate.swift */,
+				F533DAA0DD0E635225923F9BDE06D39D /* DietarySugarTimelineTableViewCellDelegate.swift */,
 				0806EEE35269A4AE17A10817883DDADB /* FatigueTimelineTableViewCellDelegate.swift */,
 				890D1E9AF56C76FF4FD87C256C2369B5 /* HeartRateTimelineTableViewCellDelegate.swift */,
 				6BFEF4FADBFD10BEEEB95CB834516357 /* LeanBodyMassTimelineTableViewCellDelegate.swift */,
@@ -3993,6 +3996,7 @@
 				86E1DD3CAF3C785C528D358A67180381 /* ActiveImportTableViewCell.swift in Sources */,
 				F6B9FE3D7A2C303234ED43EA2CC36638 /* GroupNameTableViewCell.swift in Sources */,
 				6887302E168B9B5C71B22902831367B9 /* UnifiedDayViewController.swift in Sources */,
+				29A896A79536E54FBE7D4F016DE6F4FC /* DietarySugarTimelineTableViewCellDelegate.swift in Sources */,
 				1D00F6747831829D71CF6F1B3AE4903A /* SelectSampleGroupInformationViewController.swift in Sources */,
 				C2C88F1B669BAAF878E50FC890F92AD9 /* SelectOneAttributeValueViewController.swift in Sources */,
 				0AAE5EB1B7434CCD026262DAB9EE2406 /* AutoTrimWhitespaceInActivityNotesTableViewCell.swift in Sources */,

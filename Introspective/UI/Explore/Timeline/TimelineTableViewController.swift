@@ -453,6 +453,9 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			appendBodyMassIndexEvents(for: bodyMassIndex, to: &events)
 			return
 		}
+		if let dietarySugar = sample as? DietarySugar {
+			appendDietarySugar(for: dietarySugar, to: &events)
+		}
 		if let fatigue = sample as? Fatigue {
 			appendFatigueEvents(for: fatigue, to: &events)
 			return
@@ -508,6 +511,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 
 	private func appendBodyMassIndexEvents(for bodyMassIndex: BodyMassIndex, to events: inout [Event]) {
 		events.append(BodyMassIndexEvent(for: bodyMassIndex))
+	}
+
+	private func appendDietarySugar(for dietarySugar: DietarySugar, to events: inout [Event]) {
+		events.append(DietarySugarEvent(for: dietarySugar))
 	}
 
 	private func appendFatigueEvents(for fatigue: Fatigue, to events: inout [Event]) {
@@ -680,6 +687,21 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 				"⚖️ Body Mass Index: " + bodyMassIndex.description,
 			]
 			super.init(at: bodyMassIndex.timestamp, for: bodyMassIndex, descriptions: descriptions)
+		}
+	}
+
+	// MARK: Dietary Sugar Events
+
+	private final class DietarySugarEvent: Event {
+		override var delegate: TimelineTableViewCellDelegate {
+			FatigueTimelineTableViewCellDelegate()
+		}
+
+		init(for dietarySugar: DietarySugar) {
+			let descriptions = [
+				"🍬 Dietary Sugar: " + String(dietarySugar.dietarySugar),
+			]
+			super.init(at: dietarySugar.timestamp, for: dietarySugar, descriptions: descriptions)
 		}
 	}
 

@@ -504,6 +504,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		case is ActivityQuery: addQuerySampleType(Activity.self, matcher); break
 		case is BloodPressureQuery: addQuerySampleType(BloodPressure.self, matcher); break
 		case is BodyMassIndexQuery: addQuerySampleType(BodyMassIndex.self, matcher); break
+		case is DietarySugarQuery: addQuerySampleType(DietarySugar.self, matcher); break
 		case is FatigueQuery: addQuerySampleType(FatigueImpl.self, matcher); break
 		case is HeartRateQuery: addQuerySampleType(HeartRate.self, matcher); break
 		case is LeanBodyMassQuery: addQuerySampleType(LeanBodyMass.self, matcher); break
@@ -593,6 +594,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		case is Activity.Type: return try injected(QueryFactory.self).activityQuery(parts)
 		case is BloodPressure.Type: return try injected(QueryFactory.self).bloodPressureQuery(parts)
 		case is BodyMassIndex.Type: return try injected(QueryFactory.self).bmiQuery(parts)
+		case is DietarySugar.Type: return try injected(QueryFactory.self).dietarySugarQuery(parts)
 		case is Fatigue.Type: return try injected(QueryFactory.self).fatigueQuery(parts)
 		case is HeartRate.Type: return try injected(QueryFactory.self).heartRateQuery(parts)
 		case is LeanBodyMass.Type: return try injected(QueryFactory.self).leanBodyMassQuery(parts)

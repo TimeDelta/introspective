@@ -10,6 +10,7 @@
 		A20675912625CB5A00AA86C0 /* WithinXCalendarUnitsBeforeSubQueryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20675902625CB5A00AA86C0 /* WithinXCalendarUnitsBeforeSubQueryMatcher.swift */; };
 		A20675982630A5C500AA86C0 /* WithinXCalendarUnitsAfterSubQueryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20675972630A5C500AA86C0 /* WithinXCalendarUnitsAfterSubQueryMatcher.swift */; };
 		A224F66A267A3B11007C3577 /* PainQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A224F669267A3B11007C3577 /* PainQuery.swift */; };
+		A24BE2F9267D3F1400E6FECF /* DietarySugarQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24BE2F8267D3F1400E6FECF /* DietarySugarQuery.swift */; };
 		A24E2E8F23451CE500A7707D /* Queries.h in Headers */ = {isa = PBXBuildFile; fileRef = A24E2E8D23451CE500A7707D /* Queries.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A24E2E9723451CF500A7707D /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A24E2E9623451CF500A7707D /* Common.framework */; };
 		A24E2E9923451CFA00A7707D /* DependencyInjection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A24E2E9823451CFA00A7707D /* DependencyInjection.framework */; };
@@ -51,6 +52,7 @@
 		A20675902625CB5A00AA86C0 /* WithinXCalendarUnitsBeforeSubQueryMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithinXCalendarUnitsBeforeSubQueryMatcher.swift; sourceTree = "<group>"; };
 		A20675972630A5C500AA86C0 /* WithinXCalendarUnitsAfterSubQueryMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithinXCalendarUnitsAfterSubQueryMatcher.swift; sourceTree = "<group>"; };
 		A224F669267A3B11007C3577 /* PainQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainQuery.swift; sourceTree = "<group>"; };
+		A24BE2F8267D3F1400E6FECF /* DietarySugarQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DietarySugarQuery.swift; sourceTree = "<group>"; };
 		A24E2E8A23451CE500A7707D /* Queries.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Queries.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A24E2E8D23451CE500A7707D /* Queries.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Queries.h; sourceTree = "<group>"; };
 		A24E2E8E23451CE500A7707D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -176,6 +178,7 @@
 				A24E2EAA23451D4A00A7707D /* HealthKitQuery.swift */,
 				A24E2EAD23451D4A00A7707D /* BloodPressureQuery.swift */,
 				A24E2EB223451D4A00A7707D /* BodyMassIndexQuery.swift */,
+				A24BE2F8267D3F1400E6FECF /* DietarySugarQuery.swift */,
 				A24E2EB123451D4A00A7707D /* HeartRateQuery.swift */,
 				A24E2EAF23451D4A00A7707D /* LeanBodyMassQuery.swift */,
 				A24E2EAC23451D4A00A7707D /* RestingHeartRateQuery.swift */,
@@ -311,6 +314,7 @@
 			files = (
 				A224F66A267A3B11007C3577 /* PainQuery.swift in Sources */,
 				A24E2EBD23451D4B00A7707D /* SubQueryMatcher.swift in Sources */,
+				A24BE2F9267D3F1400E6FECF /* DietarySugarQuery.swift in Sources */,
 				A24E2ECD23451D4B00A7707D /* SampleQueryResult.swift in Sources */,
 				A24E2EBC23451D4B00A7707D /* SameDatesSubQueryMatcher.swift in Sources */,
 				A24E2EC723451D4B00A7707D /* BloodPressureQuery.swift in Sources */,

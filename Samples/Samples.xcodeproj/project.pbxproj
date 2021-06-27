@@ -39,6 +39,7 @@
 		A22D6277234398C40023470F /* SamplesInjectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22D6276234398C40023470F /* SamplesInjectionProvider.swift */; };
 		A22D627A234398D90023470F /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A22D6279234398D90023470F /* Common.framework */; };
 		A22D627C234398DD0023470F /* DependencyInjection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A22D627B234398DD0023470F /* DependencyInjection.framework */; };
+		A24BE2F7267D388600E6FECF /* DietarySugar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24BE2F6267D388600E6FECF /* DietarySugar.swift */; };
 		A26BD7A2249D3DDD0083C9FC /* MedicationDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26BD7A1249D3DDD0083C9FC /* MedicationDAO.swift */; };
 		A287DEAE2580615E000B8166 /* FatigueDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A287DEAD2580615E000B8166 /* FatigueDAO.swift */; };
 		A287DEB325806183000B8166 /* Fatigue.swift in Sources */ = {isa = PBXBuildFile; fileRef = A287DEB225806183000B8166 /* Fatigue.swift */; };
@@ -104,6 +105,7 @@
 		A22D6276234398C40023470F /* SamplesInjectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplesInjectionProvider.swift; sourceTree = "<group>"; };
 		A22D6279234398D90023470F /* Common.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Common.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A22D627B234398DD0023470F /* DependencyInjection.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DependencyInjection.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A24BE2F6267D388600E6FECF /* DietarySugar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DietarySugar.swift; sourceTree = "<group>"; };
 		A26BD7A1249D3DDD0083C9FC /* MedicationDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDAO.swift; sourceTree = "<group>"; };
 		A287DEAD2580615E000B8166 /* FatigueDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FatigueDAO.swift; sourceTree = "<group>"; };
 		A287DEB225806183000B8166 /* Fatigue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fatigue.swift; sourceTree = "<group>"; };
@@ -225,12 +227,13 @@
 				A22D6251234398AE0023470F /* HealthKitCorrelationSample.swift */,
 				A22D6254234398AE0023470F /* HealthKitQuantitySample.swift */,
 				A22D6255234398AE0023470F /* HealthKitCategorySample.swift */,
-				A22D624B234398AE0023470F /* SexualActivity.swift */,
+				A22D624F234398AE0023470F /* BodyMassIndex.swift */,
+				A22D6250234398AE0023470F /* BloodPressure.swift */,
+				A24BE2F6267D388600E6FECF /* DietarySugar.swift */,
 				A22D624C234398AE0023470F /* HeartRate.swift */,
 				A22D624D234398AE0023470F /* RestingHeartRate.swift */,
 				A22D624E234398AE0023470F /* Weight.swift */,
-				A22D624F234398AE0023470F /* BodyMassIndex.swift */,
-				A22D6250234398AE0023470F /* BloodPressure.swift */,
+				A22D624B234398AE0023470F /* SexualActivity.swift */,
 				A22D6253234398AE0023470F /* Sleep.swift */,
 				A22D6256234398AE0023470F /* LeanBodyMass.swift */,
 			);
@@ -433,6 +436,7 @@
 				A2AF1FE32343C27C00E04517 /* MoodExporter.swift in Sources */,
 				A2A8AFF92343E59100E883CE /* NumericSampleUtil.swift in Sources */,
 				A2A8AFF72343E59100E883CE /* CoreDataSampleUtil.swift in Sources */,
+				A24BE2F7267D388600E6FECF /* DietarySugar.swift in Sources */,
 				A26BD7A2249D3DDD0083C9FC /* MedicationDAO.swift in Sources */,
 				A29700FD2344FE42004B97E6 /* ActivityDAO.swift in Sources */,
 				A2A0E7552496969A006C0A6E /* SearchableSample.swift in Sources */,

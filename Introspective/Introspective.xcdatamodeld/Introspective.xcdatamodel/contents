@@ -40,6 +40,9 @@
     <entity name="ATrackerActivityImporter" representedClassName="DataImport.ATrackerActivityImporterImpl" syncable="YES">
         <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
+    <entity name="AttributeRestriction" representedClassName="AttributeRestriction" syncable="YES" codeGenerationType="class">
+        <attribute name="attributeName" optional="YES" attributeType="String"/>
+    </entity>
     <entity name="CoreDataSync" representedClassName="Persistence.CoreDataSync" syncable="YES">
         <attribute name="externallyModified" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
     </entity>
@@ -145,5 +148,6 @@
         <element name="Settings" positionX="-63" positionY="9" width="128" height="254"/>
         <element name="Tag" positionX="-18" positionY="81" width="128" height="30"/>
         <element name="WellnessMoodImporter" positionX="-54" positionY="18" width="128" height="30"/>
+        <element name="AttributeRestriction" positionX="-9" positionY="126" width="128" height="44"/>
     </elements>
 </model>

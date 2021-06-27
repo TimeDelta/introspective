@@ -31,6 +31,7 @@ public final class SampleFactoryImpl: SampleFactory {
 		Activity.self,
 		BloodPressure.self,
 		BodyMassIndex.self,
+		DietarySugar.self,
 		FatigueImpl.self,
 		HeartRate.self,
 		LeanBodyMass.self,
@@ -45,6 +46,7 @@ public final class SampleFactoryImpl: SampleFactory {
 	private static let healthKitTypes: [HealthKitSample.Type] = [
 		BloodPressure.self,
 		BodyMassIndex.self,
+		DietarySugar.self,
 		HeartRate.self,
 		LeanBodyMass.self,
 		RestingHeartRate.self,
