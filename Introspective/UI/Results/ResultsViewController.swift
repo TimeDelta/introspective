@@ -68,7 +68,22 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			if !initialSampleSortDone {
 				guard !samples.isEmpty else {
 					viewIsReady()
+					showError(title: "No results", message: nil, onDismiss: { _ in self.popFromNavigationController() })
 					return
+				}
+
+				if let _ = samples as? [SearchableSample] {
+					searchController.searchResultsUpdater = self
+					searchController.obscuresBackgroundDuringPresentation = false
+					searchController.searchBar.placeholder = "Search \(type(of: samples[0]).name) entries"
+					searchController.hidesNavigationBarDuringPresentation = false
+					navigationItem.searchController = searchController
+					navigationItem.hidesSearchBarWhenScrolling = false
+					definesPresentationContext = true
+				} else {
+					DispatchQueue.main.async {
+						self.searchController.searchBar.isHidden = true
+					}
 				}
 
 				let factory = injected(SampleGroupInformationFactory.self)
@@ -150,28 +165,11 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
-		guard samples.count > 0 else {
-			showError(title: "No results", message: nil, onDismiss: { _ in self.popFromNavigationController() })
-			return
-		}
-
 		setTableViewInsetsForTabBar()
 
 		actionsButton.target = self
 		actionsButton.action = #selector(presentActions)
 		actionsButton.accessibilityLabel = "actions button"
-
-		if let _ = samples as? [SearchableSample] {
-			searchController.searchResultsUpdater = self
-			searchController.obscuresBackgroundDuringPresentation = false
-			searchController.searchBar.placeholder = "Search \(type(of: samples[0]).name) entries"
-			searchController.hidesNavigationBarDuringPresentation = false
-			navigationItem.searchController = searchController
-			navigationItem.hidesSearchBarWhenScrolling = false
-			definesPresentationContext = true
-		} else {
-			searchController.searchBar.isHidden = true
-		}
 
 		observe(selector: #selector(saveEditedInformation), name: .editedInformation, object: self)
 		observe(selector: #selector(sortSamplesBy), name: Me.sortSamples)
@@ -970,7 +968,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	}
 
 	private final func waiting() -> Bool {
-		samples == nil
+		filteredSamples == nil
 	}
 
 	// leave non-private for testing
