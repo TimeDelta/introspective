@@ -68,7 +68,13 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			if !initialSampleSortDone {
 				guard !samples.isEmpty else {
 					viewIsReady()
-					showError(title: "No results", message: nil, onDismiss: { _ in self.popFromNavigationController() })
+					DispatchQueue.main.async {
+						self.showError(
+							title: "No results",
+							message: nil,
+							onDismiss: { _ in self.popFromNavigationController() }
+						)
+					}
 					return
 				}
 
