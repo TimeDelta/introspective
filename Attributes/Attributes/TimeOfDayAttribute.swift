@@ -16,6 +16,7 @@ public final class TimeOfDayAttribute: AttributeBase<TimeOfDay>, ComparableAttri
 	}
 
 	public override init(
+		id: Int16,
 		name: String = "Time of day",
 		pluralName: String? = "Times of day",
 		description: String? = nil,
@@ -23,6 +24,7 @@ public final class TimeOfDayAttribute: AttributeBase<TimeOfDay>, ComparableAttri
 		optional: Bool = false
 	) {
 		super.init(
+			id: id,
 			name: name,
 			pluralName: pluralName,
 			description: description,

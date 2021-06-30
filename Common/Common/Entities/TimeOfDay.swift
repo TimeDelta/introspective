@@ -10,7 +10,7 @@ import Foundation
 
 import DependencyInjection
 
-public struct TimeOfDay: Comparable {
+public final class TimeOfDay: NSObject, Comparable {
 	public static func == (lhs: TimeOfDay, rhs: TimeOfDay) -> Bool {
 		lhs.hour == rhs.hour
 			&& lhs.minute == rhs.minute
@@ -35,9 +35,14 @@ public struct TimeOfDay: Comparable {
 	public var minute: Int = 0
 	public var second: Int = 0
 
-	public init() {}
+	// MARK: - Initializers
+
+	public override init() {
+		super.init()
+	}
 
 	public init(_ date: Date) {
+		super.init()
 		let calendar = Calendar.autoupdatingCurrent
 		hour = calendar.component(.hour, from: date)
 		minute = calendar.component(.minute, from: date)
@@ -45,6 +50,7 @@ public struct TimeOfDay: Comparable {
 	}
 
 	public init?(_ str: String) {
+		super.init()
 		let strStrippedOfAmPm = str.lowercased().trimmingCharacters(in: CharacterSet(charactersIn: "apm "))
 		let parts = strStrippedOfAmPm.split(separator: ":")
 		// very minor sacrifice to speed to ensure readability here
@@ -68,7 +74,16 @@ public struct TimeOfDay: Comparable {
 		}
 	}
 
-	public nonmutating func toString(_ style: DateFormatter.Style = .medium) -> String {
+	public init?(coder decoder: NSCoder) {
+		super.init()
+		hour = decoder.decodeInteger(forKey: CodingKeys.hour.rawValue)
+		minute = decoder.decodeInteger(forKey: CodingKeys.minute.rawValue)
+		second = decoder.decodeInteger(forKey: CodingKeys.second.rawValue)
+	}
+
+	// MARK: - Functions
+
+	public func toString(_ style: DateFormatter.Style = .medium) -> String {
 		let date = Calendar.autoupdatingCurrent.date(bySettingHour: hour, minute: minute, second: second, of: Date())!
 		return injected(CalendarUtil.self).string(for: date, dateStyle: .none, timeStyle: style)
 	}
@@ -142,5 +157,39 @@ public extension Date {
 		if second > timeOfDay.second { return .orderedDescending }
 
 		return .orderedSame
+	}
+}
+
+extension TimeOfDay: NSSecureCoding {
+
+	// MARK: - NSSecureCoding
+
+	private enum CodingKeys: String, CodingKey {
+		case hour
+		case minute
+		case second
+	}
+
+	public static let supportsSecureCoding = true
+
+	public final func encode(with encoder: NSCoder) {
+		encoder.encode(hour, forKey: CodingKeys.hour.rawValue)
+		encoder.encode(minute, forKey: CodingKeys.minute.rawValue)
+		encoder.encode(second, forKey: CodingKeys.second.rawValue)
+	}
+}
+
+@objc(TimeOfDayValueTransformer)
+public final class TimeOfDayValueTransformer: NSSecureUnarchiveFromDataTransformer {
+	/// The name of the transformer. This is the name used to register the transformer using `ValueTransformer.setValueTrandformer(_"forName:)`.
+	public static let name = NSValueTransformerName(rawValue: String(describing: TimeOfDayValueTransformer.self))
+
+	public static override var allowedTopLevelClasses: [AnyClass] {
+		[TimeOfDay.self]
+	}
+
+	/// Registers the transformer.
+	public static func register() {
+		ValueTransformer.setValueTransformer(TimeOfDayValueTransformer(), forName: name)
 	}
 }

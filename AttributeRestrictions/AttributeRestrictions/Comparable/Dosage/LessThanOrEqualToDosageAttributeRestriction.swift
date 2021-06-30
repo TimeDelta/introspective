@@ -13,7 +13,7 @@ import Common
 
 public final class LessThanOrEqualToDosageAttributeRestriction: TypedLessThanOrEqualToAttributeRestrictionBase<Dosage> {
 	private typealias Me = LessThanOrEqualToDosageAttributeRestriction
-	public static let valueAttribute = DosageAttribute(name: "Target Dosage", pluralName: "Target Dosages")
+	public static let valueAttribute = DosageAttribute(id: 0, name: "Target Dosage", pluralName: "Target Dosages")
 
 	public required convenience init(restrictedAttribute: Attribute) {
 		self.init(restrictedAttribute: restrictedAttribute, value: Dosage(0, ""))

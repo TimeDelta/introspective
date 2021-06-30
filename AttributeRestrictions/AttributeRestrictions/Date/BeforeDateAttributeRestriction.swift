@@ -23,7 +23,7 @@ public final class BeforeDateAttributeRestriction: DateAttributeRestriction, Equ
 
 	// MARK: - Attributes
 
-	public static let dateAttribute = DateOnlyAttribute()
+	public static let dateAttribute = DateOnlyAttribute(id: 0)
 	public static var attributes: [Attribute] = [
 		dateAttribute,
 	]

@@ -23,7 +23,7 @@ public final class AfterDateAndTimeAttributeRestriction: DateAttributeRestrictio
 
 	// MARK: - Attributes
 
-	public static let dateAttribute = DateTimeAttribute(name: "Date", format: "MMMM d yyyy 'at' H:mm")
+	public static let dateAttribute = DateTimeAttribute(id: 0, name: "Date", format: "MMMM d yyyy 'at' H:mm")
 	public static var attributes: [Attribute] = [
 		dateAttribute,
 	]

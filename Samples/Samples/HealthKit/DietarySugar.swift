@@ -41,6 +41,7 @@ public final class DietarySugar: HealthKitQuantitySample {
 	// MARK: - Attributes
 
 	public static let dietarySugar = DoubleAttribute(
+		id: 0,
 		name: "Dietary sugar",
 		pluralName: "Dietary sugar",
 		variableName: HKPredicateKeyPathQuantity

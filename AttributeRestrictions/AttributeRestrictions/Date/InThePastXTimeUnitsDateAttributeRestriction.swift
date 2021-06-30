@@ -19,8 +19,9 @@ public final class InThePastXTimeUnitsDateAttributeRestriction: DateAttributeRes
 	// MARK: - Attributes
 
 	private typealias Me = InThePastXTimeUnitsDateAttributeRestriction
-	public static let numberOfTimeUnitsAttribute = IntegerAttribute(name: "Number of time units")
+	public static let numberOfTimeUnitsAttribute = IntegerAttribute(id: 0, name: "Number of time units")
 	public static let timeUnitAttribute = CalendarComponentAttribute(
+		id: 1,
 		name: "Time unit",
 		possibleValues: [
 			.year,

@@ -15,7 +15,7 @@ public final class GreaterThanOrEqualToIntegerAttributeRestriction: TypedGreater
 >,
 	IntegerAttributeRestriction {
 	private typealias Me = GreaterThanOrEqualToIntegerAttributeRestriction
-	public static let valueAttribute = IntegerAttribute(name: "Value", pluralName: "Values")
+	public static let valueAttribute = IntegerAttribute(id: 0, name: "Value", pluralName: "Values")
 
 	public required convenience init(restrictedAttribute: Attribute) {
 		self.init(restrictedAttribute: restrictedAttribute, value: 0)

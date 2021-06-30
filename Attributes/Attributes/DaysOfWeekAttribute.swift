@@ -16,6 +16,7 @@ public final class DaysOfWeekAttribute: ComparableTypedMultiSelectAttribute<DayO
 	}
 
 	public init(
+		id: Int16,
 		name: String = "Days of the week",
 		pluralName: String? = "Days of the week",
 		description: String? = nil,
@@ -23,6 +24,7 @@ public final class DaysOfWeekAttribute: ComparableTypedMultiSelectAttribute<DayO
 		optional: Bool = false
 	) {
 		super.init(
+			id: id,
 			name: name,
 			pluralName: pluralName,
 			description: description,

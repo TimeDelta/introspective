@@ -51,6 +51,7 @@ public final class SexualActivity: HealthKitCategorySample, SearchableSample {
 	// MARK: - Attributes
 
 	public static let protectionUsed = TypedSelectOneAttribute<Protection>(
+		id: 0,
 		name: "Protection used",
 		typeName: "Protection used",
 		variableName: HKMetadataKeySexualActivityProtectionUsed,

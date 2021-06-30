@@ -15,7 +15,7 @@ public final class GreaterThanOrEqualToDosageAttributeRestriction: TypedGreaterT
 	Dosage
 > {
 	private typealias Me = GreaterThanOrEqualToDosageAttributeRestriction
-	public static let valueAttribute = DosageAttribute(name: "Target Dosage", pluralName: "Target Dosages")
+	public static let valueAttribute = DosageAttribute(id: 0, name: "Target Dosage", pluralName: "Target Dosages")
 
 	public required convenience init(restrictedAttribute: Attribute) {
 		self.init(restrictedAttribute: restrictedAttribute, value: Dosage(0, ""))
@@ -30,4 +30,9 @@ public final class GreaterThanOrEqualToDosageAttributeRestriction: TypedGreaterT
 	}
 
 	public override func predicate() -> NSPredicate? { nil }
+
+	public func stored() throws -> StoredBooleanExpression {
+		restriction.populate(from: self)
+		return restriction
+	}
 }

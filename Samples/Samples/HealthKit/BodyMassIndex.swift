@@ -39,7 +39,7 @@ public final class BodyMassIndex: HealthKitQuantitySample {
 
 	// MARK: - Attributes
 
-	public static let bmi = DoubleAttribute(name: "BMI", pluralName: "BMIs", variableName: HKPredicateKeyPathQuantity)
+	public static let bmi = DoubleAttribute(id: 0, name: "BMI", pluralName: "BMIs", variableName: HKPredicateKeyPathQuantity)
 	public static let attributes: [Attribute] = [CommonSampleAttributes.healthKitTimestamp, bmi]
 	public static let defaultDependentAttribute: Attribute = bmi
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp

@@ -42,18 +42,26 @@ public final class PainImpl: NSManagedObject, Pain {
 
 	// MARK: - Attributes
 
-	public static let rating = DoubleAttribute(name: "Pain Rating", pluralName: "Pain Ratings", variableName: "rating")
-	public static let note = TextAttribute(name: "Note", pluralName: "Notes", variableName: "note")
+	public static let rating = DoubleAttribute(
+		id: 0,
+		name: "Pain Rating",
+		pluralName: "Pain Ratings",
+		variableName: "rating"
+	)
+	public static let note = TextAttribute(id: 1, name: "Note", pluralName: "Notes", variableName: "note")
 	public static let location = TextAttribute(
+		id: 2,
 		name: "Location",
 		pluralName: "Locations"
 	)
 	public static let minRating = DoubleAttribute(
+		id: 3,
 		name: "Min Allowed Pain Rating",
 		pluralName: "Min allowed pain ratings",
 		variableName: "minRating"
 	)
 	public static let maxRating = DoubleAttribute(
+		id: 4,
 		name: "Max Allowed Pain Rating",
 		pluralName: "Max allowed pain ratings",
 		variableName: "maxRating"

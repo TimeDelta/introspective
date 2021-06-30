@@ -17,7 +17,7 @@ public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction
 
 	// MARK: - Attributes
 
-	public static let prefixAttribute = TextAttribute(name: "Value", pluralName: "Values")
+	public static let prefixAttribute = TextAttribute(id: 0, name: "Value", pluralName: "Values")
 	public static let attributes: [Attribute] = [
 		prefixAttribute,
 	]

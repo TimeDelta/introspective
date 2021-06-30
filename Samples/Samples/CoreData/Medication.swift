@@ -32,21 +32,24 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed, Expo
 
 	// MARK: - Attributes
 
-	public static let nameAttribute = TextAttribute(name: "Name", pluralName: "Names", variableName: "name")
+	public static let nameAttribute = TextAttribute(id: 0, name: "Name", pluralName: "Names", variableName: "name")
 	public static let dosage = DosageAttribute(
+		id: 1,
 		description: "You can set this if you have a common dosage that you usually take for this medication. When marking this medication as taken, this will be used as the default value for dosage but can still be overriden. Changing this value will not affect the dosage of any existing records.",
 		optional: true
 	)
 	public static let frequency =
-		FrequencyAttribute(description: "How frequently you are supposed to take this medication.")
+		FrequencyAttribute(id: 2, description: "How frequently you are supposed to take this medication.")
 	public static let startedOn = DateOnlyAttribute(
+		id: 3,
 		name: "Started On",
 		description: "When did you start this medication?",
 		variableName: "startedOn",
 		optional: true
 	)
-	public static let notes = TextAttribute(name: "Notes", variableName: "notes", optional: true)
+	public static let notes = TextAttribute(id: 4, name: "Notes", variableName: "notes", optional: true)
 	public static let sourceAttribute = TypedEquatableSelectOneAttribute<String>(
+		id: 5,
 		name: "Source",
 		typeName: "Medication Source",
 		pluralName: "Sources",

@@ -13,7 +13,7 @@ import Common
 
 public final class EqualToFrequencyAttributeRestriction: TypedEqualToAttributeRestrictionBase<Frequency> {
 	private typealias Me = EqualToFrequencyAttributeRestriction
-	public static let valueAttribute = FrequencyAttribute(name: "Target Frequency", pluralName: "Target Frequencys")
+	public static let valueAttribute = FrequencyAttribute(id: 0, name: "Target Frequency", pluralName: "Target Frequencys")
 
 	public required convenience init(restrictedAttribute: Attribute) {
 		self.init(restrictedAttribute: restrictedAttribute, value: Frequency(0, .day)!)

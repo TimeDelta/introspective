@@ -41,17 +41,20 @@ public final class FatigueImpl: NSManagedObject, Fatigue {
 	// MARK: - Attributes
 
 	public static let rating = DoubleAttribute(
+		id: 0,
 		name: "Fatigue Rating",
 		pluralName: "Fatigue Ratings",
 		variableName: "rating"
 	)
-	public static let note = TextAttribute(name: "Note", pluralName: "Notes", variableName: "note")
+	public static let note = TextAttribute(id: 1, name: "Note", pluralName: "Notes", variableName: "note")
 	public static let minRating = DoubleAttribute(
+		id: 2,
 		name: "Min Allowed Fatigue Rating",
 		pluralName: "Min allowed fatigue ratings",
 		variableName: "minRating"
 	)
 	public static let maxRating = DoubleAttribute(
+		id: 3,
 		name: "Max Allowed Fatigue Rating",
 		pluralName: "Max allowed fatigue ratings",
 		variableName: "maxRating"

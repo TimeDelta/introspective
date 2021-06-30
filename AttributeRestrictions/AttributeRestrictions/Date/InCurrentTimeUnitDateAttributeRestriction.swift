@@ -19,6 +19,7 @@ public final class InCurrentTimeUnitDateAttributeRestriction: DateAttributeRestr
 
 	private typealias Me = InCurrentTimeUnitDateAttributeRestriction
 	public static let timeUnitAttribute = CalendarComponentAttribute(
+		id: 0,
 		name: "Time unit",
 		possibleValues: [
 			.year,

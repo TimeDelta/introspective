@@ -21,6 +21,7 @@ public final class TextAttribute: AttributeBase<String>, ComparableAttribute {
 	private final let delegate: TextAttributeDelegate?
 
 	public init(
+		id: Int16,
 		name: String,
 		pluralName: String? = nil,
 		description: String? = nil,
@@ -30,6 +31,7 @@ public final class TextAttribute: AttributeBase<String>, ComparableAttribute {
 	) {
 		self.delegate = delegate
 		super.init(
+			id: id,
 			name: name,
 			pluralName: pluralName,
 			description: description,

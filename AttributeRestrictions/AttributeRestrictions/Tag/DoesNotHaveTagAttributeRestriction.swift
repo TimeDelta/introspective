@@ -17,7 +17,7 @@ public class DoesNotHaveTagAttributeRestriction: AnyAttributeRestriction, Equata
 
 	// MARK: - Attributes
 
-	public static let tagAttribute = TagAttribute(name: "Tag", pluralName: "Tags")
+	public static let tagAttribute = TagAttribute(id: 0, name: "Tag", pluralName: "Tags")
 	public static let attributes: [Attribute] = [tagAttribute]
 
 	// MARK: - Display Information

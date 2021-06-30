@@ -16,7 +16,7 @@ public final class EndsWithStringAttributeRestriction: AnyAttributeRestriction, 
 
 	// MARK: - Attributes
 
-	public static let suffixAttribute = TextAttribute(name: "Value", pluralName: "Values")
+	public static let suffixAttribute = TextAttribute(id: 0, name: "Value", pluralName: "Values")
 	public static let attributes: [Attribute] = [
 		suffixAttribute,
 	]

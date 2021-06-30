@@ -51,7 +51,7 @@ public final class PerTagSampleGrouper: SampleGrouper {
 		if groupByAttribute == nil {
 			Me.log.error("No tag attributes provided to PerTagSampleGrouper")
 		}
-		attributeSelectAttribute = AttributeSelectAttribute(attributes: applicableAttributes)
+		attributeSelectAttribute = AttributeSelectAttribute(id: 0, attributes: applicableAttributes)
 		self.attributes = [attributeSelectAttribute]
 	}
 

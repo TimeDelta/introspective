@@ -41,6 +41,7 @@ open class TypedSelectOneAttribute<Type>: AttributeBase<Type>, SelectOneAttribut
 	// MARK: - Initializers
 
 	public init(
+		id: Int16,
 		name: String,
 		typeName: String,
 		pluralName: String? = nil,
@@ -57,6 +58,7 @@ open class TypedSelectOneAttribute<Type>: AttributeBase<Type>, SelectOneAttribut
 		self.areEqual = areEqual
 		_typeName = typeName
 		super.init(
+			id: id,
 			name: name,
 			pluralName: pluralName,
 			description: description,
@@ -66,6 +68,7 @@ open class TypedSelectOneAttribute<Type>: AttributeBase<Type>, SelectOneAttribut
 	}
 
 	public init(
+		id: Int16,
 		name: String,
 		typeName: String,
 		pluralName: String? = nil,
@@ -82,6 +85,7 @@ open class TypedSelectOneAttribute<Type>: AttributeBase<Type>, SelectOneAttribut
 		self.areEqual = areEqual
 		_typeName = typeName
 		super.init(
+			id: id,
 			name: name,
 			pluralName: pluralName,
 			description: description,
@@ -133,6 +137,7 @@ open class TypedSelectOneAttribute<Type>: AttributeBase<Type>, SelectOneAttribut
 
 public class TypedEquatableSelectOneAttribute<Type: Equatable>: TypedSelectOneAttribute<Type> {
 	public init(
+		id: Int16,
 		name: String,
 		typeName: String,
 		pluralName: String? = nil,
@@ -143,6 +148,7 @@ public class TypedEquatableSelectOneAttribute<Type: Equatable>: TypedSelectOneAt
 		possibleValueToString: @escaping (Type) -> String
 	) {
 		super.init(
+			id: id,
 			name: name,
 			typeName: typeName,
 			pluralName: pluralName,

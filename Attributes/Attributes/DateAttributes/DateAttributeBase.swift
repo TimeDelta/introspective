@@ -19,6 +19,7 @@ public class DateAttributeBase: AttributeBase<Date>, DateAttribute {
 	private final var dateFormat: String
 
 	public init(
+		id: Int16,
 		name: String,
 		pluralName: String? = nil,
 		description: String? = nil,
@@ -34,6 +35,7 @@ public class DateAttributeBase: AttributeBase<Date>, DateAttribute {
 		self.earliestDate = earliestDate
 		self.latestDate = latestDate
 		super.init(
+			id: id,
 			name: name,
 			pluralName: pluralName,
 			description: description,

@@ -17,6 +17,7 @@ public final class DateOnlyAttribute: DateAttributeBase {
 	}
 
 	public init(
+		id: Int16,
 		name: String = "Date",
 		pluralName: String? = "Dates",
 		description: String? = nil,
@@ -26,6 +27,7 @@ public final class DateOnlyAttribute: DateAttributeBase {
 		latestDate: Date? = nil
 	) {
 		super.init(
+			id: id,
 			name: name,
 			pluralName: pluralName,
 			description: description,

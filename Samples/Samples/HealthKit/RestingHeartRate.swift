@@ -40,6 +40,7 @@ public class RestingHeartRate: HealthKitQuantitySample {
 	// MARK: - Attributes
 
 	public static let restingHeartRate = DoubleAttribute(
+		id: 0,
 		name: "Resting heart rate",
 		pluralName: "Resting heart rates",
 		variableName: HKPredicateKeyPathQuantity
