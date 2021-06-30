@@ -22,6 +22,7 @@ public class TagsAttribute: TypedMultiSelectAttribute<Tag> {
 	// MARK: - Initializers
 
 	public init(
+		id: Int16,
 		name: String = "Tags",
 		pluralName: String? = "Tags",
 		description: String? = nil,
@@ -29,6 +30,7 @@ public class TagsAttribute: TypedMultiSelectAttribute<Tag> {
 		optional: Bool = false
 	) {
 		super.init(
+			id: id,
 			name: name,
 			pluralName: pluralName,
 			description: description,

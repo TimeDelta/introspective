@@ -18,8 +18,8 @@ public final class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatab
 
 	// MARK: - Attributes
 
-	public static let amountOfTime = IntegerAttribute(name: "Number of time units")
-	public static let timeUnit = CalendarComponentAttribute(name: "Time unit", possibleValues: [
+	public static let amountOfTime = IntegerAttribute(id: 0, name: "Number of time units")
+	public static let timeUnit = CalendarComponentAttribute(id: 1, name: "Time unit", possibleValues: [
 		.year,
 		.quarter,
 		.month,

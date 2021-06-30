@@ -18,6 +18,7 @@ public final class TagAttribute: TypedSelectOneAttribute<Tag> {
 	// MARK: - Initializers
 
 	public init(
+		id: Int16,
 		name: String = "Tag",
 		pluralName: String? = "Tags",
 		description: String? = nil,
@@ -25,6 +26,7 @@ public final class TagAttribute: TypedSelectOneAttribute<Tag> {
 		optional: Bool = false
 	) {
 		super.init(
+			id: id,
 			name: name,
 			typeName: "Tag",
 			pluralName: pluralName,

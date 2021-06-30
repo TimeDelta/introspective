@@ -22,7 +22,7 @@ public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Eq
 
 	// MARK: - Attributes
 
-	public static let daysOfWeekAttribute = DaysOfWeekAttribute()
+	public static let daysOfWeekAttribute = DaysOfWeekAttribute(id: 0)
 	public static var attributes: [Attribute] = [
 		daysOfWeekAttribute,
 	]

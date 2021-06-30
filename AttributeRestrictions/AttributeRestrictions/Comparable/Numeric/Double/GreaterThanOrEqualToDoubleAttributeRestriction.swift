@@ -15,7 +15,7 @@ public final class GreaterThanOrEqualToDoubleAttributeRestriction: TypedGreaterT
 >,
 	DoubleAttributeRestriction {
 	private typealias Me = GreaterThanOrEqualToDoubleAttributeRestriction
-	public static let valueAttribute = DoubleAttribute(name: "Value", pluralName: "Values")
+	public static let valueAttribute = DoubleAttribute(id: 0, name: "Value", pluralName: "Values")
 
 	public required convenience init(restrictedAttribute: Attribute) {
 		self.init(restrictedAttribute: restrictedAttribute, value: 0.0)

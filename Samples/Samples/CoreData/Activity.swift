@@ -33,15 +33,17 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 	// MARK: - Attributes
 
 	public static let nameAttribute = TextAttribute(
+		id: 0,
 		name: "Name",
 		pluralName: "Names",
 		description: "The name of this activity",
 		variableName: "definition.name"
 	)
-	public static let noteAttribute = TextAttribute(name: "Note", pluralName: "Notes", variableName: "note")
-	public static let tagsAttribute = ActivityTagsAttribute(variableName: "tags")
-	public static let durationAttribute = DurationAttribute()
+	public static let noteAttribute = TextAttribute(id: 1, name: "Note", pluralName: "Notes", variableName: "note")
+	public static let tagsAttribute = ActivityTagsAttribute(id: 2, variableName: "tags")
+	public static let durationAttribute = DurationAttribute(id: 3)
 	public static let sourceAttribute = TypedEquatableSelectOneAttribute<String>(
+		id: 4,
 		name: "Source",
 		typeName: "Activity Source",
 		pluralName: "Sources",

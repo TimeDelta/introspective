@@ -62,6 +62,7 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 	// MARK: - Attributes
 
 	public static let stateAttribute = TypedSelectOneAttribute<State>(
+		id: 0,
 		name: "Waking state",
 		typeName: "Waking state",
 		variableName: HKPredicateKeyPathCategoryValue,
@@ -69,7 +70,7 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 		possibleValueToString: { $0.description },
 		areEqual: { $0 == $1 }
 	)
-	public static let durationAttribute = DurationAttribute()
+	public static let durationAttribute = DurationAttribute(id: 1)
 	public static let attributes: [Attribute] = [
 		durationAttribute,
 		CommonSampleAttributes.healthKitStartDate,

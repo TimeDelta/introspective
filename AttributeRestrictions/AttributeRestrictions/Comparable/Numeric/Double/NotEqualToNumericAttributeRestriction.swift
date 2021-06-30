@@ -13,7 +13,7 @@ import Attributes
 public final class NotEqualToDoubleAttributeRestriction: TypedNotEqualToAttributeRestrictionBase<Double>,
 	DoubleAttributeRestriction {
 	private typealias Me = NotEqualToDoubleAttributeRestriction
-	public static let valueAttribute = DoubleAttribute(name: "Value", pluralName: "Values")
+	public static let valueAttribute = DoubleAttribute(id: 0, name: "Value", pluralName: "Values")
 
 	public required convenience init(restrictedAttribute: Attribute) {
 		self.init(restrictedAttribute: restrictedAttribute, value: 0.0)

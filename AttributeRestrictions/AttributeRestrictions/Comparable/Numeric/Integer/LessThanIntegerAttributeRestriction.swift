@@ -13,7 +13,7 @@ import Attributes
 public final class LessThanIntegerAttributeRestriction: TypedLessThanAttributeRestrictionBase<Int>,
 	IntegerAttributeRestriction {
 	private typealias Me = LessThanIntegerAttributeRestriction
-	public static let valueAttribute = IntegerAttribute(name: "Value", pluralName: "Values")
+	public static let valueAttribute = IntegerAttribute(id: 0, name: "Value", pluralName: "Values")
 
 	public required convenience init(restrictedAttribute: Attribute) {
 		self.init(restrictedAttribute: restrictedAttribute, value: 0)

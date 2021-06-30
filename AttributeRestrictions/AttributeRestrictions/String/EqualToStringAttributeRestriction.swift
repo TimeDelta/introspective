@@ -15,7 +15,7 @@ public final class EqualToStringAttributeRestriction: TypedEqualToAttributeRestr
 
 	// MARK: - Attributes
 
-	public static let valueAttribute = TextAttribute(name: "Value", pluralName: "Values")
+	public static let valueAttribute = TextAttribute(id: 0, name: "Value", pluralName: "Values")
 
 	// MARK: - Initializers
 

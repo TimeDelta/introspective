@@ -79,6 +79,21 @@
 		A29701A723450087004B97E6 /* Attributes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A29701A623450087004B97E6 /* Attributes.framework */; };
 		A29701A92345008E004B97E6 /* Samples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A29701A82345008E004B97E6 /* Samples.framework */; };
 		A29701AB2345009B004B97E6 /* DependencyInjection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A29701AA2345009B004B97E6 /* DependencyInjection.framework */; };
+		A2D138A2268BEC0900762A3D /* StoredDoubleComparisonAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138A1268BEC0900762A3D /* StoredDoubleComparisonAttributeRestriction.swift */; };
+		A2D138A4268BFAE300762A3D /* Comparison.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138A3268BFAE300762A3D /* Comparison.swift */; };
+		A2D138A6268CA94B00762A3D /* StoredIntegerComparisonAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138A5268CA94B00762A3D /* StoredIntegerComparisonAttributeRestriction.swift */; };
+		A2D138A8268CA9C800762A3D /* StoredDosageComparisonAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138A7268CA9C800762A3D /* StoredDosageComparisonAttributeRestriction.swift */; };
+		A2D138AA268CAA6D00762A3D /* StoredFrequencyComparisonAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138A9268CAA6D00762A3D /* StoredFrequencyComparisonAttributeRestriction.swift */; };
+		A2D138AC268CAAD800762A3D /* StoredDurationAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138AB268CAAD800762A3D /* StoredDurationAttributeRestriction.swift */; };
+		A2D138AE268CAB5800762A3D /* StringOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138AD268CAB5800762A3D /* StringOperation.swift */; };
+		A2D138B0268CAC2500762A3D /* StoredStringOperationAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138AF268CAC2500762A3D /* StoredStringOperationAttributeRestriction.swift */; };
+		A2D138B2268CF1CB00762A3D /* StoredDateOperationAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138B1268CF1CB00762A3D /* StoredDateOperationAttributeRestriction.swift */; };
+		A2D138B4268CF23A00762A3D /* DateOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138B3268CF23A00762A3D /* DateOperation.swift */; };
+		A2D138B6268CF43C00762A3D /* StoredTimeOfDayAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138B5268CF43C00762A3D /* StoredTimeOfDayAttributeRestriction.swift */; };
+		A2D138B8268CF89D00762A3D /* StoredInCurrentTimeUnitAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138B7268CF89D00762A3D /* StoredInCurrentTimeUnitAttributeRestriction.swift */; };
+		A2D138BA268CF9E100762A3D /* StoredInThePastXTimeUnitsAttributeRestrictionm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138B9268CF9E100762A3D /* StoredInThePastXTimeUnitsAttributeRestrictionm.swift */; };
+		A2D138BC268CFA7D00762A3D /* StoredOnDayOfWeekAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138BB268CFA7D00762A3D /* StoredOnDayOfWeekAttributeRestriction.swift */; };
+		A2D138C0268D214000762A3D /* DosageAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138BF268D214000762A3D /* DosageAttributeRestriction.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -157,6 +172,21 @@
 		A29701A623450087004B97E6 /* Attributes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Attributes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A29701A82345008E004B97E6 /* Samples.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Samples.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A29701AA2345009B004B97E6 /* DependencyInjection.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DependencyInjection.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2D138A1268BEC0900762A3D /* StoredDoubleComparisonAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredDoubleComparisonAttributeRestriction.swift; sourceTree = "<group>"; };
+		A2D138A3268BFAE300762A3D /* Comparison.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comparison.swift; sourceTree = "<group>"; };
+		A2D138A5268CA94B00762A3D /* StoredIntegerComparisonAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredIntegerComparisonAttributeRestriction.swift; sourceTree = "<group>"; };
+		A2D138A7268CA9C800762A3D /* StoredDosageComparisonAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredDosageComparisonAttributeRestriction.swift; sourceTree = "<group>"; };
+		A2D138A9268CAA6D00762A3D /* StoredFrequencyComparisonAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredFrequencyComparisonAttributeRestriction.swift; sourceTree = "<group>"; };
+		A2D138AB268CAAD800762A3D /* StoredDurationAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredDurationAttributeRestriction.swift; sourceTree = "<group>"; };
+		A2D138AD268CAB5800762A3D /* StringOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringOperation.swift; sourceTree = "<group>"; };
+		A2D138AF268CAC2500762A3D /* StoredStringOperationAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredStringOperationAttributeRestriction.swift; sourceTree = "<group>"; };
+		A2D138B1268CF1CB00762A3D /* StoredDateOperationAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredDateOperationAttributeRestriction.swift; sourceTree = "<group>"; };
+		A2D138B3268CF23A00762A3D /* DateOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateOperation.swift; sourceTree = "<group>"; };
+		A2D138B5268CF43C00762A3D /* StoredTimeOfDayAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredTimeOfDayAttributeRestriction.swift; sourceTree = "<group>"; };
+		A2D138B7268CF89D00762A3D /* StoredInCurrentTimeUnitAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredInCurrentTimeUnitAttributeRestriction.swift; sourceTree = "<group>"; };
+		A2D138B9268CF9E100762A3D /* StoredInThePastXTimeUnitsAttributeRestrictionm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredInThePastXTimeUnitsAttributeRestrictionm.swift; sourceTree = "<group>"; };
+		A2D138BB268CFA7D00762A3D /* StoredOnDayOfWeekAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredOnDayOfWeekAttributeRestriction.swift; sourceTree = "<group>"; };
+		A2D138BF268D214000762A3D /* DosageAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DosageAttributeRestriction.swift; sourceTree = "<group>"; };
 		D3E1F58CB37300E6AB438A14 /* Pods-AttributeRestrictions.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AttributeRestrictions.release.xcconfig"; path = "../Pods/Target Support Files/Pods-AttributeRestrictions/Pods-AttributeRestrictions.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -216,6 +246,8 @@
 		A29701142344FF0E004B97E6 /* String */ = {
 			isa = PBXGroup;
 			children = (
+				A2D138AD268CAB5800762A3D /* StringOperation.swift */,
+				A2D138AF268CAC2500762A3D /* StoredStringOperationAttributeRestriction.swift */,
 				A29701172344FF0E004B97E6 /* StringAttributeRestriction.swift */,
 				A29701182344FF0E004B97E6 /* ContainsStringAttributeRestriction.swift */,
 				A29701162344FF0E004B97E6 /* StartsWithStringAttributeRestriction.swift */,
@@ -231,6 +263,8 @@
 		A297011D2344FF0E004B97E6 /* Dosage */ = {
 			isa = PBXGroup;
 			children = (
+				A2D138BF268D214000762A3D /* DosageAttributeRestriction.swift */,
+				A2D138A7268CA9C800762A3D /* StoredDosageComparisonAttributeRestriction.swift */,
 				A297011E2344FF0E004B97E6 /* GreaterThanOrEqualToDosageAttributeRestriction.swift */,
 				A297011F2344FF0E004B97E6 /* LessThanDosageAttributeRestriction.swift */,
 				A29701202344FF0E004B97E6 /* NotEqualToDosageAttributeRestriction.swift */,
@@ -244,6 +278,12 @@
 		A29701242344FF0E004B97E6 /* Date */ = {
 			isa = PBXGroup;
 			children = (
+				A2D138B3268CF23A00762A3D /* DateOperation.swift */,
+				A2D138B1268CF1CB00762A3D /* StoredDateOperationAttributeRestriction.swift */,
+				A2D138B5268CF43C00762A3D /* StoredTimeOfDayAttributeRestriction.swift */,
+				A2D138B7268CF89D00762A3D /* StoredInCurrentTimeUnitAttributeRestriction.swift */,
+				A2D138B9268CF9E100762A3D /* StoredInThePastXTimeUnitsAttributeRestrictionm.swift */,
+				A2D138BB268CFA7D00762A3D /* StoredOnDayOfWeekAttributeRestriction.swift */,
 				A297012D2344FF0E004B97E6 /* DateAttributeRestriction.swift */,
 				A29701282344FF0E004B97E6 /* InCurrentTimeUnitDateAttributeRestriction.swift */,
 				A297012B2344FF0E004B97E6 /* InThePastXTimeUnitsDateAttributeRestriction.swift */,
@@ -262,6 +302,7 @@
 		A29701302344FF0E004B97E6 /* Comparable */ = {
 			isa = PBXGroup;
 			children = (
+				A2D138A3268BFAE300762A3D /* Comparison.swift */,
 				A297014C2344FF0E004B97E6 /* TypedLessThanAttributeRestrictionBase.swift */,
 				A297013A2344FF0E004B97E6 /* TypedLessThanOrEqualToAttributeRestrictionBase.swift */,
 				A29701392344FF0E004B97E6 /* TypedGreaterThanOrEqualToAttributeRestrictionBase.swift */,
@@ -277,6 +318,7 @@
 		A29701312344FF0E004B97E6 /* Frequency */ = {
 			isa = PBXGroup;
 			children = (
+				A2D138A9268CAA6D00762A3D /* StoredFrequencyComparisonAttributeRestriction.swift */,
 				A29701322344FF0E004B97E6 /* NotEqualToFrequencyAttributeRestriction.swift */,
 				A29701332344FF0E004B97E6 /* EqualToFrequencyAttributeRestriction.swift */,
 				A29701342344FF0E004B97E6 /* LessThanFrequencyAttributeRestriction.swift */,
@@ -299,6 +341,7 @@
 		A297013C2344FF0E004B97E6 /* Double */ = {
 			isa = PBXGroup;
 			children = (
+				A2D138A1268BEC0900762A3D /* StoredDoubleComparisonAttributeRestriction.swift */,
 				A297013D2344FF0E004B97E6 /* LessThanOrEqualToDoubleAttributeRestriction.swift */,
 				A297013E2344FF0E004B97E6 /* GreaterThanDoubleAttributeRestriction.swift */,
 				A297013F2344FF0E004B97E6 /* EqualToDoubleAttributeRestriction.swift */,
@@ -313,6 +356,7 @@
 		A29701442344FF0E004B97E6 /* Integer */ = {
 			isa = PBXGroup;
 			children = (
+				A2D138A5268CA94B00762A3D /* StoredIntegerComparisonAttributeRestriction.swift */,
 				A29701452344FF0E004B97E6 /* EqualToIntegerAttributeRestriction.swift */,
 				A29701462344FF0E004B97E6 /* LessThanIntegerAttributeRestriction.swift */,
 				A29701472344FF0E004B97E6 /* NotEqualToIntegerAttributeRestriction.swift */,
@@ -327,6 +371,7 @@
 		A297014D2344FF0E004B97E6 /* Duration */ = {
 			isa = PBXGroup;
 			children = (
+				A2D138AB268CAAD800762A3D /* StoredDurationAttributeRestriction.swift */,
 				A297014E2344FF0E004B97E6 /* GreaterThanOrEqualToDurationAttributeRestriction.swift */,
 				A297014F2344FF0E004B97E6 /* NotEqualToDurationAttributeRestriction.swift */,
 				A29701502344FF0E004B97E6 /* LessThanDurationAttributeRestriction.swift */,
@@ -480,6 +525,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A29701692344FF10004B97E6 /* LessThanDosageAttributeRestriction.swift in Sources */,
+				A2D138AE268CAB5800762A3D /* StringOperation.swift in Sources */,
 				A29701942344FF10004B97E6 /* GreaterThanDurationAttributeRestriction.swift in Sources */,
 				A29701772344FF10004B97E6 /* AfterTimeOfDayAttributeRestriction.swift in Sources */,
 				A29701622344FF10004B97E6 /* StringAttributeRestriction.swift in Sources */,
@@ -489,7 +535,9 @@
 				A29701862344FF10004B97E6 /* NotEqualToNumericAttributeRestriction.swift in Sources */,
 				A297018E2344FF10004B97E6 /* GreaterThanOrEqualToIntegerAttributeRestriction.swift in Sources */,
 				A297018B2344FF10004B97E6 /* NotEqualToIntegerAttributeRestriction.swift in Sources */,
+				A2D138A8268CA9C800762A3D /* StoredDosageComparisonAttributeRestriction.swift in Sources */,
 				A29701972344FF10004B97E6 /* AttributeRestrictionFactory.swift in Sources */,
+				A2D138BC268CFA7D00762A3D /* StoredOnDayOfWeekAttributeRestriction.swift in Sources */,
 				A297017B2344FF10004B97E6 /* LessThanFrequencyAttributeRestriction.swift in Sources */,
 				A297017A2344FF10004B97E6 /* EqualToFrequencyAttributeRestriction.swift in Sources */,
 				A297019E2344FF10004B97E6 /* DoesNotHaveOneOfTagAttributeRestriction.swift in Sources */,
@@ -497,35 +545,44 @@
 				A29701912344FF10004B97E6 /* GreaterThanOrEqualToDurationAttributeRestriction.swift in Sources */,
 				A29701A22344FFD6004B97E6 /* AttributeRestrictionsInjectionProvider.swift in Sources */,
 				A29701962344FF10004B97E6 /* LessThanOrEqualToDurationAttributeRestriction.swift in Sources */,
+				A2D138B8268CF89D00762A3D /* StoredInCurrentTimeUnitAttributeRestriction.swift in Sources */,
 				A29701712344FF10004B97E6 /* InCurrentTimeUnitDateAttributeRestriction.swift in Sources */,
 				A297016D2344FF10004B97E6 /* EqualToDosageAttributeRestriction.swift in Sources */,
 				A29701832344FF10004B97E6 /* GreaterThanDoubleAttributeRestriction.swift in Sources */,
 				A297016F2344FF10004B97E6 /* BeforeTimeOfDayAttributeRestriction.swift in Sources */,
 				A297017F2344FF10004B97E6 /* TypedGreaterThanAttributeRestrictionBase.swift in Sources */,
+				A2D138B2268CF1CB00762A3D /* StoredDateOperationAttributeRestriction.swift in Sources */,
 				A29701602344FF10004B97E6 /* NotEmptyStringAttributeRestriction.swift in Sources */,
 				A29701852344FF10004B97E6 /* DoubleAttributeRestriction.swift in Sources */,
 				A29701922344FF10004B97E6 /* NotEqualToDurationAttributeRestriction.swift in Sources */,
 				A297018D2344FF10004B97E6 /* LessThanOrEqualToIntegerAttributeRestriction.swift in Sources */,
 				A29701842344FF10004B97E6 /* EqualToDoubleAttributeRestriction.swift in Sources */,
 				A29701822344FF10004B97E6 /* LessThanOrEqualToDoubleAttributeRestriction.swift in Sources */,
+				A2D138AA268CAA6D00762A3D /* StoredFrequencyComparisonAttributeRestriction.swift in Sources */,
 				A297019A2344FF10004B97E6 /* EqualToSelectOneAttributeRestriction.swift in Sources */,
+				A2D138A6268CA94B00762A3D /* StoredIntegerComparisonAttributeRestriction.swift in Sources */,
 				A297016C2344FF10004B97E6 /* GreaterThanDosageAttributeRestriction.swift in Sources */,
 				A297016E2344FF10004B97E6 /* OnDateAttributeRestriction.swift in Sources */,
+				A2D138B4268CF23A00762A3D /* DateOperation.swift in Sources */,
 				A29701682344FF10004B97E6 /* GreaterThanOrEqualToDosageAttributeRestriction.swift in Sources */,
 				A29701812344FF10004B97E6 /* TypedLessThanOrEqualToAttributeRestrictionBase.swift in Sources */,
 				A297017C2344FF10004B97E6 /* GreaterThanOrEqualToFrequencyAttributeRestriction.swift in Sources */,
 				A29701722344FF10004B97E6 /* BeforeDateAndTimeAttributeRestriction.swift in Sources */,
 				A29701A02344FF10004B97E6 /* HasTagAttributeRestriction.swift in Sources */,
 				A29701882344FF10004B97E6 /* GreaterThanOrEqualToDoubleAttributeRestriction.swift in Sources */,
+				A2D138A4268BFAE300762A3D /* Comparison.swift in Sources */,
 				A29701792344FF10004B97E6 /* NotEqualToFrequencyAttributeRestriction.swift in Sources */,
+				A2D138B6268CF43C00762A3D /* StoredTimeOfDayAttributeRestriction.swift in Sources */,
 				A29701672344FF10004B97E6 /* NotEqualToStringAttributeRestriction.swift in Sources */,
 				A297018C2344FF10004B97E6 /* IntegerAttributeRestriction.swift in Sources */,
 				A29701982344FF10004B97E6 /* NotEqualToAttributeRestriction.swift in Sources */,
 				A29701612344FF10004B97E6 /* StartsWithStringAttributeRestriction.swift in Sources */,
 				A29701762344FF10004B97E6 /* DateAttributeRestriction.swift in Sources */,
 				A297019D2344FF10004B97E6 /* DoesNotHaveTagAttributeRestriction.swift in Sources */,
+				A2D138BA268CF9E100762A3D /* StoredInThePastXTimeUnitsAttributeRestrictionm.swift in Sources */,
 				A29701952344FF10004B97E6 /* EqualToDurationAttributeRestriction.swift in Sources */,
 				A29701902344FF10004B97E6 /* TypedLessThanAttributeRestrictionBase.swift in Sources */,
+				A2D138B0268CAC2500762A3D /* StoredStringOperationAttributeRestriction.swift in Sources */,
 				A29701872344FF10004B97E6 /* LessThanDoubleAttributeRestriction.swift in Sources */,
 				A297019C2344FF10004B97E6 /* EqualToAttributeRestriction.swift in Sources */,
 				A29701662344FF10004B97E6 /* EmptyStringAttributeRestriction.swift in Sources */,
@@ -540,8 +597,11 @@
 				A29701652344FF10004B97E6 /* EndsWithStringAttributeRestriction.swift in Sources */,
 				A297019F2344FF10004B97E6 /* HasOneOfTagAttributeRestriction.swift in Sources */,
 				A29701732344FF10004B97E6 /* OnDayOfWeekAttributeRestriction.swift in Sources */,
+				A2D138A2268BEC0900762A3D /* StoredDoubleComparisonAttributeRestriction.swift in Sources */,
 				A29701742344FF10004B97E6 /* InThePastXTimeUnitsDateAttributeRestriction.swift in Sources */,
 				A29701992344FF10004B97E6 /* NotEqualToSelectOneAttributeRestriction.swift in Sources */,
+				A2D138C0268D214000762A3D /* DosageAttributeRestriction.swift in Sources */,
+				A2D138AC268CAAD800762A3D /* StoredDurationAttributeRestriction.swift in Sources */,
 				A29701752344FF10004B97E6 /* BeforeDateAttributeRestriction.swift in Sources */,
 				A29701642344FF10004B97E6 /* EqualToStringAttributeRestriction.swift in Sources */,
 				A29701932344FF10004B97E6 /* LessThanDurationAttributeRestriction.swift in Sources */,

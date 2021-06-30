@@ -39,6 +39,7 @@ public final class Weight: HealthKitQuantitySample {
 	// MARK: - Attributes
 
 	public static let weight = DoubleAttribute(
+		id: 0,
 		name: "Weight",
 		pluralName: "Weights",
 		variableName: HKPredicateKeyPathQuantity

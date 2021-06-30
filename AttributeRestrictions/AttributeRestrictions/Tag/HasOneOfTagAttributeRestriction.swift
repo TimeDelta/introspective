@@ -17,7 +17,7 @@ public class HasOneOfTagAttributeRestriction: AnyAttributeRestriction, Equatable
 
 	// MARK: - Attributes
 
-	public static let tagsAttribute = TagsAttribute(name: "Tags", pluralName: "Tags")
+	public static let tagsAttribute = TagsAttribute(id: 0, name: "Tags", pluralName: "Tags")
 	public static let attributes: [Attribute] = [tagsAttribute]
 
 	// MARK: - Display Information

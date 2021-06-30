@@ -13,7 +13,7 @@ import Common
 
 public final class LessThanFrequencyAttributeRestriction: TypedLessThanAttributeRestrictionBase<Frequency> {
 	private typealias Me = LessThanFrequencyAttributeRestriction
-	public static let valueAttribute = FrequencyAttribute(name: "Target Frequency", pluralName: "Target Frequencies")
+	public static let valueAttribute = FrequencyAttribute(id: 0, name: "Target Frequency", pluralName: "Target Frequencies")
 
 	public required convenience init(restrictedAttribute: Attribute) {
 		self.init(restrictedAttribute: restrictedAttribute, value: Frequency(0, .day)!)

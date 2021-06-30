@@ -22,6 +22,7 @@ public final class AfterTimeOfDayAttributeRestriction: DateAttributeRestriction,
 	// MARK: - Attributes
 
 	public static let timeAttribute = TimeOfDayAttribute(
+		id: 0,
 		name: "Time",
 		pluralName: "Times",
 		description: "The time of day after which a date must occur to pass this constraint"

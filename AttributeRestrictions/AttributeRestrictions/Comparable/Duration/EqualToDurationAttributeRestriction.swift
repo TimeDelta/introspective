@@ -13,7 +13,7 @@ import Common
 
 public final class EqualToDurationAttributeRestriction: TypedEqualToAttributeRestrictionBase<TimeDuration> {
 	private typealias Me = EqualToDurationAttributeRestriction
-	public static let valueAttribute = DurationAttribute(name: "Target TimeDuration", pluralName: "Target Durations")
+	public static let valueAttribute = DurationAttribute(id: 0, name: "Target TimeDuration", pluralName: "Target Durations")
 
 	public required convenience init(restrictedAttribute: Attribute) {
 		self.init(restrictedAttribute: restrictedAttribute, value: TimeDuration(0))

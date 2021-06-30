@@ -118,22 +118,26 @@ public extension Sample {
 
 public class CommonSampleAttributes {
 	public static let timestamp = DateTimeAttribute(
+		id: Int16.min + 1,
 		name: "Timestamp",
 		pluralName: "Timestamps",
 		variableName: "timestamp"
 	)
 	public static let startDate = DateTimeAttribute(
+		id: Int16.min,
 		name: "Start Date",
 		pluralName: "Start dates",
 		variableName: "startDate"
 	)
 	public static let endDate = DateTimeAttribute(
+		id: Int16.max,
 		name: "End Date",
 		pluralName: "End dates",
 		variableName: "endDate",
 		optional: false
 	)
 	public static let optionalEndDate = DateTimeAttribute(
+		id: Int16.max - 1,
 		name: "End Date",
 		pluralName: "End Dates",
 		variableName: "endDate",
@@ -141,16 +145,19 @@ public class CommonSampleAttributes {
 	)
 
 	public static let healthKitTimestamp = DateTimeAttribute(
+		id: Int16.min + 1,
 		name: timestamp.name,
 		pluralName: timestamp.pluralName,
 		variableName: HKPredicateKeyPathStartDate
 	)
 	public static let healthKitStartDate = DateTimeAttribute(
+		id: Int16.min,
 		name: startDate.name,
 		pluralName: startDate.pluralName,
 		variableName: HKPredicateKeyPathStartDate
 	)
 	public static let healthKitEndDate = DateTimeAttribute(
+		id: Int16.max,
 		name: endDate.name,
 		pluralName: endDate.pluralName,
 		variableName: HKPredicateKeyPathEndDate

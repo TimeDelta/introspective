@@ -12,6 +12,8 @@ import Common
 
 // sourcery: AutoMockable
 public protocol Attribute {
+	/// An unchanging value that can be used to differentiate this attribute from the other attributes for a given sample type in the persistence layer
+	var id: Int16 { get }
 	/// This is a name that should be understandable by the user
 	var name: String { get }
 	var pluralName: String { get }
@@ -42,6 +44,8 @@ public extension Attribute {
 }
 
 open class AttributeBase<ValueType>: Attribute {
+	/// An unchanging value that can be used to differentiate this attribute from the other attributes for a given sample type in the persistence layer
+	public final var id: Int16
 	/// This is a name that should be understandable by the user
 	public final let name: String
 	public final let pluralName: String
@@ -62,12 +66,14 @@ open class AttributeBase<ValueType>: Attribute {
 	/// - Parameter description: If nil, no description is needed for the user to understand this attribute.
 	/// - Parameter variableName: This should be usable by an NSPredicate to identify the associated variable. If nil, use `name` parameter.
 	public init(
+		id: Int16,
 		name: String,
 		pluralName: String? = nil,
 		description: String? = nil,
 		variableName: String? = nil,
 		optional: Bool = false
 	) {
+		self.id = id
 		self.name = name
 		self.pluralName = pluralName ?? name
 		extendedDescription = description

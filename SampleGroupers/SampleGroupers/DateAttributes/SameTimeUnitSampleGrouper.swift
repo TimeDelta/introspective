@@ -33,6 +33,7 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 	]
 
 	public static let timeUnitAttribute = CalendarComponentAttribute(
+		id: 0,
 		description: "Combine all samples within the same time unit",
 		possibleValues: supportedTimeUnits
 	)
@@ -68,7 +69,7 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 	public init(attributes: [Attribute], _ timeUnit: Calendar.Component, _ attribute: DateAttribute? = nil) {
 		let dateAttributesForSampleType = attributes.filter { $0 is DateAttribute }.map { $0 as! DateAttribute }
 		groupByAttribute = attribute ?? dateAttributesForSampleType.first
-		attributeSelectAttribute = AttributeSelectAttribute(attributes: dateAttributesForSampleType)
+		attributeSelectAttribute = AttributeSelectAttribute(id: 1, attributes: dateAttributesForSampleType)
 		self.attributes = [
 			attributeSelectAttribute,
 			Me.timeUnitAttribute,

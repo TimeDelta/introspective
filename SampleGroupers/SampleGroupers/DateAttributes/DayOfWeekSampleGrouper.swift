@@ -54,7 +54,7 @@ public final class DayOfWeekSampleGrouper: SampleGrouper {
 		if groupByAttribute == nil {
 			Me.log.error("No date or day of week attributes provided to DayOfWeekSampleGrouper")
 		}
-		attributeSelectAttribute = AttributeSelectAttribute(attributes: applicableAttributes)
+		attributeSelectAttribute = AttributeSelectAttribute(id: 0, attributes: applicableAttributes)
 		self.attributes = [attributeSelectAttribute]
 	}
 

@@ -16,7 +16,7 @@ public final class ContainsStringAttributeRestriction: AnyAttributeRestriction, 
 
 	// MARK: - Attributes
 
-	public static let substringAttribute = TextAttribute(name: "Value", pluralName: "Values")
+	public static let substringAttribute = TextAttribute(id: 0, name: "Value", pluralName: "Values")
 	public static let attributes: [Attribute] = [
 		substringAttribute,
 	]

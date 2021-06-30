@@ -43,9 +43,15 @@ public final class MoodImpl: NSManagedObject, Mood {
 
 	// MARK: - Attributes
 
-	public static let rating = DoubleAttribute(name: "Mood Rating", pluralName: "Mood Ratings", variableName: "rating")
-	public static let note = TextAttribute(name: "Note", pluralName: "Notes", variableName: "note")
+	public static let rating = DoubleAttribute(
+		id: 0,
+		name: "Mood Rating",
+		pluralName: "Mood Ratings",
+		variableName: "rating"
+	)
+	public static let note = TextAttribute(id: 1, name: "Note", pluralName: "Notes", variableName: "note")
 	public static let sourceAttribute = TypedEquatableSelectOneAttribute<String>(
+		id: 2,
 		name: "Source",
 		typeName: "Mood Source",
 		pluralName: "Sources",
@@ -53,11 +59,13 @@ public final class MoodImpl: NSManagedObject, Mood {
 		possibleValueToString: { $0 }
 	)
 	public static let minRating = DoubleAttribute(
+		id: 3,
 		name: "Min Allowed Mood Rating",
 		pluralName: "Min allowed mood ratings",
 		variableName: "minRating"
 	)
 	public static let maxRating = DoubleAttribute(
+		id: 4,
 		name: "Max Allowed Mood Rating",
 		pluralName: "Max allowed mood ratings",
 		variableName: "maxRating"

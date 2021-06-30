@@ -16,7 +16,13 @@
 		A231CF3A234255A300CCE625 /* OrExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = A231CF34234255A200CCE625 /* OrExpression.swift */; };
 		A231CF3C2342563100CCE625 /* BooleanAlgebraInjectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A231CF3B2342563100CCE625 /* BooleanAlgebraInjectionProvider.swift */; };
 		A231CF3F2342564E00CCE625 /* DependencyInjection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A231CF3E2342564E00CCE625 /* DependencyInjection.framework */; };
+		A24BE3012688E6D000E6FECF /* StoredBooleanExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24BE3002688E6D000E6FECF /* StoredBooleanExpression.swift */; };
+		A24BE3032688E71100E6FECF /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A24BE3022688E71100E6FECF /* Persistence.framework */; };
+		A24BE3052688E7D800E6FECF /* StoredAndExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24BE3042688E7D800E6FECF /* StoredAndExpression.swift */; };
+		A2776EA7268BC61500EB5BE5 /* StoredOrExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2776EA6268BC61500EB5BE5 /* StoredOrExpression.swift */; };
+		A2776EA9268BC78000EB5BE5 /* StoredNotExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2776EA8268BC78000EB5BE5 /* StoredNotExpression.swift */; };
 		A29CCF4324D4FE6E00218CE2 /* NotExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29CCF4224D4FE6D00218CE2 /* NotExpression.swift */; };
+		A2D138BE268CFE5800762A3D /* StoredBooleanExpressionGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138BD268CFE5800762A3D /* StoredBooleanExpressionGroup.swift */; };
 		CFEFD80C13DA3E21C891636B /* Pods_BooleanAlgebra.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD478BED6662D617D5C83AE9 /* Pods_BooleanAlgebra.framework */; };
 /* End PBXBuildFile section */
 
@@ -33,7 +39,13 @@
 		A231CF34234255A200CCE625 /* OrExpression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrExpression.swift; sourceTree = "<group>"; };
 		A231CF3B2342563100CCE625 /* BooleanAlgebraInjectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooleanAlgebraInjectionProvider.swift; sourceTree = "<group>"; };
 		A231CF3E2342564E00CCE625 /* DependencyInjection.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DependencyInjection.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A24BE3002688E6D000E6FECF /* StoredBooleanExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredBooleanExpression.swift; sourceTree = "<group>"; };
+		A24BE3022688E71100E6FECF /* Persistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Persistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A24BE3042688E7D800E6FECF /* StoredAndExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredAndExpression.swift; sourceTree = "<group>"; };
+		A2776EA6268BC61500EB5BE5 /* StoredOrExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredOrExpression.swift; sourceTree = "<group>"; };
+		A2776EA8268BC78000EB5BE5 /* StoredNotExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredNotExpression.swift; sourceTree = "<group>"; };
 		A29CCF4224D4FE6D00218CE2 /* NotExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotExpression.swift; sourceTree = "<group>"; };
+		A2D138BD268CFE5800762A3D /* StoredBooleanExpressionGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredBooleanExpressionGroup.swift; sourceTree = "<group>"; };
 		DD478BED6662D617D5C83AE9 /* Pods_BooleanAlgebra.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BooleanAlgebra.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E95C29B43EE4501D07734B6E /* Pods-BooleanAlgebra.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BooleanAlgebra.release.xcconfig"; path = "../Pods/Target Support Files/Pods-BooleanAlgebra/Pods-BooleanAlgebra.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -43,6 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A24BE3032688E71100E6FECF /* Persistence.framework in Frameworks */,
 				A22D62232343975F0023470F /* Common.framework in Frameworks */,
 				A231CF3F2342564E00CCE625 /* DependencyInjection.framework in Frameworks */,
 				CFEFD80C13DA3E21C891636B /* Pods_BooleanAlgebra.framework in Frameworks */,
@@ -75,6 +88,11 @@
 			children = (
 				A231CF3B2342563100CCE625 /* BooleanAlgebraInjectionProvider.swift */,
 				A231CF2F234255A100CCE625 /* BooleanExpression.swift */,
+				A24BE3002688E6D000E6FECF /* StoredBooleanExpression.swift */,
+				A2D138BD268CFE5800762A3D /* StoredBooleanExpressionGroup.swift */,
+				A2776EA8268BC78000EB5BE5 /* StoredNotExpression.swift */,
+				A24BE3042688E7D800E6FECF /* StoredAndExpression.swift */,
+				A2776EA6268BC61500EB5BE5 /* StoredOrExpression.swift */,
 				A231CF31234255A100CCE625 /* BooleanExpressionGroup.swift */,
 				A231CF33234255A200CCE625 /* BooleanExpressionParser.swift */,
 				A29CCF4224D4FE6D00218CE2 /* NotExpression.swift */,
@@ -89,6 +107,7 @@
 		A231CF3D2342564E00CCE625 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A24BE3022688E71100E6FECF /* Persistence.framework */,
 				A22D62222343975F0023470F /* Common.framework */,
 				A231CF3E2342564E00CCE625 /* DependencyInjection.framework */,
 				DD478BED6662D617D5C83AE9 /* Pods_BooleanAlgebra.framework */,
@@ -206,13 +225,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2776EA7268BC61500EB5BE5 /* StoredOrExpression.swift in Sources */,
 				A231CF35234255A300CCE625 /* BooleanExpression.swift in Sources */,
 				A231CF3A234255A300CCE625 /* OrExpression.swift in Sources */,
 				A231CF3C2342563100CCE625 /* BooleanAlgebraInjectionProvider.swift in Sources */,
 				A231CF39234255A300CCE625 /* BooleanExpressionParser.swift in Sources */,
+				A2776EA9268BC78000EB5BE5 /* StoredNotExpression.swift in Sources */,
 				A29CCF4324D4FE6E00218CE2 /* NotExpression.swift in Sources */,
+				A24BE3052688E7D800E6FECF /* StoredAndExpression.swift in Sources */,
+				A24BE3012688E6D000E6FECF /* StoredBooleanExpression.swift in Sources */,
 				A231CF36234255A300CCE625 /* AndExpression.swift in Sources */,
 				A231CF37234255A300CCE625 /* BooleanExpressionGroup.swift in Sources */,
+				A2D138BE268CFE5800762A3D /* StoredBooleanExpressionGroup.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

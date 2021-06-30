@@ -24,6 +24,7 @@ public final class CalendarComponentAttribute: TypedEquatableSelectOneAttribute<
 	]
 
 	public init(
+		id: Int16,
 		name: String = "Time unit",
 		pluralName: String? = "Time units",
 		description: String? = nil,
@@ -32,6 +33,7 @@ public final class CalendarComponentAttribute: TypedEquatableSelectOneAttribute<
 		possibleValues: [Calendar.Component] = CalendarComponentAttribute.supportedComponents
 	) {
 		super.init(
+			id: id,
 			name: name,
 			typeName: "Time Unit",
 			pluralName: pluralName,

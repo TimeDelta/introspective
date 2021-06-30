@@ -24,7 +24,7 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatab
 
 	// MARK: - Attributes
 
-	public static let dateAttribute = DateOnlyAttribute()
+	public static let dateAttribute = DateOnlyAttribute(id: 0)
 	public static var attributes: [Attribute] = [
 		dateAttribute,
 	]
