@@ -9,6 +9,7 @@
 import Foundation
 
 import Common
+import Samples
 
 public protocol BooleanExpression: CustomStringConvertible {
 	func evaluate(_ parameters: [UserInfoKey: Any]?) throws -> Bool
@@ -18,7 +19,7 @@ public protocol BooleanExpression: CustomStringConvertible {
 	func equalTo(_ other: BooleanExpression) -> Bool
 	/// - Returns: `nil` if a predicate can not be made
 	func predicate() -> NSPredicate?
-	func stored() throws -> StoredBooleanExpression
+	func stored(for sampleType: Sample.Type) throws -> StoredBooleanExpression
 }
 
 public extension BooleanExpression {

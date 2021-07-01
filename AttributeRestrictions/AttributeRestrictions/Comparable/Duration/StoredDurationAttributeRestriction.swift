@@ -42,6 +42,34 @@ public final class StoredDurationComparisonAttributeRestriction: StoredBooleanEx
 			throw GenericError("Invalid comparison value for StoredDurationComparisonAttributeRestriction")
 		}
 	}
+
+	public func populate(from other: DurationAttributeRestriction, for sampleType: Sample.Type) throws {
+		sampleTypeId = injected(SampleFactory.self).sampleTypeId(for: sampleType)
+		attributeId = other.restrictedAttribute.id
+		switch other {
+		case is LessThanDurationAttributeRestriction:
+			comparison = Comparison.lessThan.rawValue
+			break
+		case is LessThanOrEqualToDurationAttributeRestriction:
+			comparison = Comparison.lessThanOrEqual.rawValue
+			break
+		case is EqualToDurationAttributeRestriction:
+			comparison = Comparison.equalTo.rawValue
+			break
+		case is NotEqualToDurationAttributeRestriction:
+			comparison = Comparison.notEqualTo.rawValue
+			break
+		case is GreaterThanOrEqualToDurationAttributeRestriction:
+			comparison = Comparison.greaterThanOrEqual.rawValue
+			break
+		case is GreaterThanDurationAttributeRestriction:
+			comparison = Comparison.greaterThan.rawValue
+			break
+		default:
+			fatalError("Forgot a type of DurationAttributeRestriction")
+		}
+		value = other.typedValue
+	}
 }
 
 extension StoredDurationComparisonAttributeRestriction {

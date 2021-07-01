@@ -9,6 +9,9 @@
 import Foundation
 
 import Attributes
+import BooleanAlgebra
+import DependencyInjection
+import Persistence
 import Samples
 
 public final class ContainsStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, Equatable {
@@ -31,6 +34,8 @@ public final class ContainsStringAttributeRestriction: AnyAttributeRestriction, 
 	// MARK: - Instance Variables
 
 	public final var substring: String
+
+	public final var typedValue: String? { substring }
 
 	// MARK: - Initializers
 
@@ -75,9 +80,19 @@ public final class ContainsStringAttributeRestriction: AnyAttributeRestriction, 
 		ContainsStringAttributeRestriction(restrictedAttribute: restrictedAttribute, substring: substring)
 	}
 
+	// MARK: - Boolean Expression Functions
+
 	public override func predicate() -> NSPredicate? {
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		return NSPredicate(format: "%K CONTAINS[cd] %@", variableName, substring)
+	}
+
+	public override func stored(for sampleType: Sample.Type) throws -> StoredBooleanExpression {
+		let transaction = injected(Database.self).transaction()
+		let stored = try transaction.new(StoredStringOperationAttributeRestriction.self)
+		try stored.populate(from: self, for: sampleType)
+		try transaction.commit()
+		return stored
 	}
 
 	// MARK: - Equality

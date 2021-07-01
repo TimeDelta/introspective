@@ -43,8 +43,32 @@ public final class StoredDosageComparisonAttributeRestriction: StoredBooleanExpr
 		}
 	}
 
-	public func populate(from other: DosageAttributeRestriction) throws {
-		
+	public func populate(from other: DosageAttributeRestriction, for sampleType: Sample.Type) throws {
+		sampleTypeId = injected(SampleFactory.self).sampleTypeId(for: sampleType)
+		attributeId = other.restrictedAttribute.id
+		switch other {
+		case is LessThanDosageAttributeRestriction:
+			comparison = Comparison.lessThan.rawValue
+			break
+		case is LessThanOrEqualToDosageAttributeRestriction:
+			comparison = Comparison.lessThanOrEqual.rawValue
+			break
+		case is EqualToDosageAttributeRestriction:
+			comparison = Comparison.equalTo.rawValue
+			break
+		case is NotEqualToDosageAttributeRestriction:
+			comparison = Comparison.notEqualTo.rawValue
+			break
+		case is GreaterThanOrEqualToDosageAttributeRestriction:
+			comparison = Comparison.greaterThanOrEqual.rawValue
+			break
+		case is GreaterThanDosageAttributeRestriction:
+			comparison = Comparison.greaterThan.rawValue
+			break
+		default:
+			fatalError("Forgot a type of DosageAttributeRestriction")
+		}
+		value = other.typedValue
 	}
 }
 

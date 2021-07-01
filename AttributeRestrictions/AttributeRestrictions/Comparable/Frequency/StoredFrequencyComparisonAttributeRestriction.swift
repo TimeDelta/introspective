@@ -42,6 +42,34 @@ public final class StoredFrequencyComparisonAttributeRestriction: StoredBooleanE
 			throw GenericError("Invalid comparison value for StoredFrequencyComparisonAttributeRestriction")
 		}
 	}
+
+	public func populate(from other: FrequencyAttributeRestriction, for sampleType: Sample.Type) throws {
+		sampleTypeId = injected(SampleFactory.self).sampleTypeId(for: sampleType)
+		attributeId = other.restrictedAttribute.id
+		switch other {
+		case is LessThanFrequencyAttributeRestriction:
+			comparison = Comparison.lessThan.rawValue
+			break
+		case is LessThanOrEqualToFrequencyAttributeRestriction:
+			comparison = Comparison.lessThanOrEqual.rawValue
+			break
+		case is EqualToFrequencyAttributeRestriction:
+			comparison = Comparison.equalTo.rawValue
+			break
+		case is NotEqualToFrequencyAttributeRestriction:
+			comparison = Comparison.notEqualTo.rawValue
+			break
+		case is GreaterThanOrEqualToFrequencyAttributeRestriction:
+			comparison = Comparison.greaterThanOrEqual.rawValue
+			break
+		case is GreaterThanFrequencyAttributeRestriction:
+			comparison = Comparison.greaterThan.rawValue
+			break
+		default:
+			fatalError("Forgot a type of FrequencyAttributeRestriction")
+		}
+		value = other.typedValue
+	}
 }
 
 extension StoredFrequencyComparisonAttributeRestriction {

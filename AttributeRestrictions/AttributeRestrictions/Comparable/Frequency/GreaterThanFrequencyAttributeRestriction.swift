@@ -9,11 +9,19 @@
 import Foundation
 
 import Attributes
+import BooleanAlgebra
 import Common
+import DependencyInjection
+import Persistence
+import Samples
 
-public final class GreaterThanFrequencyAttributeRestriction: TypedGreaterThanAttributeRestrictionBase<Frequency> {
+public final class GreaterThanFrequencyAttributeRestriction: TypedGreaterThanAttributeRestrictionBase<Frequency>, FrequencyAttributeRestriction {
 	private typealias Me = GreaterThanFrequencyAttributeRestriction
 	public static let valueAttribute = FrequencyAttribute(id: 0, name: "Target Frequency", pluralName: "Target Frequencies")
+
+	public var typedValue: Frequency {
+		return value
+	}
 
 	public required convenience init(restrictedAttribute: Attribute) {
 		self.init(restrictedAttribute: restrictedAttribute, value: Frequency(0, .day)!)
@@ -28,4 +36,12 @@ public final class GreaterThanFrequencyAttributeRestriction: TypedGreaterThanAtt
 	}
 
 	public override func predicate() -> NSPredicate? { nil }
+
+	public override func stored(for sampleType: Sample.Type) throws -> StoredBooleanExpression {
+		let transaction = injected(Database.self).transaction()
+		let stored = try transaction.new(StoredFrequencyComparisonAttributeRestriction.self)
+		try stored.populate(from: self, for: sampleType)
+		try transaction.commit()
+		return stored
+	}
 }

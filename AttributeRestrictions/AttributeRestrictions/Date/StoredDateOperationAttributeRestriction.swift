@@ -40,6 +40,31 @@ public final class StoredDateOperationAttributeRestriction: StoredBooleanExpress
 			throw GenericError("Invalid operation value for StoredDateOperationAttributeRestriction")
 		}
 	}
+
+	public func populate(from other: DateAttributeRestriction, for sampleType: Sample.Type) throws {
+		sampleTypeId = injected(SampleFactory.self).sampleTypeId(for: sampleType)
+		attributeId = other.restrictedAttribute.id
+		switch other {
+		case is OnDateAttributeRestriction:
+			operation = DateOperation.onDate.rawValue
+			break
+		case is BeforeDateAttributeRestriction:
+			operation = DateOperation.beforeDate.rawValue
+			break
+		case is AfterDateAttributeRestriction:
+			operation = DateOperation.afterDate.rawValue
+			break
+		case is BeforeDateAndTimeAttributeRestriction:
+			operation = DateOperation.beforeDateAndTime.rawValue
+			break
+		case is AfterDateAndTimeAttributeRestriction:
+			operation = DateOperation.afterDateAndTime.rawValue
+			break
+		default:
+			fatalError("Forgot a type of DateAttributeRestriction")
+		}
+		value = other.typedValue!
+	}
 }
 
 extension StoredDateOperationAttributeRestriction {

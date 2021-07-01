@@ -42,6 +42,28 @@ public final class StoredDoubleComparisonAttributeRestriction: StoredBooleanExpr
 			throw GenericError("Invalid comparison value for StoredDoubleComparisonAttributeRestriction")
 		}
 	}
+
+	public func populate(from other: DoubleAttributeRestriction, for sampleType: Sample.Type) throws {
+		sampleTypeId = injected(SampleFactory.self).sampleTypeId(for: sampleType)
+		attributeId = other.restrictedAttribute.id
+		switch other {
+		case is LessThanDoubleAttributeRestriction:
+			comparison = Comparison.lessThan.rawValue
+		case is LessThanOrEqualToDoubleAttributeRestriction:
+			comparison = Comparison.lessThanOrEqual.rawValue
+		case is EqualToDoubleAttributeRestriction:
+			comparison = Comparison.equalTo.rawValue
+		case is NotEqualToDoubleAttributeRestriction:
+			comparison = Comparison.notEqualTo.rawValue
+		case is GreaterThanOrEqualToDoubleAttributeRestriction:
+			comparison = Comparison.greaterThanOrEqual.rawValue
+		case is GreaterThanDoubleAttributeRestriction:
+			comparison = Comparison.greaterThan.rawValue
+		default:
+			fatalError("Forgot a type of DoubleAttributeRestriction")
+		}
+		value = other.typedValue
+	}
 }
 
 extension StoredDoubleComparisonAttributeRestriction {

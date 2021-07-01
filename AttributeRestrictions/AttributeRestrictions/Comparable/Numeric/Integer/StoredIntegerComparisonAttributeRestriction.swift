@@ -27,20 +27,42 @@ public final class StoredIntegerComparisonAttributeRestriction: StoredBooleanExp
 		}
 		switch comparison {
 		case Comparison.lessThan.rawValue:
-			return LessThanIntegerAttributeRestriction(restrictedAttribute: attribute, value: value)
+			return LessThanIntegerAttributeRestriction(restrictedAttribute: attribute, value: Int(value))
 		case Comparison.lessThanOrEqual.rawValue:
-			return LessThanOrEqualToIntegerAttributeRestriction(restrictedAttribute: attribute, value: value)
+			return LessThanOrEqualToIntegerAttributeRestriction(restrictedAttribute: attribute, value: Int(value))
 		case Comparison.equalTo.rawValue:
-			return EqualToIntegerAttributeRestriction(restrictedAttribute: attribute, value: value)
+			return EqualToIntegerAttributeRestriction(restrictedAttribute: attribute, value: Int(value))
 		case Comparison.notEqualTo.rawValue:
-			return NotEqualToIntegerAttributeRestriction(restrictedAttribute: attribute, value: value)
+			return NotEqualToIntegerAttributeRestriction(restrictedAttribute: attribute, value: Int(value))
 		case Comparison.greaterThanOrEqual.rawValue:
-			return GreaterThanOrEqualToIntegerAttributeRestriction(restrictedAttribute: attribute, value: value)
+			return GreaterThanOrEqualToIntegerAttributeRestriction(restrictedAttribute: attribute, value: Int(value))
 		case Comparison.greaterThan.rawValue:
-			return GreaterThanIntegerAttributeRestriction(restrictedAttribute: attribute, value: value)
+			return GreaterThanIntegerAttributeRestriction(restrictedAttribute: attribute, value: Int(value))
 		default:
 			throw GenericError("Invalid comparison value for StoredIntegerComparisonAttributeRestriction")
 		}
+	}
+
+	public func populate(from other: IntegerAttributeRestriction, for sampleType: Sample.Type) throws {
+		sampleTypeId = injected(SampleFactory.self).sampleTypeId(for: sampleType)
+		attributeId = other.restrictedAttribute.id
+		switch other {
+		case is LessThanIntegerAttributeRestriction:
+			comparison = Comparison.lessThan.rawValue
+		case is LessThanOrEqualToIntegerAttributeRestriction:
+			comparison = Comparison.lessThanOrEqual.rawValue
+		case is EqualToIntegerAttributeRestriction:
+			comparison = Comparison.equalTo.rawValue
+		case is NotEqualToIntegerAttributeRestriction:
+			comparison = Comparison.notEqualTo.rawValue
+		case is GreaterThanOrEqualToIntegerAttributeRestriction:
+			comparison = Comparison.greaterThanOrEqual.rawValue
+		case is GreaterThanIntegerAttributeRestriction:
+			comparison = Comparison.greaterThan.rawValue
+		default:
+			fatalError("Forgot a type of IntegerAttributeRestriction")
+		}
+		value = Int64(other.typedValue)
 	}
 }
 
@@ -49,5 +71,5 @@ extension StoredIntegerComparisonAttributeRestriction {
 	@NSManaged private var sampleTypeId: Int16
 	@NSManaged private var attributeId: Int16
 	@NSManaged private var comparison: Int16
-	@NSManaged private var value: Int
+	@NSManaged private var value: Int64
 }

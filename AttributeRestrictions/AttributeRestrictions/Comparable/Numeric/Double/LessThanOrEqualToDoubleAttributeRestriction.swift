@@ -9,12 +9,21 @@
 import Foundation
 
 import Attributes
-import Common
+import BooleanAlgebra
+import DependencyInjection
+import Persistence
+import Samples
 
-public final class LessThanOrEqualToDoubleAttributeRestriction: TypedLessThanOrEqualToAttributeRestrictionBase<Double>,
-	DoubleAttributeRestriction {
+public final class LessThanOrEqualToDoubleAttributeRestriction:
+	TypedLessThanOrEqualToAttributeRestrictionBase<Double>,
+	DoubleAttributeRestriction
+{
 	private typealias Me = LessThanOrEqualToDoubleAttributeRestriction
 	public static let valueAttribute = DoubleAttribute(id: 0, name: "Value", pluralName: "Values")
+
+	public var typedValue: Double {
+		return value
+	}
 
 	public required convenience init(restrictedAttribute: Attribute) {
 		self.init(restrictedAttribute: restrictedAttribute, value: 0.0)
@@ -31,5 +40,13 @@ public final class LessThanOrEqualToDoubleAttributeRestriction: TypedLessThanOrE
 	public override func predicate() -> NSPredicate? {
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		return NSPredicate(format: "%K <= %f", variableName, value)
+	}
+
+	public override func stored(for sampleType: Sample.Type) throws -> StoredBooleanExpression {
+		let transaction = injected(Database.self).transaction()
+		let stored = try transaction.new(StoredDoubleComparisonAttributeRestriction.self)
+		try stored.populate(from: self, for: sampleType)
+		try transaction.commit()
+		return stored
 	}
 }

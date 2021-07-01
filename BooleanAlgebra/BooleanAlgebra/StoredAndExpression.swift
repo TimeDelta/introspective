@@ -12,6 +12,7 @@ import CoreData
 import Common
 import DependencyInjection
 import Persistence
+import Samples
 
 public final class StoredAndExpression: StoredBooleanExpression, CoreDataObject {
 
@@ -22,9 +23,9 @@ public final class StoredAndExpression: StoredBooleanExpression, CoreDataObject 
 		AndExpression(try storedExpression1.convert(), try storedExpression2.convert())
 	}
 
-	public func populate(from other: AndExpression) throws {
-		storedExpression1 = try other.expression1.stored()
-		storedExpression2 = try other.expression2.stored()
+	public func populate(from other: AndExpression, for sampleType: Samplee.Type) throws {
+		storedExpression1 = try other.expression1.stored(for: sampleType)
+		storedExpression2 = try other.expression2.stored(for: sampleType)
 	}
 }
 

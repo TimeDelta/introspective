@@ -9,8 +9,10 @@
 import Foundation
 
 import Attributes
+import BooleanAlgebra
 import Common
 import DependencyInjection
+import Persistence
 import Samples
 
 public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Equatable {
@@ -107,6 +109,14 @@ public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Eq
 
 	public override func predicate() -> NSPredicate? {
 		nil
+	}
+
+	public override func stored(for sampleType: Sample.Type) throws -> StoredBooleanExpression {
+		let transaction = injected(Database.self).transaction()
+		let stored = try transaction.new(StoredOnDayOfWeekAttributeRestriction.self)
+		try stored.populate(from: self, for: sampleType)
+		try transaction.commit()
+		return stored
 	}
 
 	// MARK: - Equality

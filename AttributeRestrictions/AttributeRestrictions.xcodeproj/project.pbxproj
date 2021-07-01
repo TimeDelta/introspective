@@ -89,11 +89,15 @@
 		A2D138B0268CAC2500762A3D /* StoredStringOperationAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138AF268CAC2500762A3D /* StoredStringOperationAttributeRestriction.swift */; };
 		A2D138B2268CF1CB00762A3D /* StoredDateOperationAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138B1268CF1CB00762A3D /* StoredDateOperationAttributeRestriction.swift */; };
 		A2D138B4268CF23A00762A3D /* DateOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138B3268CF23A00762A3D /* DateOperation.swift */; };
-		A2D138B6268CF43C00762A3D /* StoredTimeOfDayAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138B5268CF43C00762A3D /* StoredTimeOfDayAttributeRestriction.swift */; };
+		A2D138B6268CF43C00762A3D /* StoredTimeOfDayComparisonAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138B5268CF43C00762A3D /* StoredTimeOfDayComparisonAttributeRestriction.swift */; };
 		A2D138B8268CF89D00762A3D /* StoredInCurrentTimeUnitAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138B7268CF89D00762A3D /* StoredInCurrentTimeUnitAttributeRestriction.swift */; };
 		A2D138BA268CF9E100762A3D /* StoredInThePastXTimeUnitsAttributeRestrictionm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138B9268CF9E100762A3D /* StoredInThePastXTimeUnitsAttributeRestrictionm.swift */; };
 		A2D138BC268CFA7D00762A3D /* StoredOnDayOfWeekAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138BB268CFA7D00762A3D /* StoredOnDayOfWeekAttributeRestriction.swift */; };
 		A2D138C0268D214000762A3D /* DosageAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138BF268D214000762A3D /* DosageAttributeRestriction.swift */; };
+		A2D138C2268E637E00762A3D /* FrequencyAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138C1268E637E00762A3D /* FrequencyAttributeRestriction.swift */; };
+		A2D138C4268E674C00762A3D /* DurationAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138C3268E674C00762A3D /* DurationAttributeRestriction.swift */; };
+		A2D138C6268E8C0700762A3D /* SelectOneRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138C5268E8C0700762A3D /* SelectOneRestriction.swift */; };
+		A2D138C8268E8D0A00762A3D /* StoredSelectOneAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138C7268E8D0A00762A3D /* StoredSelectOneAttributeRestriction.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -182,11 +186,15 @@
 		A2D138AF268CAC2500762A3D /* StoredStringOperationAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredStringOperationAttributeRestriction.swift; sourceTree = "<group>"; };
 		A2D138B1268CF1CB00762A3D /* StoredDateOperationAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredDateOperationAttributeRestriction.swift; sourceTree = "<group>"; };
 		A2D138B3268CF23A00762A3D /* DateOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateOperation.swift; sourceTree = "<group>"; };
-		A2D138B5268CF43C00762A3D /* StoredTimeOfDayAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredTimeOfDayAttributeRestriction.swift; sourceTree = "<group>"; };
+		A2D138B5268CF43C00762A3D /* StoredTimeOfDayComparisonAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredTimeOfDayComparisonAttributeRestriction.swift; sourceTree = "<group>"; };
 		A2D138B7268CF89D00762A3D /* StoredInCurrentTimeUnitAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredInCurrentTimeUnitAttributeRestriction.swift; sourceTree = "<group>"; };
 		A2D138B9268CF9E100762A3D /* StoredInThePastXTimeUnitsAttributeRestrictionm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredInThePastXTimeUnitsAttributeRestrictionm.swift; sourceTree = "<group>"; };
 		A2D138BB268CFA7D00762A3D /* StoredOnDayOfWeekAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredOnDayOfWeekAttributeRestriction.swift; sourceTree = "<group>"; };
 		A2D138BF268D214000762A3D /* DosageAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DosageAttributeRestriction.swift; sourceTree = "<group>"; };
+		A2D138C1268E637E00762A3D /* FrequencyAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrequencyAttributeRestriction.swift; sourceTree = "<group>"; };
+		A2D138C3268E674C00762A3D /* DurationAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationAttributeRestriction.swift; sourceTree = "<group>"; };
+		A2D138C5268E8C0700762A3D /* SelectOneRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectOneRestriction.swift; sourceTree = "<group>"; };
+		A2D138C7268E8D0A00762A3D /* StoredSelectOneAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredSelectOneAttributeRestriction.swift; sourceTree = "<group>"; };
 		D3E1F58CB37300E6AB438A14 /* Pods-AttributeRestrictions.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AttributeRestrictions.release.xcconfig"; path = "../Pods/Target Support Files/Pods-AttributeRestrictions/Pods-AttributeRestrictions.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -247,8 +255,8 @@
 			isa = PBXGroup;
 			children = (
 				A2D138AD268CAB5800762A3D /* StringOperation.swift */,
-				A2D138AF268CAC2500762A3D /* StoredStringOperationAttributeRestriction.swift */,
 				A29701172344FF0E004B97E6 /* StringAttributeRestriction.swift */,
+				A2D138AF268CAC2500762A3D /* StoredStringOperationAttributeRestriction.swift */,
 				A29701182344FF0E004B97E6 /* ContainsStringAttributeRestriction.swift */,
 				A29701162344FF0E004B97E6 /* StartsWithStringAttributeRestriction.swift */,
 				A297011A2344FF0E004B97E6 /* EndsWithStringAttributeRestriction.swift */,
@@ -265,12 +273,12 @@
 			children = (
 				A2D138BF268D214000762A3D /* DosageAttributeRestriction.swift */,
 				A2D138A7268CA9C800762A3D /* StoredDosageComparisonAttributeRestriction.swift */,
-				A297011E2344FF0E004B97E6 /* GreaterThanOrEqualToDosageAttributeRestriction.swift */,
 				A297011F2344FF0E004B97E6 /* LessThanDosageAttributeRestriction.swift */,
-				A29701202344FF0E004B97E6 /* NotEqualToDosageAttributeRestriction.swift */,
 				A29701212344FF0E004B97E6 /* LessThanOrEqualToDosageAttributeRestriction.swift */,
-				A29701222344FF0E004B97E6 /* GreaterThanDosageAttributeRestriction.swift */,
 				A29701232344FF0E004B97E6 /* EqualToDosageAttributeRestriction.swift */,
+				A29701202344FF0E004B97E6 /* NotEqualToDosageAttributeRestriction.swift */,
+				A297011E2344FF0E004B97E6 /* GreaterThanOrEqualToDosageAttributeRestriction.swift */,
+				A29701222344FF0E004B97E6 /* GreaterThanDosageAttributeRestriction.swift */,
 			);
 			path = Dosage;
 			sourceTree = "<group>";
@@ -279,22 +287,22 @@
 			isa = PBXGroup;
 			children = (
 				A2D138B3268CF23A00762A3D /* DateOperation.swift */,
+				A297012D2344FF0E004B97E6 /* DateAttributeRestriction.swift */,
 				A2D138B1268CF1CB00762A3D /* StoredDateOperationAttributeRestriction.swift */,
-				A2D138B5268CF43C00762A3D /* StoredTimeOfDayAttributeRestriction.swift */,
+				A2D138B5268CF43C00762A3D /* StoredTimeOfDayComparisonAttributeRestriction.swift */,
 				A2D138B7268CF89D00762A3D /* StoredInCurrentTimeUnitAttributeRestriction.swift */,
 				A2D138B9268CF9E100762A3D /* StoredInThePastXTimeUnitsAttributeRestrictionm.swift */,
 				A2D138BB268CFA7D00762A3D /* StoredOnDayOfWeekAttributeRestriction.swift */,
-				A297012D2344FF0E004B97E6 /* DateAttributeRestriction.swift */,
+				A297012E2344FF0E004B97E6 /* AfterTimeOfDayAttributeRestriction.swift */,
+				A29701262344FF0E004B97E6 /* BeforeTimeOfDayAttributeRestriction.swift */,
 				A29701282344FF0E004B97E6 /* InCurrentTimeUnitDateAttributeRestriction.swift */,
 				A297012B2344FF0E004B97E6 /* InThePastXTimeUnitsDateAttributeRestriction.swift */,
+				A297012A2344FF0E004B97E6 /* OnDayOfWeekAttributeRestriction.swift */,
 				A29701272344FF0E004B97E6 /* AfterDateAndTimeAttributeRestriction.swift */,
 				A297012F2344FF0E004B97E6 /* AfterDateAttributeRestriction.swift */,
-				A297012E2344FF0E004B97E6 /* AfterTimeOfDayAttributeRestriction.swift */,
 				A29701292344FF0E004B97E6 /* BeforeDateAndTimeAttributeRestriction.swift */,
 				A297012C2344FF0E004B97E6 /* BeforeDateAttributeRestriction.swift */,
-				A29701262344FF0E004B97E6 /* BeforeTimeOfDayAttributeRestriction.swift */,
 				A29701252344FF0E004B97E6 /* OnDateAttributeRestriction.swift */,
-				A297012A2344FF0E004B97E6 /* OnDayOfWeekAttributeRestriction.swift */,
 			);
 			path = Date;
 			sourceTree = "<group>";
@@ -318,13 +326,14 @@
 		A29701312344FF0E004B97E6 /* Frequency */ = {
 			isa = PBXGroup;
 			children = (
+				A2D138C1268E637E00762A3D /* FrequencyAttributeRestriction.swift */,
 				A2D138A9268CAA6D00762A3D /* StoredFrequencyComparisonAttributeRestriction.swift */,
-				A29701322344FF0E004B97E6 /* NotEqualToFrequencyAttributeRestriction.swift */,
-				A29701332344FF0E004B97E6 /* EqualToFrequencyAttributeRestriction.swift */,
 				A29701342344FF0E004B97E6 /* LessThanFrequencyAttributeRestriction.swift */,
+				A29701372344FF0E004B97E6 /* LessThanOrEqualToFrequencyAttributeRestriction.swift */,
+				A29701332344FF0E004B97E6 /* EqualToFrequencyAttributeRestriction.swift */,
+				A29701322344FF0E004B97E6 /* NotEqualToFrequencyAttributeRestriction.swift */,
 				A29701352344FF0E004B97E6 /* GreaterThanOrEqualToFrequencyAttributeRestriction.swift */,
 				A29701362344FF0E004B97E6 /* GreaterThanFrequencyAttributeRestriction.swift */,
-				A29701372344FF0E004B97E6 /* LessThanOrEqualToFrequencyAttributeRestriction.swift */,
 			);
 			path = Frequency;
 			sourceTree = "<group>";
@@ -341,14 +350,14 @@
 		A297013C2344FF0E004B97E6 /* Double */ = {
 			isa = PBXGroup;
 			children = (
-				A2D138A1268BEC0900762A3D /* StoredDoubleComparisonAttributeRestriction.swift */,
-				A297013D2344FF0E004B97E6 /* LessThanOrEqualToDoubleAttributeRestriction.swift */,
-				A297013E2344FF0E004B97E6 /* GreaterThanDoubleAttributeRestriction.swift */,
-				A297013F2344FF0E004B97E6 /* EqualToDoubleAttributeRestriction.swift */,
 				A29701402344FF0E004B97E6 /* DoubleAttributeRestriction.swift */,
-				A29701412344FF0E004B97E6 /* NotEqualToNumericAttributeRestriction.swift */,
+				A2D138A1268BEC0900762A3D /* StoredDoubleComparisonAttributeRestriction.swift */,
 				A29701422344FF0E004B97E6 /* LessThanDoubleAttributeRestriction.swift */,
+				A297013D2344FF0E004B97E6 /* LessThanOrEqualToDoubleAttributeRestriction.swift */,
+				A297013F2344FF0E004B97E6 /* EqualToDoubleAttributeRestriction.swift */,
+				A29701412344FF0E004B97E6 /* NotEqualToNumericAttributeRestriction.swift */,
 				A29701432344FF0E004B97E6 /* GreaterThanOrEqualToDoubleAttributeRestriction.swift */,
+				A297013E2344FF0E004B97E6 /* GreaterThanDoubleAttributeRestriction.swift */,
 			);
 			path = Double;
 			sourceTree = "<group>";
@@ -356,12 +365,12 @@
 		A29701442344FF0E004B97E6 /* Integer */ = {
 			isa = PBXGroup;
 			children = (
-				A2D138A5268CA94B00762A3D /* StoredIntegerComparisonAttributeRestriction.swift */,
-				A29701452344FF0E004B97E6 /* EqualToIntegerAttributeRestriction.swift */,
-				A29701462344FF0E004B97E6 /* LessThanIntegerAttributeRestriction.swift */,
-				A29701472344FF0E004B97E6 /* NotEqualToIntegerAttributeRestriction.swift */,
 				A29701482344FF0E004B97E6 /* IntegerAttributeRestriction.swift */,
+				A2D138A5268CA94B00762A3D /* StoredIntegerComparisonAttributeRestriction.swift */,
+				A29701462344FF0E004B97E6 /* LessThanIntegerAttributeRestriction.swift */,
 				A29701492344FF0E004B97E6 /* LessThanOrEqualToIntegerAttributeRestriction.swift */,
+				A29701452344FF0E004B97E6 /* EqualToIntegerAttributeRestriction.swift */,
+				A29701472344FF0E004B97E6 /* NotEqualToIntegerAttributeRestriction.swift */,
 				A297014A2344FF0E004B97E6 /* GreaterThanOrEqualToIntegerAttributeRestriction.swift */,
 				A297014B2344FF0E004B97E6 /* GreaterThanIntegerAttributeRestriction.swift */,
 			);
@@ -371,13 +380,14 @@
 		A297014D2344FF0E004B97E6 /* Duration */ = {
 			isa = PBXGroup;
 			children = (
+				A2D138C3268E674C00762A3D /* DurationAttributeRestriction.swift */,
 				A2D138AB268CAAD800762A3D /* StoredDurationAttributeRestriction.swift */,
-				A297014E2344FF0E004B97E6 /* GreaterThanOrEqualToDurationAttributeRestriction.swift */,
-				A297014F2344FF0E004B97E6 /* NotEqualToDurationAttributeRestriction.swift */,
 				A29701502344FF0E004B97E6 /* LessThanDurationAttributeRestriction.swift */,
-				A29701512344FF0E004B97E6 /* GreaterThanDurationAttributeRestriction.swift */,
-				A29701522344FF0E004B97E6 /* EqualToDurationAttributeRestriction.swift */,
 				A29701532344FF0E004B97E6 /* LessThanOrEqualToDurationAttributeRestriction.swift */,
+				A29701522344FF0E004B97E6 /* EqualToDurationAttributeRestriction.swift */,
+				A297014F2344FF0E004B97E6 /* NotEqualToDurationAttributeRestriction.swift */,
+				A297014E2344FF0E004B97E6 /* GreaterThanOrEqualToDurationAttributeRestriction.swift */,
+				A29701512344FF0E004B97E6 /* GreaterThanDurationAttributeRestriction.swift */,
 			);
 			path = Duration;
 			sourceTree = "<group>";
@@ -385,6 +395,8 @@
 		A29701562344FF0F004B97E6 /* SelectOne */ = {
 			isa = PBXGroup;
 			children = (
+				A2D138C5268E8C0700762A3D /* SelectOneRestriction.swift */,
+				A2D138C7268E8D0A00762A3D /* StoredSelectOneAttributeRestriction.swift */,
 				A29701582344FF0F004B97E6 /* EqualToSelectOneAttributeRestriction.swift */,
 				A29701572344FF0F004B97E6 /* NotEqualToSelectOneAttributeRestriction.swift */,
 			);
@@ -546,6 +558,7 @@
 				A29701A22344FFD6004B97E6 /* AttributeRestrictionsInjectionProvider.swift in Sources */,
 				A29701962344FF10004B97E6 /* LessThanOrEqualToDurationAttributeRestriction.swift in Sources */,
 				A2D138B8268CF89D00762A3D /* StoredInCurrentTimeUnitAttributeRestriction.swift in Sources */,
+				A2D138C2268E637E00762A3D /* FrequencyAttributeRestriction.swift in Sources */,
 				A29701712344FF10004B97E6 /* InCurrentTimeUnitDateAttributeRestriction.swift in Sources */,
 				A297016D2344FF10004B97E6 /* EqualToDosageAttributeRestriction.swift in Sources */,
 				A29701832344FF10004B97E6 /* GreaterThanDoubleAttributeRestriction.swift in Sources */,
@@ -572,7 +585,7 @@
 				A29701882344FF10004B97E6 /* GreaterThanOrEqualToDoubleAttributeRestriction.swift in Sources */,
 				A2D138A4268BFAE300762A3D /* Comparison.swift in Sources */,
 				A29701792344FF10004B97E6 /* NotEqualToFrequencyAttributeRestriction.swift in Sources */,
-				A2D138B6268CF43C00762A3D /* StoredTimeOfDayAttributeRestriction.swift in Sources */,
+				A2D138B6268CF43C00762A3D /* StoredTimeOfDayComparisonAttributeRestriction.swift in Sources */,
 				A29701672344FF10004B97E6 /* NotEqualToStringAttributeRestriction.swift in Sources */,
 				A297018C2344FF10004B97E6 /* IntegerAttributeRestriction.swift in Sources */,
 				A29701982344FF10004B97E6 /* NotEqualToAttributeRestriction.swift in Sources */,
@@ -600,9 +613,12 @@
 				A2D138A2268BEC0900762A3D /* StoredDoubleComparisonAttributeRestriction.swift in Sources */,
 				A29701742344FF10004B97E6 /* InThePastXTimeUnitsDateAttributeRestriction.swift in Sources */,
 				A29701992344FF10004B97E6 /* NotEqualToSelectOneAttributeRestriction.swift in Sources */,
+				A2D138C6268E8C0700762A3D /* SelectOneRestriction.swift in Sources */,
 				A2D138C0268D214000762A3D /* DosageAttributeRestriction.swift in Sources */,
 				A2D138AC268CAAD800762A3D /* StoredDurationAttributeRestriction.swift in Sources */,
 				A29701752344FF10004B97E6 /* BeforeDateAttributeRestriction.swift in Sources */,
+				A2D138C8268E8D0A00762A3D /* StoredSelectOneAttributeRestriction.swift in Sources */,
+				A2D138C4268E674C00762A3D /* DurationAttributeRestriction.swift in Sources */,
 				A29701642344FF10004B97E6 /* EqualToStringAttributeRestriction.swift in Sources */,
 				A29701932344FF10004B97E6 /* LessThanDurationAttributeRestriction.swift in Sources */,
 			);

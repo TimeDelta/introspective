@@ -27,6 +27,12 @@ public final class StoredInCurrentTimeUnitAttributeRestriction: StoredBooleanExp
 		}
 		return InCurrentTimeUnitDateAttributeRestriction(restrictedAttribute: attribute, Calendar.Component.fromInt(Int(value)))
 	}
+
+	public func populate(from other: InCurrentTimeUnitDateAttributeRestriction, for sampleType: Sample.Type) throws {
+		sampleTypeId = injected(SampleFactory.self).sampleTypeId(for: sampleType)
+		attributeId = other.restrictedAttribute.id
+		value = Int16(other.timeUnit.intValue())
+	}
 }
 
 extension StoredInCurrentTimeUnitAttributeRestriction {

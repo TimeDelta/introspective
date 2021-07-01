@@ -27,6 +27,13 @@ public final class StoredInThePastXTimeUnitsAttributeRestriction: StoredBooleanE
 		}
 		return InThePastXTimeUnitsDateAttributeRestriction(restrictedAttribute: attribute, Int(numTimeUnits), Calendar.Component.fromInt(Int(timeUnit)))
 	}
+
+	public func populate(from other: InThePastXTimeUnitsDateAttributeRestriction, for sampleType: Sample.Type) throws {
+		sampleTypeId = injected(SampleFactory.self).sampleTypeId(for: sampleType)
+		attributeId = other.restrictedAttribute.id
+		numTimeUnits = Int64(other.numberOfTimeUnits)
+		timeUnit = Int16(other.timeUnit.intValue())
+	}
 }
 
 extension StoredInThePastXTimeUnitsAttributeRestriction {

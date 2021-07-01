@@ -9,6 +9,9 @@
 import Foundation
 
 import Attributes
+import BooleanAlgebra
+import DependencyInjection
+import Persistence
 import Samples
 
 public final class NotEmptyStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction {
@@ -18,6 +21,10 @@ public final class NotEmptyStringAttributeRestriction: AnyAttributeRestriction, 
 	public final override var description: String {
 		restrictedAttribute.name.localizedCapitalized + " is not empty"
 	}
+
+	// MARK: - Instance Variables
+
+	public final var typedValue: String? { nil }
 
 	// MARK: - Initializers
 
@@ -40,9 +47,19 @@ public final class NotEmptyStringAttributeRestriction: AnyAttributeRestriction, 
 		NotEmptyStringAttributeRestriction(restrictedAttribute: restrictedAttribute)
 	}
 
+	// MARK: - Boolean Expression Functions
+
 	public override func predicate() -> NSPredicate? {
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		return NSPredicate(format: "%K.length > 0", variableName)
+	}
+
+	public override func stored(for sampleType: Sample.Type) throws -> StoredBooleanExpression {
+		let transaction = injected(Database.self).transaction()
+		let stored = try transaction.new(StoredStringOperationAttributeRestriction.self)
+		try stored.populate(from: self, for: sampleType)
+		try transaction.commit()
+		return stored
 	}
 
 	// MARK: - Attributed Functions

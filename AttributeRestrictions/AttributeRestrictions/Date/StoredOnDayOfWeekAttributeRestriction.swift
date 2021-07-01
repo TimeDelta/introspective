@@ -31,6 +31,12 @@ public final class StoredOnDayOfWeekAttributeRestriction: StoredBooleanExpressio
 		}
 		return OnDayOfWeekAttributeRestriction(restrictedAttribute: attribute, daysOfWeek: Set(convertedDaysOfWeek))
 	}
+
+	public func populate(from other: OnDayOfWeekAttributeRestriction, for sampleType: Sample.Type) throws {
+		sampleTypeId = injected(SampleFactory.self).sampleTypeId(for: sampleType)
+		attributeId = other.restrictedAttribute.id
+		daysOfWeek = other.daysOfWeek.map{ String($0.intValue) }.joined(separator: "")
+	}
 }
 
 extension StoredOnDayOfWeekAttributeRestriction {

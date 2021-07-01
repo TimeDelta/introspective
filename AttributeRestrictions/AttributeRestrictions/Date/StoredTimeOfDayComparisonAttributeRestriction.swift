@@ -39,6 +39,22 @@ public final class StoredTimeOfDayComparisonAttributeRestriction: StoredBooleanE
 			throw GenericError("Invalid comparison value for StoredTimeOfDayComparisonAttributeRestriction")
 		}
 	}
+
+	public func populate(from other: TimeOfDayAttributeRestriction, for sampleType: Sample.Type) throws {
+		sampleTypeId = injected(SampleFactory.self).sampleTypeId(for: sampleType)
+		attributeId = other.restrictedAttribute.id
+		switch other {
+		case is BeforeTimeOfDayAttributeRestriction:
+			comparison = Comparison.lessThan.rawValue
+			break
+		case is AfterTimeOfDayAttributeRestriction:
+			comparison = Comparison.greaterThan.rawValue
+			break
+		default:
+			fatalError("Forgot a type of DateAttributeRestriction")
+		}
+		value = other.timeOfDay
+	}
 }
 
 extension StoredTimeOfDayComparisonAttributeRestriction {
