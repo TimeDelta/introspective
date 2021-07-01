@@ -12,6 +12,7 @@ import Foundation
 import Common
 import DependencyInjection
 import Persistence
+import Samples
 
 public final class StoredNotExpression: StoredBooleanExpression, CoreDataObject {
 
@@ -22,8 +23,8 @@ public final class StoredNotExpression: StoredBooleanExpression, CoreDataObject 
 		NotExpression(try storedSubExpression.convert())
 	}
 
-	public func populate(from other: NotExpression) throws {
-		storedSubExpression = try other.subExpression.stored()
+	public func populate(from other: NotExpression, for sampleType: Sample.Type) throws {
+		storedSubExpression = try other.subExpression.stored(for: sampleType)
 	}
 }
 

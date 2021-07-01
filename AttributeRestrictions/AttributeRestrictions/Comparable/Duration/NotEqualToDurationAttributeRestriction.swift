@@ -9,11 +9,22 @@
 import Foundation
 
 import Attributes
+import BooleanAlgebra
 import Common
+import DependencyInjection
+import Persistence
+import Samples
 
-public final class NotEqualToDurationAttributeRestriction: TypedNotEqualToAttributeRestrictionBase<TimeDuration> {
+public final class NotEqualToDurationAttributeRestriction:
+	TypedNotEqualToAttributeRestrictionBase<TimeDuration>,
+	DurationAttributeRestriction
+{
 	private typealias Me = NotEqualToDurationAttributeRestriction
 	public static let valueAttribute = DurationAttribute(id: 0, name: "Target TimeDuration", pluralName: "Target Durations")
+
+	public var typedValue: TimeDuration {
+		return value as! TimeDuration
+	}
 
 	public required convenience init(restrictedAttribute: Attribute) {
 		self.init(restrictedAttribute: restrictedAttribute, value: TimeDuration(0))
@@ -28,4 +39,12 @@ public final class NotEqualToDurationAttributeRestriction: TypedNotEqualToAttrib
 	}
 
 	public override func predicate() -> NSPredicate? { nil }
+
+	public override func stored(for sampleType: Sample.Type) throws -> StoredBooleanExpression {
+		let transaction = injected(Database.self).transaction()
+		let stored = try transaction.new(StoredDurationComparisonAttributeRestriction.self)
+		try stored.populate(from: self, for: sampleType)
+		try transaction.commit()
+		return stored
+	}
 }

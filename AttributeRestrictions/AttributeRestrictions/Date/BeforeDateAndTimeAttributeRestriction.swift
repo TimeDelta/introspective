@@ -9,8 +9,10 @@
 import Foundation
 
 import Attributes
+import BooleanAlgebra
 import Common
 import DependencyInjection
+import Persistence
 import Samples
 import Settings
 
@@ -47,6 +49,8 @@ public final class BeforeDateAndTimeAttributeRestriction: DateAttributeRestricti
 	// MARK: - Instance Variables
 
 	public var date: Date
+
+	public override var typedValue: Date? { date }
 
 	// MARK: - Initializers
 
@@ -99,6 +103,14 @@ public final class BeforeDateAndTimeAttributeRestriction: DateAttributeRestricti
 		guard !injected(Settings.self).convertTimeZones else { return nil }
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		return NSPredicate(format: "%K < %@", variableName, date as NSDate)
+	}
+
+	public override func stored(for sampleType: Sample.Type) throws -> StoredBooleanExpression {
+		let transaction = injected(Database.self).transaction()
+		let stored = try transaction.new(StoredDateOperationAttributeRestriction.self)
+		try stored.populate(from: self, for: sampleType)
+		try transaction.commit()
+		return stored
 	}
 
 	// MARK: - Equality

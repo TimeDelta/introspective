@@ -13,6 +13,5 @@ import Common
 
 public protocol DosageAttributeRestriction: AttributeRestriction {
 
-	var value: Dosage { get }
-	var attribute: Attribute { get }
+	var typedValue: Dosage { get }
 }

@@ -10,8 +10,10 @@ import Foundation
 import SwiftDate
 
 import Attributes
+import BooleanAlgebra
 import Common
 import DependencyInjection
+import Persistence
 import Samples
 import Settings
 
@@ -48,6 +50,8 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatab
 	// MARK: - Instance Variables
 
 	public final var date: Date
+
+	public override var typedValue: Date? { date }
 
 	// MARK: - Initializers
 
@@ -108,6 +112,14 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatab
 			variableName,
 			maxDate as NSDate
 		)
+	}
+
+	public override func stored(for sampleType: Sample.Type) throws -> StoredBooleanExpression {
+		let transaction = injected(Database.self).transaction()
+		let stored = try transaction.new(StoredDateOperationAttributeRestriction.self)
+		try stored.populate(from: self, for: sampleType)
+		try transaction.commit()
+		return stored
 	}
 
 	// MARK: - Equality

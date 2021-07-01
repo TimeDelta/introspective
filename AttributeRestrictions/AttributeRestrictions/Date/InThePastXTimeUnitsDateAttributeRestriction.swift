@@ -10,8 +10,10 @@ import Foundation
 import SwiftDate
 
 import Attributes
+import BooleanAlgebra
 import Common
 import DependencyInjection
+import Persistence
 import Samples
 import Settings
 
@@ -135,6 +137,14 @@ public final class InThePastXTimeUnitsDateAttributeRestriction: DateAttributeRes
 			variableName,
 			now as NSDate
 		)
+	}
+
+	public override func stored(for sampleType: Sample.Type) throws -> StoredBooleanExpression {
+		let transaction = injected(Database.self).transaction()
+		let stored = try transaction.new(StoredInThePastXTimeUnitsAttributeRestriction.self)
+		try stored.populate(from: self, for: sampleType)
+		try transaction.commit()
+		return stored
 	}
 
 	// MARK: - Equality

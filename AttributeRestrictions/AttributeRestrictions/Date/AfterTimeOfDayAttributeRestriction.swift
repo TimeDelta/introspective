@@ -9,10 +9,17 @@
 import Foundation
 
 import Attributes
+import BooleanAlgebra
 import Common
+import DependencyInjection
+import Persistence
 import Samples
 
-public final class AfterTimeOfDayAttributeRestriction: DateAttributeRestriction, Equatable {
+public final class AfterTimeOfDayAttributeRestriction:
+	DateAttributeRestriction,
+	TimeOfDayAttributeRestriction,
+	Equatable
+{
 	// MARK: - Static Variables
 
 	private typealias Me = AfterTimeOfDayAttributeRestriction
@@ -97,6 +104,14 @@ public final class AfterTimeOfDayAttributeRestriction: DateAttributeRestriction,
 
 	public override func predicate() -> NSPredicate? {
 		nil
+	}
+
+	public override func stored(for sampleType: Sample.Type) throws -> StoredBooleanExpression {
+		let transaction = injected(Database.self).transaction()
+		let stored = try transaction.new(StoredTimeOfDayComparisonAttributeRestriction.self)
+		try stored.populate(from: self, for: sampleType)
+		try transaction.commit()
+		return stored
 	}
 
 	// MARK: - Equality

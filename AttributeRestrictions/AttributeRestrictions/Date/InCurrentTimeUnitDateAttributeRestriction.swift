@@ -9,8 +9,10 @@
 import Foundation
 
 import Attributes
+import BooleanAlgebra
 import Common
 import DependencyInjection
+import Persistence
 import Samples
 import Settings
 
@@ -112,6 +114,14 @@ public final class InCurrentTimeUnitDateAttributeRestriction: DateAttributeRestr
 			variableName,
 			maxDate as NSDate
 		)
+	}
+
+	public override func stored(for sampleType: Sample.Type) throws -> StoredBooleanExpression {
+		let transaction = injected(Database.self).transaction()
+		let stored = try transaction.new(StoredInCurrentTimeUnitAttributeRestriction.self)
+		try stored.populate(from: self, for: sampleType)
+		try transaction.commit()
+		return stored
 	}
 
 	// MARK: - Equality

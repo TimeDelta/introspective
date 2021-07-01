@@ -12,6 +12,7 @@ import Foundation
 import Common
 import DependencyInjection
 import Persistence
+import Samples
 
 public final class NotExpression: BooleanExpression {
 	// MARK: - Display Information
@@ -60,10 +61,10 @@ public final class NotExpression: BooleanExpression {
 		return NSCompoundPredicate(notPredicateWithSubpredicate: subPredicate)
 	}
 
-	public final func stored() throws -> StoredBooleanExpression {
+	public final func stored(for sampleType: Sample.Type) throws -> StoredBooleanExpression {
 		let transaction = injected(Database.self).transaction()
 		let stored = try transaction.new(StoredNotExpression.self)
-		try stored.populate(from: self)
+		try stored.populate(from: self, for: sampleType)
 		try transaction.commit()
 		return stored
 	}

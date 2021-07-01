@@ -120,8 +120,10 @@ public class AnyAttributeRestriction: AttributeRestriction {
 		return self
 	}
 
-	public func stored() throws -> StoredBooleanExpression {
-		throw GenericError("must override stored()")
+	public func stored(for sampleType: Sample.Type) throws -> StoredBooleanExpression {
+		let typeDescription = String(describing: type(of: self))
+		Me.log.error("Did not override copy() for %@", typeDescription)
+		throw GenericError("must override \(typeDescription).stored()")
 	}
 
 	/// Do not call this function. It is only meant to be used internally but cannot be declared as private because it must be overridable by subclasses

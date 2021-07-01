@@ -59,6 +59,37 @@ public final class StoredStringOperationAttributeRestriction: StoredBooleanExpre
 			throw GenericError("Invalid operation value for StoredStringOperationAttributeRestriction")
 		}
 	}
+
+	public func populate(from other: StringAttributeRestriction, for sampleType: Sample.Type) throws {
+		sampleTypeId = injected(SampleFactory.self).sampleTypeId(for: sampleType)
+		attributeId = other.restrictedAttribute.id
+		switch other {
+		case is ContainsStringAttributeRestriction:
+			operation = StringOperation.contains.rawValue
+			break
+		case is StartsWithStringAttributeRestriction:
+			operation = StringOperation.startsWith.rawValue
+			break
+		case is EndsWithStringAttributeRestriction:
+			operation = StringOperation.endsWith.rawValue
+			break
+		case is EqualToStringAttributeRestriction:
+			operation = StringOperation.equalTo.rawValue
+			break
+		case is NotEqualToStringAttributeRestriction:
+			operation = StringOperation.notEqualTo.rawValue
+			break
+		case is EmptyStringAttributeRestriction:
+			operation = StringOperation.isEmpty.rawValue
+			break
+		case is NotEmptyStringAttributeRestriction:
+			operation = StringOperation.isNotEmpty.rawValue
+			break
+		default:
+			fatalError("Forgot a type of StringAttributeRestriction")
+		}
+		value = other.typedValue
+	}
 }
 
 extension StoredStringOperationAttributeRestriction {

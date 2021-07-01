@@ -9,13 +9,24 @@
 import Foundation
 
 import Attributes
+import BooleanAlgebra
+import DependencyInjection
+import Persistence
+import Samples
 
-public final class EqualToStringAttributeRestriction: TypedEqualToAttributeRestrictionBase<String> {
+public final class EqualToStringAttributeRestriction:
+	TypedEqualToAttributeRestrictionBase<String>,
+	StringAttributeRestriction
+{
 	private typealias Me = EqualToStringAttributeRestriction
 
 	// MARK: - Attributes
 
 	public static let valueAttribute = TextAttribute(id: 0, name: "Value", pluralName: "Values")
+
+	// MARK: - Instance Variables
+
+	public final var typedValue: String? { value as? String }
 
 	// MARK: - Initializers
 
@@ -38,8 +49,18 @@ public final class EqualToStringAttributeRestriction: TypedEqualToAttributeRestr
 		EqualToStringAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! String)
 	}
 
+	// MARK: - Boolean Expression Functions
+
 	public override func predicate() -> NSPredicate? {
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		return NSPredicate(format: "%K ==[cd] %@", variableName, value as! String)
+	}
+
+	public override func stored(for sampleType: Sample.Type) throws -> StoredBooleanExpression {
+		let transaction = injected(Database.self).transaction()
+		let stored = try transaction.new(StoredStringOperationAttributeRestriction.self)
+		try stored.populate(from: self, for: sampleType)
+		try transaction.commit()
+		return stored
 	}
 }

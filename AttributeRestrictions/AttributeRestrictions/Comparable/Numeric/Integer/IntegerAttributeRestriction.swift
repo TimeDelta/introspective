@@ -8,4 +8,7 @@
 
 import Foundation
 
-public protocol IntegerAttributeRestriction: AttributeRestriction {}
+public protocol IntegerAttributeRestriction: AttributeRestriction {
+
+	var typedValue: Int { get }
+}
