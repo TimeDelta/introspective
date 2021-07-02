@@ -72,6 +72,7 @@ The following data types are supported (with more to come, guaranteed):
     - Source (the name of the app that generated this record - automatically recorded)
   - Blood Pressure (from Apple Health app)
   - Body Mass Index (from Apple Health app)
+  - Dietary Sugar (from Apple Health app)
   - Fatigue (with customizable scale)
     - Timestamp (with time zone)
     - Rating
