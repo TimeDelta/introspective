@@ -44,6 +44,7 @@ public protocol QueryFactory {
 	func weightQuery() -> WeightQuery
 	func weightQuery(_ parts: [BooleanExpressionPart]) throws -> WeightQuery
 	func queryFor(_ sampleType: Sample.Type) throws -> Query
+	func sampleTypeFor(_ query: Query) throws -> Sample.Type
 }
 
 public final class QueryFactoryImpl: QueryFactory {
@@ -164,6 +165,7 @@ public final class QueryFactoryImpl: QueryFactory {
 		case is Activity.Type: return activityQuery()
 		case is BloodPressure.Type: return bloodPressureQuery()
 		case is BodyMassIndex.Type: return bmiQuery()
+		case is DietarySugar.Type: return dietarySugarQuery()
 		case is HeartRate.Type: return heartRateQuery()
 		case is LeanBodyMass.Type: return leanBodyMassQuery()
 		case is MedicationDose.Type: return medicationDoseQuery()
@@ -175,6 +177,26 @@ public final class QueryFactoryImpl: QueryFactory {
 		case is Weight.Type: return weightQuery()
 		default:
 			throw UnknownSampleTypeError(sampleType)
+		}
+	}
+
+	public func sampleTypeFor(_ query: Query) throws -> Sample.Type {
+		switch query {
+		case is ActivityQuery: return Activity.self
+		case is BloodPressureQuery: return BloodPressure.self
+		case is BodyMassIndexQuery: return BodyMassIndex.self
+		case is DietarySugarQuery: return DietarySugar.self
+		case is HeartRateQuery: return HeartRate.self
+		case is LeanBodyMassQuery: return LeanBodyMass.self
+		case is MedicationDoseQuery: return MedicationDose.self
+		case is MoodQuery: return MoodImpl.self
+		case is PainQuery: return PainImpl.self
+		case is RestingHeartRateQuery: return RestingHeartRate.self
+		case is SexualActivityQuery: return SexualActivity.self
+		case is SleepQuery: return Sleep.self
+		case is WeightQuery: return Weight.self
+		default:
+			throw GenericError("Forgot type of query")
 		}
 	}
 }

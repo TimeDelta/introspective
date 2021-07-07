@@ -26,6 +26,8 @@ public protocol Query: AnyObject {
 	/// This resets the stopped state so that the query can be ran again
 	func resetStoppedState()
 	func equalTo(_ otherQuery: Query) -> Bool
+
+	func stored(withName name: String) throws -> StoredQuery
 }
 
 public extension Query {

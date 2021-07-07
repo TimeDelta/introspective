@@ -169,6 +169,17 @@
         <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="timestampTimeZoneId" optional="YES" attributeType="String"/>
     </entity>
+    <entity name="Query" representedClassName="StoredQuery" syncable="YES">
+        <attribute name="name" attributeType="String"/>
+        <attribute name="sampleTypeId" attributeType="Integer 16" usesScalarValueType="YES"/>
+        <relationship name="storedExpression" maxCount="1" deletionRule="Cascade" destinationEntity="BooleanExpression"/>
+    </entity>
+    <entity name="SelectOneAttributeRestriction" representedClassName="StoredSelectOneAttributeRestriction" parentEntity="BooleanExpression" syncable="YES">
+        <attribute name="attributeId" attributeType="Integer 16" usesScalarValueType="YES"/>
+        <attribute name="operation" attributeType="Integer 16" usesScalarValueType="YES"/>
+        <attribute name="sampleTypeId" attributeType="Integer 16" usesScalarValueType="YES"/>
+        <attribute name="valueIndex" attributeType="Integer 64" usesScalarValueType="YES"/>
+    </entity>
     <entity name="Settings" representedClassName="Settings.SettingsImpl" syncable="YES">
         <attribute name="storedAutoIgnoreEnabled" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="storedAutoIgnoreSeconds" attributeType="Integer 64" defaultValueString="15" usesScalarValueType="YES"/>
@@ -209,36 +220,38 @@
     <elements>
         <element name="Activity" positionX="-36" positionY="63" width="128" height="163"/>
         <element name="ActivityDefinition" positionX="-29.5263671875" positionY="299.7723999023438" width="128" height="30"/>
+        <element name="AndExpression" positionX="182.6837158203125" positionY="39.67959594726562" width="128" height="73"/>
         <element name="ATrackerActivityImporter" positionX="55.80963134765625" positionY="-80.89248657226562" width="128" height="30"/>
+        <element name="BooleanExpression" positionX="570.680419921875" positionY="24.19615173339844" width="128" height="43"/>
+        <element name="BooleanExpressionGroup" positionX="-36" positionY="27" width="128" height="44"/>
         <element name="CoreDataSync" positionX="403.2936401367188" positionY="-81.23626708984375" width="128" height="58"/>
+        <element name="DateAttributeRestriction" positionX="-72" positionY="-9" width="128" height="89"/>
+        <element name="DosageComparisonAttributeRestriction" positionX="-27" positionY="36" width="128" height="89"/>
+        <element name="DoubleComparisonAttributeRestriction" positionX="-45" positionY="18" width="128" height="89"/>
+        <element name="DurationAttributeRestriction" positionX="-54" positionY="9" width="128" height="89"/>
         <element name="EasyPillMedicationDoseImporter" positionX="-213.828125" positionY="-107.7706909179688" width="128" height="30"/>
         <element name="EasyPillMedicationImporter" positionX="-26.795654296875" positionY="-174.1388549804688" width="128" height="58"/>
         <element name="Fatigue" positionX="216.076904296875" positionY="220.891845703125" width="128" height="119"/>
+        <element name="FrequencyAttributeRestriction" positionX="-45" positionY="18" width="128" height="89"/>
+        <element name="InCurrentTimeUnitAttributeRestriction" positionX="-81" positionY="-18" width="128" height="74"/>
+        <element name="IntegerComparisonAttributeRestriction1" positionX="-36" positionY="27" width="128" height="89"/>
+        <element name="InThePastXTimeUnitsAttributeRestriction" positionX="-72" positionY="-9" width="128" height="89"/>
         <element name="IntrospectiveActivityImporter" positionX="241.8269653320312" positionY="-36.84661865234375" width="128" height="58"/>
         <element name="IntrospectiveMedicationImporter" positionX="-81.85430908203125" positionY="-66.12109375" width="128" height="58"/>
         <element name="IntrospectiveMoodImporter" positionX="240.7255859375" positionY="-110.7881927490234" width="128" height="58"/>
         <element name="Medication" positionX="-137.720947265625" positionY="590.0188903808594" width="128" height="178"/>
         <element name="MedicationDose" positionX="-113.9071044921875" positionY="416.1189117431641" width="128" height="118"/>
         <element name="Mood" positionX="-285.966552734375" positionY="-16.72526550292969" width="128" height="30"/>
-        <element name="Pain" positionX="-244.591552734375" positionY="43.80722045898438" width="128" height="134"/>
-        <element name="Settings" positionX="-289.8668212890625" positionY="352.4930419921875" width="128" height="254"/>
-        <element name="Tag" positionX="72.3931884765625" positionY="376.8829345703125" width="128" height="30"/>
-        <element name="WellnessMoodImporter" positionX="-271.3795166015625" positionY="230.5117492675781" width="128" height="30"/>
-        <element name="BooleanExpression" positionX="570.680419921875" positionY="24.19615173339844" width="128" height="43"/>
-        <element name="OrExpression" positionX="363.893310546875" positionY="249.4068603515625" width="128" height="59"/>
-        <element name="AndExpression" positionX="182.6837158203125" positionY="39.67959594726562" width="128" height="73"/>
         <element name="NotExpression" positionX="258.6334228515625" positionY="146.2091674804688" width="128" height="58"/>
-        <element name="DoubleComparisonAttributeRestriction" positionX="-45" positionY="18" width="128" height="89"/>
-        <element name="BooleanExpressionGroup" positionX="-36" positionY="27" width="128" height="44"/>
-        <element name="DosageComparisonAttributeRestriction" positionX="-27" positionY="36" width="128" height="89"/>
-        <element name="DateAttributeRestriction" positionX="-72" positionY="-9" width="128" height="89"/>
-        <element name="StringOperationAttributeRestriction" positionX="-63" positionY="0" width="128" height="89"/>
-        <element name="DurationAttributeRestriction" positionX="-54" positionY="9" width="128" height="89"/>
-        <element name="FrequencyAttributeRestriction" positionX="-45" positionY="18" width="128" height="89"/>
-        <element name="IntegerComparisonAttributeRestriction1" positionX="-36" positionY="27" width="128" height="89"/>
-        <element name="TimeOfDayAttributeRestriction" positionX="-27" positionY="36" width="128" height="89"/>
-        <element name="InCurrentTimeUnitAttributeRestriction" positionX="-81" positionY="-18" width="128" height="74"/>
-        <element name="InThePastXTimeUnitsAttributeRestriction" positionX="-72" positionY="-9" width="128" height="89"/>
         <element name="OnDayOfTheWeekAttributeRestriction" positionX="-63" positionY="0" width="128" height="74"/>
+        <element name="OrExpression" positionX="363.893310546875" positionY="249.4068603515625" width="128" height="59"/>
+        <element name="Pain" positionX="-244.591552734375" positionY="43.80722045898438" width="128" height="134"/>
+        <element name="SelectOneAttributeRestriction" positionX="-54" positionY="9" width="128" height="89"/>
+        <element name="Settings" positionX="-289.8668212890625" positionY="352.4930419921875" width="128" height="254"/>
+        <element name="StringOperationAttributeRestriction" positionX="-63" positionY="0" width="128" height="89"/>
+        <element name="Tag" positionX="72.3931884765625" positionY="376.8829345703125" width="128" height="30"/>
+        <element name="TimeOfDayAttributeRestriction" positionX="-27" positionY="36" width="128" height="89"/>
+        <element name="WellnessMoodImporter" positionX="-271.3795166015625" positionY="230.5117492675781" width="128" height="30"/>
+        <element name="Query" positionX="-81" positionY="-18" width="128" height="74"/>
     </elements>
 </model>

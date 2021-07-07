@@ -15,12 +15,17 @@ import DependencyInjection
 import Persistence
 import Samples
 
-public final class GreaterThanFrequencyAttributeRestriction: TypedGreaterThanAttributeRestrictionBase<Frequency>, FrequencyAttributeRestriction {
+public final class GreaterThanFrequencyAttributeRestriction: TypedGreaterThanAttributeRestrictionBase<Frequency>,
+	FrequencyAttributeRestriction {
 	private typealias Me = GreaterThanFrequencyAttributeRestriction
-	public static let valueAttribute = FrequencyAttribute(id: 0, name: "Target Frequency", pluralName: "Target Frequencies")
+	public static let valueAttribute = FrequencyAttribute(
+		id: 0,
+		name: "Target Frequency",
+		pluralName: "Target Frequencies"
+	)
 
 	public var typedValue: Frequency {
-		return value
+		value
 	}
 
 	public required convenience init(restrictedAttribute: Attribute) {

@@ -9,9 +9,15 @@
 import Foundation
 
 import Attributes
+import BooleanAlgebra
 import Common
+import DependencyInjection
+import Persistence
+import Samples
 
-public final class NotEqualToSelectOneAttributeRestriction: NotEqualToAttributeRestriction {
+public final class NotEqualToSelectOneAttributeRestriction:
+	NotEqualToAttributeRestriction,
+	SelectOneAttributeRestriction {
 	// MARK: - Static Variables
 
 	private typealias Me = NotEqualToSelectOneAttributeRestriction
@@ -20,7 +26,7 @@ public final class NotEqualToSelectOneAttributeRestriction: NotEqualToAttributeR
 
 	// MARK: - Instance Variables
 
-	private final var selectOneAttribute: SelectOneAttribute
+	public final var selectOneAttribute: SelectOneAttribute
 
 	// MARK: - Initializers
 
@@ -56,6 +62,14 @@ public final class NotEqualToSelectOneAttributeRestriction: NotEqualToAttributeR
 
 	public override func predicate() -> NSPredicate? {
 		nil
+	}
+
+	public override func stored(for sampleType: Sample.Type) throws -> StoredBooleanExpression {
+		let transaction = injected(Database.self).transaction()
+		let stored = try transaction.new(StoredSelectOneAttributeRestriction.self)
+		try stored.populate(from: self, for: sampleType)
+		try transaction.commit()
+		return stored
 	}
 
 	// MARK: - Other

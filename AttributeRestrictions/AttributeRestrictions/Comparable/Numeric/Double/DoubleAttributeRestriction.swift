@@ -9,6 +9,5 @@
 import Foundation
 
 public protocol DoubleAttributeRestriction: AttributeRestriction {
-
 	var typedValue: Double { get }
 }

@@ -96,8 +96,12 @@
 		A2D138C0268D214000762A3D /* DosageAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138BF268D214000762A3D /* DosageAttributeRestriction.swift */; };
 		A2D138C2268E637E00762A3D /* FrequencyAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138C1268E637E00762A3D /* FrequencyAttributeRestriction.swift */; };
 		A2D138C4268E674C00762A3D /* DurationAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138C3268E674C00762A3D /* DurationAttributeRestriction.swift */; };
-		A2D138C6268E8C0700762A3D /* SelectOneRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138C5268E8C0700762A3D /* SelectOneRestriction.swift */; };
+		A2D138C6268E8C0700762A3D /* SelectOneRestrictionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138C5268E8C0700762A3D /* SelectOneRestrictionType.swift */; };
 		A2D138C8268E8D0A00762A3D /* StoredSelectOneAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138C7268E8D0A00762A3D /* StoredSelectOneAttributeRestriction.swift */; };
+		A2D138CA26902A7600762A3D /* SelectOneAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138C926902A7600762A3D /* SelectOneAttributeRestriction.swift */; };
+		A2D138D026902DE300762A3D /* BooleanAlgebra.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2D138CF26902DE300762A3D /* BooleanAlgebra.framework */; };
+		A2D138D226910A3400762A3D /* StoredSingleTagAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138D126910A3400762A3D /* StoredSingleTagAttributeRestriction.swift */; };
+		A2D138D426910D1800762A3D /* SingleTagAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138D326910D1800762A3D /* SingleTagAttributeRestriction.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -193,8 +197,12 @@
 		A2D138BF268D214000762A3D /* DosageAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DosageAttributeRestriction.swift; sourceTree = "<group>"; };
 		A2D138C1268E637E00762A3D /* FrequencyAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrequencyAttributeRestriction.swift; sourceTree = "<group>"; };
 		A2D138C3268E674C00762A3D /* DurationAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationAttributeRestriction.swift; sourceTree = "<group>"; };
-		A2D138C5268E8C0700762A3D /* SelectOneRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectOneRestriction.swift; sourceTree = "<group>"; };
+		A2D138C5268E8C0700762A3D /* SelectOneRestrictionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectOneRestrictionType.swift; sourceTree = "<group>"; };
 		A2D138C7268E8D0A00762A3D /* StoredSelectOneAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredSelectOneAttributeRestriction.swift; sourceTree = "<group>"; };
+		A2D138C926902A7600762A3D /* SelectOneAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectOneAttributeRestriction.swift; sourceTree = "<group>"; };
+		A2D138CF26902DE300762A3D /* BooleanAlgebra.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BooleanAlgebra.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2D138D126910A3400762A3D /* StoredSingleTagAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredSingleTagAttributeRestriction.swift; sourceTree = "<group>"; };
+		A2D138D326910D1800762A3D /* SingleTagAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleTagAttributeRestriction.swift; sourceTree = "<group>"; };
 		D3E1F58CB37300E6AB438A14 /* Pods-AttributeRestrictions.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AttributeRestrictions.release.xcconfig"; path = "../Pods/Target Support Files/Pods-AttributeRestrictions/Pods-AttributeRestrictions.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -203,6 +211,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2D138D026902DE300762A3D /* BooleanAlgebra.framework in Frameworks */,
 				A29701AB2345009B004B97E6 /* DependencyInjection.framework in Frameworks */,
 				A29701A92345008E004B97E6 /* Samples.framework in Frameworks */,
 				A29701A723450087004B97E6 /* Attributes.framework in Frameworks */,
@@ -395,7 +404,8 @@
 		A29701562344FF0F004B97E6 /* SelectOne */ = {
 			isa = PBXGroup;
 			children = (
-				A2D138C5268E8C0700762A3D /* SelectOneRestriction.swift */,
+				A2D138C5268E8C0700762A3D /* SelectOneRestrictionType.swift */,
+				A2D138C926902A7600762A3D /* SelectOneAttributeRestriction.swift */,
 				A2D138C7268E8D0A00762A3D /* StoredSelectOneAttributeRestriction.swift */,
 				A29701582344FF0F004B97E6 /* EqualToSelectOneAttributeRestriction.swift */,
 				A29701572344FF0F004B97E6 /* NotEqualToSelectOneAttributeRestriction.swift */,
@@ -406,6 +416,8 @@
 		A297015B2344FF0F004B97E6 /* Tag */ = {
 			isa = PBXGroup;
 			children = (
+				A2D138D326910D1800762A3D /* SingleTagAttributeRestriction.swift */,
+				A2D138D126910A3400762A3D /* StoredSingleTagAttributeRestriction.swift */,
 				A297015F2344FF0F004B97E6 /* HasTagAttributeRestriction.swift */,
 				A297015C2344FF0F004B97E6 /* DoesNotHaveTagAttributeRestriction.swift */,
 				A297015E2344FF0F004B97E6 /* HasOneOfTagAttributeRestriction.swift */,
@@ -417,6 +429,7 @@
 		A29701A32345007E004B97E6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A2D138CF26902DE300762A3D /* BooleanAlgebra.framework */,
 				A29701AA2345009B004B97E6 /* DependencyInjection.framework */,
 				A29701A82345008E004B97E6 /* Samples.framework */,
 				A29701A623450087004B97E6 /* Attributes.framework */,
@@ -549,6 +562,7 @@
 				A297018B2344FF10004B97E6 /* NotEqualToIntegerAttributeRestriction.swift in Sources */,
 				A2D138A8268CA9C800762A3D /* StoredDosageComparisonAttributeRestriction.swift in Sources */,
 				A29701972344FF10004B97E6 /* AttributeRestrictionFactory.swift in Sources */,
+				A2D138D226910A3400762A3D /* StoredSingleTagAttributeRestriction.swift in Sources */,
 				A2D138BC268CFA7D00762A3D /* StoredOnDayOfWeekAttributeRestriction.swift in Sources */,
 				A297017B2344FF10004B97E6 /* LessThanFrequencyAttributeRestriction.swift in Sources */,
 				A297017A2344FF10004B97E6 /* EqualToFrequencyAttributeRestriction.swift in Sources */,
@@ -581,6 +595,7 @@
 				A29701812344FF10004B97E6 /* TypedLessThanOrEqualToAttributeRestrictionBase.swift in Sources */,
 				A297017C2344FF10004B97E6 /* GreaterThanOrEqualToFrequencyAttributeRestriction.swift in Sources */,
 				A29701722344FF10004B97E6 /* BeforeDateAndTimeAttributeRestriction.swift in Sources */,
+				A2D138D426910D1800762A3D /* SingleTagAttributeRestriction.swift in Sources */,
 				A29701A02344FF10004B97E6 /* HasTagAttributeRestriction.swift in Sources */,
 				A29701882344FF10004B97E6 /* GreaterThanOrEqualToDoubleAttributeRestriction.swift in Sources */,
 				A2D138A4268BFAE300762A3D /* Comparison.swift in Sources */,
@@ -600,6 +615,7 @@
 				A297019C2344FF10004B97E6 /* EqualToAttributeRestriction.swift in Sources */,
 				A29701662344FF10004B97E6 /* EmptyStringAttributeRestriction.swift in Sources */,
 				A297017D2344FF10004B97E6 /* GreaterThanFrequencyAttributeRestriction.swift in Sources */,
+				A2D138CA26902A7600762A3D /* SelectOneAttributeRestriction.swift in Sources */,
 				A29701802344FF10004B97E6 /* TypedGreaterThanOrEqualToAttributeRestrictionBase.swift in Sources */,
 				A297016B2344FF10004B97E6 /* LessThanOrEqualToDosageAttributeRestriction.swift in Sources */,
 				A297017E2344FF10004B97E6 /* LessThanOrEqualToFrequencyAttributeRestriction.swift in Sources */,
@@ -613,7 +629,7 @@
 				A2D138A2268BEC0900762A3D /* StoredDoubleComparisonAttributeRestriction.swift in Sources */,
 				A29701742344FF10004B97E6 /* InThePastXTimeUnitsDateAttributeRestriction.swift in Sources */,
 				A29701992344FF10004B97E6 /* NotEqualToSelectOneAttributeRestriction.swift in Sources */,
-				A2D138C6268E8C0700762A3D /* SelectOneRestriction.swift in Sources */,
+				A2D138C6268E8C0700762A3D /* SelectOneRestrictionType.swift in Sources */,
 				A2D138C0268D214000762A3D /* DosageAttributeRestriction.swift in Sources */,
 				A2D138AC268CAAD800762A3D /* StoredDurationAttributeRestriction.swift in Sources */,
 				A29701752344FF10004B97E6 /* BeforeDateAttributeRestriction.swift in Sources */,

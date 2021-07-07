@@ -12,6 +12,5 @@ import Attributes
 import Common
 
 public protocol FrequencyAttributeRestriction: AttributeRestriction {
-
 	var typedValue: Frequency { get }
 }

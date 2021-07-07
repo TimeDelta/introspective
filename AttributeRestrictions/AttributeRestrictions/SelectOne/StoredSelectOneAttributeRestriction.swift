@@ -9,6 +9,7 @@
 import CoreData
 import Foundation
 
+import Attributes
 import BooleanAlgebra
 import Common
 import DependencyInjection
@@ -16,7 +17,6 @@ import Persistence
 import Samples
 
 public final class StoredSelectOneAttributeRestriction: StoredBooleanExpression, CoreDataObject {
-
 	private typealias Me = StoredSelectOneAttributeRestriction
 	public static let entityName = "SelectOneAttributeRestriction"
 
@@ -25,46 +25,57 @@ public final class StoredSelectOneAttributeRestriction: StoredBooleanExpression,
 		guard let attribute = sampleType.attributes.first(where: { $0.id == attributeId }) else {
 			throw GenericError("Unable to determine attribute")
 		}
+		guard let selectOneAttribute = attribute as? SelectOneAttribute else {
+			throw GenericError("Wrong attribute type for StoredSelectOneAttributeRestriction")
+		}
+		let value = selectOneAttribute.possibleValues[Int(valueIndex)]
 		switch operation {
-		case SelectOneRestriction.onDate.rawValue:
-			return EqualToSelectOneAttributeRestriction(restrictedAttribute: attribute, )
-		case SelectOneRestriction.beforeDate.rawValue:
-			return NotEqualToSelectOneAttributeRestriction(restrictedAttribute: attribute, )
+		case SelectOneRestrictionType.equalTo.rawValue:
+			return EqualToSelectOneAttributeRestriction(
+				restrictedAttribute: attribute,
+				value: value,
+				valueAttribute: selectOneAttribute
+			)
+		case SelectOneRestrictionType.notEqualTo.rawValue:
+			return NotEqualToSelectOneAttributeRestriction(
+				restrictedAttribute: attribute,
+				value: value,
+				valueAttribute: selectOneAttribute
+			)
 		default:
 			throw GenericError("Invalid operation value for StoredSelectOneAttributeRestriction")
 		}
 	}
 
-	public func populate(from other: DateAttributeRestriction, for sampleType: Sample.Type) throws {
+	public func populate(from other: SelectOneAttributeRestriction, for sampleType: Sample.Type) throws {
 		sampleTypeId = injected(SampleFactory.self).sampleTypeId(for: sampleType)
 		attributeId = other.restrictedAttribute.id
 		switch other {
-		case is OnDateAttributeRestriction:
-			operation = SelectOneRestriction.onDate.rawValue
+		case is EqualToSelectOneAttributeRestriction:
+			operation = SelectOneRestrictionType.equalTo.rawValue
 			break
-		case is BeforeDateAttributeRestriction:
-			operation = SelectOneRestriction.beforeDate.rawValue
-			break
-		case is AfterDateAttributeRestriction:
-			operation = SelectOneRestriction.afterDate.rawValue
-			break
-		case is BeforeDateAndTimeAttributeRestriction:
-			operation = SelectOneRestriction.beforeDateAndTime.rawValue
-			break
-		case is AfterDateAndTimeAttributeRestriction:
-			operation = SelectOneRestriction.afterDateAndTime.rawValue
+		case is NotEqualToSelectOneAttributeRestriction:
+			operation = SelectOneRestrictionType.notEqualTo.rawValue
 			break
 		default:
-			fatalError("Forgot a type of DateAttributeRestriction")
+			throw GenericError("Forgot a type of SelectOneAttributeRestriction")
 		}
-		value = other.typedValue!
+		guard let value = other.value else {
+			throw GenericError("No Value provided for populating StoredSelectOneAttributeRestriction")
+		}
+		guard let index = other.selectOneAttribute.indexOf(
+			possibleValue: value,
+			in: other.selectOneAttribute.possibleValues
+		) else {
+			throw GenericError("Invalid value found")
+		}
+		valueIndex = Int64(index)
 	}
 }
 
 extension StoredSelectOneAttributeRestriction {
-
 	@NSManaged private var sampleTypeId: Int16
 	@NSManaged private var attributeId: Int16
 	@NSManaged private var operation: Int16
-	@NSManaged private var value: Date
+	@NSManaged private var valueIndex: Int64
 }

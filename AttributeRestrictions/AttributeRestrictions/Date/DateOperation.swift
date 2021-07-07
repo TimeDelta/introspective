@@ -9,7 +9,6 @@
 import Foundation
 
 internal enum DateOperation: Int16 {
-
 	case onDate = 0
 	case beforeDate = 1
 	case afterDate = 2

@@ -256,6 +256,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			fromStoryboard: "AttributeList"
 		)
 		controller.multiSelectAttribute = TypedMultiSelectAttribute<String>(
+			id: 0,
 			name: "Data Types",
 			possibleValues: {
 				injected(SampleFactory.self).allTypes().map { Me.enabledString(for: $0) }

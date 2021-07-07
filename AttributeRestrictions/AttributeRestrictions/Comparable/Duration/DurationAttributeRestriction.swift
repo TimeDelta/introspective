@@ -12,6 +12,5 @@ import Attributes
 import Common
 
 public protocol DurationAttributeRestriction: AttributeRestriction {
-
 	var typedValue: TimeDuration { get }
 }

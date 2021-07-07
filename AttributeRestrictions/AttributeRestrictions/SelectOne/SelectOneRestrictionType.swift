@@ -8,8 +8,7 @@
 
 import Foundation
 
-internal enum SelectOneRestriction: Int16 {
-
+internal enum SelectOneRestrictionType: Int16 {
 	case equalTo = 0
 	case notEqualTo = 1
 }

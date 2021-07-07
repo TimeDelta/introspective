@@ -16,7 +16,6 @@ import Persistence
 import Samples
 
 public final class StoredInThePastXTimeUnitsAttributeRestriction: StoredBooleanExpression, CoreDataObject {
-
 	private typealias Me = StoredInThePastXTimeUnitsAttributeRestriction
 	public static let entityName = "InThePastXTimeUnitsAttributeRestriction"
 
@@ -25,7 +24,11 @@ public final class StoredInThePastXTimeUnitsAttributeRestriction: StoredBooleanE
 		guard let attribute = sampleType.attributes.first(where: { $0.id == attributeId }) else {
 			throw GenericError("Unable to determine attribute")
 		}
-		return InThePastXTimeUnitsDateAttributeRestriction(restrictedAttribute: attribute, Int(numTimeUnits), Calendar.Component.fromInt(Int(timeUnit)))
+		return InThePastXTimeUnitsDateAttributeRestriction(
+			restrictedAttribute: attribute,
+			Int(numTimeUnits),
+			Calendar.Component.fromInt(Int(timeUnit))
+		)
 	}
 
 	public func populate(from other: InThePastXTimeUnitsDateAttributeRestriction, for sampleType: Sample.Type) throws {
@@ -37,7 +40,6 @@ public final class StoredInThePastXTimeUnitsAttributeRestriction: StoredBooleanE
 }
 
 extension StoredInThePastXTimeUnitsAttributeRestriction {
-
 	@NSManaged private var sampleTypeId: Int16
 	@NSManaged private var attributeId: Int16
 	@NSManaged private var timeUnit: Int16

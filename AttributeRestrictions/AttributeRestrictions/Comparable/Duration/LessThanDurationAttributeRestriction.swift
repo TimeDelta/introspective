@@ -17,13 +17,16 @@ import Samples
 
 public final class LessThanDurationAttributeRestriction:
 	TypedLessThanAttributeRestrictionBase<TimeDuration>,
-	DurationAttributeRestriction
-{
+	DurationAttributeRestriction {
 	private typealias Me = LessThanDurationAttributeRestriction
-	public static let valueAttribute = DurationAttribute(id: 0, name: "Target TimeDuration", pluralName: "Target Durations")
+	public static let valueAttribute = DurationAttribute(
+		id: 0,
+		name: "Target TimeDuration",
+		pluralName: "Target Durations"
+	)
 
 	public var typedValue: TimeDuration {
-		return value
+		value
 	}
 
 	public required convenience init(restrictedAttribute: Attribute) {

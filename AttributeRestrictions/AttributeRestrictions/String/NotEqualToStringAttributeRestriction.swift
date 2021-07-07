@@ -16,8 +16,7 @@ import Samples
 
 public final class NotEqualToStringAttributeRestriction:
 	TypedNotEqualToAttributeRestrictionBase<String>,
-	StringAttributeRestriction
-{
+	StringAttributeRestriction {
 	private typealias Me = NotEqualToStringAttributeRestriction
 
 	// MARK: - Attributes

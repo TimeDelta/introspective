@@ -6,8 +6,8 @@
 //  Copyright © 2021 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 import Common
 import DependencyInjection
@@ -15,7 +15,6 @@ import Persistence
 import Samples
 
 public final class StoredAndExpression: StoredBooleanExpression, CoreDataObject {
-
 	private typealias Me = StoredAndExpression
 	public static let entityName = "AndExpression"
 
@@ -23,16 +22,15 @@ public final class StoredAndExpression: StoredBooleanExpression, CoreDataObject 
 		AndExpression(try storedExpression1.convert(), try storedExpression2.convert())
 	}
 
-	public func populate(from other: AndExpression, for sampleType: Samplee.Type) throws {
+	public func populate(from other: AndExpression, for sampleType: Sample.Type) throws {
 		storedExpression1 = try other.expression1.stored(for: sampleType)
 		storedExpression2 = try other.expression2.stored(for: sampleType)
 	}
 }
 
 extension StoredAndExpression {
-
 	@nonobjc public class func fetchRequest() -> NSFetchRequest<StoredAndExpression> {
-		return NSFetchRequest<StoredAndExpression>(entityName: Me.entityName)
+		NSFetchRequest<StoredAndExpression>(entityName: Me.entityName)
 	}
 
 	@NSManaged var storedExpression1: StoredBooleanExpression

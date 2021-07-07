@@ -16,13 +16,12 @@ import Samples
 
 public final class LessThanDoubleAttributeRestriction:
 	TypedLessThanAttributeRestrictionBase<Double>,
-	DoubleAttributeRestriction
-{
+	DoubleAttributeRestriction {
 	private typealias Me = LessThanDoubleAttributeRestriction
 	public static let valueAttribute = DoubleAttribute(id: 0, name: "Value", pluralName: "Values")
 
 	public var typedValue: Double {
-		return value
+		value
 	}
 
 	public required convenience init(restrictedAttribute: Attribute) {

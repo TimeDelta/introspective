@@ -15,7 +15,6 @@ import Persistence
 import Samples
 
 public final class StoredNotExpression: StoredBooleanExpression, CoreDataObject {
-
 	private typealias Me = StoredNotExpression
 	public static let entityName = "NotExpression"
 
@@ -29,9 +28,8 @@ public final class StoredNotExpression: StoredBooleanExpression, CoreDataObject 
 }
 
 extension StoredNotExpression {
-
 	@nonobjc public class func fetchRequest() -> NSFetchRequest<StoredNotExpression> {
-		return NSFetchRequest<StoredNotExpression>(entityName: Me.entityName)
+		NSFetchRequest<StoredNotExpression>(entityName: Me.entityName)
 	}
 
 	@NSManaged public var storedSubExpression: StoredBooleanExpression

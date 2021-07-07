@@ -12,6 +12,5 @@ import Attributes
 import Common
 
 public protocol DosageAttributeRestriction: AttributeRestriction {
-
 	var typedValue: Dosage { get }
 }

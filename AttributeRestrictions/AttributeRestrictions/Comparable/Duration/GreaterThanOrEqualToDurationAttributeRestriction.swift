@@ -17,13 +17,16 @@ import Samples
 
 public final class GreaterThanOrEqualToDurationAttributeRestriction:
 	TypedGreaterThanOrEqualToAttributeRestrictionBase<TimeDuration>,
-	DurationAttributeRestriction
-{
+	DurationAttributeRestriction {
 	private typealias Me = GreaterThanOrEqualToDurationAttributeRestriction
-	public static let valueAttribute = DurationAttribute(id: 0, name: "Target TimeDuration", pluralName: "Target Durations")
+	public static let valueAttribute = DurationAttribute(
+		id: 0,
+		name: "Target TimeDuration",
+		pluralName: "Target Durations"
+	)
 
 	public var typedValue: TimeDuration {
-		return value
+		value
 	}
 
 	public required convenience init(restrictedAttribute: Attribute) {

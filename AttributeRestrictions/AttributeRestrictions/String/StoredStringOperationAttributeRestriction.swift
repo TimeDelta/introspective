@@ -16,7 +16,6 @@ import Persistence
 import Samples
 
 public final class StoredStringOperationAttributeRestriction: StoredBooleanExpression, CoreDataObject {
-
 	private typealias Me = StoredStringOperationAttributeRestriction
 	public static let entityName = "StringOperationAttributeRestriction"
 
@@ -86,14 +85,13 @@ public final class StoredStringOperationAttributeRestriction: StoredBooleanExpre
 			operation = StringOperation.isNotEmpty.rawValue
 			break
 		default:
-			fatalError("Forgot a type of StringAttributeRestriction")
+			throw GenericError("Forgot a type of StringAttributeRestriction")
 		}
 		value = other.typedValue
 	}
 }
 
 extension StoredStringOperationAttributeRestriction {
-
 	@NSManaged private var sampleTypeId: Int16
 	@NSManaged private var attributeId: Int16
 	@NSManaged private var operation: Int16

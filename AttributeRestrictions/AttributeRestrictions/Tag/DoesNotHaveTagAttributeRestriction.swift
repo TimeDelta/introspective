@@ -9,10 +9,13 @@
 import Foundation
 
 import Attributes
+import BooleanAlgebra
 import Common
+import DependencyInjection
+import Persistence
 import Samples
 
-public class DoesNotHaveTagAttributeRestriction: AnyAttributeRestriction, Equatable {
+public class DoesNotHaveTagAttributeRestriction: AnyAttributeRestriction, SingleTagAttributeRestriction, Equatable {
 	private typealias Me = DoesNotHaveTagAttributeRestriction
 
 	// MARK: - Attributes
@@ -28,6 +31,7 @@ public class DoesNotHaveTagAttributeRestriction: AnyAttributeRestriction, Equata
 	// MARK: - Instance Variables
 
 	public final var tag: Tag!
+	public final var tagName: String { tag.name }
 	final fileprivate let log = Log()
 
 	// MARK: - Initializers
@@ -79,6 +83,14 @@ public class DoesNotHaveTagAttributeRestriction: AnyAttributeRestriction, Equata
 		}
 		log.debug("Unsupported restricted attribute type for predicate")
 		return nil
+	}
+
+	public override func stored(for sampleType: Sample.Type) throws -> StoredBooleanExpression {
+		let transaction = injected(Database.self).transaction()
+		let stored = try transaction.new(StoredSingleTagAttributeRestriction.self)
+		try stored.populate(from: self, for: sampleType)
+		try transaction.commit()
+		return stored
 	}
 
 	// MARK: - Attributed Functions

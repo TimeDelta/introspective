@@ -16,7 +16,6 @@ import Persistence
 import Samples
 
 public final class StoredDosageComparisonAttributeRestriction: StoredBooleanExpression, CoreDataObject {
-
 	private typealias Me = StoredDosageComparisonAttributeRestriction
 	public static let entityName = "DosageComparisonAttributeRestriction"
 
@@ -66,14 +65,13 @@ public final class StoredDosageComparisonAttributeRestriction: StoredBooleanExpr
 			comparison = Comparison.greaterThan.rawValue
 			break
 		default:
-			fatalError("Forgot a type of DosageAttributeRestriction")
+			throw GenericError("Forgot a type of DosageAttributeRestriction")
 		}
 		value = other.typedValue
 	}
 }
 
 extension StoredDosageComparisonAttributeRestriction {
-
 	@NSManaged private var sampleTypeId: Int16
 	@NSManaged private var attributeId: Int16
 	@NSManaged private var comparison: Int16

@@ -6,8 +6,8 @@
 //  Copyright © 2021 Bryan Nova. All rights reserved.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 import Common
 import DependencyInjection
@@ -15,12 +15,11 @@ import Persistence
 import Samples
 
 public final class StoredOrExpression: StoredBooleanExpression, CoreDataObject {
-
 	private typealias Me = StoredOrExpression
 	public static let entityName = "OrExpression"
 
 	public override func convert() throws -> BooleanExpression {
-		return OrExpression(try storedExpression1.convert(), try storedExpression2.convert())
+		OrExpression(try storedExpression1.convert(), try storedExpression2.convert())
 	}
 
 	public func populate(from other: OrExpression, for sampleType: Sample.Type) throws {
@@ -30,9 +29,8 @@ public final class StoredOrExpression: StoredBooleanExpression, CoreDataObject {
 }
 
 extension StoredOrExpression {
-
 	@nonobjc public class func fetchRequest() -> NSFetchRequest<StoredOrExpression> {
-		return NSFetchRequest<StoredOrExpression>(entityName: Me.entityName)
+		NSFetchRequest<StoredOrExpression>(entityName: Me.entityName)
 	}
 
 	@NSManaged public var storedExpression1: StoredBooleanExpression

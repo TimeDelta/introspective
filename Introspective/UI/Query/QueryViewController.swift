@@ -51,6 +51,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	private static let acceptedAttributeRestrictionEdit = Notification.Name("acceptedAttributeRestrictionEdit")
 	private static let acceptedSubSampleTypeEdit = Notification.Name("acceptedSubSampleTypeEdit")
+	private static let queryNameChosen = Notification.Name("queryNameChosen")
 
 	// MARK: Presenters
 
@@ -336,6 +337,31 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 			}
 			controller.query = query
 			pushToNavigationController(controller)
+		}
+	}
+
+	@IBAction final func saveButtonPressed(_: Any) {
+		guard let _ = buildQuery() else {
+			Me.log.error("buildQuery() returned nil 2")
+			showError(title: "Failed to build query")
+			return
+		}
+		let controller: QueryNameViewController = viewController(named: "queryName")
+		controller.notificationToSendOnSave = Me.queryNameChosen
+		customPresentViewController(QueryNameViewController.presenter, viewController: controller, animated: false)
+	}
+
+	@objc private final func queryNameChosen(notification: Notification) {
+		if let name: String = value(for: .text, from: notification) {
+			do {
+				let query = buildQuery()!
+				_ = try query.stored(withName: name)
+			} catch {
+				showError(
+					title: "Failed to save query",
+					tryAgain: { self.queryNameChosen(notification: notification) }
+				)
+			}
 		}
 	}
 

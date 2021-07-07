@@ -17,13 +17,16 @@ import Samples
 
 public final class EqualToDurationAttributeRestriction:
 	TypedEqualToAttributeRestrictionBase<TimeDuration>,
-	DurationAttributeRestriction
-{
+	DurationAttributeRestriction {
 	private typealias Me = EqualToDurationAttributeRestriction
-	public static let valueAttribute = DurationAttribute(id: 0, name: "Target TimeDuration", pluralName: "Target Durations")
+	public static let valueAttribute = DurationAttribute(
+		id: 0,
+		name: "Target TimeDuration",
+		pluralName: "Target Durations"
+	)
 
 	public var typedValue: TimeDuration {
-		return value as! TimeDuration
+		value as! TimeDuration
 	}
 
 	public required convenience init(restrictedAttribute: Attribute) {

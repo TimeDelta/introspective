@@ -9,7 +9,6 @@
 import Foundation
 
 internal enum Comparison: Int16 {
-
 	case lessThan = 0
 	case lessThanOrEqual = 1
 	case equalTo = 2

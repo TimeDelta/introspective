@@ -16,7 +16,6 @@ import Persistence
 import Samples
 
 public final class StoredInCurrentTimeUnitAttributeRestriction: StoredBooleanExpression, CoreDataObject {
-
 	private typealias Me = StoredInCurrentTimeUnitAttributeRestriction
 	public static let entityName = "DoubleComparisonAttributeRestriction"
 
@@ -25,7 +24,10 @@ public final class StoredInCurrentTimeUnitAttributeRestriction: StoredBooleanExp
 		guard let attribute = sampleType.attributes.first(where: { $0.id == attributeId }) else {
 			throw GenericError("Unable to determine attribute")
 		}
-		return InCurrentTimeUnitDateAttributeRestriction(restrictedAttribute: attribute, Calendar.Component.fromInt(Int(value)))
+		return InCurrentTimeUnitDateAttributeRestriction(
+			restrictedAttribute: attribute,
+			Calendar.Component.fromInt(Int(value))
+		)
 	}
 
 	public func populate(from other: InCurrentTimeUnitDateAttributeRestriction, for sampleType: Sample.Type) throws {
@@ -36,7 +38,6 @@ public final class StoredInCurrentTimeUnitAttributeRestriction: StoredBooleanExp
 }
 
 extension StoredInCurrentTimeUnitAttributeRestriction {
-
 	@NSManaged private var sampleTypeId: Int16
 	@NSManaged private var attributeId: Int16
 	@NSManaged private var value: Int16
