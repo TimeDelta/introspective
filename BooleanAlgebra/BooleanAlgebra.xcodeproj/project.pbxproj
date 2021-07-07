@@ -23,6 +23,7 @@
 		A2776EA9268BC78000EB5BE5 /* StoredNotExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2776EA8268BC78000EB5BE5 /* StoredNotExpression.swift */; };
 		A29CCF4324D4FE6E00218CE2 /* NotExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29CCF4224D4FE6D00218CE2 /* NotExpression.swift */; };
 		A2D138BE268CFE5800762A3D /* StoredBooleanExpressionGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138BD268CFE5800762A3D /* StoredBooleanExpressionGroup.swift */; };
+		A2D138CC26902B3700762A3D /* Samples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2D138CB26902B3700762A3D /* Samples.framework */; };
 		CFEFD80C13DA3E21C891636B /* Pods_BooleanAlgebra.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD478BED6662D617D5C83AE9 /* Pods_BooleanAlgebra.framework */; };
 /* End PBXBuildFile section */
 
@@ -46,6 +47,7 @@
 		A2776EA8268BC78000EB5BE5 /* StoredNotExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredNotExpression.swift; sourceTree = "<group>"; };
 		A29CCF4224D4FE6D00218CE2 /* NotExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotExpression.swift; sourceTree = "<group>"; };
 		A2D138BD268CFE5800762A3D /* StoredBooleanExpressionGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredBooleanExpressionGroup.swift; sourceTree = "<group>"; };
+		A2D138CB26902B3700762A3D /* Samples.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Samples.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD478BED6662D617D5C83AE9 /* Pods_BooleanAlgebra.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BooleanAlgebra.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E95C29B43EE4501D07734B6E /* Pods-BooleanAlgebra.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BooleanAlgebra.release.xcconfig"; path = "../Pods/Target Support Files/Pods-BooleanAlgebra/Pods-BooleanAlgebra.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -55,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2D138CC26902B3700762A3D /* Samples.framework in Frameworks */,
 				A24BE3032688E71100E6FECF /* Persistence.framework in Frameworks */,
 				A22D62232343975F0023470F /* Common.framework in Frameworks */,
 				A231CF3F2342564E00CCE625 /* DependencyInjection.framework in Frameworks */,
@@ -107,6 +110,7 @@
 		A231CF3D2342564E00CCE625 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A2D138CB26902B3700762A3D /* Samples.framework */,
 				A24BE3022688E71100E6FECF /* Persistence.framework */,
 				A22D62222343975F0023470F /* Common.framework */,
 				A231CF3E2342564E00CCE625 /* DependencyInjection.framework */,

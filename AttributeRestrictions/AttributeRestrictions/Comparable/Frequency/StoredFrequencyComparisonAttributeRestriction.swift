@@ -16,7 +16,6 @@ import Persistence
 import Samples
 
 public final class StoredFrequencyComparisonAttributeRestriction: StoredBooleanExpression, CoreDataObject {
-
 	private typealias Me = StoredFrequencyComparisonAttributeRestriction
 	public static let entityName = "FrequencyComparisonAttributeRestriction"
 
@@ -66,14 +65,13 @@ public final class StoredFrequencyComparisonAttributeRestriction: StoredBooleanE
 			comparison = Comparison.greaterThan.rawValue
 			break
 		default:
-			fatalError("Forgot a type of FrequencyAttributeRestriction")
+			throw GenericError("Forgot a type of FrequencyAttributeRestriction")
 		}
 		value = other.typedValue
 	}
 }
 
 extension StoredFrequencyComparisonAttributeRestriction {
-
 	@NSManaged private var sampleTypeId: Int16
 	@NSManaged private var attributeId: Int16
 	@NSManaged private var comparison: Int16

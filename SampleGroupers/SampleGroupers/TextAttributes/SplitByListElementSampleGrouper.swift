@@ -39,7 +39,10 @@ public final class SplitByListElementSampleGrouper: SampleGrouper {
 	}
 
 	public required init(attributes: [Attribute]) {
-		attributeSelectAttribute = AttributeSelectAttribute(id: 0, attributes: attributes.filter { a in a is TextAttribute })
+		attributeSelectAttribute = AttributeSelectAttribute(
+			id: 0,
+			attributes: attributes.filter { a in a is TextAttribute }
+		)
 		groupByAttribute = attributeSelectAttribute.typedPossibleValues.first as? TextAttribute
 		self.attributes = [
 			attributeSelectAttribute,

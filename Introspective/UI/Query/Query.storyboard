@@ -32,6 +32,11 @@
                                         <action selector="finishedButtonPressed:" destination="WJ9-gy-FSd" id="T9F-nk-fZN"/>
                                     </connections>
                                 </barButtonItem>
+                                <barButtonItem title="Save As" id="dFQ-l9-hqi" userLabel="Save As">
+                                    <connections>
+                                        <action selector="saveButtonPressed:" destination="WJ9-gy-FSd" id="gOM-5c-jFv"/>
+                                    </connections>
+                                </barButtonItem>
                                 <barButtonItem style="plain" systemItem="flexibleSpace" id="dGc-G1-3ad"/>
                                 <barButtonItem title="Edit" id="LVd-yT-HTy"/>
                             </items>
@@ -261,10 +266,69 @@
             </objects>
             <point key="canvasLocation" x="1308" y="-836"/>
         </scene>
+        <!--Query Name View Controller-->
+        <scene sceneID="hEX-lr-NoH">
+            <objects>
+                <viewController storyboardIdentifier="queryName" useStoryboardIdentifierAsRestorationIdentifier="YES" id="DVp-y5-W36" customClass="QueryNameViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="IN2-vW-dlE">
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="100"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Vim-hc-brv">
+                                <rect key="frame" x="16" y="20" width="268" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="mood rating" label="mood rating"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="nameEdited:" destination="DVp-y5-W36" eventType="editingChanged" id="IzM-Es-tYd"/>
+                                </connections>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="90Q-JL-ubq">
+                                <rect key="frame" x="16" y="58" width="138" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Save"/>
+                                <connections>
+                                    <action selector="savePressed:" destination="DVp-y5-W36" eventType="touchUpInside" id="4Wh-Bx-Hl2"/>
+                                </connections>
+                            </button>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Already Exists" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uaW-mA-iX6">
+                                <rect key="frame" x="97" y="0.0" width="107" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" systemColor="systemRedColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Gn-WX-RaX">
+                                <rect key="frame" x="146" y="58" width="138" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Cancel"/>
+                                <connections>
+                                    <action selector="cancelPressed" destination="DVp-y5-W36" eventType="touchUpInside" id="mBU-3N-D1i"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="wkY-uy-RGh"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <size key="freeformSize" width="300" height="100"/>
+                    <connections>
+                        <outlet property="alreadyExistsLabel" destination="uaW-mA-iX6" id="fZS-oL-Fds"/>
+                        <outlet property="nameField" destination="Vim-hc-brv" id="UJm-fV-fza"/>
+                        <outlet property="saveButton" destination="90Q-JL-ubq" id="H8R-Xo-Zxb"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mQJ-nQ-cfw" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2104" y="-1291.7541229385308"/>
+        </scene>
     </scenes>
     <resources>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

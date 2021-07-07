@@ -16,13 +16,12 @@ import Samples
 
 public final class EqualToDoubleAttributeRestriction:
 	TypedEqualToAttributeRestrictionBase<Double>,
-	DoubleAttributeRestriction
-{
+	DoubleAttributeRestriction {
 	private typealias Me = EqualToDoubleAttributeRestriction
 	public static let valueAttribute = DoubleAttribute(id: 0, name: "Value", pluralName: "Values")
 
 	public var typedValue: Double {
-		return value as! Double
+		value as! Double
 	}
 
 	public required convenience init(restrictedAttribute: Attribute) {

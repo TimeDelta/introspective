@@ -12,6 +12,7 @@ import Foundation
 import Common
 import DependencyInjection
 import Persistence
+import Samples
 
 public final class OrExpression: BooleanExpression {
 	// MARK: - Display Information

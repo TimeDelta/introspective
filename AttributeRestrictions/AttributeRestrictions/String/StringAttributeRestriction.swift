@@ -9,6 +9,5 @@
 import Foundation
 
 public protocol StringAttributeRestriction: AttributeRestriction {
-
 	var typedValue: String? { get }
 }

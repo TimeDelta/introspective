@@ -161,7 +161,6 @@ public extension Date {
 }
 
 extension TimeOfDay: NSSecureCoding {
-
 	// MARK: - NSSecureCoding
 
 	private enum CodingKeys: String, CodingKey {

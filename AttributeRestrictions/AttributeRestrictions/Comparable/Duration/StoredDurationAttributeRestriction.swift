@@ -16,7 +16,6 @@ import Persistence
 import Samples
 
 public final class StoredDurationComparisonAttributeRestriction: StoredBooleanExpression, CoreDataObject {
-
 	private typealias Me = StoredDurationComparisonAttributeRestriction
 	public static let entityName = "DurationComparisonAttributeRestriction"
 
@@ -66,14 +65,13 @@ public final class StoredDurationComparisonAttributeRestriction: StoredBooleanEx
 			comparison = Comparison.greaterThan.rawValue
 			break
 		default:
-			fatalError("Forgot a type of DurationAttributeRestriction")
+			throw GenericError("Forgot a type of DurationAttributeRestriction")
 		}
 		value = other.typedValue
 	}
 }
 
 extension StoredDurationComparisonAttributeRestriction {
-
 	@NSManaged private var sampleTypeId: Int16
 	@NSManaged private var attributeId: Int16
 	@NSManaged private var comparison: Int16

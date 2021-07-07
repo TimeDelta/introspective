@@ -15,7 +15,6 @@ import Persistence
 import Samples
 
 public final class StoredBooleanExpressionGroup: StoredBooleanExpression, CoreDataObject {
-
 	private typealias Me = StoredBooleanExpressionGroup
 	public static let entityName = "BooleanExpressionGroup"
 
@@ -29,9 +28,8 @@ public final class StoredBooleanExpressionGroup: StoredBooleanExpression, CoreDa
 }
 
 extension StoredBooleanExpressionGroup {
-
 	@nonobjc public class func fetchRequest() -> NSFetchRequest<StoredBooleanExpressionGroup> {
-		return NSFetchRequest<StoredBooleanExpressionGroup>(entityName: Me.entityName)
+		NSFetchRequest<StoredBooleanExpressionGroup>(entityName: Me.entityName)
 	}
 
 	@NSManaged public var storedSubExpression: StoredBooleanExpression

@@ -17,13 +17,16 @@ import Samples
 
 public final class LessThanOrEqualToFrequencyAttributeRestriction:
 	TypedLessThanOrEqualToAttributeRestrictionBase<Frequency>,
-	FrequencyAttributeRestriction
-{
+	FrequencyAttributeRestriction {
 	private typealias Me = LessThanOrEqualToFrequencyAttributeRestriction
-	public static let valueAttribute = FrequencyAttribute(id: 0, name: "Target Frequency", pluralName: "Target Frequencys")
+	public static let valueAttribute = FrequencyAttribute(
+		id: 0,
+		name: "Target Frequency",
+		pluralName: "Target Frequencys"
+	)
 
 	public var typedValue: Frequency {
-		return value
+		value
 	}
 
 	public required convenience init(restrictedAttribute: Attribute) {

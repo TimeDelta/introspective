@@ -16,7 +16,6 @@ import Persistence
 import Samples
 
 public final class StoredDateOperationAttributeRestriction: StoredBooleanExpression, CoreDataObject {
-
 	private typealias Me = StoredDateOperationAttributeRestriction
 	public static let entityName = "DateOperationAttributeRestriction"
 
@@ -61,14 +60,13 @@ public final class StoredDateOperationAttributeRestriction: StoredBooleanExpress
 			operation = DateOperation.afterDateAndTime.rawValue
 			break
 		default:
-			fatalError("Forgot a type of DateAttributeRestriction")
+			throw GenericError("Forgot a type of DateAttributeRestriction")
 		}
 		value = other.typedValue!
 	}
 }
 
 extension StoredDateOperationAttributeRestriction {
-
 	@NSManaged private var sampleTypeId: Int16
 	@NSManaged private var attributeId: Int16
 	@NSManaged private var operation: Int16

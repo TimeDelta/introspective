@@ -15,12 +15,13 @@ import DependencyInjection
 import Persistence
 import Samples
 
-public final class LessThanDosageAttributeRestriction: TypedLessThanAttributeRestrictionBase<Dosage>, DosageAttributeRestriction {
+public final class LessThanDosageAttributeRestriction: TypedLessThanAttributeRestrictionBase<Dosage>,
+	DosageAttributeRestriction {
 	private typealias Me = LessThanDosageAttributeRestriction
 	public static let valueAttribute = DosageAttribute(id: 0, name: "Target Dosage", pluralName: "Target Dosages")
 
 	public var typedValue: Dosage {
-		return value
+		value
 	}
 
 	public required convenience init(restrictedAttribute: Attribute) {

@@ -16,13 +16,12 @@ import Samples
 
 public final class NotEqualToIntegerAttributeRestriction:
 	TypedNotEqualToAttributeRestrictionBase<Int>,
-	IntegerAttributeRestriction
-{
+	IntegerAttributeRestriction {
 	private typealias Me = NotEqualToIntegerAttributeRestriction
 	public static let valueAttribute = IntegerAttribute(id: 0, name: "Value", pluralName: "Values")
 
 	public var typedValue: Int {
-		return value as! Int
+		value as! Int
 	}
 
 	public required convenience init(restrictedAttribute: Attribute) {

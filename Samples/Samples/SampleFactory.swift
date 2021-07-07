@@ -78,7 +78,7 @@ public final class SampleFactoryImpl: SampleFactory {
 		case weight = 13
 
 		/// Ordered by enum value
-		fileprivate static var sampleTypes: [Sample.Type] = [
+		static fileprivate var sampleTypes: [Sample.Type] = [
 			Activity.self,
 			BloodPressure.self,
 			BodyMassIndex.self,

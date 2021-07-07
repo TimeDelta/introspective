@@ -17,8 +17,7 @@ import Samples
 public final class StartsWithStringAttributeRestriction:
 	AnyAttributeRestriction,
 	StringAttributeRestriction,
-	Equatable
-{
+	Equatable {
 	private typealias Me = StartsWithStringAttributeRestriction
 
 	// MARK: - Attributes

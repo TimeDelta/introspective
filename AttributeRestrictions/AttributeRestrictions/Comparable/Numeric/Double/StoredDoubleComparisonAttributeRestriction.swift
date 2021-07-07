@@ -16,7 +16,6 @@ import Persistence
 import Samples
 
 public final class StoredDoubleComparisonAttributeRestriction: StoredBooleanExpression, CoreDataObject {
-
 	private typealias Me = StoredDoubleComparisonAttributeRestriction
 	public static let entityName = "DoubleComparisonAttributeRestriction"
 
@@ -60,14 +59,13 @@ public final class StoredDoubleComparisonAttributeRestriction: StoredBooleanExpr
 		case is GreaterThanDoubleAttributeRestriction:
 			comparison = Comparison.greaterThan.rawValue
 		default:
-			fatalError("Forgot a type of DoubleAttributeRestriction")
+			throw GenericError("Forgot a type of DoubleAttributeRestriction")
 		}
 		value = other.typedValue
 	}
 }
 
 extension StoredDoubleComparisonAttributeRestriction {
-
 	@NSManaged private var sampleTypeId: Int16
 	@NSManaged private var attributeId: Int16
 	@NSManaged private var comparison: Int16

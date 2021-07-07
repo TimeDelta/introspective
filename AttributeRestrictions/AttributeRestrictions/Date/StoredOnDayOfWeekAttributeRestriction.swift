@@ -16,7 +16,6 @@ import Persistence
 import Samples
 
 public final class StoredOnDayOfWeekAttributeRestriction: StoredBooleanExpression, CoreDataObject {
-
 	private typealias Me = StoredOnDayOfWeekAttributeRestriction
 	public static let entityName = "OnDayOfWeekAttributeRestriction"
 
@@ -35,14 +34,12 @@ public final class StoredOnDayOfWeekAttributeRestriction: StoredBooleanExpressio
 	public func populate(from other: OnDayOfWeekAttributeRestriction, for sampleType: Sample.Type) throws {
 		sampleTypeId = injected(SampleFactory.self).sampleTypeId(for: sampleType)
 		attributeId = other.restrictedAttribute.id
-		daysOfWeek = other.daysOfWeek.map{ String($0.intValue) }.joined(separator: "")
+		daysOfWeek = other.daysOfWeek.map { String($0.intValue) }.joined(separator: "")
 	}
 }
 
 extension StoredOnDayOfWeekAttributeRestriction {
-
 	@NSManaged private var sampleTypeId: Int16
 	@NSManaged private var attributeId: Int16
 	@NSManaged private var daysOfWeek: String
 }
-

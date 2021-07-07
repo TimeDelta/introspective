@@ -18,8 +18,7 @@ import Samples
 public final class BeforeTimeOfDayAttributeRestriction:
 	DateAttributeRestriction,
 	TimeOfDayAttributeRestriction,
-	Equatable
-{
+	Equatable {
 	// MARK: - Static Variables
 
 	private typealias Me = BeforeTimeOfDayAttributeRestriction

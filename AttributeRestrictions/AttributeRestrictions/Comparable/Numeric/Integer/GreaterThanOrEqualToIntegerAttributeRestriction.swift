@@ -16,13 +16,12 @@ import Samples
 
 public final class GreaterThanOrEqualToIntegerAttributeRestriction:
 	TypedGreaterThanOrEqualToAttributeRestrictionBase<Int>,
-	IntegerAttributeRestriction
-{
+	IntegerAttributeRestriction {
 	private typealias Me = GreaterThanOrEqualToIntegerAttributeRestriction
 	public static let valueAttribute = IntegerAttribute(id: 0, name: "Value", pluralName: "Values")
 
 	public var typedValue: Int {
-		return value
+		value
 	}
 
 	public required convenience init(restrictedAttribute: Attribute) {

@@ -16,8 +16,7 @@ import Samples
 
 public final class EqualToStringAttributeRestriction:
 	TypedEqualToAttributeRestrictionBase<String>,
-	StringAttributeRestriction
-{
+	StringAttributeRestriction {
 	private typealias Me = EqualToStringAttributeRestriction
 
 	// MARK: - Attributes

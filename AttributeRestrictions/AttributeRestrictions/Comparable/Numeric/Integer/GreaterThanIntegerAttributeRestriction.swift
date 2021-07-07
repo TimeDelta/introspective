@@ -20,7 +20,7 @@ public final class GreaterThanIntegerAttributeRestriction: TypedGreaterThanAttri
 	public static let valueAttribute = IntegerAttribute(id: 0, name: "Value", pluralName: "Values")
 
 	public var typedValue: Int {
-		return value
+		value
 	}
 
 	public required convenience init(restrictedAttribute: Attribute) {

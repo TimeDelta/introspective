@@ -16,7 +16,6 @@ import Persistence
 import Samples
 
 public final class StoredTimeOfDayComparisonAttributeRestriction: StoredBooleanExpression, CoreDataObject {
-
 	private typealias Me = StoredTimeOfDayComparisonAttributeRestriction
 	public static let entityName = "TimeOfDayComparisonAttributeRestriction"
 
@@ -51,14 +50,13 @@ public final class StoredTimeOfDayComparisonAttributeRestriction: StoredBooleanE
 			comparison = Comparison.greaterThan.rawValue
 			break
 		default:
-			fatalError("Forgot a type of DateAttributeRestriction")
+			throw GenericError("Forgot a type of DateAttributeRestriction")
 		}
 		value = other.timeOfDay
 	}
 }
 
 extension StoredTimeOfDayComparisonAttributeRestriction {
-
 	@NSManaged private var sampleTypeId: Int16
 	@NSManaged private var attributeId: Int16
 	@NSManaged private var comparison: Int16

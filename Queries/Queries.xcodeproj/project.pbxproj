@@ -45,6 +45,7 @@
 		A287DED625816299000B8166 /* FatigueQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A287DED525816299000B8166 /* FatigueQuery.swift */; };
 		A2E30FCF2736DED0004D0A60 /* StepsQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E30FCE2736DED0004D0A60 /* StepsQuery.swift */; };
 		A2D1389C268BE5E500762A3D /* StoredQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D1389B268BE5E500762A3D /* StoredQuery.swift */; };
+		A2D138D82691212400762A3D /* StoredQueriesDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D138D72691212400762A3D /* StoredQueriesDAO.swift */; };
 		A8C8041364B7AEAB1B0AF143 /* Pods_Queries.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 627A4CECE02EEC6128B44450 /* Pods_Queries.framework */; };
 /* End PBXBuildFile section */
 
@@ -92,6 +93,7 @@
 		A287DED525816299000B8166 /* FatigueQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FatigueQuery.swift; sourceTree = "<group>"; };
 		A2E30FCE2736DED0004D0A60 /* StepsQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsQuery.swift; sourceTree = "<group>"; };
 		A2D1389B268BE5E500762A3D /* StoredQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredQuery.swift; sourceTree = "<group>"; };
+		A2D138D72691212400762A3D /* StoredQueriesDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredQueriesDAO.swift; sourceTree = "<group>"; };
 		CB1F8E8071C704DA6DDA5236 /* Pods-Queries.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Queries.release.xcconfig"; path = "../Pods/Target Support Files/Pods-Queries/Pods-Queries.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -133,6 +135,7 @@
 			isa = PBXGroup;
 			children = (
 				A24E2ED523451DD800A7707D /* QueriesInjectionProvider.swift */,
+				A2D138D72691212400762A3D /* StoredQueriesDAO.swift */,
 				A24E2EBB23451D4B00A7707D /* QueryFactory.swift */,
 				A24E2EA823451D4A00A7707D /* Query.swift */,
 				A2D1389B268BE5E500762A3D /* StoredQuery.swift */,
@@ -333,6 +336,7 @@
 				A24E2EC923451D4B00A7707D /* LeanBodyMassQuery.swift in Sources */,
 				A24E2ED023451D4B00A7707D /* MedicationDoseQuery.swift in Sources */,
 				A24E2EC323451D4B00A7707D /* Query.swift in Sources */,
+				A2D138D82691212400762A3D /* StoredQueriesDAO.swift in Sources */,
 				A24E2EBE23451D4B00A7707D /* InSameCalendarUnitSubQueryMatcher.swift in Sources */,
 				A2E30FCF2736DED0004D0A60 /* StepsQuery.swift in Sources */,
 				A24E2ECF23451D4B00A7707D /* QueryError.swift in Sources */,
