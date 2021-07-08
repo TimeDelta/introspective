@@ -14,6 +14,7 @@ import Persistence
 
 public protocol StoredQueriesDAO {
 	func getQueryWith(name: String) throws -> StoredQuery?
+	func getAllQueries() throws -> [StoredQuery]
 }
 
 public final class StoredQueriesDAOImpl: StoredQueriesDAO {
@@ -24,5 +25,10 @@ public final class StoredQueriesDAOImpl: StoredQueriesDAO {
 		let queries = try transaction.query(request)
 		guard queries.count > 0 else { return nil }
 		return queries[0]
+	}
+
+	public func getAllQueries() throws -> [StoredQuery] {
+		let transaction = injected(Database.self).transaction()
+		return try transaction.query(StoredQuery.fetchRequest())
 	}
 }
