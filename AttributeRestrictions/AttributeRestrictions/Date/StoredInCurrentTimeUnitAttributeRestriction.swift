@@ -17,7 +17,7 @@ import Samples
 
 public final class StoredInCurrentTimeUnitAttributeRestriction: StoredBooleanExpression, CoreDataObject {
 	private typealias Me = StoredInCurrentTimeUnitAttributeRestriction
-	public static let entityName = "DoubleComparisonAttributeRestriction"
+	public static let entityName = "InCurrentTimeUnitAttributeRestriction"
 
 	public override func convert() throws -> BooleanExpression {
 		let sampleType: Sample.Type = injected(SampleFactory.self).sampleType(for: sampleTypeId)

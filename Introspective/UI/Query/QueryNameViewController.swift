@@ -29,7 +29,7 @@ public final class QueryNameViewController: UIViewController {
 	@IBAction public func savePressed(_: Any) {
 		let name = nameField.text!
 		// make sure query with that name doesn't exist yet
-		post(notificationToSendOnSave, userInfo: [.text: name])
+		syncPost(notificationToSendOnSave, userInfo: [.text: name])
 		dismiss(animated: false, completion: nil)
 	}
 

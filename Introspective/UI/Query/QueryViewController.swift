@@ -74,6 +74,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	@IBOutlet final var finishedButton: UIBarButtonItem!
 	@IBOutlet final var editButton: UIBarButtonItem!
 	@IBOutlet final var toolbar: UIToolbar!
+	@IBOutlet final var saveButton: UIBarButtonItem!
 
 	// MARK: - Instance Variables
 
@@ -116,6 +117,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		observe(selector: #selector(saveEditedSubQuerySampleType), name: Me.acceptedSubSampleTypeEdit)
 		observe(selector: #selector(saveEditedSampleType), name: .sampleTypeEdited)
 		observe(selector: #selector(saveEditedAttributeRestriction), name: .attributeRestrictionEdited)
+		observe(selector: #selector(queryNameChosen), name: Me.queryNameChosen)
 
 		addPartButton?.target = self
 		addPartButton?.action = #selector(addPartButtonWasPressed)
@@ -340,10 +342,52 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		}
 	}
 
+	@IBAction final func loadButtonPressed(_: Any) {
+		let alert = injected(UiUtil.self).alert(title: "Load which query?", message: nil, preferredStyle: .actionSheet)
+		do {
+			let savedQueries = try injected(StoredQueriesDAO.self).getAllQueries()
+			guard savedQueries.count > 0 else {
+				showError(title: "No queries have been saved yet")
+				return
+			}
+			alert.addAction(injected(UiUtil.self).alertAction(
+				title: "Cancel",
+				style: .cancel,
+				handler: { _ in alert.dismiss(animated: false, completion: nil) }
+			))
+			for query in savedQueries {
+				alert.addAction(injected(UiUtil.self).alertAction(
+					title: query.name,
+					style: .default,
+					handler: { (UIAlertAction) -> Void in
+						do {
+							try self.load(query)
+						} catch {
+							self.showError(title: "Failed to load query")
+						}
+					}
+				))
+			}
+			presentView(alert)
+		} catch {
+			Me.log.error("Failed to fetch saved queries: %@", errorInfo(error))
+			showError(title: "Failed to fetch saved queries")
+		}
+	}
+
+	private func load(_ query: StoredQuery) throws {
+		queries = [(sampleTypeInfo: SampleTypeInfo, parts: [BooleanExpressionPart])]()
+		populateQuery(try query.convert())
+	}
+
 	@IBAction final func saveButtonPressed(_: Any) {
-		guard let _ = buildQuery() else {
+		guard let query = buildQuery() else {
 			Me.log.error("buildQuery() returned nil 2")
 			showError(title: "Failed to build query")
+			return
+		}
+		guard query.expression != nil else {
+			showError(title: "Cannot save an empty query", message: "Hint: Press the \"+\" button")
 			return
 		}
 		let controller: QueryNameViewController = viewController(named: "queryName")
