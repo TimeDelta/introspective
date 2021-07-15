@@ -61,10 +61,13 @@ public final class NotExpression: BooleanExpression {
 		return NSCompoundPredicate(notPredicateWithSubpredicate: subPredicate)
 	}
 
-	public final func stored(for sampleType: Sample.Type) throws -> StoredBooleanExpression {
-		let transaction = injected(Database.self).transaction()
+	public final func stored(
+		for sampleType: Sample.Type,
+		using transaction: Transaction?
+	) throws -> StoredBooleanExpression {
+		let transaction = transaction ?? injected(Database.self).transaction()
 		let stored = try transaction.new(StoredNotExpression.self)
-		try stored.populate(from: self, for: sampleType)
+		try stored.populate(from: self, for: sampleType, using: transaction)
 		try transaction.commit()
 		return stored
 	}

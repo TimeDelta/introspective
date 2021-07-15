@@ -11,6 +11,7 @@ import Foundation
 import Attributes
 import BooleanAlgebra
 import Common
+import Persistence
 import Samples
 
 public class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestriction, Equatable {
@@ -97,7 +98,10 @@ public class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestriction, E
 		return nil
 	}
 
-	public override func stored(for sampleType: Sample.Type) throws -> StoredBooleanExpression {
+	public override func stored(
+		for sampleType: Sample.Type,
+		using transaction: Transaction?
+	) throws -> StoredBooleanExpression {
 		throw GenericDisplayableError(
 			title: "Not yet supported",
 			description: "the attribute restriction for 'does not have one of _,_,...,_ tags' cannot yet be saved. As a workaround, use 'and' statements with 'does not have tag _' restrictions."

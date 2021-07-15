@@ -54,11 +54,13 @@ public final class EmptyStringAttributeRestriction: AnyAttributeRestriction, Str
 		return NSPredicate(format: "%K.length == 0", variableName)
 	}
 
-	public override func stored(for sampleType: Sample.Type) throws -> StoredBooleanExpression {
-		let transaction = injected(Database.self).transaction()
+	public override func stored(
+		for sampleType: Sample.Type,
+		using transaction: Transaction?
+	) throws -> StoredBooleanExpression {
+		let transaction = transaction ?? injected(Database.self).transaction()
 		let stored = try transaction.new(StoredStringOperationAttributeRestriction.self)
 		try stored.populate(from: self, for: sampleType)
-		try transaction.commit()
 		return stored
 	}
 

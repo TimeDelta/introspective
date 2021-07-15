@@ -26,13 +26,14 @@ public final class StoredQuery: NSManagedObject, CoreDataObject {
 		return query
 	}
 
-	public final func populate(from other: Query, withName name: String) throws {
+	public final func populate(from other: Query, withName name: String, using transaction: Transaction) throws {
 		guard let expression = other.expression else {
 			throw GenericDisplayableError(title: "Invalid Query", description: "Query must be valid before saving")
 		}
 		self.name = name
 		let sampleType = try injected(QueryFactory.self).sampleTypeFor(other)
-		storedExpression = try expression.stored(for: sampleType)
+		sampleTypeId = injected(SampleFactory.self).sampleTypeId(for: sampleType)
+		storedExpression = try expression.stored(for: sampleType, using: transaction)
 	}
 }
 

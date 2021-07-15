@@ -55,11 +55,13 @@ public final class EqualToStringAttributeRestriction:
 		return NSPredicate(format: "%K ==[cd] %@", variableName, value as! String)
 	}
 
-	public override func stored(for sampleType: Sample.Type) throws -> StoredBooleanExpression {
-		let transaction = injected(Database.self).transaction()
+	public override func stored(
+		for sampleType: Sample.Type,
+		using transaction: Transaction?
+	) throws -> StoredBooleanExpression {
+		let transaction = transaction ?? injected(Database.self).transaction()
 		let stored = try transaction.new(StoredStringOperationAttributeRestriction.self)
 		try stored.populate(from: self, for: sampleType)
-		try transaction.commit()
 		return stored
 	}
 }

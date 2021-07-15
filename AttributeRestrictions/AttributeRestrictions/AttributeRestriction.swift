@@ -11,6 +11,7 @@ import Foundation
 import Attributes
 import BooleanAlgebra
 import Common
+import Persistence
 import Samples
 
 public protocol AttributeRestriction: Attributed, BooleanExpression {
@@ -120,7 +121,7 @@ public class AnyAttributeRestriction: AttributeRestriction {
 		return self
 	}
 
-	public func stored(for sampleType: Sample.Type) throws -> StoredBooleanExpression {
+	public func stored(for sampleType: Sample.Type, using transaction: Transaction?) throws -> StoredBooleanExpression {
 		let typeDescription = String(describing: type(of: self))
 		Me.log.error("Did not override copy() for %@", typeDescription)
 		throw GenericError("must override \(typeDescription).stored()")

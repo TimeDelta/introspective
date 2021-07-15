@@ -9,6 +9,7 @@
 import Foundation
 
 import BooleanAlgebra
+import Persistence
 
 // sourcery: AutoMockable
 public protocol Query: AnyObject {
@@ -27,7 +28,7 @@ public protocol Query: AnyObject {
 	func resetStoppedState()
 	func equalTo(_ otherQuery: Query) -> Bool
 
-	func stored(withName name: String) throws -> StoredQuery
+	func stored(withName name: String, using transaction: Transaction?) throws -> StoredQuery
 }
 
 public extension Query {
@@ -43,5 +44,9 @@ public extension Query {
 		if subQuery != nil && !subQuery!.query.equalTo(otherQuery.subQuery!.query) { return false }
 		if subQuery != nil && !subQuery!.matcher.equalTo(otherQuery.subQuery!.matcher) { return false }
 		return true
+	}
+
+	func stored(withName name: String, using transaction: Transaction? = nil) throws -> StoredQuery {
+		try stored(withName: name, using: transaction)
 	}
 }
