@@ -81,10 +81,10 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 		subQuery?.query.resetStoppedState()
 	}
 
-	public final func stored(withName name: String) throws -> StoredQuery {
-		let transaction = injected(Database.self).transaction()
+	public final func stored(withName name: String, using transaction: Transaction? = nil) throws -> StoredQuery {
+		let transaction = transaction ?? injected(Database.self).transaction()
 		let stored = try transaction.new(StoredQuery.self)
-		try stored.populate(from: self, withName: name)
+		try stored.populate(from: self, withName: name, using: transaction)
 		try transaction.commit()
 		return stored
 	}

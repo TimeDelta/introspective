@@ -22,9 +22,9 @@ public final class StoredOrExpression: StoredBooleanExpression, CoreDataObject {
 		OrExpression(try storedExpression1.convert(), try storedExpression2.convert())
 	}
 
-	public func populate(from other: OrExpression, for sampleType: Sample.Type) throws {
-		storedExpression1 = try other.expression1.stored(for: sampleType)
-		storedExpression2 = try other.expression2.stored(for: sampleType)
+	public func populate(from other: OrExpression, for sampleType: Sample.Type, using transaction: Transaction) throws {
+		storedExpression1 = try other.expression1.stored(for: sampleType, using: transaction)
+		storedExpression2 = try other.expression2.stored(for: sampleType, using: transaction)
 	}
 }
 

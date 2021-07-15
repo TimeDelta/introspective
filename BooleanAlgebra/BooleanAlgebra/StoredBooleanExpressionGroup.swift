@@ -22,8 +22,12 @@ public final class StoredBooleanExpressionGroup: StoredBooleanExpression, CoreDa
 		NotExpression(try storedSubExpression.convert())
 	}
 
-	public func populate(from other: BooleanExpressionGroup, for sampleType: Sample.Type) throws {
-		storedSubExpression = try other.subExpression.stored(for: sampleType)
+	public func populate(
+		from other: BooleanExpressionGroup,
+		for sampleType: Sample.Type,
+		using transaction: Transaction
+	) throws {
+		storedSubExpression = try other.subExpression.stored(for: sampleType, using: transaction)
 	}
 }
 

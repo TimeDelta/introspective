@@ -41,11 +41,13 @@ public final class EqualToIntegerAttributeRestriction:
 		return NSPredicate(format: "%K == %d", variableName, value as! Int)
 	}
 
-	public override func stored(for sampleType: Sample.Type) throws -> StoredBooleanExpression {
-		let transaction = injected(Database.self).transaction()
+	public override func stored(
+		for sampleType: Sample.Type,
+		using transaction: Transaction?
+	) throws -> StoredBooleanExpression {
+		let transaction = transaction ?? injected(Database.self).transaction()
 		let stored = try transaction.new(StoredIntegerComparisonAttributeRestriction.self)
 		try stored.populate(from: self, for: sampleType)
-		try transaction.commit()
 		return stored
 	}
 }
