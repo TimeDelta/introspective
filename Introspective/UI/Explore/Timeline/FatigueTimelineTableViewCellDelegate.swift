@@ -8,10 +8,29 @@
 
 import UIKit
 
+import Common
+import DependencyInjection
 import Samples
 
 class FatigueTimelineTableViewCellDelegate: TimelineTableViewCellDelegate {
+	private typealias Me = FatigueTimelineTableViewCellDelegate
+
+	private static let log = Log()
+
 	func editController(for sample: Sample) -> UIViewController? {
-		nil
+		guard let fatigue = sample as? Fatigue else {
+			Me.log.error(
+				"Wrong type of sample passed to retrieve edit controller for fatigue: %@",
+				sample.attributedName
+			)
+			return nil
+		}
+		let controller: EditFatigueTableViewController = injected(UiUtil.self).controller(
+			named: "editFatigue",
+			from: "Util",
+			as: EditFatigueTableViewController.self
+		)
+		controller.fatigue = fatigue
+		return controller
 	}
 }

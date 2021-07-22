@@ -806,7 +806,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 
 	private final class PainEvent: Event {
 		override var delegate: TimelineTableViewCellDelegate {
-			FatigueTimelineTableViewCellDelegate()
+			PainTimelineTableViewCellDelegate()
 		}
 
 		init(for pain: Pain) {
