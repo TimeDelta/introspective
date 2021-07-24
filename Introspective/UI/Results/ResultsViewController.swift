@@ -384,6 +384,12 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			} else if filteredSamples[indexPath.row] is MedicationDose {
 				lastSelectedUnfilteredRowIndex = indexPath.row
 				showEditDoseView(indexPath)
+			} else if filteredSamples[indexPath.row] is Fatigue {
+				lastSelectedUnfilteredRowIndex = indexPath.row
+				showEditFatigueView(indexPath)
+			} else if filteredSamples[indexPath.row] is Pain {
+				lastSelectedUnfilteredRowIndex = indexPath.row
+				showEditPainView(indexPath)
 			}
 		}
 	}
@@ -959,6 +965,48 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		controller.notificationToSendOnAccept = Me.editedSample
 		tableView.deselectRow(at: indexPath, animated: false)
 		customPresentViewController(Me.setDosePresenter, viewController: controller, animated: false)
+	}
+
+	private final func showEditFatigueView(_ indexPath: IndexPath) {
+		lastSelectedRowIndex = indexPath.row
+
+		let controller = viewController(
+			named: "editFatigue",
+			fromStoryboard: "Util"
+		) as! EditFatigueTableViewController
+		guard let fatigue = filteredSamples[indexPath.row] as? Fatigue else {
+			Me.log.error("Failed to cast result sample as Fatigue")
+			return
+		}
+		controller.fatigue = fatigue
+		controller.notificationToSendOnAccept = Me.editedSample
+		tableView.deselectRow(at: indexPath, animated: false)
+		if navigationController != nil {
+			pushToNavigationController(controller)
+		} else {
+			present(controller, animated: false, completion: nil)
+		}
+	}
+
+	private final func showEditPainView(_ indexPath: IndexPath) {
+		lastSelectedRowIndex = indexPath.row
+
+		let controller = viewController(
+			named: "editPain",
+			fromStoryboard: "Util"
+		) as! EditPainTableViewController
+		guard let pain = filteredSamples[indexPath.row] as? Pain else {
+			Me.log.error("Failed to cast result sample as Pain")
+			return
+		}
+		controller.pain = pain
+		controller.notificationToSendOnAccept = Me.editedSample
+		tableView.deselectRow(at: indexPath, animated: false)
+		if navigationController != nil {
+			pushToNavigationController(controller)
+		} else {
+			present(controller, animated: false, completion: nil)
+		}
 	}
 
 	// MARK: - Helper functions
