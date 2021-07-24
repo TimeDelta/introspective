@@ -285,6 +285,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			forKey: .dietarySugarEnabledOnTimeline
 		)
 		injected(UserDefaultsUtil.self).setUserDefault(
+			enabledSampleTypes[Me.enabledString(for: FatigueImpl.self)] ?? false,
+			forKey: .fatigueEnabledOnTimeline
+		)
+		injected(UserDefaultsUtil.self).setUserDefault(
 			enabledSampleTypes[Me.enabledString(for: HeartRate.self)] ?? false,
 			forKey: .heartRateEnabledOnTimeline
 		)
@@ -299,6 +303,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		injected(UserDefaultsUtil.self).setUserDefault(
 			enabledSampleTypes[Me.enabledString(for: MoodImpl.self)] ?? false,
 			forKey: .moodEnabledOnTimeline
+		)
+		injected(UserDefaultsUtil.self).setUserDefault(
+			enabledSampleTypes[Me.enabledString(for: PainImpl.self)] ?? false,
+			forKey: .painEnabledOnTimeline
 		)
 		injected(UserDefaultsUtil.self).setUserDefault(
 			enabledSampleTypes[Me.enabledString(for: RestingHeartRate.self)] ?? false,
@@ -485,6 +493,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		}
 		if let pain = sample as? Pain {
 			appendPainEvents(for: pain, to: &events)
+			return
 		}
 		if let restingHeartRate = sample as? RestingHeartRate {
 			appendRestingHeartRateEvents(for: restingHeartRate, to: &events)

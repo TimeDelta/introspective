@@ -28,7 +28,7 @@ class PainTimelineTableViewCellDelegate: TimelineTableViewCellDelegate {
 		let controller: EditPainTableViewController = injected(UiUtil.self).controller(
 			named: "editPain",
 			from: "Util",
-			as: EditPainTableViewController.self
+			as: EditPainTableViewControllerImpl.self
 		)
 		controller.pain = pain
 		return controller

@@ -28,7 +28,7 @@ class FatigueTimelineTableViewCellDelegate: TimelineTableViewCellDelegate {
 		let controller: EditFatigueTableViewController = injected(UiUtil.self).controller(
 			named: "editFatigue",
 			from: "Util",
-			as: EditFatigueTableViewController.self
+			as: EditFatigueTableViewControllerImpl.self
 		)
 		controller.fatigue = fatigue
 		return controller
