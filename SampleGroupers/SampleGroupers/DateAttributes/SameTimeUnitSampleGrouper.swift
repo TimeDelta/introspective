@@ -225,7 +225,7 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 			if !lessThanDayComponents.contains(timeUnit) {
 				dateToAdd = currentDate.addingTimeInterval(-dstOffset)
 			}
-			if results[index].key != dateToAdd {
+			if results[index].key != dateToAdd && results[index].key != currentDate {
 				results.insert((key: dateToAdd, value: []), at: index)
 			}
 			currentDate = currentDate.dateByAdding(1, timeUnit).date
