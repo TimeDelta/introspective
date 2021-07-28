@@ -9,6 +9,8 @@
 import Foundation
 import os
 
+import SwiftDate
+
 import Attributes
 import Common
 import DependencyInjection
@@ -216,8 +218,15 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 		var currentDate = minDate
 		var index = 0
 		while currentDate.isBeforeDate(maxDate, granularity: timeUnit) {
-			if results[index].key != currentDate {
-				results.insert((key: currentDate, value: []), at: index)
+			// if unit >= day and the date region has DST on that day, subtract an hour
+			let lessThanDayComponents: Set<Calendar.Component> = Set([.hour, .minute, .second, .nanosecond])
+			let dstOffset = TimeZone.autoupdatingCurrent.daylightSavingTimeOffset(for: currentDate)
+			var dateToAdd = currentDate
+			if !lessThanDayComponents.contains(timeUnit) {
+				dateToAdd = currentDate.addingTimeInterval(-dstOffset)
+			}
+			if results[index].key != dateToAdd {
+				results.insert((key: dateToAdd, value: []), at: index)
 			}
 			currentDate = currentDate.dateByAdding(1, timeUnit).date
 			index += 1
