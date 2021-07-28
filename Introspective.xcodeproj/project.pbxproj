@@ -4081,6 +4081,7 @@
 				CODE_SIGN_ENTITLEMENTS = Introspective/Introspective.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = M4DG35ZPLD;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4164,6 +4165,7 @@
 				CODE_SIGN_ENTITLEMENTS = Introspective/Introspective.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = M4DG35ZPLD;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
