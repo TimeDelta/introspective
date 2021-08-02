@@ -217,15 +217,14 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 
 		var currentDate = minDate
 		var index = 0
+		let lessThanDayComponents: Set<Calendar.Component> = Set([.hour, .minute, .second, .nanosecond])
 		while currentDate.isBeforeDate(maxDate, granularity: timeUnit) {
-			// if unit >= day and the date region has DST on that day, subtract an hour
-			let lessThanDayComponents: Set<Calendar.Component> = Set([.hour, .minute, .second, .nanosecond])
-			let dstOffset = TimeZone.autoupdatingCurrent.daylightSavingTimeOffset(for: currentDate)
-			var dateToAdd = currentDate
-			if !lessThanDayComponents.contains(timeUnit) {
-				dateToAdd = currentDate.addingTimeInterval(-dstOffset)
-			}
-			if results[index].key != dateToAdd && results[index].key != currentDate {
+			if results[index].key.compare(toDate: currentDate, granularity: timeUnit) != .orderedSame {
+				let dstOffset = TimeZone.autoupdatingCurrent.daylightSavingTimeOffset(for: currentDate)
+				var dateToAdd = currentDate
+				if !lessThanDayComponents.contains(timeUnit) && dstOffset == 0 {
+					dateToAdd = currentDate.addingTimeInterval(TimeZone.autoupdatingCurrent.daylightSavingTimeOffset())
+				}
 				results.insert((key: dateToAdd, value: []), at: index)
 			}
 			currentDate = currentDate.dateByAdding(1, timeUnit).date
