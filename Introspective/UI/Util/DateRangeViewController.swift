@@ -14,9 +14,11 @@ import DependencyInjection
 public protocol DateRangeViewController: UIViewController {
 	var datePickerMode: UIDatePicker.Mode { get set }
 	var initialFromDate: Date? { get set }
+	var fromDateRequired: Bool { get set }
 	var minFromDate: Date? { get set }
 	var maxFromDate: Date? { get set }
 	var initialToDate: Date? { get set }
+	var toDateRequired: Bool { get set }
 	var minToDate: Date? { get set }
 	var maxToDate: Date? { get set }
 	var notificationToSendOnAccept: Notification.Name! { get set }
@@ -35,9 +37,11 @@ public final class DateRangeViewControllerImpl: UIViewController, DateRangeViewC
 
 	public final var datePickerMode: UIDatePicker.Mode = .date
 	public final var initialFromDate: Date?
+	public final var fromDateRequired = false
 	public final var minFromDate: Date?
 	public final var maxFromDate: Date?
 	public final var initialToDate: Date?
+	public final var toDateRequired = false
 	public final var minToDate: Date?
 	public final var maxToDate: Date?
 	public final var notificationToSendOnAccept: Notification.Name!
@@ -55,13 +59,19 @@ public final class DateRangeViewControllerImpl: UIViewController, DateRangeViewC
 
 		if let fromDate = initialFromDate {
 			fromDatePicker.date = fromDate
-		} else {
+		} else if !fromDateRequired {
 			enableFromDateSwitch.isOn = false
+		} else {
+			enableFromDateSwitch.isOn = true
+			enableFromDateSwitch.isEnabled = false
 		}
 		if let toDate = initialToDate {
 			toDatePicker.date = toDate
-		} else {
+		} else if !toDateRequired {
 			enableToDateSwitch.isOn = false
+		} else {
+			enableToDateSwitch.isOn = true
+			enableToDateSwitch.isEnabled = false
 		}
 		updateFromDatePickerState()
 		updateToDatePickerState()

@@ -17,6 +17,7 @@ import DataExport
 import DataImport
 import DependencyInjection
 import Globals
+import MetaData
 import Notifications
 import Persistence
 import Queries
@@ -112,6 +113,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 			DataExportInjectionProvider(),
 			DataImportInjectionProvider(),
 			IntrospectiveInjectionProvider(),
+			MetaDataInjectionProvider(),
 			PersistenceInjectionProvider(ObjectModelContainer.objectModel),
 			QueriesInjectionProvider(),
 			SamplesInjectionProvider(),

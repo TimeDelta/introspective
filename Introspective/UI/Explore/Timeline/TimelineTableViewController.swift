@@ -35,7 +35,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 
 	// MARK: Notification Names
 
-	static let dateRangeSet = Notification.Name("medicationDosesTableDateRangeSet")
+	static let dateRangeSet = Notification.Name("timelineDateRangeSet")
 	static let enabledDataTypesChanged = Notification.Name("enabledDataTypesChanged")
 
 	// MARK: Presenters

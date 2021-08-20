@@ -38,6 +38,9 @@
       location = "group:SampleGroupInformation/SampleGroupInformation.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:MetaData/MetaData.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:Queries/Queries.xcodeproj">
    </FileRef>
    <FileRef

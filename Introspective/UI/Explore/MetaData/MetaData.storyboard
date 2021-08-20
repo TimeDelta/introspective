@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="pmy-ka-Lxa">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Meta Data-->
+        <scene sceneID="rLn-MG-XNR">
+            <objects>
+                <tableViewController storyboardIdentifier="metaDataView" title="Meta Data" useStoryboardIdentifierAsRestorationIdentifier="YES" id="pmy-ka-Lxa" customClass="MetaDataTableViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="lgY-Tb-bYw">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <toolbar key="tableHeaderView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="7nc-u7-1Ia">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                            <items>
+                                <barButtonItem style="plain" systemItem="flexibleSpace" id="E0u-7y-6Hc"/>
+                                <barButtonItem title="&lt;" id="Tj7-tV-y5y">
+                                    <connections>
+                                        <action selector="previousDateRangeButtonPressed:" destination="pmy-ka-Lxa" id="gJL-Pf-1Dq"/>
+                                    </connections>
+                                </barButtonItem>
+                                <barButtonItem title="Date Range" id="lTt-gp-K77">
+                                    <connections>
+                                        <action selector="chooseDateRangeButtonPressed:" destination="pmy-ka-Lxa" id="HRP-AD-VP0"/>
+                                    </connections>
+                                </barButtonItem>
+                                <barButtonItem title="&gt;" id="4yS-Pk-vNi">
+                                    <connections>
+                                        <action selector="nextDateRangeButtonPressed:" destination="pmy-ka-Lxa" id="aNV-hO-0OM"/>
+                                    </connections>
+                                </barButtonItem>
+                                <barButtonItem style="plain" systemItem="flexibleSpace" id="afk-c1-ufg"/>
+                            </items>
+                        </toolbar>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="timeUnaccountedFor" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="timeUnaccountedFor" id="9Wq-6U-lhq" customClass="UnaccountedForTimeTableViewCell" customModule="Introspective" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="68.5" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="9Wq-6U-lhq" id="ry2-Q7-p89" customClass="UnaccountedForTimeTableViewCell" customModule="Introspective" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Time Unaccounted For: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PfG-eg-mCW">
+                                            <rect key="frame" x="20" y="11" width="183" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="JOZ-62-U9h">
+                                            <rect key="frame" x="207" y="12" width="20" height="20"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        </activityIndicatorView>
+                                    </subviews>
+                                    <connections>
+                                        <outlet property="label" destination="PfG-eg-mCW" id="u3U-Pv-yXT"/>
+                                        <outlet property="progressIndicator" destination="JOZ-62-U9h" id="KK9-O4-ggR"/>
+                                    </connections>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <sections/>
+                        <connections>
+                            <outlet property="dataSource" destination="pmy-ka-Lxa" id="97x-Aw-E95"/>
+                            <outlet property="delegate" destination="pmy-ka-Lxa" id="64K-qd-SLI"/>
+                        </connections>
+                    </tableView>
+                    <connections>
+                        <outlet property="dateRangeButton" destination="lTt-gp-K77" id="Uqc-aI-6MO"/>
+                        <outlet property="nextDateRangeButton" destination="4yS-Pk-vNi" id="SjV-GR-Ppb"/>
+                        <outlet property="previousDateRangeButton" destination="Tj7-tV-y5y" id="Wyh-rt-nP0"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vG6-Bo-acC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="387" y="-84"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

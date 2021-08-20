@@ -20,6 +20,7 @@ final class ExploreCollectionViewController: UICollectionViewController {
 	private static let graphCellReuseIdentifier = "graph"
 	private static let unifiedViewCellReuseIdentifier = "unifiedView"
 	private static let timelineCellReuseIdentifier = "timeline"
+	private static let metaDataCellReuseIdentifier = "metaData"
 
 	private static let log = Log()
 
@@ -41,7 +42,7 @@ final class ExploreCollectionViewController: UICollectionViewController {
 	}
 
 	final override func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
-		3
+		4
 	}
 
 	final override func collectionView(
@@ -57,6 +58,12 @@ final class ExploreCollectionViewController: UICollectionViewController {
 		if indexPath.row == 2 {
 			return collectionView.dequeueReusableCell(
 				withReuseIdentifier: Me.timelineCellReuseIdentifier,
+				for: indexPath
+			)
+		}
+		if indexPath.row == 3 {
+			return collectionView.dequeueReusableCell(
+				withReuseIdentifier: Me.metaDataCellReuseIdentifier,
 				for: indexPath
 			)
 		}

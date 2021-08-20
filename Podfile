@@ -101,6 +101,14 @@ target 'DependencyInjection' do
   pod 'Sourcery'
 end
 
+target 'MetaData' do
+  project 'MetaData/MetaData'
+  use_frameworks!
+
+  pod 'Sourcery'
+  pod 'CSV.swift', '~> 2.3.1'
+end
+
 target 'Notifications' do
   project 'Notifications/Notifications'
   use_frameworks!
