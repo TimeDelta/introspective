@@ -42,7 +42,7 @@ public final class EmptyStringAttributeRestriction: AnyAttributeRestriction, Str
 
 	public override func predicate() -> NSPredicate? {
 		guard let variableName = restrictedAttribute.variableName else { return nil }
-		return NSPredicate(format: "%K.length == 0", variableName)
+		return NSPredicate(format: "%K.length == 0 || %K == nil", variableName, variableName)
 	}
 
 	// MARK: - Attributed Functions
