@@ -52,6 +52,14 @@ public final class StartActivityIntentHandler: ActivityIntentHandler<StartActivi
 		super.provideActivityNameOptions(for: intent, with: completion)
 	}
 
+	@available(iOS 14.0, *)
+	public override func provideActivityNameOptionsCollection(
+		for intent: StartActivityIntent,
+		with completion: @escaping (INObjectCollection<NSString>?, Error?) -> Swift.Void
+	) {
+		super.provideActivityNameOptionsCollection(for: intent, with: completion)
+	}
+
 	public func resolveStartDate(
 		for intent: StartActivityIntent,
 		with completion: @escaping (INDateComponentsResolutionResult) -> Swift.Void

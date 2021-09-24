@@ -40,6 +40,14 @@ public final class StartActivityFromEndOfLastIntentHandler: ActivityIntentHandle
 		super.provideActivityNameOptions(for: intent, with: completion)
 	}
 
+	@available(iOS 14.0, *)
+	public override func provideActivityNameOptionsCollection(
+		for intent: StartActivityFromEndOfLastIntent,
+		with completion: @escaping (INObjectCollection<NSString>?, Error?) -> Swift.Void
+	) {
+		super.provideActivityNameOptionsCollection(for: intent, with: completion)
+	}
+
 	public func handle(
 		intent: StartActivityFromEndOfLastIntent,
 		completion: @escaping (StartActivityFromEndOfLastIntentResponse) -> Void

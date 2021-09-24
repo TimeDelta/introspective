@@ -36,7 +36,15 @@ public final class StartActivitiesIntentHandler: ActivityIntentHandler<StartActi
 		for intent: StartActivitiesIntent,
 		with completion: @escaping ([String]?, Error?) -> Void
 	) {
-		provideActivityNameOptions(for: intent, with: completion)
+		super.provideActivityNameOptions(for: intent, with: completion)
+	}
+
+	@available(iOS 14.0, *)
+	public func provideActivityNamesOptionsCollection(
+		for intent: StartActivitiesIntent,
+		with completion: @escaping (INObjectCollection<NSString>?, Error?) -> Swift.Void
+	) {
+		super.provideActivityNameOptionsCollection(for: intent, with: completion)
 	}
 
 	public func handle(intent: StartActivitiesIntent, completion: @escaping (StartActivitiesIntentResponse) -> Void) {

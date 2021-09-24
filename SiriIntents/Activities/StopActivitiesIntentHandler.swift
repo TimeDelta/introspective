@@ -39,6 +39,14 @@ public final class StopActivitiesIntentHandler: ActivityIntentHandler<StopActivi
 		super.provideActivityNameOptions(for: intent, with: completion)
 	}
 
+	@available(iOS 14.0, *)
+	public func provideActivityNamesOptionsCollection(
+		for intent: StopActivitiesIntent,
+		with completion: @escaping (INObjectCollection<NSString>?, Error?) -> Swift.Void
+	) {
+		super.provideActivityNameOptionsCollection(for: intent, with: completion)
+	}
+
 	public func handle(intent: StopActivitiesIntent, completion: @escaping (StopActivitiesIntentResponse) -> Void) {
 		Me.log.info("Handling StopActivitiesIntent")
 		guard let activityNames = intent.activityNames else {

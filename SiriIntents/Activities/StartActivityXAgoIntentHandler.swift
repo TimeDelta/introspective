@@ -76,11 +76,28 @@ public final class StartActivityXAgoIntentHandler: ActivityIntentHandler<StartAc
 		super.provideActivityNameOptions(for: intent, with: completion)
 	}
 
+	@available(iOS 14.0, *)
+	public override func provideActivityNameOptionsCollection(
+		for intent: StartActivityXAgoIntent,
+		with completion: @escaping (INObjectCollection<NSString>?, Error?) -> Swift.Void
+	) {
+		super.provideActivityNameOptionsCollection(for: intent, with: completion)
+	}
+
 	public func provideTimeUnitOptions(
 		for _: StartActivityXAgoIntent,
 		with completion: @escaping ([String]?, Error?) -> Void
 	) {
 		completion(Me.supportedTimeUnits.map { t in t.pluralDescription }, nil)
+	}
+
+	@available(iOS 14.0, *)
+	public func provideTimeUnitOptionsCollection(
+		for _: StartActivityXAgoIntent,
+		with completion: @escaping (INObjectCollection<NSString>?, Error?) -> Swift.Void
+	) {
+		let values = Me.supportedTimeUnits.map { t in t.pluralDescription as NSString }
+		completion(INObjectCollection<NSString>(items: values), nil)
 	}
 
 	public func handle(
