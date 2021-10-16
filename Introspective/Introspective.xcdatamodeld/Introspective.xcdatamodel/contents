@@ -63,7 +63,7 @@
         <attribute name="attributeId" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="comparison" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="sampleTypeId" attributeType="Integer 16" usesScalarValueType="YES"/>
-        <attribute name="value" attributeType="Transformable"/>
+        <attribute name="value" attributeType="Transformable" valueTransformerName="DosageValueTransformer"/>
     </entity>
     <entity name="DoubleComparisonAttributeRestriction" representedClassName="AttributeRestrictions.StoredDoubleComparisonAttributeRestriction" parentEntity="BooleanExpression" syncable="YES">
         <attribute name="attributeId" attributeType="Integer 16" usesScalarValueType="YES"/>
@@ -248,12 +248,12 @@
         <element name="OnDayOfTheWeekAttributeRestriction" positionX="-63" positionY="0" width="128" height="74"/>
         <element name="OrExpression" positionX="363.893310546875" positionY="249.4068603515625" width="128" height="59"/>
         <element name="Pain" positionX="-244.591552734375" positionY="43.80722045898438" width="128" height="134"/>
+        <element name="Query" positionX="-81" positionY="-18" width="128" height="74"/>
         <element name="SelectOneAttributeRestriction" positionX="-54" positionY="9" width="128" height="89"/>
         <element name="Settings" positionX="-289.8668212890625" positionY="352.4930419921875" width="128" height="254"/>
         <element name="StringOperationAttributeRestriction" positionX="-63" positionY="0" width="128" height="89"/>
         <element name="Tag" positionX="72.3931884765625" positionY="376.8829345703125" width="128" height="30"/>
         <element name="TimeOfDayAttributeRestriction" positionX="-27" positionY="36" width="128" height="89"/>
         <element name="WellnessMoodImporter" positionX="-271.3795166015625" positionY="230.5117492675781" width="128" height="30"/>
-        <element name="Query" positionX="-81" positionY="-18" width="128" height="74"/>
     </elements>
 </model>
