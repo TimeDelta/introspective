@@ -624,8 +624,8 @@ extension WSTagsField {
         textField.spellCheckingType = .no
         textField.delegate = self
         textField.font = font
-        textField.itemSelectionHandler = { chosenTagName, index in
-            self.acceptCurrentTextAsTag()
+        textField.itemSelectionHandler = { chosenTagNames, index in
+            self.addTag(chosenTagNames[0].title)
         }
         addSubview(textField)
 
