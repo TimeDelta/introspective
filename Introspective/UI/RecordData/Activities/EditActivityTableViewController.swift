@@ -328,7 +328,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 					name: self.notificationToSendOnAccept,
 					object: self,
 					userInfo: self.info([
-						self.userInfoKey: activity,
+						self.userInfoKey: activity!,
 					])
 				)
 			}
