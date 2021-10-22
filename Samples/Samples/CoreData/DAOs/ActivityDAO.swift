@@ -265,6 +265,7 @@ public class ActivityDAOImpl: ActivityDAO {
 		activity.setSource(.introspective)
 		activity.definition = definition
 		activity.start = Date()
+		activity.startSetAt = activity.start
 		activity.note = note
 		definition.addToActivities(activity)
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
@@ -287,6 +288,7 @@ public class ActivityDAOImpl: ActivityDAO {
 			let now = Date()
 			if !autoIgnoreIfAppropriate(activity, end: now) {
 				activity.end = now
+				activity.endSetAt = now
 				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 			}
 			return try injected(Database.self).pull(savedObject: activity)
@@ -313,6 +315,7 @@ public class ActivityDAOImpl: ActivityDAO {
 		let activity = activities[0]
 		if !autoIgnoreIfAppropriate(activity, end: now) {
 			activity.end = now
+			activity.endSetAt = now
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 		}
 		return activity
@@ -330,6 +333,7 @@ public class ActivityDAOImpl: ActivityDAO {
 			if !autoIgnoreIfAppropriate(activity, end: now) {
 				let transaction = injected(Database.self).transaction()
 				activity.end = now
+				activity.endSetAt = now
 				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 				if activity.definition.autoNote {
 					activitiesToAutoNote.append(activity)

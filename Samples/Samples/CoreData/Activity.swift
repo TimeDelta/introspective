@@ -48,6 +48,26 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 		possibleValues: Sources.ActivitySourceNum.values.map { $0.description },
 		possibleValueToString: { $0 }
 	)
+	public static let startDateSetAttribute = DateTimeAttribute(
+		name: "Start Date Set At",
+		variableName: "startDateSetAt",
+		optional: true
+	)
+	public static let endDateSetAttribute = DateTimeAttribute(
+		name: "End Date Set At",
+		variableName: "startDateSetAt",
+		optional: true
+	)
+	public static let durationBetweenStartAndSetAttribute = DurationAttribute(
+		name: "Start Date Offset",
+		description: "Duration between start & when start was set",
+		optional: true
+	)
+	public static let durationBetweenEndAndSetAttribute = DurationAttribute(
+		name: "End Date Offset",
+		description: "Duration between end & when end was set",
+		optional: true
+	)
 
 	public static let defaultDependentAttribute: Attribute = durationAttribute
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.startDate
@@ -59,6 +79,10 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 		CommonSampleAttributes.optionalEndDate,
 		noteAttribute,
 		tagsAttribute,
+		startDateSetAttribute,
+		durationBetweenStartAndSetAttribute,
+		endDateSetAttribute,
+		durationBetweenEndAndSetAttribute,
 		sourceAttribute,
 	]
 	public final let attributes: [Attribute] = Me.attributes
@@ -98,9 +122,25 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 		}
 		set {
 			startDate = newValue
-			if source == Sources.ActivitySourceNum.introspective.rawValue && startDateTimeZoneId == nil {
+			let thisApp = Sources.ActivitySourceNum.introspective.rawValue
+			if source == thisApp && startDateTimeZoneId == nil {
 				startDateTimeZoneId = injected(CalendarUtil.self).currentTimeZone().identifier
 			}
+		}
+	}
+
+	public final var startSetAt: Date? {
+		get {
+			guard let startDateSetAt = startDateSetAt else {
+				return nil
+			}
+			return injected(CoreDataSampleUtil.self).convertTimeZoneIfApplicable(
+				for: startDateSetAt,
+				timeZoneId: startDateTimeZoneId
+			)
+		}
+		set {
+			startDateSetAt = newValue
 		}
 	}
 
@@ -116,8 +156,8 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 		}
 		set {
 			endDate = newValue
-			if source == Sources.ActivitySourceNum.introspective
-				.rawValue && endDateTimeZoneId == nil && endDate != nil {
+			let thisApp = Sources.ActivitySourceNum.introspective.rawValue
+			if source == thisApp && endDateTimeZoneId == nil && endDate != nil {
 				endDateTimeZoneId = injected(CalendarUtil.self).currentTimeZone().identifier
 			}
 			if endDate == nil {
@@ -126,10 +166,39 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 		}
 	}
 
+	public final var endSetAt: Date? {
+		get {
+			guard let endDateSetAt = endDateSetAt else {
+				return nil
+			}
+			return injected(CoreDataSampleUtil.self).convertTimeZoneIfApplicable(
+				for: endDateSetAt,
+				timeZoneId: endDateTimeZoneId
+			)
+		}
+		set {
+			endDateSetAt = newValue
+		}
+	}
+
 	public final var duration: TimeDuration {
 		// use raw unconverted dates to avoid issues such as negative durations
 		// caused by start and end being in different time zones
 		TimeDuration(start: startDate, end: endDate)
+	}
+
+	public final var durationBetweenStartAndSet: TimeDuration? {
+		guard let startDateSetAt = startDateSetAt else {
+			return nil
+		}
+		return TimeDuration(start: startDate, end: startDateSetAt)
+	}
+
+	public final var durationBetweenEndAndSet: TimeDuration? {
+		guard let endDate = endDate else {
+			return nil
+		}
+		return TimeDuration(start: endDate, end: endDateSetAt)
 	}
 
 	public final var startDateTimeZone: String? { startDateTimeZoneId }
@@ -165,8 +234,10 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 	// MARK: Export Column Names
 
 	public static let startColumn = "Start"
+	public static let startSetAtColumn = "Start Set At"
 	public static let startTimeZoneColumn = "Start Time Zone"
 	public static let endColumn = "End"
+	public static let endSetAtColumn = "End Set At"
 	public static let endTimeZoneColumn = "End Time Zone"
 	public static let noteColumn = "Note"
 	public static let tagsColumn = "Extra Tags"
@@ -177,8 +248,10 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 	public static func exportHeaderRow(to csv: CSVWriter) throws {
 		try ActivityDefinition.exportHeaderRow(to: csv)
 		try csv.write(field: startColumn, quoted: true)
+		try csv.write(field: startSetAtColumn, quoted: true)
 		try csv.write(field: startTimeZoneColumn, quoted: true)
 		try csv.write(field: endColumn, quoted: true)
+		try csv.write(field: endSetAtColumn, quoted: true)
 		try csv.write(field: endTimeZoneColumn, quoted: true)
 		try csv.write(field: noteColumn, quoted: true)
 		try csv.write(field: tagsColumn, quoted: true)
@@ -192,6 +265,14 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 			.string(for: startDate, dateStyle: .full, timeStyle: .full)
 		try csv.write(field: startText, quoted: true)
 
+		if let startSetAt = startSetAt {
+			let startSetAtText = injected(CalendarUtil.self)
+				.string(for: startSetAt, dateStyle: .full, timeStyle: .full)
+			try csv.write(field: startSetAtText, quoted: true)
+		} else {
+			try csv.write(field: "", quoted: true)
+		}
+
 		let startTimeZone = startDateTimeZoneId ?? ""
 		try csv.write(field: startTimeZone, quoted: true)
 
@@ -199,6 +280,14 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 			let endText = injected(CalendarUtil.self)
 				.string(for: endDate, dateStyle: .full, timeStyle: .full)
 			try csv.write(field: endText, quoted: true)
+		} else {
+			try csv.write(field: "", quoted: true)
+		}
+
+		if let endSetAt = endSetAt {
+			let endSetAtText = injected(CalendarUtil.self)
+				.string(for: endSetAt, dateStyle: .full, timeStyle: .full)
+			try csv.write(field: endSetAtText, quoted: true)
 		} else {
 			try csv.write(field: "", quoted: true)
 		}
@@ -240,6 +329,18 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 		}
 		if attribute.equalTo(Me.sourceAttribute) {
 			return Sources.resolveActivitySource(source).description
+		}
+		if attribute.equalTo(Me.startDateSetAttribute) {
+			return startSetAt
+		}
+		if attribute.equalTo(Me.endDateSetAttribute) {
+			return endSetAt
+		}
+		if attribute.equalTo(Me.durationBetweenStartAndSetAttribute) {
+			return durationBetweenStartAndSet
+		}
+		if attribute.equalTo(Me.durationBetweenEndAndSetAttribute) {
+			return durationBetweenEndAndSet
 		}
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
@@ -294,6 +395,28 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 			}
 			try setTags(castedValue)
+			return
+		}
+		if attribute.equalTo(Me.startDateSetAttribute) {
+			guard let castedValue = value as? Date else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
+			startDateSetAt = castedValue
+			return
+		}
+		if attribute.equalTo(Me.endDateSetAttribute) {
+			guard let castedValue = value as? Date else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
+			endDateSetAt = castedValue
+			return
+		}
+		if attribute.equalTo(Me.durationBetweenStartAndSetAttribute) {
+			Me.log.error("Trying to set read only attribute (durationBetweenStartAndSetAttribute)")
+			return
+		}
+		if attribute.equalTo(Me.durationBetweenEndAndSetAttribute) {
+			Me.log.error("Trying to set read only attribute (durationBetweenEndAndSetAttribute)")
 			return
 		}
 		throw UnknownAttributeError(attribute: attribute, for: self)
@@ -415,8 +538,10 @@ public extension Activity {
 
 	@NSManaged fileprivate var startDate: Date
 	@NSManaged fileprivate var startDateTimeZoneId: String?
+	@NSManaged fileprivate var startDateSetAt: Date? // will automatically use the startDateTimeZoneId
 	@NSManaged fileprivate var endDate: Date?
 	@NSManaged fileprivate var endDateTimeZoneId: String?
+	@NSManaged fileprivate var endDateSetAt: Date? // will automatically use the endDateTimeZoneId
 	@NSManaged var note: String?
 	@NSManaged var definition: ActivityDefinition
 	@NSManaged var tags: NSSet

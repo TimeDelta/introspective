@@ -288,7 +288,9 @@ public final class IntrospectiveActivityImporterImpl: NSManagedObject, Introspec
 		let activity = try childTransaction.new(Activity.self)
 		activity.definition = try childTransaction.pull(savedObject: definition)
 		activity.start = start
+		activity.startSetAt = try getStartDateSetAt(from: csv)
 		activity.end = try getEndDate(from: csv)
+		activity.endSetAt = try getEndDateSetAt(from: csv)
 		activity.note = csv[Activity.noteColumn]
 		activity.setSource(.introspective)
 
@@ -333,12 +335,38 @@ public final class IntrospectiveActivityImporterImpl: NSManagedObject, Introspec
 		}
 	}
 
+	private final func getStartDateSetAt(from csv: CSVReader) throws -> Date? {
+		if let startDateSetText = csv[Activity.startSetAtColumn] {
+			if !startDateSetText.isEmpty {
+				if let startDateSet = injected(CalendarUtil.self)
+					.date(from: startDateSetText, dateStyle: .full, timeStyle: .full) {
+					return startDateSet
+				}
+				throw InvalidFileFormatError("Invalid format for end date / time for record \(recordNumber).")
+			}
+		}
+		return nil
+	}
+
 	private final func getEndDate(from csv: CSVReader) throws -> Date? {
 		if let endDateText = csv[Activity.endColumn] {
 			if !endDateText.isEmpty {
 				if let endDate = injected(CalendarUtil.self)
 					.date(from: endDateText, dateStyle: .full, timeStyle: .full) {
 					return endDate
+				}
+				throw InvalidFileFormatError("Invalid format for end date / time for record \(recordNumber).")
+			}
+		}
+		return nil
+	}
+
+	private final func getEndDateSetAt(from csv: CSVReader) throws -> Date? {
+		if let endDateSetText = csv[Activity.endSetAtColumn] {
+			if !endDateSetText.isEmpty {
+				if let endDateSet = injected(CalendarUtil.self)
+					.date(from: endDateSetText, dateStyle: .full, timeStyle: .full) {
+					return endDateSet
 				}
 				throw InvalidFileFormatError("Invalid format for end date / time for record \(recordNumber).")
 			}

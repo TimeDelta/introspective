@@ -76,7 +76,9 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 			guard let activity = activity else { return }
 			definition = activity.definition
 			startDate = activity.start
+			startDateSetAt = activity.startSetAt
 			endDate = activity.end
+			endDateSetAt = activity.endSetAt
 			note = activity.note
 			tagNames = Set(activity.tagsArray().map { $0.name })
 		}
@@ -86,10 +88,28 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 
 	/// - Note: This will be overwritten if `activity` is set after this is
 	public final var definition: ActivityDefinition? { didSet { validate() } }
-	final var startDate: Date = Date() { didSet { validate() } }
-	final var endDate: Date? { didSet { validate() } }
+	final var startDate: Date = Date() {
+		didSet {
+			startDateSetAt = Date()
+			validate()
+		}
+	}
+
+	final var endDate: Date? {
+		didSet {
+			if endDate != nil {
+				endDateSetAt = Date()
+			} else {
+				endDateSetAt = nil
+			}
+			validate()
+		}
+	}
+
 	final var note: String?
 	final var tagNames = Set<String>()
+	final var startDateSetAt: Date?
+	final var endDateSetAt: Date?
 
 	private final var saveButton: UIBarButtonItem!
 
@@ -312,7 +332,9 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 			}
 			activity.definition = try transaction.pull(savedObject: definition!)
 			activity.start = startDate
+			activity.startSetAt = startDateSetAt
 			activity.end = endDate
+			activity.endSetAt = endDateSetAt
 			if injected(Settings.self).autoTrimWhitespaceInActivityNotes {
 				activity.note = note?.split(separator: "\n").map {
 					str in str.trimmingCharacters(in: .whitespaces)
