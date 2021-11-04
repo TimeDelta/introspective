@@ -68,6 +68,11 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 		description: "Duration between end & when end was set",
 		optional: true
 	)
+	public static let totalDurationOffset = DurationAttribute(
+		name: "Total Date Offset",
+		description: "The sum of Start Date Offset and End Date Offset",
+		optional: true
+	)
 
 	public static let defaultDependentAttribute: Attribute = durationAttribute
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.startDate
@@ -83,6 +88,7 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 		durationBetweenStartAndSetAttribute,
 		endDateSetAttribute,
 		durationBetweenEndAndSetAttribute,
+		totalDurationOffset,
 		sourceAttribute,
 	]
 	public final let attributes: [Attribute] = Me.attributes
@@ -201,6 +207,16 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 		return TimeDuration(start: endDate, end: endDateSetAt)
 	}
 
+	public final var totalDurationOffset: TimeDuration? {
+		guard let durationBetweenStartAndSet = durationBetweenStartAndSet else {
+			return nil
+		}
+		guard let durationBetweenEndAndSet = durationBetweenEndAndSet else {
+			return nil
+		}
+		return durationBetweenStartAndSet + durationBetweenEndAndSet
+	}
+
 	public final var startDateTimeZone: String? { startDateTimeZoneId }
 	public final var endDateTimeZone: String? { endDateTimeZoneId }
 
@@ -236,9 +252,12 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 	public static let startColumn = "Start"
 	public static let startSetAtColumn = "Start Set At"
 	public static let startTimeZoneColumn = "Start Time Zone"
+	public static let startDateOffsetColumn = "Start Date Offset"
 	public static let endColumn = "End"
 	public static let endSetAtColumn = "End Set At"
 	public static let endTimeZoneColumn = "End Time Zone"
+	public static let endDateOffsetColumn = "End Date Offset"
+	public static let totalDurationOffsetColumn = "Total Duration Offset"
 	public static let noteColumn = "Note"
 	public static let tagsColumn = "Extra Tags"
 	public static let sourceColumn = "Instance Source"
@@ -250,9 +269,12 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 		try csv.write(field: startColumn, quoted: true)
 		try csv.write(field: startSetAtColumn, quoted: true)
 		try csv.write(field: startTimeZoneColumn, quoted: true)
+		try csv.write(field: startDateOffsetColumn, quoted: true)
 		try csv.write(field: endColumn, quoted: true)
 		try csv.write(field: endSetAtColumn, quoted: true)
 		try csv.write(field: endTimeZoneColumn, quoted: true)
+		try csv.write(field: endDateOffsetColumn, quoted: true)
+		try csv.write(field: totalDurationOffsetColumn, quoted: true)
 		try csv.write(field: noteColumn, quoted: true)
 		try csv.write(field: tagsColumn, quoted: true)
 		try csv.write(field: sourceColumn, quoted: true)
@@ -276,6 +298,9 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 		let startTimeZone = startDateTimeZoneId ?? ""
 		try csv.write(field: startTimeZone, quoted: true)
 
+		let startDateOffset = durationBetweenStartAndSet?.description ?? ""
+		try csv.write(field: startDateOffset, quoted: true)
+
 		if let endDate = endDate {
 			let endText = injected(CalendarUtil.self)
 				.string(for: endDate, dateStyle: .full, timeStyle: .full)
@@ -294,6 +319,12 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 
 		let endTimeZone = endDateTimeZoneId ?? ""
 		try csv.write(field: endTimeZone, quoted: true)
+
+		let endDateOffset = durationBetweenEndAndSet?.description ?? ""
+		try csv.write(field: endDateOffset, quoted: true)
+
+		let totalDurationOffset = totalDurationOffset?.description ?? ""
+		try csv.write(field: totalDurationOffset, quoted: true)
 
 		try csv.write(field: note ?? "", quoted: true)
 
@@ -341,6 +372,9 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 		}
 		if attribute.equalTo(Me.durationBetweenEndAndSetAttribute) {
 			return durationBetweenEndAndSet
+		}
+		if attribute.equalTo(Me.totalDurationOffset) {
+			return totalDurationOffset
 		}
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
@@ -417,6 +451,10 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 		}
 		if attribute.equalTo(Me.durationBetweenEndAndSetAttribute) {
 			Me.log.error("Trying to set read only attribute (durationBetweenEndAndSetAttribute)")
+			return
+		}
+		if attribute.equalTo(Me.totalDurationOffset) {
+			Me.log.error("Trying to set read only attribute")
 			return
 		}
 		throw UnknownAttributeError(attribute: attribute, for: self)

@@ -282,8 +282,7 @@ public final class IntrospectiveActivityImporterImpl: NSManagedObject, Introspec
 		startingAt start: Date,
 		from csv: CSVReader,
 		using transaction: Transaction
-	)
-		throws {
+	) throws {
 		let childTransaction = transaction.childTransaction()
 		let activity = try childTransaction.new(Activity.self)
 		activity.definition = try childTransaction.pull(savedObject: definition)
