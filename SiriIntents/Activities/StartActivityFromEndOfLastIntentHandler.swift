@@ -67,10 +67,12 @@ public final class StartActivityFromEndOfLastIntentHandler: ActivityIntentHandle
 				)
 				return
 			}
-			let start = try injected(ActivityDAO.self).getMostRecentActivityEndDate() ?? Date()
+			let now = Date()
+			let start = try injected(ActivityDAO.self).getMostRecentActivityEndDate() ?? now
 			let activity = try injected(ActivityDAO.self).createActivity(
 				definition: definition,
-				startDate: start
+				startDate: start,
+				startDateSetAt: now
 			)
 			injected(Database.self).setModifiedExternally(true)
 			completion(StartActivityFromEndOfLastIntentResponse.success(activity: ActivityIntentInfo(activity)))

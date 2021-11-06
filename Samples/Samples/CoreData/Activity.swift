@@ -212,7 +212,7 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 			return nil
 		}
 		guard let durationBetweenEndAndSet = durationBetweenEndAndSet else {
-			return nil
+			return durationBetweenStartAndSet
 		}
 		return durationBetweenStartAndSet + durationBetweenEndAndSet
 	}

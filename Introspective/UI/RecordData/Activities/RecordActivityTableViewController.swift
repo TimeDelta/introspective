@@ -626,7 +626,12 @@ public final class RecordActivityTableViewController: UITableViewController {
 					return
 				}
 				let activityDefinition = try injected(ActivityDAO.self).createDefinition(name: searchText)
-				try injected(ActivityDAO.self).createActivity(definition: activityDefinition)
+				let now = Date()
+				try injected(ActivityDAO.self).createActivity(
+					definition: activityDefinition,
+					startDate: now,
+					startDateSetAt: now
+				)
 				searchController.searchBar.text = ""
 				loadActivitiyDefinitions()
 			} catch {

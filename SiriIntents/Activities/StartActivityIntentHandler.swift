@@ -114,10 +114,12 @@ public final class StartActivityIntentHandler: ActivityIntentHandler<StartActivi
 				)
 				return
 			}
-			let startDate = intent.startDate?.date ?? Date()
+			let now = Date()
+			let startDate = intent.startDate?.date ?? now
 			let activity = try injected(ActivityDAO.self).createActivity(
 				definition: definition,
 				startDate: startDate,
+				startDateSetAt: now,
 				note: intent.note,
 				extraTags: try parseTags(intent.extraTags ?? [])
 			)

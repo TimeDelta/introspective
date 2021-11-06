@@ -57,8 +57,10 @@ public protocol ActivityDAO {
 	func createActivity(
 		definition: ActivityDefinition,
 		startDate: Date,
+		startDateSetAt: Date?,
 		source: Sources.ActivitySourceNum,
 		endDate: Date?,
+		endDateSetAt: Date?,
 		note: String?,
 		extraTags: [Tag],
 		using transaction: Transaction?
@@ -99,8 +101,10 @@ extension ActivityDAO {
 	public func createActivity(
 		definition: ActivityDefinition,
 		startDate: Date = Date(),
+		startDateSetAt: Date?,
 		source: Sources.ActivitySourceNum = .introspective,
 		endDate: Date? = nil,
+		endDateSetAt: Date? = nil,
 		note: String? = nil,
 		extraTags: [Tag] = [],
 		using transaction: Transaction? = nil
@@ -108,8 +112,10 @@ extension ActivityDAO {
 		try createActivity(
 			definition: definition,
 			startDate: startDate,
+			startDateSetAt: startDateSetAt,
 			source: source,
 			endDate: endDate,
+			endDateSetAt: endDateSetAt,
 			note: note,
 			extraTags: extraTags,
 			using: transaction
@@ -401,8 +407,10 @@ public class ActivityDAOImpl: ActivityDAO {
 	public final func createActivity(
 		definition: ActivityDefinition,
 		startDate: Date,
+		startDateSetAt: Date?,
 		source: Sources.ActivitySourceNum,
 		endDate: Date?,
+		endDateSetAt: Date?,
 		note: String?,
 		extraTags: [Tag],
 		using transaction: Transaction?
@@ -414,7 +422,9 @@ public class ActivityDAOImpl: ActivityDAO {
 		activity.definition = sameContextDefinition
 		activity.note = note
 		activity.start = startDate
+		activity.startSetAt = startDateSetAt
 		activity.end = endDate
+		activity.endSetAt = endDateSetAt
 		activity.setSource(source)
 		extraTags.forEach(activity.addToTags(_:))
 
