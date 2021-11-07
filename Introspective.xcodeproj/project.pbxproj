@@ -370,6 +370,7 @@
 		A26589F32BFC0527881D20D03E4CB48C /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
 		A2DF8D22C94D6F91A865D337C0730F03 /* DurationUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA96F5DDD263FD0D99095EBADBA4AACC /* DurationUnitTests.swift */; };
+		32D62C4B4D5DDAF692DAE183BC452791 /* StepsTimelineTableViewCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934C1FD18CB7B43EF9C3A0CEE017CCC4 /* StepsTimelineTableViewCellDelegate.swift */; };
 		A307D44D6721A760E637CEAE90AFED42 /* BloodPressureTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F312D49748BD5F763B6D8463E6112C45 /* BloodPressureTableViewCell.swift */; };
 		A34600A18766AE66F0324FF5AB10E114 /* GraphType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */; };
 		A4A958FBC360353B84DBFD1E49D8602C /* MiscMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99DEF55FA04C46F3921A7305BB937620 /* MiscMatchers.swift */; };
@@ -1001,6 +1002,7 @@
 		A2505FFD3F0233815468AA6A0A4B96FE /* CoreDataSampleMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSampleMock.swift; sourceTree = "<group>"; };
 		A254A029FEFC43660C4B99A34ABAB46A /* RecordContinuousPainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordContinuousPainTableViewCell.swift; sourceTree = "<group>"; };
 		A25D08E3C5E59C0EC152317C412139BD /* PainSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainSettingsViewController.swift; sourceTree = "<group>"; };
+		934C1FD18CB7B43EF9C3A0CEE017CCC4 /* StepsTimelineTableViewCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsTimelineTableViewCellDelegate.swift; sourceTree = "<group>"; };
 		A30C94F0D3F3F560B5DF8EF74A77E1E9 /* RestingHeartRateTimelineTableViewCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestingHeartRateTimelineTableViewCellDelegate.swift; sourceTree = "<group>"; };
 		A3E36FCC87EF505C8D25E7E1C0AFB644 /* UnifiedView.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = UnifiedView.storyboard; sourceTree = "<group>"; };
 		A455D3386BC23DDD4E8C89EF40475474 /* LessThanDoubleAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanDoubleAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
@@ -2067,6 +2069,7 @@
 				A30C94F0D3F3F560B5DF8EF74A77E1E9 /* RestingHeartRateTimelineTableViewCellDelegate.swift */,
 				8B30CE072710CF51BF5C4A33BCDDAF23 /* SexualActivityTimelineTableViewCellDelegate.swift */,
 				7FE23CB07736990976E16F672FB2A196 /* SleepTimelineTableViewCellDelegate.swift */,
+				934C1FD18CB7B43EF9C3A0CEE017CCC4 /* StepsTimelineTableViewCellDelegate.swift */,
 				C47C6482E5A9805465F922E51E9597AE /* WeightTimelineTableViewCellDelegate.swift */,
 			);
 			path = Timeline;
@@ -3951,6 +3954,7 @@
 				BE24FA988597362EAB7FADF5C1970EE9 /* WeightTimelineTableViewCellDelegate.swift in Sources */,
 				3026B07E143F5908592A57EFA5C69AD6 /* GroupDefinitionTableViewController.swift in Sources */,
 				FB6BEBCF0CBBEA7BE17034F2AE8956ED /* SampleGroupInformationTableViewCell.swift in Sources */,
+				32D62C4B4D5DDAF692DAE183BC452791 /* StepsTimelineTableViewCellDelegate.swift in Sources */,
 				78F81CB4F18A2A12318EA6133198EDAF /* EditFatigueTableViewController.swift in Sources */,
 				6BC39865F7C37F639220609946D97925 /* HealthKitQuantitySampleTableViewCell.swift in Sources */,
 				8D8BC0396B18CE5B859FCF41552EA9B0 /* ActivityEndDateTableViewCell.swift in Sources */,

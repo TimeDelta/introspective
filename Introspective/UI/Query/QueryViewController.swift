@@ -514,6 +514,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		case is RestingHeartRateQuery: addQuerySampleType(RestingHeartRate.self, matcher); break
 		case is SexualActivityQuery: addQuerySampleType(SexualActivity.self, matcher); break
 		case is SleepQuery: addQuerySampleType(Sleep.self, matcher); break
+		case is StepsQuery: addQuerySampleType(Steps.self, matcher); break
 		case is WeightQuery: addQuerySampleType(Weight.self, matcher); break
 		default: Me.log.error("Forgot query type: %@", String(describing: type(of: query)))
 		}
@@ -604,6 +605,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		case is RestingHeartRate.Type: return try injected(QueryFactory.self).restingHeartRateQuery(parts)
 		case is SexualActivity.Type: return try injected(QueryFactory.self).sexualActivityQuery(parts)
 		case is Sleep.Type: return try injected(QueryFactory.self).sleepQuery(parts)
+		case is Steps.Type: return try injected(QueryFactory.self).stepsQuery(parts)
 		case is Weight.Type: return try injected(QueryFactory.self).weightQuery(parts)
 		default: throw GenericError("Unknown sample type: \(sampleType.name)")
 		}

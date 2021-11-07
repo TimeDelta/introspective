@@ -64,6 +64,7 @@
 		A2AF201F2343C85300E04517 /* Settings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2AF201E2343C85300E04517 /* Settings.framework */; };
 		A2DEB93223439D5200551E0B /* Attributes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2DEB93123439D5200551E0B /* Attributes.framework */; };
 		A2DEB93C23439F4800551E0B /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2DEB93B23439F4800551E0B /* Persistence.framework */; };
+		A2E30FCD2736DB27004D0A60 /* Steps.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E30FCC2736DB27004D0A60 /* Steps.swift */; };
 		D965E6C4E68635A121CEC18D /* Pods_Samples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FD9205055C3D47CACA310F2 /* Pods_Samples.framework */; };
 /* End PBXBuildFile section */
 
@@ -131,6 +132,7 @@
 		A2AF201E2343C85300E04517 /* Settings.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Settings.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2DEB93123439D5200551E0B /* Attributes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Attributes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2DEB93B23439F4800551E0B /* Persistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Persistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2E30FCC2736DB27004D0A60 /* Steps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Steps.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -231,11 +233,12 @@
 				A22D6250234398AE0023470F /* BloodPressure.swift */,
 				A24BE2F6267D388600E6FECF /* DietarySugar.swift */,
 				A22D624C234398AE0023470F /* HeartRate.swift */,
+				A22D6256234398AE0023470F /* LeanBodyMass.swift */,
 				A22D624D234398AE0023470F /* RestingHeartRate.swift */,
-				A22D624E234398AE0023470F /* Weight.swift */,
 				A22D624B234398AE0023470F /* SexualActivity.swift */,
 				A22D6253234398AE0023470F /* Sleep.swift */,
-				A22D6256234398AE0023470F /* LeanBodyMass.swift */,
+				A2E30FCC2736DB27004D0A60 /* Steps.swift */,
+				A22D624E234398AE0023470F /* Weight.swift */,
 			);
 			path = HealthKit;
 			sourceTree = "<group>";
@@ -404,6 +407,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A22D6263234398AF0023470F /* Mood.swift in Sources */,
+				A2E30FCD2736DB27004D0A60 /* Steps.swift in Sources */,
 				A2A8AFF62343E59100E883CE /* MoodUtil.swift in Sources */,
 				A2AF1FF22343C63900E04517 /* Tag.swift in Sources */,
 				A2034F1724A700F200557F69 /* MoodDAO.swift in Sources */,

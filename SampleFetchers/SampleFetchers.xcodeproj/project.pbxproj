@@ -33,6 +33,7 @@
 		A2A2436D250565FD00FE18CA /* SampleFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A2433F25055B6F00FE18CA /* SampleFetcher.swift */; };
 		A2A2436E250565FD00FE18CA /* ActivitySampleFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A2434025055B6F00FE18CA /* ActivitySampleFetcher.swift */; };
 		A2A2436F250565FD00FE18CA /* BloodPressureSampleFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A2434225055B6F00FE18CA /* BloodPressureSampleFetcher.swift */; };
+		A2E30FD327370316004D0A60 /* StepsSampleFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E30FD227370316004D0A60 /* StepsSampleFetcher.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -65,6 +66,7 @@
 		A2A2436325055EA100FE18CA /* Attributes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Attributes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2A2436625055EBB00FE18CA /* BooleanAlgebra.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BooleanAlgebra.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2A24369250562A500FE18CA /* AttributeRestrictions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AttributeRestrictions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2E30FD227370316004D0A60 /* StepsSampleFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsSampleFetcher.swift; sourceTree = "<group>"; };
 		F5F25BB2B82F7872272C6BDA /* Pods_SampleFetchers.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SampleFetchers.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -134,6 +136,7 @@
 				A2A2435925055D1500FE18CA /* RestingHeartRateSampleFetcher.swift */,
 				A2A2435B25055D2700FE18CA /* SexualActivitySampleFetcher.swift */,
 				A2A2435D25055D3500FE18CA /* SleepSampleFetcher.swift */,
+				A2E30FD227370316004D0A60 /* StepsSampleFetcher.swift */,
 				A2A2435F25055D3E00FE18CA /* WeightSampleFetcher.swift */,
 				A2A2433725055B5000FE18CA /* SampleFetchers.h */,
 				A2A2433825055B5000FE18CA /* Info.plist */,
@@ -264,6 +267,7 @@
 				A2A2436C250565FD00FE18CA /* SampleFetcherFactory.swift in Sources */,
 				A2A2435225055CCE00FE18CA /* HeartRateSampleFetcher.swift in Sources */,
 				A2A2435A25055D1500FE18CA /* RestingHeartRateSampleFetcher.swift in Sources */,
+				A2E30FD327370316004D0A60 /* StepsSampleFetcher.swift in Sources */,
 				A2A2435625055CF100FE18CA /* MedicationDoseSampleFetcher.swift in Sources */,
 				A2A2436E250565FD00FE18CA /* ActivitySampleFetcher.swift in Sources */,
 				A28CCE66267BF33000A590E6 /* PainSampleFetcher.swift in Sources */,

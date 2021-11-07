@@ -90,7 +90,9 @@ The following data types are supported (with more to come, guaranteed):
       - Common Tags **?**
       - Source (the name of the app that generated this record - automatically recorded)
     - Start Time (with time zone)
+    - When start time was set
     - End Time **?** (with time zone)
+    - When end time was set
     - Additional Tags **?** (only appear on this instance of the activity)
     - Note **?**
     - Source (the name of the app that generated this record - automatically recorded)
@@ -123,6 +125,7 @@ The following data types are supported (with more to come, guaranteed):
   - Resting Heart Rate (from Apple Health app)
   - Sexual Activity (from Apple Health app)
   - Sleep (from Apple Health app)
+  - Steps (from Apple Health app)
   - Weight (from Apple Health app)
 
 ## Getting Started with contributing

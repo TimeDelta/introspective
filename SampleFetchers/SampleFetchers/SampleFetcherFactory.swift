@@ -22,6 +22,7 @@ public protocol SampleFetcherFactory {
 	func restingHeartRateSampleFetcher() -> SampleFetcher
 	func sexualActivitySampleFetcher() -> SampleFetcher
 	func sleepSampleFetcher() -> SampleFetcher
+	func stepsSampleFetcher() -> SampleFetcher
 	func weightSampleFetcher() -> SampleFetcher
 }
 
@@ -76,6 +77,10 @@ public final class SampleFetcherFactoryImpl: SampleFetcherFactory {
 
 	public func sleepSampleFetcher() -> SampleFetcher {
 		SleepSampleFetcher()
+	}
+
+	public func stepsSampleFetcher() -> SampleFetcher {
+		StepsSampleFetcher()
 	}
 
 	public func weightSampleFetcher() -> SampleFetcher {

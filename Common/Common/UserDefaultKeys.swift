@@ -31,5 +31,6 @@ public enum UserDefaultKey: String {
 	case restingHeartRateEnabledOnTimeline
 	case sexualActivityEnabledOnTimeline
 	case sleepEnabledOnTimeline
+	case stepsEnabledOnTimeline
 	case weightEnabledOnTimeline
 }

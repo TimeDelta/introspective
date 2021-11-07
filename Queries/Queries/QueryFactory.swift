@@ -41,6 +41,8 @@ public protocol QueryFactory {
 	func sexualActivityQuery(_ parts: [BooleanExpressionPart]) throws -> SexualActivityQuery
 	func sleepQuery() -> SleepQuery
 	func sleepQuery(_ parts: [BooleanExpressionPart]) throws -> SleepQuery
+	func stepsQuery() -> StepsQuery
+	func stepsQuery(_ parts: [BooleanExpressionPart]) throws -> StepsQuery
 	func weightQuery() -> WeightQuery
 	func weightQuery(_ parts: [BooleanExpressionPart]) throws -> WeightQuery
 	func queryFor(_ sampleType: Sample.Type) throws -> Query
@@ -149,6 +151,14 @@ public final class QueryFactoryImpl: QueryFactory {
 
 	public final func sleepQuery(_ parts: [BooleanExpressionPart]) throws -> SleepQuery {
 		try SleepQueryImpl(parts: parts)
+	}
+
+	public final func stepsQuery() -> StepsQuery {
+		StepsQueryImpl()
+	}
+
+	public final func stepsQuery(_ parts: [BooleanExpressionPart]) throws -> StepsQuery {
+		try StepsQueryImpl(parts: parts)
 	}
 
 	public final func weightQuery() -> WeightQuery {

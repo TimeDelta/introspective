@@ -71,6 +71,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		(type: RestingHeartRate.self, fetcher: injected(SampleFetcherFactory.self).restingHeartRateSampleFetcher()),
 		(type: SexualActivity.self, fetcher: injected(SampleFetcherFactory.self).sexualActivitySampleFetcher()),
 		(type: Sleep.self, fetcher: injected(SampleFetcherFactory.self).sleepSampleFetcher()),
+		(type: Steps.self, fetcher: injected(SampleFetcherFactory.self).stepsSampleFetcher()),
 		(type: Weight.self, fetcher: injected(SampleFetcherFactory.self).weightSampleFetcher()),
 	]
 
@@ -101,6 +102,8 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			injected(UserDefaultsUtil.self).bool(forKey: .sexualActivityEnabledOnTimeline),
 		enabledString(for: Sleep.self):
 			injected(UserDefaultsUtil.self).bool(forKey: .sleepEnabledOnTimeline),
+		enabledString(for: Steps.self):
+			injected(UserDefaultsUtil.self).bool(forKey: .stepsEnabledOnTimeline),
 		enabledString(for: Weight.self):
 			injected(UserDefaultsUtil.self).bool(forKey: .weightEnabledOnTimeline),
 	]
@@ -321,6 +324,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			forKey: .sleepEnabledOnTimeline
 		)
 		injected(UserDefaultsUtil.self).setUserDefault(
+			enabledSampleTypes[Me.enabledString(for: Steps.self)] ?? false,
+			forKey: .stepsEnabledOnTimeline
+		)
+		injected(UserDefaultsUtil.self).setUserDefault(
 			enabledSampleTypes[Me.enabledString(for: Weight.self)] ?? false,
 			forKey: .weightEnabledOnTimeline
 		)
@@ -507,6 +514,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			appendSleepEvents(for: sleep, to: &events)
 			return
 		}
+		if let steps = sample as? Steps {
+			appendStepsEvents(for: steps, to: &events)
+			return
+		}
 		if let weight = sample as? Weight {
 			appendWeightEvents(for: weight, to: &events)
 			return
@@ -578,6 +589,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		if let event = GotOutOfBedEvent(for: sleep) {
 			events.append(event)
 		}
+	}
+
+	private func appendStepsEvents(for steps: Steps, to events: inout [Event]) {
+		events.append(StepsEvent(for: steps))
 	}
 
 	private func appendWeightEvents(for weight: Weight, to events: inout [Event]) {
@@ -930,6 +945,21 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 				"- In bed for " + sleep.duration.description,
 			]
 			super.init(at: sleep.endDate, for: sleep, descriptions: descriptions)
+		}
+	}
+
+	// MARK: Step Events
+
+	private final class StepsEvent: Event {
+		override var delegate: TimelineTableViewCellDelegate {
+			StepsTimelineTableViewCellDelegate()
+		}
+
+		init(for steps: Steps) {
+			let descriptions = [
+				"👣 Steps: " + formatValue(steps.steps),
+			]
+			super.init(at: steps.timestamp, for: steps, descriptions: descriptions)
 		}
 	}
 
