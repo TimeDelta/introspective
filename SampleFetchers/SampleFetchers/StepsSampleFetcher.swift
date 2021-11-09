@@ -12,13 +12,12 @@ import DependencyInjection
 import Queries
 import Samples
 
-public final class StepsSampleFetcher: SingleDateHealthKitSampleFetcher {
-	public override var sampleTypePluralName: String { "Heart Rates" }
+public final class StepsSampleFetcher: TwoDateHealthKitSampleFetcher {
+	public override var sampleTypePluralName: String {
+		"Steps Data"
+	}
 
 	public init() {
-		super.init(
-			{ injected(QueryFactory.self).stepsQuery() },
-			dateAttribute: CommonSampleAttributes.healthKitTimestamp
-		)
+		super.init { injected(QueryFactory.self).stepsQuery() }
 	}
 }

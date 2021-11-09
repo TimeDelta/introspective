@@ -45,30 +45,41 @@ public final class Steps: HealthKitQuantitySample {
 		pluralName: "Step Counts",
 		variableName: HKPredicateKeyPathQuantity
 	)
-	public static let attributes: [Attribute] = [CommonSampleAttributes.healthKitTimestamp, stepCount]
+	public static let durationAttribute = DurationAttribute()
+	public static let attributes: [Attribute] = [
+		durationAttribute,
+		stepCount,
+		CommonSampleAttributes.healthKitStartDate,
+		CommonSampleAttributes.healthKitEndDate,
+	]
 	public static var dateAttributes: [DateType: DateAttribute] = [
-		.start: CommonSampleAttributes.healthKitTimestamp,
+		.start: CommonSampleAttributes.healthKitStartDate,
+		.end: CommonSampleAttributes.healthKitEndDate,
 	]
 	public static let defaultDependentAttribute: Attribute = stepCount
-	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp
+	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitStartDate
 	public final var attributes: [Attribute] { Me.attributes }
 
 	// MARK: - Instance Variables
 
-	public final var timestamp: Date
+	public final var start: Date
+	public final var end: Date
 	public final var steps: Double
 
 	// MARK: - Initializers
 
-	public init(_ value: Double = Double(), _ timestamp: Date = Date()) {
+	public init(_ value: Double = Double(), _ start: Date = Date(), _ end: Date = Date()) {
 		steps = value
-		self.timestamp = timestamp
+		self.start = start
+		self.end = end
 	}
 
 	public required init(_ sample: HKQuantitySample) {
 		steps = sample.quantity.doubleValue(for: Me.unit)
-		timestamp = sample.startDate
-		injected(HealthKitUtil.self).setTimeZoneIfApplicable(for: &timestamp, from: sample)
+		start = sample.startDate
+		end = sample.endDate
+		injected(HealthKitUtil.self).setTimeZoneIfApplicable(for: &start, from: sample)
+		injected(HealthKitUtil.self).setTimeZoneIfApplicable(for: &end, from: sample)
 	}
 
 	// MARK: - HealthKitSample Functions
@@ -78,8 +89,8 @@ public final class Steps: HealthKitQuantitySample {
 		return HKQuantitySample(
 			type: Me.quantityType,
 			quantity: quantity,
-			start: timestamp,
-			end: timestamp,
+			start: start,
+			end: end,
 			metadata: [HKMetadataKeyTimeZone: TimeZone.autoupdatingCurrent.identifier]
 		)
 	}
@@ -93,7 +104,10 @@ public final class Steps: HealthKitQuantitySample {
 	// MARK: - Sample Functions
 
 	public final func dates() -> [DateType: Date] {
-		[.start: timestamp]
+		[
+			.start: start,
+			.end: end,
+		]
 	}
 
 	// MARK: - Attributed Functions
@@ -102,8 +116,11 @@ public final class Steps: HealthKitQuantitySample {
 		if attribute.equalTo(Me.stepCount) {
 			return steps
 		}
-		if attribute.equalTo(CommonSampleAttributes.healthKitTimestamp) {
-			return timestamp
+		if attribute.equalTo(CommonSampleAttributes.healthKitStartDate) {
+			return start
+		}
+		if attribute.equalTo(CommonSampleAttributes.healthKitEndDate) {
+			return end
 		}
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
@@ -116,11 +133,18 @@ public final class Steps: HealthKitQuantitySample {
 			steps = castedValue
 			return
 		}
-		if attribute.equalTo(CommonSampleAttributes.healthKitTimestamp) {
+		if attribute.equalTo(CommonSampleAttributes.healthKitStartDate) {
 			guard let castedValue = value as? Date else {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 			}
-			timestamp = castedValue
+			start = castedValue
+			return
+		}
+		if attribute.equalTo(CommonSampleAttributes.healthKitEndDate) {
+			guard let castedValue = value as? Date else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
+			end = castedValue
 			return
 		}
 		throw UnknownAttributeError(attribute: attribute, for: self)
@@ -147,7 +171,7 @@ extension Steps: Equatable {
 	}
 
 	public final func equalTo(_ other: Steps) -> Bool {
-		timestamp == other.timestamp && steps == other.steps
+		start == other.start && end == other.end && steps == other.steps
 	}
 }
 
@@ -155,6 +179,6 @@ extension Steps: Equatable {
 
 extension Steps: CustomDebugStringConvertible {
 	public final var debugDescription: String {
-		"\(steps) steps at " + timestamp.debugDescription
+		"\(steps) steps from " + start.debugDescription + " to " + end.debugDescription
 	}
 }

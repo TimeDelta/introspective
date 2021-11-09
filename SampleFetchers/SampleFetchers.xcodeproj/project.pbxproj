@@ -34,6 +34,7 @@
 		A2A2436E250565FD00FE18CA /* ActivitySampleFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A2434025055B6F00FE18CA /* ActivitySampleFetcher.swift */; };
 		A2A2436F250565FD00FE18CA /* BloodPressureSampleFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A2434225055B6F00FE18CA /* BloodPressureSampleFetcher.swift */; };
 		A2E30FD327370316004D0A60 /* StepsSampleFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E30FD227370316004D0A60 /* StepsSampleFetcher.swift */; };
+		A2E30FD7273ABB1C004D0A60 /* TwoDateHealthKitSampleFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E30FD6273ABB1C004D0A60 /* TwoDateHealthKitSampleFetcher.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +68,7 @@
 		A2A2436625055EBB00FE18CA /* BooleanAlgebra.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BooleanAlgebra.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2A24369250562A500FE18CA /* AttributeRestrictions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AttributeRestrictions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2E30FD227370316004D0A60 /* StepsSampleFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsSampleFetcher.swift; sourceTree = "<group>"; };
+		A2E30FD6273ABB1C004D0A60 /* TwoDateHealthKitSampleFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoDateHealthKitSampleFetcher.swift; sourceTree = "<group>"; };
 		F5F25BB2B82F7872272C6BDA /* Pods_SampleFetchers.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SampleFetchers.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -123,6 +125,7 @@
 				A2A2433F25055B6F00FE18CA /* SampleFetcher.swift */,
 				A2A2434125055B6F00FE18CA /* SampleFetcherFactory.swift */,
 				A2A2436125055D8B00FE18CA /* SingleDateHealthKitSampleFetcher.swift */,
+				A2E30FD6273ABB1C004D0A60 /* TwoDateHealthKitSampleFetcher.swift */,
 				A2A2434025055B6F00FE18CA /* ActivitySampleFetcher.swift */,
 				A2A2434225055B6F00FE18CA /* BloodPressureSampleFetcher.swift */,
 				A2A2434F25055CBA00FE18CA /* BodyMassIndexSampleFetcher.swift */,
@@ -267,6 +270,7 @@
 				A2A2436C250565FD00FE18CA /* SampleFetcherFactory.swift in Sources */,
 				A2A2435225055CCE00FE18CA /* HeartRateSampleFetcher.swift in Sources */,
 				A2A2435A25055D1500FE18CA /* RestingHeartRateSampleFetcher.swift in Sources */,
+				A2E30FD7273ABB1C004D0A60 /* TwoDateHealthKitSampleFetcher.swift in Sources */,
 				A2E30FD327370316004D0A60 /* StepsSampleFetcher.swift in Sources */,
 				A2A2435625055CF100FE18CA /* MedicationDoseSampleFetcher.swift in Sources */,
 				A2A2436E250565FD00FE18CA /* ActivitySampleFetcher.swift in Sources */,

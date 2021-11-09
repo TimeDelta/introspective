@@ -592,7 +592,8 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	}
 
 	private func appendStepsEvents(for steps: Steps, to events: inout [Event]) {
-		events.append(StepsEvent(for: steps))
+		events.append(StartedWalkingEvent(for: steps))
+		events.append(StoppedWalkingEvent(for: steps))
 	}
 
 	private func appendWeightEvents(for weight: Weight, to events: inout [Event]) {
@@ -950,16 +951,29 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 
 	// MARK: Step Events
 
-	private final class StepsEvent: Event {
+	private final class StartedWalkingEvent: StartEvent {
 		override var delegate: TimelineTableViewCellDelegate {
 			StepsTimelineTableViewCellDelegate()
 		}
 
 		init(for steps: Steps) {
 			let descriptions = [
-				"👣 Steps: " + formatValue(steps.steps),
+				"👣 Started walking (" + formatValue(steps.steps) + " steps)",
 			]
-			super.init(at: steps.timestamp, for: steps, descriptions: descriptions)
+			super.init(at: steps.start, for: steps, descriptions: descriptions)
+		}
+	}
+
+	private final class StoppedWalkingEvent: StopEvent {
+		override var delegate: TimelineTableViewCellDelegate {
+			StepsTimelineTableViewCellDelegate()
+		}
+
+		init(for steps: Steps) {
+			let descriptions = [
+				"👣 Stopped walking (" + formatValue(steps.steps) + " steps)",
+			]
+			super.init(at: steps.end, for: steps, descriptions: descriptions)
 		}
 	}
 
