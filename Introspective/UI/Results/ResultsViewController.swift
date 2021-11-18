@@ -315,6 +315,13 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				) as! FatigueTableViewCell)
 				cell.fatigue = (sample as! Fatigue)
 				return cell
+			case is Steps: // must come before HealthKitQuantitySample
+				let cell = (tableView.dequeueReusableCell(
+					withIdentifier: "stepsCell",
+					for: indexPath
+				) as! StepsTableViewCell)
+				cell.steps = (sample as! Steps)
+				return cell
 			case is HealthKitQuantitySample:
 				let cell = (tableView.dequeueReusableCell(
 					withIdentifier: "healthKitQuantitySampleCell",
