@@ -371,7 +371,6 @@
 		A26589F32BFC0527881D20D03E4CB48C /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
 		A2DF8D22C94D6F91A865D337C0730F03 /* DurationUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA96F5DDD263FD0D99095EBADBA4AACC /* DurationUnitTests.swift */; };
-		C39C5306BE8AA3A1D5F822A7F2469E31 /* StepsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D325556C12A806C679E711C7155008D /* StepsTableViewCell.swift */; };
 		A307D44D6721A760E637CEAE90AFED42 /* BloodPressureTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F312D49748BD5F763B6D8463E6112C45 /* BloodPressureTableViewCell.swift */; };
 		A34600A18766AE66F0324FF5AB10E114 /* GraphType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */; };
 		A4A958FBC360353B84DBFD1E49D8602C /* MiscMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99DEF55FA04C46F3921A7305BB937620 /* MiscMatchers.swift */; };
@@ -437,6 +436,7 @@
 		C20856BFEE25277F08AD5F1CBBF4C0C3 /* SingleSampleTypeXYGraphDataGeneratorUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED1ED371E1529BCAA650A691AE74834 /* SingleSampleTypeXYGraphDataGeneratorUnitTests.swift */; };
 		C24FBD68696FC353B4EBD62347767D8D /* NotificationsMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB6EA17C1791732855C2C5F151EC4341 /* NotificationsMocks.swift */; };
 		C2C88F1B669BAAF878E50FC890F92AD9 /* SelectOneAttributeValueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA75F2691AE8A3935FF7CAA81B5A3D4E /* SelectOneAttributeValueViewController.swift */; };
+		C39C5306BE8AA3A1D5F822A7F2469E31 /* StepsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D325556C12A806C679E711C7155008D /* StepsTableViewCell.swift */; };
 		C3FD8E71E815CF49F7DAB1F40C7B279F /* ActivityIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07DBCF028AB728CB91602F18C812CB2A /* ActivityIntentHandler.swift */; };
 		C43A2229976D53A013FF8E722A72BDDE /* RecordData.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B5F8BF11900044421A50FB27C0A83A25 /* RecordData.storyboard */; };
 		C47E802963A18E06B587E18196E2BB04 /* ImportDataTableViewControllerUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58D4F7A20D65B7D8B57AD3C509F9BC16 /* ImportDataTableViewControllerUnitTests.swift */; };
@@ -910,6 +910,7 @@
 		7CCC5B52B7763BF96CDC97A91B6F9A0F /* ActiveExportTableViewCellUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveExportTableViewCellUnitTests.swift; sourceTree = "<group>"; };
 		7CCE5C625CFFE60BDD95D4EB82375FBA /* MedianInformationFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedianInformationFunctionalTests.swift; sourceTree = "<group>"; };
 		7CD59D0ACA2B51D77F7F11B0C8BB6586 /* ActiveExportTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveExportTableViewCell.swift; sourceTree = "<group>"; };
+		7D325556C12A806C679E711C7155008D /* StepsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsTableViewCell.swift; sourceTree = "<group>"; };
 		7DAE3275E008400544CB2EB1FD59CF6C /* FrequencyEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrequencyEditorViewController.swift; sourceTree = "<group>"; };
 		7DF12E0E1923C8E864C89BCABDEB6AD5 /* SearchUtilUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUtilUnitTests.swift; sourceTree = "<group>"; };
 		7E71A40F4AA2C10AB0C507C48A1C983D /* AutoLenses.stencil */ = {isa = PBXFileReference; lastKnownFileType = text; path = AutoLenses.stencil; sourceTree = "<group>"; };
@@ -1004,7 +1005,6 @@
 		A2505FFD3F0233815468AA6A0A4B96FE /* CoreDataSampleMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSampleMock.swift; sourceTree = "<group>"; };
 		A254A029FEFC43660C4B99A34ABAB46A /* RecordContinuousPainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordContinuousPainTableViewCell.swift; sourceTree = "<group>"; };
 		A25D08E3C5E59C0EC152317C412139BD /* PainSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainSettingsViewController.swift; sourceTree = "<group>"; };
-		7D325556C12A806C679E711C7155008D /* StepsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsTableViewCell.swift; sourceTree = "<group>"; };
 		A30C94F0D3F3F560B5DF8EF74A77E1E9 /* RestingHeartRateTimelineTableViewCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestingHeartRateTimelineTableViewCellDelegate.swift; sourceTree = "<group>"; };
 		A3E36FCC87EF505C8D25E7E1C0AFB644 /* UnifiedView.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = UnifiedView.storyboard; sourceTree = "<group>"; };
 		A455D3386BC23DDD4E8C89EF40475474 /* LessThanDoubleAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanDoubleAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
@@ -4089,7 +4089,7 @@
 				CODE_SIGN_ENTITLEMENTS = Introspective/Introspective.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = M4DG35ZPLD;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4102,7 +4102,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bnova.Introspective;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4173,7 +4173,7 @@
 				CODE_SIGN_ENTITLEMENTS = Introspective/Introspective.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = M4DG35ZPLD;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4186,7 +4186,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bnova.Introspective;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
