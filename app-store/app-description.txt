@@ -54,6 +54,7 @@ The following data types are supported (with more to come, guaranteed). For a fu
   - Resting Heart Rate
   - Sexual Activity
   - Sleep
+  - Steps
   - Weight
 
 
