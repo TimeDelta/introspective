@@ -194,8 +194,6 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 		tableView.rowHeight = UITableView.automaticDimension
 		tableView.estimatedRowHeight = 44
-
-		filterSamples()
 	}
 
 	deinit {
@@ -1022,10 +1020,6 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		DispatchQueue.main.async {
 			self.enableActionsButton()
 		}
-		injected(AsyncUtil.self).run(qos: .userInteractive) {
-			self.recomputeInformation()
-			DispatchQueue.main.async { self.tableView.reloadData() }
-		}
 	}
 
 	private final func waiting() -> Bool {
@@ -1034,15 +1028,17 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	// leave non-private for testing
 	final func recomputeInformation() {
-		informationValues = [String]()
+		var newInformationValues = [String]()
 		for index in 0 ..< information.count {
 			do {
-				informationValues.append(try information[index].compute(forSamples: filteredSamples))
+				let value = try information[index].compute(forSamples: filteredSamples)
+				newInformationValues.append(value)
 			} catch {
 				Me.log.error("Failed to compute %@ information: %@", information[index].name, errorInfo(error))
-				informationValues.append("") // avoid any index out of bounds errors
+				newInformationValues.append("") // avoid any index out of bounds errors
 			}
 		}
+		informationValues = newInformationValues
 	}
 
 	private final func samplesAreDeletable() -> Bool {
