@@ -34,6 +34,7 @@ public enum UserInfoKey: StringLiteralType, Hashable, CustomStringConvertible {
 	case fromDate = "fromDate"
 	case graphType = "graphType"
 	case groupDefinition = "groupDefinition"
+	case indexPath = "indexPath"
 	case information = "information"
 	case medication = "medication"
 	case message = "message"

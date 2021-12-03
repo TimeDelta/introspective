@@ -35,8 +35,9 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 
 	// MARK: Notification Names
 
-	static let dateRangeSet = Notification.Name("medicationDosesTableDateRangeSet")
-	static let enabledDataTypesChanged = Notification.Name("enabledDataTypesChanged")
+	static let dateRangeSet = Notification.Name("timelineDateRangeSet")
+	static let enabledDataTypesChanged = Notification.Name("timelineEnabledDataTypesChanged")
+	static let sampleChanged = Notification.Name("timelineViewSampleChanged")
 
 	// MARK: Presenters
 
@@ -134,6 +135,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		observe(selector: #selector(enabledDataTypesChanged), name: Me.enabledDataTypesChanged)
 		observe(selector: #selector(persistenceLayerDidRefresh), name: .persistenceLayerDidRefresh)
 		observe(selector: #selector(persistenceLayerWillRefresh), name: .persistenceLayerWillRefresh)
+		observe(selector: #selector(sampleChanged), name: Me.sampleChanged)
 
 		let chooseDataTypesButton = barButton(title: "☑️ Data Types", action: #selector(chooseDataTypesButtonPressed))
 		navigationItem.rightBarButtonItem = chooseDataTypesButton
@@ -196,6 +198,8 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			return
 		}
 		if let controller = event.delegate.editController(for: event.sample) {
+			controller.notificationToSendOnAccept = Me.sampleChanged
+			controller.indexPath = indexPath
 			pushToNavigationController(controller)
 		}
 	}
@@ -375,7 +379,64 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		}
 	}
 
+	@objc private func sampleChanged(notification: Notification) {
+//		if
+//			let indexPath: IndexPath? = value(for: .indexPath, from: notification),
+//			let sample: Sample = value(for: .sample, from: notification)
+//		{
+//			if let event = event(at: indexPath!) {
+//				let originalSample = event.sample
+//				// cannot force Sample to conform to Hashable due to associated type fo Equatable
+//				var samples = Set<Sample>()
+//				if let buckets = eventBuckets {
+//					for var bucket in buckets {
+//						bucket.events.removeAll(where: { $0.sample.equalTo(originalSample) })
+//						samples.append(contentsOf: bucket.events.map{ $0.sample })
+//					}
+//				}
+//				setEvents(for: samples)
+//			}
+//		} else {
+			fetchSamples()
+//		}
+	}
+
 	// MARK: - Helper Functions
+
+	private func setEvents(for samples: [Sample]) {
+		let signpostName2: StaticString = "Determining events"
+		Me.signpost.begin(name: signpostName2)
+		var events = [Event]()
+		for sample in samples {
+			appendEvents(for: sample, to: &events)
+		}
+		var eventsByDay = [(day: Date, events: [Event])]()
+		var eventsForCurrentDay = [Event]()
+		var currentDay: Date?
+		let sortedEvents = sortEventsByMostRecentFirst(events)
+		for event in sortedEvents {
+			if let minDate = minDate {
+				guard event.date >= minDate else { continue }
+			}
+			if let maxDate = maxDate {
+				guard event.date <= maxDate else { continue }
+			}
+			let newDay = injected(CalendarUtil.self).start(of: .day, in: event.date)
+			if newDay != currentDay {
+				if let currentDay = currentDay {
+					eventsByDay.append((day: currentDay, events: eventsForCurrentDay))
+				}
+				eventsForCurrentDay = [Event]()
+				currentDay = newDay
+			}
+			eventsForCurrentDay.append(event)
+		}
+		if let currentDay = currentDay {
+			eventsByDay.append((day: currentDay, events: eventsForCurrentDay))
+		}
+		Me.signpost.end(name: signpostName2, "Processed %d events", events.count)
+		eventBuckets = eventsByDay
+	}
 
 	private func event(at indexPath: IndexPath) -> Event? {
 		eventBuckets?[indexPath.section].events[indexPath.row]
@@ -415,38 +476,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		fetchSync.wait()
 		Me.signpost.end(name: signpostName1, "Fetched %d samples", samples.count)
 
-		let signpostName2: StaticString = "Determining events"
-		Me.signpost.begin(name: signpostName2)
-		var events = [Event]()
-		for sample in samples {
-			appendEvents(for: sample, to: &events)
-		}
-		var eventsByDay = [(day: Date, events: [Event])]()
-		var eventsForCurrentDay = [Event]()
-		var currentDay: Date?
-		let sortedEvents = sortEventsByMostRecentFirst(events)
-		for event in sortedEvents {
-			if let minDate = minDate {
-				guard event.date >= minDate else { continue }
-			}
-			if let maxDate = maxDate {
-				guard event.date <= maxDate else { continue }
-			}
-			let newDay = injected(CalendarUtil.self).start(of: .day, in: event.date)
-			if newDay != currentDay {
-				if let currentDay = currentDay {
-					eventsByDay.append((day: currentDay, events: eventsForCurrentDay))
-				}
-				eventsForCurrentDay = [Event]()
-				currentDay = newDay
-			}
-			eventsForCurrentDay.append(event)
-		}
-		if let currentDay = currentDay {
-			eventsByDay.append((day: currentDay, events: eventsForCurrentDay))
-		}
-		Me.signpost.end(name: signpostName2, "Processed %d events", events.count)
-		eventBuckets = eventsByDay
+		setEvents(for: samples)
 	}
 
 	private func sortEventsByMostRecentFirst(_ events: [Event]) -> [Event] {

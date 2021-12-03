@@ -14,11 +14,10 @@ import DependencyInjection
 import Persistence
 import Samples
 
-public protocol MedicationDoseEditorViewController: UIViewController {
+public protocol MedicationDoseEditorViewController: UIViewController, EditViewController {
 	var medicationDose: MedicationDose? { get set }
 	/// If `medicationDose` is not set, will use default dosage and is only required if not editing an existing dose
 	var medication: Medication! { get set }
-	var notificationToSendOnAccept: Notification.Name! { get set }
 	var userInfoKey: UserInfoKey { get set }
 }
 
@@ -44,7 +43,8 @@ public final class MedicationDoseEditorViewControllerImpl: UIViewController, Med
 	public final var medicationDose: MedicationDose?
 	/// If `medicationDose` is not set, will use default dosage and is only required if not editing an existing dose
 	public final var medication: Medication!
-	public final var notificationToSendOnAccept: Notification.Name!
+	public final var notificationToSendOnAccept: Notification.Name?
+	public final var indexPath: IndexPath?
 	public final var userInfoKey: UserInfoKey = .dose
 
 	private final var limitDateToStartOfMinute = true
@@ -133,12 +133,14 @@ public final class MedicationDoseEditorViewControllerImpl: UIViewController, Med
 			medicationDose?.date = datePicker.date
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 			medicationDose = try injected(Database.self).pull(savedObject: medicationDose!)
-			post(
-				notificationToSendOnAccept,
-				userInfo: [
-					userInfoKey: medicationDose as Any,
-				]
-			)
+			if let notificationToSend = notificationToSendOnAccept {
+				post(
+					notificationToSend,
+					userInfo: [
+						userInfoKey: medicationDose as Any,
+					]
+				)
+			}
 			dismiss(animated: false, completion: nil)
 		} catch {
 			Me.log.error("Failed to create medication dose: %@", errorInfo(error))

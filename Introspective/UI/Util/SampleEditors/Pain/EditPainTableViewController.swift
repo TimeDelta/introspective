@@ -15,9 +15,7 @@ import Persistence
 import Samples
 import Settings
 
-public protocol EditPainTableViewController: UITableViewController {
-	/// If nil, no notification will be sent
-	var notificationToSendOnAccept: Notification.Name? { get set }
+public protocol EditPainTableViewController: UITableViewController, EditViewController {
 	var userInfoKey: UserInfoKey { get set }
 	var pain: Pain? { get set }
 }
@@ -55,6 +53,7 @@ public final class EditPainTableViewControllerImpl: UITableViewController, EditP
 	// MARK: - Instance Variables
 
 	public final var notificationToSendOnAccept: Notification.Name?
+	public final var indexPath: IndexPath?
 	/// The user info key to use when sending back the edited pain record
 	public final var userInfoKey: UserInfoKey = .pain
 	public final var pain: Pain? {

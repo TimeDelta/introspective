@@ -14,7 +14,7 @@ import Samples
 
 protocol TimelineTableViewCellDelegate {
 	/// If applicable, this function should return a controller capable of allowing the user to edit the given sample
-	func editController(for sample: Sample) -> UIViewController?
+	func editController(for sample: Sample) -> EditViewController?
 }
 
 protocol TimelineTableViewCell: UITableViewCell {

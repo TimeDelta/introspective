@@ -15,9 +15,7 @@ import Persistence
 import Samples
 import Settings
 
-public protocol EditFatigueTableViewController: UITableViewController {
-	/// If nil, no notification will be sent
-	var notificationToSendOnAccept: Notification.Name? { get set }
+public protocol EditFatigueTableViewController: UITableViewController, EditViewController {
 	var userInfoKey: UserInfoKey { get set }
 	var fatigue: Fatigue? { get set }
 }
@@ -52,7 +50,9 @@ public final class EditFatigueTableViewControllerImpl: UITableViewController, Ed
 
 	// MARK: - Instance Variables
 
+	/// If nil, no notification will be sent
 	public final var notificationToSendOnAccept: Notification.Name?
+	public final var indexPath: IndexPath?
 	/// The user info key to use when sending back the edited fatigue record
 	public final var userInfoKey: UserInfoKey = .fatigue
 	public final var fatigue: Fatigue? {
@@ -210,6 +210,7 @@ public final class EditFatigueTableViewControllerImpl: UITableViewController, Ed
 					notificationToSendOnAccept,
 					userInfo: [
 						userInfoKey: fatigue as Any,
+						.indexPath: indexPath as Any,
 					]
 				)
 			}

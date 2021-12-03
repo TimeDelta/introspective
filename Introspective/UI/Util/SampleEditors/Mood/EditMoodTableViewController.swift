@@ -15,9 +15,7 @@ import Persistence
 import Samples
 import Settings
 
-public protocol EditMoodTableViewController: UITableViewController {
-	/// If nil, no notification will be sent
-	var notificationToSendOnAccept: Notification.Name? { get set }
+public protocol EditMoodTableViewController: UITableViewController, EditViewController {
 	var userInfoKey: UserInfoKey { get set }
 	var mood: Mood? { get set }
 }
@@ -53,6 +51,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 	// MARK: - Instance Variables
 
 	public final var notificationToSendOnAccept: Notification.Name?
+	public final var indexPath: IndexPath?
 	public final var userInfoKey: UserInfoKey = .mood
 	public final var mood: Mood? {
 		didSet {

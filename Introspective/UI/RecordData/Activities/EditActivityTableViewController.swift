@@ -16,8 +16,7 @@ import Persistence
 import Samples
 import Settings
 
-public protocol EditActivityTableViewController: UITableViewController {
-	var notificationToSendOnAccept: Notification.Name! { get set }
+public protocol EditActivityTableViewController: UITableViewController, EditViewController {
 	var userInfoKey: UserInfoKey { get set }
 
 	var activity: Activity? { get set }
@@ -69,7 +68,8 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 
 	// MARK: - Instance Variables
 
-	public final var notificationToSendOnAccept: Notification.Name!
+	public final var notificationToSendOnAccept: Notification.Name?
+	public var indexPath: IndexPath?
 	public final var userInfoKey: UserInfoKey = .activity
 	public final var activity: Activity? {
 		didSet {
@@ -345,14 +345,16 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 			try updateTagsForActivity(activity, using: transaction)
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 			activity = try injected(Database.self).pull(savedObject: activity)
-			DispatchQueue.main.async {
-				NotificationCenter.default.post(
-					name: self.notificationToSendOnAccept,
-					object: self,
-					userInfo: self.info([
-						self.userInfoKey: activity!,
-					])
-				)
+			if let notificationToSend = notificationToSendOnAccept {
+				DispatchQueue.main.async {
+					NotificationCenter.default.post(
+						name: notificationToSend,
+						object: self,
+						userInfo: self.info([
+							self.userInfoKey: activity!,
+						])
+					)
+				}
 			}
 			navigationController?.popViewController(animated: false)
 		} catch {

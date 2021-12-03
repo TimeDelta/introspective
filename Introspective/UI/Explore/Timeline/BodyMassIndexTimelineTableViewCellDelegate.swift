@@ -11,7 +11,7 @@ import UIKit
 import Samples
 
 class BodyMassIndexTimelineTableViewCellDelegate: TimelineTableViewCellDelegate {
-	func editController(for sample: Sample) -> UIViewController? {
+	func editController(for sample: Sample) -> EditViewController? {
 		nil
 	}
 }

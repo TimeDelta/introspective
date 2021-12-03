@@ -17,7 +17,7 @@ class MoodTimelineTableViewCellDelegate: TimelineTableViewCellDelegate {
 
 	private static let log = Log()
 
-	func editController(for sample: Sample) -> UIViewController? {
+	func editController(for sample: Sample) -> EditViewController? {
 		guard let mood = sample as? Mood else {
 			Me.log.error(
 				"Wrong type of sample passed to retrieve edit controller for mood: %@",

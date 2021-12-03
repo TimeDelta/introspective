@@ -17,7 +17,7 @@ class MedicationDoseTimelineTableViewCellDelegate: TimelineTableViewCellDelegate
 
 	private static let log = Log()
 
-	func editController(for sample: Sample) -> UIViewController? {
+	func editController(for sample: Sample) -> EditViewController? {
 		guard let dose = sample as? MedicationDose else {
 			Me.log.error(
 				"Wrong type of sample passed to retrieve edit controller for medication dose: %@",
@@ -31,7 +31,6 @@ class MedicationDoseTimelineTableViewCellDelegate: TimelineTableViewCellDelegate
 			as: MedicationDoseEditorViewControllerImpl.self
 		)
 		controller.medicationDose = dose
-//		controller.notificationToSendOnAccept =
 		return controller
 	}
 }
