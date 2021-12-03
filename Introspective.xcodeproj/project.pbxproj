@@ -270,6 +270,7 @@
 		755B0E488FF66A3DFF658CB2B9D71AD7 /* ResultsViewControllerUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB42BEA8A4D67CD5177EC2A509610F8 /* ResultsViewControllerUnitTests.swift */; };
 		758C1C7C797F448FEADD3951EFEAF553 /* MoodNoteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131FBF4684DE5AF7E2016067B85C3936 /* MoodNoteTableViewCell.swift */; };
 		75E5834894536821228DED5FF926A881 /* ActivityDefinitionNameTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AA1DCF95D6A08D5DE00DAE32A56471 /* ActivityDefinitionNameTableViewCell.swift */; };
+		76004C394DB2A877922952E0629F6246 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FECCC8E9045813F441ABF4F49E25324 /* EditViewController.swift */; };
 		764148555A6661D891E0723BFE875258 /* QueryScreenUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8AF1BA62CF59F285D331C712F7E7FB2 /* QueryScreenUITests.swift */; };
 		768B8F1173AEDD0A157DC79F83D0AFBC /* AttributedChooserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E58A24B51EF36F76BC8635DA280D57 /* AttributedChooserViewController.swift */; };
 		771041A34B6F16E1A9CBDA78FF6BCCEF /* MedicationDAOFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DBFC5E195B0A25364A62082A004DF2 /* MedicationDAOFunctionalTests.swift */; };
@@ -367,7 +368,6 @@
 		A0ACDA46E85F2ECEFBDA115171002AEF /* MoodMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE301C2F2247DBBEDE6822A654DD4F1 /* MoodMock.swift */; };
 		A108D51984F45F433488927376B4A95A /* RecordDecimalMoodIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C624D2A8E2DF0D653F2E4CF507F9BC09 /* RecordDecimalMoodIntentHandler.swift */; };
 		A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FC569196ECE6B2231D16543528A687 /* UITest.swift */; };
-		76004C394DB2A877922952E0629F6246 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FECCC8E9045813F441ABF4F49E25324 /* EditViewController.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A26589F32BFC0527881D20D03E4CB48C /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
@@ -809,6 +809,7 @@
 		4EFCB36B18C64CA9C305527217C2B36D /* ContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerView.swift; sourceTree = "<group>"; };
 		4F902645318CE3CA20F195D285592D48 /* EditActivityDefinitionTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditActivityDefinitionTableViewController.swift; sourceTree = "<group>"; };
 		4F9AD32F1EE1369EDE699A6AAF6B8A98 /* SampleQueryMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleQueryMock.swift; sourceTree = "<group>"; };
+		4FECCC8E9045813F441ABF4F49E25324 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		50669801E9B27BB96C5B13BC94E1EF14 /* ActivityExporterFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityExporterFunctionalTests.swift; sourceTree = "<group>"; };
 		512C33704C8FCB7593E08FF2F731EBEB /* SampleGroupInformationTableViewCellUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleGroupInformationTableViewCellUnitTests.swift; sourceTree = "<group>"; };
 		5148425BFEAA576D40966089DC41DC81 /* OnDayOfWeekAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDayOfWeekAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
@@ -1001,7 +1002,6 @@
 		A1B93F7FE435E06819E4BF152382DAA9 /* EqualToDurationAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToDurationAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphType.swift; sourceTree = "<group>"; };
 		A22D5ACFE86EF6F1ED02801B02A60A14 /* DiscreteFatigueRatingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscreteFatigueRatingTableViewCell.swift; sourceTree = "<group>"; };
-		4FECCC8E9045813F441ABF4F49E25324 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		A2505FFD3F0233815468AA6A0A4B96FE /* CoreDataSampleMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSampleMock.swift; sourceTree = "<group>"; };
@@ -4106,7 +4106,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6.1;
+				MARKETING_VERSION = 1.6.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bnova.Introspective;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4190,7 +4190,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6.1;
+				MARKETING_VERSION = 1.6.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bnova.Introspective;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

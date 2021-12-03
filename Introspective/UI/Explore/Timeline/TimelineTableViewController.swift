@@ -397,7 +397,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 //				setEvents(for: samples)
 //			}
 //		} else {
-			fetchSamples()
+		fetchSamples()
 //		}
 	}
 
