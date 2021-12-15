@@ -3,7 +3,6 @@
 ## Contents
 - [What is this?](#what-is-this)
 - [Introduction](#introduction)
-- [Why?](#why)
 - [The dangers of doing this wrong](#the-dangers-of-doing-this-wrong)
 - [Choosing the right recording method](#choosing-the-right-recording-method)
 - [Features](#main-features)
