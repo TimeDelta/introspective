@@ -22,7 +22,7 @@ What if a doctor had actual data available to customize the care of each individ
 ## The dangers of doing this wrong
 ### Distorted data: tracking bias
 ### Normal biases
-See [8 types of bias in data analysis and how to avoid them](https://searchbusinessanalytics.techtarget.com/feature/8-types-of-bias-in-data-analysis-and-how-to-avoid-them?amp=1) for other types of bias
+See https://commons.wikimedia.org/wiki/File:The_Cognitive_Bias_Codex_-_180%2B_biases,_designed_by_John_Manoogian_III_(jm3).png for other types of cognitive bias
 ### This is not a replacement for doctors or for the type of population studies done for medications, merely a supplement.
 
 ## Choosing the right recording method
