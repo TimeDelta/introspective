@@ -209,6 +209,18 @@
         <attribute name="name" attributeType="String"/>
         <relationship name="activityDefinitions" toMany="YES" deletionRule="Nullify" destinationEntity="ActivityDefinition" inverseName="tags" inverseEntity="ActivityDefinition"/>
     </entity>
+    <entity name="SingleTagAttributeRestriction" representedClassName="AttributeRestrictions.StoredSingleTagAttributeRestriction" parentEntity="BooleanExpression" syncable="YES">
+        <attribute name="sampleTypeId" attributeType="Integer 16" usesScalarValueType="YES"/>
+        <attribute name="attributeId" attributeType="Integer 16" usesScalarValueType="YES"/>
+        <attribute name="operation" attributeType="Integer 16" usesScalarValueType="YES"/>
+        <attribute name="tagName" attributeType="String"/>
+    </entity>
+    <entity name="TagsAttributeRestriction" representedClassName="AttributeRestrictions.StoredTagsAttributeRestriction" parentEntity="BooleanExpression" syncable="YES">
+        <attribute name="sampleTypeId" attributeType="Integer 16" usesScalarValueType="YES"/>
+        <attribute name="attributeId" attributeType="Integer 16" usesScalarValueType="YES"/>
+        <attribute name="operation" attributeType="Integer 16" usesScalarValueType="YES"/>
+        <attribute name="tagNames" attributeType="String"/>
+    </entity>
     <entity name="TimeOfDayAttributeRestriction" representedClassName="AttributeRestrictions.StoredTimeOfDayAttributeRestriction" parentEntity="BooleanExpression" syncable="YES">
         <attribute name="attributeId" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="comparison" attributeType="Integer 16" usesScalarValueType="YES"/>
@@ -253,6 +265,8 @@
         <element name="Settings" positionX="-289.8668212890625" positionY="352.4930419921875" width="128" height="254"/>
         <element name="StringOperationAttributeRestriction" positionX="-63" positionY="0" width="128" height="89"/>
         <element name="Tag" positionX="72.3931884765625" positionY="376.8829345703125" width="128" height="30"/>
+        <element name="SingleTagAttributeRestriction" positionX="-54" positionY="9" width="128" height="89"/>
+        <element name="TagsAttributeRestriction" positionX="-54" positionY="9" width="128" height="89"/>
         <element name="TimeOfDayAttributeRestriction" positionX="-27" positionY="36" width="128" height="89"/>
         <element name="WellnessMoodImporter" positionX="-271.3795166015625" positionY="230.5117492675781" width="128" height="30"/>
     </elements>
