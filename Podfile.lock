@@ -1,0 +1,87 @@
+PODS:
+  - AAInfographics (5.0.1)
+  - CalendarKit (1.1.15)
+  - CSV.swift (2.3.1)
+  - Instructions (1.2.2)
+  - MarqueeLabel (4.3.2)
+  - NotificationBannerSwift (3.2.1):
+    - MarqueeLabel (~> 4.3.0)
+    - SnapKit (~> 5.6.0)
+  - Presentr (1.9)
+  - SnapKit (5.6.0)
+  - Sourcery (2.3.0):
+    - Sourcery/CLI-Only (= 2.3.0)
+  - Sourcery/CLI-Only (2.3.0)
+  - SwiftDate (6.0.3)
+  - SwiftHamcrest (2.2.4)
+  - SwiftyMocky (4.0.0):
+    - Sourcery (>= 0.18)
+  - WSTagsField (5.4.0)
+
+DEPENDENCIES:
+  - AAInfographics (from `https://github.com/AAChartModel/AAChartKit-Swift.git`, commit `5a4cd821251442fbb24720897db0b1abf7ccef32`)
+  - CalendarKit
+  - CSV.swift (~> 2.3.1)
+  - Instructions (~> 1.2.2)
+  - MarqueeLabel
+  - NotificationBannerSwift
+  - Presentr
+  - Sourcery
+  - SwiftDate (= 6.0.3)
+  - SwiftHamcrest (~> 2.2.1)
+  - SwiftyMocky (from `https://github.com/MakeAWishFoundation/SwiftyMocky.git`, commit `a431fa7d5d322fab57503beef97d8e429766c188`)
+  - WSTagsField (from `https://github.com/TimeDelta/WSTagsField.git`, commit `9c629c40a11a2c7dc60f2783469eb161a6239208`)
+
+SPEC REPOS:
+  trunk:
+    - CalendarKit
+    - CSV.swift
+    - Instructions
+    - MarqueeLabel
+    - NotificationBannerSwift
+    - Presentr
+    - SnapKit
+    - Sourcery
+    - SwiftDate
+    - SwiftHamcrest
+
+EXTERNAL SOURCES:
+  AAInfographics:
+    :commit: 5a4cd821251442fbb24720897db0b1abf7ccef32
+    :git: https://github.com/AAChartModel/AAChartKit-Swift.git
+  SwiftyMocky:
+    :commit: a431fa7d5d322fab57503beef97d8e429766c188
+    :git: https://github.com/MakeAWishFoundation/SwiftyMocky.git
+  WSTagsField:
+    :commit: 9c629c40a11a2c7dc60f2783469eb161a6239208
+    :git: https://github.com/TimeDelta/WSTagsField.git
+
+CHECKOUT OPTIONS:
+  AAInfographics:
+    :commit: 5a4cd821251442fbb24720897db0b1abf7ccef32
+    :git: https://github.com/AAChartModel/AAChartKit-Swift.git
+  SwiftyMocky:
+    :commit: a431fa7d5d322fab57503beef97d8e429766c188
+    :git: https://github.com/MakeAWishFoundation/SwiftyMocky.git
+  WSTagsField:
+    :commit: 9c629c40a11a2c7dc60f2783469eb161a6239208
+    :git: https://github.com/TimeDelta/WSTagsField.git
+
+SPEC CHECKSUMS:
+  AAInfographics: 4f95dfdeb1a1642ab26365b9b40b83693eb5b83d
+  CalendarKit: cd71ec598a838a103f4cb60a6b138e806fbbd7b8
+  CSV.swift: d16f671b3090a2c0525d5f2165b18319074aae2b
+  Instructions: baff1b8ac41e195556c2b3453be1fcdd92e18612
+  MarqueeLabel: 15e524a6762552bb279cb17438b8a94990269fb9
+  NotificationBannerSwift: dce54ded532b26e30cd8e7f4d80e124a0f2ba7d1
+  Presentr: 7078d7eb5d1661ebeaae60c9e42a1e534de1b993
+  SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
+  Sourcery: 521dc708d3d473409e69f1fe7740051a1294d8a4
+  SwiftDate: 8d4f14bf1ef68e95094511504856547bf9e3e1a6
+  SwiftHamcrest: a45dd878978049c0953259aa01c34fd7258d0340
+  SwiftyMocky: 8c701b84442e63efba60cd0f7838cfbbeceed9c9
+  WSTagsField: 78ab4d3f0df475152a6c762876c2b9f341ad1a3b
+
+PODFILE CHECKSUM: f66dd88da9792fc94c0671149c444e12ec03e351
+
+COCOAPODS: 1.17.0

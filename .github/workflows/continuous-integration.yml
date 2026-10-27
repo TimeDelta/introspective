@@ -3,7 +3,7 @@ name: iOS Compatibility Build
 on:
   workflow_dispatch:
   push:
-    branches: [master, ci/ios-26-compatibility]
+    branches: [master]
   pull_request:
     branches: [master]
 
@@ -45,8 +45,8 @@ jobs:
         run: |
           set -euo pipefail
           # Podfile retains the modified TimeDelta/WSTagsField commit.
-          # No lockfile exists yet; retain the resolved graph as an artifact.
-          pod install 2>&1 | tee ci-output/pod-install.log
+          # Keep the reviewed dependency graph fixed on CI.
+          pod install --deployment 2>&1 | tee ci-output/pod-install.log
           cp Podfile.lock ci-output/Podfile.lock
 
       - name: Generate build version
