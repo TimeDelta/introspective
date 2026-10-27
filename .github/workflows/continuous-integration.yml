@@ -49,6 +49,13 @@ jobs:
           pod install 2>&1 | tee ci-output/pod-install.log
           cp Podfile.lock ci-output/Podfile.lock
 
+      - name: Generate build version
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./scripts/create-git-version-swift-file.sh
+          test -s Common/Common/GitVersion.swift
+
       - name: Build without signing
         shell: bash
         run: |
