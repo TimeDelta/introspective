@@ -10,23 +10,23 @@ if ! which swiftformat > /dev/null; then
 fi
 
 get_rules_list() {
-  cat "${SOURCE_ROOT}/config/${1}-code-format-rules.txt" | egrep -v '^$' | egrep -v '^#' | tr '\n' ','
+  cat "${SOURCE_ROOT}/config/${1}-code-format-rules.txt" | egrep -v '^$' | egrep -v '^#' | paste -sd ',' -
 }
 
 swiftformat \
-  --swiftversion `swift --version | awk '{print $4}'` \
+  --swiftversion 5 \
   --tabwidth 4 \
   --maxwidth 120 \
   --wraparguments before-first \
   --wrapparameters before-first \
   --wrapcollections before-first \
   --closingparen balanced \
-  --commas always \
+  --trailingcommas always \
   --shortoptionals always \
   --indent tab \
   --linebreaks lf \
   --header ignore \
-  --specifierorder open,public,internal,private,static,weak,unowned,final,convenience,override \
+  --modifierorder open,public,internal,private,static,weak,unowned,final,convenience,override \
   --disable `get_rules_list disabled` \
   --enable `get_rules_list enabled` \
   `find . -type d -maxdepth 1 -print \
