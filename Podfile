@@ -63,6 +63,8 @@ target 'AttributeRestrictions' do
   pod 'SwiftDate', '6.0.3'
   pod 'CSV.swift', '~> 2.3.1'
   pod 'NotificationBannerSwift'
+  # Required to resolve modules imported through internal frameworks.
+  pod 'Presentr'
 end
 
 target 'Attributes' do
@@ -70,6 +72,10 @@ target 'Attributes' do
   use_frameworks!
 
   pod 'Sourcery'
+  # Required to resolve modules imported through internal frameworks.
+  pod 'CSV.swift', '~> 2.3.1'
+  pod 'Presentr'
+  pod 'SwiftDate', '6.0.3'
 end
 
 target 'BooleanAlgebra' do
@@ -77,6 +83,10 @@ target 'BooleanAlgebra' do
   use_frameworks!
 
   pod 'Sourcery'
+  # Required to resolve modules imported through internal frameworks.
+  pod 'CSV.swift', '~> 2.3.1'
+  pod 'Presentr'
+  pod 'SwiftDate', '6.0.3'
 end
 
 target 'Common' do
@@ -95,6 +105,9 @@ target 'DataExport' do
 
   pod 'Sourcery'
   pod 'CSV.swift', '~> 2.3.1'
+  # Required to resolve modules imported through internal frameworks.
+  pod 'Presentr'
+  pod 'SwiftDate', '6.0.3'
 end
 
 target 'DataImport' do
@@ -105,6 +118,8 @@ target 'DataImport' do
   pod 'CSV.swift', '~> 2.3.1'
   pod 'NotificationBannerSwift'
   pod 'SwiftDate', '6.0.3'
+  # Required to resolve modules imported through internal frameworks.
+  pod 'Presentr'
 end
 
 target 'DependencyInjection' do
@@ -120,6 +135,10 @@ target 'Notifications' do
 
   pod 'Sourcery'
   pod 'NotificationBannerSwift'
+  # Required to resolve modules imported through internal frameworks.
+  pod 'CSV.swift', '~> 2.3.1'
+  pod 'Presentr'
+  pod 'SwiftDate', '6.0.3'
 end
 
 target 'Persistence' do
@@ -128,6 +147,10 @@ target 'Persistence' do
 
   pod 'Sourcery'
   pod 'NotificationBannerSwift'
+  # Required to resolve modules imported through internal frameworks.
+  pod 'CSV.swift', '~> 2.3.1'
+  pod 'Presentr'
+  pod 'SwiftDate', '6.0.3'
 end
 
 target 'Queries' do
@@ -135,6 +158,11 @@ target 'Queries' do
   use_frameworks!
 
   pod 'Sourcery'
+  # Required to resolve modules imported through internal frameworks.
+  pod 'CSV.swift', '~> 2.3.1'
+  pod 'NotificationBannerSwift'
+  pod 'Presentr'
+  pod 'SwiftDate', '6.0.3'
 end
 
 target 'Samples' do
@@ -144,6 +172,9 @@ target 'Samples' do
   pod 'Sourcery'
   pod 'SwiftDate', '6.0.3'
   pod 'CSV.swift', '~> 2.3.1'
+  # Required to resolve modules imported through internal frameworks.
+  pod 'NotificationBannerSwift'
+  pod 'Presentr'
 end
 
 target 'SampleFetchers' do
@@ -164,6 +195,10 @@ target 'SampleGroupers' do
 
   pod 'Sourcery'
   pod 'SwiftDate', '6.0.3'
+  # Required to resolve modules imported through internal frameworks.
+  pod 'CSV.swift', '~> 2.3.1'
+  pod 'NotificationBannerSwift'
+  pod 'Presentr'
 end
 
 target 'SampleGroupInformation' do
@@ -172,6 +207,10 @@ target 'SampleGroupInformation' do
 
   pod 'Sourcery'
   pod 'SwiftDate', '6.0.3'
+  # Required to resolve modules imported through internal frameworks.
+  pod 'CSV.swift', '~> 2.3.1'
+  pod 'NotificationBannerSwift'
+  pod 'Presentr'
 end
 
 target 'UIExtensions' do
@@ -180,4 +219,19 @@ target 'UIExtensions' do
 
   pod 'Sourcery'
   pod 'Instructions', '~> 1.2.2'
+  # Required to resolve modules imported through internal frameworks.
+  pod 'CSV.swift', '~> 2.3.1'
+  pod 'Presentr'
+  pod 'SwiftDate', '6.0.3'
+end
+
+
+target 'Settings' do
+  project 'Settings/Settings'
+  use_frameworks!
+  # Required to resolve modules imported through internal frameworks.
+  pod 'CSV.swift', '~> 2.3.1'
+  pod 'NotificationBannerSwift'
+  pod 'Presentr'
+  pod 'SwiftDate', '6.0.3'
 end
