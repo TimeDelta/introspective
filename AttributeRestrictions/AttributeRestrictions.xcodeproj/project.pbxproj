@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		799401E2EB688325A8CB28A2 /* OnDeviceQueryPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87FBB90F157712EE0F7305C /* OnDeviceQueryPlan.swift */; };
 		DA9E7C47AD03BB4DFE1F2FC0 /* StoredTagsAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A215D551AE5A7B260A4F257 /* StoredTagsAttributeRestriction.swift */; };
 		138C33E73451AEA27239997B /* Pods_AttributeRestrictions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 587502F23F58A5BDE9E0A3DA /* Pods_AttributeRestrictions.framework */; };
 		A297010E2344FEE3004B97E6 /* AttributeRestrictions.h in Headers */ = {isa = PBXBuildFile; fileRef = A297010C2344FEE3004B97E6 /* AttributeRestrictions.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -106,6 +107,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E87FBB90F157712EE0F7305C /* OnDeviceQueryPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDeviceQueryPlan.swift; sourceTree = "<group>"; };
 		3A215D551AE5A7B260A4F257 /* StoredTagsAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredTagsAttributeRestriction.swift; sourceTree = "<group>"; };
 		51E4A92846130888BFBD9456 /* Pods-AttributeRestrictions.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AttributeRestrictions.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-AttributeRestrictions/Pods-AttributeRestrictions.debug.xcconfig"; sourceTree = "<group>"; };
 		587502F23F58A5BDE9E0A3DA /* Pods_AttributeRestrictions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AttributeRestrictions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -248,6 +250,7 @@
 			children = (
 				A29701A12344FFD6004B97E6 /* AttributeRestrictionsInjectionProvider.swift */,
 				A29701542344FF0E004B97E6 /* AttributeRestrictionFactory.swift */,
+				E87FBB90F157712EE0F7305C /* OnDeviceQueryPlan.swift */,
 				A29701592344FF0F004B97E6 /* AttributeRestriction.swift */,
 				A297015A2344FF0F004B97E6 /* EqualToAttributeRestriction.swift */,
 				A29701552344FF0F004B97E6 /* NotEqualToAttributeRestriction.swift */,
@@ -565,6 +568,7 @@
 				A297018B2344FF10004B97E6 /* NotEqualToIntegerAttributeRestriction.swift in Sources */,
 				A2D138A8268CA9C800762A3D /* StoredDosageComparisonAttributeRestriction.swift in Sources */,
 				A29701972344FF10004B97E6 /* AttributeRestrictionFactory.swift in Sources */,
+				799401E2EB688325A8CB28A2 /* OnDeviceQueryPlan.swift in Sources */,
 				A2D138D226910A3400762A3D /* StoredSingleTagAttributeRestriction.swift in Sources */,
 				DA9E7C47AD03BB4DFE1F2FC0 /* StoredTagsAttributeRestriction.swift in Sources */,
 				A2D138BC268CFA7D00762A3D /* StoredOnDayOfWeekAttributeRestriction.swift in Sources */,

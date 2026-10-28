@@ -732,4 +732,34 @@ final class SavedQueryTests: XCTestCase {
 		for store in migrated.persistentStoreCoordinator.persistentStores { try migrated.persistentStoreCoordinator.remove(store) }
 	}
 
+	func testOnDeviceQueryPlanCompilesRatingAndLiteralNotes() throws {
+		let record = try mood(5)
+		record.note = "worked on a project"
+		let plan = try OnDeviceQueryPlan(dataType: "mood", minimumRating: 4, maximumRating: 6, noteContains: "project", mostRecentOnly: true).resolve()
+		XCTAssertTrue(plan.sampleType == MoodImpl.self)
+		XCTAssertTrue(plan.mostRecentOnly)
+		XCTAssertTrue(try XCTUnwrap(plan.expression).evaluate([.sample: record]))
+		record.rating = 2
+		XCTAssertFalse(try XCTUnwrap(plan.expression).evaluate([.sample: record]))
+	}
+
+	func testOnDeviceQueryPlanRejectsUnsupportedAndInvalidConditions() throws {
+		XCTAssertThrowsError(try OnDeviceQueryPlan(dataType: "arbitrary SQL").resolve())
+		XCTAssertThrowsError(try OnDeviceQueryPlan(dataType: "workout", minimumRating: 4).resolve())
+		XCTAssertThrowsError(try OnDeviceQueryPlan(dataType: "mood", minimumDurationMinutes: 5).resolve())
+		XCTAssertThrowsError(try OnDeviceQueryPlan(dataType: "mood", minimumEnergyKcal: 50).resolve())
+		XCTAssertThrowsError(try OnDeviceQueryPlan(dataType: "mood", days: 0).resolve())
+		XCTAssertThrowsError(try OnDeviceQueryPlan(dataType: "mood", minimumRating: .nan).resolve())
+		XCTAssertThrowsError(try OnDeviceQueryPlan(dataType: "mood", minimumRating: 5, maximumRating: 1).resolve())
+	}
+
+	func testOnDeviceQueryPlanSupportsDurationsAndEnergyWithoutRunning() throws {
+		let energy = ActiveEnergy(50)
+		let resolved = try OnDeviceQueryPlan(dataType: "activeEnergy", minimumEnergyKcal: 100).resolve()
+		XCTAssertFalse(try XCTUnwrap(resolved.expression).evaluate([.sample: energy]))
+		let duration = try OnDeviceQueryPlan(dataType: "workout", days: 7, minimumDurationMinutes: 30).resolve()
+		XCTAssertTrue(try XCTUnwrap(duration.expression).isValid())
+		XCTAssertEqual(try injected(Database.self).count(MoodImpl.self), 0)
+	}
+
 }

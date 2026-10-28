@@ -9,6 +9,9 @@
 import Instructions
 import Presentr
 import UIKit
+#if canImport(FoundationModels)
+import FoundationModels
+#endif
 
 import AttributeRestrictions
 import BooleanAlgebra
@@ -101,6 +104,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
+		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Describe Query", style: .plain, target: self, action: #selector(describeQuery))
 
 		editButton.target = self
 		editButton.action = #selector(editButtonPressed)
@@ -345,6 +349,62 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 			}
 		}
 	}
+
+	@objc private func describeQuery() {
+#if canImport(FoundationModels)
+		if #available(iOS 26.0, *) {
+			guard case .available = SystemLanguageModel.default.availability else {
+				showError(title: "On-device model unavailable", message: "This feature requires an available Apple Intelligence language model. Use the query builder on other devices. No cloud fallback is used.")
+				return
+			}
+			let alert = UIAlertController(title: "Describe a query", message: "Processed on this device. The generated draft will open for review; it will not run automatically. Supported: data type, past days, rating bounds, note text, minimum duration, active energy, and most recent only.", preferredStyle: .alert)
+			alert.addTextField { field in
+				field.placeholder = "Moods rated at least 4 in the past 7 days"
+				field.autocorrectionType = .no; field.spellCheckingType = .no
+			}
+			alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+			alert.addAction(UIAlertAction(title: "Create draft", style: .default) { [weak self, weak alert] _ in
+				guard let text = alert?.textFields?.first?.text, !text.isEmpty, text.count <= 2000 else { return }
+				self?.generateDraft(text)
+			})
+			present(alert, animated: true)
+			return
+		}
+#endif
+		showError(title: "On-device generation requires iOS 26", message: "Use the query builder on this device. No query text is sent to an online service.")
+	}
+#if canImport(FoundationModels)
+	@available(iOS 26.0, *)
+	private func generateDraft(_ text: String) {
+		navigationItem.rightBarButtonItem?.isEnabled = false
+		navigationItem.prompt = "Creating on-device draft…"
+		view.isUserInteractionEnabled = false
+		Task { @MainActor [weak self] in
+			do {
+				let session = LanguageModelSession(instructions: "Convert the user's request to a draft query. Supported dataType values: mood, pain, fatigue, activity, workout, activeEnergy, lostItem. Only AND conditions are supported. days means relative past days. Rating limits and minimum duration/energy are inclusive. Note text is literal. Do not approximate unsupported requests, OR, negation, comparisons, subqueries, or exact calendar ranges; set canRepresent=false. Use nil for unspecified optional conditions. No medical interpretation. Never execute anything.")
+				let response = try await session.respond(to: text, generating: GeneratedQueryDraft.self)
+				let draft = response.content
+				guard draft.canRepresent else { throw GenericDisplayableError(title: "Use the builder for this query", description: "The requested conditions cannot all be represented by this experimental draft generator.") }
+				let resolved = try OnDeviceQueryPlan(dataType: draft.dataType, days: draft.days, minimumRating: draft.minimumRating,
+					maximumRating: draft.maximumRating, noteContains: draft.noteContains, minimumDurationMinutes: draft.minimumDurationMinutes,
+					minimumEnergyKcal: draft.minimumEnergyKcal, mostRecentOnly: draft.mostRecentOnly).resolve()
+				guard let self = self else { return }
+				if let required = self.topmostSampleType, required != resolved.sampleType { throw GenericDisplayableError(title: "This editor requires a different data type.") }
+				let query = try injected(QueryFactory.self).queryFor(resolved.sampleType)
+				query.expression = resolved.expression; query.mostRecentEntryOnly = resolved.mostRecentOnly
+				if let expression = query.expression { _ = try expression.partsForEditing() }
+				self.loadedSavedQuery = nil
+				self.queries = []; self.populateQuery(query); self.tableView.reloadData(); self.validate()
+				self.navigationItem.prompt = "Review every condition before running"
+			} catch {
+				self?.navigationItem.prompt = nil
+				self?.showError(title: "Could not create draft", message: "The request was not applied. Try the query builder or a simpler description.")
+			}
+			self?.navigationItem.rightBarButtonItem?.isEnabled = true
+			self?.view.isUserInteractionEnabled = true
+		}
+	}
+#endif
 
 	@IBAction final func loadButtonPressed(_: Any) {
 		var run: ((StoredQuery) -> Void)?
@@ -1095,3 +1155,19 @@ private final class SavedQueriesViewController: UITableViewController, UISearchR
 		present(alert, animated: true)
 	}
 }
+
+#if canImport(FoundationModels)
+@available(iOS 26.0, *)
+@Generable
+private struct GeneratedQueryDraft {
+	var canRepresent: Bool
+	var dataType: String
+	var days: Int?
+	var minimumRating: Double?
+	var maximumRating: Double?
+	var noteContains: String?
+	var minimumDurationMinutes: Double?
+	var minimumEnergyKcal: Double?
+	var mostRecentOnly: Bool
+}
+#endif
