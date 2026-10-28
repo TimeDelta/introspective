@@ -6,7 +6,7 @@ on:
       suite:
         description: Test suite (legacy diagnoses the original unit and functional target)
         type: choice
-        options: [focused, legacy]
+        options: [focused, legacy, ui]
         default: focused
       runner:
         description: macOS runner (Intel avoids current ARM capacity constraints)
@@ -27,18 +27,18 @@ concurrency:
 
 jobs:
   validation:
-    name: ${{ matrix.kind == 'release' && 'Release compilation' || matrix.kind == 'legacy' && 'Legacy unit and functional tests' || 'Simulator tests' }}
+    name: ${{ matrix.kind == 'release' && 'Release compilation' || matrix.kind == 'legacy' && 'Legacy unit and functional tests' || matrix.kind == 'ui' && 'Legacy UI tests' || 'Simulator tests' }}
     runs-on: ${{ inputs.runner || 'macos-15-intel' }}
     timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
-        kind: ${{ inputs.suite == 'legacy' && fromJSON('["legacy"]') || fromJSON('["tests", "release"]') }}
+        kind: ${{ inputs.suite == 'legacy' && fromJSON('["legacy"]') || inputs.suite == 'ui' && fromJSON('["ui"]') || fromJSON('["tests", "release"]') }}
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
       COCOAPODS_DISABLE_STATS: 'true'
       CI_BUILD_KIND: ${{ matrix.kind }}
-      CI_TEST_SCHEME: ${{ matrix.kind == 'legacy' && 'CI-CD' || 'MoodHealthTests' }}
+      CI_TEST_SCHEME: ${{ matrix.kind == 'legacy' && 'CI-CD' || matrix.kind == 'ui' && 'UIRegressionTests' || 'MoodHealthTests' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -101,6 +101,7 @@ jobs:
         run: |
           set -euo pipefail
           if [ "$CI_BUILD_KIND" = tests ]; then ruby scripts/prepare-mood-health-tests.rb; fi
+          if [ "$CI_BUILD_KIND" = ui ]; then ruby scripts/prepare-ui-tests.rb; fi
           xcrun simctl list devices available --json > ci-output/simulators.json
           simulator_id=$(python3 -c 'import json; d=json.load(open("ci-output/simulators.json")); print(next(v["udid"] for k,vs in d["devices"].items() if "iOS" in k for v in vs if v["isAvailable"] and "iPhone" in v["name"]))')
           echo "CI_SIMULATOR_ID=$simulator_id" >> "$GITHUB_ENV"

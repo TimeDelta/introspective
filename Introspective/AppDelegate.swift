@@ -61,7 +61,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		_: UIApplication,
 		didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]? = nil
 	) -> Bool {
-		guard !Globals.testing else { return true }
+		guard !Globals.testing && !Globals.uiTesting else { return true }
 
 		let options: UNAuthorizationOptions = [.alert, .sound, .badge]
 		UNUserNotificationCenter.current().requestAuthorization(options: options) { granted, error in
