@@ -41,11 +41,12 @@ public final class Steps: HealthKitQuantitySample {
 	// MARK: - Attributes
 
 	public static let stepCount = DoubleAttribute(
+		id: 0,
 		name: "Step Count",
 		pluralName: "Step Counts",
 		variableName: HKPredicateKeyPathQuantity
 	)
-	public static let durationAttribute = DurationAttribute()
+	public static let durationAttribute = DurationAttribute(id: 1)
 	public static let attributes: [Attribute] = [
 		durationAttribute,
 		stepCount,
