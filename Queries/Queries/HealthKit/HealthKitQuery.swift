@@ -19,6 +19,8 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 	private let cancellationLock = NSLock()
 	private var cancellationRequested = false
 
+	deinit { stopFunction?() }
+
 	func initFromHKSample(_: HKSample) -> SampleType {
 		fatalError("Must override")
 	}
