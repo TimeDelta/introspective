@@ -46,6 +46,12 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Capture build inputs before CocoaPods modifies projects
+        id: build-inputs
+        shell: bash
+        run: |
+          echo "fingerprint=${{ hashFiles('Podfile', 'Podfile.lock', '**/project.pbxproj', '!Pods/**', 'scripts/prepare-*.rb') }}" >> "$GITHUB_OUTPUT"
+
       - name: Verify build tools
         shell: bash
         run: |
@@ -81,9 +87,9 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ${{ env.CI_DERIVED_DATA }}
-          key: xcode-v1-${{ runner.os }}-${{ runner.arch }}-26.3-${{ matrix.kind }}-${{ hashFiles('Podfile.lock', '**/project.pbxproj', '!Pods/**') }}-${{ github.sha }}
+          key: xcode-v2-${{ runner.os }}-${{ runner.arch }}-26.3-${{ matrix.kind }}-${{ steps.build-inputs.outputs.fingerprint }}-${{ github.sha }}
           restore-keys: |
-            xcode-v1-${{ runner.os }}-${{ runner.arch }}-26.3-${{ matrix.kind }}-${{ hashFiles('Podfile.lock', '**/project.pbxproj', '!Pods/**') }}-
+            xcode-v2-${{ runner.os }}-${{ runner.arch }}-26.3-${{ matrix.kind }}-${{ steps.build-inputs.outputs.fingerprint }}-
 
       - name: Generate build version
         shell: bash
@@ -158,8 +164,21 @@ jobs:
           xcrun xcresulttool get test-results summary --path ci-output/MoodTests.xcresult > ci-output/mood-tests-summary.json
           if [ "$CI_BUILD_KIND" = tests ]; then
             python3 scripts/verify-native-test-results.py ci-output/mood-tests-summary.json
+          elif [ "$CI_BUILD_KIND" = ui ]; then
+            python3 scripts/verify-ui-test-results.py ci-output/mood-tests-summary.json
           else
             cat ci-output/mood-tests-summary.json
+          fi
+
+      - name: Collect test summaries and UI failure attachments
+        if: always() && matrix.kind != 'release' && matrix.kind != 'mocks'
+        shell: bash
+        run: |
+          if [ -d ci-output/MoodTests.xcresult ]; then
+            xcrun xcresulttool get test-results summary --path ci-output/MoodTests.xcresult > ci-output/test-summary.json 2> ci-output/summary-errors.log || true
+            if [ "$CI_BUILD_KIND" = ui ]; then
+              xcrun xcresulttool export attachments --path ci-output/MoodTests.xcresult --output-path ci-output/ui-attachments --only-failures > ci-output/attachment-export.log 2>&1 || true
+            fi
           fi
 
       - name: Build without signing

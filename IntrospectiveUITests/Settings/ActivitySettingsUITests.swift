@@ -22,7 +22,7 @@ final class ActivitySettingsUITests: UITest {
 		// given
 		let originallyEnabled = autoIgnoreEnabledSwitch().value as? String == "1"
 		let expectedEnabledValue = originallyEnabled ? "0" : "1"
-		let expectedSeconds = autoIgnoreSecondsTextField().value as? String ?? "" + "5"
+		let expectedSeconds = (autoIgnoreSecondsTextField().value as? String ?? "") + "5"
 
 		// when
 		setAutoIgnore(enabled: !originallyEnabled, seconds: expectedSeconds)
@@ -38,7 +38,7 @@ final class ActivitySettingsUITests: UITest {
 		// given
 		let originallyEnabledStringValue = autoIgnoreEnabledSwitch().value as? String
 		let originalSeconds = autoIgnoreSecondsTextField().value as? String
-		setAutoIgnore(enabled: originallyEnabledStringValue != "1", seconds: originalSeconds ?? "" + "5")
+		setAutoIgnore(enabled: originallyEnabledStringValue != "1", seconds: (originalSeconds ?? "") + "5")
 
 		// when
 		app.navigationBars.buttons["Reset"].tap()

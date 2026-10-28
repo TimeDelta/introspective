@@ -473,7 +473,7 @@
                                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dBr-2w-KAD">
                                             <rect key="frame" x="46" y="13" width="49" height="31"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                            <accessibility key="accessibilityConfiguration" identifier="auto-ignore enabled" label="auto-ignore enabled"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="trim activity note whitespace" label="Trim whitespace in activity notes"/>
                                             <connections>
                                                 <action selector="valueChangeed:" destination="glK-cz-CBq" eventType="valueChanged" id="z7S-BY-qeE"/>
                                             </connections>
