@@ -125,7 +125,8 @@ final class SavedQueryTests: XCTestCase {
 		controller.loadViewIfNeeded()
 	}
 
-	@MainActor func testChartDataCanArriveBeforeTheViewLoads() {
+	@MainActor
+	func testChartDataCanArriveBeforeTheViewLoads() {
 		let controller = BasicXYChartViewControllerImpl()
 		controller.dataSeries = []
 		XCTAssertFalse(controller.isViewLoaded)
@@ -135,7 +136,8 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertEqual(controller.view.subviews.filter { $0 is AAChartView }.count, 1)
 	}
 
-	@MainActor func testChartRepeatedLayoutsReuseOneWebView() throws {
+	@MainActor
+	func testChartRepeatedLayoutsReuseOneWebView() throws {
 		let controller = BasicXYChartViewControllerImpl()
 		loadChart(controller)
 		let original = try XCTUnwrap(controller.view.subviews.first { $0 is AAChartView })
@@ -146,7 +148,8 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertFalse(controller.activityIndicator.isHidden)
 	}
 
-	@MainActor func testChartResizeUpdatesExistingViewAndControllerCanBeReleased() throws {
+	@MainActor
+	func testChartResizeUpdatesExistingViewAndControllerCanBeReleased() throws {
 		weak var released: BasicXYChartViewControllerImpl?
 		try autoreleasepool {
 			let controller = BasicXYChartViewControllerImpl()
