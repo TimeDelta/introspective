@@ -80,7 +80,7 @@ jobs:
             2>&1 | tee ci-output/mood-tests.log
           wait "$simulator_boot_pid"
           xcrun xcresulttool get test-results summary --path ci-output/MoodTests.xcresult > ci-output/mood-tests-summary.json
-          python3 -c 'import json; r=json.load(open("ci-output/mood-tests-summary.json")); assert r["passedTests"] >= 40 and r["failedTests"] == 0, r'
+          python3 -c 'import json; r=json.load(open("ci-output/mood-tests-summary.json")); assert r["passedTests"] >= 43 and r["failedTests"] == 0, r'
 
       - name: Build without signing
         shell: bash

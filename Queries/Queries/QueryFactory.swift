@@ -173,6 +173,8 @@ public final class QueryFactoryImpl: QueryFactory {
 	public func queryFor(_ sampleType: Sample.Type) throws -> Query {
 		switch sampleType {
 		case is FatigueImpl.Type: return fatigueQuery()
+		case is ActiveEnergy.Type: return ActiveEnergyQueryImpl()
+		case is Workout.Type: return WorkoutQueryImpl()
 		case is Steps.Type: return stepsQuery()
 		case is Activity.Type: return activityQuery()
 		case is BloodPressure.Type: return bloodPressureQuery()
@@ -195,6 +197,8 @@ public final class QueryFactoryImpl: QueryFactory {
 	public func sampleTypeFor(_ query: Query) throws -> Sample.Type {
 		switch query {
 		case is FatigueQuery: return FatigueImpl.self
+		case is ActiveEnergyQueryImpl: return ActiveEnergy.self
+		case is WorkoutQueryImpl: return Workout.self
 		case is StepsQuery: return Steps.self
 		case is ActivityQuery: return Activity.self
 		case is BloodPressureQuery: return BloodPressure.self
