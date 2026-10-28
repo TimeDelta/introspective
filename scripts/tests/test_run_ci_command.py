@@ -27,6 +27,17 @@ class TestCommandCapture(unittest.TestCase):
             self.assertIn('compiler error', result.stderr)
             self.assertIn('compiler error', log.read_text())
 
+    def test_early_compiler_errors_remain_visible_after_long_timing_summaries(self):
+        with tempfile.TemporaryDirectory() as directory:
+            log = Path(directory) / 'build.log'
+            program = 'import sys; print("file.swift:1: error: missing dependency"); [print("timing", i) for i in range(500)]; sys.exit(65)'
+            result = subprocess.run([str(RUNNER), str(log), sys.executable, '-c', program],
+                                    capture_output=True, text=True)
+            self.assertEqual(result.returncode, 65)
+            self.assertIn('error: missing dependency', result.stderr)
+            self.assertIn('timing 499', result.stderr)
+            self.assertLessEqual(len(result.stderr.splitlines()), 120)
+
     def test_arguments_are_passed_without_shell_evaluation(self):
         with tempfile.TemporaryDirectory() as directory:
             log = Path(directory) / 'build.log'
