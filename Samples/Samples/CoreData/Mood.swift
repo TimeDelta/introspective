@@ -114,6 +114,9 @@ public final class MoodImpl: NSManagedObject, Mood {
 		set { timestampTimeZoneId = newValue?.identifier }
 	}
 
+	// Use the stored instant for Health exchange, without display-time zone conversion.
+	internal var originalTimestamp: Date { timestamp }
+
 	// MARK: - Sample Functions
 
 	public final func dates() -> [DateType: Date] {
@@ -282,6 +285,7 @@ public extension MoodImpl {
 		NSFetchRequest<MoodImpl>(entityName: "Mood")
 	}
 
+	@NSManaged public var healthKitUUID: String?
 	@NSManaged var note: String?
 	@NSManaged var rating: Double
 	@NSManaged fileprivate var timestamp: Date

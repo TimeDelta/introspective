@@ -27,6 +27,7 @@ final class MoodSettingsViewController: UIViewController {
 	)
 
 	private static let log = Log()
+	private var healthExchangeInProgress = false
 
 	// MARK: - IBOutlets
 
@@ -47,10 +48,51 @@ final class MoodSettingsViewController: UIViewController {
 			action: #selector(reset)
 		)
 
+		if #available(iOS 18.0, *) {
+			navigationItem.rightBarButtonItems = [navigationItem.rightBarButtonItem!,
+				UIBarButtonItem(title: "Health", style: .plain, target: self, action: #selector(showHealthExchange))]
+		}
+
 		injected(UiUtil.self).setBackButton(for: self, title: "Settings", action: #selector(done))
 	}
 
 	// MARK: - Actions
+
+
+	@objc private func showHealthExchange() {
+		guard #available(iOS 18.0, *), !healthExchangeInProgress else { return }
+		let alert = UIAlertController(title: "Moods in Apple Health",
+			message: "Import State of Mind ratings, or export your moods as momentary emotions. Repeating a transfer skips records already transferred. Notes, emotion labels, and associations are not transferred. Existing records are not updated or deleted.",
+			preferredStyle: .alert)
+		alert.addAction(UIAlertAction(title: "Import from Health", style: .default) { _ in self.exchangeHealthMoods(export: false) })
+		alert.addAction(UIAlertAction(title: "Export to Health", style: .default) { _ in self.exchangeHealthMoods(export: true) })
+		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+		present(alert, animated: true)
+	}
+
+	@available(iOS 18.0, *)
+	private func exchangeHealthMoods(export: Bool) {
+		guard !healthExchangeInProgress else { return }
+		healthExchangeInProgress = true
+		navigationItem.rightBarButtonItems?.forEach { $0.isEnabled = false }
+		let exchange = MoodHealthExchange()
+		let completion: (Result<Int, Error>) -> Void = { [weak self] result in
+			guard let self = self else { return }
+			self.healthExchangeInProgress = false
+			self.navigationItem.rightBarButtonItems?.forEach { $0.isEnabled = true }
+			switch result {
+			case .failure(let error): self.showError(title: "Mood transfer failed", error: error)
+			case .success(let count):
+				let message = export ? "Exported \(count) new moods to Health." :
+					"Imported \(count) new moods. Health only returns records you allow Introspective to read. If none were imported, check State of Mind access in Health Settings."
+				let alert = UIAlertController(title: "Mood transfer complete", message: message, preferredStyle: .alert)
+				alert.addAction(UIAlertAction(title: "OK", style: .default))
+				self.present(alert, animated: true)
+			}
+		}
+		if export { exchange.exportMoods(completion: completion) }
+		else { exchange.importMoods(completion: completion) }
+	}
 
 	@IBAction final func showAutoScaleMoodsOnImportDescription(_: Any) {
 		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")

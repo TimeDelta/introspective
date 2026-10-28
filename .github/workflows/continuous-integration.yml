@@ -5,7 +5,7 @@ on:
   push:
     branches: [master]
   pull_request:
-    branches: [master]
+    branches: [master, ci/ios-26-compatibility]
 
 permissions:
   contents: read
@@ -72,6 +72,26 @@ jobs:
             CODE_SIGN_IDENTITY='' \
             ENABLE_USER_SCRIPT_SANDBOXING=NO \
             2>&1 | tee ci-output/xcodebuild.log
+
+      - name: Test mood Health exchange
+        shell: bash
+        run: |
+          set -euo pipefail
+          xcrun simctl list devices available --json > ci-output/simulators.json
+          simulator_id=$(python3 -c 'import json; d=json.load(open("ci-output/simulators.json")); print(next(v["udid"] for k,vs in d["devices"].items() if "iOS" in k for v in vs if v["isAvailable"] and "iPhone" in v["name"]))')
+          xcodebuild test \
+            -workspace Introspective.xcworkspace \
+            -scheme CI-CD \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=$simulator_id" \
+            -only-testing:IntrospectiveTests/MoodHealthExchangeFunctionalTests \
+            -derivedDataPath "$RUNNER_TEMP/MoodTestsDerivedData" \
+            -resultBundlePath "$GITHUB_WORKSPACE/ci-output/MoodTests.xcresult" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY='' \
+            ENABLE_USER_SCRIPT_SANDBOXING=NO \
+            2>&1 | tee ci-output/mood-tests.log
+          xcrun xcresulttool get test-results summary --path ci-output/MoodTests.xcresult --format json > ci-output/mood-tests-summary.json
+          python3 -c 'import json; r=json.load(open("ci-output/mood-tests-summary.json")); assert r["passedTests"] >= 4 and r["failedTests"] == 0, r'
 
       - name: Record generated changes
         if: always()

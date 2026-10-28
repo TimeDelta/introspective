@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19206" systemVersion="20G71" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="0">
+    <entity name="Activity" representedClassName="Samples.Activity" syncable="YES">
+        <attribute name="endDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="endDateSetAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="endDateTimeZoneId" optional="YES" attributeType="String"/>
+        <attribute name="note" optional="YES" attributeType="String"/>
+        <attribute name="source" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="startDate" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="startDateSetAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="startDateTimeZoneId" optional="YES" attributeType="String"/>
+        <relationship name="definition" maxCount="1" deletionRule="Nullify" destinationEntity="ActivityDefinition" inverseName="activities" inverseEntity="ActivityDefinition"/>
+        <relationship name="tags" toMany="YES" deletionRule="Nullify" destinationEntity="Tag"/>
+        <fetchIndex name="byDefinition">
+            <fetchIndexElement property="definition" type="Binary" order="ascending"/>
+        </fetchIndex>
+    </entity>
+    <entity name="ActivityDefinition" representedClassName="Samples.ActivityDefinition" syncable="YES">
+        <attribute name="activityDescription" optional="YES" attributeType="String"/>
+        <attribute name="autoNote" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String" spotlightIndexingEnabled="YES"/>
+        <attribute name="recordScreenIndex" attributeType="Integer 16" minValueString="0" usesScalarValueType="YES"/>
+        <attribute name="source" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="activities" toMany="YES" deletionRule="Cascade" destinationEntity="Activity" inverseName="definition" inverseEntity="Activity"/>
+        <relationship name="tags" toMany="YES" deletionRule="Nullify" destinationEntity="Tag" inverseName="activityDefinitions" inverseEntity="Tag"/>
+        <fetchIndex name="byName">
+            <fetchIndexElement property="name" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byRecordScreenIndex">
+            <fetchIndexElement property="recordScreenIndex" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byTag">
+            <fetchIndexElement property="tags" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byRecordScreenSearch">
+            <fetchIndexElement property="recordScreenIndex" type="Binary" order="ascending"/>
+            <fetchIndexElement property="name" type="Binary" order="ascending"/>
+            <fetchIndexElement property="activityDescription" type="Binary" order="ascending"/>
+            <fetchIndexElement property="tags" type="Binary" order="ascending"/>
+        </fetchIndex>
+    </entity>
+    <entity name="ATrackerActivityImporter" representedClassName="DataImport.ATrackerActivityImporterImpl" syncable="YES">
+        <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
+    <entity name="AttributeRestriction" representedClassName="AttributeRestriction" syncable="YES" codeGenerationType="class">
+        <attribute name="attributeName" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="CoreDataSync" representedClassName="Persistence.CoreDataSync" syncable="YES">
+        <attribute name="externallyModified" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="EasyPillMedicationDoseImporter" representedClassName="DataImport.EasyPillMedicationDoseImporterImpl" syncable="YES">
+        <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
+    <entity name="EasyPillMedicationImporter" representedClassName="DataImport.EasyPillMedicationImporterImpl" syncable="YES">
+        <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
+    <entity name="Fatigue" representedClassName="Samples.FatigueImpl" syncable="YES">
+        <attribute name="maxRating" attributeType="Double" defaultValueString="6" usesScalarValueType="YES"/>
+        <attribute name="minRating" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="note" optional="YES" attributeType="String"/>
+        <attribute name="rating" attributeType="Double" usesScalarValueType="YES"/>
+        <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="timestampTimeZoneId" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="IntrospectiveActivityImporter" representedClassName="DataImport.IntrospectiveActivityImporterImpl" syncable="YES">
+        <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
+    <entity name="IntrospectiveMedicationImporter" representedClassName="DataImport.IntrospectiveMedicationImporterImpl" syncable="YES">
+        <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
+    <entity name="IntrospectiveMoodImporter" representedClassName="DataImport.IntrospectiveMoodImporterImpl" syncable="YES">
+        <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
+    <entity name="Medication" representedClassName="Samples.Medication" syncable="YES" coreSpotlightDisplayNameExpression="Medication">
+        <attribute name="dosage" optional="YES" attributeType="Transformable" valueTransformerName="DosageValueTransformer"/>
+        <attribute name="frequency" optional="YES" attributeType="Transformable" valueTransformerName="FrequencyValueTransformer" customClassName=".Frequency"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="notes" optional="YES" attributeType="String" spotlightIndexingEnabled="YES"/>
+        <attribute name="recordScreenIndex" attributeType="Integer 16" minValueString="0" usesScalarValueType="YES"/>
+        <attribute name="source" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="startedOnTimeZoneId" optional="YES" attributeType="String"/>
+        <attribute name="storedStartedOn" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="doses" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="MedicationDose" inverseName="medication" inverseEntity="MedicationDose"/>
+    </entity>
+    <entity name="MedicationDose" representedClassName="Samples.MedicationDose" syncable="YES">
+        <attribute name="dosage" optional="YES" attributeType="Transformable" valueTransformerName="DosageValueTransformer"/>
+        <attribute name="source" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="timestampTimeZoneId" optional="YES" attributeType="String"/>
+        <relationship name="medication" maxCount="1" deletionRule="Nullify" destinationEntity="Medication" inverseName="doses" inverseEntity="Medication"/>
+    </entity>
+    <entity name="Mood" representedClassName="Samples.MoodImpl" syncable="YES">
+        <attribute name="healthKitUUID" optional="YES" attributeType="String"/>
+        <attribute name="maxRating" attributeType="Double" defaultValueString="7" usesScalarValueType="YES"/>
+        <attribute name="minRating" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="note" optional="YES" attributeType="String" spotlightIndexingEnabled="YES"/>
+        <attribute name="rating" attributeType="Double" usesScalarValueType="YES"/>
+        <attribute name="source" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="timestampTimeZoneId" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="Pain" representedClassName="Samples.PainImpl" syncable="YES">
+        <attribute name="location" optional="YES" attributeType="String"/>
+        <attribute name="maxRating" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="minRating" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="note" optional="YES" attributeType="String"/>
+        <attribute name="rating" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="timestampTimeZoneId" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="Settings" representedClassName="Settings.SettingsImpl" syncable="YES">
+        <attribute name="storedAutoIgnoreEnabled" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="storedAutoIgnoreSeconds" attributeType="Integer 64" defaultValueString="15" usesScalarValueType="YES"/>
+        <attribute name="storedAutoTrimWhitespaceInActivityNotes" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
+        <attribute name="storedConvertTimeZones" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="storedDefaultSearchNearbyDuration" optional="YES" attributeType="Transformable" valueTransformerName="TimeDurationValueTransformer" customClassName="TimeDuration"/>
+        <attribute name="storedDiscreteFatigue" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="storedDiscreteMoods" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="storedDiscretePain" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="storedMaxFatigue" attributeType="Double" defaultValueString="6" usesScalarValueType="YES"/>
+        <attribute name="storedMaxMood" attributeType="Double" defaultValueString="10" usesScalarValueType="YES"/>
+        <attribute name="storedMaxPain" optional="YES" attributeType="Double" defaultValueString="10" usesScalarValueType="YES"/>
+        <attribute name="storedMinFatigue" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="storedMinMood" attributeType="Double" defaultValueString="1" usesScalarValueType="YES"/>
+        <attribute name="storedMinPain" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="storedScaleMoodsOnImport" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="Tag" representedClassName="Samples.Tag" syncable="YES">
+        <attribute name="name" attributeType="String"/>
+        <relationship name="activityDefinitions" toMany="YES" deletionRule="Nullify" destinationEntity="ActivityDefinition" inverseName="tags" inverseEntity="ActivityDefinition"/>
+    </entity>
+    <entity name="WellnessMoodImporter" representedClassName="DataImport.WellnessMoodImporterImpl" syncable="YES">
+        <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
+    <fetchRequest name="allActivityDefinitions" entity="ActivityDefinition" predicateString="TRUEPREDICATE"/>
+    <elements>
+        <element name="Activity" positionX="-36" positionY="63" width="128" height="179"/>
+        <element name="ActivityDefinition" positionX="-45" positionY="54" width="128" height="30"/>
+        <element name="ATrackerActivityImporter" positionX="-36" positionY="72" width="128" height="30"/>
+        <element name="AttributeRestriction" positionX="-9" positionY="126" width="128" height="44"/>
+        <element name="CoreDataSync" positionX="-36" positionY="90" width="128" height="58"/>
+        <element name="EasyPillMedicationDoseImporter" positionX="-36" positionY="63" width="128" height="30"/>
+        <element name="EasyPillMedicationImporter" positionX="-45" positionY="54" width="128" height="30"/>
+        <element name="Fatigue" positionX="-27" positionY="90" width="128" height="119"/>
+        <element name="IntrospectiveActivityImporter" positionX="-36" positionY="90" width="128" height="58"/>
+        <element name="IntrospectiveMedicationImporter" positionX="-9" positionY="117" width="128" height="58"/>
+        <element name="IntrospectiveMoodImporter" positionX="0" positionY="126" width="128" height="58"/>
+        <element name="Medication" positionX="-54" positionY="9" width="128" height="178"/>
+        <element name="MedicationDose" positionX="-45" positionY="45" width="128" height="118"/>
+        <element name="Mood" positionX="-63" positionY="-18" width="128" height="30"/>
+        <element name="Pain" positionX="-27" positionY="90" width="128" height="134"/>
+        <element name="Settings" positionX="-63" positionY="9" width="128" height="254"/>
+        <element name="Tag" positionX="-18" positionY="81" width="128" height="30"/>
+        <element name="WellnessMoodImporter" positionX="-54" positionY="18" width="128" height="30"/>
+    </elements>
+</model>

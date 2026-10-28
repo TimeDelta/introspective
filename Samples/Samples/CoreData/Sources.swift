@@ -59,15 +59,18 @@ public final class Sources {
 		public static let values: [MoodSourceNum] = [
 			.introspective,
 			.wellness,
+			.health,
 		]
 
 		case introspective
 		case wellness
+		case health
 
 		public var description: String {
 			switch self {
 			case .introspective: return "Introspective"
 			case .wellness: return "Wellness"
+			case .health: return "Apple Health"
 			}
 		}
 	}

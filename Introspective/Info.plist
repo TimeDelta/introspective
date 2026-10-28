@@ -21,9 +21,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSHealthShareUsageDescription</key>
-	<string>In order to answer questions about your heart rate.</string>
+	<string>Read your health data to answer your queries and import State of Mind ratings into your mood history when you choose Import from Health.</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>This is for testing purposes only. TODO - Temporarily remove this when releasing</string>
+	<string>Export your mood ratings to State of Mind in Apple Health when you choose Export to Health.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This is used to allow you to simply ask a question out loud.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
