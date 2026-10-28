@@ -33,6 +33,14 @@ end
   end
 end
 
+# Exercise the actual chart controller lifecycle without launching the application.
+chart_path = File.expand_path('Introspective/UI/Graphing/GraphTypes/BasicXYGraph/BasicXYChartViewController.swift')
+chart_reference = project.files.find { |file| file.real_path.to_s == chart_path }
+raise 'Missing production chart controller source' unless chart_reference
+unless target.source_build_phase.files_references.include?(chart_reference)
+  target.add_file_references([chart_reference])
+end
+
 target.build_configurations.each do |config|
   app_config = app.build_configurations.find { |item| item.name == config.name }
   raise "Missing app configuration #{config.name}" unless app_config
