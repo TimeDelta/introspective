@@ -3,6 +3,11 @@ name: iOS Compatibility Build
 on:
   workflow_dispatch:
     inputs:
+      suite:
+        description: Test suite (legacy diagnoses the original unit and functional target)
+        type: choice
+        options: [focused, legacy]
+        default: focused
       runner:
         description: macOS runner (Intel avoids current ARM capacity constraints)
         type: choice
@@ -22,17 +27,18 @@ concurrency:
 
 jobs:
   validation:
-    name: ${{ matrix.kind == 'tests' && 'Simulator tests' || 'Release compilation' }}
+    name: ${{ matrix.kind == 'release' && 'Release compilation' || matrix.kind == 'legacy' && 'Legacy unit and functional tests' || 'Simulator tests' }}
     runs-on: ${{ inputs.runner || 'macos-15-intel' }}
     timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
-        kind: [tests, release]
+        kind: ${{ inputs.suite == 'legacy' && fromJSON('["legacy"]') || fromJSON('["tests", "release"]') }}
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
       COCOAPODS_DISABLE_STATS: 'true'
       CI_BUILD_KIND: ${{ matrix.kind }}
+      CI_TEST_SCHEME: ${{ matrix.kind == 'legacy' && 'CI-CD' || 'MoodHealthTests' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -86,15 +92,15 @@ jobs:
           test -s Common/Common/GitVersion.swift
 
       - name: Verify the test-completeness guard
-        if: matrix.kind == 'tests'
+        if: matrix.kind != 'release'
         run: python3 -m unittest discover -s scripts/tests -v
 
       - name: Prepare native test target and start simulator
-        if: matrix.kind == 'tests'
+        if: matrix.kind != 'release'
         shell: bash
         run: |
           set -euo pipefail
-          ruby scripts/prepare-mood-health-tests.rb
+          if [ "$CI_BUILD_KIND" = tests ]; then ruby scripts/prepare-mood-health-tests.rb; fi
           xcrun simctl list devices available --json > ci-output/simulators.json
           simulator_id=$(python3 -c 'import json; d=json.load(open("ci-output/simulators.json")); print(next(v["udid"] for k,vs in d["devices"].items() if "iOS" in k for v in vs if v["isAvailable"] and "iPhone" in v["name"]))')
           echo "CI_SIMULATOR_ID=$simulator_id" >> "$GITHUB_ENV"
@@ -103,18 +109,16 @@ jobs:
           if [ "$state" != Booted ]; then xcrun simctl boot "$simulator_id"; fi
 
       - name: Build simulator tests
-        if: matrix.kind == 'tests'
+        if: matrix.kind != 'release'
         id: test-build
         shell: bash
         run: |
           set -euo pipefail
           ./scripts/run-ci-command.sh ci-output/test-build.log xcodebuild build-for-testing \
             -workspace Introspective.xcworkspace \
-            -scheme MoodHealthTests \
+            -scheme "$CI_TEST_SCHEME" \
             -configuration Debug \
             -destination "platform=iOS Simulator,id=$CI_SIMULATOR_ID" \
-            -only-testing:MoodHealthTests/MoodHealthExchangeFunctionalTests \
-            -only-testing:MoodHealthTests/SavedQueryTests \
             -derivedDataPath "$CI_DERIVED_DATA" \
             -resultBundlePath "$GITHUB_WORKSPACE/ci-output/TestBuild.xcresult" \
             -showBuildTimingSummary \
@@ -123,22 +127,24 @@ jobs:
             ENABLE_USER_SCRIPT_SANDBOXING=NO
 
       - name: Run every native test without rebuilding
-        if: matrix.kind == 'tests'
+        if: matrix.kind != 'release'
         shell: bash
         run: |
           set -euo pipefail
           xcrun simctl bootstatus "$CI_SIMULATOR_ID" -b > ci-output/simulator-boot.log 2>&1
           ./scripts/run-ci-command.sh ci-output/mood-tests.log xcodebuild test-without-building \
             -workspace Introspective.xcworkspace \
-            -scheme MoodHealthTests \
+            -scheme "$CI_TEST_SCHEME" \
             -configuration Debug \
             -destination "platform=iOS Simulator,id=$CI_SIMULATOR_ID" \
-            -only-testing:MoodHealthTests/MoodHealthExchangeFunctionalTests \
-            -only-testing:MoodHealthTests/SavedQueryTests \
             -derivedDataPath "$CI_DERIVED_DATA" \
             -resultBundlePath "$GITHUB_WORKSPACE/ci-output/MoodTests.xcresult"
           xcrun xcresulttool get test-results summary --path ci-output/MoodTests.xcresult > ci-output/mood-tests-summary.json
-          python3 scripts/verify-native-test-results.py ci-output/mood-tests-summary.json
+          if [ "$CI_BUILD_KIND" = tests ]; then
+            python3 scripts/verify-native-test-results.py ci-output/mood-tests-summary.json
+          else
+            cat ci-output/mood-tests-summary.json
+          fi
 
       - name: Build without signing
         if: matrix.kind == 'release'
