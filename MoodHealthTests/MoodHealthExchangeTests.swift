@@ -3,7 +3,6 @@ import CoreData
 import HealthKit
 import Common
 import DependencyInjection
-@testable import Introspective
 @testable import Persistence
 @testable import Samples
 @testable import Settings
@@ -23,12 +22,14 @@ private final class HealthTestProvider: InjectionProvider {
 
 final class MoodHealthExchangeFunctionalTests: XCTestCase {
 
+	private static let modelBundle = Bundle(for: MoodHealthExchangeFunctionalTests.self)
+	private static let objectModel = NSManagedObjectModel.mergedModel(from: [modelBundle])!
 	private var container: NSPersistentContainer!
 	private var database: Database!
 
 	override func setUpWithError() throws {
 		try super.setUpWithError()
-		container = NSPersistentContainer(name: "MoodHealthTests", managedObjectModel: ObjectModelContainer.objectModel)
+		container = NSPersistentContainer(name: "MoodHealthTests", managedObjectModel: Self.objectModel)
 		let description = NSPersistentStoreDescription()
 		description.type = NSInMemoryStoreType
 		description.shouldAddStoreAsynchronously = false
@@ -123,7 +124,7 @@ final class MoodHealthExchangeFunctionalTests: XCTestCase {
 		let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
 		try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
 		defer { try? FileManager.default.removeItem(at: directory) }
-		let modelDirectory = try XCTUnwrap(Bundle.main.url(forResource: "Introspective", withExtension: "momd"))
+		let modelDirectory = try XCTUnwrap(Self.modelBundle.url(forResource: "Introspective", withExtension: "momd"))
 		let oldModel = try XCTUnwrap(NSManagedObjectModel(contentsOf: modelDirectory.appendingPathComponent("Introspective.mom")))
 		let newModel = try XCTUnwrap(NSManagedObjectModel(contentsOf: modelDirectory.appendingPathComponent("HealthMood.mom")))
 		let url = directory.appendingPathComponent("migration.sqlite")

@@ -21,20 +21,38 @@ target.build_configurations.each do |config|
   raise "Missing app configuration #{config.name}" unless app_config
   # Reuse production pod search paths, not the legacy test/mocking dependencies.
   config.base_configuration_reference = app_config.base_configuration_reference
+  %w[TEST_HOST BUNDLE_LOADER TEST_TARGET_NAME].each { |key| config.build_settings.delete(key) }
   config.build_settings.merge!(
     'PRODUCT_NAME' => '$(TARGET_NAME)',
     'PRODUCT_MODULE_NAME' => name,
-    'TEST_TARGET_NAME' => 'Introspective',
     'PRODUCT_BUNDLE_IDENTIFIER' => 'com.bnova.Introspective.MoodHealthTests',
     'SWIFT_VERSION' => '5.0',
     'GENERATE_INFOPLIST_FILE' => 'YES',
-    'TEST_HOST' => '$(BUILT_PRODUCTS_DIR)/Introspective.app/Introspective',
-    'BUNDLE_LOADER' => '$(TEST_HOST)',
     'FRAMEWORK_SEARCH_PATHS' => ['$(inherited)', '$(BUILT_PRODUCTS_DIR)'],
     'LD_RUNPATH_SEARCH_PATHS' => ['$(inherited)', '@executable_path/Frameworks', '@loader_path/Frameworks'],
     'ENABLE_USER_SCRIPT_SANDBOXING' => 'NO'
   )
 end
+# Bundle the same versioned model and dynamic frameworks used by the app.
+model = project.objects.find do |object|
+  object.is_a?(Xcodeproj::Project::Object::XCVersionGroup) && object.path == 'Introspective.xcdatamodeld'
+end
+raise 'Missing production Core Data model' unless model
+target.resources_build_phase.add_file_reference(model, true)
+embed = target.copy_files_build_phases.find { |phase| phase.name == 'Embed production frameworks' }
+embed ||= target.new_copy_files_build_phase('Embed production frameworks')
+embed.dst_subfolder_spec = '10'
+app.copy_files_build_phases.select { |phase| phase.dst_subfolder_spec == '10' }.each do |phase|
+  phase.files.each do |file|
+    next unless file.file_ref && file.file_ref.path.end_with?('.framework')
+    copied = embed.add_file_reference(file.file_ref, true)
+    copied.settings = { 'ATTRIBUTES' => ['CodeSignOnCopy', 'RemoveHeadersOnCopy'] }
+  end
+end
+pods_embed = target.shell_script_build_phases.find { |phase| phase.name == 'Embed production pods' }
+pods_embed ||= target.new_shell_script_build_phase('Embed production pods')
+pods_embed.shell_script = '"${PODS_ROOT}/Target Support Files/Pods-Introspective/Pods-Introspective-frameworks.sh"'
+
 project.save
 
 scheme = Xcodeproj::XCScheme.new('Introspective.xcodeproj/xcshareddata/xcschemes/CI-CD.xcscheme')
