@@ -217,6 +217,8 @@ public final class UiUtilImpl: UiUtil {
 		button.setImage(UIImage(named: "back-button"), for: .normal)
 		// add a space in front of the title so that it looks more like the default back button
 		button.setTitle(" \(title)", for: .normal)
+		button.accessibilityIdentifier = title
+		button.accessibilityLabel = title
 		button.sizeToFit()
 		button.addTarget(viewController, action: selector, for: .touchUpInside)
 

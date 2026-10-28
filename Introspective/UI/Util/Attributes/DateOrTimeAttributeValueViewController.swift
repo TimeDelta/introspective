@@ -32,6 +32,10 @@ public final class DateOrTimeAttributeValueViewController: AttributeValueTypeVie
 
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
+		// These fixed-height editors were designed for an always-visible wheel picker.
+		if #available(iOS 13.4, *) {
+			datePicker.preferredDatePickerStyle = .wheels
+		}
 
 		if dateAttribute != nil {
 			if dateAttribute.includeTime {

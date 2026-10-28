@@ -26,30 +26,42 @@ def compatible_template(source):
     if (source.count(".characters.split(") != 6 or source.count(old_signature) != 1
             or source.count(old_mapping) != 1):
         raise RuntimeError("Unexpected SwiftyMocky template; review compatibility adapter")
+    selection = 'let autoMockable: Bool = type.inheritedTypes.contains("AutoMockable") || type.annotations["AutoMockable"] != nil'
+    if source.count(selection) != 1:
+        raise RuntimeError("Unexpected SwiftyMocky type selection; review module filter")
     return (source.replace(".characters.split(", ".split(")
             .replace(old_signature, "[String: [SourceryRuntime.Attribute]]")
-            .replace(old_mapping, "return attributes.values.flatMap { $0 }.map { $0.description }"))
+            .replace(old_mapping, "return attributes.values.flatMap { $0 }.map { $0.description }")
+            .replace(selection, selection + '\n    if autoMockable, let selected = argument["mockTypes"] as? [String], !selected.contains(type.name) { continue }'))
 
 
 def configurations():
     template = ROOT / "ci-output/mock-templates/Mock.swifttemplate"
+    modules = []
     for output in sorted((ROOT / "IntrospectiveTests").glob("*Mocks.swift")):
         module = output.stem.removesuffix("Mocks")
         source_dir = ROOT / module / module
         if not source_dir.is_dir():
-            source_dir = ROOT / module  # The app keeps its sources directly in Introspective/.
+            source_dir = ROOT / module
         if not source_dir.is_dir():
             continue
-        sources = [str(ROOT / "IntrospectiveTests/CustomMocks")]
-        sources += [str(path) for path in sorted(source_dir.rglob("*.swift"))
-                    if not re.search(r"Delegate|Mock|DateExtension", path.name)]
-        if len(sources) == 1:
-            continue
+        files = [path for path in sorted(source_dir.rglob("*.swift"))
+                 if not re.search(r"Delegate|Mock|DateExtension", path.name)]
+        if files:
+            modules.append((module, output, files))
+    # Sourcery must see cross-module parent protocols (e.g. Sample -> Attributed).
+    # Every inline custom mock gets the same complete inheritance information.
+    sources = [str(ROOT / "IntrospectiveTests/CustomMocks")]
+    sources += sorted({str(path) for _, _, files in modules for path in files})
+    for module, output, files in modules:
+        # Parse dependencies without emitting their AutoMockable classes again.
+        names = sorted({name for path in files
+                        for name in re.findall(r"\b(?:protocol|class|struct|enum)\s+(\w+)", path.read_text())})
         yield module, {
             "sources": {"include": sources},
             "templates": [str(template)],
             "output": str(output),
-            "args": {"testable": TESTABLE, "import": IMPORTS},
+            "args": {"testable": TESTABLE, "import": IMPORTS, "mockTypes": names},
         }
 
 
