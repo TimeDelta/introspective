@@ -86,6 +86,7 @@ class UITest: XCTestCase {
 	}
 
 	final func setDatePicker(_ queryString: String? = nil, to date: Date) {
+		skipInstructionsIfPresent()
 		let datePickerWheels: XCUIElementQuery
 		if let queryString = queryString {
 			datePickerWheels = app.descendants(matching: .any).matching(identifier: queryString).firstMatch.pickerWheels
