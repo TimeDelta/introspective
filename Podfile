@@ -39,13 +39,6 @@ target 'Introspective' do
     pod 'SwiftHamcrest', '~> 2.2.1'
   end
 
-  target 'IntrospectiveUITests' do
-    # UI tests run in a separate process and do not import the application.
-    # Inheriting app linker flags links frameworks that this runner never embeds.
-    inherit! :none
-    pod 'SwiftDate', '6.0.3'
-  end
-
   target 'DiscreteMoodWidget' do
     inherit! :search_paths
     pod 'SwiftDate', '6.0.3'
@@ -55,6 +48,13 @@ target 'Introspective' do
     inherit! :search_paths
     pod 'SwiftDate', '6.0.3'
   end
+end
+
+# A UI runner is a separate process, not a hosted unit-test bundle.
+# Keep it top-level so CocoaPods supplies its own link and embed settings.
+target 'IntrospectiveUITests' do
+  use_frameworks!
+  pod 'SwiftDate', '6.0.3'
 end
 
 target 'AttributeRestrictions' do

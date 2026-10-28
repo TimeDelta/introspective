@@ -18,8 +18,21 @@ TESTABLE = ["Introspective", "AttributeRestrictions", "Attributes", "BooleanAlge
 IMPORTS = ["HealthKit", "CoreData", "Presentr", "CSV", "SwiftDate", "UserNotifications", "Instructions"]
 
 
+def compatible_template(source):
+    # Adapt the frozen SwiftyMocky 4 template to the frozen Sourcery 2.3 runtime.
+    # Keep the installed dependency unchanged and fail clearly if it changes.
+    old_signature = "[String: SourceryRuntime.Attribute]"
+    old_mapping = "return attributes.map { $0.1.description }"
+    if (source.count(".characters.split(") != 6 or source.count(old_signature) != 1
+            or source.count(old_mapping) != 1):
+        raise RuntimeError("Unexpected SwiftyMocky template; review compatibility adapter")
+    return (source.replace(".characters.split(", ".split(")
+            .replace(old_signature, "[String: [SourceryRuntime.Attribute]]")
+            .replace(old_mapping, "return attributes.values.flatMap { $0 }.map { $0.description }"))
+
+
 def configurations():
-    template = ROOT / "Pods/SwiftyMocky/Sources/SwiftyMocky/Mock.swifttemplate"
+    template = ROOT / "ci-output/mock-templates/Mock.swifttemplate"
     for output in sorted((ROOT / "IntrospectiveTests").glob("*Mocks.swift")):
         module = output.stem.removesuffix("Mocks")
         source_dir = ROOT / module / module
@@ -47,12 +60,24 @@ def main():
     config_dir = ROOT / "ci-output/mock-configs"
     config_dir.mkdir(parents=True, exist_ok=True)
     sourcery = ROOT / "Pods/Sourcery/bin/sourcery"
+    source = ROOT / "Pods/SwiftyMocky/Sources/SwiftyMocky/Mock.swifttemplate"
+    if source.exists():
+        template = ROOT / "ci-output/mock-templates/Mock.swifttemplate"
+        template.parent.mkdir(parents=True, exist_ok=True)
+        template.write_text(compatible_template(source.read_text()))
+    elif not options.config_only:
+        raise FileNotFoundError("Run pod install --deployment before generating mocks")
+    configs = []
     for module, config in configurations():
         path = config_dir / (module + ".yml")
         path.write_text(json.dumps(config, indent=2) + "\n")
-        if not options.config_only:
-            subprocess.run([str(sourcery), "--config", str(path), "--disableCache"],
-                           cwd=ROOT, check=True)
+        configs.append(config)
+    combined = config_dir / "all.yml"
+    combined.write_text(json.dumps({"configurations": configs}, indent=2) + "\n")
+    if not options.config_only:
+        # One invocation shares the compiled template cache across all modules.
+        # Source changes are handled by Sourcery's own content-based cache keys.
+        subprocess.run([str(sourcery), "--config", str(combined)], cwd=ROOT, check=True)
 
 
 if __name__ == "__main__":
