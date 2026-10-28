@@ -40,7 +40,9 @@ target 'Introspective' do
   end
 
   target 'IntrospectiveUITests' do
-    inherit! :search_paths
+    # UI tests run in a separate process and do not import the application.
+    # Inheriting app linker flags links frameworks that this runner never embeds.
+    inherit! :none
     pod 'SwiftDate', '6.0.3'
   end
 
