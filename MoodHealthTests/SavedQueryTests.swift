@@ -148,7 +148,7 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertTrue(objects.isEmpty)
 		XCTAssertEqual(exporter.recordsCompleted, 6)
 		let bytes = try XCTUnwrap(stream.property(forKey: .dataWrittenToMemoryStreamKey) as? Data)
-		XCTAssertEqual(String(data: bytes, encoding: .utf8), "value\n0\n1\n2\n3\n4\n5\n")
+		XCTAssertEqual(String(data: bytes, encoding: .utf8), "value\n0\n1\n2\n3\n4\n5")
 	}
 
 	func testExportBufferRestoresRemainingOrderAfterFailure() throws {
