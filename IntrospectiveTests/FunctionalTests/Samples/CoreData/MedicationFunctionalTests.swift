@@ -24,7 +24,7 @@ final class MedicationFunctionalTests: FunctionalTest {
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// given
-		let unknownAttribute = DoubleAttribute(name: "this is not a real attribute")
+		let unknownAttribute = DoubleAttribute(id: 0, name: "this is not a real attribute")
 		let medication = MedicationDataTestUtil.createMedication()
 
 		// when

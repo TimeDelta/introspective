@@ -20,7 +20,7 @@ final class LessThanDurationAttributeRestrictionUnitTests: UnitTest {
 
 	private typealias Me = LessThanDurationAttributeRestrictionUnitTests
 	private static let valueAttribute = LessThanDurationAttributeRestriction.valueAttribute
-	private static let restrictedAttribute = DurationAttribute(name: "restricted")
+	private static let restrictedAttribute = DurationAttribute(id: 0, name: "restricted")
 
 	private var restriction: LessThanDurationAttributeRestriction!
 
@@ -196,7 +196,7 @@ final class LessThanDurationAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
 		// given
 		let other = LessThanDurationAttributeRestriction(
-			restrictedAttribute: DurationAttribute(name: "not the same attribute"))
+			restrictedAttribute: DurationAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction == other
@@ -255,7 +255,7 @@ final class LessThanDurationAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentRestrictedAttribute_equalToAttributed_returnsFalse() {
 		// given
 		let otherAttributed: Attributed = LessThanDurationAttributeRestriction(
-			restrictedAttribute: DurationAttribute(name: "not the same attribute"))
+			restrictedAttribute: DurationAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -315,7 +315,7 @@ final class LessThanDurationAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
 		let otherRestriction: AttributeRestriction = LessThanDurationAttributeRestriction(
-			restrictedAttribute: DurationAttribute(name: "not the same attribute"))
+			restrictedAttribute: DurationAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherRestriction)
@@ -363,7 +363,7 @@ final class LessThanDurationAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
 		let other = LessThanDurationAttributeRestriction(
-			restrictedAttribute: DurationAttribute(name: "not the same attribute"))
+			restrictedAttribute: DurationAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(other)

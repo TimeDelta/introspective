@@ -18,7 +18,7 @@ import Hamcrest
 
 class DayOfWeekSampleGrouperUnitTests: UnitTest {
 
-	private final let dayOfWeekAttribute = DayOfWeekAttribute(name: "fds")
+	private final let dayOfWeekAttribute = DayOfWeekAttribute(id: 0, name: "fds")
 
 	private final var grouper: DayOfWeekSampleGrouper!
 
@@ -33,7 +33,7 @@ class DayOfWeekSampleGrouperUnitTests: UnitTest {
 		// given
 		let attributes = [
 			dayOfWeekAttribute,
-			DayOfWeekAttribute(name: dayOfWeekAttribute.name + "other stuff"),
+			DayOfWeekAttribute(id: 0, name: dayOfWeekAttribute.name + "other stuff"),
 		]
 
 		// when
@@ -47,10 +47,10 @@ class DayOfWeekSampleGrouperUnitTests: UnitTest {
 
 	func testGivenDaysOfWeekAttributes_init_includesThemAsPossibleValuesForAttributeSelectAttribute() {
 		// given
-		let daysOfWeekAttribute = DaysOfWeekAttribute(name: "fjdskl")
+		let daysOfWeekAttribute = DaysOfWeekAttribute(id: 0, name: "fjdskl")
 		let attributes = [
 			daysOfWeekAttribute,
-			DaysOfWeekAttribute(name: daysOfWeekAttribute.name + "other stuff"),
+			DaysOfWeekAttribute(id: 0, name: daysOfWeekAttribute.name + "other stuff"),
 		]
 
 		// when
@@ -67,7 +67,7 @@ class DayOfWeekSampleGrouperUnitTests: UnitTest {
 		let dateAttribute = CommonSampleAttributes.endDate
 		let attributes = [
 			dateAttribute,
-			DateTimeAttribute(name: dateAttribute.name + "other stuff"),
+			DateTimeAttribute(id: 0, name: dateAttribute.name + "other stuff"),
 		]
 
 		// when
@@ -84,7 +84,7 @@ class DayOfWeekSampleGrouperUnitTests: UnitTest {
 		let attributes: [Attribute] = [
 			dayOfWeekAttribute,
 			CommonSampleAttributes.endDate,
-			DaysOfWeekAttribute(name: dayOfWeekAttribute.name + "other stuff"),
+			DaysOfWeekAttribute(id: 0, name: dayOfWeekAttribute.name + "other stuff"),
 		]
 
 		// when
@@ -99,8 +99,8 @@ class DayOfWeekSampleGrouperUnitTests: UnitTest {
 	func testGivenNonDayOfWeekAndNonDateBasedAttributes_init_doesNotIncludeThemAsPossibleVZaluesForAttributeSelectAttribute() {
 		// given
 		let attributes: [Attribute] = [
-			TextAttribute(name: "f"),
-			DoubleAttribute(name: "a"),
+			TextAttribute(id: 0, name: "f"),
+			DoubleAttribute(id: 0, name: "a"),
 		]
 
 		// when
@@ -163,7 +163,7 @@ class DayOfWeekSampleGrouperUnitTests: UnitTest {
 
 	func testGivenInvalidGroupByAttribute_group_throwsError() throws {
 		// given
-		grouper.groupByAttribute = TextAttribute(name: "fs")
+		grouper.groupByAttribute = TextAttribute(id: 0, name: "fs")
 		let samples = [SampleCreatorTestUtil.createSample()]
 
 		// when / then
@@ -174,7 +174,7 @@ class DayOfWeekSampleGrouperUnitTests: UnitTest {
 		// given
 		let dayOfWeek1 = DayOfWeek.Friday
 		let dayOfWeek2 = DayOfWeek.Monday
-		let dateAttribute = DateTimeAttribute(name: "fds")
+		let dateAttribute = DateTimeAttribute(id: 0, name: "fds")
 		grouper.groupByAttribute = dateAttribute
 		let samples = SampleCreatorTestUtil.createSamples(
 			withValues: [
@@ -218,7 +218,7 @@ class DayOfWeekSampleGrouperUnitTests: UnitTest {
 		let dayOfWeek1 = DayOfWeek.Friday
 		let dayOfWeek2 = DayOfWeek.Monday
 		let dayOfWeek3 = DayOfWeek.Saturday
-		let daysOfWeekAttribute = DaysOfWeekAttribute(name: "fd")
+		let daysOfWeekAttribute = DaysOfWeekAttribute(id: 0, name: "fd")
 		grouper.groupByAttribute = daysOfWeekAttribute
 		let samples = SampleCreatorTestUtil.createSamples(
 			withValues: [
@@ -263,7 +263,7 @@ class DayOfWeekSampleGrouperUnitTests: UnitTest {
 
 	func testGivenDaysOfWeekAttributeWithNonDaysOfWeekValueForSample_group_throwsTypeMismatchError() throws {
 		// given
-		let daysOfWeekAttribute = DaysOfWeekAttribute(name: "fg")
+		let daysOfWeekAttribute = DaysOfWeekAttribute(id: 0, name: "fg")
 		grouper.groupByAttribute = daysOfWeekAttribute
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [0], for: daysOfWeekAttribute)
 
@@ -294,7 +294,7 @@ class DayOfWeekSampleGrouperUnitTests: UnitTest {
 
 	func testGivenGroupByDateAttributeWithStringValue_groupNameForValue_returnsAttributeNameIsOnAValue() throws {
 		// given
-		let dateAttribute = DateTimeAttribute(name: "hteq")
+		let dateAttribute = DateTimeAttribute(id: 0, name: "hteq")
 		grouper.groupByAttribute = dateAttribute
 		let value = "value string"
 
@@ -319,7 +319,7 @@ class DayOfWeekSampleGrouperUnitTests: UnitTest {
 
 	func testGivenGroupByDaysOfWeekAttributeWithStringValue_groupNameForValue_returnsAttributeNameContainsValue() throws {
 		// given
-		let daysOfWeekAttribute = DaysOfWeekAttribute(name: "fdjkjwiofjeiow")
+		let daysOfWeekAttribute = DaysOfWeekAttribute(id: 0, name: "fdjkjwiofjeiow")
 		grouper.groupByAttribute = daysOfWeekAttribute
 		let value = "value string"
 
@@ -332,7 +332,7 @@ class DayOfWeekSampleGrouperUnitTests: UnitTest {
 
 	func testGivenGroupByUnknownAttributeTypeWithStringValue_groupNameForValue_throwsError() throws {
 		// given
-		let invalidAttribute = TextAttribute(name: "fes")
+		let invalidAttribute = TextAttribute(id: 0, name: "fes")
 		grouper.groupByAttribute = invalidAttribute
 
 		// when / then
@@ -424,7 +424,7 @@ class DayOfWeekSampleGrouperUnitTests: UnitTest {
 		}
 
 		// when
-		copy.groupByAttribute = DaysOfWeekAttribute(name: "fjeoqugnjk")
+		copy.groupByAttribute = DaysOfWeekAttribute(id: 0, name: "fjeoqugnjk")
 
 		// then
 		assertThat(grouper.groupByAttribute, equals(dayOfWeekAttribute))
@@ -464,7 +464,7 @@ class DayOfWeekSampleGrouperUnitTests: UnitTest {
 
 	func testGivenAttributeSelectAttributeWithValidValue_set_setsGroupByAttribute() throws {
 		// given
-		grouper.groupByAttribute = DaysOfWeekAttribute(name: "ghjreiouq")
+		grouper.groupByAttribute = DaysOfWeekAttribute(id: 0, name: "ghjreiouq")
 		let expectedValue = dayOfWeekAttribute
 
 		// when
@@ -483,7 +483,7 @@ class DayOfWeekSampleGrouperUnitTests: UnitTest {
 
 	func testGivenAttributeThatIsNotAPossibleValue_set_throwsError() throws {
 		// given
-		let value = TextAttribute(name: "fs")
+		let value = TextAttribute(id: 0, name: "fs")
 
 		// when / then
 		XCTAssertThrowsError(try grouper.set(attribute: grouper.attributeSelectAttribute, to: value))
@@ -545,7 +545,7 @@ class DayOfWeekSampleGrouperUnitTests: UnitTest {
 		// given
 		let other = DayOfWeekSampleGrouper(attributes: [dayOfWeekAttribute])
 		grouper.groupByAttribute = dayOfWeekAttribute
-		other.groupByAttribute = DaysOfWeekAttribute(name: "grejnqio")
+		other.groupByAttribute = DaysOfWeekAttribute(id: 0, name: "grejnqio")
 
 		// when
 		let areEqual = grouper.equalTo(other)

@@ -105,7 +105,7 @@ final class ActivityFunctionalTests: FunctionalTest {
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// given
-		let unknownAttribute = DoubleAttribute(name: "this is not a real attribute")
+		let unknownAttribute = DoubleAttribute(id: 0, name: "this is not a real attribute")
 		let activity = ActivityDataTestUtil.createActivity()
 
 		// when
@@ -521,7 +521,7 @@ final class ActivityFunctionalTests: FunctionalTest {
 	func testGivenWrongClass_equalToAttributed_returnsFalse() {
 		// given
 		let activity = ActivityDataTestUtil.createActivity()
-		let other = EqualToDoubleAttributeRestriction(restrictedAttribute: DoubleAttribute(name: ""))
+		let other = EqualToDoubleAttributeRestriction(restrictedAttribute: DoubleAttribute(id: 0, name: ""))
 
 		// when
 		let areEqual = activity.equalTo(other as Attributed)

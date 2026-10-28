@@ -238,7 +238,7 @@ final class DoesNotHaveTagAttributeRestrictionFunctionalTests: FunctionalTest {
 		let _ = useTagAttribute()
 		let tag = TagDataTestUtil.createTag()
 		restriction.tag = tag
-		let unknownAttribute = DoubleAttribute(name: "unknown attribute")
+		let unknownAttribute = DoubleAttribute(id: 0, name: "unknown attribute")
 
 		// when
 		XCTAssertThrowsError(try restriction.value(of: unknownAttribute)) { error in
@@ -265,7 +265,7 @@ final class DoesNotHaveTagAttributeRestrictionFunctionalTests: FunctionalTest {
 		// given
 		let _ = useTagAttribute()
 		let tag = TagDataTestUtil.createTag()
-		let unknownAttribute = DoubleAttribute(name: "unknown attribute")
+		let unknownAttribute = DoubleAttribute(id: 0, name: "unknown attribute")
 
 		// when
 		XCTAssertThrowsError(try restriction.set(attribute: unknownAttribute, to: tag)) { error in

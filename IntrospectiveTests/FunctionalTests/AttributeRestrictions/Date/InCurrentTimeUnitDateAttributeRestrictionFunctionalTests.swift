@@ -17,7 +17,7 @@ import Hamcrest
 class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	private typealias Me = InCurrentTimeUnitDateAttributeRestrictionFunctionalTests
-	private static let restrictedAttribute = DateTimeAttribute(name: "this is a date")
+	private static let restrictedAttribute = DateTimeAttribute(id: 0, name: "this is a date")
 	private static let timeUnitAttribute = InCurrentTimeUnitDateAttributeRestriction.timeUnitAttribute
 
 	private var restriction: InCurrentTimeUnitDateAttributeRestriction!
@@ -179,7 +179,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 	func testGivenSameClassWithDifferentRestrictedAttributes_equalToOperator_returnsFalse() throws {
 		// given
 		let otherRestriction = InCurrentTimeUnitDateAttributeRestriction(
-			restrictedAttribute: DateTimeAttribute(name: "not the same attribute"),
+			restrictedAttribute: DateTimeAttribute(id: 0, name: "not the same attribute"),
 			restriction.timeUnit)
 
 		// when / then
@@ -230,7 +230,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 	func testGivenSameClassWithDifferentRestrictedAttributes_equalToAttributed_returnsFalse() throws {
 		// given
 		let otherAttributed: Attributed = InCurrentTimeUnitDateAttributeRestriction(
-			restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
+			restrictedAttribute: DateOnlyAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -287,7 +287,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 	func testGivenSameClassWithDifferentRestrictedAttributes_equalToRestriction_returnsFalse() throws {
 		// given
 		let otherAttributed: AttributeRestriction = InCurrentTimeUnitDateAttributeRestriction(
-			restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"),
+			restrictedAttribute: DateOnlyAttribute(id: 0, name: "not the same attribute"),
 			restriction.timeUnit)
 
 		// when
@@ -333,7 +333,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	func testGivenSameClassWithDifferentRestrictedAttributes_equalTo_returnsFalse() throws {
 		// given
-		let other = InCurrentTimeUnitDateAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
+		let other = InCurrentTimeUnitDateAttributeRestriction(restrictedAttribute: DateOnlyAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(other)

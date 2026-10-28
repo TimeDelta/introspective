@@ -18,7 +18,7 @@ final class LessThanOrEqualToDoubleAttributeRestrictionUnitTests: UnitTest {
 
 	private typealias Me = LessThanOrEqualToDoubleAttributeRestrictionUnitTests
 	private static let valueAttribute = LessThanOrEqualToDoubleAttributeRestriction.valueAttribute
-	private static let restrictedAttribute = DoubleAttribute(name: "restricted")
+	private static let restrictedAttribute = DoubleAttribute(id: 0, name: "restricted")
 
 	private var restriction: LessThanOrEqualToDoubleAttributeRestriction!
 
@@ -193,7 +193,7 @@ final class LessThanOrEqualToDoubleAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
 		// given
-		let other = LessThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: IntegerAttribute(name: "not the same attribute"))
+		let other = LessThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: IntegerAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction == other
@@ -251,7 +251,7 @@ final class LessThanOrEqualToDoubleAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = LessThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: IntegerAttribute(name: "not the same attribute"))
+		let otherAttributed: Attributed = LessThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: IntegerAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -307,7 +307,7 @@ final class LessThanOrEqualToDoubleAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
 		let otherRestriction: AttributeRestriction = LessThanOrEqualToDoubleAttributeRestriction(
-			restrictedAttribute: IntegerAttribute(name: "not the same attribute"))
+			restrictedAttribute: IntegerAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherRestriction)
@@ -354,7 +354,7 @@ final class LessThanOrEqualToDoubleAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let other = LessThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: IntegerAttribute(name: "not the same attribute"))
+		let other = LessThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: IntegerAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(other)

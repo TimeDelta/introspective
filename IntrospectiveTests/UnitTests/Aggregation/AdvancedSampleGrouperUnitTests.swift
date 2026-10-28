@@ -337,7 +337,7 @@ class AdvancedSampleGrouperUnitTests: UnitTest {
 		if grouper.attributes.count > 0 {
 			attribute = grouper.attributes[0]
 		} else {
-			attribute = TextAttribute(name: "f")
+			attribute = TextAttribute(id: 0, name: "f")
 		}
 
 		// when
@@ -355,7 +355,7 @@ class AdvancedSampleGrouperUnitTests: UnitTest {
 		if grouper.attributes.count > 0 {
 			attribute = grouper.attributes[0]
 		} else {
-			attribute = TextAttribute(name: "f")
+			attribute = TextAttribute(id: 0, name: "f")
 		}
 
 		// when

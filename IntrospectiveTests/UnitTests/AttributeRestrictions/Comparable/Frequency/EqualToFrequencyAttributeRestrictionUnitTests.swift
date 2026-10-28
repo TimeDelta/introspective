@@ -19,7 +19,7 @@ final class EqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 
 	private typealias Me = EqualToFrequencyAttributeRestrictionUnitTests
 	private static let valueAttribute = EqualToFrequencyAttributeRestriction.valueAttribute
-	private static let restrictedAttribute = FrequencyAttribute(name: "restricted")
+	private static let restrictedAttribute = FrequencyAttribute(id: 0, name: "restricted")
 
 	private var restriction: EqualToFrequencyAttributeRestriction!
 
@@ -211,7 +211,7 @@ final class EqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
 		// given
 		let other = EqualToFrequencyAttributeRestriction(
-			restrictedAttribute: FrequencyAttribute(name: "not the same attribute"))
+			restrictedAttribute: FrequencyAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction == other
@@ -272,7 +272,7 @@ final class EqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentRestrictedAttribute_equalToAttributed_returnsFalse() {
 		// given
 		let otherAttributed: Attributed = EqualToFrequencyAttributeRestriction(
-			restrictedAttribute: FrequencyAttribute(name: "not the same attribute"))
+			restrictedAttribute: FrequencyAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -333,7 +333,7 @@ final class EqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
 		let otherRestriction: AttributeRestriction = EqualToFrequencyAttributeRestriction(
-			restrictedAttribute: FrequencyAttribute(name: "not the same attribute"))
+			restrictedAttribute: FrequencyAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherRestriction)
@@ -383,7 +383,7 @@ final class EqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
 		let other = EqualToFrequencyAttributeRestriction(
-			restrictedAttribute: FrequencyAttribute(name: "not the same attribute"))
+			restrictedAttribute: FrequencyAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(other)

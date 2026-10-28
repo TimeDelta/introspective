@@ -16,9 +16,9 @@ import Hamcrest
 final class SameValueSampleGrouperUnitTests: UnitTest {
 
 	private typealias Me = SameValueSampleGrouperUnitTests
-	private static let hashableAttribute = TextAttribute(name: "hashable attribute")
+	private static let hashableAttribute = TextAttribute(id: 0, name: "hashable attribute")
 	private static let nonHashableAttribute = AttributeSelectAttribute(
-		name: "non-hashable attribute",
+		id: 0, name: "non-hashable attribute",
 		attributes: [hashableAttribute])
 
 	private final var grouper: SameValueSampleGrouper!
@@ -75,8 +75,8 @@ final class SameValueSampleGrouperUnitTests: UnitTest {
 
 	func testGivenNonHashableValues_group_correctlyGroupsSamples() throws {
 		grouper.groupByAttribute = Me.nonHashableAttribute
-		let group1Value = TextAttribute(name: "0")
-		let group2Value = TextAttribute(name: "1")
+		let group1Value = TextAttribute(id: 0, name: "0")
+		let group2Value = TextAttribute(id: 0, name: "1")
 		let samples = SampleCreatorTestUtil.createSamples(
 			withValues: [
 				group1Value,

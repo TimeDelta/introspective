@@ -16,9 +16,9 @@ final class AttributeSelectAttributeUnitTests: UnitTest {
 
 	private typealias Me = AttributeSelectAttributeUnitTests
 	private static let possibleValues: [Attribute] = [
-		TextAttribute(name: "text"),
-		DoubleAttribute(name: "double"),
-		IntegerAttribute(name: "integer")
+		TextAttribute(id: 0, name: "text"),
+		DoubleAttribute(id: 0, name: "double"),
+		IntegerAttribute(id: 0, name: "integer")
 	]
 
 	private final var attribute: AttributeSelectAttribute!
@@ -74,7 +74,7 @@ final class AttributeSelectAttributeUnitTests: UnitTest {
 	func testGivenCorrectValueTypeAndValueIsNotPossibleValue_isValid_returnsFalse() {
 		// given
 		useOptionalAttribute()
-		let value = TextAttribute(name: "This attribute is not a possible value")
+		let value = TextAttribute(id: 0, name: "This attribute is not a possible value")
 
 		// when
 		let valid = attribute.isValid(value: value)
@@ -113,7 +113,7 @@ final class AttributeSelectAttributeUnitTests: UnitTest {
 	func testGivenEmptyValuesArray_indexOf_returnsNil() {
 		// given
 		useRequiredAttribute()
-		let value = TextAttribute(name: "not found")
+		let value = TextAttribute(id: 0, name: "not found")
 
 		// when
 		let index = attribute.indexOf(possibleValue: value, in: [])
@@ -334,7 +334,7 @@ final class AttributeSelectAttributeUnitTests: UnitTest {
 	func testGivenWrongClass_equalTo_returnsFalse() {
 		// given
 		useRequiredAttribute()
-		let other = DoubleAttribute(name: "name")
+		let other = DoubleAttribute(id: 0, name: "name")
 
 		// when
 		let areEqual = attribute.equalTo(other)
@@ -358,7 +358,7 @@ final class AttributeSelectAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = AttributeSelectAttribute(
-			name: attribute.name + "other stuff",
+			id: 0, name: attribute.name + "other stuff",
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
@@ -376,7 +376,7 @@ final class AttributeSelectAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = AttributeSelectAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: (attribute.extendedDescription ?? "") + "other stuff",
 			variableName: attribute.variableName,
@@ -394,7 +394,7 @@ final class AttributeSelectAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = AttributeSelectAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: (attribute.variableName ?? "") + "other stuff",
@@ -412,7 +412,7 @@ final class AttributeSelectAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = AttributeSelectAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
@@ -430,9 +430,9 @@ final class AttributeSelectAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		var otherPossibleValues = Me.possibleValues
-		otherPossibleValues.append(TextAttribute(name: "not in main attribute"))
+		otherPossibleValues.append(TextAttribute(id: 0, name: "not in main attribute"))
 		let other = AttributeSelectAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
@@ -450,7 +450,7 @@ final class AttributeSelectAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = AttributeSelectAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
@@ -468,7 +468,7 @@ final class AttributeSelectAttributeUnitTests: UnitTest {
 
 	private final func useOptionalAttribute() {
 		attribute = AttributeSelectAttribute(
-			name: "name",
+			id: 0, name: "name",
 			description: "description",
 			variableName: "variable name",
 			optional: true,
@@ -477,7 +477,7 @@ final class AttributeSelectAttributeUnitTests: UnitTest {
 
 	private final func useRequiredAttribute() {
 		attribute = AttributeSelectAttribute(
-			name: "name",
+			id: 0, name: "name",
 			description: "description",
 			variableName: "variable name",
 			optional: false,

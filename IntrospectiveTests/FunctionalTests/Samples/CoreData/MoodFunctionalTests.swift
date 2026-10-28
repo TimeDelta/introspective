@@ -33,7 +33,7 @@ final class MoodFunctionalTests: FunctionalTest {
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeException() {
 		// given
-		let unknownAttribute = TextAttribute(name: "unknown")
+		let unknownAttribute = TextAttribute(id: 0, name: "unknown")
 
 		// when
 		XCTAssertThrowsError(try mood.value(of: unknownAttribute)) { error in
@@ -94,7 +94,7 @@ final class MoodFunctionalTests: FunctionalTest {
 
 	func testGivenUnknownAttribute_set_throwsUnknownAttributeError() {
 		// given
-		let unknownAttribute = TextAttribute(name: "unknown")
+		let unknownAttribute = TextAttribute(id: 0, name: "unknown")
 
 		// when
 		XCTAssertThrowsError(try mood.set(attribute: unknownAttribute, to: 0.0 as Any)) { error in
@@ -238,7 +238,7 @@ final class MoodFunctionalTests: FunctionalTest {
 
 	func testGivenWrongClass_equalToAttributed_returnsFalse() {
 		// given
-		let other = EqualToStringAttributeRestriction(restrictedAttribute: TextAttribute(name: ""))
+		let other = EqualToStringAttributeRestriction(restrictedAttribute: TextAttribute(id: 0, name: ""))
 
 		// when
 		let areEqual = mood.equalTo(other as Attributed)

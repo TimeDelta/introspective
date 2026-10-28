@@ -108,7 +108,7 @@ final class SameTimeUnitSampleGrouperFunctionalTests: FunctionalTest {
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// given
-		let unknownAttribute = TextAttribute(name: "text")
+		let unknownAttribute = TextAttribute(id: 0, name: "text")
 		let grouper = SameTimeUnitSampleGrouper(attributes: [], .minute)
 
 		// when
@@ -134,7 +134,7 @@ final class SameTimeUnitSampleGrouperFunctionalTests: FunctionalTest {
 
 	func testGivenUnknownAttribute_set_throwsUnknownAttributeError() {
 		// given
-		let unknownAttribute = TextAttribute(name: "text")
+		let unknownAttribute = TextAttribute(id: 0, name: "text")
 		let grouper = SameTimeUnitSampleGrouper(attributes: [], .minute)
 
 		// when

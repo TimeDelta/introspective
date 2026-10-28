@@ -34,7 +34,7 @@ final class MedicationDoseFunctionalTests: FunctionalTest {
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// given
-		let unknownAttribute = TextAttribute(name: "unknown")
+		let unknownAttribute = TextAttribute(id: 0, name: "unknown")
 
 		// when
 		XCTAssertThrowsError(try dose.value(of: unknownAttribute)) { error in

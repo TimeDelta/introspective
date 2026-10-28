@@ -30,7 +30,7 @@ final class WeightUnitTests: UnitTest {
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// given
-		let unknownAttribute = TextAttribute(name: "unknown")
+		let unknownAttribute = TextAttribute(id: 0, name: "unknown")
 
 		// when
 		XCTAssertThrowsError(try weight.value(of: unknownAttribute)) { error in
@@ -59,7 +59,7 @@ final class WeightUnitTests: UnitTest {
 
 	func testGivenUnknownAttribute_setAttribute_throwsUnknownAttributeError() {
 		// given
-		let unknownAttribute = TextAttribute(name: "unknown")
+		let unknownAttribute = TextAttribute(id: 0, name: "unknown")
 		let value = ""
 
 		// when
@@ -162,7 +162,7 @@ final class WeightUnitTests: UnitTest {
 
 	func testGivenWrongClass_equalToAttributed_returnsFalse() {
 		// given
-		let other = EqualToStringAttributeRestriction(restrictedAttribute: TextAttribute(name: ""), value: "")
+		let other = EqualToStringAttributeRestriction(restrictedAttribute: TextAttribute(id: 0, name: ""), value: "")
 
 		// when
 		let areEqual = weight.equalTo(other)

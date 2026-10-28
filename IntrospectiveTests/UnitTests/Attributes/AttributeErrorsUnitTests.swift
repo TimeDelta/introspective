@@ -19,7 +19,7 @@ final class AttributeErrorsUnitTests: UnitTest {
 
 	func testGivenTypeMismatchErrorWithAttributedObject_localizedDescription_containsNameOfAttributedObject() {
 		// given
-		let attribute = TextAttribute(name: "name of the text attribute")
+		let attribute = TextAttribute(id: 0, name: "name of the text attribute")
 		let attributedObject = HeartRate(12, Date())
 		let error = TypeMismatchError(attribute: attribute, of: attributedObject, wasA: HeartRate.self)
 
@@ -32,7 +32,7 @@ final class AttributeErrorsUnitTests: UnitTest {
 
 	func testGivenTypeMismatchErrorWithAttributedObject_localizedDescription_containsNameOfAttribute() {
 		// given
-		let attribute = TextAttribute(name: "name of the text attribute")
+		let attribute = TextAttribute(id: 0, name: "name of the text attribute")
 		let attributedObject = HeartRate(12, Date())
 		let error = TypeMismatchError(attribute: attribute, of: attributedObject, wasA: HeartRate.self)
 
@@ -45,7 +45,7 @@ final class AttributeErrorsUnitTests: UnitTest {
 
 	func testGivenTypeMismatchErrorWithAttributedObjectAndNonNilValue_localizedDescription_containsDescriptionOfValueType() {
 		// given
-		let attribute = TextAttribute(name: "name of the text attribute")
+		let attribute = TextAttribute(id: 0, name: "name of the text attribute")
 		let attributedObject = HeartRate(12, Date())
 		let error = TypeMismatchError(attribute: attribute, of: attributedObject, wasA: HeartRate.self)
 
@@ -58,7 +58,7 @@ final class AttributeErrorsUnitTests: UnitTest {
 
 	func testGivenTypeMismatchErrorWithoutAttributedObject_localizedDescription_containsNameOfAttribute() {
 		// given
-		let attribute = TextAttribute(name: "name of the text attribute")
+		let attribute = TextAttribute(id: 0, name: "name of the text attribute")
 		let error = TypeMismatchError(attribute: attribute, wasA: HeartRate.self)
 
 		// when
@@ -70,7 +70,7 @@ final class AttributeErrorsUnitTests: UnitTest {
 
 	func testGivenTypeMismatchErrorWithoutAttributedObjectAndWithNonNilValue_localizedDescription_containsDescriptionOfValueType() {
 		// given
-		let attribute = TextAttribute(name: "name of the text attribute")
+		let attribute = TextAttribute(id: 0, name: "name of the text attribute")
 		let error = TypeMismatchError(attribute: attribute, wasA: HeartRate.self)
 
 		// when
@@ -84,7 +84,7 @@ final class AttributeErrorsUnitTests: UnitTest {
 
 	func testGivenUnsupportedValueErrorWithAttributedObject_localizedDescription_containsNameOfAttributedObject() {
 		// given
-		let attribute = TextAttribute(name: "name of the text attribute")
+		let attribute = TextAttribute(id: 0, name: "name of the text attribute")
 		let attributedObject = HeartRate(12, Date())
 		let value: Any? = nil
 		let error = UnsupportedValueError(attribute: attribute, of: attributedObject, is: value)
@@ -98,7 +98,7 @@ final class AttributeErrorsUnitTests: UnitTest {
 
 	func testGivenUnsupportedValueErrorWithAttributedObject_localizedDescription_containsNameOfAttribute() {
 		// given
-		let attribute = TextAttribute(name: "name of the text attribute")
+		let attribute = TextAttribute(id: 0, name: "name of the text attribute")
 		let attributedObject = HeartRate(12, Date())
 		let value: Any? = nil
 		let error = UnsupportedValueError(attribute: attribute, of: attributedObject, is: value)
@@ -112,7 +112,7 @@ final class AttributeErrorsUnitTests: UnitTest {
 
 	func testGivenUnsupportedValueErrorWithAttributedObjectAndNonNilValue_localizedDescription_containsDescriptionOfValue() {
 		// given
-		let attribute = TextAttribute(name: "name of the text attribute")
+		let attribute = TextAttribute(id: 0, name: "name of the text attribute")
 		let attributedObject = HeartRate(12, Date())
 		let value: Any = Dosage(12, "mg")
 		let error = UnsupportedValueError(attribute: attribute, of: attributedObject, is: value)
@@ -126,7 +126,7 @@ final class AttributeErrorsUnitTests: UnitTest {
 
 	func testGivenUnsupportedValueErrorWithAttributedObjectAndNilValue_localizedDescription_containsNil() {
 		// given
-		let attribute = TextAttribute(name: "name of the text attribute")
+		let attribute = TextAttribute(id: 0, name: "name of the text attribute")
 		let attributedObject = HeartRate(12, Date())
 		let error = UnsupportedValueError(attribute: attribute, of: attributedObject, is: nil)
 
@@ -139,7 +139,7 @@ final class AttributeErrorsUnitTests: UnitTest {
 
 	func testGivenUnsupportedValueErrorWithoutAttributedObject_localizedDescription_containsNameOfAttribute() {
 		// given
-		let attribute = TextAttribute(name: "name of the text attribute")
+		let attribute = TextAttribute(id: 0, name: "name of the text attribute")
 		let value: Any? = nil
 		let error = UnsupportedValueError(attribute: attribute, is: value)
 
@@ -152,7 +152,7 @@ final class AttributeErrorsUnitTests: UnitTest {
 
 	func testGivenUnsupportedValueErrorWithoutAttributedObjectAndWithNonNilValue_localizedDescription_containsDescriptionOfValue() {
 		// given
-		let attribute = TextAttribute(name: "name of the text attribute")
+		let attribute = TextAttribute(id: 0, name: "name of the text attribute")
 		let value: Any = Dosage(12, "mg")
 		let error = UnsupportedValueError(attribute: attribute, is: value)
 
@@ -165,7 +165,7 @@ final class AttributeErrorsUnitTests: UnitTest {
 
 	func testGivenUnsupportedValueErrorWithoutAttributedObjectAndWithNilValue_localizedDescription_containsNil() {
 		// given
-		let attribute = TextAttribute(name: "name of the text attribute")
+		let attribute = TextAttribute(id: 0, name: "name of the text attribute")
 		let error = UnsupportedValueError(attribute: attribute, is: nil)
 
 		// when
@@ -179,7 +179,7 @@ final class AttributeErrorsUnitTests: UnitTest {
 
 	func testGivenUnknownAttributeError_localizedDescription_containsNameOfAttributedObject() {
 		// given
-		let attribute = TextAttribute(name: "name of the text attribute")
+		let attribute = TextAttribute(id: 0, name: "name of the text attribute")
 		let attributedObject = HeartRate(12, Date())
 		let error = UnknownAttributeError(attribute: attribute, for: attributedObject)
 
@@ -192,7 +192,7 @@ final class AttributeErrorsUnitTests: UnitTest {
 
 	func testGivenUnknownAttributeError_localizedDescription_containsNameOfAttribute() {
 		// given
-		let attribute = TextAttribute(name: "name of the text attribute")
+		let attribute = TextAttribute(id: 0, name: "name of the text attribute")
 		let attributedObject = HeartRate(12, Date())
 		let error = UnknownAttributeError(attribute: attribute, for: attributedObject)
 

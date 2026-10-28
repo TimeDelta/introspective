@@ -117,7 +117,7 @@ final class FrequencyAttributeUnitTests: UnitTest {
 	func testGivenWrongClass_equalTo_returnsFalse() {
 		// given
 		useRequiredAttribute()
-		let other = DoubleAttribute(name: "name")
+		let other = DoubleAttribute(id: 0, name: "name")
 
 		// when
 		let areEqual = attribute.equalTo(other)
@@ -141,7 +141,7 @@ final class FrequencyAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = FrequencyAttribute(
-			name: attribute.name + "other stuff",
+			id: 0, name: attribute.name + "other stuff",
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
@@ -158,7 +158,7 @@ final class FrequencyAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = FrequencyAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: (attribute.extendedDescription ?? "") + "other stuff",
 			variableName: attribute.variableName,
@@ -175,7 +175,7 @@ final class FrequencyAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = FrequencyAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: (attribute.variableName ?? "") + "other stuff",
@@ -192,7 +192,7 @@ final class FrequencyAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = FrequencyAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
@@ -209,7 +209,7 @@ final class FrequencyAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = FrequencyAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
@@ -226,7 +226,7 @@ final class FrequencyAttributeUnitTests: UnitTest {
 
 	private final func useOptionalAttribute() {
 		attribute = FrequencyAttribute(
-			name: "name",
+			id: 0, name: "name",
 			description: "description",
 			variableName: "variableName",
 			optional: true)
@@ -234,7 +234,7 @@ final class FrequencyAttributeUnitTests: UnitTest {
 
 	private final func useRequiredAttribute() {
 		attribute = FrequencyAttribute(
-			name: "name",
+			id: 0, name: "name",
 			description: "description",
 			variableName: "variableName",
 			optional: false)

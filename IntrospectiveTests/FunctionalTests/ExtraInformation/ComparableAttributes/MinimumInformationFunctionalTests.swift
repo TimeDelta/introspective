@@ -18,7 +18,7 @@ import SwiftDate
 final class MinimumInformationFunctionalTests: FunctionalTest {
 
 	private typealias Me = MinimumInformationFunctionalTests
-	private static let restrictedAttribute = IntegerAttribute(name: "abc")
+	private static let restrictedAttribute = IntegerAttribute(id: 0, name: "abc")
 
 	private final var information: MinimumInformation<Int>!
 
@@ -140,7 +140,7 @@ final class MinimumInformationFunctionalTests: FunctionalTest {
 
 	func testGivenTwoInformationObjectsOfSameTypeWithDifferentRestrictedAttributes_equalTo_returnsFalse() throws {
 		// given
-		let otherAttribute = IntegerAttribute(name: Me.restrictedAttribute.name + "some other stuff")
+		let otherAttribute = IntegerAttribute(id: 0, name: Me.restrictedAttribute.name + "some other stuff")
 		let otherInformation = MinimumInformation<Int>(otherAttribute)
 
 		// when

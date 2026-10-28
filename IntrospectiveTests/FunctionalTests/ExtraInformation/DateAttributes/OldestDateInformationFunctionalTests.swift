@@ -418,7 +418,7 @@ final class OldestDateInformationFunctionalTests: FunctionalTest {
 
 	func testGivenDifferentRestrictedAttribute_equalTo_returnsFalse() {
 		// given
-		let other = OldestDateInformation(TextAttribute(name: "different attribute"))
+		let other = OldestDateInformation(TextAttribute(id: 0, name: "different attribute"))
 
 		// when
 		let areEqual = information.equalTo(other)

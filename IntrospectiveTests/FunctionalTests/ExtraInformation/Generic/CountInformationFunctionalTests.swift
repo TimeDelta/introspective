@@ -17,7 +17,7 @@ import SwiftDate
 class CountInformationFunctionalTests: FunctionalTest {
 
 	private typealias Me = CountInformationFunctionalTests
-	private static let attribute = AttributeBase<Any>(name: "attribute")
+	private static let attribute = AttributeBase<Any>(id: 0, name: "attribute")
 
 	private var information: CountInformation!
 
@@ -365,7 +365,7 @@ class CountInformationFunctionalTests: FunctionalTest {
 
 	func testGivenDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let other = CountInformation(TextAttribute(name: information.attribute.name + "other stuff"))
+		let other = CountInformation(TextAttribute(id: 0, name: information.attribute.name + "other stuff"))
 
 		// when
 		let areEqual = information.equalTo(other)

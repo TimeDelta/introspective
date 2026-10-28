@@ -17,7 +17,7 @@ import SwiftDate
 class ModeInformationFunctionalTests: FunctionalTest {
 
 	private typealias Me = ModeInformationFunctionalTests
-	private static let doubleAttribute = DoubleAttribute(name: "double")
+	private static let doubleAttribute = DoubleAttribute(id: 0, name: "double")
 
 	// MARK: - compute()
 
@@ -83,7 +83,7 @@ class ModeInformationFunctionalTests: FunctionalTest {
 	func testGivenDurationAttribute_compute_returnsCorrectValue() throws {
 		// given
 		let modeValue = TimeDuration([.hour: 1])
-		let attribute = DurationAttribute(name: "name")
+		let attribute = DurationAttribute(id: 0, name: "name")
 		let samples = SampleCreatorTestUtil.createSamples(
 			withValues: [
 				modeValue,
@@ -103,7 +103,7 @@ class ModeInformationFunctionalTests: FunctionalTest {
 	func testGivenFrequencyAttribute_compute_returnsCorrectValue() throws {
 		// given
 		let modeValue = Frequency(1, .hour)!
-		let attribute = FrequencyAttribute(name: "name")
+		let attribute = FrequencyAttribute(id: 0, name: "name")
 		let samples = SampleCreatorTestUtil.createSamples(
 			withValues: [
 				modeValue,
@@ -169,7 +169,7 @@ class ModeInformationFunctionalTests: FunctionalTest {
 	func testGivenDurationAttribute_computeGraphable_returnsCorrectValue() throws {
 		// given
 		let modeValue = TimeDuration([.hour: 1])
-		let attribute = DurationAttribute(name: "name")
+		let attribute = DurationAttribute(id: 0, name: "name")
 		let samples = SampleCreatorTestUtil.createSamples(
 			withValues: [
 				modeValue,
@@ -189,7 +189,7 @@ class ModeInformationFunctionalTests: FunctionalTest {
 	func testGivenFrequencyAttribute_computeGraphable_returnsCorrectValue() throws {
 		// given
 		let modeValue = Frequency(1, .hour)!
-		let attribute = FrequencyAttribute(name: "name")
+		let attribute = FrequencyAttribute(id: 0, name: "name")
 		let samples = SampleCreatorTestUtil.createSamples(
 			withValues: [
 				modeValue,

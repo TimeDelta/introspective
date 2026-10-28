@@ -336,7 +336,7 @@ final class TagsAttributeFunctionalTests: FunctionalTest {
 	func testGivenWrongClass_equalTo_returnsFalse() {
 		// given
 		useRequiredAttribute()
-		let other = DoubleAttribute(name: "name")
+		let other = DoubleAttribute(id: 0, name: "name")
 
 		// when
 		let areEqual = attribute.equalTo(other)

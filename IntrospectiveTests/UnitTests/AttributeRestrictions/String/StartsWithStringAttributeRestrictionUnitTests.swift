@@ -17,7 +17,7 @@ import SwiftyMocky
 final class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	private typealias Me = StartsWithStringAttributeRestrictionUnitTests
-	private static let restrictedAttribute = TextAttribute(name: "text")
+	private static let restrictedAttribute = TextAttribute(id: 0, name: "text")
 	private static let prefixAttribute = StartsWithStringAttributeRestriction.prefixAttribute
 
 	private var restriction: StartsWithStringAttributeRestriction!
@@ -294,7 +294,7 @@ final class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() throws {
 		// given
-		let other = StartsWithStringAttributeRestriction(restrictedAttribute: TextAttribute(name: "not the same attribute"))
+		let other = StartsWithStringAttributeRestriction(restrictedAttribute: TextAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction == other
@@ -353,7 +353,7 @@ final class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToAttributed_returnsFalse() throws {
 		// given
 		let otherAttributed: Attributed = StartsWithStringAttributeRestriction(
-			restrictedAttribute: TextAttribute(name: "not the same attribute"))
+			restrictedAttribute: TextAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -410,7 +410,7 @@ final class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() throws {
 		// given
 		let otherAttributed: AttributeRestriction = StartsWithStringAttributeRestriction(
-			restrictedAttribute: TextAttribute(name: "not the same attribute"))
+			restrictedAttribute: TextAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -456,7 +456,7 @@ final class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() throws {
 		// given
-		let otherAttributed = StartsWithStringAttributeRestriction(restrictedAttribute: TextAttribute(name: "not the same attribute"))
+		let otherAttributed = StartsWithStringAttributeRestriction(restrictedAttribute: TextAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)

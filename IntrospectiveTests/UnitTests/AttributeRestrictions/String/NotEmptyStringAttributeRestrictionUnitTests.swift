@@ -14,7 +14,7 @@ import Hamcrest
 
 final class NotEmptyStringAttributeRestrictionUnitTests: UnitTest {
 
-	private final let attribute = TextAttribute(name: "attribute name")
+	private final let attribute = TextAttribute(id: 0, name: "attribute name")
 	private final var restriction: NotEmptyStringAttributeRestriction!
 
 	override func setUp() {
@@ -88,7 +88,7 @@ final class NotEmptyStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// given
-		let unknownAttribute = TextAttribute(name: "unknown")
+		let unknownAttribute = TextAttribute(id: 0, name: "unknown")
 
 		// when
 		XCTAssertThrowsError(try restriction.value(of: unknownAttribute)) { error in
@@ -101,7 +101,7 @@ final class NotEmptyStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenUnknownAttribute_set_throwsUnknownAttributeError() {
 		// given
-		let unknownAttribute = TextAttribute(name: "unknown")
+		let unknownAttribute = TextAttribute(id: 0, name: "unknown")
 
 		// when
 		XCTAssertThrowsError(try restriction.set(attribute: unknownAttribute, to: "" as Any)) { error in

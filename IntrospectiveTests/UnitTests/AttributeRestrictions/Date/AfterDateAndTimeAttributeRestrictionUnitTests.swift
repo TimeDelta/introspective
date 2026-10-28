@@ -19,7 +19,7 @@ final class AfterDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 
 	private typealias Me = AfterDateAndTimeAttributeRestrictionUnitTests
 	private static let dateAttribute = AfterDateAndTimeAttributeRestriction.dateAttribute
-	private static let restrictedAttribute = DateTimeAttribute(name: "unknown")
+	private static let restrictedAttribute = DateTimeAttribute(id: 0, name: "unknown")
 
 	private var restriction: AfterDateAndTimeAttributeRestriction!
 
@@ -219,7 +219,7 @@ final class AfterDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
 		// given
-		let otherAttributed = AfterDateAndTimeAttributeRestriction(restrictedAttribute: DateTimeAttribute(name: "not the same attribute"))
+		let otherAttributed = AfterDateAndTimeAttributeRestriction(restrictedAttribute: DateTimeAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction == otherAttributed
@@ -278,7 +278,7 @@ final class AfterDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToAttributed_returnsFalse() {
 		// given
 		let otherAttributed: Attributed = AfterDateAndTimeAttributeRestriction(
-			restrictedAttribute: DateTimeAttribute(name: "not the same attribute"))
+			restrictedAttribute: DateTimeAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -338,7 +338,7 @@ final class AfterDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
 		let otherRestriction: AttributeRestriction = AfterDateAndTimeAttributeRestriction(
-			restrictedAttribute: DateTimeAttribute(name: "not the same attribute"))
+			restrictedAttribute: DateTimeAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherRestriction)
@@ -385,7 +385,7 @@ final class AfterDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let other = AfterDateAndTimeAttributeRestriction(restrictedAttribute: DateTimeAttribute(name: "not the same attribute"))
+		let other = AfterDateAndTimeAttributeRestriction(restrictedAttribute: DateTimeAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(other)

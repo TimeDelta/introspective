@@ -207,7 +207,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		controller.viewDidLoad()
 		setRandomSamples()
 		let presentedController = mockXAxisSetupController()
-		let expectedAttribute = TextAttribute(name: "f")
+		let expectedAttribute = TextAttribute(id: 0, name: "f")
 		setXAxis(expectedAttribute)
 
 		// when
@@ -222,7 +222,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		controller.viewDidLoad()
 		setRandomSamples()
 		let presentedController = mockXAxisSetupController()
-		let expectedInformation = AverageInformation(TextAttribute(name: ""))
+		let expectedInformation = AverageInformation(TextAttribute(id: 0, name: ""))
 		setXAxis(expectedInformation)
 
 		// when
@@ -293,12 +293,12 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		// given
 		let graphableAttributes: [Attribute] = [
 			HeartRate.heartRate,
-			IntegerAttribute(name: "int"),
-			DurationAttribute(name: "duration"),
-			DosageAttribute(name: "dosage"),
+			IntegerAttribute(id: 0, name: "int"),
+			DurationAttribute(id: 0, name: "duration"),
+			DosageAttribute(id: 0, name: "dosage"),
 		]
 		var attributes: [Attribute] = [
-			TextAttribute(name: "text"),
+			TextAttribute(id: 0, name: "text"),
 		]
 		attributes.append(contentsOf: graphableAttributes)
 		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: attributes)
@@ -429,7 +429,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenUseAttributeForXAxis_xAxisSet_setsCorrectTitleForXAxisButton() {
 		// given
-		let attribute = TextAttribute(name: "fhjidso")
+		let attribute = TextAttribute(id: 0, name: "fhjidso")
 		controller.viewDidLoad()
 
 		// when
@@ -480,9 +480,9 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 	func testGivenMultipleAttributesForYAxis_yAxisSet_setsYAxisButtonTitleToIncludeAllAttributeNames() {
 		// given
 		let attributes: [Attribute] = [
-			TextAttribute(name: "gjnreoq;"),
-			DoubleAttribute(name: "fdsjkl"),
-			DurationAttribute(name: "fggregeqmkp"),
+			TextAttribute(id: 0, name: "gjnreoq;"),
+			DoubleAttribute(id: 0, name: "fdsjkl"),
+			DurationAttribute(id: 0, name: "fggregeqmkp"),
 		]
 		controller.viewDidLoad()
 
@@ -500,7 +500,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		controller.viewDidLoad()
 
 		// when
-		setYAxis([TextAttribute(name: "")])
+		setYAxis([TextAttribute(id: 0, name: "")])
 
 		// then
 		assertThat(yAxisButton, hasAccessibilityValue(yAxisButton.currentTitle))
@@ -590,7 +590,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		// given
 		controller.viewDidLoad()
 		setRandomSamples()
-		setXAxis(TextAttribute(name: "a"))
+		setXAxis(TextAttribute(id: 0, name: "a"))
 
 		// when
 		setPointGrouper(mockSampleGrouper())
@@ -606,7 +606,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		// given
 		controller.viewDidLoad()
 		setRandomSamples()
-		setYAxis([TextAttribute(name: "a")])
+		setYAxis([TextAttribute(id: 0, name: "a")])
 
 		// when
 		setPointGrouper(mockSampleGrouper())
@@ -624,7 +624,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		let pointGrouper = mockSampleGrouper(debugDescription: "point")
 		Given(pointGrouper, .copy(willReturn: pointGrouper))
 		setPointGrouper(pointGrouper)
-		setXAxis(TextAttribute(name: "a"))
+		setXAxis(TextAttribute(id: 0, name: "a"))
 
 		// when
 		setPointGrouper(mockSampleGrouper())
@@ -642,7 +642,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		let pointGrouper = mockSampleGrouper(debugDescription: "point")
 		Given(pointGrouper, .copy(willReturn: pointGrouper))
 		setPointGrouper(pointGrouper)
-		let yAxis = [AverageInformation(TextAttribute(name: "a"))]
+		let yAxis = [AverageInformation(TextAttribute(id: 0, name: "a"))]
 		setYAxis(yAxis)
 
 		// when
@@ -686,7 +686,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		// given
 		controller.viewDidLoad()
 		setRandomSamples()
-		setXAxis(TextAttribute(name: "a"))
+		setXAxis(TextAttribute(id: 0, name: "a"))
 		let pointGrouper = mockSampleGrouper(debugDescription: "point")
 		setPointGrouper(pointGrouper)
 
@@ -704,7 +704,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		// given
 		controller.viewDidLoad()
 		setRandomSamples()
-		setYAxis([TextAttribute(name: "a")])
+		setYAxis([TextAttribute(id: 0, name: "a")])
 		let pointGrouper = mockSampleGrouper(debugDescription: "point")
 		setPointGrouper(pointGrouper)
 
@@ -721,7 +721,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		// given
 		controller.viewDidLoad()
 		setRandomSamples()
-		setXAxis(TextAttribute(name: "a"))
+		setXAxis(TextAttribute(id: 0, name: "a"))
 
 		// when
 		controller.clearPointGroupingButtonPressed(clearPointGrouperButton as Any)
@@ -736,7 +736,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		// given
 		controller.viewDidLoad()
 		setRandomSamples()
-		let yAxis = [TextAttribute(name: "a")]
+		let yAxis = [TextAttribute(id: 0, name: "a")]
 		setYAxis(yAxis)
 
 		// when
@@ -755,7 +755,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		controller.viewDidLoad()
 		setPointGrouper(mockSampleGrouper())
 		setXAxis(usePointGroupValue: true)
-		setYAxis([TextAttribute(name: "")])
+		setYAxis([TextAttribute(id: 0, name: "")])
 
 		// then
 		assertThat(showGraphButton, isEnabled())
@@ -764,8 +764,8 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 	func testGivenAllRequirementsSetWithXAxisAttribute_updateShowGraphButtonState_enablesShowGraphButton() {
 		// given
 		controller.viewDidLoad()
-		setXAxis(TextAttribute(name: ""))
-		setYAxis([TextAttribute(name: "")])
+		setXAxis(TextAttribute(id: 0, name: ""))
+		setYAxis([TextAttribute(id: 0, name: "")])
 
 		// then
 		assertThat(showGraphButton, isEnabled())
@@ -774,8 +774,8 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 	func testGivenAllRequirementsSetWithXAxisInformation_updateShowGraphButtonState_enablesShowGraphButton() {
 		// given
 		controller.viewDidLoad()
-		setXAxis(AverageInformation(DoubleAttribute(name: "")))
-		setYAxis([TextAttribute(name: "")])
+		setXAxis(AverageInformation(DoubleAttribute(id: 0, name: "")))
+		setYAxis([TextAttribute(id: 0, name: "")])
 
 		// then
 		assertThat(showGraphButton, isEnabled())
@@ -784,8 +784,8 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 	func testGivenAllRequirementsSetWithYAxisInformation_updateShowGraphButtonState_enablesShowGraphButton() {
 		// given
 		controller.viewDidLoad()
-		setXAxis(TextAttribute(name: ""))
-		setYAxis([AverageInformation(DoubleAttribute(name: ""))])
+		setXAxis(TextAttribute(id: 0, name: ""))
+		setYAxis([AverageInformation(DoubleAttribute(id: 0, name: ""))])
 
 		// then
 		assertThat(showGraphButton, isEnabled())
@@ -794,7 +794,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 	func testGivenXAxisNotSetAndUsePointGroupValueFalse_updateShowGraphButtonState_disablesGraphButton() {
 		// given
 		controller.viewDidLoad()
-		setYAxis([TextAttribute(name: "")])
+		setYAxis([TextAttribute(id: 0, name: "")])
 
 		// then
 		assertThat(showGraphButton, not(isEnabled()))
@@ -803,7 +803,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 	func testGivenYAxisNotSet_updateShowGraphButtonState_disablesGraphButton() {
 		// given
 		controller.viewDidLoad()
-		setXAxis(TextAttribute(name: ""))
+		setXAxis(TextAttribute(id: 0, name: ""))
 
 		// then
 		assertThat(showGraphButton, not(isEnabled()))

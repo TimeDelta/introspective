@@ -20,7 +20,7 @@ final class GreaterThanDurationAttributeRestrictionUnitTests: UnitTest {
 
 	private typealias Me = GreaterThanDurationAttributeRestrictionUnitTests
 	private static let valueAttribute = GreaterThanDurationAttributeRestriction.valueAttribute
-	private static let restrictedAttribute = DurationAttribute(name: "restricted")
+	private static let restrictedAttribute = DurationAttribute(id: 0, name: "restricted")
 
 	private var restriction: GreaterThanDurationAttributeRestriction!
 
@@ -196,7 +196,7 @@ final class GreaterThanDurationAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
 		// given
 		let other = GreaterThanDurationAttributeRestriction(
-			restrictedAttribute: DurationAttribute(name: "not the same attribute"))
+			restrictedAttribute: DurationAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction == other
@@ -254,7 +254,7 @@ final class GreaterThanDurationAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentRestrictedAttribute_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = GreaterThanDurationAttributeRestriction(restrictedAttribute: DurationAttribute(name: "not the same attribute"))
+		let otherAttributed: Attributed = GreaterThanDurationAttributeRestriction(restrictedAttribute: DurationAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -310,7 +310,7 @@ final class GreaterThanDurationAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
 		let otherRestriction: AttributeRestriction = GreaterThanDurationAttributeRestriction(
-			restrictedAttribute: DurationAttribute(name: "not the same attribute"))
+			restrictedAttribute: DurationAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherRestriction)
@@ -358,7 +358,7 @@ final class GreaterThanDurationAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
 		let other = GreaterThanDurationAttributeRestriction(
-			restrictedAttribute: DurationAttribute(name: "not the same attribute"))
+			restrictedAttribute: DurationAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(other)

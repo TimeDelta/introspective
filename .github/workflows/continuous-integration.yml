@@ -108,6 +108,13 @@ jobs:
           state=$(xcrun simctl list devices available --json | python3 -c 'import json,sys; d=json.load(sys.stdin); print(next(v["state"] for vs in d["devices"].values() for v in vs if v["udid"]==sys.argv[1]))' "$simulator_id")
           if [ "$state" != Booted ]; then xcrun simctl boot "$simulator_id"; fi
 
+      - name: Regenerate original test mocks from frozen dependencies
+        if: matrix.kind == 'legacy'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./scripts/run-ci-command.sh ci-output/mock-generation.log python3 scripts/generate-legacy-mocks.py
+
       - name: Build simulator tests
         if: matrix.kind != 'release'
         id: test-build

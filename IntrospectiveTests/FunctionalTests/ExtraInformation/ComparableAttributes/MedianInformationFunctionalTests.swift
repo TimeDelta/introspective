@@ -17,7 +17,7 @@ import SwiftDate
 class MedianInformationFunctionalTests: FunctionalTest {
 
 	private typealias Me = MedianInformationFunctionalTests
-	private static let restrictedAttribute = DoubleAttribute(name: "abc")
+	private static let restrictedAttribute = DoubleAttribute(id: 0, name: "abc")
 
 	// MARK: - compute()
 
@@ -67,7 +67,7 @@ class MedianInformationFunctionalTests: FunctionalTest {
 	func testGivenDurationAttribute_compute_returnsCorrectValue() throws {
 		// given
 		let medianValue = TimeDuration([.hour: 1])
-		let attribute = DurationAttribute(name: "name")
+		let attribute = DurationAttribute(id: 0, name: "name")
 		let samples = SampleCreatorTestUtil.createSamples(
 			withValues: [
 				medianValue,
@@ -86,7 +86,7 @@ class MedianInformationFunctionalTests: FunctionalTest {
 	func testGivenFrequencyAttribute_compute_returnsCorrectValue() throws {
 		// given
 		let medianValue = Frequency(1, .hour)!
-		let attribute = FrequencyAttribute(name: "name")
+		let attribute = FrequencyAttribute(id: 0, name: "name")
 		let samples = SampleCreatorTestUtil.createSamples(
 			withValues: [
 				medianValue,
@@ -164,7 +164,7 @@ class MedianInformationFunctionalTests: FunctionalTest {
 	func testGivenTwoInformationObjectsOfSameTypeWithDifferentRestrictedAttributes_equalTo_returnsFalse() throws {
 		// given
 		let information = MedianInformation<Double>(Me.restrictedAttribute)
-		let otherAttribute = DoubleAttribute(name: Me.restrictedAttribute.name + "some other stuff")
+		let otherAttribute = DoubleAttribute(id: 0, name: Me.restrictedAttribute.name + "some other stuff")
 		let otherInformation = MedianInformation<Double>(otherAttribute)
 
 		// when

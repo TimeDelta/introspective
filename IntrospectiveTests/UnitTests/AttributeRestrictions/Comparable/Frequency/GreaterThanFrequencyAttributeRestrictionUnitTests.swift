@@ -19,7 +19,7 @@ final class GreaterThanFrequencyAttributeRestrictionUnitTests: UnitTest {
 
 	private typealias Me = GreaterThanFrequencyAttributeRestrictionUnitTests
 	private static let valueAttribute = GreaterThanFrequencyAttributeRestriction.valueAttribute
-	private static let restrictedAttribute = FrequencyAttribute(name: "restricted")
+	private static let restrictedAttribute = FrequencyAttribute(id: 0, name: "restricted")
 
 	private var restriction: GreaterThanFrequencyAttributeRestriction!
 
@@ -201,7 +201,7 @@ final class GreaterThanFrequencyAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
 		// given
 		let other = GreaterThanFrequencyAttributeRestriction(
-			restrictedAttribute: FrequencyAttribute(name: "not the same attribute"))
+			restrictedAttribute: FrequencyAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction == other
@@ -260,7 +260,7 @@ final class GreaterThanFrequencyAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentRestrictedAttribute_equalToAttributed_returnsFalse() {
 		// given
 		let otherAttributed: Attributed = GreaterThanFrequencyAttributeRestriction(
-			restrictedAttribute: FrequencyAttribute(name: "not the same attribute"))
+			restrictedAttribute: FrequencyAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -319,7 +319,7 @@ final class GreaterThanFrequencyAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
 		let otherRestriction: AttributeRestriction = GreaterThanFrequencyAttributeRestriction(
-			restrictedAttribute: FrequencyAttribute(name: "not the same attribute"))
+			restrictedAttribute: FrequencyAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherRestriction)
@@ -367,7 +367,7 @@ final class GreaterThanFrequencyAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
 		let other = GreaterThanFrequencyAttributeRestriction(
-			restrictedAttribute: FrequencyAttribute(name: "not the same attribute"))
+			restrictedAttribute: FrequencyAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(other)
