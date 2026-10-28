@@ -74,13 +74,24 @@ public final class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatab
 
 		var matchingSamples = [QuerySampleType]()
 
-		var subQuerySamplesByStart = injected(SampleUtil.self)
-			.sort(samples: subQuerySamples, by: .start, in: .orderedAscending)
-		var subQuerySamplesByEnd = injected(SampleUtil.self)
-			.sort(samples: subQuerySamples, by: .end, in: .orderedAscending)
+		let subQuerySamplesByStart: [Sample]
+		let subQuerySamplesByEnd: [Sample]
 		if mostRecentOnly {
-			subQuerySamplesByStart = [subQuerySamplesByStart[0]]
-			subQuerySamplesByEnd = [subQuerySamplesByStart[0]]
+			// Recency follows the latest start, as in activity history. Keep both
+			// boundaries of that one record without sorting the full history twice.
+			var latest = subQuerySamples[0]
+			var latestStart = latest.dates()[.start]!
+			for candidate in subQuerySamples.dropFirst() {
+				let start = candidate.dates()[.start]!
+				if start > latestStart { latest = candidate; latestStart = start }
+			}
+			subQuerySamplesByStart = [latest]
+			subQuerySamplesByEnd = [latest]
+		} else {
+			subQuerySamplesByStart = injected(SampleUtil.self)
+				.sort(samples: subQuerySamples, by: .start, in: .orderedAscending)
+			subQuerySamplesByEnd = injected(SampleUtil.self)
+				.sort(samples: subQuerySamples, by: .end, in: .orderedAscending)
 		}
 
 		for sample in querySamples {

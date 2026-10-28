@@ -139,6 +139,44 @@ final class SavedQueryTests: XCTestCase {
 		return mood
 	}
 
+	func testMostRecentTimeWindowUsesNewestSampleRegardlessOfInputOrder() throws {
+		let older = try mood(1), newer = try mood(2)
+		let nearOlder = try mood(3), nearNewer = try mood(4)
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		older.date = base
+		newer.date = base.addingTimeInterval(3_600)
+		nearOlder.date = older.date.addingTimeInterval(1)
+		nearNewer.date = newer.date.addingTimeInterval(1)
+		let matcher = WithinXCalendarUnitsSubQueryMatcher(numberOfTimeUnits: 2, timeUnit: .second, mostRecentOnly: true)
+		for references in [[older, newer], [newer, older]] {
+			let result = matcher.getSamples(from: [nearOlder, nearNewer], matching: references)
+			XCTAssertEqual(result.map { $0.objectID }, [nearNewer.objectID])
+		}
+		matcher.mostRecentOnly = false
+		XCTAssertEqual(matcher.getSamples(from: [nearOlder, nearNewer], matching: [newer, older]).map { $0.objectID },
+			[nearOlder.objectID, nearNewer.objectID])
+	}
+
+	func testMostRecentTimeWindowKeepsBothBoundariesOfOneActivity() throws {
+		let context = container.viewContext
+		let definition = ActivityDefinition(context: context)
+		definition.name = "Temporal query"
+		definition.recordScreenIndex = 0
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		let older = Activity(context: context)
+		older.definition = definition; older.start = base; older.end = base.addingTimeInterval(5_000)
+		let newer = Activity(context: context)
+		newer.definition = definition
+		newer.start = base.addingTimeInterval(4_000); newer.end = base.addingTimeInterval(4_100)
+		let nearStart = try mood(1), nearEnd = try mood(2), nearOlderEnd = try mood(3)
+		nearStart.date = newer.start.addingTimeInterval(-1)
+		nearEnd.date = newer.end!.addingTimeInterval(1)
+		nearOlderEnd.date = older.end!.addingTimeInterval(1)
+		let matcher = WithinXCalendarUnitsSubQueryMatcher(numberOfTimeUnits: 2, timeUnit: .second, mostRecentOnly: true)
+		let result = matcher.getSamples(from: [nearStart, nearEnd, nearOlderEnd], matching: [older, newer])
+		XCTAssertEqual(result.map { $0.objectID }, [nearStart.objectID, nearEnd.objectID])
+	}
+
 	func testGraphNumericSortResolvesKeysOnceAndPreservesRoundingTies() {
 		let generator = XYGraphDataGenerator(log: Log())
 		let values = Array((0..<512).reversed())
