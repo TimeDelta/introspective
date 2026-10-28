@@ -4,6 +4,7 @@ import Common
 import DependencyInjection
 import BooleanAlgebra
 import AttributeRestrictions
+import Attributes
 @testable import Persistence
 @testable import Queries
 @testable import Samples
@@ -230,6 +231,66 @@ final class SavedQueryTests: XCTestCase {
 		}
 		XCTAssertTrue(activity.equalTo(try XCTUnwrap(dao.getQueryWith(name: "Duration")).convert()))
 		XCTAssertTrue(dosage.equalTo(try XCTUnwrap(dao.getQueryWith(name: "Dosage")).convert()))
+	}
+
+	private func fixtureValue(for attribute: Attribute, tag: Tag) throws -> Any {
+		if attribute is DaysOfWeekAttribute { return Set([DayOfWeek.Monday, DayOfWeek.Friday]) }
+		if let choice = attribute as? SelectOneAttribute { return try XCTUnwrap(choice.possibleValues.first) }
+		let type = attribute.valueType
+		if type == String.self { return "fixture" }
+		if type == Double.self { return 2.5 }
+		if type == Int.self { return 3 }
+		if type == Bool.self { return true }
+		if type == Date.self { return Date(timeIntervalSince1970: 1_700_000_000) }
+		if type == TimeDuration.self { return TimeDuration(5400) }
+		if type == Dosage.self { return Dosage(2.5, "mg") }
+		if type == Frequency.self { return try XCTUnwrap(Frequency("2 per day")) }
+		if type == TimeOfDay.self { let time = TimeOfDay(); time.hour = 12; time.minute = 34; return time }
+		if type == Tag.self { return tag }
+		if type == [Tag].self || type == Set<Tag>.self { return [tag] }
+		throw NSError(domain: "Missing fixture for \(type)", code: 1)
+	}
+
+	func testBuilderRestrictionFamiliesRoundTripThroughDisk() throws {
+		let tag = try injected(TagDAO.self).getOrCreateTag(named: "fixture;tag")
+		let factory = injected(AttributeRestrictionFactory.self)
+		var cases: [(name: String, query: Query, tagDescription: String?)] = []
+		var failures: [String] = []
+		var attempted = 0
+		for sampleType in injected(SampleFactory.self).allTypes() {
+			for attribute in sampleType.attributes {
+				for type in factory.typesFor(attribute) {
+					attempted += 1
+					let label = "\(sampleType.name) / \(attribute.name) / \(type)"
+					do {
+						let restriction = factory.initialize(type: type, forAttribute: attribute)
+						for valueAttribute in restriction.attributes {
+							try restriction.set(attribute: valueAttribute, to: fixtureValue(for: valueAttribute, tag: tag))
+						}
+						guard restriction.isValid() else { throw NSError(domain: "Invalid configured restriction", code: 1) }
+						let query = try injected(QueryFactory.self).queryFor(sampleType)
+						query.expression = restriction
+						let name = "Family \(attempted)"
+						try dao.save(query, name: name)
+						let usesTags = attribute is TagAttribute || attribute is TagsAttribute
+						cases.append((name, query, usesTags ? restriction.description : nil))
+					} catch {
+						failures.append("\(label): \(error)")
+						container.viewContext.rollback()
+					}
+				}
+			}
+		}
+		try reopen()
+		for item in cases {
+			do {
+				let restored = try XCTUnwrap(dao.getQueryWith(name: item.name)).convert()
+				if let text = item.tagDescription { XCTAssertEqual(restored.expression?.description, text, item.name) }
+				else { XCTAssertTrue(item.query.equalTo(restored), item.name) }
+			} catch { failures.append("\(item.name) failed after reopening: \(error)") }
+		}
+		XCTAssertGreaterThan(attempted, 30)
+		XCTAssertTrue(failures.isEmpty, failures.joined(separator: "\n"))
 	}
 
 	func testEveryMatcherKindRetainsItsOptions() throws {
