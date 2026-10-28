@@ -356,4 +356,79 @@ final class SavedQueryTests: XCTestCase {
 		migrated.viewContext.reset()
 		for store in migrated.persistentStoreCoordinator.persistentStores { try migrated.persistentStoreCoordinator.remove(store) }
 	}
+	func testMoodCreationPreservesRequestedTimestampAndScaleAfterReopen() throws {
+		let date = Date(timeIntervalSince1970: 1_700_000_023.75)
+		let created = try injected(MoodDAO.self).createMood(timestamp: date, rating: 2.5, min: 0, max: 5, note: "Missed check-in")
+		XCTAssertEqual(created.date, date)
+		try reopen()
+		let restored = try XCTUnwrap(injected(MoodDAO.self).getMoods(from: date.addingTimeInterval(-1), to: date.addingTimeInterval(1)).first)
+		XCTAssertEqual(restored.date, date)
+		XCTAssertEqual(restored.minRating, 0)
+		XCTAssertEqual(restored.maxRating, 5)
+		XCTAssertEqual(restored.note, "Missed check-in")
+	}
+
+	func testMoodReviewNormalizesHistoricalScalesAndExcludesInvalidRatings() throws {
+		var calendar = Calendar(identifier: .gregorian)
+		calendar.timeZone = try XCTUnwrap(TimeZone(identifier: "America/New_York"))
+		let first = try mood(2)
+		first.minRating = 0; first.maxRating = 4
+		let second = try mood(75)
+		second.minRating = 0; second.maxRating = 100
+		second.date = calendar.date(byAdding: .day, value: 1, to: first.date)!
+		let invalid = try mood(5)
+		invalid.minRating = 5; invalid.maxRating = 5
+		let summary = MoodReviewSummary(moods: [first, second, invalid], calendar: calendar)
+		XCTAssertEqual(summary.checkInCount, 3)
+		XCTAssertEqual(summary.recordedDayCount, 2)
+		XCTAssertEqual(summary.ratedCheckInCount, 2)
+		XCTAssertEqual(try XCTUnwrap(summary.averagePosition), 0.625, accuracy: 0.000001)
+		XCTAssertNil(MoodReviewSummary(moods: []).averagePosition)
+		XCTAssertNil(MoodReviewSummary(moods: [invalid]).averagePosition)
+	}
+
+	func testMoodReviewUsesCalendarBoundariesAcrossDaylightSaving() throws {
+		var calendar = Calendar(identifier: .gregorian)
+		calendar.timeZone = try XCTUnwrap(TimeZone(identifier: "America/New_York"))
+		let date = try XCTUnwrap(calendar.date(from: DateComponents(year: 2024, month: 3, day: 10, hour: 12)))
+		let today = MoodReviewSummary.dateInterval(forLastDays: 1, endingOn: date, calendar: calendar)
+		XCTAssertEqual(today.duration, 23 * 3600)
+		XCTAssertEqual(calendar.component(.hour, from: today.start), 0)
+		let week = MoodReviewSummary.dateInterval(forLastDays: 7, endingOn: date, calendar: calendar)
+		XCTAssertEqual(calendar.dateComponents([.day], from: week.start, to: week.end).day, 7)
+		XCTAssertEqual(week.end, today.end)
+	}
+
+	func testEstimatedTimestampNormalizationClearsSecondsAndFractions() throws {
+		let util = injected(CalendarUtil.self)
+		for timestamp in [1_700_000_023.75, -0.125, 1_710_055_845.987] {
+			let original = Date(timeIntervalSince1970: timestamp)
+			let estimated = util.start(of: .minute, in: original)
+			let components = Calendar.autoupdatingCurrent.dateComponents([.second, .nanosecond], from: estimated)
+			XCTAssertEqual(components.second, 0)
+			XCTAssertEqual(components.nanosecond, 0)
+			XCTAssertLessThanOrEqual(estimated, original)
+			XCTAssertLessThan(original.timeIntervalSince(estimated), 60)
+			let wholeSecond = util.start(of: .second, in: original)
+			XCTAssertEqual(Calendar.autoupdatingCurrent.component(.nanosecond, from: wholeSecond), 0)
+			XCTAssertEqual(Calendar.autoupdatingCurrent.component(.second, from: wholeSecond),
+				Calendar.autoupdatingCurrent.component(.second, from: original))
+		}
+	}
+
+	func testSavedQuerySearchMatchesNamesTypesAndAllTermsAfterRename() throws {
+		try dao.save(injected(QueryFactory.self).moodQuery(), name: "Evening Résumé")
+		try dao.save(injected(QueryFactory.self).activityQuery(), name: "Morning walk")
+		let queries = try dao.getAllQueries()
+		XCTAssertEqual(queries.filter { $0.matchesSearchText("  resume MOOD\n") }.map { $0.name }, ["Evening Résumé"])
+		XCTAssertEqual(queries.filter { $0.matchesSearchText("activity walk") }.map { $0.name }, ["Morning walk"])
+		XCTAssertTrue(queries.filter { $0.matchesSearchText("evening activity") }.isEmpty)
+		XCTAssertEqual(queries.filter { $0.matchesSearchText(" \n ") }.count, 2)
+		let query = try XCTUnwrap(dao.getQueryWith(name: "Evening Résumé"))
+		try dao.rename(query, to: "Bedtime")
+		let renamed = try XCTUnwrap(dao.getQueryWith(name: "Bedtime"))
+		XCTAssertFalse(renamed.matchesSearchText("resume"))
+		XCTAssertTrue(renamed.matchesSearchText("bedtime mood"))
+	}
+
 }

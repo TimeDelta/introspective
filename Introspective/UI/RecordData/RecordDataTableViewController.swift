@@ -63,6 +63,8 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
+		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Mood History", style: .plain,
+			target: self, action: #selector(showMoodHistory))
 		observe(selector: #selector(showViewController), name: Me.showViewController)
 		observe(selector: #selector(showErrorMessage), name: Me.showErrorMessage)
 		observe(selector: #selector(showRecordActivitiesScreen), name: .showRecordActivitiesScreen)
@@ -72,6 +74,10 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		observe(selector: #selector(reloadData), name: PainUiUtilImpl.useDiscretePainChanged)
 
 		hideKeyboardOnTapNonTextInput()
+	}
+
+	@objc private func showMoodHistory() {
+		pushToNavigationController(MoodHistoryViewController(style: .grouped))
 	}
 
 	deinit {
@@ -300,5 +306,122 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		}
 		action.backgroundColor = .orange
 		return action
+	}
+}
+
+/// A focused review flow alongside the existing quick recording controls.
+private final class MoodHistoryViewController: UITableViewController, UISearchResultsUpdating {
+	private let period = UISegmentedControl(items: ["Today", "7 Days", "30 Days"])
+	private let search = UISearchController(searchResultsController: nil)
+	private var moods: [Mood] = []
+	private var displayed: [Mood] = []
+
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		title = "Mood History"
+		tableView.accessibilityIdentifier = "moodHistory"
+		period.selectedSegmentIndex = 1
+		period.addTarget(self, action: #selector(reloadMoods), for: .valueChanged)
+		period.accessibilityLabel = "Mood history period"
+		let header = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 52))
+		period.translatesAutoresizingMaskIntoConstraints = false
+		header.addSubview(period)
+		NSLayoutConstraint.activate([
+			period.leadingAnchor.constraint(equalTo: header.leadingAnchor, constant: 16),
+			period.trailingAnchor.constraint(equalTo: header.trailingAnchor, constant: -16),
+			period.centerYAnchor.constraint(equalTo: header.centerYAnchor),
+		])
+		tableView.tableHeaderView = header
+		search.searchResultsUpdater = self
+		search.obscuresBackgroundDuringPresentation = false
+		search.searchBar.placeholder = "Search mood notes"
+		navigationItem.searchController = search
+		navigationItem.hidesSearchBarWhenScrolling = false
+		definesPresentationContext = true
+		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
+			target: self, action: #selector(addMood))
+		navigationItem.rightBarButtonItem?.accessibilityLabel = "Add mood check-in"
+		refreshControl = UIRefreshControl()
+		refreshControl?.addTarget(self, action: #selector(reloadMoods), for: .valueChanged)
+	}
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		reloadMoods()
+	}
+
+	@objc private func reloadMoods() {
+		defer { refreshControl?.endRefreshing() }
+		let days = [1, 7, 30][period.selectedSegmentIndex]
+		let interval = MoodReviewSummary.dateInterval(forLastDays: days)
+		do {
+			moods = try injected(MoodDAO.self).getMoods(from: interval.start, to: interval.end)
+				.filter { $0.date >= interval.start && $0.date < interval.end }
+				.sorted { $0.date > $1.date }
+			updateSearchResults(for: search)
+		} catch { showError(title: "Could not load mood history", error: error) }
+	}
+
+	func updateSearchResults(for searchController: UISearchController) {
+		let text = (searchController.searchBar.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+		displayed = text.isEmpty ? moods : moods.filter {
+			($0.note ?? "").range(of: text, options: [.caseInsensitive, .diacriticInsensitive]) != nil
+		}
+		tableView.reloadData()
+	}
+
+	override func numberOfSections(in tableView: UITableView) -> Int { 2 }
+	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		section == 0 ? 1 : displayed.count
+	}
+	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+		section == 0 ? "Summary" : "Check-ins"
+	}
+	override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+		if section == 1 { return displayed.isEmpty ? "No matching check-ins. Tap + to record a mood, including a missed check-in." : nil }
+		let summary = MoodReviewSummary(moods: displayed)
+		var text = "Average across displayed check-ins, adjusted for each entry's original scale. 0% is the lowest rating; 100% is the highest."
+		if summary.ratedCheckInCount < summary.checkInCount {
+			text += " Entries with invalid or missing scales are excluded from the average."
+		}
+		return text
+	}
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
+		cell.textLabel?.numberOfLines = 0
+		cell.detailTextLabel?.numberOfLines = 0
+		if indexPath.section == 0 {
+			let summary = MoodReviewSummary(moods: displayed)
+			cell.textLabel?.text = "\(summary.checkInCount) check-ins on \(summary.recordedDayCount) days"
+			cell.detailTextLabel?.text = summary.averagePosition.map {
+				"Average position: \(number($0 * 100))% of mood scale"
+			} ?? "Average unavailable"
+			cell.selectionStyle = .none
+		} else {
+			let mood = displayed[indexPath.row]
+			let formatter = DateFormatter()
+			formatter.dateStyle = .medium; formatter.timeStyle = .short
+			cell.textLabel?.text = "\(formatter.string(from: mood.date)) · \(number(mood.rating)) (\(number(mood.minRating))–\(number(mood.maxRating)))"
+			cell.detailTextLabel?.text = mood.note?.isEmpty == false ? mood.note : "No note"
+			cell.accessoryType = .disclosureIndicator
+		}
+		return cell
+	}
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		tableView.deselectRow(at: indexPath, animated: false)
+		guard indexPath.section == 1 else { return }
+		edit(displayed[indexPath.row])
+	}
+	@objc private func addMood() { edit(nil) }
+	private func edit(_ mood: Mood?) {
+		let controller = viewController(named: "editMood", fromStoryboard: "Util") as! EditMoodTableViewController
+		controller.mood = mood
+		pushToNavigationController(controller)
+	}
+	private func number(_ value: Double) -> String {
+		let formatter = NumberFormatter()
+		formatter.numberStyle = .decimal
+		formatter.maximumFractionDigits = 1
+		return formatter.string(from: NSNumber(value: value)) ?? "—"
 	}
 }

@@ -63,9 +63,9 @@ public final class DateOrTimeAttributeValueViewController: AttributeValueTypeVie
 
 	@IBAction final func dateValueChanged(_: Any) {
 		if timeOfDayAttribute != nil {
-			currentValue = TimeOfDay(datePicker.date)
+			currentValue = TimeOfDay(injected(CalendarUtil.self).start(of: .minute, in: datePicker.date))
 		} else if dateAttribute.includeTime {
-			currentValue = datePicker.date
+			currentValue = injected(CalendarUtil.self).start(of: .minute, in: datePicker.date)
 		} else {
 			currentValue = injected(CalendarUtil.self).start(of: .day, in: datePicker.date)
 		}

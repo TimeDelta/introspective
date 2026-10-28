@@ -330,23 +330,31 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 			)
 			popFromNavigationController()
 		} else {
-			let controller = viewController(named: "results", fromStoryboard: "Results") as! ResultsViewController
-			query.runQuery { (result: QueryResult?, error: Error?) in
-				if error != nil {
-					DispatchQueue.main.async {
-						controller.showError(title: "Failed to run query", error: error)
-					}
-					return
-				}
-				controller.samples = result?.samples
+			showResults(for: query)
+		}
+	}
+
+	private func showResults(for query: Query) {
+		let controller = viewController(named: "results", fromStoryboard: "Results") as! ResultsViewController
+		controller.query = query
+		pushToNavigationController(controller)
+		query.runQuery { [weak controller] (result: QueryResult?, error: Error?) in
+			DispatchQueue.main.async {
+				if let error = error { controller?.showError(title: "Failed to run query", error: error) }
+				else { controller?.samples = result?.samples }
 			}
-			controller.query = query
-			pushToNavigationController(controller)
 		}
 	}
 
 	@IBAction final func loadButtonPressed(_: Any) {
-		let controller = SavedQueriesViewController(requiredSampleType: topmostSampleType) { [weak self] stored in
+		var run: ((StoredQuery) -> Void)?
+		if finishedButtonNotification == .runQuery {
+			run = { [weak self] stored in
+				do { self?.showResults(for: try stored.convert()) }
+				catch { self?.showError(title: "Failed to run saved query", error: error) }
+			}
+		}
+		let controller = SavedQueriesViewController(requiredSampleType: topmostSampleType, run: run) { [weak self] stored in
 			do { try self?.load(stored) }
 			catch { self?.showError(title: "Failed to load query", error: error) }
 		}
@@ -960,12 +968,16 @@ final fileprivate class QueryViewControllerCoachMarksDataSourceAndDelegate: Coac
 }
 
 /// Saved query management uses live fetches so renamed/deleted records never leave stale rows.
-private final class SavedQueriesViewController: UITableViewController {
+private final class SavedQueriesViewController: UITableViewController, UISearchResultsUpdating {
 	private var saved: [StoredQuery] = []
+	private var displayed: [StoredQuery] = []
+	private let search = UISearchController(searchResultsController: nil)
+	private let run: ((StoredQuery) -> Void)?
 	private let requiredSampleType: Sample.Type?
 	private let selected: (StoredQuery) -> Void
 
-	init(requiredSampleType: Sample.Type?, selected: @escaping (StoredQuery) -> Void) {
+	init(requiredSampleType: Sample.Type?, run: ((StoredQuery) -> Void)?, selected: @escaping (StoredQuery) -> Void) {
+		self.run = run
 		self.requiredSampleType = requiredSampleType
 		self.selected = selected
 		super.init(style: .plain)
@@ -977,6 +989,12 @@ private final class SavedQueriesViewController: UITableViewController {
 		super.viewDidLoad()
 		title = "Saved Queries"
 		tableView.accessibilityIdentifier = "savedQueries"
+		search.searchResultsUpdater = self
+		search.obscuresBackgroundDuringPresentation = false
+		search.searchBar.placeholder = "Search names and data types"
+		navigationItem.searchController = search
+		navigationItem.hidesSearchBarWhenScrolling = false
+		definesPresentationContext = true
 		reloadQueries()
 	}
 
@@ -987,20 +1005,25 @@ private final class SavedQueriesViewController: UITableViewController {
 				let id = injected(SampleFactory.self).sampleTypeId(for: type)
 				saved = saved.filter { $0.sampleTypeId == id }
 			}
-			let label = UILabel()
-			label.text = "No saved queries. Save a query from the query builder."
-			label.numberOfLines = 0
-			label.textAlignment = .center
-			tableView.backgroundView = saved.isEmpty ? label : nil
-			tableView.reloadData()
+			updateSearchResults(for: search)
 		} catch { showError(title: "Failed to fetch saved queries", error: error) }
 	}
 
-	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { saved.count }
+	func updateSearchResults(for searchController: UISearchController) {
+		displayed = saved.filter { $0.matchesSearchText(searchController.searchBar.text ?? "") }
+		let label = UILabel()
+		label.text = saved.isEmpty ? "No saved queries. Save a query from the query builder." : "No matching saved queries."
+		label.numberOfLines = 0
+		label.textAlignment = .center
+		tableView.backgroundView = displayed.isEmpty ? label : nil
+		tableView.reloadData()
+	}
+
+	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { displayed.count }
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
-		let query = saved[indexPath.row]
+		let query = displayed[indexPath.row]
 		cell.textLabel?.text = query.name
 		let factory = injected(SampleFactory.self)
 		cell.detailTextLabel?.text = factory.allTypes().first(where: { factory.sampleTypeId(for: $0) == query.sampleTypeId })?.name
@@ -1009,13 +1032,27 @@ private final class SavedQueriesViewController: UITableViewController {
 	}
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let query = saved[indexPath.row]
+		let query = displayed[indexPath.row]
 		navigationController?.popViewController(animated: false)
 		selected(query)
 	}
 
+	override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+		guard let run = run else { return nil }
+		let query = displayed[indexPath.row]
+		let action = UIContextualAction(style: .normal, title: "Run") { [weak self] _, _, completion in
+			completion(true)
+			self?.navigationController?.popViewController(animated: false)
+			run(query)
+		}
+		action.backgroundColor = .systemBlue
+		let configuration = UISwipeActionsConfiguration(actions: [action])
+		configuration.performsFirstActionWithFullSwipe = false
+		return configuration
+	}
+
 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		let query = saved[indexPath.row]
+		let query = displayed[indexPath.row]
 		let rename = UIContextualAction(style: .normal, title: "Rename") { [weak self] _, _, completion in
 			completion(true)
 			self?.rename(query)

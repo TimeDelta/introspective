@@ -59,7 +59,7 @@ public final class MoodDAOImpl: SingleDateSampleDAO<MoodImpl>, MoodDAO {
 
 	@discardableResult
 	public final func createMood(
-		timestamp _: Date,
+		timestamp: Date,
 		rating: Double,
 		min: Double?,
 		max: Double?,
@@ -67,7 +67,7 @@ public final class MoodDAOImpl: SingleDateSampleDAO<MoodImpl>, MoodDAO {
 	) throws -> Mood {
 		let transaction = injected(Database.self).transaction()
 		let mood = try transaction.new(MoodImpl.self)
-		mood.date = Date()
+		mood.date = timestamp
 		mood.rating = rating
 		mood.note = note
 		mood.minRating = min ?? injected(Settings.self).minMood
@@ -83,5 +83,36 @@ public final class MoodDAOImpl: SingleDateSampleDAO<MoodImpl>, MoodDAO {
 		let moods = try injected(Database.self).query(fetchRequest)
 		guard moods.count > 0 else { return nil }
 		return moods[0]
+	}
+}
+
+/// Descriptive statistics for a set of check-ins, respecting each record's original rating scale.
+public struct MoodReviewSummary {
+	public let checkInCount: Int
+	public let recordedDayCount: Int
+	public let ratedCheckInCount: Int
+	/// Average position on the original scales: zero is the minimum, one is the maximum.
+	public let averagePosition: Double?
+
+	public init(moods: [Mood], calendar: Calendar = .current) {
+		checkInCount = moods.count
+		recordedDayCount = Set(moods.map { calendar.startOfDay(for: $0.date) }).count
+		let positions: [Double] = moods.compactMap { mood in
+			let span = mood.maxRating - mood.minRating
+			guard mood.rating.isFinite, mood.minRating.isFinite, mood.maxRating.isFinite,
+				span.isFinite, span > 0, mood.rating >= mood.minRating, mood.rating <= mood.maxRating else { return nil }
+			return (mood.rating - mood.minRating) / span
+		}
+		ratedCheckInCount = positions.count
+		averagePosition = positions.isEmpty ? nil : positions.reduce(0, +) / Double(positions.count)
+	}
+
+	/// Calendar days including today; avoids treating daylight-saving days as 24-hour periods.
+	public static func dateInterval(forLastDays days: Int, endingOn date: Date = Date(),
+		calendar: Calendar = .current) -> DateInterval {
+		let today = calendar.startOfDay(for: date)
+		let start = calendar.date(byAdding: .day, value: 1 - max(1, days), to: today)!
+		let end = calendar.date(byAdding: .day, value: 1, to: today)!
+		return DateInterval(start: start, end: end)
 	}
 }
