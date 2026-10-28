@@ -41,6 +41,11 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		_: UIApplication,
 		willFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]? = nil
 	) -> Bool {
+		// Settings and persistence resolve dependencies during launch. Set test mode first.
+		Globals.testing = CommandLine.arguments.contains("--testing")
+		Globals.functionalTesting = CommandLine.arguments.contains("--functional-testing")
+		Globals.uiTesting = CommandLine.arguments.contains("--ui-testing")
+
 		Me.registerDependencies()
 
 		userNotificationDelegate = UserNotificationDelegate(window)
@@ -56,9 +61,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		_: UIApplication,
 		didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]? = nil
 	) -> Bool {
-		Globals.testing = CommandLine.arguments.contains("--testing")
-		Globals.functionalTesting = CommandLine.arguments.contains("--functional-testing")
-		Globals.uiTesting = CommandLine.arguments.contains("--ui-testing")
+		guard !Globals.testing else { return true }
 
 		let options: UNAuthorizationOptions = [.alert, .sound, .badge]
 		UNUserNotificationCenter.current().requestAuthorization(options: options) { granted, error in
