@@ -5,6 +5,8 @@ import DependencyInjection
 import BooleanAlgebra
 import AttributeRestrictions
 import Attributes
+@testable import DataExport
+@testable import SampleGroupInformation
 @testable import Persistence
 @testable import Queries
 @testable import Samples
@@ -429,6 +431,82 @@ final class SavedQueryTests: XCTestCase {
 		let renamed = try XCTUnwrap(dao.getQueryWith(name: "Bedtime"))
 		XCTAssertFalse(renamed.matchesSearchText("resume"))
 		XCTAssertTrue(renamed.matchesSearchText("bedtime mood"))
+	}
+
+	func testPainAndFatiguePreserveBackdatedTimestamps() throws {
+		let date = Date(timeIntervalSince1970: 1_600_000_023.75)
+		let fatigue = try injected(FatigueDAO.self).createFatigue(timestamp: date, rating: 3, min: 1, max: 5, note: "Earlier")
+		let pain = try injected(PainDAO.self).createPain(timestamp: date, rating: 4, min: 0, max: 10, location: "Knee", note: "Earlier")
+		XCTAssertEqual(fatigue.date, date)
+		XCTAssertEqual(pain.date, date)
+		try reopen()
+		XCTAssertEqual(try injected(FatigueDAO.self).getFatigueRecords(from: date, to: date).first?.date, date)
+		XCTAssertEqual(try injected(PainDAO.self).getPainRecords(from: date, to: date).first?.location, "Knee")
+	}
+
+	func testNestedQueryCanRunRepeatedlyWithoutStaleCompletions() throws {
+		try mood(5)
+		let query = injected(QueryFactory.self).moodQuery()
+		query.subQuery = (SameDatesSubQueryMatcher(), injected(QueryFactory.self).moodQuery())
+		var calls = 0
+		for _ in 0..<3 {
+			query.runQuery { (result: QueryResult?, error: Error?) in
+				XCTAssertNil(error)
+				XCTAssertEqual(result?.samples.count, 1)
+				calls += 1
+			}
+		}
+		XCTAssertEqual(calls, 3)
+	}
+
+	func testQueryCanRestartFromItsCompletion() throws {
+		try mood(5)
+		let query = injected(QueryFactory.self).moodQuery()
+		var calls = 0
+		query.runQuery { (_: QueryResult?, error: Error?) in
+			XCTAssertNil(error)
+			calls += 1
+			query.runQuery { (result: QueryResult?, error: Error?) in
+				XCTAssertNil(error)
+				XCTAssertEqual(result?.samples.count, 1)
+				calls += 1
+			}
+		}
+		XCTAssertEqual(calls, 2)
+	}
+
+	func testStandardDeviationAcceptsUnitlessDoses() throws {
+		let context = container.viewContext
+		let first = NSEntityDescription.insertNewObject(forEntityName: MedicationDose.entityName, into: context) as! MedicationDose
+		let second = NSEntityDescription.insertNewObject(forEntityName: MedicationDose.entityName, into: context) as! MedicationDose
+		first.dosage = Dosage(2, "")
+		second.dosage = Dosage(4, "")
+		let info = StandardDeviationInformation(MedicationDose.dosage)
+		XCTAssertEqual(Double(try info.computeGraphable(forSamples: [first, second])), 1)
+		XCTAssertFalse(try info.compute(forSamples: [first, second]).isEmpty)
+		context.rollback()
+	}
+
+	func testRepeatedExportsReceiveDistinctFileNames() throws {
+		let directory = FileManager.default.temporaryDirectory
+		let util = ExporterUtilImpl()
+		let first = util.urlOfExportFile(for: MoodImpl.self, in: directory)
+		let second = util.urlOfExportFile(for: MoodImpl.self, in: directory)
+		XCTAssertNotEqual(first, second)
+		XCTAssertEqual(first.pathExtension, "csv")
+		XCTAssertEqual(first.deletingLastPathComponent(), directory)
+	}
+
+	func testOpenEndedDateRangeUsesLowerBoundRatherThanUpperBound() throws {
+		let earlier = try mood(2)
+		let later = try mood(6)
+		let start = earlier.date
+		later.date = start.addingTimeInterval(3600)
+		try container.viewContext.save()
+		let dao = injected(MoodDAO.self)
+		XCTAssertEqual(try dao.getMoods(from: start.addingTimeInterval(1), to: nil).map { $0.rating }, [6])
+		XCTAssertEqual(try dao.getMoods(from: nil, to: start).map { $0.rating }, [2])
+		XCTAssertEqual(try dao.getMoods(from: start, to: later.date).count, 2)
 	}
 
 }

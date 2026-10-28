@@ -52,6 +52,9 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 
 	public final func runQuery(callback: @escaping (SampleQueryResult<SampleType>?, Error?) -> Void) {
 		self.callback = callback
+		queryCallbackParameters = nil
+		subQueryCallbackParameters = nil
+		stopped = false
 		subQuery?.query.runQuery(callback: { (result: QueryResult?, error: Error?) in
 			self.subQueryCallbackParameters = (result, error)
 			if self.queryCallbackParameters != nil {
@@ -108,24 +111,18 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 	}
 
 	private final func filterAndCallBack() {
-		if let error = subQueryCallbackParameters?.error {
-			callback(nil, error)
-			return
+		guard let completion = callback else { return }
+		var result: SampleQueryResult<SampleType>?
+		var failure = subQueryCallbackParameters?.error ?? queryCallbackParameters?.error
+		if failure == nil {
+			do { result = try filterResults() }
+			catch { failure = error }
 		}
-		if let error = queryCallbackParameters?.error {
-			callback(nil, error)
-			return
-		}
-
-		do {
-			callback(try filterResults(), nil)
-		} catch {
-			log.error("Failed to filter query results: %@", errorInfo(error))
-			callback(nil, error)
-		}
-		// could capture surrounding context (from e.g. view controller) so set to nil to avoid retain cycles, which
-		// cause memory leaks
+		// Clear this run before calling client code, which may start another run.
 		callback = nil
+		queryCallbackParameters = nil
+		subQueryCallbackParameters = nil
+		completion(result, failure)
 	}
 
 	private final func filterResults() throws -> SampleQueryResult<SampleType>? {

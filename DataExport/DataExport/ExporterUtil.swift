@@ -18,7 +18,7 @@ public protocol ExporterUtil {
 public final class ExporterUtilImpl: ExporterUtil {
 	public final func urlOfExportFile(for type: Exportable.Type, in directory: URL) -> URL {
 		let now = injected(CalendarUtil.self).string(for: Date(), inFormat: "yyyy-MM-dd_HH:mm")
-		let fileName = "\(type.exportFileDescription.localizedCapitalized) " + now + ".csv"
+		let fileName = "\(type.exportFileDescription.localizedCapitalized) " + now + " " + UUID().uuidString + ".csv"
 		return URL(fileURLWithPath: fileName, relativeTo: directory)
 	}
 }
