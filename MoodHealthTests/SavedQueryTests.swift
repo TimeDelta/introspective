@@ -189,6 +189,37 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertEqual(exporter.recordsCompleted, 128)
 	}
 
+	func testSampleDateFilteringPreservesStrictBoundsAndInputOrder() throws {
+		let first = try mood(1), second = try mood(2), third = try mood(3)
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		first.date = base; second.date = base.addingTimeInterval(60); third.date = base.addingTimeInterval(120)
+		let samples = [third, first, second]
+		let util = SampleUtilImpl()
+		XCTAssertEqual(util.getOnly(samples: samples, from: nil, to: nil).map { $0.objectID }, samples.map { $0.objectID })
+		XCTAssertEqual(util.getOnly(samples: samples, from: first.date, to: third.date).map { $0.objectID }, [second.objectID])
+		XCTAssertEqual(util.getOnly(samples: samples, from: first.date, to: nil).map { $0.objectID }, [third.objectID, second.objectID])
+		XCTAssertEqual(util.getOnly(samples: samples, from: nil, to: third.date).map { $0.objectID }, [first.objectID, second.objectID])
+		XCTAssertTrue(util.getOnly(samples: samples, from: third.date, to: first.date).isEmpty)
+		XCTAssertTrue(util.getOnly(samples: [MoodImpl](), from: base, to: base).isEmpty)
+	}
+
+	func testSampleDateFilteringUsesActivityEndWhenPresent() throws {
+		let context = container.viewContext
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		let ended = Activity(context: context)
+		ended.start = base.addingTimeInterval(10)
+		ended.end = base.addingTimeInterval(90)
+		let ongoing = Activity(context: context)
+		ongoing.start = base.addingTimeInterval(20)
+		let boundary = Activity(context: context)
+		boundary.start = base.addingTimeInterval(30)
+		boundary.end = base.addingTimeInterval(60)
+		let samples = [ended, ongoing, boundary]
+		let util = SampleUtilImpl()
+		XCTAssertEqual(util.getOnly(samples: samples, from: base, to: base.addingTimeInterval(60)).map { $0.objectID }, [ongoing.objectID])
+		XCTAssertEqual(util.getOnly(samples: samples, from: nil, to: base.addingTimeInterval(61)).map { $0.objectID }, [ongoing.objectID, boundary.objectID])
+	}
+
 	func testNestedQueryAndBooleanGroupsSurviveDiskReopen() throws {
 		let query = injected(QueryFactory.self).moodQuery()
 		query.expression = AndExpression(
