@@ -515,7 +515,7 @@ final class SavedQueryTests: XCTestCase {
 		let second = util.urlOfExportFile(for: MoodImpl.self, in: directory)
 		XCTAssertNotEqual(first, second)
 		XCTAssertEqual(first.pathExtension, "csv")
-		XCTAssertEqual(first.deletingLastPathComponent(), directory)
+		XCTAssertEqual(first.deletingLastPathComponent().standardizedFileURL, directory.standardizedFileURL)
 	}
 
 	func testOpenEndedDateRangeUsesLowerBoundRatherThanUpperBound() throws {
