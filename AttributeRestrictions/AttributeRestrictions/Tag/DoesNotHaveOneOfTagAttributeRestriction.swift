@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import DependencyInjection
 
 import Attributes
 import BooleanAlgebra
