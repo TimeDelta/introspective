@@ -54,6 +54,10 @@ public final class MedicationDoseEditorViewControllerImpl: UIViewController, Med
 
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
+		// These fixed-height editors were designed for an always-visible wheel picker.
+		if #available(iOS 13.4, *) {
+			datePicker.preferredDatePickerStyle = .wheels
+		}
 		if let medicationDose = medicationDose {
 			dosageTextField.text = medicationDose.dosage?.description
 		} else {

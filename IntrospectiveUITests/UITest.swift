@@ -158,7 +158,7 @@ class UITest: XCTestCase {
 			return
 		}
 		if let value = field.value as? String, !value.isEmpty, value != field.placeholderValue {
-			deleteContentOf(textField: field)
+			guard deleteContentOf(textField: field) else { return }
 		}
 		if let text = text, !text.isEmpty {
 			field.tap()
@@ -166,15 +166,23 @@ class UITest: XCTestCase {
 		}
 	}
 
-	final func deleteContentOf(textField: XCUIElement) {
+	@discardableResult
+	final func deleteContentOf(textField: XCUIElement) -> Bool {
 		textField.tap()
-		textField.tap()
-		app.menuItems["Select All"].tap()
-		var deleteKey = app.keyboards.keys["delete"]
-		if !deleteKey.exists {
-			deleteKey = app.keyboards.keys["Delete"]
+		textField.press(forDuration: 1)
+		// UIKit's newer edit menu exposes actions as buttons instead of menu items.
+		let menuItem = app.menuItems["Select All"]
+		let button = app.buttons["Select All"]
+		if menuItem.waitForExistence(timeout: 1) {
+			menuItem.tap()
+		} else if button.waitForExistence(timeout: 1) {
+			button.tap()
+		} else {
+			XCTFail("Select All did not appear for \(textField)")
+			return false
 		}
-		deleteKey.tap()
+		textField.typeText(XCUIKeyboardKey.delete.rawValue)
+		return true
 	}
 
 	final func delete(numberOfTags: Int, fromTagsField tagsField: XCUIElement) {

@@ -46,6 +46,11 @@ public final class DateRangeViewControllerImpl: UIViewController, DateRangeViewC
 
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
+		// These fixed-height editors were designed for an always-visible wheel picker.
+		if #available(iOS 13.4, *) {
+			fromDatePicker.preferredDatePickerStyle = .wheels
+			toDatePicker.preferredDatePickerStyle = .wheels
+		}
 
 		fromDatePicker.datePickerMode = datePickerMode
 		toDatePicker.datePickerMode = datePickerMode
