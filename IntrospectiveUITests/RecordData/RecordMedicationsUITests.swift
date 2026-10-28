@@ -99,7 +99,8 @@ final class RecordMedicationsUITests: UITest {
 		createMedication(medication)
 
 		// when
-		app.tables.staticTexts[medication.name].tap()
+		app.tables.staticTexts[medication.name].swipeLeft()
+		app.tables.buttons["Edit"].tap()
 
 		// then
 		let dateStrings = convertDateToStringComponents(medication.startedOn!)
@@ -118,7 +119,8 @@ final class RecordMedicationsUITests: UITest {
 		createMedication(medication)
 
 		// when
-		app.tables.staticTexts[medication.name].tap()
+		app.tables.staticTexts[medication.name].swipeLeft()
+		app.tables.buttons["Edit"].tap()
 		app.textFields["medication name"].tap()
 		app.textFields["medication name"].typeText(additionalCharacters)
 		app.buttons["Save"].tap()
@@ -134,7 +136,8 @@ final class RecordMedicationsUITests: UITest {
 		createMedication(medication)
 
 		// when
-		app.tables.staticTexts[medication.name].tap()
+		app.tables.staticTexts[medication.name].swipeLeft()
+		app.tables.buttons["Edit"].tap()
 		setTextFor(field: app.textFields["medication name"], to: medication.name.localizedUppercase)
 
 		// then
