@@ -47,8 +47,7 @@ final class MoodResultsUITests: UITest {
 		app.tables.cells.staticTexts["Date"].tap()
 		setDatePicker(to: newTimestamp)
 		app.buttons["save button"].tap()
-		app.tables.cells.textFields["mood rating"].tap()
-		app.tables.cells.textFields["mood rating"].typeText(String(newRating))
+		setTextFor(field: app.tables.cells.textFields["mood rating"], to: String(newRating))
 		setTextFor(field: app.tables.cells.textViews["note"], to: newNote)
 		app.buttons["Save"].tap()
 
