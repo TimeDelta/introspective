@@ -59,7 +59,7 @@ public final class FatigueDAOImpl: SingleDateSampleDAO<FatigueImpl>, FatigueDAO 
 
 	@discardableResult
 	public final func createFatigue(
-		timestamp _: Date,
+		timestamp: Date,
 		rating: Double,
 		min: Double?,
 		max: Double?,
@@ -67,7 +67,7 @@ public final class FatigueDAOImpl: SingleDateSampleDAO<FatigueImpl>, FatigueDAO 
 	) throws -> Fatigue {
 		let transaction = injected(Database.self).transaction()
 		let fatigue = try transaction.new(FatigueImpl.self)
-		fatigue.date = Date()
+		fatigue.date = timestamp
 		fatigue.rating = rating
 		fatigue.note = note
 		fatigue.minRating = min ?? injected(Settings.self).minFatigue

@@ -46,7 +46,7 @@ public class StandardDeviationInformation: AnyInformation {
 			if filteredSamples.isEmpty { throw GenericDisplayableError(title: "No samples matching filter") }
 			let first = filteredSamples
 				.first(where: { !((try? $0.value(of: attribute) as? Dosage)?.unit.isEmpty ?? true) })
-			let units = (try! first?.value(of: attribute) as! Dosage).unit
+			let units = (try first?.value(of: attribute) as? Dosage)?.unit ?? ""
 			return formattedValue + units
 		}
 		if attribute is DurationAttribute {
@@ -83,7 +83,7 @@ public class StandardDeviationInformation: AnyInformation {
 			if filteredSamples.isEmpty { throw GenericDisplayableError(title: "No samples matching filter") }
 			let first = filteredSamples
 				.first(where: { !((try? $0.value(of: attribute) as? Dosage)?.unit.isEmpty ?? true) })
-			let units = (try! first?.value(of: attribute) as! Dosage).unit
+			let units = (try first?.value(of: attribute) as? Dosage)?.unit ?? ""
 			for sample in filteredSamples {
 				guard let sampleValue = try sample.value(of: attribute) as? Dosage else {
 					throw GenericDisplayableError(title: "Failed to compute value")

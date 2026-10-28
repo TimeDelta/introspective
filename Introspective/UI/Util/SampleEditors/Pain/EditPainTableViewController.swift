@@ -69,7 +69,7 @@ public final class EditPainTableViewControllerImpl: UITableViewController, EditP
 	}
 
 	private var timestamp: Date = Date()
-	private var rating: Double = 0
+	private var rating: Double = injected(Settings.self).minPain
 	private var minRating: Double = injected(Settings.self).minPain
 	private var maxRating: Double = injected(Settings.self).maxPain
 	private var location: String?
@@ -201,6 +201,9 @@ public final class EditPainTableViewControllerImpl: UITableViewController, EditP
 			}
 			pain.date = timestamp
 			pain.rating = rating
+			pain.minRating = minRating
+			pain.maxRating = maxRating
+			pain.location = location
 			pain.note = note
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 			if let localPain = pain as? PainImpl {

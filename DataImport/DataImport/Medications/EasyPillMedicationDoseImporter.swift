@@ -96,8 +96,8 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 		isPaused = false
 		do {
 			while !lines.isEmpty {
-				let line = lines.removeFirst()
 				guard !isPaused && !isCancelled else { return }
+				let line = lines.removeFirst()
 				try processLine(line, latestDate: &latestDate, using: mainTransaction)
 				recordNumber += 1
 			}

@@ -67,7 +67,7 @@ public final class PainDAOImpl: SingleDateSampleDAO<PainImpl>, PainDAO {
 
 	@discardableResult
 	public final func createPain(
-		timestamp _: Date,
+		timestamp: Date,
 		rating: Double,
 		min: Double?,
 		max: Double?,
@@ -76,7 +76,7 @@ public final class PainDAOImpl: SingleDateSampleDAO<PainImpl>, PainDAO {
 	) throws -> Pain {
 		let transaction = injected(Database.self).transaction()
 		let pain = try transaction.new(PainImpl.self)
-		pain.date = Date()
+		pain.date = timestamp
 		pain.rating = rating
 		pain.note = note
 		pain.location = location

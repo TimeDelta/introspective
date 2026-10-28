@@ -67,7 +67,7 @@ public final class EditFatigueTableViewControllerImpl: UITableViewController, Ed
 	}
 
 	private final var timestamp: Date = Date()
-	private final var rating: Double = 0
+	private final var rating: Double = injected(Settings.self).minFatigue
 	private final var minRating: Double = injected(Settings.self).minFatigue
 	private final var maxRating: Double = injected(Settings.self).maxFatigue
 	private final var note: String?
@@ -198,6 +198,8 @@ public final class EditFatigueTableViewControllerImpl: UITableViewController, Ed
 			}
 			fatigue.date = timestamp
 			fatigue.rating = rating
+			fatigue.minRating = minRating
+			fatigue.maxRating = maxRating
 			fatigue.note = note
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 			if let localFatigue = fatigue as? FatigueImpl {

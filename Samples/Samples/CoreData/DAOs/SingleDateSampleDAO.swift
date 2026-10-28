@@ -22,7 +22,7 @@ public class SingleDateSampleDAO<SampleType: CoreDataSample> {
 		if let min = minDate, let max = maxDate {
 			return NSPredicate(format: "%@ <= %K AND %K <= %@", min, fieldName, fieldName, max)
 		} else if let min = minDate {
-			return NSPredicate(format: "%@ >= %K", min, fieldName)
+			return NSPredicate(format: "%@ <= %K", min, fieldName)
 		} else if let max = maxDate {
 			return NSPredicate(format: "%K <= %@", fieldName, max)
 		}
