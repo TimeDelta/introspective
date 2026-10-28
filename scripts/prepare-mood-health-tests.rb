@@ -22,6 +22,9 @@ target.build_configurations.each do |config|
   # Reuse production pod search paths, not the legacy test/mocking dependencies.
   config.base_configuration_reference = app_config.base_configuration_reference
   config.build_settings.merge!(
+    'PRODUCT_NAME' => '$(TARGET_NAME)',
+    'PRODUCT_MODULE_NAME' => name,
+    'TEST_TARGET_NAME' => 'Introspective',
     'PRODUCT_BUNDLE_IDENTIFIER' => 'com.bnova.Introspective.MoodHealthTests',
     'SWIFT_VERSION' => '5.0',
     'GENERATE_INFOPLIST_FILE' => 'YES',
