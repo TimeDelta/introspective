@@ -9,11 +9,20 @@
 import Foundation
 
 import Attributes
+import BooleanAlgebra
 import Common
+import DependencyInjection
+import Persistence
+import Samples
 
-public final class EqualToDosageAttributeRestriction: TypedEqualToAttributeRestrictionBase<Dosage> {
+public final class EqualToDosageAttributeRestriction: TypedEqualToAttributeRestrictionBase<Dosage>,
+	DosageAttributeRestriction {
 	private typealias Me = EqualToDosageAttributeRestriction
-	public static let valueAttribute = DosageAttribute(name: "Target Dosage", pluralName: "Target Dosages")
+	public static let valueAttribute = DosageAttribute(id: 0, name: "Target Dosage", pluralName: "Target Dosages")
+
+	public var typedValue: Dosage {
+		value as! Dosage
+	}
 
 	public required convenience init(restrictedAttribute: Attribute) {
 		self.init(restrictedAttribute: restrictedAttribute, value: Dosage(0, ""))
@@ -28,4 +37,14 @@ public final class EqualToDosageAttributeRestriction: TypedEqualToAttributeRestr
 	}
 
 	public override func predicate() -> NSPredicate? { nil }
+
+	public override func stored(
+		for sampleType: Sample.Type,
+		using transaction: Transaction?
+	) throws -> StoredBooleanExpression {
+		let transaction = transaction ?? injected(Database.self).transaction()
+		let stored = try transaction.new(StoredDosageComparisonAttributeRestriction.self)
+		try stored.populate(from: self, for: sampleType)
+		return stored
+	}
 }

@@ -9,6 +9,9 @@
 import Foundation
 
 import Attributes
+import BooleanAlgebra
+import DependencyInjection
+import Persistence
 import Samples
 
 public final class EndsWithStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, Equatable {
@@ -16,7 +19,7 @@ public final class EndsWithStringAttributeRestriction: AnyAttributeRestriction, 
 
 	// MARK: - Attributes
 
-	public static let suffixAttribute = TextAttribute(name: "Value", pluralName: "Values")
+	public static let suffixAttribute = TextAttribute(id: 0, name: "Value", pluralName: "Values")
 	public static let attributes: [Attribute] = [
 		suffixAttribute,
 	]
@@ -33,6 +36,8 @@ public final class EndsWithStringAttributeRestriction: AnyAttributeRestriction, 
 	public final var suffix: String {
 		didSet { suffix = suffix.localizedLowercase }
 	}
+
+	public final var typedValue: String? { suffix }
 
 	// MARK: - Initializers
 
@@ -77,9 +82,21 @@ public final class EndsWithStringAttributeRestriction: AnyAttributeRestriction, 
 		EndsWithStringAttributeRestriction(restrictedAttribute: restrictedAttribute, suffix: suffix)
 	}
 
+	// MARK: - Boolean Expression Functions
+
 	public override func predicate() -> NSPredicate? {
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		return NSPredicate(format: "%K ENDSWITH[cd] %@", variableName, suffix)
+	}
+
+	public override func stored(
+		for sampleType: Sample.Type,
+		using transaction: Transaction?
+	) throws -> StoredBooleanExpression {
+		let transaction = transaction ?? injected(Database.self).transaction()
+		let stored = try transaction.new(StoredStringOperationAttributeRestriction.self)
+		try stored.populate(from: self, for: sampleType)
+		return stored
 	}
 
 	// MARK: - Equality

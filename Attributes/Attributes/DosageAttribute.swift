@@ -16,6 +16,7 @@ public final class DosageAttribute: AttributeBase<Dosage>, ComparableAttribute, 
 	}
 
 	public override init(
+		id: Int16,
 		name: String = "Dosage",
 		pluralName: String? = "Dosages",
 		description: String? = nil,
@@ -23,6 +24,7 @@ public final class DosageAttribute: AttributeBase<Dosage>, ComparableAttribute, 
 		optional: Bool = false
 	) {
 		super.init(
+			id: id,
 			name: name,
 			pluralName: pluralName,
 			description: description,

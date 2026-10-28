@@ -9,11 +9,20 @@
 import Foundation
 
 import Attributes
+import BooleanAlgebra
+import DependencyInjection
+import Persistence
+import Samples
 
-public final class EqualToIntegerAttributeRestriction: TypedEqualToAttributeRestrictionBase<Int>,
+public final class EqualToIntegerAttributeRestriction:
+	TypedEqualToAttributeRestrictionBase<Int>,
 	IntegerAttributeRestriction {
 	private typealias Me = EqualToIntegerAttributeRestriction
-	public static let valueAttribute = IntegerAttribute(name: "Value", pluralName: "Values")
+	public static let valueAttribute = IntegerAttribute(id: 0, name: "Value", pluralName: "Values")
+
+	public var typedValue: Int {
+		value as! Int
+	}
 
 	public required convenience init(restrictedAttribute: Attribute) {
 		self.init(restrictedAttribute: restrictedAttribute, value: 0)
@@ -30,5 +39,15 @@ public final class EqualToIntegerAttributeRestriction: TypedEqualToAttributeRest
 	public override func predicate() -> NSPredicate? {
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		return NSPredicate(format: "%K == %d", variableName, value as! Int)
+	}
+
+	public override func stored(
+		for sampleType: Sample.Type,
+		using transaction: Transaction?
+	) throws -> StoredBooleanExpression {
+		let transaction = transaction ?? injected(Database.self).transaction()
+		let stored = try transaction.new(StoredIntegerComparisonAttributeRestriction.self)
+		try stored.populate(from: self, for: sampleType)
+		return stored
 	}
 }

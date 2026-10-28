@@ -12,6 +12,7 @@ import Common
 
 public final class DayOfWeekAttribute: TypedSelectOneAttribute<DayOfWeek>, ComparableAttribute {
 	public init(
+		id: Int16,
 		name: String = "Day of the week",
 		pluralName: String? = "Day of the week",
 		description: String? = nil,
@@ -19,6 +20,7 @@ public final class DayOfWeekAttribute: TypedSelectOneAttribute<DayOfWeek>, Compa
 		optional: Bool = false
 	) {
 		super.init(
+			id: id,
 			name: name,
 			typeName: "Day of the Week",
 			pluralName: pluralName,

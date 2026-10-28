@@ -21,6 +21,7 @@
 		A297705D234519D1004E2C35 /* DependencyInjection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A297705C234519D1004E2C35 /* DependencyInjection.framework */; };
 		A297706123451A25004E2C35 /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A297706023451A25004E2C35 /* Common.framework */; };
 		A297706323451A7A004E2C35 /* SampleGroupersInjectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297706223451A7A004E2C35 /* SampleGroupersInjectionProvider.swift */; };
+		A2D138CE26902D9C00762A3D /* BooleanAlgebra.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2D138CD26902D9C00762A3D /* BooleanAlgebra.framework */; };
 		A2E0AB7224B01A0E00246B46 /* SplitByListElementSampleGrouper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E0AB7124B01A0E00246B46 /* SplitByListElementSampleGrouper.swift */; };
 		FF00D8493242ED03329CD03E /* Pods_SampleGroupers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3794F3D0F31FE276F47BF37 /* Pods_SampleGroupers.framework */; };
 /* End PBXBuildFile section */
@@ -43,6 +44,7 @@
 		A297705C234519D1004E2C35 /* DependencyInjection.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DependencyInjection.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A297706023451A25004E2C35 /* Common.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Common.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A297706223451A7A004E2C35 /* SampleGroupersInjectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleGroupersInjectionProvider.swift; sourceTree = "<group>"; };
+		A2D138CD26902D9C00762A3D /* BooleanAlgebra.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BooleanAlgebra.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2E0AB7124B01A0E00246B46 /* SplitByListElementSampleGrouper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitByListElementSampleGrouper.swift; sourceTree = "<group>"; };
 		D3794F3D0F31FE276F47BF37 /* Pods_SampleGroupers.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SampleGroupers.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4838702D7A77319E4D51BE8 /* Pods-SampleGroupers.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SampleGroupers.release.xcconfig"; path = "../Pods/Target Support Files/Pods-SampleGroupers/Pods-SampleGroupers.release.xcconfig"; sourceTree = "<group>"; };
@@ -53,6 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2D138CE26902D9C00762A3D /* BooleanAlgebra.framework in Frameworks */,
 				A297706123451A25004E2C35 /* Common.framework in Frameworks */,
 				A297705D234519D1004E2C35 /* DependencyInjection.framework in Frameworks */,
 				A297705B234519C8004E2C35 /* Attributes.framework in Frameworks */,
@@ -129,6 +132,7 @@
 		A2977057234519BE004E2C35 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A2D138CD26902D9C00762A3D /* BooleanAlgebra.framework */,
 				A297706023451A25004E2C35 /* Common.framework */,
 				A297705C234519D1004E2C35 /* DependencyInjection.framework */,
 				A297705A234519C8004E2C35 /* Attributes.framework */,

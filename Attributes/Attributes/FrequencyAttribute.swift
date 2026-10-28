@@ -16,6 +16,7 @@ public final class FrequencyAttribute: AttributeBase<Frequency>, ComparableAttri
 	}
 
 	public override init(
+		id: Int16,
 		name: String = "Frequency",
 		pluralName: String? = "Frequencies",
 		description: String? = nil,
@@ -23,6 +24,7 @@ public final class FrequencyAttribute: AttributeBase<Frequency>, ComparableAttri
 		optional: Bool = false
 	) {
 		super.init(
+			id: id,
 			name: name,
 			pluralName: pluralName,
 			description: description,

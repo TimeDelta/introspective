@@ -9,6 +9,8 @@
 import Foundation
 
 import Common
+import Persistence
+import Samples
 
 public protocol BooleanExpression: CustomStringConvertible {
 	func evaluate(_ parameters: [UserInfoKey: Any]?) throws -> Bool
@@ -18,10 +20,15 @@ public protocol BooleanExpression: CustomStringConvertible {
 	func equalTo(_ other: BooleanExpression) -> Bool
 	/// - Returns: `nil` if a predicate can not be made
 	func predicate() -> NSPredicate?
+	func stored(for sampleType: Sample.Type, using transaction: Transaction?) throws -> StoredBooleanExpression
 }
 
 public extension BooleanExpression {
 	func evaluate() throws -> Bool {
 		try evaluate(nil)
+	}
+
+	func stored(for sampleType: Sample.Type, using transaction: Transaction?) throws -> StoredBooleanExpression {
+		throw GenericError("This expression cannot be saved.")
 	}
 }

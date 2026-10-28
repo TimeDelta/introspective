@@ -6,9 +6,13 @@
 //  Copyright © 2019 Bryan Nova. All rights reserved.
 //
 
+import CoreData
 import Foundation
 
 import Common
+import DependencyInjection
+import Persistence
+import Samples
 
 public final class AndExpression: BooleanExpression {
 	// MARK: - Display Information
@@ -60,5 +64,17 @@ public final class AndExpression: BooleanExpression {
 		guard let subPredicate1 = expression1.predicate() else { return nil }
 		guard let subPredicate2 = expression2.predicate() else { return nil }
 		return NSCompoundPredicate(andPredicateWithSubpredicates: [subPredicate1, subPredicate2])
+	}
+
+	public final func stored(
+		for sampleType: Sample.Type,
+		using transaction: Transaction?
+	) throws -> StoredBooleanExpression {
+		let ownsTransaction = transaction == nil
+		let transaction = transaction ?? injected(Database.self).transaction()
+		let stored = try transaction.new(StoredAndExpression.self)
+		try stored.populate(from: self, for: sampleType, using: transaction)
+		if ownsTransaction { try transaction.commit() }
+		return stored
 	}
 }

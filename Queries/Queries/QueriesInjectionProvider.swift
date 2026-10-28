@@ -14,10 +14,12 @@ import DependencyInjection
 public class QueriesInjectionProvider: InjectionProvider {
 	private typealias Me = QueriesInjectionProvider
 	private static let queryFactory = QueryFactoryImpl()
+	private static let storedQueriesDAO = StoredQueriesDAOImpl()
 	private static let subQueryMatcherFactory = SubQueryMatcherFactoryImpl()
 
 	public final let types: [Any.Type] = [
 		QueryFactory.self,
+		StoredQueriesDAO.self,
 		SubQueryMatcherFactory.self,
 	]
 
@@ -27,6 +29,8 @@ public class QueriesInjectionProvider: InjectionProvider {
 		switch type {
 		case is QueryFactory.Protocol:
 			return Me.queryFactory as! Type
+		case is StoredQueriesDAO.Protocol:
+			return Me.storedQueriesDAO as! Type
 		case is SubQueryMatcherFactory.Protocol:
 			return Me.subQueryMatcherFactory as! Type
 		default:

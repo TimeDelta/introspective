@@ -16,6 +16,7 @@ public final class DateTimeAttribute: DateAttributeBase {
 	}
 
 	public init(
+		id: Int16,
 		name: String = "Date and time",
 		pluralName: String? = "Dates and times",
 		description: String? = nil,
@@ -26,6 +27,7 @@ public final class DateTimeAttribute: DateAttributeBase {
 		latestDate: Date? = nil
 	) {
 		super.init(
+			id: id,
 			name: name,
 			pluralName: pluralName,
 			description: description,

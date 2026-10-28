@@ -9,6 +9,9 @@
 import Foundation
 
 import Common
+import DependencyInjection
+import Persistence
+import Samples
 
 public final class BooleanExpressionGroup: BooleanExpression {
 	// MARK: - Display Information
@@ -54,5 +57,17 @@ public final class BooleanExpressionGroup: BooleanExpression {
 
 	public final func predicate() -> NSPredicate? {
 		subExpression.predicate()
+	}
+
+	public final func stored(
+		for sampleType: Sample.Type,
+		using transaction: Transaction?
+	) throws -> StoredBooleanExpression {
+		let ownsTransaction = transaction == nil
+		let transaction = transaction ?? injected(Database.self).transaction()
+		let stored = try transaction.new(StoredBooleanExpressionGroup.self)
+		try stored.populate(from: self, for: sampleType, using: transaction)
+		if ownsTransaction { try transaction.commit() }
+		return stored
 	}
 }

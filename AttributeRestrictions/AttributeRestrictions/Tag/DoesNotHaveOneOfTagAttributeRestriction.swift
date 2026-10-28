@@ -9,7 +9,9 @@
 import Foundation
 
 import Attributes
+import BooleanAlgebra
 import Common
+import Persistence
 import Samples
 
 public class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestriction, Equatable {
@@ -17,7 +19,7 @@ public class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestriction, E
 
 	// MARK: - Attributes
 
-	public static let tagsAttribute = TagsAttribute(name: "Tags", pluralName: "Tags")
+	public static let tagsAttribute = TagsAttribute(id: 0, name: "Tags", pluralName: "Tags")
 	public static let attributes: [Attribute] = [tagsAttribute]
 
 	// MARK: - Display Information
@@ -95,6 +97,16 @@ public class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestriction, E
 		log.debug("Unsupported restricted attribute type for predicate")
 		return nil
 	}
+
+        public override func stored(
+                for sampleType: Sample.Type,
+                using transaction: Transaction?
+        ) throws -> StoredBooleanExpression {
+                let transaction = transaction ?? injected(Database.self).transaction()
+                let stored = try transaction.new(StoredTagsAttributeRestriction.self)
+                try stored.populate(from: self, for: sampleType)
+                return stored
+        }
 
 	// MARK: - Attributed Functions
 

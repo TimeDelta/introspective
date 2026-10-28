@@ -46,11 +46,13 @@ public final class BloodPressure: HealthKitCorrelationSample {
 	// MARK: - Attributes
 
 	public static let systolic = DoubleAttribute(
+		id: 0,
 		name: "Systolic blood pressure",
 		pluralName: "Systolic blood pressures",
 		variableName: HKPredicateKeyPathQuantity
 	)
 	public static let diastolic = DoubleAttribute(
+		id: 1,
 		name: "Diastolic blood pressure",
 		pluralName: "Diastolic blood pressures",
 		variableName: HKPredicateKeyPathQuantity
