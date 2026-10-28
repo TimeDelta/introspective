@@ -1,0 +1,11 @@
+# Mood review and query shortcuts
+
+From **Record Data → Mood History**, review today's, the last seven days', or the last thirty days' check-ins. Search notes without leaving the history, tap an entry to edit it, or tap **+** to record a missed check-in (change the timestamp in the editor). Pull to refresh; returning from an edit also refreshes the list.
+
+The summary follows the selected period and note search. It counts check-ins and local calendar days, and averages each rating's position on its original scale. For example, 2 on a 0–4 scale and 75 on a 0–100 scale average to 62.5%. This is descriptive, per-check-in information, not a clinical score. Invalid or missing scales are excluded from the average and disclosed in the footer. Entries retain their original ratings and scales. Period boundaries follow the device calendar, including daylight-saving changes.
+
+The shared timestamp picker preserves full precision for **Now**, **Last**, and unchanged initial values. Wheel edits and minute/hour/day/month adjustments clear seconds and fractions. The explicit **Seconds** adjustment preserves seconds but clears fractional seconds. Date-only choices use the start of the day. Date/time attribute and range pickers also clear seconds/fractions for manual date/time choices. Automatic capture and import timestamps retain their precision. Mood creation now respects the supplied timestamp, and the mood editor stores the original rating scale on new check-ins.
+
+In **Explore → Query → Load**, search saved-query names and data types using case/accent-insensitive, whitespace-separated terms. Every term must match. Swipe right and tap **Run** to execute without changing your draft; tap a row to open it for editing. Direct Run is only available for ordinary exploration, not when selecting a query for a graph. Rename/delete actions continue to apply to the visible filtered row.
+
+Native regression coverage includes backdated mood creation across database reopen, historical scales and invalid scales, daylight-saving day boundaries, timestamp rounding, and saved-query search/rename behavior. Manual UI checks should cover Add/Edit in Mood History, filter changes and note search, each timestamp shortcut, and opening/running/renaming a filtered saved query.

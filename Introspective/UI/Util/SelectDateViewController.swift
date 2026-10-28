@@ -57,7 +57,7 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 	public final var lastDate: Date?
 	public final var notificationToSendOnAccept: Notification.Name!
 
-	private final var limitDateToStartOfMinute = true
+	private final var selectedPrecision: Calendar.Component? = .minute
 
 	private final var decrementByThirtyButton: UIBarButtonItem!
 
@@ -77,7 +77,7 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 		super.viewDidLoad()
 		if let date = initialDate {
 			datePicker.setDate(date, animated: false)
-			limitDateToStartOfMinute = false
+			selectedPrecision = nil
 		}
 		datePicker.minimumDate = earliestPossibleDate
 		datePicker.maximumDate = latestPossibleDate
@@ -155,7 +155,7 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 	@IBAction final func lastButtonPressed(_: Any) {
 		if let date = lastDate {
 			datePicker.date = date
-			limitDateToStartOfMinute = false
+			selectedPrecision = nil
 		} else {
 			Me.log.error("last date was unexpectedly nil")
 		}
@@ -195,19 +195,19 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 
 	@IBAction final func nowButtonPressed(_: Any) {
 		datePicker.date = Date()
-		limitDateToStartOfMinute = false
+		selectedPrecision = nil
 	}
 
 	@IBAction func datePickerValueChanged(_: Any) {
-		limitDateToStartOfMinute = true
+		selectedPrecision = .minute
 	}
 
 	@IBAction final func acceptButtonPressed(_: Any) {
 		var date = datePicker.date
 		if datePickerMode == .date {
 			date = injected(CalendarUtil.self).start(of: .day, in: date)
-		} else if limitDateToStartOfMinute {
-			date = injected(CalendarUtil.self).start(of: .minute, in: date)
+		} else if let precision = selectedPrecision {
+			date = injected(CalendarUtil.self).start(of: precision, in: date)
 		}
 		post(notificationToSendOnAccept, userInfo: [.date: date])
 		dismiss(animated: false, completion: nil)
@@ -216,6 +216,7 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 	// MARK: - Helper Functions
 
 	private final func quickPressIncrementOrDecrement(amountToAdd: Int) {
+		selectedPrecision = .minute
 		if datePickerMode == .date {
 			datePicker.date = datePicker.date + amountToAdd.days
 		} else {
@@ -226,23 +227,28 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 	private final func showChooseTimeUnitActionSheet(amountToAdd: Int) {
 		let actionSheet = UIAlertController(title: "Which unit?", message: nil, preferredStyle: .actionSheet)
 		actionSheet.addAction(UIAlertAction(title: "Months", style: .default) { _ in
+			self.selectedPrecision = .minute
 			self.datePicker.date = self.datePicker.date + amountToAdd.months
 		})
 		actionSheet.addAction(UIAlertAction(title: "Weeks", style: .default) { _ in
+			self.selectedPrecision = .minute
 			self.datePicker.date = self.datePicker.date + amountToAdd.weeks
 		})
 		actionSheet.addAction(UIAlertAction(title: "Days", style: .default) { _ in
+			self.selectedPrecision = .minute
 			self.datePicker.date = self.datePicker.date + amountToAdd.days
 		})
 		actionSheet.addAction(UIAlertAction(title: "Hours", style: .default) { _ in
+			self.selectedPrecision = .minute
 			self.datePicker.date = self.datePicker.date + amountToAdd.hours
 		})
 		actionSheet.addAction(UIAlertAction(title: "Minutes", style: .default) { _ in
+			self.selectedPrecision = .minute
 			self.datePicker.date = self.datePicker.date + amountToAdd.minutes
 		})
 		actionSheet.addAction(UIAlertAction(title: "Seconds", style: .default) { _ in
+			self.selectedPrecision = .second
 			self.datePicker.date = self.datePicker.date + amountToAdd.seconds
-			self.limitDateToStartOfMinute = false
 		})
 		actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		presentView(actionSheet)

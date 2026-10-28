@@ -136,7 +136,7 @@ public final class DateRangeViewControllerImpl: UIViewController, DateRangeViewC
 	private final func getFromDate() -> Date? {
 		var fromDate: Date?
 		if enableFromDateSwitch.isOn {
-			fromDate = fromDatePicker.date
+			fromDate = injected(CalendarUtil.self).start(of: .minute, in: fromDatePicker.date)
 			if datePickerMode == .date {
 				fromDate = injected(CalendarUtil.self).start(of: .day, in: fromDatePicker.date)
 			}
@@ -148,7 +148,7 @@ public final class DateRangeViewControllerImpl: UIViewController, DateRangeViewC
 	private final func getToDate() -> Date? {
 		var toDate: Date?
 		if enableToDateSwitch.isOn {
-			toDate = toDatePicker.date
+			toDate = injected(CalendarUtil.self).start(of: .minute, in: toDatePicker.date)
 			if datePickerMode == .date {
 				toDate = injected(CalendarUtil.self).start(of: .day, in: toDatePicker.date)
 			}

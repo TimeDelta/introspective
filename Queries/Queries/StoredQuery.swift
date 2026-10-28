@@ -10,6 +10,16 @@ import Samples
 public final class StoredQuery: NSManagedObject, CoreDataObject {
 	public static let entityName = "Query"
 
+	/// Matches all whitespace-separated terms against the name and data type.
+	public func matchesSearchText(_ text: String) -> Bool {
+		let factory = injected(SampleFactory.self)
+		let typeName = factory.allTypes().first(where: { factory.sampleTypeId(for: $0) == sampleTypeId })?.name ?? ""
+		let searchable = name + " " + typeName
+		return text.split(whereSeparator: { $0.isWhitespace }).allSatisfy {
+			searchable.range(of: String($0), options: [.caseInsensitive, .diacriticInsensitive]) != nil
+		}
+	}
+
 	public func convert() throws -> Query { try convert(depth: 0) }
 
 	private func convert(depth: Int) throws -> Query {

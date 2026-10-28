@@ -65,7 +65,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 	}
 
 	private final var timestamp: Date = Date()
-	private final var rating: Double = 0
+	private final var rating: Double = injected(Settings.self).minMood
 	private final var minRating: Double = injected(Settings.self).minMood
 	private final var maxRating: Double = injected(Settings.self).maxMood
 	private final var note: String?
@@ -194,6 +194,8 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 			}
 			mood.date = timestamp
 			mood.rating = rating
+			mood.minRating = minRating
+			mood.maxRating = maxRating
 			mood.note = note
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 			if let localMood = mood as? MoodImpl {
