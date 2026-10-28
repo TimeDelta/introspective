@@ -359,6 +359,7 @@ final class GraphSetupScreenUITests: UITest {
 		app.buttons["choose x-axis query button"].tap()
 
 		// then
+		XCTAssertEqual(app.tables.cells.count, parts.count)
 		for i in 0 ..< parts.count {
 			let cell = app.tables.cells.element(boundBy: i)
 			XCTAssertEqual(cell.value as? String, parts[i])

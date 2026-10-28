@@ -176,7 +176,7 @@
                                         <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" buttonType="system" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="Iky-EB-IJe">
                                             <rect key="frame" x="16" y="86" width="343" height="49"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <accessibility key="accessibilityConfiguration" hint="Add a note about your mood" identifier="set mood note button" label="set mood note button"/>
+                                            <accessibility key="accessibilityConfiguration" hint="Add a note about your fatigue" identifier="set fatigue note button" label="set fatigue note button"/>
                                             <state key="normal" title="Add Note"/>
                                             <connections>
                                                 <action selector="presentFatigueNoteController:" destination="3yz-Lq-Jd3" eventType="touchUpInside" id="N6M-Qv-Igs"/>
@@ -185,7 +185,7 @@
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FGM-hG-1PE">
                                             <rect key="frame" x="16" y="11" width="343" height="34"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                            <accessibility key="accessibilityConfiguration" hint="Save this mood rating" identifier="save mood button" label="save mood button"/>
+                                            <accessibility key="accessibilityConfiguration" hint="Save this fatigue rating" identifier="save fatigue button" label="save fatigue button"/>
                                             <state key="normal" title="Save Fatigue"/>
                                             <connections>
                                                 <action selector="doneButtonPressed:" destination="3yz-Lq-Jd3" eventType="touchUpInside" id="3xs-a3-4Fd"/>
@@ -211,7 +211,7 @@
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="arg-dq-72Y">
                                             <rect key="frame" x="221" y="53" width="73" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                            <accessibility key="accessibilityConfiguration" identifier="set mood button" label="set mood button"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="set fatigue button" label="set fatigue button"/>
                                             <state key="normal" title="rating"/>
                                             <connections>
                                                 <action selector="setRating:" destination="3yz-Lq-Jd3" eventType="touchUpInside" id="FpS-qB-DeL"/>

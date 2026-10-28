@@ -26,9 +26,8 @@ class UITest: XCTestCase {
 	// MARK: - Instructions Helpers
 
 	final func skipInstructionsIfPresent() {
-		sleep(1) // give the skip instructions button a chance to appear before checking if it's there
-		let skipInstructionsButton = app.buttons["AccessibilityIdentifiers.skipButton"]
-		if skipInstructionsButton.exists {
+		let skipInstructionsButton = app.buttons["skip instructions"]
+		if skipInstructionsButton.waitForExistence(timeout: 1) {
 			skipInstructionsButton.tap()
 		}
 	}
@@ -154,10 +153,14 @@ class UITest: XCTestCase {
 	// MARK: - Text Field Helpers
 
 	final func setTextFor(field: XCUIElement, to text: String? = nil) {
-		if (field.value as? String)?.count ?? 0 > 0 {
+		guard field.waitForExistence(timeout: 5) else {
+			XCTFail("Text input did not appear: \(field)")
+			return
+		}
+		if let value = field.value as? String, !value.isEmpty, value != field.placeholderValue {
 			deleteContentOf(textField: field)
 		}
-		if let text = text {
+		if let text = text, !text.isEmpty {
 			field.tap()
 			field.typeText(text)
 		}
@@ -169,7 +172,6 @@ class UITest: XCTestCase {
 		app.menuItems["Select All"].tap()
 		var deleteKey = app.keyboards.keys["delete"]
 		if !deleteKey.exists {
-			// key label is different on number pad keyboard
 			deleteKey = app.keyboards.keys["Delete"]
 		}
 		deleteKey.tap()
@@ -286,7 +288,8 @@ class UITest: XCTestCase {
 			app.tabBars.buttons["Record"].tap()
 			app.tables.cells.staticTexts["Activities"].tap()
 		}
-		app.buttons["+"].tap()
+		skipInstructionsIfPresent()
+		app.navigationBars.buttons["+"].tap()
 		setTextFor(field: app.tables.textFields["activity name"], to: definition.name)
 		if let autoNote = definition.autoNote {
 			let currentlyEnabled = activityDefinitionAutoNoteField().value as? String == "1"

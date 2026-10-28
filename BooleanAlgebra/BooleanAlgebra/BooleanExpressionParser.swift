@@ -199,6 +199,8 @@ public extension BooleanExpression {
 			} else { result.append((type: .expression, expression: expression)) }
 			return result
 		}
-		return try parts(self, enclosed: false, depth: 0)
+		// The root is already bounded by the editor. Only nested operators need
+		// synthetic parentheses; explicit user groups are still emitted above.
+		return try parts(self, enclosed: true, depth: 0)
 	}
 }

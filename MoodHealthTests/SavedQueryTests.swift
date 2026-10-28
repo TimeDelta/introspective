@@ -822,6 +822,38 @@ final class SavedQueryTests: XCTestCase {
 		}
 	}
 
+	func testEditorRoundTripKeepsRootRowsAndExplicitGroups() throws {
+		let expression = AndExpression(
+			GreaterThanDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating, value: 1),
+			LessThanDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating, value: 5))
+		let parts = try expression.partsForEditing()
+		XCTAssertEqual(parts.map { String(describing: $0.type) }, ["expression", "and", "expression"])
+		let parsed = try injected(BooleanExpressionParser.self).parse(parts)
+		XCTAssertEqual(try parsed.partsForEditing().map { String(describing: $0.type) },
+			parts.map { String(describing: $0.type) })
+		let grouped = try BooleanExpressionGroup(expression).partsForEditing()
+		XCTAssertEqual(grouped.count, 5)
+		XCTAssertEqual(String(describing: grouped.first!.type), "groupStart")
+		XCTAssertEqual(String(describing: grouped.last!.type), "groupEnd")
+	}
+
+	func testEditorRootWithoutExtraRowsPreservesNestedMixedOperators() throws {
+		let a = GreaterThanDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating, value: 1)
+		let b = LessThanDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating, value: 5)
+		let c = EqualToDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating, value: 6)
+		let expressions: [BooleanExpression] = [AndExpression(a, OrExpression(b, c)), OrExpression(AndExpression(a, b), c)]
+		for expression in expressions {
+			let parts = try expression.partsForEditing()
+			let parsed = try injected(BooleanExpressionParser.self).parse(parts)
+			XCTAssertEqual(try parsed.partsForEditing().map { String(describing: $0.type) },
+				parts.map { String(describing: $0.type) })
+			for rating in [0.0, 2.0, 5.0, 6.0] {
+				let sample = try mood(rating)
+				XCTAssertEqual(try expression.evaluate([.sample: sample]), try parsed.evaluate([.sample: sample]))
+			}
+		}
+	}
+
 	func testStoredExpressionEntitiesInstantiateTheirDeclaredClasses() throws {
 		let context = container.viewContext
 		for entity in Self.model.entities where entity.superentity?.name == "BooleanExpression" && !entity.isAbstract {

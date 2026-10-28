@@ -28,6 +28,7 @@ public final class DefaultCoachMarksDataSourceAndDelegate: CoachMarksDataSourceA
 	static func defaultSkipInstructionsView() -> CoachMarkSkipView {
 		let skipView = CoachMarkSkipDefaultView()
 		skipView.setTitle("Skip instructions", for: .normal)
+		skipView.accessibilityIdentifier = "skip instructions"
 		skipView.frame = CGRect(x: 0.0, y: 0.0, width: skipView.frame.width, height: skipView.frame.height)
 		return skipView
 	}
