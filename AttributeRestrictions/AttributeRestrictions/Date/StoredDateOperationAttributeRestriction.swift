@@ -17,7 +17,7 @@ import Samples
 
 public final class StoredDateOperationAttributeRestriction: StoredBooleanExpression, CoreDataObject {
 	private typealias Me = StoredDateOperationAttributeRestriction
-	public static let entityName = "DateOperationAttributeRestriction"
+	public static let entityName = "DateAttributeRestriction"
 
 	public override func convert() throws -> BooleanExpression {
 		let sampleType: Sample.Type = try injected(SampleFactory.self).sampleType(for: sampleTypeId)

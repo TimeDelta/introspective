@@ -447,7 +447,9 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	@objc final func saveEditedSampleType(notification: Notification) {
 		guard let sampleType: Sample.Type? = value(for: .sampleType, from: notification) else { return }
-		queries[editedSampleTypeSectionIndex].sampleTypeInfo = SampleTypeInfo(sampleType!)
+		var updated = SampleTypeInfo(sampleType!)
+		updated.mostRecentEntryOnly = queries[editedSampleTypeSectionIndex].sampleTypeInfo.mostRecentEntryOnly
+		queries[editedSampleTypeSectionIndex].sampleTypeInfo = updated
 		updateAttributeRestrictionsForSampleType(at: editedSampleTypeSectionIndex)
 		validate()
 		tableView.reloadData()
@@ -467,7 +469,9 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	@objc final func saveEditedSubQuerySampleType(notification: Notification) {
 		guard let sampleTypeInfo: SampleTypeInfo = value(for: .sampleType, from: notification) else { return }
-		queries[editedSampleTypeSectionIndex].sampleTypeInfo = sampleTypeInfo
+		var updated = sampleTypeInfo
+		updated.mostRecentEntryOnly = queries[editedSampleTypeSectionIndex].sampleTypeInfo.mostRecentEntryOnly
+		queries[editedSampleTypeSectionIndex].sampleTypeInfo = updated
 		updateAttributeRestrictionsForSampleType(at: editedSampleTypeSectionIndex)
 		validate()
 		tableView.reloadData()
@@ -527,6 +531,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	private final func validate() {
 		finishedButton.isEnabled = buildQuery() != nil
+		saveButton?.isEnabled = finishedButton.isEnabled
 	}
 
 	// MARK: Reordering

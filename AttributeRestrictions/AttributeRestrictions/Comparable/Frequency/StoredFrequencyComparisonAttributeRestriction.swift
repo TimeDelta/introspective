@@ -17,7 +17,7 @@ import Samples
 
 public final class StoredFrequencyComparisonAttributeRestriction: StoredBooleanExpression, CoreDataObject {
 	private typealias Me = StoredFrequencyComparisonAttributeRestriction
-	public static let entityName = "FrequencyComparisonAttributeRestriction"
+	public static let entityName = "FrequencyAttributeRestriction"
 
 	public override func convert() throws -> BooleanExpression {
 		let sampleType: Sample.Type = try injected(SampleFactory.self).sampleType(for: sampleTypeId)

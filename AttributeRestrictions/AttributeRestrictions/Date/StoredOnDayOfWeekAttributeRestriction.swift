@@ -17,7 +17,7 @@ import Samples
 
 public final class StoredOnDayOfWeekAttributeRestriction: StoredBooleanExpression, CoreDataObject {
 	private typealias Me = StoredOnDayOfWeekAttributeRestriction
-	public static let entityName = "OnDayOfWeekAttributeRestriction"
+	public static let entityName = "OnDayOfTheWeekAttributeRestriction"
 
 	public override func convert() throws -> BooleanExpression {
 		let sampleType: Sample.Type = try injected(SampleFactory.self).sampleType(for: sampleTypeId)

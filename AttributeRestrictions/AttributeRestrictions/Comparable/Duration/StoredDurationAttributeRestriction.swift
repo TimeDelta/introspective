@@ -17,7 +17,7 @@ import Samples
 
 public final class StoredDurationComparisonAttributeRestriction: StoredBooleanExpression, CoreDataObject {
 	private typealias Me = StoredDurationComparisonAttributeRestriction
-	public static let entityName = "DurationComparisonAttributeRestriction"
+	public static let entityName = "DurationAttributeRestriction"
 
 	public override func convert() throws -> BooleanExpression {
 		let sampleType: Sample.Type = try injected(SampleFactory.self).sampleType(for: sampleTypeId)

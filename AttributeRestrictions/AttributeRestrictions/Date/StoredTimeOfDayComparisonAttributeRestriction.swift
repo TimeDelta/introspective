@@ -17,7 +17,7 @@ import Samples
 
 public final class StoredTimeOfDayComparisonAttributeRestriction: StoredBooleanExpression, CoreDataObject {
 	private typealias Me = StoredTimeOfDayComparisonAttributeRestriction
-	public static let entityName = "TimeOfDayComparisonAttributeRestriction"
+	public static let entityName = "TimeOfDayAttributeRestriction"
 
 	private enum Comparison: Int16 {
 		case lessThan = 0

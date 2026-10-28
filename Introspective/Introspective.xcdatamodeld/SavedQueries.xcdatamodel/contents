@@ -39,7 +39,7 @@
             <fetchIndexElement property="tags" type="Binary" order="ascending"/>
         </fetchIndex>
     </entity>
-    <entity name="AndExpression" representedClassName="BooleanAlgebra.AndExpression" parentEntity="BooleanExpression" syncable="YES">
+    <entity name="AndExpression" representedClassName="BooleanAlgebra.StoredAndExpression" parentEntity="BooleanExpression" syncable="YES">
         <relationship name="storedExpression1" maxCount="1" deletionRule="Cascade" destinationEntity="BooleanExpression"/>
         <relationship name="storedExpression2" maxCount="1" deletionRule="Cascade" destinationEntity="BooleanExpression"/>
     </entity>
@@ -53,7 +53,7 @@
     <entity name="CoreDataSync" representedClassName="Persistence.CoreDataSync" syncable="YES">
         <attribute name="externallyModified" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
     </entity>
-    <entity name="DateAttributeRestriction" representedClassName="AttributeRestrictions.StoredDateAttributeRestriction" parentEntity="BooleanExpression" syncable="YES">
+    <entity name="DateAttributeRestriction" representedClassName="AttributeRestrictions.StoredDateOperationAttributeRestriction" parentEntity="BooleanExpression" syncable="YES">
         <attribute name="attributeId" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="operation" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="sampleTypeId" attributeType="Integer 16" usesScalarValueType="YES"/>
@@ -71,7 +71,7 @@
         <attribute name="sampleTypeId" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="value" attributeType="Double" usesScalarValueType="YES"/>
     </entity>
-    <entity name="DurationAttributeRestriction" representedClassName="AttributeRestrictions.StoredDurationAttributeRestriction" parentEntity="BooleanExpression" syncable="YES">
+    <entity name="DurationAttributeRestriction" representedClassName="AttributeRestrictions.StoredDurationComparisonAttributeRestriction" parentEntity="BooleanExpression" syncable="YES">
         <attribute name="attributeId" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="comparison" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="sampleTypeId" attributeType="Integer 16" usesScalarValueType="YES"/>
@@ -91,7 +91,7 @@
         <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="timestampTimeZoneId" optional="YES" attributeType="String"/>
     </entity>
-    <entity name="FrequencyAttributeRestriction" representedClassName="AttributeRestrictions.StoredFrequencyAttributeRestriction" parentEntity="BooleanExpression" syncable="YES">
+    <entity name="FrequencyAttributeRestriction" representedClassName="AttributeRestrictions.StoredFrequencyComparisonAttributeRestriction" parentEntity="BooleanExpression" syncable="YES">
         <attribute name="attributeId" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="comparison" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="sampleTypeId" attributeType="Integer 16" usesScalarValueType="YES"/>
@@ -102,7 +102,13 @@
         <attribute name="sampleTypeId" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="value" attributeType="Integer 16" usesScalarValueType="YES"/>
     </entity>
-    <entity name="IntegerComparisonAttributeRestriction1" representedClassName="AttributeRestrictions.StoredIntegerComparisonAttributeRestriction" syncable="YES">
+    <entity name="IntegerComparisonAttributeRestriction1" representedClassName="NSManagedObject" syncable="YES">
+        <attribute name="attributeId" attributeType="Integer 16" usesScalarValueType="YES"/>
+        <attribute name="comparison" attributeType="Integer 16" usesScalarValueType="YES"/>
+        <attribute name="sampleTypeId" attributeType="Integer 16" usesScalarValueType="YES"/>
+        <attribute name="value" attributeType="Integer 64" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="IntegerComparisonAttributeRestriction" representedClassName="AttributeRestrictions.StoredIntegerComparisonAttributeRestriction" parentEntity="BooleanExpression" syncable="YES">
         <attribute name="attributeId" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="comparison" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="sampleTypeId" attributeType="Integer 16" usesScalarValueType="YES"/>
@@ -154,7 +160,7 @@
     <entity name="NotExpression" representedClassName="BooleanAlgebra.StoredNotExpression" parentEntity="BooleanExpression" syncable="YES">
         <relationship name="storedSubExpression" maxCount="1" deletionRule="Cascade" destinationEntity="BooleanExpression"/>
     </entity>
-    <entity name="OnDayOfTheWeekAttributeRestriction" representedClassName="AttributeRestrictions.StoredOnDayOfTheWeekAttributeRestriction" parentEntity="BooleanExpression" syncable="YES">
+    <entity name="OnDayOfTheWeekAttributeRestriction" representedClassName="AttributeRestrictions.StoredOnDayOfWeekAttributeRestriction" parentEntity="BooleanExpression" syncable="YES">
         <attribute name="attributeId" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="daysOfWeek" attributeType="String"/>
         <attribute name="sampleTypeId" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -230,7 +236,7 @@
         <attribute name="operation" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="tagNames" attributeType="String"/>
     </entity>
-    <entity name="TimeOfDayAttributeRestriction" representedClassName="AttributeRestrictions.StoredTimeOfDayAttributeRestriction" parentEntity="BooleanExpression" syncable="YES">
+    <entity name="TimeOfDayAttributeRestriction" representedClassName="AttributeRestrictions.StoredTimeOfDayComparisonAttributeRestriction" parentEntity="BooleanExpression" syncable="YES">
         <attribute name="attributeId" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="comparison" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="sampleTypeId" attributeType="Integer 16" usesScalarValueType="YES"/>
