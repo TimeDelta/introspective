@@ -29,7 +29,8 @@ jobs:
   validation:
     name: ${{ matrix.kind == 'release' && 'Release compilation' || matrix.kind == 'legacy' && 'Legacy unit and functional tests' || matrix.kind == 'ui' && 'Legacy UI tests' || matrix.kind == 'mocks' && 'Legacy mocking SDK check' || 'Simulator tests' }}
     runs-on: ${{ inputs.runner || 'macos-15-intel' }}
-    timeout-minutes: 45
+    # Restored suites include thousands of tests / UI flows after a cold build.
+    timeout-minutes: ${{ matrix.kind == 'ui' && 120 || matrix.kind == 'legacy' && 90 || 45 }}
     strategy:
       fail-fast: false
       matrix:
