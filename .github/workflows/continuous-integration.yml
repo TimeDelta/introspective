@@ -57,23 +57,6 @@ jobs:
           ./scripts/create-git-version-swift-file.sh
           test -s Common/Common/GitVersion.swift
 
-      - name: Build without signing
-        shell: bash
-        run: |
-          set -euo pipefail
-          xcodebuild build \
-            -workspace Introspective.xcworkspace \
-            -scheme CI-CD \
-            -configuration Release \
-            -destination 'generic/platform=iOS' \
-            -derivedDataPath "$RUNNER_TEMP/IntrospectiveDerivedData" \
-            -resultBundlePath "$GITHUB_WORKSPACE/ci-output/Build.xcresult" \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGN_IDENTITY='' \
-            ENABLE_USER_SCRIPT_SANDBOXING=NO \
-            2>&1 | tee ci-output/xcodebuild.log
-
       - name: Test mood Health exchange
         shell: bash
         run: |
@@ -93,6 +76,23 @@ jobs:
             2>&1 | tee ci-output/mood-tests.log
           xcrun xcresulttool get test-results summary --path ci-output/MoodTests.xcresult --format json > ci-output/mood-tests-summary.json
           python3 -c 'import json; r=json.load(open("ci-output/mood-tests-summary.json")); assert r["passedTests"] >= 5 and r["failedTests"] == 0, r'
+
+      - name: Build without signing
+        shell: bash
+        run: |
+          set -euo pipefail
+          xcodebuild build \
+            -workspace Introspective.xcworkspace \
+            -scheme CI-CD \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath "$RUNNER_TEMP/IntrospectiveDerivedData" \
+            -resultBundlePath "$GITHUB_WORKSPACE/ci-output/Build.xcresult" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY='' \
+            ENABLE_USER_SCRIPT_SANDBOXING=NO \
+            2>&1 | tee ci-output/xcodebuild.log
 
       - name: Record generated changes
         if: always()
