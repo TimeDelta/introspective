@@ -509,4 +509,14 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertEqual(try dao.getMoods(from: start, to: later.date).count, 2)
 	}
 
+	func testTransactionResetDiscardsUnsavedRecordsWithoutAnUndoManager() throws {
+		let transaction = try injected(Database.self).viewContextTransaction(for: MoodImpl.self, sortedBy: "timestamp")
+		let record = try transaction.new(MoodImpl.self)
+		record.date = Date()
+		record.rating = 4; record.minRating = 0; record.maxRating = 7
+		transaction.reset()
+		try transaction.commit()
+		XCTAssertEqual(try injected(Database.self).count(MoodImpl.self), 0)
+	}
+
 }

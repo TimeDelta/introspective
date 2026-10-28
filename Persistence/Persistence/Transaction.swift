@@ -90,7 +90,8 @@ internal final class TransactionImpl: Transaction {
 	}
 
 	public final func reset() {
-		myContext.undo()
+		for transaction in childTransactions { transaction.reset() }
+		myContext.performAndWait { myContext.rollback() }
 	}
 
 	// MARK: - Fetching
