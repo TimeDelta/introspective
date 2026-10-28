@@ -65,7 +65,7 @@ public final class MoodHealthExchange {
 			case .unavailable: return "Health data is not available on this device."
 			case .authorizationFailed: return "Health authorization could not be completed."
 			case .writeDenied: return "Allow Introspective to write State of Mind in Health Settings, then try again."
-			case .invalidRating: return "A mood has an invalid rating or rating range. No moods were exported."
+			case .invalidRating: return "A mood rating or rating range is invalid. Check your minimum and maximum mood settings."
 			case .saveFailed: return "Health could not save the mood. Please try again."
 			}
 		}
@@ -79,7 +79,7 @@ public final class MoodHealthExchange {
 
 	/// Both scales are continuous; a zero-width range has no meaningful valence.
 	public static func valence(rating: Double, min: Double, max: Double) throws -> Double {
-		guard rating.isFinite, min.isFinite, max.isFinite, max > min,
+		guard rating.isFinite, min.isFinite, max.isFinite, max > min, (max - min).isFinite,
 			rating >= min, rating <= max else { throw ExchangeError.invalidRating }
 		let value = 2 * ((rating - min) / (max - min)) - 1
 		guard value.isFinite else { throw ExchangeError.invalidRating }
@@ -127,13 +127,14 @@ public final class MoodHealthExchange {
 		let scale = injected(Settings.self).scaleMoodsOnImport
 		let minimum = scale ? injected(Settings.self).minMood : -1
 		let maximum = scale ? injected(Settings.self).maxMood : 1
-		guard minimum.isFinite, maximum.isFinite, maximum > minimum else { throw ExchangeError.invalidRating }
+		guard minimum.isFinite, maximum.isFinite, maximum > minimum, (maximum - minimum).isFinite else { throw ExchangeError.invalidRating }
 		var count = 0
 		for sample in samples {
 			// Never import our exports, including after a partial save or retry.
 			guard sample.metadata?[Self.exportMarker] as? Bool != true,
 				knownIDs.insert(sample.uuid.uuidString).inserted else { continue }
-			let mood = MoodImpl(context: context)
+			let entity = NSEntityDescription.entity(forEntityName: MoodImpl.entityName, in: context)!
+			let mood = MoodImpl(entity: entity, insertInto: context)
 			mood.setSource(.health)
 			mood.date = sample.startDate
 			mood.timeZone = (sample.metadata?[HKMetadataKeyTimeZone] as? String).flatMap(TimeZone.init(identifier:))
@@ -160,6 +161,18 @@ public final class MoodHealthExchange {
 		try context.parent?.save()
 	}
 
+
+	internal static func exportSample(_ mood: MoodImpl) throws -> HKStateOfMind {
+		let value = try valence(rating: mood.rating, min: mood.minRating, max: mood.maxRating)
+		return HKStateOfMind(date: mood.originalTimestamp, kind: .momentaryEmotion, valence: value,
+			labels: [], associations: [], metadata: [
+				HKMetadataKeySyncIdentifier: mood.objectID.uriRepresentation().absoluteString,
+				HKMetadataKeySyncVersion: 1,
+				exportMarker: true,
+				HKMetadataKeyTimeZone: (mood.timeZone ?? .current).identifier,
+			])
+	}
+
 	public func exportMoods(completion: @escaping (Result<Int, Error>) -> Void) {
 		authorize(write: true) { error in
 			if let error = error { completion(.failure(error)); return }
@@ -169,16 +182,7 @@ public final class MoodHealthExchange {
 					$0.healthKitUUID == nil && $0.getSource() != .health
 				}
 				// Validate the entire batch before making any Health writes.
-				let valences = try moods.map { try Self.valence(rating: $0.rating, min: $0.minRating, max: $0.maxRating) }
-				let samples = zip(moods, valences).map { mood, valence in
-					HKStateOfMind(date: mood.originalTimestamp, kind: .momentaryEmotion, valence: valence,
-						labels: [], associations: [], metadata: [
-							HKMetadataKeySyncIdentifier: mood.objectID.uriRepresentation().absoluteString,
-							HKMetadataKeySyncVersion: 1,
-							Self.exportMarker: true,
-							HKMetadataKeyTimeZone: (mood.timeZone ?? .current).identifier,
-						])
-				}
+				let samples = try moods.map(Self.exportSample)
 				guard !samples.isEmpty else { completion(.success(0)); return }
 				self.store.save(samples) { success, error in
 					DispatchQueue.main.async {

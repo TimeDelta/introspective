@@ -136,6 +136,24 @@ final class MoodHealthExchangeFunctionalTests: FunctionalTest {
 		let moods = try injected(Database.self).query(MoodImpl.fetchRequest())
 		XCTAssertEqual(moods.first?.rating, 5)
 	}
+	func testExportPreservesStoredInstantAndUsesStableIdentifierWithoutNotes() throws {
+		guard #available(iOS 18.0, *) else { throw XCTSkip("State of Mind requires iOS 18") }
+		let date = Date(timeIntervalSince1970: 1_700_000_000)
+		let mood = MoodDataTestUtil.createMood(note: "Private note", rating: 3.5, timestamp: date, min: 0, max: 7)
+		mood.timeZone = TimeZone(secondsFromGMT: 3600)
+		let first = try MoodHealthExchange.exportSample(mood)
+		let retry = try MoodHealthExchange.exportSample(mood)
+		XCTAssertEqual(first.startDate, date)
+		XCTAssertEqual(first.kind, .momentaryEmotion)
+		XCTAssertEqual(first.valence, 0)
+		XCTAssertEqual(first.metadata?[HKMetadataKeySyncIdentifier] as? String,
+			retry.metadata?[HKMetadataKeySyncIdentifier] as? String)
+		XCTAssertEqual(first.metadata?[MoodHealthExchange.exportMarker] as? Bool, true)
+		XCTAssertNil(first.metadata?["note"])
+		XCTAssertTrue(first.labels.isEmpty)
+		XCTAssertTrue(first.associations.isEmpty)
+	}
+
 	func testExistingMoodStoreMigratesWithoutLosingData() throws {
 		let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
 		try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)

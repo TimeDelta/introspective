@@ -92,7 +92,7 @@ jobs:
             ENABLE_USER_SCRIPT_SANDBOXING=NO \
             2>&1 | tee ci-output/mood-tests.log
           xcrun xcresulttool get test-results summary --path ci-output/MoodTests.xcresult --format json > ci-output/mood-tests-summary.json
-          python3 -c 'import json; r=json.load(open("ci-output/mood-tests-summary.json")); assert r["passedTests"] >= 4 and r["failedTests"] == 0, r'
+          python3 -c 'import json; r=json.load(open("ci-output/mood-tests-summary.json")); assert r["passedTests"] >= 5 and r["failedTests"] == 0, r'
 
       - name: Record generated changes
         if: always()
