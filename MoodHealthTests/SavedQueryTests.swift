@@ -1,6 +1,8 @@
 import XCTest
 import HealthKit
 import CoreData
+import UIKit
+import AAInfographics
 import Common
 import DependencyInjection
 import BooleanAlgebra
@@ -113,6 +115,51 @@ final class SavedQueryTests: XCTestCase {
 		mood.minRating = 0; mood.maxRating = 7; mood.rating = rating
 		try context.save()
 		return mood
+	}
+
+	@MainActor private func loadChart(_ controller: BasicXYChartViewControllerImpl) {
+		controller.chartType = .line
+		controller.pleaseBePatientLabel = UILabel()
+		controller.activityIndicator = UIActivityIndicatorView()
+		controller.chartViewOutline = UIView(frame: CGRect(x: 10, y: 20, width: 300, height: 200))
+		controller.loadViewIfNeeded()
+	}
+
+	@MainActor func testChartDataCanArriveBeforeTheViewLoads() {
+		let controller = BasicXYChartViewControllerImpl()
+		controller.dataSeries = []
+		XCTAssertFalse(controller.isViewLoaded)
+		loadChart(controller)
+		XCTAssertTrue(controller.activityIndicator.isHidden)
+		XCTAssertTrue(controller.pleaseBePatientLabel.isHidden)
+		XCTAssertEqual(controller.view.subviews.filter { $0 is AAChartView }.count, 1)
+	}
+
+	@MainActor func testChartRepeatedLayoutsReuseOneWebView() throws {
+		let controller = BasicXYChartViewControllerImpl()
+		loadChart(controller)
+		let original = try XCTUnwrap(controller.view.subviews.first { $0 is AAChartView })
+		for _ in 0..<50 { controller.viewDidLayoutSubviews() }
+		let charts = controller.view.subviews.filter { $0 is AAChartView }
+		XCTAssertEqual(charts.count, 1)
+		XCTAssertTrue(charts.first === original)
+		XCTAssertFalse(controller.activityIndicator.isHidden)
+	}
+
+	@MainActor func testChartResizeUpdatesExistingViewAndControllerCanBeReleased() throws {
+		weak var released: BasicXYChartViewControllerImpl?
+		try autoreleasepool {
+			let controller = BasicXYChartViewControllerImpl()
+			released = controller
+			loadChart(controller)
+			let chart = try XCTUnwrap(controller.view.subviews.compactMap { $0 as? AAChartView }.first)
+			let frame = CGRect(x: 30, y: 40, width: 500, height: 350)
+			controller.chartViewOutline.frame = frame
+			controller.viewDidLayoutSubviews()
+			XCTAssertEqual(chart.frame, frame)
+			XCTAssertEqual(chart.contentHeight, 350)
+		}
+		XCTAssertNil(released)
 	}
 
 	func testTagGroupingPreservesFirstSeenOrderCaseAndDuplicateMembership() throws {

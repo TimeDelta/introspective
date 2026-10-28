@@ -43,7 +43,6 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 	public final var displayXAxisValueLabels: Bool = false
 	public final var chartType: AAChartType!
 	public final var categories: [String]?
-	private final var finishedSetup: Bool = false
 	private final var chartView: AAChartView!
 	private final var chartModel = AAChartModel()
 		.animationType(.easeInCubic)
@@ -57,18 +56,20 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 		super.viewDidLoad()
 
 		chartModel = chartModel.chartType(chartType)
+		chartView = AAChartView()
+		chartView.scrollEnabled = false
+		view.insertSubview(chartView, at: 0)
+		updateChartFrame()
 
 		injected(UiUtil.self).setBackButton(for: self, title: "Graph Setup", action: #selector(back))
 
-		finishedSetup = true
+		// Data may arrive before UIKit loads the view. Render the latest value now.
+		if dataSeries != nil { updateChartData() }
 	}
 
 	public final override func viewDidLayoutSubviews() {
-		chartView = AAChartView()
-		chartView.frame = chartViewOutline.frame
-		chartView.contentHeight = chartViewOutline.frame.size.height
-		chartView.scrollEnabled = false
-		view.insertSubview(chartView, at: 0)
+		super.viewDidLayoutSubviews()
+		updateChartFrame()
 	}
 
 	public final override func showError(
@@ -80,11 +81,11 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 		onDonePresenting: (() -> Void)? = nil
 	) {
 		doneWaiting()
-		let onDismiss: ((UIAlertAction) -> Void) = { action in
+		let onDismiss: ((UIAlertAction) -> Void) = { [weak self] action in
 			if let originalOnDismiss = originalOnDismiss {
 				originalOnDismiss(action)
 			}
-			self.navigationController?.popViewController(animated: false)
+			self?.navigationController?.popViewController(animated: false)
 		}
 		super.showError(
 			title: title,
@@ -109,8 +110,15 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 
 	// MARK: - Helper Functions
 
+	private final func updateChartFrame() {
+		guard let chartView = chartView, let outline = chartViewOutline else { return }
+		chartView.frame = outline.frame
+		let height = outline.frame.height
+		if chartView.contentHeight != height { chartView.contentHeight = height }
+	}
+
 	private final func updateChartData() {
-		while !finishedSetup {}
+		guard isViewLoaded, chartView != nil else { return }
 		doneWaiting()
 		chartModel = chartModel
 			.xAxisVisible(displayXAxisValueLabels)
