@@ -57,7 +57,11 @@ public struct OnDeviceQueryPlan {
 			guard dataType == "activeEnergy", kcal.isFinite, kcal >= 0 else { throw GenericDisplayableError(title: "Invalid active-energy condition.") }
 			expressions.append(GreaterThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: ActiveEnergy.energyBurned, value: kcal))
 		}
-		let expression = expressions.dropFirst().reduce(expressions.first) { partial, next in partial.map { AndExpression($0, next) } ?? next }
+		var expression: BooleanExpression?
+		for atom in expressions {
+			if let existing = expression { expression = AndExpression(existing, atom) }
+			else { expression = atom }
+		}
 		return (type, expression, mostRecentOnly)
 	}
 }
