@@ -154,6 +154,17 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertEqual(try dao.getAllQueries().count, samples.allTypes().count)
 	}
 
+	func testEditorPartsPreserveNotAndMixedOperatorPrecedence() throws {
+		let expression = NotExpression(OrExpression(
+			GreaterThanDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating, value: 3),
+			LessThanDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating, value: 1)))
+		let restored = try injected(BooleanExpressionParser.self).parse(expression.partsForEditing())
+		for rating in [0.0, 2.0, 6.0] {
+			let sample = try mood(rating)
+			XCTAssertEqual(try expression.evaluate([.sample: sample]), try restored.evaluate([.sample: sample]))
+		}
+	}
+
 	func testEveryMatcherKindRetainsItsOptions() throws {
 		for (index, type) in SubQueryMatcherFactoryImpl.allMatcherTypes.enumerated() {
 			var matcher = type.init()

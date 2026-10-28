@@ -164,3 +164,26 @@ internal final class BooleanExpressionParserImpl: BooleanExpressionParser {
 		}
 	}
 }
+
+public extension BooleanExpression {
+	/// Preserve evaluation order when rebuilding the editor, including NOT over groups.
+	func partsForEditing() throws -> [BooleanExpressionPart] {
+		guard isValid() else { throw GenericError("Cannot edit an invalid expression.") }
+		if let expression = self as? AndExpression {
+			return [(type: .groupStart, expression: nil)] + (try expression.expression1.partsForEditing()) +
+				[(type: .and, expression: nil)] + (try expression.expression2.partsForEditing()) + [(type: .groupEnd, expression: nil)]
+		}
+		if let expression = self as? OrExpression {
+			return [(type: .groupStart, expression: nil)] + (try expression.expression1.partsForEditing()) +
+				[(type: .or, expression: nil)] + (try expression.expression2.partsForEditing()) + [(type: .groupEnd, expression: nil)]
+		}
+		if let expression = self as? NotExpression {
+			return [(type: .not, expression: nil), (type: .groupStart, expression: nil)] +
+				(try expression.subExpression.partsForEditing()) + [(type: .groupEnd, expression: nil)]
+		}
+		if let expression = self as? BooleanExpressionGroup {
+			return [(type: .groupStart, expression: nil)] + (try expression.subExpression.partsForEditing()) + [(type: .groupEnd, expression: nil)]
+		}
+		return [(type: .expression, expression: self)]
+	}
+}

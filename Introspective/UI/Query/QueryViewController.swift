@@ -575,33 +575,10 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	}
 
 	private final func populateExpression(_ expression: BooleanExpression) {
-		if let and = expression as? AndExpression {
-			populateExpression(and.expression1)
-			queries[queries.count - 1].parts.append((type: .and, expression: nil))
+		do {
+			queries[queries.count - 1].parts.append(contentsOf: try expression.partsForEditing())
 			partWasAdded()
-			populateExpression(and.expression2)
-		} else if let or = expression as? OrExpression {
-			populateExpression(or.expression1)
-			queries[queries.count - 1].parts.append((type: .or, expression: nil))
-			partWasAdded()
-			populateExpression(or.expression2)
-		} else if let group = expression as? BooleanExpressionGroup {
-			queries[queries.count - 1].parts.append((type: .groupStart, expression: nil))
-			partWasAdded()
-			populateExpression(group.subExpression)
-			queries[queries.count - 1].parts.append((type: .groupEnd, expression: nil))
-			partWasAdded()
-		} else if let attributeRestriction = expression as? AttributeRestriction {
-			queries[queries.count - 1].parts.append((type: .expression, expression: attributeRestriction))
-			partWasAdded()
-		} else {
-			Me.log.error("Unknown expression type")
-			showError(
-				title: "You found a bug",
-				message: "Please report that you found a bug with expression population."
-			)
-			return
-		}
+		} catch { showError(title: "Could not restore query expression", error: error) }
 	}
 
 	private final func addQuerySampleType(_ type: Sample.Type, _ matcher: SubQueryMatcher?) {
@@ -971,7 +948,6 @@ private final class SavedQueriesViewController: UITableViewController {
 		super.viewDidLoad()
 		title = "Saved Queries"
 		tableView.accessibilityIdentifier = "savedQueries"
-		navigationItem.rightBarButtonItem = editButtonItem
 		reloadQueries()
 	}
 
