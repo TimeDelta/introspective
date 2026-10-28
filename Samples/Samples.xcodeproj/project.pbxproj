@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E748299A3C0D1EA94FEECCB0 /* LostItemEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAAC731F89AB66BE8320CF9C /* LostItemEvent.swift */; };
 		EE5FB29047A7A83B2EE0F5DD /* Workout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C9F901387A002E28284DF2 /* Workout.swift */; };
 		6CBA46752862A487D1924575 /* ActiveEnergy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C72968A04A278D9F1AB216 /* ActiveEnergy.swift */; };
 		5C446A57A18AD20881AE82FF /* TimeCoverageSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25137F308E23E99D8421A4EE /* TimeCoverageSummary.swift */; };
@@ -72,6 +73,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CAAC731F89AB66BE8320CF9C /* LostItemEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LostItemEvent.swift; sourceTree = "<group>"; };
 		86C9F901387A002E28284DF2 /* Workout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workout.swift; sourceTree = "<group>"; };
 		F2C72968A04A278D9F1AB216 /* ActiveEnergy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveEnergy.swift; sourceTree = "<group>"; };
 		25137F308E23E99D8421A4EE /* TimeCoverageSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCoverageSummary.swift; sourceTree = "<group>"; };
@@ -223,6 +225,7 @@
 				A22D6241234398AE0023470F /* Medication.swift */,
 				A22D623D234398AE0023470F /* MedicationDose.swift */,
 				A22D6246234398AE0023470F /* Mood.swift */,
+				CAAC731F89AB66BE8320CF9C /* LostItemEvent.swift */,
 				A224F6652679BB0A007C3577 /* Pain.swift */,
 				A2AF1FF02343C63900E04517 /* Tag.swift */,
 			);
@@ -416,6 +419,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A22D6263234398AF0023470F /* Mood.swift in Sources */,
+				E748299A3C0D1EA94FEECCB0 /* LostItemEvent.swift in Sources */,
 				A2E30FCD2736DB27004D0A60 /* Steps.swift in Sources */,
 				EE5FB29047A7A83B2EE0F5DD /* Workout.swift in Sources */,
 				6CBA46752862A487D1924575 /* ActiveEnergy.swift in Sources */,

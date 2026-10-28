@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		94E0FEEA37563F718E882B4C /* LostItemsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 584FE77277385E08EF37E135 /* LostItemsViewController.swift */; };
 		7E8B81DC95888D034A604DEC /* TimeCoverageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FABD70E72A7B0CD487637A /* TimeCoverageViewController.swift */; };
 		002860D0C159FA869343468230899D6F /* MedicationMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE94CCD5ECDC571D829C20B4C9B8BACD /* MedicationMatchers.swift */; };
 		00351062FC0728C1E4DF5B5AA7AC39DE /* RecordActivityTableViewControllerFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DE9D31516B68C3DC254B112DD5CE26 /* RecordActivityTableViewControllerFunctionalTests.swift */; };
@@ -633,6 +634,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		584FE77277385E08EF37E135 /* LostItemsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LostItemsViewController.swift; sourceTree = "<group>"; };
+		CAFE00000000000000000004 /* LostItems.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = LostItems.xcdatamodel; sourceTree = "<group>"; };
 		28FABD70E72A7B0CD487637A /* TimeCoverageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCoverageViewController.swift; sourceTree = "<group>"; };
 		CAFE00000000000000000003 /* LegacySavedQueries.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = LegacySavedQueries.xcdatamodel; sourceTree = "<group>"; };
 		CAFE00000000000000000002 /* SavedQueries.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SavedQueries.xcdatamodel; sourceTree = "<group>"; };
@@ -2470,6 +2473,7 @@
 			children = (
 				B5F8BF11900044421A50FB27C0A83A25 /* RecordData.storyboard */,
 				9D30BBB7762C78F1AE39E5BE06C181B7 /* RecordDataTableViewController.swift */,
+				584FE77277385E08EF37E135 /* LostItemsViewController.swift */,
 				F7843D62808AC15694FAE1AC3DF8BE94 /* NoteViewController.swift */,
 				92C1670E4E1C91090E6E419B5EEF03F8 /* RecordNumberViewController.swift */,
 				4FECCC8E9045813F441ABF4F49E25324 /* EditViewController.swift */,
@@ -3919,6 +3923,7 @@
 				3F7D4AA266B91FA7471A2FC2DFB7FE25 /* ChooseCalendarComponentViewController.swift in Sources */,
 				768B8F1173AEDD0A157DC79F83D0AFBC /* AttributedChooserViewController.swift in Sources */,
 				D4AF7A49F4DD55CE7B3C38F5EC1AB3EF /* RecordDataTableViewController.swift in Sources */,
+				94E0FEEA37563F718E882B4C /* LostItemsViewController.swift in Sources */,
 				69EA6E223717DB166F5CB977A5DDCEFF /* BasicXYGraphSetupViewController.swift in Sources */,
 				7E29FF9C028B4B97C0E72AF9B4D1AD58 /* RecordActivityTableViewController.swift in Sources */,
 				D69BAD4EFAD65B101CE8A744A51466CF /* ActivitySettingsTableViewController.swift in Sources */,
@@ -4545,10 +4550,11 @@
 			children = (
 				CAFE00000000000000000003 /* LegacySavedQueries.xcdatamodel */,
 				CAFE00000000000000000002 /* SavedQueries.xcdatamodel */,
+				CAFE00000000000000000004 /* LostItems.xcdatamodel */,
 				CAFE00000000000000000001 /* HealthMood.xcdatamodel */,
 				6ABD42B5BE3FEFE618570A03FC26467C /* Introspective.xcdatamodel */,
 			);
-			currentVersion = CAFE00000000000000000002 /* SavedQueries.xcdatamodel */;
+			currentVersion = CAFE00000000000000000004 /* LostItems.xcdatamodel */;
 			path = Introspective.xcdatamodeld;
 			sourceTree = "<group>";
 		};
