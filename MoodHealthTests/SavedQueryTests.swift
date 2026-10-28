@@ -116,6 +116,7 @@ final class SavedQueryTests: XCTestCase {
 	func testActivityDurationTimerDoesNotRetainCell() throws {
 		let definition = ActivityDefinition(context: container.viewContext)
 		definition.name = "Timer lifecycle"
+		definition.recordScreenIndex = 0
 		try container.viewContext.save()
 		weak var weakCell: RecordActivityDefinitionTableViewCell?
 		autoreleasepool {
