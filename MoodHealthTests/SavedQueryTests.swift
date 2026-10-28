@@ -190,6 +190,48 @@ final class SavedQueryTests: XCTestCase {
 		}
 	}
 
+	func testStoredExpressionEntitiesInstantiateTheirDeclaredClasses() throws {
+		let context = container.viewContext
+		for entity in Self.model.entities where entity.superentity?.name == "BooleanExpression" && !entity.isAbstract {
+			let name = try XCTUnwrap(entity.name)
+			let object = NSEntityDescription.insertNewObject(forEntityName: name, into: context)
+			XCTAssertTrue(object is StoredBooleanExpression, "Wrong managed class for \(name)")
+		}
+		context.rollback()
+	}
+
+	func testDateTimeDurationAndDosageConditionsSurviveDiskReopen() throws {
+		let time = TimeOfDay()
+		time.hour = 12; time.minute = 34; time.second = 56
+		let dateAttribute = MoodImpl.defaultIndependentAttribute
+		let expressions: [BooleanExpression] = [
+			OnDateAttributeRestriction(restrictedAttribute: dateAttribute, date: Date(timeIntervalSince1970: 1_700_000_000)),
+			BeforeTimeOfDayAttributeRestriction(restrictedAttribute: dateAttribute, timeOfDay: time),
+			OnDayOfWeekAttributeRestriction(restrictedAttribute: dateAttribute, daysOfWeek: [DayOfWeek.Monday, DayOfWeek.Friday]),
+			InThePastXTimeUnitsDateAttributeRestriction(restrictedAttribute: dateAttribute, 7, .day),
+			InCurrentTimeUnitDateAttributeRestriction(restrictedAttribute: dateAttribute, .month),
+		]
+		var originals: [Query] = []
+		for (index, expression) in expressions.enumerated() {
+			let query = injected(QueryFactory.self).moodQuery()
+			query.expression = expression
+			originals.append(query)
+			try dao.save(query, name: "Typed \(index)")
+		}
+		let activity = injected(QueryFactory.self).activityQuery()
+		activity.expression = EqualToDurationAttributeRestriction(restrictedAttribute: Activity.durationAttribute, value: TimeDuration(5400))
+		try dao.save(activity, name: "Duration")
+		let dosage = injected(QueryFactory.self).medicationDoseQuery()
+		dosage.expression = EqualToDosageAttributeRestriction(restrictedAttribute: MedicationDose.dosage, value: Dosage(2.5, "mg"))
+		try dao.save(dosage, name: "Dosage")
+		try reopen()
+		for (index, query) in originals.enumerated() {
+			XCTAssertTrue(query.equalTo(try XCTUnwrap(dao.getQueryWith(name: "Typed \(index)")).convert()))
+		}
+		XCTAssertTrue(activity.equalTo(try XCTUnwrap(dao.getQueryWith(name: "Duration")).convert()))
+		XCTAssertTrue(dosage.equalTo(try XCTUnwrap(dao.getQueryWith(name: "Dosage")).convert()))
+	}
+
 	func testEveryMatcherKindRetainsItsOptions() throws {
 		for (index, type) in SubQueryMatcherFactoryImpl.allMatcherTypes.enumerated() {
 			var matcher = type.init()
