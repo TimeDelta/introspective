@@ -40,6 +40,7 @@ public final class SampleGroupInformationFactoryImpl: SampleGroupInformationFact
 	private static let dateInformationTypes: [SampleGroupInformation.Type] = [
 		OldestDateInformation.self,
 		MostRecentDateInformation.self,
+		EstimatedDatesInformation.self,
 	]
 
 	public final func getApplicableInformationTypes(
@@ -82,6 +83,7 @@ public final class SampleGroupInformationFactoryImpl: SampleGroupInformationFact
 		forAttribute attribute: Attribute
 	) -> [SampleGroupInformation.Type] {
 		var applicableInformationTypes = [SampleGroupInformation.Type]()
+		if attribute is DateAttribute { applicableInformationTypes.append(EstimatedDatesInformation.self) }
 		if attribute is DoubleAttribute {
 			applicableInformationTypes.append(contentsOf: Me.numericInformationTypes)
 			applicableInformationTypes.append(MaximumInformation<Double>.self)
