@@ -21,3 +21,10 @@ class LegacyMockInputs(unittest.TestCase):
                              ('SampleGroupInformation', 'SampleGroupInformation')]:
             self.assertIn(name, configs[module]['args']['mockTypes'])
             self.assertNotIn(name, configs['Common']['args']['mockTypes'])
+
+    def test_handwritten_mock_descriptions_are_preserved(self):
+        properties = GENERATOR['manual_properties']()
+        for name in ('SampleMock', 'CoreDataSampleMock', 'MoodMock', 'SampleGrouperMock',
+                     'SubQueryMatcherMock', 'AttributeRestrictionMock'):
+            self.assertIn('description', properties[name])
+            self.assertNotIn('matcher', properties[name])  # Generated region is excluded.
