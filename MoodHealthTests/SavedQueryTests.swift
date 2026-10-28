@@ -129,6 +129,7 @@ final class SavedQueryTests: XCTestCase {
 		controller.chartType = .line
 		controller.pleaseBePatientLabel = UILabel()
 		controller.activityIndicator = UIActivityIndicatorView()
+		controller.activityIndicator.startAnimating() // Match the storyboard loading state.
 		controller.chartViewOutline = UIView(frame: CGRect(x: 10, y: 20, width: 300, height: 200))
 		controller.loadViewIfNeeded()
 	}
@@ -150,6 +151,7 @@ final class SavedQueryTests: XCTestCase {
 		controller.chartType = .line
 		controller.pleaseBePatientLabel = UILabel()
 		controller.activityIndicator = UIActivityIndicatorView()
+		controller.activityIndicator.startAnimating() // Match the storyboard loading state.
 		controller.chartViewOutline = UIView(frame: CGRect(x: 10, y: 20, width: 300, height: 200))
 		let root = ChartInsertionProbeView()
 		var insertions = 0
