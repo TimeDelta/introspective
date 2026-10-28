@@ -1,6 +1,8 @@
 import XCTest
 import HealthKit
 import CoreData
+import UIKit
+import AAInfographics
 import CSV
 import Common
 import DependencyInjection
@@ -43,6 +45,14 @@ private final class ReviewHealthStub: HealthKitUtil, InjectionProvider {
 		samples = callback
 		// Model HealthKit retaining the result handler until stopped.
 		return { _ = callback; self.stopCount += 1 }
+	}
+}
+
+private final class ChartInsertionProbeView: UIView {
+	var onChartInsertion: (() -> Void)?
+	override func didAddSubview(_ subview: UIView) {
+		super.didAddSubview(subview)
+		if subview is AAChartView { onChartInsertion?() }
 	}
 }
 
@@ -127,6 +137,80 @@ final class SavedQueryTests: XCTestCase {
 		mood.minRating = 0; mood.maxRating = 7; mood.rating = rating
 		try context.save()
 		return mood
+	}
+
+	@MainActor private func loadChart(_ controller: BasicXYChartViewControllerImpl) {
+		controller.chartType = .line
+		controller.pleaseBePatientLabel = UILabel()
+		controller.activityIndicator = UIActivityIndicatorView()
+		controller.activityIndicator.startAnimating() // Match the storyboard loading state.
+		controller.chartViewOutline = UIView(frame: CGRect(x: 10, y: 20, width: 300, height: 200))
+		controller.loadViewIfNeeded()
+	}
+
+	@MainActor
+	func testChartDataCanArriveBeforeTheViewLoads() {
+		let controller = BasicXYChartViewControllerImpl()
+		controller.dataSeries = []
+		XCTAssertFalse(controller.isViewLoaded)
+		loadChart(controller)
+		XCTAssertTrue(controller.activityIndicator.isHidden)
+		XCTAssertTrue(controller.pleaseBePatientLabel.isHidden)
+		XCTAssertEqual(controller.view.subviews.filter { $0 is AAChartView }.count, 1)
+	}
+
+	@MainActor
+	func testChartDataArrivingDuringSetupWaitsUntilSetupFinishes() {
+		let controller = BasicXYChartViewControllerImpl()
+		controller.chartType = .line
+		controller.pleaseBePatientLabel = UILabel()
+		controller.activityIndicator = UIActivityIndicatorView()
+		controller.activityIndicator.startAnimating() // Match the storyboard loading state.
+		controller.chartViewOutline = UIView(frame: CGRect(x: 10, y: 20, width: 300, height: 200))
+		let root = ChartInsertionProbeView()
+		var insertions = 0
+		root.onChartInsertion = { [weak controller] in
+			guard let controller = controller else { XCTFail("Controller released during setup"); return }
+			insertions += 1
+			controller.dataSeries = []
+			// The chart exists, but frame/outlet configuration is still in progress.
+			XCTAssertFalse(controller.activityIndicator.isHidden)
+			XCTAssertFalse(controller.pleaseBePatientLabel.isHidden)
+		}
+		controller.view = root
+		if insertions == 0 { controller.viewDidLoad() }
+		XCTAssertEqual(insertions, 1)
+		XCTAssertTrue(controller.activityIndicator.isHidden)
+		XCTAssertTrue(controller.pleaseBePatientLabel.isHidden)
+	}
+
+	@MainActor
+	func testChartRepeatedLayoutsReuseOneWebView() throws {
+		let controller = BasicXYChartViewControllerImpl()
+		loadChart(controller)
+		let original = try XCTUnwrap(controller.view.subviews.first { $0 is AAChartView })
+		for _ in 0..<50 { controller.viewDidLayoutSubviews() }
+		let charts = controller.view.subviews.filter { $0 is AAChartView }
+		XCTAssertEqual(charts.count, 1)
+		XCTAssertTrue(charts.first === original)
+		XCTAssertFalse(controller.activityIndicator.isHidden)
+	}
+
+	@MainActor
+	func testChartResizeUpdatesExistingViewAndControllerCanBeReleased() throws {
+		weak var released: BasicXYChartViewControllerImpl?
+		try autoreleasepool {
+			let controller = BasicXYChartViewControllerImpl()
+			released = controller
+			loadChart(controller)
+			let chart = try XCTUnwrap(controller.view.subviews.compactMap { $0 as? AAChartView }.first)
+			let frame = CGRect(x: 30, y: 40, width: 500, height: 350)
+			controller.chartViewOutline.frame = frame
+			controller.viewDidLayoutSubviews()
+			XCTAssertEqual(chart.frame, frame)
+			XCTAssertEqual(chart.contentHeight, 350)
+		}
+		XCTAssertNil(released)
 	}
 
 	func testExportBufferPreservesOrderAcrossPauseAndResume() throws {
