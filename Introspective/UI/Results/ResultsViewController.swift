@@ -615,7 +615,8 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			message: nil,
 			preferredStyle: .actionSheet
 		)
-		sortActionSheet?.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
+		sortActionSheet?.addAction(UIAlertAction(title: "Cancel", style: .cancel) { [weak self] _ in
+			guard let self = self else { return }
 			self.sortTask?.cancel()
 			self.sortTask = nil
 			self.tableView.reloadData()
@@ -766,21 +767,21 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		actionsController?.addAction(injected(UiUtil.self).alertAction(
 			title: "Graph",
 			style: .default,
-			handler: { _ in self.graph() }
+			handler: { [weak self] _ in self?.graph() }
 		))
 		if samplesAreSortable() {
 			actionsController?.addAction(injected(UiUtil.self).alertAction(
 				title: "Sort",
 				style: .default,
-				handler: { _ in self.setSampleSort() }
+				handler: { [weak self] _ in self?.setSampleSort() }
 			))
 		}
 		actionsController?.addAction(injected(UiUtil.self).alertAction(
 			title: "Add Information",
 			style: .default,
-			handler: { _ in
-				injected(AsyncUtil.self).run(qos: .userInteractive) {
-					self.addInformation()
+			handler: { [weak self] _ in
+				injected(AsyncUtil.self).run(qos: .userInteractive) { [weak self] in
+					self?.addInformation()
 				}
 			}
 		))
@@ -788,8 +789,8 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			actionsController?.addAction(injected(UiUtil.self).alertAction(
 				title: "Refresh",
 				style: .default,
-				handler: { _ in
-					self.refreshQuery()
+				handler: { [weak self] _ in
+					self?.refreshQuery()
 				}
 			))
 		}
@@ -797,7 +798,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			actionsController?.addAction(injected(UiUtil.self).alertAction(
 				title: "Delete these " + samples[0].attributedName.localizedLowercase + " entries",
 				style: .default,
-				handler: { _ in self.deleteAllSamples() }
+				handler: { [weak self] _ in self?.deleteAllSamples() }
 			))
 		}
 		actionsController?
