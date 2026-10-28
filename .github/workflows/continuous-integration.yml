@@ -48,6 +48,7 @@ jobs:
           # Keep the reviewed dependency graph fixed on CI.
           pod install --deployment 2>&1 | tee ci-output/pod-install.log
           cp Podfile.lock ci-output/Podfile.lock
+          python3 scripts/patch-swiftymocky-for-current-xcode.py
 
       - name: Generate build version
         shell: bash

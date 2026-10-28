@@ -151,7 +151,7 @@ public final class MoodHealthExchange {
 	private func exchangeContext() -> NSManagedObjectContext {
 		let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
 		context.parent = injected(Database.self).fetchedResultsController(
-			type: MoodImpl.self, sortDescriptors: []).managedObjectContext
+			type: MoodImpl.self, sortDescriptors: [NSSortDescriptor(key: "timestamp", ascending: true)]).managedObjectContext
 		return context
 	}
 
