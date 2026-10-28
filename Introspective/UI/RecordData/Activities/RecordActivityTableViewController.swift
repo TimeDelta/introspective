@@ -377,7 +377,8 @@ public final class RecordActivityTableViewController: UITableViewController {
 				message: "This will delete all history for this activity and cannot be undone.",
 				preferredStyle: .alert
 			)
-			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
+			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { [weak self, weak alert] _ in
+				guard let self = self, let alert = alert else { return }
 				let secondAlert = UIAlertController(
 					title: "Are you sure you want to delete \(activityDefinition.name)?",
 					message: "This will delete all history for this activity and cannot be undone.",
@@ -395,6 +396,9 @@ public final class RecordActivityTableViewController: UITableViewController {
 					}
 				})
 				secondAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+				alert.dismiss(animated: false) {
+					self.present(secondAlert, animated: false, completion: nil)
+				}
 			})
 			alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
 			self.present(alert, animated: false, completion: { completion(true) })

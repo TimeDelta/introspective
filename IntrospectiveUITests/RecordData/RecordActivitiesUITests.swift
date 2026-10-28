@@ -560,6 +560,8 @@ final class RecordActivitiesUITests: UITest {
 		app.tables.cells.staticTexts[definition2.name].gentleSwipe(.right)
 		app.tables.buttons["🗑️ All"].tap()
 		app.buttons["Yes"].tap()
+		XCTAssertTrue(app.alerts.buttons["Cancel"].waitForExistence(timeout: 3))
+		app.alerts.buttons["Yes"].tap()
 
 		// then
 		XCTAssertEqual(app.tables.cells.allElementsBoundByIndex.count, 2)
@@ -584,6 +586,8 @@ final class RecordActivitiesUITests: UITest {
 		app.tables.cells.staticTexts[definition3.name].gentleSwipe(.right)
 		app.tables.buttons["🗑️ All"].tap()
 		app.buttons["Yes"].tap()
+		XCTAssertTrue(app.alerts.buttons["Cancel"].waitForExistence(timeout: 3))
+		app.alerts.buttons["Yes"].tap()
 		app.buttons["Cancel"].tap() // clear search text
 
 		// then
