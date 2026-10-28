@@ -117,7 +117,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenOptionalDosageAttributeWithSomeSamplesHavingNilValue_compute_returnsCorrectValue() throws {
 		// given
-		let attribute = DosageAttribute(optional: true)
+		let attribute = DosageAttribute(id: 0, optional: true)
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [
 			Dosage(1.0, "L"),
 			nil,
@@ -302,7 +302,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenOptionalDosageAttributeWithSomeSamplesHavingNilValue_computeGraphable_returnsCorrectValue() throws {
 		// given
-		let attribute = DosageAttribute(optional: true)
+		let attribute = DosageAttribute(id: 0, optional: true)
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [
 			Dosage(1.0, "L"),
 			nil,
