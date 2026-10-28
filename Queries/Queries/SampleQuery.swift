@@ -11,6 +11,7 @@ import Foundation
 import BooleanAlgebra
 import Common
 import DependencyInjection
+import Persistence
 import Samples
 
 public protocol SampleQuery: Query {
@@ -78,6 +79,15 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 	public final func resetStoppedState() {
 		stopped = false
 		subQuery?.query.resetStoppedState()
+	}
+
+	public final func stored(withName name: String, using transaction: Transaction? = nil) throws -> StoredQuery {
+		let ownsTransaction = transaction == nil
+		let transaction = try transaction ?? injected(Database.self).viewContextTransaction(for: StoredQuery.self, sortedBy: "name")
+		let stored = try transaction.new(StoredQuery.self)
+		try stored.populate(from: self, withName: name, using: transaction)
+		if ownsTransaction { try transaction.commit() }
+		return stored
 	}
 
 	/// This should be called by any subclasses after finishing the query.

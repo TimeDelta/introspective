@@ -20,7 +20,7 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 
 	// MARK: - Attributes
 
-	public static let timeUnit = CalendarComponentAttribute(name: "Time unit", possibleValues: [
+	public static let timeUnit = CalendarComponentAttribute(id: 0, name: "Time unit", possibleValues: [
 		.year,
 		.quarter,
 		.month,

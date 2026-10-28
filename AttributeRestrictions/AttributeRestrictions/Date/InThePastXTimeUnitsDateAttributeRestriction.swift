@@ -10,8 +10,10 @@ import Foundation
 import SwiftDate
 
 import Attributes
+import BooleanAlgebra
 import Common
 import DependencyInjection
+import Persistence
 import Samples
 import Settings
 
@@ -19,8 +21,9 @@ public final class InThePastXTimeUnitsDateAttributeRestriction: DateAttributeRes
 	// MARK: - Attributes
 
 	private typealias Me = InThePastXTimeUnitsDateAttributeRestriction
-	public static let numberOfTimeUnitsAttribute = IntegerAttribute(name: "Number of time units")
+	public static let numberOfTimeUnitsAttribute = IntegerAttribute(id: 0, name: "Number of time units")
 	public static let timeUnitAttribute = CalendarComponentAttribute(
+		id: 1,
 		name: "Time unit",
 		possibleValues: [
 			.year,
@@ -134,6 +137,16 @@ public final class InThePastXTimeUnitsDateAttributeRestriction: DateAttributeRes
 			variableName,
 			now as NSDate
 		)
+	}
+
+	public override func stored(
+		for sampleType: Sample.Type,
+		using transaction: Transaction?
+	) throws -> StoredBooleanExpression {
+		let transaction = transaction ?? injected(Database.self).transaction()
+		let stored = try transaction.new(StoredInThePastXTimeUnitsAttributeRestriction.self)
+		try stored.populate(from: self, for: sampleType)
+		return stored
 	}
 
 	// MARK: - Equality

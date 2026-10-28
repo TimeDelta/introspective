@@ -9,8 +9,10 @@
 import Foundation
 
 import Attributes
+import BooleanAlgebra
 import Common
 import DependencyInjection
+import Persistence
 import Samples
 import Settings
 
@@ -23,7 +25,7 @@ public final class AfterDateAttributeRestriction: DateAttributeRestriction, Equa
 
 	// MARK: - Attributes
 
-	public static let dateAttribute = DateOnlyAttribute()
+	public static let dateAttribute = DateOnlyAttribute(id: 0)
 	public static var attributes: [Attribute] = [
 		dateAttribute,
 	]
@@ -51,6 +53,8 @@ public final class AfterDateAttributeRestriction: DateAttributeRestriction, Equa
 			date = injected(CalendarUtil.self).end(of: .day, in: date)
 		}
 	}
+
+	public override var typedValue: Date? { date }
 
 	// MARK: Initializers
 
@@ -103,6 +107,16 @@ public final class AfterDateAttributeRestriction: DateAttributeRestriction, Equa
 		guard !injected(Settings.self).convertTimeZones else { return nil }
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		return NSPredicate(format: "%K > %@", variableName, date as NSDate)
+	}
+
+	public override func stored(
+		for sampleType: Sample.Type,
+		using transaction: Transaction?
+	) throws -> StoredBooleanExpression {
+		let transaction = transaction ?? injected(Database.self).transaction()
+		let stored = try transaction.new(StoredDateOperationAttributeRestriction.self)
+		try stored.populate(from: self, for: sampleType)
+		return stored
 	}
 
 	// MARK: - Equality

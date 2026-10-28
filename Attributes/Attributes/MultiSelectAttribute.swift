@@ -42,6 +42,7 @@ open class TypedMultiSelectAttribute<ValueType: Hashable>: AttributeBase<ValueTy
 	// MARK: Initializers
 
 	public init(
+		id: Int16,
 		name: String,
 		pluralName: String? = nil,
 		description: String? = nil,
@@ -54,6 +55,7 @@ open class TypedMultiSelectAttribute<ValueType: Hashable>: AttributeBase<ValueTy
 		possibleValuesFunction = nil
 		self.possibleValueToString = possibleValueToString
 		super.init(
+			id: id,
 			name: name,
 			pluralName: pluralName,
 			description: description,
@@ -63,6 +65,7 @@ open class TypedMultiSelectAttribute<ValueType: Hashable>: AttributeBase<ValueTy
 	}
 
 	public init(
+		id: Int16,
 		name: String,
 		pluralName: String? = nil,
 		description: String? = nil,
@@ -75,6 +78,7 @@ open class TypedMultiSelectAttribute<ValueType: Hashable>: AttributeBase<ValueTy
 		possibleValuesFunction = possibleValues
 		self.possibleValueToString = possibleValueToString
 		super.init(
+			id: id,
 			name: name,
 			pluralName: pluralName,
 			description: description,
@@ -185,6 +189,7 @@ open class TypedMultiSelectAttribute<ValueType: Hashable>: AttributeBase<ValueTy
 
 public class ComparableTypedMultiSelectAttribute<Type: Hashable & Comparable>: TypedMultiSelectAttribute<Type> {
 	public override init(
+		id: Int16,
 		name: String,
 		pluralName: String? = nil,
 		description: String? = nil,
@@ -194,6 +199,7 @@ public class ComparableTypedMultiSelectAttribute<Type: Hashable & Comparable>: T
 		possibleValueToString: @escaping (Type) -> String
 	) {
 		super.init(
+			id: id,
 			name: name,
 			pluralName: pluralName,
 			description: description,

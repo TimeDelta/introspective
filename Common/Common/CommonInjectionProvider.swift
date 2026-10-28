@@ -40,7 +40,12 @@ public class CommonInjectionProvider: InjectionProvider {
 		UserDefaultsUtil.self,
 	]
 
-	public init() {}
+	public init() {
+		TimeOfDayValueTransformer.register()
+		TimeDurationValueTransformer.register()
+		DosageValueTransformer.register()
+		FrequencyValueTransformer.register()
+	}
 
 	public func get<Type>(_ type: Type.Type) throws -> Type {
 		switch type {

@@ -19,7 +19,6 @@
 		A231CEFA2342545A00CCE625 /* CalendarComponentAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A231CEE52342545500CCE625 /* CalendarComponentAttribute.swift */; };
 		A231CEFB2342545A00CCE625 /* MultiSelectAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A231CEE62342545500CCE625 /* MultiSelectAttribute.swift */; };
 		A231CEFC2342545A00CCE625 /* SelectAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A231CEE72342545600CCE625 /* SelectAttribute.swift */; };
-		A231CEFD2342545A00CCE625 /* Attribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A231CEE82342545600CCE625 /* Attribute.swift */; };
 		A231CEFE2342545A00CCE625 /* SelectOneAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A231CEE92342545600CCE625 /* SelectOneAttribute.swift */; };
 		A231CEFF2342545A00CCE625 /* Attributed.swift in Sources */ = {isa = PBXBuildFile; fileRef = A231CEEA2342545700CCE625 /* Attributed.swift */; };
 		A231CF012342545A00CCE625 /* TimeOfDayAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A231CEEC2342545800CCE625 /* TimeOfDayAttribute.swift */; };
@@ -35,6 +34,7 @@
 		A231CF142342547800CCE625 /* DateTimeAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A231CF102342547800CCE625 /* DateTimeAttribute.swift */; };
 		A231CF152342547800CCE625 /* DateAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A231CF112342547800CCE625 /* DateAttribute.swift */; };
 		A231CF162342547800CCE625 /* DateAttributeBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A231CF122342547800CCE625 /* DateAttributeBase.swift */; };
+		A2D138A0268BEB7A00762A3D /* Attribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D1389F268BEB7900762A3D /* Attribute.swift */; };
 		A2DEB93623439DC400551E0B /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2DEB93523439DC400551E0B /* Common.framework */; };
 /* End PBXBuildFile section */
 
@@ -54,7 +54,6 @@
 		A231CEE52342545500CCE625 /* CalendarComponentAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarComponentAttribute.swift; sourceTree = "<group>"; };
 		A231CEE62342545500CCE625 /* MultiSelectAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSelectAttribute.swift; sourceTree = "<group>"; };
 		A231CEE72342545600CCE625 /* SelectAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectAttribute.swift; sourceTree = "<group>"; };
-		A231CEE82342545600CCE625 /* Attribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attribute.swift; sourceTree = "<group>"; };
 		A231CEE92342545600CCE625 /* SelectOneAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectOneAttribute.swift; sourceTree = "<group>"; };
 		A231CEEA2342545700CCE625 /* Attributed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attributed.swift; sourceTree = "<group>"; };
 		A231CEEC2342545800CCE625 /* TimeOfDayAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeOfDayAttribute.swift; sourceTree = "<group>"; };
@@ -73,6 +72,7 @@
 		A231CF18234254F600CCE625 /* DependencyInjection.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DependencyInjection.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A29E1C4C2343AD4E008B4AE9 /* CommonEntities.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CommonEntities.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2AF1FC72343AFA000E04517 /* CommonCoreDataEntities.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CommonCoreDataEntities.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2D1389F268BEB7900762A3D /* Attribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attribute.swift; sourceTree = "<group>"; };
 		A2DEB93523439DC400551E0B /* Common.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Common.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E106286C17BA7EA61326C331 /* Pods-Attributes.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Attributes.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-Attributes/Pods-Attributes.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -122,7 +122,7 @@
 			children = (
 				A231CF0E2342547800CCE625 /* DateAttributes */,
 				A231CF072342546D00CCE625 /* NumericAttributes */,
-				A231CEE82342545600CCE625 /* Attribute.swift */,
+				A2D1389F268BEB7900762A3D /* Attribute.swift */,
 				A231CEEA2342545700CCE625 /* Attributed.swift */,
 				A231CEF12342545A00CCE625 /* AttributeErrors.swift */,
 				A231CEE12342545300CCE625 /* AttributeFactory.swift */,
@@ -296,7 +296,6 @@
 				A231CF052342545A00CCE625 /* FrequencyAttribute.swift in Sources */,
 				A231CEFC2342545A00CCE625 /* SelectAttribute.swift in Sources */,
 				A231CEFB2342545A00CCE625 /* MultiSelectAttribute.swift in Sources */,
-				A231CEFD2342545A00CCE625 /* Attribute.swift in Sources */,
 				A231CF152342547800CCE625 /* DateAttribute.swift in Sources */,
 				A231CF132342547800CCE625 /* DateOnlyAttribute.swift in Sources */,
 				A231CF142342547800CCE625 /* DateTimeAttribute.swift in Sources */,
@@ -306,6 +305,7 @@
 				A231CEF62342545A00CCE625 /* AttributeFactory.swift in Sources */,
 				A231CEFF2342545A00CCE625 /* Attributed.swift in Sources */,
 				A231CEF82342545A00CCE625 /* TextAttribute.swift in Sources */,
+				A2D138A0268BEB7A00762A3D /* Attribute.swift in Sources */,
 				A231CEF92342545A00CCE625 /* DosageAttribute.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

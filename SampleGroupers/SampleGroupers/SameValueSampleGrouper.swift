@@ -41,7 +41,7 @@ public final class SameValueSampleGrouper: SampleGrouper {
 
 	public required init(attributes: [Attribute]) {
 		groupByAttribute = attributes.first
-		attributeSelectAttribute = AttributeSelectAttribute(attributes: attributes)
+		attributeSelectAttribute = AttributeSelectAttribute(id: 0, attributes: attributes)
 		self.attributes = [
 			attributeSelectAttribute,
 		]

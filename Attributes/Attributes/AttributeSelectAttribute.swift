@@ -10,6 +10,7 @@ import Foundation
 
 public final class AttributeSelectAttribute: TypedSelectOneAttribute<Attribute> {
 	public init(
+		id: Int16,
 		name: String = "Attribute",
 		pluralName: String? = "Attributes",
 		description: String? = nil,
@@ -18,6 +19,7 @@ public final class AttributeSelectAttribute: TypedSelectOneAttribute<Attribute> 
 		attributes: [Attribute]
 	) {
 		super.init(
+			id: id,
 			name: name,
 			typeName: "Attribute",
 			pluralName: pluralName,

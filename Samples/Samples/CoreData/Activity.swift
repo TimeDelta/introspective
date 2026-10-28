@@ -33,15 +33,17 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 	// MARK: - Attributes
 
 	public static let nameAttribute = TextAttribute(
+		id: 0,
 		name: "Name",
 		pluralName: "Names",
 		description: "The name of this activity",
 		variableName: "definition.name"
 	)
-	public static let noteAttribute = TextAttribute(name: "Note", pluralName: "Notes", variableName: "note")
-	public static let tagsAttribute = ActivityTagsAttribute(variableName: "tags")
-	public static let durationAttribute = DurationAttribute()
+	public static let noteAttribute = TextAttribute(id: 1, name: "Note", pluralName: "Notes", variableName: "note")
+	public static let tagsAttribute = ActivityTagsAttribute(id: 2, variableName: "tags")
+	public static let durationAttribute = DurationAttribute(id: 3)
 	public static let sourceAttribute = TypedEquatableSelectOneAttribute<String>(
+		id: 4,
 		name: "Source",
 		typeName: "Activity Source",
 		pluralName: "Sources",
@@ -49,26 +51,31 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 		possibleValueToString: { $0 }
 	)
 	public static let startDateSetAttribute = DateTimeAttribute(
+		id: 5,
 		name: "Start Date Set At",
 		variableName: "startDateSetAt",
 		optional: true
 	)
 	public static let endDateSetAttribute = DateTimeAttribute(
+		id: 6,
 		name: "End Date Set At",
 		variableName: "startDateSetAt",
 		optional: true
 	)
 	public static let durationBetweenStartAndSetAttribute = DurationAttribute(
+		id: 7,
 		name: "Start Date Offset",
 		description: "Duration between start & when start was set",
 		optional: true
 	)
 	public static let durationBetweenEndAndSetAttribute = DurationAttribute(
+		id: 8,
 		name: "End Date Offset",
 		description: "Duration between end & when end was set",
 		optional: true
 	)
 	public static let totalDurationOffset = DurationAttribute(
+		id: 9,
 		name: "Total Date Offset",
 		description: "The sum of Start Date Offset and End Date Offset",
 		optional: true

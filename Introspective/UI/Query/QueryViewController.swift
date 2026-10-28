@@ -31,6 +31,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	struct SampleTypeInfo {
 		var sampleType: Sample.Type = injected(SampleFactory.self).allTypes()[0]
 		var matcher: SubQueryMatcher? = SameDatesSubQueryMatcher()
+		var mostRecentEntryOnly = false
 
 		init() {}
 		init(_ sampleType: Sample.Type) {
@@ -51,6 +52,8 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	private static let acceptedAttributeRestrictionEdit = Notification.Name("acceptedAttributeRestrictionEdit")
 	private static let acceptedSubSampleTypeEdit = Notification.Name("acceptedSubSampleTypeEdit")
+	private let queryNameChosenNotification = Notification.Name("queryNameChosen.\(UUID().uuidString)")
+	private var pendingSaveQuery: Query?
 
 	// MARK: Presenters
 
@@ -73,6 +76,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	@IBOutlet final var finishedButton: UIBarButtonItem!
 	@IBOutlet final var editButton: UIBarButtonItem!
 	@IBOutlet final var toolbar: UIToolbar!
+	@IBOutlet final var saveButton: UIBarButtonItem!
 
 	// MARK: - Instance Variables
 
@@ -85,6 +89,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	// leave non-private for testing purposes
 	final var queries = [(sampleTypeInfo: SampleTypeInfo, parts: [BooleanExpressionPart])]()
+	private var loadedSavedQuery: StoredQuery?
 	private final var editedSampleTypeSectionIndex: Int!
 	private final var editedAttributeRestrictionIndex: IndexPath!
 
@@ -115,6 +120,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		observe(selector: #selector(saveEditedSubQuerySampleType), name: Me.acceptedSubSampleTypeEdit)
 		observe(selector: #selector(saveEditedSampleType), name: .sampleTypeEdited)
 		observe(selector: #selector(saveEditedAttributeRestriction), name: .attributeRestrictionEdited)
+		observe(selector: #selector(queryNameChosen), name: queryNameChosenNotification)
 
 		addPartButton?.target = self
 		addPartButton?.action = #selector(addPartButtonWasPressed)
@@ -339,6 +345,71 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		}
 	}
 
+	@IBAction final func loadButtonPressed(_: Any) {
+		let controller = SavedQueriesViewController(requiredSampleType: topmostSampleType) { [weak self] stored in
+			do { try self?.load(stored) }
+			catch { self?.showError(title: "Failed to load query", error: error) }
+		}
+		pushToNavigationController(controller)
+	}
+
+	private func load(_ query: StoredQuery) throws {
+		let restored = try query.convert()
+		var current: Query? = restored
+		while let node = current {
+			if let expression = node.expression { _ = try expression.partsForEditing() }
+			current = node.subQuery?.query
+		}
+		loadedSavedQuery = query
+		queries = []
+		populateQuery(restored)
+		tableView.reloadData()
+		validate()
+	}
+
+	@IBAction final func saveButtonPressed(_: Any) {
+		guard let query = buildQuery() else { showError(title: "Failed to build query"); return }
+		pendingSaveQuery = query
+		guard let saved = loadedSavedQuery, !saved.isDeleted else { showQueryNamePicker(); return }
+		let alert = UIAlertController(title: "Save query", message: saved.name, preferredStyle: .alert)
+		alert.addAction(UIAlertAction(title: "Update saved query", style: .default) { [weak self, weak alert] _ in
+			alert?.dismiss(animated: false) {
+				do {
+					try injected(StoredQueriesDAO.self).update(saved, with: query)
+					self?.navigationItem.prompt = "Query saved"
+				} catch { self?.showError(title: "Could not update query", error: error) }
+			}
+		})
+		alert.addAction(UIAlertAction(title: "Save as new query", style: .default) { [weak self, weak alert] _ in
+			alert?.dismiss(animated: false) { self?.showQueryNamePicker() }
+		})
+		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+		present(alert, animated: true)
+	}
+
+	private func showQueryNamePicker() {
+		let controller: QueryNameViewController = viewController(named: "queryName")
+		controller.notificationToSendOnSave = queryNameChosenNotification
+		customPresentViewController(QueryNameViewController.presenter, viewController: controller, animated: false)
+	}
+
+	@objc private final func queryNameChosen(notification: Notification) {
+		if let name: String = value(for: .text, from: notification), let query = pendingSaveQuery {
+			do {
+				try injected(StoredQueriesDAO.self).save(query, name: name)
+				loadedSavedQuery = try? injected(StoredQueriesDAO.self).getQueryWith(name: name)
+				pendingSaveQuery = nil
+				navigationItem.prompt = "Query saved"
+			} catch {
+				showError(
+					title: "Failed to save query",
+					error: error,
+					tryAgain: { self.queryNameChosen(notification: notification) }
+				)
+			}
+		}
+	}
+
 	@objc private final func addPartButtonWasPressed() {
 		showExpressionParts()
 	}
@@ -376,7 +447,9 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	@objc final func saveEditedSampleType(notification: Notification) {
 		guard let sampleType: Sample.Type? = value(for: .sampleType, from: notification) else { return }
-		queries[editedSampleTypeSectionIndex].sampleTypeInfo = SampleTypeInfo(sampleType!)
+		var updated = SampleTypeInfo(sampleType!)
+		updated.mostRecentEntryOnly = queries[editedSampleTypeSectionIndex].sampleTypeInfo.mostRecentEntryOnly
+		queries[editedSampleTypeSectionIndex].sampleTypeInfo = updated
 		updateAttributeRestrictionsForSampleType(at: editedSampleTypeSectionIndex)
 		validate()
 		tableView.reloadData()
@@ -396,7 +469,9 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	@objc final func saveEditedSubQuerySampleType(notification: Notification) {
 		guard let sampleTypeInfo: SampleTypeInfo = value(for: .sampleType, from: notification) else { return }
-		queries[editedSampleTypeSectionIndex].sampleTypeInfo = sampleTypeInfo
+		var updated = sampleTypeInfo
+		updated.mostRecentEntryOnly = queries[editedSampleTypeSectionIndex].sampleTypeInfo.mostRecentEntryOnly
+		queries[editedSampleTypeSectionIndex].sampleTypeInfo = updated
 		updateAttributeRestrictionsForSampleType(at: editedSampleTypeSectionIndex)
 		validate()
 		tableView.reloadData()
@@ -456,6 +531,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	private final func validate() {
 		finishedButton.isEnabled = buildQuery() != nil
+		saveButton?.isEnabled = finishedButton.isEnabled
 	}
 
 	// MARK: Reordering
@@ -518,6 +594,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		case is WeightQuery: addQuerySampleType(Weight.self, matcher); break
 		default: Me.log.error("Forgot query type: %@", String(describing: type(of: query)))
 		}
+		queries[queries.count - 1].sampleTypeInfo.mostRecentEntryOnly = query.mostRecentEntryOnly
 		if let expression = query.expression {
 			populateExpression(expression)
 		}
@@ -527,33 +604,10 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	}
 
 	private final func populateExpression(_ expression: BooleanExpression) {
-		if let and = expression as? AndExpression {
-			populateExpression(and.expression1)
-			queries[queries.count - 1].parts.append((type: .and, expression: nil))
+		do {
+			queries[queries.count - 1].parts.append(contentsOf: try expression.partsForEditing())
 			partWasAdded()
-			populateExpression(and.expression2)
-		} else if let or = expression as? OrExpression {
-			populateExpression(or.expression1)
-			queries[queries.count - 1].parts.append((type: .or, expression: nil))
-			partWasAdded()
-			populateExpression(or.expression2)
-		} else if let group = expression as? BooleanExpressionGroup {
-			queries[queries.count - 1].parts.append((type: .groupStart, expression: nil))
-			partWasAdded()
-			populateExpression(group.subExpression)
-			queries[queries.count - 1].parts.append((type: .groupEnd, expression: nil))
-			partWasAdded()
-		} else if let attributeRestriction = expression as? AttributeRestriction {
-			queries[queries.count - 1].parts.append((type: .expression, expression: attributeRestriction))
-			partWasAdded()
-		} else {
-			Me.log.error("Unknown expression type")
-			showError(
-				title: "You found a bug",
-				message: "Please report that you found a bug with expression population."
-			)
-			return
-		}
+		} catch { showError(title: "Could not restore query expression", error: error) }
 	}
 
 	private final func addQuerySampleType(_ type: Sample.Type, _ matcher: SubQueryMatcher?) {
@@ -569,20 +623,23 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	private final func buildQuery() -> Query? {
 		var query: Query?
+		var tail: Query?
 		for queryInfo in queries {
 			do {
 				let currentQuery = try getQueryFor(
 					sampleType: queryInfo.sampleTypeInfo.sampleType,
 					parts: queryInfo.parts
 				)
-				if let query = query {
+				currentQuery.mostRecentEntryOnly = queryInfo.sampleTypeInfo.mostRecentEntryOnly
+				if let tail = tail {
 					guard let matcher = queryInfo.sampleTypeInfo.matcher else {
 						throw GenericError("No matcher")
 					}
-					query.subQuery = (matcher: matcher, query: currentQuery)
+					tail.subQuery = (matcher: matcher, query: currentQuery)
 				} else {
 					query = currentQuery
 				}
+				tail = currentQuery
 			} catch {
 				return nil
 			}
@@ -899,5 +956,105 @@ final fileprivate class QueryViewControllerCoachMarksDataSourceAndDelegate: Coac
 		didEndShowingBySkipping skipped: Bool
 	) {
 		delegate.coachMarksController(coachMarksController, didEndShowingBySkipping: skipped)
+	}
+}
+
+/// Saved query management uses live fetches so renamed/deleted records never leave stale rows.
+private final class SavedQueriesViewController: UITableViewController {
+	private var saved: [StoredQuery] = []
+	private let requiredSampleType: Sample.Type?
+	private let selected: (StoredQuery) -> Void
+
+	init(requiredSampleType: Sample.Type?, selected: @escaping (StoredQuery) -> Void) {
+		self.requiredSampleType = requiredSampleType
+		self.selected = selected
+		super.init(style: .plain)
+	}
+
+	required init?(coder: NSCoder) { fatalError("Use init(requiredSampleType:selected:)") }
+
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		title = "Saved Queries"
+		tableView.accessibilityIdentifier = "savedQueries"
+		reloadQueries()
+	}
+
+	private func reloadQueries() {
+		do {
+			saved = try injected(StoredQueriesDAO.self).getAllQueries()
+			if let type = requiredSampleType {
+				let id = injected(SampleFactory.self).sampleTypeId(for: type)
+				saved = saved.filter { $0.sampleTypeId == id }
+			}
+			let label = UILabel()
+			label.text = "No saved queries. Save a query from the query builder."
+			label.numberOfLines = 0
+			label.textAlignment = .center
+			tableView.backgroundView = saved.isEmpty ? label : nil
+			tableView.reloadData()
+		} catch { showError(title: "Failed to fetch saved queries", error: error) }
+	}
+
+	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { saved.count }
+
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
+		let query = saved[indexPath.row]
+		cell.textLabel?.text = query.name
+		let factory = injected(SampleFactory.self)
+		cell.detailTextLabel?.text = factory.allTypes().first(where: { factory.sampleTypeId(for: $0) == query.sampleTypeId })?.name
+		cell.accessoryType = .disclosureIndicator
+		return cell
+	}
+
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		let query = saved[indexPath.row]
+		navigationController?.popViewController(animated: false)
+		selected(query)
+	}
+
+	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+		let query = saved[indexPath.row]
+		let rename = UIContextualAction(style: .normal, title: "Rename") { [weak self] _, _, completion in
+			completion(true)
+			self?.rename(query)
+		}
+		let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, completion in
+			completion(true)
+			self?.confirmDelete(query)
+		}
+		let configuration = UISwipeActionsConfiguration(actions: [delete, rename])
+		configuration.performsFirstActionWithFullSwipe = false
+		return configuration
+	}
+
+	private func rename(_ query: StoredQuery) {
+		let alert = UIAlertController(title: "Rename query", message: nil, preferredStyle: .alert)
+		alert.addTextField { $0.text = query.name }
+		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+		alert.addAction(UIAlertAction(title: "Save", style: .default) { [weak self, weak alert] _ in
+			alert?.dismiss(animated: false) {
+			do {
+				try injected(StoredQueriesDAO.self).rename(query, to: alert?.textFields?.first?.text ?? "")
+				self?.reloadQueries()
+			} catch { self?.showError(title: "Could not rename query", error: error) }
+			}
+		})
+		present(alert, animated: true)
+	}
+
+	private func confirmDelete(_ query: StoredQuery) {
+		let alert = UIAlertController(title: "Delete saved query?", message: query.name, preferredStyle: .alert)
+		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+		alert.addAction(UIAlertAction(title: "Delete", style: .destructive) { [weak self, weak alert] _ in
+			alert?.dismiss(animated: false) {
+			do {
+				try injected(StoredQueriesDAO.self).delete(query)
+				self?.reloadQueries()
+			} catch { self?.showError(title: "Could not delete query", error: error) }
+			}
+		})
+		present(alert, animated: true)
 	}
 }

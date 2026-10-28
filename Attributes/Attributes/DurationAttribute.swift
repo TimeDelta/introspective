@@ -18,6 +18,7 @@ public final class DurationAttribute: AttributeBase<TimeDuration>, ComparableAtt
 	// MARK: - Initializers
 
 	public override init(
+		id: Int16,
 		name: String = "Duration",
 		pluralName: String? = "Durations",
 		description: String? = nil,
@@ -25,6 +26,7 @@ public final class DurationAttribute: AttributeBase<TimeDuration>, ComparableAtt
 		optional: Bool = false
 	) {
 		super.init(
+			id: id,
 			name: name,
 			pluralName: pluralName,
 			description: description,

@@ -11,6 +11,7 @@ import Foundation
 import Attributes
 import BooleanAlgebra
 import Common
+import Persistence
 import Samples
 
 public protocol AttributeRestriction: Attributed, BooleanExpression {
@@ -48,7 +49,7 @@ public class AnyAttributeRestriction: AttributeRestriction {
 
 	private typealias Me = AnyAttributeRestriction
 
-	public static let selectAnAttribute = TextAttribute(name: "Atribute", pluralName: "Attributes")
+	public static let selectAnAttribute = TextAttribute(id: 0, name: "Atribute", pluralName: "Attributes")
 
 	private static let log = Log()
 
@@ -118,6 +119,12 @@ public class AnyAttributeRestriction: AttributeRestriction {
 		let typeDescription = String(describing: type(of: self))
 		Me.log.error("Did not override copy() for %@", typeDescription)
 		return self
+	}
+
+	public func stored(for sampleType: Sample.Type, using transaction: Transaction?) throws -> StoredBooleanExpression {
+		let typeDescription = String(describing: type(of: self))
+		Me.log.error("Did not override copy() for %@", typeDescription)
+		throw GenericError("must override \(typeDescription).stored()")
 	}
 
 	/// Do not call this function. It is only meant to be used internally but cannot be declared as private because it must be overridable by subclasses

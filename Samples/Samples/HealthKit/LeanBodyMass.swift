@@ -39,6 +39,7 @@ public final class LeanBodyMass: HealthKitQuantitySample {
 	// MARK: - Attributes
 
 	public static let leanBodyMass = DoubleAttribute(
+		id: 0,
 		name: "Lean body mass",
 		pluralName: "Lean body masses",
 		variableName: HKPredicateKeyPathQuantity

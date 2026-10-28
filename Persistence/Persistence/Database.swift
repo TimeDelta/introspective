@@ -267,3 +267,14 @@ internal class DatabaseImpl: Database {
 		return syncs[0]
 	}
 }
+
+public extension Database {
+	/// Isolated edits from a UI callback. All work and the final save stay on the main queue.
+	func viewContextTransaction<Type: NSManagedObject>(for type: Type.Type, sortedBy key: String) throws -> Transaction {
+		guard Thread.isMainThread else { throw GenericError("View-context transactions require the main queue.") }
+		let parent = fetchedResultsController(type: type, sortDescriptors: [NSSortDescriptor(key: key, ascending: true)]).managedObjectContext
+		let child = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+		child.parent = parent
+		return TransactionImpl(context: child, mainContext: parent)
+	}
+}

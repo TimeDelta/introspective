@@ -9,15 +9,20 @@
 import Foundation
 
 import Attributes
+import BooleanAlgebra
+import DependencyInjection
+import Persistence
 import Samples
 
-public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction,
+public final class StartsWithStringAttributeRestriction:
+	AnyAttributeRestriction,
+	StringAttributeRestriction,
 	Equatable {
 	private typealias Me = StartsWithStringAttributeRestriction
 
 	// MARK: - Attributes
 
-	public static let prefixAttribute = TextAttribute(name: "Value", pluralName: "Values")
+	public static let prefixAttribute = TextAttribute(id: 0, name: "Value", pluralName: "Values")
 	public static let attributes: [Attribute] = [
 		prefixAttribute,
 	]
@@ -34,6 +39,8 @@ public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction
 	public final var prefix: String {
 		didSet { prefix = prefix.localizedLowercase }
 	}
+
+	public final var typedValue: String? { prefix }
 
 	// MARK: - Initializers
 
@@ -78,9 +85,21 @@ public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction
 		StartsWithStringAttributeRestriction(restrictedAttribute: restrictedAttribute, prefix: prefix)
 	}
 
+	// MARK: - Boolean Expression Functions
+
 	public override func predicate() -> NSPredicate? {
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		return NSPredicate(format: "%K BEGINSWITH[cd] %@", variableName, prefix)
+	}
+
+	public override func stored(
+		for sampleType: Sample.Type,
+		using transaction: Transaction?
+	) throws -> StoredBooleanExpression {
+		let transaction = transaction ?? injected(Database.self).transaction()
+		let stored = try transaction.new(StoredStringOperationAttributeRestriction.self)
+		try stored.populate(from: self, for: sampleType)
+		return stored
 	}
 
 	// MARK: - Equality
