@@ -16,6 +16,12 @@ unless target
   target.add_dependency(app)
 end
 
+saved_tests = 'SavedQueryTests.swift'
+if File.exist?(File.join(name, saved_tests)) && !target.source_build_phase.files_references.any? { |ref| ref.path == saved_tests }
+  group = project.main_group.groups.find { |item| item.name == name }
+  target.add_file_references([group.new_file(saved_tests)])
+end
+
 target.build_configurations.each do |config|
   app_config = app.build_configurations.find { |item| item.name == config.name }
   raise "Missing app configuration #{config.name}" unless app_config

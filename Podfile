@@ -87,6 +87,7 @@ target 'BooleanAlgebra' do
   pod 'CSV.swift', '~> 2.3.1'
   pod 'Presentr'
   pod 'SwiftDate', '6.0.3'
+  pod 'NotificationBannerSwift'
 end
 
 target 'Common' do

@@ -215,12 +215,16 @@
         <relationship name="activityDefinitions" toMany="YES" deletionRule="Nullify" destinationEntity="ActivityDefinition" inverseName="tags" inverseEntity="ActivityDefinition"/>
     </entity>
     <entity name="SingleTagAttributeRestriction" representedClassName="AttributeRestrictions.StoredSingleTagAttributeRestriction" parentEntity="BooleanExpression" syncable="YES">
+        <attribute name="tagReferencesData" optional="YES" attributeType="Binary"/>
+        <attribute name="includesDefinitionTags" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="sampleTypeId" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="attributeId" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="operation" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="tagName" attributeType="String"/>
     </entity>
     <entity name="TagsAttributeRestriction" representedClassName="AttributeRestrictions.StoredTagsAttributeRestriction" parentEntity="BooleanExpression" syncable="YES">
+        <attribute name="tagReferencesData" optional="YES" attributeType="Binary"/>
+        <attribute name="includesDefinitionTags" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="sampleTypeId" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="attributeId" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="operation" attributeType="Integer 16" usesScalarValueType="YES"/>

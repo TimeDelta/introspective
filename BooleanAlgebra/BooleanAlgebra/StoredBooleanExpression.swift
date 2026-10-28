@@ -12,7 +12,6 @@ import Foundation
 import Common
 import Persistence
 
-@objc(BooleanExpression)
 open class StoredBooleanExpression: NSManagedObject {
 	open func convert() throws -> BooleanExpression {
 		throw GenericError("must override")

@@ -379,6 +379,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 			} catch {
 				showError(
 					title: "Failed to save query",
+					error: error,
 					tryAgain: { self.queryNameChosen(notification: notification) }
 				)
 			}
