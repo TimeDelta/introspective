@@ -4,7 +4,7 @@ import CoreData
 import UIKit
 import AAInfographics
 import CSV
-import Common
+@testable import Common
 import DependencyInjection
 import BooleanAlgebra
 import AttributeRestrictions
@@ -924,4 +924,27 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertEqual(stub.stopCount, 1)
 	}
 
+}
+
+final class ClosestItemSearchTests: XCTestCase {
+	func testClosestItemEvaluatesEachDistanceOnceWithoutSorting() {
+		let items = Array((0..<10_000).reversed())
+		var calls = 0
+		let closest = SearchUtilImpl().closestItem(to: 4_321, in: items) { item, target in
+			calls += 1
+			return abs(item - target)
+		}
+		XCTAssertEqual(closest, 4_321)
+		XCTAssertEqual(calls, items.count)
+		XCTAssertEqual(items.first, 9_999)
+	}
+
+	func testClosestItemPreservesFirstTieAndCallerDistanceOrdering() {
+		let util = SearchUtilImpl()
+		XCTAssertEqual(util.closestItem(to: 5, in: [10, 0, 20]) { abs($0 - $1) }, 10)
+		XCTAssertEqual(util.closestItem(to: 5, in: [0, 10, 20]) { abs($0 - $1) }, 0)
+		// The caller supplies the ordering score; do not reinterpret its sign.
+		XCTAssertEqual(util.closestItem(to: 0, in: [4, -7, 2]) { item, _ in item }, -7)
+		XCTAssertEqual(util.closestItem(to: 20, in: [7]) { abs($0 - $1) }, 7)
+	}
 }

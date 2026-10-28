@@ -113,8 +113,6 @@ jobs:
             -scheme MoodHealthTests \
             -configuration Debug \
             -destination "platform=iOS Simulator,id=$CI_SIMULATOR_ID" \
-            -only-testing:MoodHealthTests/MoodHealthExchangeFunctionalTests \
-            -only-testing:MoodHealthTests/SavedQueryTests \
             -derivedDataPath "$CI_DERIVED_DATA" \
             -resultBundlePath "$GITHUB_WORKSPACE/ci-output/TestBuild.xcresult" \
             -showBuildTimingSummary \
@@ -133,8 +131,6 @@ jobs:
             -scheme MoodHealthTests \
             -configuration Debug \
             -destination "platform=iOS Simulator,id=$CI_SIMULATOR_ID" \
-            -only-testing:MoodHealthTests/MoodHealthExchangeFunctionalTests \
-            -only-testing:MoodHealthTests/SavedQueryTests \
             -derivedDataPath "$CI_DERIVED_DATA" \
             -resultBundlePath "$GITHUB_WORKSPACE/ci-output/MoodTests.xcresult"
           xcrun xcresulttool get test-results summary --path ci-output/MoodTests.xcresult > ci-output/mood-tests-summary.json
