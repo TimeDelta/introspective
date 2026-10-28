@@ -112,6 +112,26 @@ final class SavedQueryTests: XCTestCase {
 			SavedQueryTestProvider(DatabaseImpl(container), settings)])
 	}
 
+	@MainActor
+	func testActivityDurationTimerDoesNotRetainCell() throws {
+		let definition = ActivityDefinition(context: container.viewContext)
+		definition.name = "Timer lifecycle"
+		try container.viewContext.save()
+		weak var weakCell: RecordActivityDefinitionTableViewCell?
+		autoreleasepool {
+			let cell = RecordActivityDefinitionTableViewCell()
+			cell.nameLabel = UILabel()
+			cell.mostRecentTimeLabel = UILabel()
+			cell.totalDurationTodayLabel = UILabel()
+			cell.currentInstanceDurationLabel = UILabel()
+			cell.progressIndicator = UIActivityIndicatorView()
+			cell.activityDefinition = definition
+			XCTAssertEqual(cell.nameLabel.text, definition.name)
+			weakCell = cell
+		}
+		XCTAssertNil(weakCell)
+	}
+
 	private func reopen() throws {
 		let url = try XCTUnwrap(container.persistentStoreDescriptions.first?.url)
 		container.viewContext.reset()

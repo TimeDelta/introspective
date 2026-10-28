@@ -24,6 +24,7 @@ end
 
 # Compile the production transfer cells into the hostless lifecycle tests.
 %w[
+  Introspective/UI/RecordData/Activities/RecordActivityDefinitionTableViewCell.swift
   Introspective/UI/ActiveImportTableViewCell.swift
   Introspective/UI/Settings/Export/ActiveExportTableViewCell.swift
 ].each do |path|

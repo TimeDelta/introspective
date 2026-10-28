@@ -34,14 +34,13 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 	public weak final var activityDefinition: ActivityDefinition! {
 		didSet {
 			timer?.invalidate()
+			timer = nil
+			guard activityDefinition != nil else { return }
 			updateUiElements()
-			timer = Timer.scheduledTimer(
-				timeInterval: 1,
-				target: self,
-				selector: #selector(updateDurationLabels),
-				userInfo: nil,
-				repeats: true
-			)
+			timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
+				guard let self = self else { timer.invalidate(); return }
+				self.updateDurationLabels()
+			}
 		}
 	}
 
@@ -54,7 +53,9 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 	deinit { timer?.invalidate() }
 
 	public override func prepareForReuse() {
+		super.prepareForReuse()
 		timer?.invalidate()
+		timer = nil
 	}
 
 	// MARK: - Helper Functions
