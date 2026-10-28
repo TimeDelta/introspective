@@ -6,6 +6,7 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
+import CoreData
 import Foundation
 import HealthKit
 
@@ -120,8 +121,8 @@ public final class MoodHealthExchange {
 
 	/// Called on the main queue so Core Data objects stay on their context's queue.
 	internal func importSamples(_ samples: [HKStateOfMind]) throws -> Int {
-		let transaction = injected(Database.self).transaction()
-		let existing = try transaction.query(MoodImpl.fetchRequest())
+		let context = exchangeContext()
+		let existing = try context.fetch(MoodImpl.fetchRequest())
 		var knownIDs = Set(existing.compactMap { $0.healthKitUUID })
 		let scale = injected(Settings.self).scaleMoodsOnImport
 		let minimum = scale ? injected(Settings.self).minMood : -1
@@ -132,7 +133,7 @@ public final class MoodHealthExchange {
 			// Never import our exports, including after a partial save or retry.
 			guard sample.metadata?[Self.exportMarker] as? Bool != true,
 				knownIDs.insert(sample.uuid.uuidString).inserted else { continue }
-			let mood = try transaction.new(MoodImpl.self)
+			let mood = MoodImpl(context: context)
 			mood.setSource(.health)
 			mood.date = sample.startDate
 			mood.timeZone = (sample.metadata?[HKMetadataKeyTimeZone] as? String).flatMap(TimeZone.init(identifier:))
@@ -142,16 +143,29 @@ public final class MoodHealthExchange {
 			mood.healthKitUUID = sample.uuid.uuidString
 			count += 1
 		}
-		try transaction.commit()
+		try save(context)
 		return count
+	}
+
+
+	private func exchangeContext() -> NSManagedObjectContext {
+		let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+		context.parent = injected(Database.self).fetchedResultsController(
+			type: MoodImpl.self, sortDescriptors: []).managedObjectContext
+		return context
+	}
+
+	private func save(_ context: NSManagedObjectContext) throws {
+		try context.save()
+		try context.parent?.save()
 	}
 
 	public func exportMoods(completion: @escaping (Result<Int, Error>) -> Void) {
 		authorize(write: true) { error in
 			if let error = error { completion(.failure(error)); return }
 			do {
-				let transaction = injected(Database.self).transaction()
-				let moods = try transaction.query(MoodImpl.fetchRequest()).filter {
+				let context = self.exchangeContext()
+				let moods = try context.fetch(MoodImpl.fetchRequest()).filter {
 					$0.healthKitUUID == nil && $0.getSource() != .health
 				}
 				// Validate the entire batch before making any Health writes.
@@ -172,7 +186,7 @@ public final class MoodHealthExchange {
 						guard success else { completion(.failure(ExchangeError.saveFailed)); return }
 						do {
 							for (mood, sample) in zip(moods, samples) { mood.healthKitUUID = sample.uuid.uuidString }
-							try transaction.commit()
+							try self.save(context)
 							completion(.success(samples.count))
 						} catch { completion(.failure(error)) }
 					}
