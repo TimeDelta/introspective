@@ -140,8 +140,7 @@ public final class UnifiedDayViewController: DayViewController {
 	private final func getActivityEventDescriptorsForDate(_ date: Date) -> [EventDescriptor] {
 		getActivitiesForDate(date).map { activity in
 			let event = Event()
-			event.startDate = activity.start
-			event.endDate = activity.end ?? Date()
+			event.dateInterval = DateInterval(start: activity.start, end: activity.end ?? Date())
 			let timeText = getTimeTextFor(event)
 			event.text = "Activity\n\(timeText)"
 			return event
@@ -173,8 +172,7 @@ public final class UnifiedDayViewController: DayViewController {
 	private final func getSleepEventDescriptorsForDate(_ date: Date) -> [EventDescriptor] {
 		getSleepSamplesForDate(date).map { sleep in
 			let event = Event()
-			event.startDate = sleep.startDate
-			event.endDate = sleep.endDate
+			event.dateInterval = DateInterval(start: sleep.startDate, end: sleep.endDate)
 			let timeText = getTimeTextFor(event)
 			event.text = "Sleeping\n\(timeText)"
 			return event
@@ -232,15 +230,15 @@ public final class UnifiedDayViewController: DayViewController {
 
 	private final func getTimeTextFor(_ event: Event) -> String {
 		let startText = injected(CalendarUtil.self)
-			.string(for: event.startDate, dateStyle: .none, timeStyle: .short)
+			.string(for: event.dateInterval.start, dateStyle: .none, timeStyle: .short)
 		let endText = injected(CalendarUtil.self)
-			.string(for: event.endDate, dateStyle: .none, timeStyle: .short)
-		let duration = TimeDuration(start: event.startDate, end: event.endDate)
+			.string(for: event.dateInterval.end, dateStyle: .none, timeStyle: .short)
+		let duration = TimeDuration(start: event.dateInterval.start, end: event.dateInterval.end)
 		return startText + " - " + endText + " (\(duration.description)))"
 	}
 
 	private final func getStartAndEndDatesFrom(_ eventView: EventView) -> (Date, Date) {
-		return (eventView.descriptor!.startDate, eventView.descriptor!.endDate)
+		return (eventView.descriptor!.dateInterval.start, eventView.descriptor!.dateInterval.end)
 	}
 
 	private final func getOperationName(for operation: HKStatisticsOptions) -> String {

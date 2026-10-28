@@ -3347,7 +3347,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "${SOURCE_ROOT}/scripts/format-code\n";
+			shellScript = "# Formatting rewrites source and must be explicitly requested.\nif [ \"${FORMAT_CODE_DURING_BUILD:-NO}\" = YES ]; then\n  \"${SOURCE_ROOT}/scripts/format-code\"\nelse\n  echo \"Skipping source formatting; set FORMAT_CODE_DURING_BUILD=YES to opt in.\"\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		5D1C14AD77BD9B66DB53DB1301911123 /* [CP] Embed Pods Frameworks */ = {

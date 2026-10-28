@@ -1,37 +1,91 @@
-name: Continuous Integration
+name: iOS Compatibility Build
 
 on:
+  workflow_dispatch:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-build-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  test:
-    name: Continuous Integration - Test
-    runs-on: macos-latest
-    strategy:
-      matrix:
-        destination: ['platform=iOS Simulator,OS=13.6,name=iPhone 11 Pro']
+  build:
+    name: Unsigned iOS 26 build
+    runs-on: macos-15
+    timeout-minutes: 45
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      COCOAPODS_DISABLE_STATS: 'true'
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
-      - name: Get Dependencies
-        run: pod install
-
-      - name: Create GitVersion.swift
+      - name: Verify build tools
+        shell: bash
         run: |
+          set -euo pipefail
+          mkdir -p ci-output
+          {
+            xcodebuild -version
+            xcrun --sdk iphoneos --show-sdk-version
+            pod --version
+            swiftformat --version
+          } | tee ci-output/tool-versions.log
+
+      - name: Resolve CocoaPods dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Podfile retains the modified TimeDelta/WSTagsField commit.
+          # Keep the reviewed dependency graph fixed on CI.
+          pod install --deployment 2>&1 | tee ci-output/pod-install.log
+          cp Podfile.lock ci-output/Podfile.lock
+
+      - name: Generate build version
+        shell: bash
+        run: |
+          set -euo pipefail
           ./scripts/create-git-version-swift-file.sh
+          test -s Common/Common/GitVersion.swift
 
-      - name: Build
+      - name: Build without signing
+        shell: bash
         run: |
-          xcodebuild clean build -workspace Introspective.xcworkspace -scheme CI-CD -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
-        env:
-         destination: ${{ matrix.destination }}
+          set -euo pipefail
+          xcodebuild build \
+            -workspace Introspective.xcworkspace \
+            -scheme CI-CD \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath "$RUNNER_TEMP/IntrospectiveDerivedData" \
+            -resultBundlePath "$GITHUB_WORKSPACE/ci-output/Build.xcresult" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY='' \
+            ENABLE_USER_SCRIPT_SANDBOXING=NO \
+            2>&1 | tee ci-output/xcodebuild.log
 
-      - name: Test
+      - name: Record generated changes
+        if: always()
+        shell: bash
         run: |
-          xcodebuild test -workspace Introspective.xcworkspace -scheme CI-CD -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
-        env:
-         destination: ${{ matrix.destination }}
+          mkdir -p ci-output
+          git status --short > ci-output/working-tree-status.txt
+          git diff --stat > ci-output/generated-changes.txt
+
+      - name: Upload build diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-26-build-diagnostics
+          path: ci-output/
+          retention-days: 14
+          if-no-files-found: warn

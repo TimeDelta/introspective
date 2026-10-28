@@ -7,7 +7,6 @@
 **/GitVersion.swift
 *.framework/
 Pods/
-Podfile.lock
 instruments/*
 **/build/
 .swiftpm/
