@@ -12,6 +12,19 @@ post_install do |installer|
       end
     end
   end
+  # Newer SDKs expose another conditional Optional.Value through Gesture.
+  # Qualify the dictionary literal types in the frozen SwiftyMocky 4 source.
+  literals = installer.sandbox.root.join('SwiftyMocky/Sources/SwiftyMocky/Parameter+Literals.swift')
+  if literals.file?
+    source = literals.read
+    old_initializer = "public init(dictionaryLiteral elements: (Key, Value)...) {\n        self = .some(Wrapped.init(elements))"
+    new_initializer = "public init(dictionaryLiteral elements: (Wrapped.Key, Wrapped.Value)...) {\n        self = .some(Wrapped.init(elements))"
+    unless source.include?(new_initializer)
+      raise 'Unexpected SwiftyMocky literal initializer; review SDK compatibility patch' unless source.scan(old_initializer).length == 1
+      literals.write(source.sub(old_initializer, new_initializer))
+    end
+  end
+
 end
 
 inhibit_all_warnings!
