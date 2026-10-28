@@ -1,6 +1,7 @@
 import XCTest
 import HealthKit
 import CoreData
+import CSV
 import Common
 import DependencyInjection
 import BooleanAlgebra
@@ -43,6 +44,19 @@ private final class ReviewHealthStub: HealthKitUtil, InjectionProvider {
 		// Model HealthKit retaining the result handler until stopped.
 		return { _ = callback; self.stopCount += 1 }
 	}
+}
+
+private final class ExportBufferProbe: Exportable {
+	static let exportFileDescription = "Probe"
+	let value: Int
+	let write: (Int) throws -> Void
+	let released: () -> Void
+	init(_ value: Int, write: @escaping (Int) throws -> Void, released: @escaping () -> Void = {}) {
+		self.value = value; self.write = write; self.released = released
+	}
+	deinit { released() }
+	static func exportHeaderRow(to csv: CSVWriter) throws { try csv.write(field: "value") }
+	func export(to csv: CSVWriter) throws { try write(value); try csv.write(field: String(value)) }
 }
 
 final class SavedQueryTests: XCTestCase {
@@ -113,6 +127,66 @@ final class SavedQueryTests: XCTestCase {
 		mood.minRating = 0; mood.maxRating = 7; mood.rating = rating
 		try context.save()
 		return mood
+	}
+
+	func testExportBufferPreservesOrderAcrossPauseAndResume() throws {
+		let exporter = BaseExporter(dataTypePluralName: "Probes", url: directory.appendingPathComponent("export.csv"))
+		let stream = OutputStream.toMemory()
+		let csv = try CSVWriter(stream: stream, delimiter: ",", newline: .lf)
+		var written = [Int]()
+		var objects: [Exportable] = (0..<6).map { ExportBufferProbe($0, write: { written.append($0) }) }
+		var headerWritten = false
+		exporter.pauseOnRecord = 2
+		try exporter.export(objects: &objects, using: csv, headerWritten: &headerWritten)
+		XCTAssertEqual(written, [0, 1])
+		XCTAssertEqual(objects.map { ($0 as! ExportBufferProbe).value }, [2, 3, 4, 5])
+		XCTAssertEqual(exporter.recordsCompleted, 2)
+		XCTAssertTrue(exporter.isPaused)
+		exporter.isPaused = false
+		try exporter.export(objects: &objects, using: csv, headerWritten: &headerWritten)
+		XCTAssertEqual(written, Array(0..<6))
+		XCTAssertTrue(objects.isEmpty)
+		XCTAssertEqual(exporter.recordsCompleted, 6)
+		let bytes = try XCTUnwrap(stream.property(forKey: .dataWrittenToMemoryStreamKey) as? Data)
+		XCTAssertEqual(String(data: bytes, encoding: .utf8), "value\n0\n1\n2\n3\n4\n5\n")
+	}
+
+	func testExportBufferRestoresRemainingOrderAfterFailure() throws {
+		let exporter = BaseExporter(dataTypePluralName: "Probes", url: directory.appendingPathComponent("export.csv"))
+		let csv = try CSVWriter(stream: OutputStream.toMemory())
+		var written = [Int]()
+		var objects: [Exportable] = (0..<5).map { ExportBufferProbe($0, write: { value in
+			if value == 2 { throw NSError(domain: "ExportBufferProbe", code: 1) }
+			written.append(value)
+		}) }
+		var headerWritten = false
+		XCTAssertThrowsError(try exporter.export(objects: &objects, using: csv, headerWritten: &headerWritten))
+		XCTAssertEqual(written, [0, 1])
+		// Match the previous behavior: the failed object was already removed.
+		XCTAssertEqual(objects.map { ($0 as! ExportBufferProbe).value }, [3, 4])
+		XCTAssertEqual(exporter.recordsCompleted, 2)
+		try exporter.export(objects: &objects, using: csv, headerWritten: &headerWritten)
+		XCTAssertEqual(written, [0, 1, 3, 4])
+		XCTAssertTrue(objects.isEmpty)
+	}
+
+	func testExportBufferReleasesProcessedRowsAndStopsOnCancellation() throws {
+		let exporter = BaseExporter(dataTypePluralName: "Probes", url: directory.appendingPathComponent("export.csv"))
+		let csv = try CSVWriter(stream: OutputStream.toMemory())
+		var released = 0
+		var written = [Int]()
+		var objects: [Exportable] = (0..<256).map { ExportBufferProbe($0, write: { value in
+			// Every earlier row should have been released before this row starts.
+			XCTAssertEqual(released, value)
+			written.append(value)
+			if value == 127 { exporter.isCancelled = true }
+		}, released: { released += 1 }) }
+		var headerWritten = false
+		try exporter.export(objects: &objects, using: csv, headerWritten: &headerWritten)
+		XCTAssertEqual(written, Array(0..<128))
+		XCTAssertEqual(released, 128)
+		XCTAssertEqual(objects.map { ($0 as! ExportBufferProbe).value }, Array(128..<256))
+		XCTAssertEqual(exporter.recordsCompleted, 128)
 	}
 
 	func testNestedQueryAndBooleanGroupsSurviveDiskReopen() throws {
