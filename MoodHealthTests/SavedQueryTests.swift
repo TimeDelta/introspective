@@ -158,7 +158,10 @@ final class SavedQueryTests: XCTestCase {
 		let expression = NotExpression(OrExpression(
 			GreaterThanDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating, value: 3),
 			LessThanDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating, value: 1)))
-		let restored = try injected(BooleanExpressionParser.self).parse(expression.partsForEditing())
+		let originalParts = try expression.partsForEditing()
+		let restored = try injected(BooleanExpressionParser.self).parse(originalParts)
+		XCTAssertEqual(originalParts.map { String(describing: $0.type) },
+			try restored.partsForEditing().map { String(describing: $0.type) })
 		for rating in [0.0, 2.0, 6.0] {
 			let sample = try mood(rating)
 			XCTAssertEqual(try expression.evaluate([.sample: sample]), try restored.evaluate([.sample: sample]))

@@ -166,24 +166,39 @@ internal final class BooleanExpressionParserImpl: BooleanExpressionParser {
 }
 
 public extension BooleanExpression {
-	/// Preserve evaluation order when rebuilding the editor, including NOT over groups.
+	/// Preserve evaluation order and avoid accumulating parentheses on repeated edits.
 	func partsForEditing() throws -> [BooleanExpressionPart] {
 		guard isValid() else { throw GenericError("Cannot edit an invalid expression.") }
-		if let expression = self as? AndExpression {
-			return [(type: .groupStart, expression: nil)] + (try expression.expression1.partsForEditing()) +
-				[(type: .and, expression: nil)] + (try expression.expression2.partsForEditing()) + [(type: .groupEnd, expression: nil)]
+		func parts(_ expression: BooleanExpression, enclosed: Bool, depth: Int) throws -> [BooleanExpressionPart] {
+			guard depth < 128 else { throw GenericError("Expression is nested too deeply.") }
+			var result: [BooleanExpressionPart] = []
+			if let group = expression as? BooleanExpressionGroup {
+				result.append((type: .groupStart, expression: nil))
+				result.append(contentsOf: try parts(group.subExpression, enclosed: true, depth: depth + 1))
+				result.append((type: .groupEnd, expression: nil))
+			} else if let not = expression as? NotExpression {
+				result.append((type: .not, expression: nil))
+				if not.subExpression is BooleanExpressionGroup {
+					result.append(contentsOf: try parts(not.subExpression, enclosed: false, depth: depth + 1))
+				} else {
+					result.append((type: .groupStart, expression: nil))
+					result.append(contentsOf: try parts(not.subExpression, enclosed: true, depth: depth + 1))
+					result.append((type: .groupEnd, expression: nil))
+				}
+			} else if expression is AndExpression || expression is OrExpression {
+				let left: BooleanExpression
+				let right: BooleanExpression
+				let operation: BooleanExpressionType
+				if let and = expression as? AndExpression { left = and.expression1; right = and.expression2; operation = .and }
+				else { let or = expression as! OrExpression; left = or.expression1; right = or.expression2; operation = .or }
+				if !enclosed { result.append((type: .groupStart, expression: nil)) }
+				result.append(contentsOf: try parts(left, enclosed: false, depth: depth + 1))
+				result.append((type: operation, expression: nil))
+				result.append(contentsOf: try parts(right, enclosed: false, depth: depth + 1))
+				if !enclosed { result.append((type: .groupEnd, expression: nil)) }
+			} else { result.append((type: .expression, expression: expression)) }
+			return result
 		}
-		if let expression = self as? OrExpression {
-			return [(type: .groupStart, expression: nil)] + (try expression.expression1.partsForEditing()) +
-				[(type: .or, expression: nil)] + (try expression.expression2.partsForEditing()) + [(type: .groupEnd, expression: nil)]
-		}
-		if let expression = self as? NotExpression {
-			return [(type: .not, expression: nil), (type: .groupStart, expression: nil)] +
-				(try expression.subExpression.partsForEditing()) + [(type: .groupEnd, expression: nil)]
-		}
-		if let expression = self as? BooleanExpressionGroup {
-			return [(type: .groupStart, expression: nil)] + (try expression.subExpression.partsForEditing()) + [(type: .groupEnd, expression: nil)]
-		}
-		return [(type: .expression, expression: self)]
+		return try parts(self, enclosed: false, depth: 0)
 	}
 }
