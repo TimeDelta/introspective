@@ -6,8 +6,8 @@ on:
       suite:
         description: Test suite (legacy diagnoses the original unit and functional target)
         type: choice
-        options: [focused, legacy, ui]
-        default: focused
+        options: [all, focused, legacy, ui]
+        default: all
       runner:
         description: macOS runner (Intel avoids current ARM capacity constraints)
         type: choice
@@ -33,7 +33,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        kind: ${{ inputs.suite == 'legacy' && fromJSON('["legacy"]') || inputs.suite == 'ui' && fromJSON('["ui"]') || fromJSON('["tests", "release"]') }}
+        kind: ${{ inputs.suite == 'legacy' && fromJSON('["legacy"]') || inputs.suite == 'ui' && fromJSON('["ui"]') || inputs.suite == 'focused' && fromJSON('["tests", "release"]') || fromJSON('["tests", "legacy", "ui", "release"]') }}
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
       COCOAPODS_DISABLE_STATS: 'true'
@@ -202,13 +202,13 @@ jobs:
           if-no-files-found: warn
 
   build:
-    # Preserve the existing check name and require BOTH parallel jobs to succeed.
+    # Preserve the existing check name and require every selected validation job.
     name: Unsigned iOS 26 build
     needs: validation
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - name: Require simulator tests and Release compilation
+      - name: Require every selected validation job
         env:
           VALIDATION_RESULT: ${{ needs.validation.result }}
         run: test "$VALIDATION_RESULT" = success
