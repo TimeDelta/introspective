@@ -2,7 +2,7 @@ import XCTest
 import HealthKit
 import CoreData
 import CSV
-import Common
+@testable import Common
 import DependencyInjection
 import BooleanAlgebra
 import AttributeRestrictions
