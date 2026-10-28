@@ -48,7 +48,6 @@ jobs:
           # Keep the reviewed dependency graph fixed on CI.
           pod install --deployment 2>&1 | tee ci-output/pod-install.log
           cp Podfile.lock ci-output/Podfile.lock
-          python3 scripts/patch-swiftymocky-for-current-xcode.py
 
       - name: Generate build version
         shell: bash
@@ -61,14 +60,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          ruby scripts/prepare-mood-health-tests.rb
           xcrun simctl list devices available --json > ci-output/simulators.json
           simulator_id=$(python3 -c 'import json; d=json.load(open("ci-output/simulators.json")); print(next(v["udid"] for k,vs in d["devices"].items() if "iOS" in k for v in vs if v["isAvailable"] and "iPhone" in v["name"]))')
           xcodebuild test \
             -workspace Introspective.xcworkspace \
-            -scheme CI-CD \
+            -scheme MoodHealthTests \
             -configuration Debug \
             -destination "platform=iOS Simulator,id=$simulator_id" \
-            -only-testing:IntrospectiveTests/MoodHealthExchangeFunctionalTests \
+            -only-testing:MoodHealthTests/MoodHealthExchangeFunctionalTests \
             -derivedDataPath "$RUNNER_TEMP/MoodTestsDerivedData" \
             -resultBundlePath "$GITHUB_WORKSPACE/ci-output/MoodTests.xcresult" \
             CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY='' \
