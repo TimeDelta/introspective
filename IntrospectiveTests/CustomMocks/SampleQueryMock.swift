@@ -11,6 +11,7 @@ import SwiftyMocky
 @testable import Introspective
 @testable import BooleanAlgebra
 @testable import Queries
+@testable import Persistence
 @testable import Samples
 
 // sourcery: mock = "SampleQuery"
