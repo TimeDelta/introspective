@@ -631,6 +631,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		CAFE00000000000000000001 /* HealthMood.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HealthMood.xcdatamodel; sourceTree = "<group>"; };
 		001B77F7312785413AB74ACB9E4810E7 /* MoodInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodInfo.swift; sourceTree = "<group>"; };
 		00608A534BB89482446BED92AB511B74 /* BodyMassIndexUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodyMassIndexUnitTests.swift; sourceTree = "<group>"; };
 		00D5779221DC3FB1B8D1D8452AE49B43 /* AutoCases.stencil */ = {isa = PBXFileReference; lastKnownFileType = text; path = AutoCases.stencil; sourceTree = "<group>"; };
@@ -4532,9 +4533,10 @@
 		A7581418039FB6FD454DA7AA8C114E56 /* Introspective.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				CAFE00000000000000000001 /* HealthMood.xcdatamodel */,
 				6ABD42B5BE3FEFE618570A03FC26467C /* Introspective.xcdatamodel */,
 			);
-			currentVersion = 6ABD42B5BE3FEFE618570A03FC26467C /* Introspective.xcdatamodel */;
+			currentVersion = CAFE00000000000000000001 /* HealthMood.xcdatamodel */;
 			path = Introspective.xcdatamodeld;
 			sourceTree = "<group>";
 		};
