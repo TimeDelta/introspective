@@ -595,4 +595,16 @@ final class SavedQueryTests: XCTestCase {
 		query.stop() // Authorization errors must not leave a spinning cancellation task.
 	}
 
+	func testReleasingActiveHealthQueryStopsItsUnderlyingFetch() throws {
+		let stub = ReviewHealthStub()
+		DependencyInjector.register([stub])
+		var query: Query? = injected(QueryFactory.self).stepsQuery()
+		weak var weakQuery = query
+		query?.runQuery { (_: QueryResult?, _: Error?) in }
+		stub.authorization?(nil)
+		query = nil
+		XCTAssertNil(weakQuery)
+		XCTAssertEqual(stub.stopCount, 1)
+	}
+
 }
