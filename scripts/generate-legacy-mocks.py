@@ -24,7 +24,9 @@ def configurations():
         module = output.stem.removesuffix("Mocks")
         source_dir = ROOT / module / module
         if not source_dir.is_dir():
-            continue  # Ignore the historical empty Introspective.xcodeprojMocks file.
+            source_dir = ROOT / module  # The app keeps its sources directly in Introspective/.
+        if not source_dir.is_dir():
+            continue
         sources = [str(ROOT / "IntrospectiveTests/CustomMocks")]
         sources += [str(path) for path in sorted(source_dir.rglob("*.swift"))
                     if not re.search(r"Delegate|Mock|DateExtension", path.name)]
