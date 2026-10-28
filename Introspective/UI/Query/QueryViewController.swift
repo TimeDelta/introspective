@@ -1036,7 +1036,7 @@ private final class SavedQueriesViewController: UITableViewController {
 		alert.addAction(UIAlertAction(title: "Save", style: .default) { [weak self, weak alert] _ in
 			alert?.dismiss(animated: false) {
 			do {
-				try injected(StoredQueriesDAO.self).rename(query, to: alert.textFields?.first?.text ?? "")
+				try injected(StoredQueriesDAO.self).rename(query, to: alert?.textFields?.first?.text ?? "")
 				self?.reloadQueries()
 			} catch { self?.showError(title: "Could not rename query", error: error) }
 			}
