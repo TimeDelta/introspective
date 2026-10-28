@@ -6,7 +6,7 @@ on:
       suite:
         description: Test suite (legacy diagnoses the original unit and functional target)
         type: choice
-        options: [all, focused, legacy, ui]
+        options: [all, focused, legacy, ui, mocks]
         default: all
       runner:
         description: macOS runner (Intel avoids current ARM capacity constraints)
@@ -27,13 +27,13 @@ concurrency:
 
 jobs:
   validation:
-    name: ${{ matrix.kind == 'release' && 'Release compilation' || matrix.kind == 'legacy' && 'Legacy unit and functional tests' || matrix.kind == 'ui' && 'Legacy UI tests' || 'Simulator tests' }}
+    name: ${{ matrix.kind == 'release' && 'Release compilation' || matrix.kind == 'legacy' && 'Legacy unit and functional tests' || matrix.kind == 'ui' && 'Legacy UI tests' || matrix.kind == 'mocks' && 'Legacy mocking SDK check' || 'Simulator tests' }}
     runs-on: ${{ inputs.runner || 'macos-15-intel' }}
     timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
-        kind: ${{ inputs.suite == 'legacy' && fromJSON('["legacy"]') || inputs.suite == 'ui' && fromJSON('["ui"]') || inputs.suite == 'focused' && fromJSON('["tests", "release"]') || fromJSON('["tests", "legacy", "ui", "release"]') }}
+        kind: ${{ inputs.suite == 'legacy' && fromJSON('["legacy"]') || inputs.suite == 'ui' && fromJSON('["ui"]') || inputs.suite == 'mocks' && fromJSON('["mocks"]') || inputs.suite == 'focused' && fromJSON('["tests", "release"]') || fromJSON('["tests", "legacy", "ui", "release"]') }}
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
       COCOAPODS_DISABLE_STATS: 'true'
@@ -95,8 +95,15 @@ jobs:
         if: matrix.kind != 'release'
         run: python3 -m unittest discover -s scripts/tests -v
 
+      - name: Type-check legacy mocking against the selected SDK
+        if: matrix.kind == 'legacy' || matrix.kind == 'mocks'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./scripts/run-ci-command.sh ci-output/mock-typecheck.log python3 scripts/typecheck-legacy-mocking.py
+
       - name: Prepare native test target and start simulator
-        if: matrix.kind != 'release'
+        if: matrix.kind != 'release' && matrix.kind != 'mocks'
         shell: bash
         run: |
           set -euo pipefail
@@ -117,7 +124,7 @@ jobs:
           ./scripts/run-ci-command.sh ci-output/mock-generation.log python3 scripts/generate-legacy-mocks.py
 
       - name: Build simulator tests
-        if: matrix.kind != 'release'
+        if: matrix.kind != 'release' && matrix.kind != 'mocks'
         id: test-build
         shell: bash
         run: |
@@ -135,7 +142,7 @@ jobs:
             ENABLE_USER_SCRIPT_SANDBOXING=NO
 
       - name: Run selected test suite without rebuilding
-        if: matrix.kind != 'release'
+        if: matrix.kind != 'release' && matrix.kind != 'mocks'
         shell: bash
         run: |
           set -euo pipefail
