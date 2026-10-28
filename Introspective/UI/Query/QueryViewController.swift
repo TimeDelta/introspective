@@ -52,7 +52,8 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	private static let acceptedAttributeRestrictionEdit = Notification.Name("acceptedAttributeRestrictionEdit")
 	private static let acceptedSubSampleTypeEdit = Notification.Name("acceptedSubSampleTypeEdit")
-	private static let queryNameChosen = Notification.Name("queryNameChosen")
+	private let queryNameChosenNotification = Notification.Name("queryNameChosen.\(UUID().uuidString)")
+	private var pendingSaveQuery: Query?
 
 	// MARK: Presenters
 
@@ -119,7 +120,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		observe(selector: #selector(saveEditedSubQuerySampleType), name: Me.acceptedSubSampleTypeEdit)
 		observe(selector: #selector(saveEditedSampleType), name: .sampleTypeEdited)
 		observe(selector: #selector(saveEditedAttributeRestriction), name: .attributeRestrictionEdited)
-		observe(selector: #selector(queryNameChosen), name: Me.queryNameChosen)
+		observe(selector: #selector(queryNameChosen), name: queryNameChosenNotification)
 
 		addPartButton?.target = self
 		addPartButton?.action = #selector(addPartButtonWasPressed)
@@ -354,6 +355,11 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	private func load(_ query: StoredQuery) throws {
 		let restored = try query.convert()
+		var current: Query? = restored
+		while let node = current {
+			if let expression = node.expression { _ = try expression.partsForEditing() }
+			current = node.subQuery?.query
+		}
 		loadedSavedQuery = query
 		queries = []
 		populateQuery(restored)
@@ -363,6 +369,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	@IBAction final func saveButtonPressed(_: Any) {
 		guard let query = buildQuery() else { showError(title: "Failed to build query"); return }
+		pendingSaveQuery = query
 		guard let saved = loadedSavedQuery, !saved.isDeleted else { showQueryNamePicker(); return }
 		let alert = UIAlertController(title: "Save query", message: saved.name, preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "Update saved query", style: .default) { [weak self, weak alert] _ in
@@ -382,16 +389,16 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	private func showQueryNamePicker() {
 		let controller: QueryNameViewController = viewController(named: "queryName")
-		controller.notificationToSendOnSave = Me.queryNameChosen
+		controller.notificationToSendOnSave = queryNameChosenNotification
 		customPresentViewController(QueryNameViewController.presenter, viewController: controller, animated: false)
 	}
 
 	@objc private final func queryNameChosen(notification: Notification) {
-		if let name: String = value(for: .text, from: notification) {
+		if let name: String = value(for: .text, from: notification), let query = pendingSaveQuery {
 			do {
-				let query = buildQuery()!
 				try injected(StoredQueriesDAO.self).save(query, name: name)
-				loadedSavedQuery = try injected(StoredQueriesDAO.self).getQueryWith(name: name)
+				loadedSavedQuery = try? injected(StoredQueriesDAO.self).getQueryWith(name: name)
+				pendingSaveQuery = nil
 				navigationItem.prompt = "Query saved"
 			} catch {
 				showError(
@@ -1021,11 +1028,13 @@ private final class SavedQueriesViewController: UITableViewController {
 		let alert = UIAlertController(title: "Rename query", message: nil, preferredStyle: .alert)
 		alert.addTextField { $0.text = query.name }
 		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-		alert.addAction(UIAlertAction(title: "Save", style: .default) { [weak self] _ in
+		alert.addAction(UIAlertAction(title: "Save", style: .default) { [weak self, weak alert] _ in
+			alert?.dismiss(animated: false) {
 			do {
 				try injected(StoredQueriesDAO.self).rename(query, to: alert.textFields?.first?.text ?? "")
 				self?.reloadQueries()
 			} catch { self?.showError(title: "Could not rename query", error: error) }
+			}
 		})
 		present(alert, animated: true)
 	}
@@ -1033,11 +1042,13 @@ private final class SavedQueriesViewController: UITableViewController {
 	private func confirmDelete(_ query: StoredQuery) {
 		let alert = UIAlertController(title: "Delete saved query?", message: query.name, preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-		alert.addAction(UIAlertAction(title: "Delete", style: .destructive) { [weak self] _ in
+		alert.addAction(UIAlertAction(title: "Delete", style: .destructive) { [weak self, weak alert] _ in
+			alert?.dismiss(animated: false) {
 			do {
 				try injected(StoredQueriesDAO.self).delete(query)
 				self?.reloadQueries()
 			} catch { self?.showError(title: "Could not delete query", error: error) }
+			}
 		})
 		present(alert, animated: true)
 	}

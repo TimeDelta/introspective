@@ -39,6 +39,7 @@ public final class StoredQuery: NSManagedObject, CoreDataObject {
 			throw GenericError("Query contains a cycle or is nested too deeply.")
 		}
 		guard query.expression?.isValid() != false else { throw GenericError("The query contains an invalid restriction.") }
+		if let expression = query.expression { _ = try expression.partsForEditing() }
 		var visited = visited
 		visited.insert(ObjectIdentifier(query))
 		self.name = try StoredQueriesDAOImpl.validName(name)

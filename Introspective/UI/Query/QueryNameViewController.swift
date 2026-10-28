@@ -35,8 +35,10 @@ public final class QueryNameViewController: UIViewController {
 		let name = (nameField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
 		guard !name.isEmpty, saveButton.isEnabled else { return }
 		// make sure query with that name doesn't exist yet
-		syncPost(notificationToSendOnSave, userInfo: [.text: name])
-		dismiss(animated: false, completion: nil)
+		saveButton.isEnabled = false
+		dismiss(animated: false) {
+			self.syncPost(self.notificationToSendOnSave, userInfo: [.text: name])
+		}
 	}
 
 	@IBAction public func cancelPressed() {

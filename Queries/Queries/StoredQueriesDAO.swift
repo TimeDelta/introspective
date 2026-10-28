@@ -19,7 +19,7 @@ public final class StoredQueriesDAOImpl: StoredQueriesDAO {
 
 	public static func validName(_ value: String) throws -> String {
 		let name = value.trimmingCharacters(in: .whitespacesAndNewlines)
-		guard !name.isEmpty else { throw GenericError("Enter a name for the query.") }
+		guard !name.isEmpty else { throw GenericDisplayableError(title: "Enter a name for the query.") }
 		return name
 	}
 
@@ -38,7 +38,7 @@ public final class StoredQueriesDAOImpl: StoredQueriesDAO {
 
 	public func save(_ query: Query, name: String) throws {
 		let name = try Self.validName(name)
-		guard try getQueryWith(name: name) == nil else { throw GenericError("A saved query already has that name.") }
+		guard try getQueryWith(name: name) == nil else { throw GenericDisplayableError(title: "A saved query already has that name.") }
 		let transaction = injected(Database.self).transaction()
 		_ = try query.stored(withName: name, using: transaction)
 		try transaction.commit()
@@ -60,7 +60,7 @@ public final class StoredQueriesDAOImpl: StoredQueriesDAO {
 	public func rename(_ query: StoredQuery, to name: String) throws {
 		let name = try Self.validName(name)
 		if let existing = try getQueryWith(name: name), existing.objectID != query.objectID {
-			throw GenericError("A saved query already has that name.")
+			throw GenericDisplayableError(title: "A saved query already has that name.")
 		}
 		let transaction = injected(Database.self).transaction()
 		try transaction.pull(savedObject: query).name = name
