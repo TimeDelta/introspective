@@ -234,6 +234,7 @@ final class SavedQueryTests: XCTestCase {
 	}
 
 	private func fixtureValue(for attribute: Attribute, tag: Tag) throws -> Any {
+		if attribute is TagsAttribute { return [tag] }
 		if attribute is DaysOfWeekAttribute { return Set([DayOfWeek.Monday, DayOfWeek.Friday]) }
 		if let choice = attribute as? SelectOneAttribute { return try XCTUnwrap(choice.possibleValues.first) }
 		let type = attribute.valueType

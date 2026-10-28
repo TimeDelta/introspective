@@ -19,7 +19,7 @@ public final class StoredBooleanExpressionGroup: StoredBooleanExpression, CoreDa
 	public static let entityName = "BooleanExpressionGroup"
 
 	public override func convert() throws -> BooleanExpression {
-		NotExpression(try storedSubExpression.convert())
+		BooleanExpressionGroup(try storedSubExpression.convert())
 	}
 
 	public func populate(

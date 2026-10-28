@@ -52,7 +52,13 @@ public final class StoredQueriesDAOImpl: StoredQueriesDAO {
 		stored.storedSubQuery = nil
 		stored.matcherData = nil
 		try stored.populate(from: query, withName: stored.name, using: transaction)
-		if let expression = oldExpression { try transaction.deleteAll([expression]) }
+		if let expression = oldExpression {
+			guard let object = expression as? CoreDataObject else {
+				throw GenericError("The saved query contains an unsupported expression.")
+			}
+			// Batch deletion writes directly to the store and bypasses this transaction.
+			try transaction.delete(object)
+		}
 		if let child = oldSubQuery { try transaction.delete(child) }
 		try transaction.commit()
 	}
