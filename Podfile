@@ -6,6 +6,14 @@ platform :ios, '12.0'
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
+      # SwiftyMocky 4 predates modern XCTest linkage. Keep XCTest and the
+      # remaining pod flags, but remove the library no longer shipped by Xcode.
+      if target.name == 'SwiftyMocky' && config.base_configuration_reference
+        settings = config.base_configuration_reference.real_path
+        original = settings.read
+        updated = original.gsub(/(?<!\S)-weak-lswiftXCTest(?!\S)/, '')
+        settings.write(updated) if updated != original
+      end
       minimum = config.build_settings['IPHONEOS_DEPLOYMENT_TARGET']
       if minimum && Gem::Version.new(minimum) < Gem::Version.new('12.0')
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.0'
