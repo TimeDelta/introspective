@@ -189,6 +189,60 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertThrowsError(try generator.getAllSortedXGroupValuesIfPointGrouped(seriesGroups: [("a", [sample])]))
 	}
 
+	func testTagGroupingPreservesFirstSeenOrderCaseAndDuplicateMembership() throws {
+		let context = container.viewContext
+		func tag(_ name: String) -> Tag {
+			let tag = Tag(context: context)
+			tag.name = name
+			return tag
+		}
+		func activity(_ tag: Tag, inherited: Bool = false) -> Activity {
+			let definition = ActivityDefinition(context: context)
+			definition.name = "Fixture"
+			definition.tags = inherited ? NSSet(object: tag) : NSSet()
+			let activity = Activity(context: context)
+			activity.definition = definition
+			activity.tags = NSSet(object: tag)
+			return activity
+		}
+		let focus = tag("Focus")
+		let other = tag("other")
+		let lower = tag("focus")
+		let first = activity(focus, inherited: true)
+		let second = activity(other)
+		let third = activity(lower)
+		let fourth = activity(focus)
+		let grouper = PerTagSampleGrouper(attributes: [Activity.tagsAttribute])
+		let groups = try grouper.group(samples: [first, second, third, fourth])
+		XCTAssertEqual(groups.compactMap { $0.0 as? String }, ["Focus", "other", "focus"])
+		// Direct and inherited occurrences both contributed before this optimization.
+		XCTAssertEqual(groups[0].1.map { ($0 as! Activity).objectID },
+			[first.objectID, first.objectID, fourth.objectID])
+		XCTAssertEqual(groups[1].1.map { ($0 as! Activity).objectID }, [second.objectID])
+		XCTAssertEqual(groups[2].1.map { ($0 as! Activity).objectID }, [third.objectID])
+	}
+
+	func testTagGroupingHandlesManyDistinctAndRepeatedNames() throws {
+		let context = container.viewContext
+		let definition = ActivityDefinition(context: context)
+		definition.name = "Fixture"
+		definition.tags = NSSet()
+		var samples = [Sample]()
+		for index in 0..<512 {
+			let tag = Tag(context: context)
+			tag.name = "tag-\(index)"
+			let activity = Activity(context: context)
+			activity.definition = definition
+			activity.tags = NSSet(object: tag)
+			samples.append(activity)
+		}
+		let grouper = PerTagSampleGrouper(attributes: [Activity.tagsAttribute])
+		let groups = try grouper.group(samples: samples + samples)
+		XCTAssertEqual(groups.compactMap { $0.0 as? String }, (0..<512).map { "tag-\($0)" })
+		XCTAssertTrue(groups.allSatisfy { $0.1.count == 2 })
+		XCTAssertTrue(try grouper.group(samples: []).isEmpty)
+	}
+
 	func testNestedQueryAndBooleanGroupsSurviveDiskReopen() throws {
 		let query = injected(QueryFactory.self).moodQuery()
 		query.expression = AndExpression(
