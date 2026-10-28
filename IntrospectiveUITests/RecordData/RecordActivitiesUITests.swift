@@ -56,7 +56,7 @@ final class RecordActivitiesUITests: UITest {
 		// when
 		// this is triggering the navigate back gesture all of the sudden
 		app.tables.staticTexts[definition.name].gentleSwipe(.right)
-		app.tables.buttons["✎ All"].tap()
+		app.tables.buttons["edit \(definition.name)"].tap()
 
 		// then
 		XCTAssertEqual(activityDefinitionNameField().value as? String, definition.name)
@@ -75,7 +75,7 @@ final class RecordActivitiesUITests: UITest {
 
 		// when
 		app.tables.staticTexts[definition.name].gentleSwipe(.right)
-		app.tables.buttons["✎ All"].tap()
+		app.tables.buttons["edit \(definition.name)"].tap()
 		deleteContentOf(textField: app.textViews["activity description"])
 		delete(numberOfTags: definition.tags!.count, fromTagsField: activityDefinitionTagsField())
 
@@ -536,7 +536,7 @@ final class RecordActivitiesUITests: UITest {
 
 		// when
 		app.tables.cells.staticTexts[definition.name].swipeLeft()
-		app.tables.buttons["🗑️ Last"].tap()
+		app.tables.buttons["delete most recent \(definition.name)"].tap()
 		app.buttons["Yes"].tap()
 
 		// then
