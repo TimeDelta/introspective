@@ -23,7 +23,6 @@ public final class UnifiedDayViewController: DayViewController {
 
 	private static let log = Log()
 
-	private final var stopQueryFunctions = [() -> Void]()
 
 	private final let healthKitUtil = injected(HealthKitUtil.self)
 
@@ -192,6 +191,8 @@ public final class UnifiedDayViewController: DayViewController {
 		to toDate: Date? = nil,
 		initSample: @escaping (HKType) -> Type
 	) -> [Type] {
+		var stopQueryFunctions = [() -> Void]()
+		defer { stopQueryFunctions.forEach { $0() } }
 		var typeSamples = [Type]()
 		var errorMessage: String?
 		let group = DispatchGroup()
