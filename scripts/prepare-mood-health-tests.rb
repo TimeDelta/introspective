@@ -22,6 +22,17 @@ if File.exist?(File.join(name, saved_tests)) && !target.source_build_phase.files
   target.add_file_references([group.new_file(saved_tests)])
 end
 
+# Compile the actual app graph sources into the hostless regression target.
+# They depend on production frameworks, not on the app's entry point or UI state.
+%w[XYGraphDataGenerator SingleSampleTypeXYGraphDataGenerator].each do |basename|
+  path = File.expand_path("Introspective/UI/Graphing/GraphDataGenerators/#{basename}.swift")
+  reference = project.files.find { |file| file.real_path.to_s == path }
+  raise "Missing production graph source #{path}" unless reference
+  unless target.source_build_phase.files_references.include?(reference)
+    target.add_file_references([reference])
+  end
+end
+
 target.build_configurations.each do |config|
   app_config = app.build_configurations.find { |item| item.name == config.name }
   raise "Missing app configuration #{config.name}" unless app_config

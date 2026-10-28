@@ -115,6 +115,80 @@ final class SavedQueryTests: XCTestCase {
 		return mood
 	}
 
+	func testGraphNumericSortResolvesKeysOnceAndPreservesRoundingTies() {
+		let generator = XYGraphDataGenerator(log: Log())
+		let values = Array((0..<512).reversed())
+		var resolutions = 0
+		let sorted = generator.sortValuesAsNumbers(values) { value in
+			resolutions += 1
+			return String(value)
+		}
+		XCTAssertEqual(sorted, Array(0..<512))
+		XCTAssertEqual(resolutions, values.count)
+		XCTAssertEqual(generator.sortValuesAsNumbers(["2.019", "1", "2.011"], by: { $0 }),
+			["1", "2.019", "2.011"])
+		XCTAssertTrue(generator.sortValuesAsNumbers([Int](), by: { String($0) }).isEmpty)
+	}
+
+	func testGraphDateSortResolvesKeysOnce() {
+		let generator = XYGraphDataGenerator(log: Log())
+		let calendar = injected(CalendarUtil.self)
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		let dates = (0..<16).reversed().map { base.addingTimeInterval(Double($0) * 86_400) }
+		var resolutions = 0
+		let sorted = generator.sortValuesAsDates(dates) { date in
+			resolutions += 1
+			return calendar.string(for: date, inFormat: defaultDateFormat)
+		}
+		XCTAssertEqual(sorted, dates.sorted())
+		XCTAssertEqual(resolutions, dates.count)
+	}
+
+	func testGraphWeekdaySortResolvesKeysOnceAndPreservesDuplicates() {
+		let generator = XYGraphDataGenerator(log: Log())
+		let days = [DayOfWeek.Saturday, .Tuesday, .Sunday, .Tuesday]
+		var resolutions = 0
+		let sorted = generator.sortValuesAsDaysOfWeek(days) { day in
+			resolutions += 1
+			return day.fullDayName
+		}
+		XCTAssertEqual(sorted, [.Sunday, .Tuesday, .Tuesday, .Saturday])
+		XCTAssertEqual(resolutions, days.count)
+	}
+
+	func testGraphPointGroupsDeduplicateAcrossManySeriesInFirstSeenOrder() throws {
+		let first = try mood(1), second = try mood(2)
+		first.note = "zeta"; second.note = "alpha"
+		let grouper = SplitByListElementSampleGrouper(attributes: [MoodImpl.note])
+		let generator = SingleSampleTypeXYGraphDataGenerator(seriesGrouper: nil, pointGrouper: grouper,
+			xAxis: nil, yAxis: [], usePointGroupValueForXAxis: true)
+		let series: [(Any, [Sample])] = (0..<256).map { ($0, [first, second]) }
+		let values = try XCTUnwrap(generator.getAllSortedXGroupValuesIfPointGrouped(seriesGroups: series))
+		XCTAssertEqual(values.compactMap { $0 as? String }, ["zeta", "alpha"])
+		XCTAssertTrue(try XCTUnwrap(generator.getAllSortedXGroupValuesIfPointGrouped(seriesGroups: [])).isEmpty)
+	}
+
+	func testGraphPointGroupsPreserveNumericOrderingAndMissingGrouperBehavior() throws {
+		let first = try mood(1), second = try mood(2)
+		first.note = "10"; second.note = "2"
+		let grouper = SplitByListElementSampleGrouper(attributes: [MoodImpl.note])
+		let generator = SingleSampleTypeXYGraphDataGenerator(seriesGrouper: nil, pointGrouper: grouper,
+			xAxis: nil, yAxis: [], usePointGroupValueForXAxis: true)
+		let values = try XCTUnwrap(generator.getAllSortedXGroupValuesIfPointGrouped(seriesGroups: [("a", [first, second]), ("b", [second])]))
+		XCTAssertEqual(values.compactMap { $0 as? String }, ["2", "10"])
+		let ungrouped = SingleSampleTypeXYGraphDataGenerator(seriesGrouper: nil, pointGrouper: nil,
+			xAxis: nil, yAxis: [], usePointGroupValueForXAxis: false)
+		XCTAssertNil(try ungrouped.getAllSortedXGroupValuesIfPointGrouped(seriesGroups: [("a", [first])]))
+	}
+
+	func testGraphPointGroupsPropagateGroupingErrors() throws {
+		let sample = try mood(1)
+		let grouper = SplitByListElementSampleGrouper(attributes: [])
+		let generator = SingleSampleTypeXYGraphDataGenerator(seriesGrouper: nil, pointGrouper: grouper,
+			xAxis: nil, yAxis: [], usePointGroupValueForXAxis: true)
+		XCTAssertThrowsError(try generator.getAllSortedXGroupValuesIfPointGrouped(seriesGroups: [("a", [sample])]))
+	}
+
 	func testNestedQueryAndBooleanGroupsSurviveDiskReopen() throws {
 		let query = injected(QueryFactory.self).moodQuery()
 		query.expression = AndExpression(
