@@ -139,6 +139,134 @@ final class SavedQueryTests: XCTestCase {
 		return mood
 	}
 
+	func testGraphNumericSortResolvesKeysOnceAndPreservesRoundingTies() {
+		let generator = XYGraphDataGenerator(log: Log())
+		let values = Array((0..<512).reversed())
+		var resolutions = 0
+		let sorted = generator.sortValuesAsNumbers(values) { value in
+			resolutions += 1
+			return String(value)
+		}
+		XCTAssertEqual(sorted, Array(0..<512))
+		XCTAssertEqual(resolutions, values.count)
+		XCTAssertEqual(generator.sortValuesAsNumbers(["2.019", "1", "2.011"], by: { $0 }),
+			["1", "2.019", "2.011"])
+		XCTAssertTrue(generator.sortValuesAsNumbers([Int](), by: { String($0) }).isEmpty)
+	}
+
+	func testGraphDateSortResolvesKeysOnce() {
+		let generator = XYGraphDataGenerator(log: Log())
+		let calendar = injected(CalendarUtil.self)
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		let dates = (0..<16).reversed().map { base.addingTimeInterval(Double($0) * 86_400) }
+		var resolutions = 0
+		let sorted = generator.sortValuesAsDates(dates) { date in
+			resolutions += 1
+			return calendar.string(for: date, inFormat: defaultDateFormat)
+		}
+		XCTAssertEqual(sorted, dates.sorted())
+		XCTAssertEqual(resolutions, dates.count)
+	}
+
+	func testGraphWeekdaySortResolvesKeysOnceAndPreservesDuplicates() {
+		let generator = XYGraphDataGenerator(log: Log())
+		let days = [DayOfWeek.Saturday, .Tuesday, .Sunday, .Tuesday]
+		var resolutions = 0
+		let sorted = generator.sortValuesAsDaysOfWeek(days) { day in
+			resolutions += 1
+			return day.fullDayName
+		}
+		XCTAssertEqual(sorted, [.Sunday, .Tuesday, .Tuesday, .Saturday])
+		XCTAssertEqual(resolutions, days.count)
+	}
+
+	func testGraphPointGroupsDeduplicateAcrossManySeriesInFirstSeenOrder() throws {
+		let first = try mood(1), second = try mood(2)
+		first.note = "zeta"; second.note = "alpha"
+		let grouper = SplitByListElementSampleGrouper(attributes: [MoodImpl.note])
+		let generator = SingleSampleTypeXYGraphDataGenerator(seriesGrouper: nil, pointGrouper: grouper,
+			xAxis: nil, yAxis: [], usePointGroupValueForXAxis: true)
+		let series: [(Any, [Sample])] = (0..<256).map { ($0, [first, second]) }
+		let values = try XCTUnwrap(generator.getAllSortedXGroupValuesIfPointGrouped(seriesGroups: series))
+		XCTAssertEqual(values.compactMap { $0 as? String }, ["zeta", "alpha"])
+		XCTAssertTrue(try XCTUnwrap(generator.getAllSortedXGroupValuesIfPointGrouped(seriesGroups: [])).isEmpty)
+	}
+
+	func testGraphPointGroupsPreserveNumericOrderingAndMissingGrouperBehavior() throws {
+		let first = try mood(1), second = try mood(2)
+		first.note = "10"; second.note = "2"
+		let grouper = SplitByListElementSampleGrouper(attributes: [MoodImpl.note])
+		let generator = SingleSampleTypeXYGraphDataGenerator(seriesGrouper: nil, pointGrouper: grouper,
+			xAxis: nil, yAxis: [], usePointGroupValueForXAxis: true)
+		let values = try XCTUnwrap(generator.getAllSortedXGroupValuesIfPointGrouped(seriesGroups: [("a", [first, second]), ("b", [second])]))
+		XCTAssertEqual(values.compactMap { $0 as? String }, ["2", "10"])
+		let ungrouped = SingleSampleTypeXYGraphDataGenerator(seriesGrouper: nil, pointGrouper: nil,
+			xAxis: nil, yAxis: [], usePointGroupValueForXAxis: false)
+		XCTAssertNil(try ungrouped.getAllSortedXGroupValuesIfPointGrouped(seriesGroups: [("a", [first])]))
+	}
+
+	func testGraphPointGroupsPropagateGroupingErrors() throws {
+		let sample = try mood(1)
+		let grouper = SplitByListElementSampleGrouper(attributes: [])
+		let generator = SingleSampleTypeXYGraphDataGenerator(seriesGrouper: nil, pointGrouper: grouper,
+			xAxis: nil, yAxis: [], usePointGroupValueForXAxis: true)
+		XCTAssertThrowsError(try generator.getAllSortedXGroupValuesIfPointGrouped(seriesGroups: [("a", [sample])]))
+	}
+
+	func testTagGroupingPreservesFirstSeenOrderCaseAndDuplicateMembership() throws {
+		let context = container.viewContext
+		func tag(_ name: String) -> Tag {
+			let tag = Tag(context: context)
+			tag.name = name
+			return tag
+		}
+		func activity(_ tag: Tag, inherited: Bool = false) -> Activity {
+			let definition = ActivityDefinition(context: context)
+			definition.name = "Fixture"
+			definition.tags = inherited ? NSSet(object: tag) : NSSet()
+			let activity = Activity(context: context)
+			activity.definition = definition
+			activity.tags = NSSet(object: tag)
+			return activity
+		}
+		let focus = tag("Focus")
+		let other = tag("other")
+		let lower = tag("focus")
+		let first = activity(focus, inherited: true)
+		let second = activity(other)
+		let third = activity(lower)
+		let fourth = activity(focus)
+		let grouper = PerTagSampleGrouper(attributes: [Activity.tagsAttribute])
+		let groups = try grouper.group(samples: [first, second, third, fourth])
+		XCTAssertEqual(groups.compactMap { $0.0 as? String }, ["Focus", "other", "focus"])
+		// Direct and inherited occurrences both contributed before this optimization.
+		XCTAssertEqual(groups[0].1.map { ($0 as! Activity).objectID },
+			[first.objectID, first.objectID, fourth.objectID])
+		XCTAssertEqual(groups[1].1.map { ($0 as! Activity).objectID }, [second.objectID])
+		XCTAssertEqual(groups[2].1.map { ($0 as! Activity).objectID }, [third.objectID])
+	}
+
+	func testTagGroupingHandlesManyDistinctAndRepeatedNames() throws {
+		let context = container.viewContext
+		let definition = ActivityDefinition(context: context)
+		definition.name = "Fixture"
+		definition.tags = NSSet()
+		var samples = [Sample]()
+		for index in 0..<512 {
+			let tag = Tag(context: context)
+			tag.name = "tag-\(index)"
+			let activity = Activity(context: context)
+			activity.definition = definition
+			activity.tags = NSSet(object: tag)
+			samples.append(activity)
+		}
+		let grouper = PerTagSampleGrouper(attributes: [Activity.tagsAttribute])
+		let groups = try grouper.group(samples: samples + samples)
+		XCTAssertEqual(groups.compactMap { $0.0 as? String }, (0..<512).map { "tag-\($0)" })
+		XCTAssertTrue(groups.allSatisfy { $0.1.count == 2 })
+		XCTAssertTrue(try grouper.group(samples: []).isEmpty)
+	}
+
 	@MainActor private func loadChart(_ controller: BasicXYChartViewControllerImpl) {
 		controller.chartType = .line
 		controller.pleaseBePatientLabel = UILabel()
@@ -302,60 +430,6 @@ final class SavedQueryTests: XCTestCase {
 		let util = SampleUtilImpl()
 		XCTAssertEqual(util.getOnly(samples: samples, from: base, to: base.addingTimeInterval(60)).map { $0.objectID }, [ongoing.objectID])
 		XCTAssertEqual(util.getOnly(samples: samples, from: nil, to: base.addingTimeInterval(61)).map { $0.objectID }, [ongoing.objectID, boundary.objectID])
-	}
-
-	func testTagGroupingPreservesFirstSeenOrderCaseAndDuplicateMembership() throws {
-		let context = container.viewContext
-		func tag(_ name: String) -> Tag {
-			let tag = Tag(context: context)
-			tag.name = name
-			return tag
-		}
-		func activity(_ tag: Tag, inherited: Bool = false) -> Activity {
-			let definition = ActivityDefinition(context: context)
-			definition.name = "Fixture"
-			definition.tags = inherited ? NSSet(object: tag) : NSSet()
-			let activity = Activity(context: context)
-			activity.definition = definition
-			activity.tags = NSSet(object: tag)
-			return activity
-		}
-		let focus = tag("Focus")
-		let other = tag("other")
-		let lower = tag("focus")
-		let first = activity(focus, inherited: true)
-		let second = activity(other)
-		let third = activity(lower)
-		let fourth = activity(focus)
-		let grouper = PerTagSampleGrouper(attributes: [Activity.tagsAttribute])
-		let groups = try grouper.group(samples: [first, second, third, fourth])
-		XCTAssertEqual(groups.compactMap { $0.0 as? String }, ["Focus", "other", "focus"])
-		// Direct and inherited occurrences both contributed before this optimization.
-		XCTAssertEqual(groups[0].1.map { ($0 as! Activity).objectID },
-			[first.objectID, first.objectID, fourth.objectID])
-		XCTAssertEqual(groups[1].1.map { ($0 as! Activity).objectID }, [second.objectID])
-		XCTAssertEqual(groups[2].1.map { ($0 as! Activity).objectID }, [third.objectID])
-	}
-
-	func testTagGroupingHandlesManyDistinctAndRepeatedNames() throws {
-		let context = container.viewContext
-		let definition = ActivityDefinition(context: context)
-		definition.name = "Fixture"
-		definition.tags = NSSet()
-		var samples = [Sample]()
-		for index in 0..<512 {
-			let tag = Tag(context: context)
-			tag.name = "tag-\(index)"
-			let activity = Activity(context: context)
-			activity.definition = definition
-			activity.tags = NSSet(object: tag)
-			samples.append(activity)
-		}
-		let grouper = PerTagSampleGrouper(attributes: [Activity.tagsAttribute])
-		let groups = try grouper.group(samples: samples + samples)
-		XCTAssertEqual(groups.compactMap { $0.0 as? String }, (0..<512).map { "tag-\($0)" })
-		XCTAssertTrue(groups.allSatisfy { $0.1.count == 2 })
-		XCTAssertTrue(try grouper.group(samples: []).isEmpty)
 	}
 
 	func testNestedQueryAndBooleanGroupsSurviveDiskReopen() throws {
