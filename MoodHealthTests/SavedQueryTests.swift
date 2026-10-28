@@ -69,6 +69,38 @@ private final class ExportBufferProbe: Exportable {
 	func export(to csv: CSVWriter) throws { try write(value); try csv.write(field: String(value)) }
 }
 
+// Exercise real SQLite fetches while recording the number of returned objects.
+private final class ActivityLookupDatabase: Database {
+	let base: Database
+	var returnedCounts = [Int]()
+	init(_ base: Database) { self.base = base }
+	func transaction() -> Transaction { base.transaction() }
+	func setModifiedExternally(_ modified: Bool) { base.setModifiedExternally(modified) }
+	func refreshContext() { base.refreshContext() }
+	func fetchedResultsController<T: NSManagedObject>(type: T.Type, sortDescriptors: [NSSortDescriptor],
+		cacheName: String?) -> NSFetchedResultsController<T> {
+		base.fetchedResultsController(type: type, sortDescriptors: sortDescriptors, cacheName: cacheName)
+	}
+	func query<T: NSManagedObject>(_ request: NSFetchRequest<T>) throws -> [T] {
+		let result = try base.query(request)
+		returnedCounts.append(result.count)
+		return result
+	}
+	func count<T: NSManagedObject>(_ type: T.Type) throws -> Int { try base.count(type) }
+	func count<T: NSFetchRequestResult>(_ request: NSFetchRequest<T>) throws -> Int { try base.count(request) }
+	func pull<T: NSManagedObject>(savedObject: T) throws -> T { try base.pull(savedObject: savedObject) }
+	func pull<T: NSManagedObject>(savedObject: T, fromSameContextAs otherObject: NSManagedObject) throws -> T {
+		try base.pull(savedObject: savedObject, fromSameContextAs: otherObject)
+	}
+	func pull<T: NSManagedObject>(savedObject: T, fromContext context: NSManagedObjectContext) throws -> T {
+		try base.pull(savedObject: savedObject, fromContext: context)
+	}
+	func deleteEverything() throws { try base.deleteEverything() }
+	func cleanUpManagedObjectWithStrongReferenceCycle<T: NSManagedObject>(_ object: T) {
+		base.cleanUpManagedObjectWithStrongReferenceCycle(object)
+	}
+}
+
 final class SavedQueryTests: XCTestCase {
 	private static let bundle = Bundle(for: SavedQueryTests.self)
 	private static let model = NSManagedObjectModel.mergedModel(from: [bundle])!
@@ -137,6 +169,89 @@ final class SavedQueryTests: XCTestCase {
 		mood.minRating = 0; mood.maxRating = 7; mood.rating = rating
 		try context.save()
 		return mood
+	}
+
+	private func lookupDefinition(_ name: String, index: Int = 0) throws -> ActivityDefinition {
+		let entity = try XCTUnwrap(NSEntityDescription.entity(forEntityName: ActivityDefinition.entityName, in: container.viewContext))
+		let definition = ActivityDefinition(entity: entity, insertInto: container.viewContext)
+		definition.name = name
+		definition.recordScreenIndex = Int16(index)
+		return definition
+	}
+
+	private func lookupActivity(_ definition: ActivityDefinition, start: Date, end: Date? = nil) throws -> Activity {
+		let entity = try XCTUnwrap(NSEntityDescription.entity(forEntityName: Activity.entityName, in: container.viewContext))
+		let activity = Activity(entity: entity, insertInto: container.viewContext)
+		activity.definition = definition
+		activity.start = start
+		activity.end = end
+		return activity
+	}
+
+	private func recordLookupResults() -> ActivityLookupDatabase {
+		let database = ActivityLookupDatabase(injected(Database.self))
+		DependencyInjector.register([SavedQueryTestProvider(database, injected(Settings.self))])
+		return database
+	}
+
+	func testActivityLookupsReturnOneRowFromLargeUnsortedHistory() throws {
+		let definition = try lookupDefinition("Résumé")
+		let other = try lookupDefinition("Other", index: 1)
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		var latest: Activity?
+		for number in 0..<1_024 {
+			let offset = (number * 73) % 1_024 // Deliberately not insertion/date order.
+			let start = base.addingTimeInterval(Double(offset * 60))
+			let activity = try lookupActivity(definition, start: start,
+				end: offset.isMultiple(of: 2) ? start.addingTimeInterval(30) : nil)
+			if offset == 1_023 { latest = activity }
+		}
+		let otherStart = base.addingTimeInterval(6_000 * 60)
+		let otherEnd = otherStart.addingTimeInterval(30)
+		_ = try lookupActivity(other, start: otherStart, end: otherEnd)
+		try container.viewContext.save()
+		let latestID = try XCTUnwrap(latest).objectID
+		let database = recordLookupResults()
+		let dao = ActivityDAOImpl()
+		XCTAssertEqual(try dao.getMostRecentActivityEndDate(), otherEnd)
+		XCTAssertEqual(try dao.getMostRecentlyStartedActivity(for: definition)?.objectID, latestID)
+		XCTAssertEqual(try dao.getMostRecentlyStartedIncompleteActivity(for: definition)?.objectID, latestID)
+		XCTAssertTrue(try dao.hasUnfinishedActivity(definition))
+		XCTAssertTrue(try dao.activityDefinitionWithNameExists("RESUME"))
+		// This fails if a lookup materializes the full matching history again.
+		XCTAssertEqual(database.returnedCounts, [1, 1, 1, 1, 1])
+	}
+
+	func testActivityLookupsPreserveEmptyAndCompletedOnlyResults() throws {
+		let definition = try lookupDefinition("Empty")
+		let other = try lookupDefinition("Unrelated", index: 1)
+		try container.viewContext.save()
+		let database = recordLookupResults()
+		let dao = ActivityDAOImpl()
+		XCTAssertNil(try dao.getMostRecentActivityEndDate())
+		XCTAssertNil(try dao.getMostRecentlyStartedActivity(for: definition))
+		XCTAssertNil(try dao.getMostRecentlyStartedIncompleteActivity(for: definition))
+		XCTAssertFalse(try dao.hasUnfinishedActivity(definition))
+		XCTAssertFalse(try dao.activityDefinitionWithNameExists("Missing"))
+		XCTAssertEqual(database.returnedCounts, [0, 0, 0, 0, 0])
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		_ = try lookupActivity(definition, start: base, end: base.addingTimeInterval(60))
+		_ = try lookupActivity(other, start: base)
+		try container.viewContext.save()
+		XCTAssertNil(try dao.getMostRecentlyStartedIncompleteActivity(for: definition))
+		XCTAssertFalse(try dao.hasUnfinishedActivity(definition))
+	}
+
+	func testDefinitionExistenceRemainsCaseInsensitiveAndDuplicateLookupStillThrows() throws {
+		_ = try lookupDefinition("Résumé")
+		_ = try lookupDefinition("RESUME", index: 1)
+		try container.viewContext.save()
+		let database = recordLookupResults()
+		let dao = ActivityDAOImpl()
+		XCTAssertTrue(try dao.activityDefinitionWithNameExists("resume"))
+		XCTAssertEqual(database.returnedCounts, [1])
+		XCTAssertThrowsError(try dao.getDefinitionWith(name: "resume"))
+		XCTAssertEqual(database.returnedCounts, [1, 2])
 	}
 
 	func testGraphNumericSortResolvesKeysOnceAndPreservesRoundingTies() {
