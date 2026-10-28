@@ -39,13 +39,13 @@ public final class StoredQueriesDAOImpl: StoredQueriesDAO {
 	public func save(_ query: Query, name: String) throws {
 		let name = try Self.validName(name)
 		guard try getQueryWith(name: name) == nil else { throw GenericDisplayableError(title: "A saved query already has that name.") }
-		let transaction = injected(Database.self).transaction()
+		let transaction = try injected(Database.self).viewContextTransaction(for: StoredQuery.self, sortedBy: "name")
 		_ = try query.stored(withName: name, using: transaction)
 		try transaction.commit()
 	}
 
 	public func update(_ saved: StoredQuery, with query: Query) throws {
-		let transaction = injected(Database.self).transaction()
+		let transaction = try injected(Database.self).viewContextTransaction(for: StoredQuery.self, sortedBy: "name")
 		let stored = try transaction.pull(savedObject: saved)
 		let oldExpression = stored.storedExpression
 		let oldSubQuery = stored.storedSubQuery
@@ -62,13 +62,13 @@ public final class StoredQueriesDAOImpl: StoredQueriesDAO {
 		if let existing = try getQueryWith(name: name), existing.objectID != query.objectID {
 			throw GenericDisplayableError(title: "A saved query already has that name.")
 		}
-		let transaction = injected(Database.self).transaction()
+		let transaction = try injected(Database.self).viewContextTransaction(for: StoredQuery.self, sortedBy: "name")
 		try transaction.pull(savedObject: query).name = name
 		try transaction.commit()
 	}
 
 	public func delete(_ query: StoredQuery) throws {
-		let transaction = injected(Database.self).transaction()
+		let transaction = try injected(Database.self).viewContextTransaction(for: StoredQuery.self, sortedBy: "name")
 		try transaction.delete(transaction.pull(savedObject: query))
 		try transaction.commit()
 	}
