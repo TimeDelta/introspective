@@ -72,7 +72,7 @@ public final class MoodHealthExchange {
 	}
 
 	internal static let exportMarker = "com.bnova.Introspective.moodExport"
-	private let store = HKHealthStore()
+	private lazy var store = HKHealthStore()
 	private let type = HKObjectType.stateOfMindType()
 
 	public init() {}
