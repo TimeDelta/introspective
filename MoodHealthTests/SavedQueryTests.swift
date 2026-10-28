@@ -1,4 +1,6 @@
 import XCTest
+import UIKit
+import DataImport
 import HealthKit
 import CoreData
 import CSV
@@ -766,4 +768,119 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertEqual(stub.stopCount, 1)
 	}
 
+}
+
+private final class TransferProgressProbe: NSObject, Importer, Exporter {
+	let dataTypePluralName = "test records"
+	let sourceName = "test source"
+	let customImportMessage: String? = nil
+	let lastImport: Date? = nil
+	let isPaused = false
+	let isCancelled = false
+	var importOnlyNewData = true
+	let url = URL(fileURLWithPath: "/unused-test-export")
+	var progress = 0.25
+	var progressReads = 0
+	func percentComplete() -> Double { progressReads += 1; return progress }
+	func importData(from url: URL) throws {}
+	func exportData() throws {}
+	func resetLastImportDate() throws {}
+	func cancel() {}
+	func pause() {}
+	func resume() throws {}
+}
+
+final class TransferCellLifecycleTests: XCTestCase {
+	@MainActor private func importCell() -> ActiveImportTableViewCell {
+		let cell = ActiveImportTableViewCell()
+		cell.cancelButton = UIButton()
+		cell.descriptionLabel = UILabel()
+		cell.progressView = UIProgressView()
+		cell.percentLabel = UILabel()
+		return cell
+	}
+
+	@MainActor private func exportCell() -> ActiveExportTableViewCell {
+		let cell = ActiveExportTableViewCell()
+		cell.cancelButton = UIButton()
+		cell.descriptionLabel = UILabel()
+		cell.progressView = UIProgressView()
+		cell.percentLabel = UILabel()
+		cell.toolbar = UIToolbar()
+		return cell
+	}
+
+	@MainActor
+	func testActiveTransferTimersDoNotRetainCells() {
+		DependencyInjector.register([CommonInjectionProvider()])
+		weak var weakImport: ActiveImportTableViewCell?
+		weak var weakExport: ActiveExportTableViewCell?
+		autoreleasepool {
+			let importing = importCell()
+			let exporting = exportCell()
+			importing.importer = TransferProgressProbe()
+			exporting.exporter = TransferProgressProbe()
+			weakImport = importing
+			weakExport = exporting
+		}
+		XCTAssertNil(weakImport)
+		XCTAssertNil(weakExport)
+	}
+
+	@MainActor
+	func testReuseReleasesTransferObjectsAndStopsPolling() {
+		DependencyInjector.register([CommonInjectionProvider()])
+		let importing = importCell()
+		let exporting = exportCell()
+		weak var weakImporter: TransferProgressProbe?
+		weak var weakExporter: TransferProgressProbe?
+		autoreleasepool {
+			let importer = TransferProgressProbe()
+			let exporter = TransferProgressProbe()
+			weakImporter = importer
+			weakExporter = exporter
+			importing.importer = importer
+			exporting.exporter = exporter
+			importing.prepareForReuse()
+			exporting.prepareForReuse()
+		}
+		XCTAssertNil(weakImporter)
+		XCTAssertNil(weakExporter)
+		XCTAssertNil(importing.importer)
+		XCTAssertNil(exporting.exporter)
+		// A stale timer must not poll a nil or recycled transfer.
+		RunLoop.main.run(until: Date().addingTimeInterval(1.2))
+	}
+
+	@MainActor
+	func testRebindingExportIgnoresPreviousCompletionNotification() {
+		DependencyInjector.register([CommonInjectionProvider()])
+		let cell = exportCell()
+		let previous = TransferProgressProbe()
+		let current = TransferProgressProbe()
+		cell.toolbar.isHidden = true
+		cell.exporter = previous
+		cell.exporter = current
+		NotificationCenter.default.post(name: NotificationName.backgroundExportFinished.toName(), object: previous)
+		XCTAssertTrue(cell.toolbar.isHidden)
+		NotificationCenter.default.post(name: NotificationName.backgroundExportFinished.toName(), object: current)
+		XCTAssertFalse(cell.toolbar.isHidden)
+		XCTAssertFalse(cell.cancelButton.isEnabled)
+	}
+
+	@MainActor
+	func testCompletedTransfersDoNotStartPollingTimers() {
+		DependencyInjector.register([CommonInjectionProvider()])
+		let importing = importCell()
+		let exporting = exportCell()
+		let importer = TransferProgressProbe()
+		let exporter = TransferProgressProbe()
+		importer.progress = 1
+		exporter.progress = 1
+		importing.importer = importer
+		exporting.exporter = exporter
+		RunLoop.main.run(until: Date().addingTimeInterval(1.2))
+		XCTAssertEqual(importer.progressReads, 1)
+		XCTAssertEqual(exporter.progressReads, 1)
+	}
 }
