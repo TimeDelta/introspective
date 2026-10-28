@@ -16,37 +16,54 @@ import Samples
 public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<SampleType> {
 	private final var stopFunction: (() -> Void)?
 	private final var finishedQuery: Bool = false
+	private let cancellationLock = NSLock()
+	private var cancellationRequested = false
 
 	func initFromHKSample(_: HKSample) -> SampleType {
 		fatalError("Must override")
 	}
 
 	final override func run() {
-		injected(HealthKitUtil.self).getAuthorization {
-			(error: Error?) in
-
-			if error != nil {
-				self.queryDone(nil, error)
-				return
-			}
-
+		cancellationLock.lock()
+		cancellationRequested = false
+		finishedQuery = false
+		stopFunction = nil
+		cancellationLock.unlock()
+		injected(HealthKitUtil.self).getAuthorization { [weak self] error in
+			guard let self = self else { return }
+			self.cancellationLock.lock()
+			let cancelled = self.cancellationRequested
+			self.cancellationLock.unlock()
+			guard !cancelled else { return }
+			if let error = error { self.finish(nil, error); return }
 			SampleType.initUnits()
-			// need a way of building HealthKit-specific predicates to avoid failures like
-			// "Expected constant value of class HKQuantity, received 83.699996948242188"
-			self.stopFunction = injected(HealthKitUtil.self).getSamples(
-				for: SampleType.self,
-				predicate: nil,
-				callback: self.processQueryResults
-			)
+			let stop = injected(HealthKitUtil.self).getSamples(for: SampleType.self, predicate: nil) { [weak self] samples, error in
+				self?.processQueryResults(originalSamples: samples, error: error)
+			}
+			self.cancellationLock.lock()
+			let shouldStop = self.cancellationRequested
+			if !shouldStop && !self.finishedQuery { self.stopFunction = stop }
+			self.cancellationLock.unlock()
+			if shouldStop { stop() }
 		}
 	}
 
 	public final override func stop() {
 		super.stop()
-		DispatchQueue.global(qos: .background).async {
-			while self.stopFunction == nil {}
-			self.stopFunction!()
-		}
+		cancellationLock.lock()
+		cancellationRequested = true
+		let stop = stopFunction
+		stopFunction = nil
+		cancellationLock.unlock()
+		stop?()
+	}
+
+	private func finish(_ result: SampleQueryResult<SampleType>?, _ error: Error?) {
+		cancellationLock.lock()
+		finishedQuery = true
+		stopFunction = nil
+		cancellationLock.unlock()
+		queryDone(result, error)
 	}
 
 	override func samplePassesFilters(_ sample: Sample) throws -> Bool {
@@ -60,11 +77,11 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 
 	private final func processQueryResults(originalSamples: [HKSample]?, error: Error?) {
 		if error != nil {
-			queryDone(nil, error)
+			finish(nil, error)
 			return
 		}
 		guard let originalSamples = originalSamples else {
-			queryDone(nil, NoHealthKitSamplesFoundQueryError(sampleType: SampleType.self))
+			finish(nil, NoHealthKitSamplesFoundQueryError(sampleType: SampleType.self))
 			return
 		}
 
@@ -74,11 +91,10 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 
 			if !stopped {
 				let result = SampleQueryResult<SampleType>(filteredSamples)
-				finishedQuery = true
-				queryDone(result, nil)
+				finish(result, nil)
 			}
 		} catch {
-			queryDone(nil, error)
+			finish(nil, error)
 		}
 	}
 }

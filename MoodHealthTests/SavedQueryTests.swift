@@ -1,4 +1,5 @@
 import XCTest
+import HealthKit
 import CoreData
 import Common
 import DependencyInjection
@@ -22,6 +23,25 @@ private final class SavedQueryTestProvider: InjectionProvider {
 		if type == Database.self { return database as! Type }
 		if type == Settings.self { return settings as! Type }
 		throw NSError(domain: "SavedQueryTests", code: 1)
+	}
+}
+
+private final class ReviewHealthStub: HealthKitUtil, InjectionProvider {
+	let types: [Any.Type] = [HealthKitUtil.self]
+	var authorization: ((Error?) -> Void)?
+	var samples: (([HKSample]?, Error?) -> Void)?
+	var stopCount = 0
+	func get<Type>(_ type: Type.Type) throws -> Type { self as! Type }
+	func setTimeZoneIfApplicable(for date: inout Date, from sample: HKSample) {}
+	func calculate(_ calculation: HKStatisticsOptions, _ type: HealthKitQuantitySample.Type,
+		from startDate: Date, to endDate: Date, callback: @escaping (Double?, Error?) -> Void) { callback(nil, nil) }
+	func preferredUnitFor(_ typeId: HKQuantityTypeIdentifier) -> HKUnit? { HKUnit.count() }
+	func getAuthorization(callback: @escaping (Error?) -> Void) { authorization = callback }
+	func getSamples(for type: HealthKitSample.Type, from startDate: Date?, to endDate: Date?,
+		predicate: NSPredicate?, callback: @escaping ([HKSample]?, Error?) -> Void) -> (() -> Void) {
+		samples = callback
+		// Model HealthKit retaining the result handler until stopped.
+		return { _ = callback; self.stopCount += 1 }
 	}
 }
 
@@ -523,6 +543,56 @@ final class SavedQueryTests: XCTestCase {
 	func testCalendarGroupingEmptyResultsReturnsNoGroups() throws {
 		let grouper = SameTimeUnitSampleGrouper(sampleType: MoodImpl.self)
 		XCTAssertTrue(try grouper.group(samples: []).isEmpty)
+	}
+
+	func testHealthQueryCancellationBeforeAuthorizationReleasesClient() throws {
+		let stub = ReviewHealthStub()
+		DependencyInjector.register([stub])
+		var query: Query? = injected(QueryFactory.self).stepsQuery()
+		weak var weakQuery = query
+		var client: NSObject? = NSObject()
+		weak var weakClient = client
+		query?.runQuery { [retained = client!] (_: QueryResult?, _: Error?) in _ = retained }
+		client = nil
+		query?.stop()
+		XCTAssertNil(weakClient)
+		stub.authorization?(nil)
+		XCTAssertNil(stub.samples, "Cancellation must prevent starting a Health fetch")
+		query = nil
+		XCTAssertNil(weakQuery)
+	}
+
+	func testCompletedHealthQueryDoesNotRetainItselfThroughStopHandler() throws {
+		let stub = ReviewHealthStub()
+		DependencyInjector.register([stub])
+		var query: Query? = injected(QueryFactory.self).stepsQuery()
+		weak var weakQuery = query
+		var calls = 0
+		query?.runQuery { (_: QueryResult?, error: Error?) in XCTAssertNil(error); calls += 1 }
+		stub.authorization?(nil)
+		stub.samples?([], nil)
+		XCTAssertEqual(calls, 1)
+		query = nil
+		XCTAssertNil(weakQuery)
+	}
+
+	func testHealthQueryErrorReleasesCapturedClientWhileQueryIsAlive() throws {
+		let stub = ReviewHealthStub()
+		DependencyInjector.register([stub])
+		let query = injected(QueryFactory.self).stepsQuery()
+		var client: NSObject? = NSObject()
+		weak var weakClient = client
+		var calls = 0
+		query.runQuery { [retained = client!] (_: QueryResult?, error: Error?) in
+			_ = retained
+			XCTAssertNotNil(error)
+			calls += 1
+		}
+		client = nil
+		stub.authorization?(NSError(domain: "Review", code: 1))
+		XCTAssertEqual(calls, 1)
+		XCTAssertNil(weakClient)
+		query.stop() // Authorization errors must not leave a spinning cancellation task.
 	}
 
 }

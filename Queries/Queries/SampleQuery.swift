@@ -55,7 +55,8 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 		queryCallbackParameters = nil
 		subQueryCallbackParameters = nil
 		stopped = false
-		subQuery?.query.runQuery(callback: { (result: QueryResult?, error: Error?) in
+		subQuery?.query.runQuery(callback: { [weak self] (result: QueryResult?, error: Error?) in
+			guard let self = self else { return }
 			self.subQueryCallbackParameters = (result, error)
 			if self.queryCallbackParameters != nil {
 				self.filterAndCallBack()
@@ -76,6 +77,9 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 
 	public func stop() {
 		stopped = true
+		callback = nil
+		queryCallbackParameters = nil
+		subQueryCallbackParameters = nil
 		subQuery?.query.stop()
 	}
 

@@ -120,14 +120,18 @@ public final class HealthKitUtilImpl: HealthKitUtil {
 	/// - Returns: A method that can be called to stop the query
 	public func getSamples(
 		for type: HealthKitSample.Type,
-		from _: Date?,
-		to _: Date?,
+		from startDate: Date?,
+		to endDate: Date?,
 		predicate: NSPredicate?,
 		callback: @escaping ([HKSample]?, Error?) -> Void
 	) -> (() -> Void) {
+		let datePredicate: NSPredicate? = (startDate != nil || endDate != nil)
+			? HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: []) : nil
+		let predicates = [predicate, datePredicate].compactMap { $0 }
+		let combinedPredicate = predicates.isEmpty ? nil : NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
 		let query = HKSampleQuery(
 			sampleType: type.sampleType,
-			predicate: predicate,
+			predicate: combinedPredicate,
 			limit: Int(HKObjectQueryNoLimit),
 			sortDescriptors: nil,
 			resultsHandler: { callback($1, $2) }
