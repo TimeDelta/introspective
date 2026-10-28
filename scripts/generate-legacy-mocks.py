@@ -32,7 +32,13 @@ def compatible_template(source):
     variables = 'let allVariables = uniques(variables: aProtocol.allVariables.filter({ !$0.isStatic }))'
     if source.count(variables) != 1:
         raise RuntimeError("Unexpected SwiftyMocky property selection; review inline mock adapter")
-    return (source.replace(".characters.split(", ".split(")
+    instance_methods = 'aProtocol.allMethods.filter({ !$0.isStatic })'
+    static_methods = 'aProtocol.allMethods.filter({ $0.isStatic })'
+    if source.count(instance_methods) != 2 or source.count(static_methods) != 2:
+        raise RuntimeError("Unexpected SwiftyMocky method selection; review initializer adapter")
+    return (source.replace(instance_methods, 'aProtocol.allMethods.filter({ !$0.isStatic || $0.isInitializer })')
+            .replace(static_methods, 'aProtocol.allMethods.filter({ $0.isStatic && !$0.isInitializer })')
+            .replace(".characters.split(", ".split(")
             .replace(old_signature, "[String: [SourceryRuntime.Attribute]]")
             .replace(old_mapping, "return attributes.values.flatMap { $0 }.map { $0.description }")
             .replace(selection, selection + '\n    if autoMockable, let selected = argument["mockTypes"] as? [String], !selected.contains(type.name) { continue }')
