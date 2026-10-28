@@ -23,7 +23,7 @@ final class EqualToSelectOneAttributeRestrictionUnitTests: UnitTest {
 	final override func setUp() {
 		super.setUp()
 		value = DayOfWeek.Sunday
-		attribute = DayOfWeekAttribute(name: "name of restricted attribute")
+		attribute = DayOfWeekAttribute(id: 0, name: "name of restricted attribute")
 		restriction = EqualToSelectOneAttributeRestriction(restrictedAttribute: attribute, value: value, valueAttribute: attribute)
 	}
 
@@ -59,7 +59,7 @@ final class EqualToSelectOneAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// given
-		let unknownAttribute = TextAttribute(name: "unknown")
+		let unknownAttribute = TextAttribute(id: 0, name: "unknown")
 
 		// when
 		XCTAssertThrowsError(try restriction.value(of: unknownAttribute)) { error in
@@ -80,7 +80,7 @@ final class EqualToSelectOneAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenUnknownAttribute_set_throwsUnknownAttributeError() {
 		// given
-		let unknownAttribute = TextAttribute(name: "unknown")
+		let unknownAttribute = TextAttribute(id: 0, name: "unknown")
 
 		// when
 		XCTAssertThrowsError(try restriction.set(attribute: unknownAttribute, to: value)) { error in
@@ -178,7 +178,7 @@ final class EqualToSelectOneAttributeRestrictionUnitTests: UnitTest {
 		// given
 		let expectedNewRestrictionValue = 2.0
 		let newAttribute = TypedEquatableSelectOneAttribute<Double>(
-			name: "new attribute",
+			id: 0, name: "new attribute",
 			typeName: "type",
 			possibleValues: [
 				expectedNewRestrictionValue,
@@ -206,7 +206,7 @@ final class EqualToSelectOneAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
 		// given
 		let other = EqualToSelectOneAttributeRestriction(
-			restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"),
+			restrictedAttribute: DateOnlyAttribute(id: 0, name: "not the same attribute"),
 			value: restriction.value as Any,
 			valueAttribute: attribute)
 
@@ -269,7 +269,7 @@ final class EqualToSelectOneAttributeRestrictionUnitTests: UnitTest {
 	func testGivenRestrictedAttributesMismatch_equalToAttributed_returnsFalse() {
 		// given
 		let other = EqualToSelectOneAttributeRestriction(
-			restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"),
+			restrictedAttribute: DateOnlyAttribute(id: 0, name: "not the same attribute"),
 			value: restriction.value as Any,
 			valueAttribute: attribute)
 
@@ -332,7 +332,7 @@ final class EqualToSelectOneAttributeRestrictionUnitTests: UnitTest {
 	func testGivenRestrictedAttributesMismatch_equalToRestriction_returnsFalse() {
 		// given
 		let other = EqualToSelectOneAttributeRestriction(
-			restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"),
+			restrictedAttribute: DateOnlyAttribute(id: 0, name: "not the same attribute"),
 			value: restriction.value as Any,
 			valueAttribute: attribute)
 
@@ -384,7 +384,7 @@ final class EqualToSelectOneAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
 		let other = EqualToSelectOneAttributeRestriction(
-			restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"),
+			restrictedAttribute: DateOnlyAttribute(id: 0, name: "not the same attribute"),
 			value: restriction.value as Any,
 			valueAttribute: attribute)
 

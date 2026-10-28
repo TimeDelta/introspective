@@ -18,7 +18,7 @@ final class LessThanIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	private typealias Me = LessThanIntegerAttributeRestrictionUnitTests
 	private static let valueAttribute = LessThanIntegerAttributeRestriction.valueAttribute
-	private static let restrictedAttribute = IntegerAttribute(name: "restricted")
+	private static let restrictedAttribute = IntegerAttribute(id: 0, name: "restricted")
 
 	private var restriction: LessThanIntegerAttributeRestriction!
 
@@ -193,7 +193,7 @@ final class LessThanIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
 		// given
-		let other = LessThanIntegerAttributeRestriction(restrictedAttribute: IntegerAttribute(name: "not the same attribute"))
+		let other = LessThanIntegerAttributeRestriction(restrictedAttribute: IntegerAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction == other
@@ -252,7 +252,7 @@ final class LessThanIntegerAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToAttributed_returnsFalse() {
 		// given
 		let otherAttributed: Attributed = LessThanIntegerAttributeRestriction(
-			restrictedAttribute: IntegerAttribute(name: "not the same attribute"))
+			restrictedAttribute: IntegerAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -312,7 +312,7 @@ final class LessThanIntegerAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
 		let otherRestriction: AttributeRestriction = LessThanIntegerAttributeRestriction(
-			restrictedAttribute: IntegerAttribute(name: "not the same attribute"))
+			restrictedAttribute: IntegerAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherRestriction)
@@ -359,7 +359,7 @@ final class LessThanIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let other = LessThanIntegerAttributeRestriction(restrictedAttribute: IntegerAttribute(name: "not the same attribute"))
+		let other = LessThanIntegerAttributeRestriction(restrictedAttribute: IntegerAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(other)

@@ -79,8 +79,8 @@ final class PerTagSampleGrouperUnitTests: UnitTest {
 	func testGivenNonTagBasedAttributes_init_doesNotIncludeThemAsPossibleVZaluesForAttributeSelectAttribute() {
 		// given
 		let attributes: [Attribute] = [
-			TextAttribute(name: "f"),
-			DoubleAttribute(name: "a"),
+			TextAttribute(id: 0, name: "f"),
+			DoubleAttribute(id: 0, name: "a"),
 		]
 
 		// when
@@ -140,7 +140,7 @@ final class PerTagSampleGrouperUnitTests: UnitTest {
 
 	func testGivenInvalidGroupByAttribute_group_throwsError() throws {
 		// given
-		grouper.groupByAttribute = TextAttribute(name: "fs")
+		grouper.groupByAttribute = TextAttribute(id: 0, name: "fs")
 		let samples = [SampleCreatorTestUtil.createSample()]
 
 		// when / then
@@ -192,7 +192,7 @@ final class PerTagSampleGrouperUnitTests: UnitTest {
 
 	func testGivenGroupByUnknownAttributeTypeWithStringValue_groupNameForValue_throwsError() throws {
 		// given
-		let invalidAttribute = TextAttribute(name: "fes")
+		let invalidAttribute = TextAttribute(id: 0, name: "fes")
 		grouper.groupByAttribute = invalidAttribute
 
 		// when / then
@@ -320,7 +320,7 @@ final class PerTagSampleGrouperUnitTests: UnitTest {
 
 	func testGivenAttributeThatIsNotAPossibleValue_set_throwsError() throws {
 		// given
-		let value = TextAttribute(name: "fs")
+		let value = TextAttribute(id: 0, name: "fs")
 
 		// when / then
 		XCTAssertThrowsError(try grouper.set(attribute: grouper.attributeSelectAttribute, to: value))

@@ -330,7 +330,7 @@ final class CalendarComponentAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = CalendarComponentAttribute(
-			name: attribute.name + "other stuff",
+			id: 0, name: attribute.name + "other stuff",
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
@@ -348,7 +348,7 @@ final class CalendarComponentAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = CalendarComponentAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: (attribute.extendedDescription ?? "") + "other stuff",
 			variableName: attribute.variableName,
@@ -366,7 +366,7 @@ final class CalendarComponentAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = CalendarComponentAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: (attribute.variableName ?? "") + "other stuff",
@@ -384,7 +384,7 @@ final class CalendarComponentAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = CalendarComponentAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
@@ -404,7 +404,7 @@ final class CalendarComponentAttributeUnitTests: UnitTest {
 		var otherPossibleValues: [Calendar.Component] = [.calendar]
 		otherPossibleValues.append(contentsOf: attribute.possibleValues as! [Calendar.Component])
 		let other = CalendarComponentAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
@@ -422,7 +422,7 @@ final class CalendarComponentAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = CalendarComponentAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
@@ -440,7 +440,7 @@ final class CalendarComponentAttributeUnitTests: UnitTest {
 
 	private final func useOptionalAttribute() {
 		attribute = CalendarComponentAttribute(
-			name: "name",
+			id: 0, name: "name",
 			description: "description",
 			variableName: "variable name",
 			optional: true,
@@ -449,7 +449,7 @@ final class CalendarComponentAttributeUnitTests: UnitTest {
 
 	private final func useRequiredAttribute() {
 		attribute = CalendarComponentAttribute(
-			name: "name",
+			id: 0, name: "name",
 			description: "description",
 			variableName: "variable name",
 			optional: false,

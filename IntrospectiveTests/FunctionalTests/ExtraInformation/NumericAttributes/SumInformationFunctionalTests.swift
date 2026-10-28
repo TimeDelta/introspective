@@ -22,7 +22,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 
 	final override func setUp() {
 		super.setUp()
-		attribute = DoubleAttribute(name: "attribute name")
+		attribute = DoubleAttribute(id: 0, name: "attribute name")
 		information = SumInformation(attribute)
 	}
 
@@ -42,7 +42,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 	func testGivenNoSamplesForIntegerAttribute_compute_returnsNoSamplesMessage() throws {
 		// given
 		let samples = [Sample]()
-		let information = SumInformation(IntegerAttribute(name: "doesn't matter"))
+		let information = SumInformation(IntegerAttribute(id: 0, name: "doesn't matter"))
 
 		// when
 		let sum = try information.compute(forSamples: samples)
@@ -54,7 +54,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 	func testGivenNoSamplesForDoubleAttribute_compute_returnsNoSamplesMessage() throws {
 		// given
 		let samples = [Sample]()
-		let information = SumInformation(DoubleAttribute(name: "doesn't matter"))
+		let information = SumInformation(DoubleAttribute(id: 0, name: "doesn't matter"))
 
 		// when
 		let sum = try information.compute(forSamples: samples)
@@ -66,7 +66,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 	func testGivenNoSamplesForDurationAttribute_compute_returnsNoSamplesMessage() throws {
 		// given
 		let samples = [Sample]()
-		let information = SumInformation(DurationAttribute(name: "doesn't matter"))
+		let information = SumInformation(DurationAttribute(id: 0, name: "doesn't matter"))
 
 		// when
 		let sum = try information.compute(forSamples: samples)
@@ -78,7 +78,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 	func testGivenNoSamplesForDosageAttribute_compute_returnsNoSamplesMessage() throws {
 		// given
 		let samples = [Sample]()
-		let information = SumInformation(DosageAttribute(name: "doesn't matter"))
+		let information = SumInformation(DosageAttribute(id: 0, name: "doesn't matter"))
 
 		// when
 		let sum = try information.compute(forSamples: samples)
@@ -89,7 +89,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 
 	func testGivenIntegerAttribute_compute_returnsCorrectValue() throws {
 		// given
-		let attribute = IntegerAttribute(name: "a")
+		let attribute = IntegerAttribute(id: 0, name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1, 2, 3, 4, 5], for: attribute)
 		let information = SumInformation(attribute)
 
@@ -102,7 +102,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 
 	func testGivenOptionalIntegerAttributeWithSomeSamplesHavingNilValue_compute_returnsCorrectValue() throws {
 		// given
-		let attribute = IntegerAttribute(name: "a", optional: true)
+		let attribute = IntegerAttribute(id: 0, name: "a", optional: true)
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1, nil, nil, 4, 5] as [Int?], for: attribute)
 		let information = SumInformation(attribute)
 
@@ -115,7 +115,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 
 	func testGivenDoubleAttribute_compute_returnsCorrectValue() throws {
 		// given
-		let attribute = DoubleAttribute(name: "a")
+		let attribute = DoubleAttribute(id: 0, name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1.0, 2.0, 3.0, 4.0, 5.0], for: attribute)
 		let information = SumInformation(attribute)
 
@@ -128,7 +128,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 
 	func testGivenOptionalDoubleAttributeWithSomeSamplesHavingNilValue_compute_returnsCorrectValue() throws {
 		// given
-		let attribute = DoubleAttribute(name: "a", optional: true)
+		let attribute = DoubleAttribute(id: 0, name: "a", optional: true)
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1.0, nil, nil, 4.0, 5.0] as [Double?], for: attribute)
 		let information = SumInformation(attribute)
 
@@ -236,7 +236,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 
 	func testGivenUnknownAttributeTypeWithNonEmptySampleArray_compute_throwsUnknownAttributeError() throws {
 		// given
-		let attribute = TextAttribute(name: "a")
+		let attribute = TextAttribute(id: 0, name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: ["a", "4"], for: attribute)
 		let information = SumInformation(attribute)
 
@@ -248,7 +248,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 	}
 
 	func testGivenUnknownAttributeTypeWithEmptySampleArray_compute_throwsDisplayableError() throws {
-		let attribute = TextAttribute(name: "a")
+		let attribute = TextAttribute(id: 0, name: "a")
 		let samples = [Sample]()
 		let information = SumInformation(attribute)
 
@@ -261,7 +261,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 
 	func testGivenEndDateRestrictionThatFilterOutAllSamples_compute_returnsNoSamplesMessage() throws {
 		// given
-		let attribute = DoubleAttribute(name: "a")
+		let attribute = DoubleAttribute(id: 0, name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1.0], for: attribute)
 		let information = SumInformation(attribute)
 		information.endDate = Date() - 1.days
@@ -275,7 +275,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 
 	func testGivenStartDateRestrictionThatFilterOutAllSamples_compute_returnsNoSamplesMessage() throws {
 		// given
-		let attribute = DoubleAttribute(name: "a")
+		let attribute = DoubleAttribute(id: 0, name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1.0], for: attribute)
 		let information = SumInformation(attribute)
 		information.startDate = Date() + 1.days
@@ -292,7 +292,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 	func testGivenNoSamplesForIntegerAttribute_computeGraphable_throwsDisplayableError() throws {
 		// given
 		let samples = [Sample]()
-		let information = SumInformation(IntegerAttribute(name: "doesn't matter"))
+		let information = SumInformation(IntegerAttribute(id: 0, name: "doesn't matter"))
 
 		// when
 		XCTAssertThrowsError(try information.computeGraphable(forSamples: samples)) { error in
@@ -304,7 +304,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 	func testGivenNoSamplesForDoubleAttribute_computeGraphable_throwsDisplayableError() throws {
 		// given
 		let samples = [Sample]()
-		let information = SumInformation(DoubleAttribute(name: "doesn't matter"))
+		let information = SumInformation(DoubleAttribute(id: 0, name: "doesn't matter"))
 
 		// when
 		XCTAssertThrowsError(try information.computeGraphable(forSamples: samples)) { error in
@@ -316,7 +316,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 	func testGivenNoSamplesForDurationAttribute_computeGraphable_throwsDisplayableError() throws {
 		// given
 		let samples = [Sample]()
-		let information = SumInformation(DurationAttribute(name: "doesn't matter"))
+		let information = SumInformation(DurationAttribute(id: 0, name: "doesn't matter"))
 
 		// when
 		XCTAssertThrowsError(try information.computeGraphable(forSamples: samples)) { error in
@@ -328,7 +328,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 	func testGivenNoSamplesForDosageAttribute_computeGraphable_throwsDisplayableError() throws {
 		// given
 		let samples = [Sample]()
-		let information = SumInformation(DosageAttribute(name: "doesn't matter"))
+		let information = SumInformation(DosageAttribute(id: 0, name: "doesn't matter"))
 
 		// when
 		XCTAssertThrowsError(try information.computeGraphable(forSamples: samples)) { error in
@@ -339,7 +339,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 
 	func testGivenIntegerAttribute_computeGraphable_returnsCorrectValue() throws {
 		// given
-		let attribute = IntegerAttribute(name: "a")
+		let attribute = IntegerAttribute(id: 0, name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1, 2, 3, 4, 5], for: attribute)
 		let information = SumInformation(attribute)
 
@@ -352,7 +352,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 
 	func testGivenOptionalIntegerAttributeWithSomeSamplesHavingNilValue_computeGraphable_returnsCorrectValue() throws {
 		// given
-		let attribute = IntegerAttribute(name: "a", optional: true)
+		let attribute = IntegerAttribute(id: 0, name: "a", optional: true)
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1, nil, nil, 4, 5] as [Int?], for: attribute)
 		let information = SumInformation(attribute)
 
@@ -365,7 +365,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 
 	func testGivenDoubleAttribute_computeGraphable_returnsCorrectValue() throws {
 		// given
-		let attribute = DoubleAttribute(name: "a")
+		let attribute = DoubleAttribute(id: 0, name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1.0, 2.0, 3.0, 4.0, 5.0], for: attribute)
 		let information = SumInformation(attribute)
 
@@ -378,7 +378,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 
 	func testGivenOptionalDoubleAttributeWithSomeSamplesHavingNilValue_computeGraphable_returnsCorrectValue() throws {
 		// given
-		let attribute = DoubleAttribute(name: "a", optional: true)
+		let attribute = DoubleAttribute(id: 0, name: "a", optional: true)
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1.0, nil, nil, 4.0, 5.0] as [Double?], for: attribute)
 		let information = SumInformation(attribute)
 
@@ -469,7 +469,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 
 	func testGivenUnknownAttributeTypeWithNonEmptySampleArray_computeGraphable_throwsUnknownAttributeError() throws {
 		// given
-		let attribute = TextAttribute(name: "a")
+		let attribute = TextAttribute(id: 0, name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: ["a", "4"], for: attribute)
 		let information = SumInformation(attribute)
 
@@ -481,7 +481,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 	}
 
 	func testGivenUnknownAttributeTypeWithEmptySampleArray_computeGraphable_throwsDisplayableError() throws {
-		let attribute = TextAttribute(name: "a")
+		let attribute = TextAttribute(id: 0, name: "a")
 		let samples = [Sample]()
 		let information = SumInformation(attribute)
 
@@ -494,7 +494,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 
 	func testGivenEndDateRestrictionThatFilterOutAllSamples_computeGraphable_throwsDisplayableError() throws {
 		// given
-		let attribute = DoubleAttribute(name: "a")
+		let attribute = DoubleAttribute(id: 0, name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1.0], for: attribute)
 		let information = SumInformation(attribute)
 		information.endDate = Date() - 1.days
@@ -508,7 +508,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 
 	func testGivenStartDateRestrictionThatFilterOutAllSamples_computeGraphable_throwsDisplayableError() throws {
 		// given
-		let attribute = DoubleAttribute(name: "a")
+		let attribute = DoubleAttribute(id: 0, name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1.0], for: attribute)
 		let information = SumInformation(attribute)
 		information.startDate = Date() + 1.days
@@ -532,7 +532,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 
 	func testGivenTwoInformationObjectsOfDifferentTypesWithSameRestrictedAttribute_equalTo_returnsFalse() throws {
 		// given
-		let restrictedAttribute = IntegerAttribute(name: "abc")
+		let restrictedAttribute = IntegerAttribute(id: 0, name: "abc")
 		let information = SumInformation(restrictedAttribute)
 		let otherInformation = MinimumInformation<Int>(restrictedAttribute)
 
@@ -545,9 +545,9 @@ final class SumInformationFunctionalTests: FunctionalTest {
 
 	func testGivenTwoInformationObjectsOfSameTypeWithDifferentRestrictedAttributes_equalTo_returnsFalse() throws {
 		// given
-		let restrictedAttribute = IntegerAttribute(name: "abc")
+		let restrictedAttribute = IntegerAttribute(id: 0, name: "abc")
 		let information = SumInformation(restrictedAttribute)
-		let otherAttribute = IntegerAttribute(name: restrictedAttribute.name + "some other stuff")
+		let otherAttribute = IntegerAttribute(id: 0, name: restrictedAttribute.name + "some other stuff")
 		let otherInformation = SumInformation(otherAttribute)
 
 		// when
@@ -559,7 +559,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 
 	func testGivenTwoSumInformationObjectsWithSameRestrictedAttribute_equalTo_returnsTrue() throws {
 		// given
-		let restrictedAttribute = IntegerAttribute(name: "abc")
+		let restrictedAttribute = IntegerAttribute(id: 0, name: "abc")
 		let information = SumInformation(restrictedAttribute)
 		let otherInformation = SumInformation(restrictedAttribute)
 

@@ -18,7 +18,7 @@ final class GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	private typealias Me = GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests
 	private static let valueAttribute = GreaterThanOrEqualToIntegerAttributeRestriction.valueAttribute
-	private static let restrictedAttribute = IntegerAttribute(name: "restricted")
+	private static let restrictedAttribute = IntegerAttribute(id: 0, name: "restricted")
 
 	private var restriction: GreaterThanOrEqualToIntegerAttributeRestriction!
 
@@ -194,7 +194,7 @@ final class GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
 		// given
 		let other = GreaterThanOrEqualToIntegerAttributeRestriction(
-			restrictedAttribute: IntegerAttribute(name: "not the same attribute"))
+			restrictedAttribute: IntegerAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction == other
@@ -253,7 +253,7 @@ final class GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToAttributed_returnsFalse() {
 		// given
 		let otherAttributed: Attributed = GreaterThanOrEqualToIntegerAttributeRestriction(
-			restrictedAttribute: IntegerAttribute(name: "not the same attribute"))
+			restrictedAttribute: IntegerAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -313,7 +313,7 @@ final class GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
 		let otherRestriction: AttributeRestriction = GreaterThanOrEqualToIntegerAttributeRestriction(
-			restrictedAttribute: IntegerAttribute(name: "not the same attribute"))
+			restrictedAttribute: IntegerAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherRestriction)
@@ -361,7 +361,7 @@ final class GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
 		let other = GreaterThanOrEqualToIntegerAttributeRestriction(
-			restrictedAttribute: IntegerAttribute(name: "not the same attribute"))
+			restrictedAttribute: IntegerAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(other)

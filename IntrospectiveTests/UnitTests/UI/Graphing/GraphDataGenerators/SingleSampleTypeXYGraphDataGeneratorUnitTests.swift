@@ -20,8 +20,8 @@ class SingleSampleTypeXYGraphDataGeneratorUnitTests: UnitTest {
 
 	func testGivenNoSeriesGrouperOrPointGrouperWithMultipleYAttributes_generateData_returnsCorrectData() throws {
 		// given
-		let xAttribute = DoubleAttribute(name: "x")
-		let yAttributes = [DoubleAttribute(name: "y1"), DoubleAttribute(name: "y2")]
+		let xAttribute = DoubleAttribute(id: 0, name: "x")
+		let yAttributes = [DoubleAttribute(id: 0, name: "y1"), DoubleAttribute(id: 0, name: "y2")]
 		let xAxis = SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation(attribute: xAttribute)
 		let yAxis = yAttributes.map {
 			SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation(attribute: $0)
@@ -71,8 +71,8 @@ class SingleSampleTypeXYGraphDataGeneratorUnitTests: UnitTest {
 
 	func testGivenSeriesGrouperButNoPointGrouperWithMultipleYAttributes_generateData_returnsCorrectData() throws {
 		// given
-		let xAttribute = DoubleAttribute(name: "x")
-		let yAttributes = [DoubleAttribute(name: "y1"), DoubleAttribute(name: "y2")]
+		let xAttribute = DoubleAttribute(id: 0, name: "x")
+		let yAttributes = [DoubleAttribute(id: 0, name: "y1"), DoubleAttribute(id: 0, name: "y2")]
 		let xAxis = SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation(attribute: xAttribute)
 		let yAxis = yAttributes.map {
 			SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation(attribute: $0)

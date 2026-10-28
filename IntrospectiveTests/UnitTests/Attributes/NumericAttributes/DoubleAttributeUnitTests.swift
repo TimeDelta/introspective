@@ -260,7 +260,7 @@ class DoubleAttributeUnitTests: UnitTest {
 	func testGivenWrongClass_equalTo_returnsFalse() {
 		// given
 		useRequiredAttribute()
-		let other = IntegerAttribute(name: "name")
+		let other = IntegerAttribute(id: 0, name: "name")
 
 		// when
 		let areEqual = attribute.equalTo(other)
@@ -284,7 +284,7 @@ class DoubleAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = DoubleAttribute(
-			name: attribute.name + "other stuff",
+			id: 0, name: attribute.name + "other stuff",
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
@@ -301,7 +301,7 @@ class DoubleAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = DoubleAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: (attribute.extendedDescription ?? "") + "other stuff",
 			variableName: attribute.variableName,
@@ -318,7 +318,7 @@ class DoubleAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = DoubleAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: (attribute.variableName ?? "") + "other stuff",
@@ -335,7 +335,7 @@ class DoubleAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = DoubleAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
@@ -352,7 +352,7 @@ class DoubleAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = DoubleAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
@@ -369,7 +369,7 @@ class DoubleAttributeUnitTests: UnitTest {
 
 	private final func useOptionalAttribute() {
 		attribute = DoubleAttribute(
-			name: "double",
+			id: 0, name: "double",
 			pluralName: "pluralName",
 			description: "description",
 			variableName: "variableName",
@@ -378,7 +378,7 @@ class DoubleAttributeUnitTests: UnitTest {
 
 	private final func useRequiredAttribute() {
 		attribute = DoubleAttribute(
-			name: "double",
+			id: 0, name: "double",
 			pluralName: "pluralName",
 			description: "description",
 			variableName: "variableName",

@@ -21,7 +21,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func test_description_containsRestrictedAttributeName() {
 		// when
-		let attribute = DoubleAttribute(name: "a")
+		let attribute = DoubleAttribute(id: 0, name: "a")
 		let information = AverageInformation(attribute)
 		let description = information.description
 
@@ -35,7 +35,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 	func testGivenNoSamples_compute_returnsNoSamplesMessage() throws {
 		// given
 		let samples = [Sample]()
-		let information = AverageInformation(IntegerAttribute(name: "doesn't matter"))
+		let information = AverageInformation(IntegerAttribute(id: 0, name: "doesn't matter"))
 
 		// when
 		let average = try information.compute(forSamples: samples)
@@ -46,7 +46,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenIntegerAttribute_compute_returnsCorrectValue() throws {
 		// given
-		let attribute = IntegerAttribute(name: "a")
+		let attribute = IntegerAttribute(id: 0, name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1, 2, 3, 4, 5], for: attribute)
 		let information = AverageInformation(attribute)
 
@@ -59,7 +59,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenOptionalIntegerAttributeWithSomeSamplesHavingNilValue_compute_returnsCorrectValue() throws {
 		// given
-		let attribute = IntegerAttribute(name: "a", optional: true)
+		let attribute = IntegerAttribute(id: 0, name: "a", optional: true)
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1, nil, nil, 2, 3] as [Int?], for: attribute)
 		let information = AverageInformation(attribute)
 
@@ -72,7 +72,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenDoubleAttribute_compute_returnsCorrectValue() throws {
 		// given
-		let attribute = DoubleAttribute(name: "a")
+		let attribute = DoubleAttribute(id: 0, name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1.0, 2.0, 3.0, 4.0, 5.0], for: attribute)
 		let information = AverageInformation(attribute)
 
@@ -85,7 +85,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenOptionalDoubleAttributeWithSomeSamplesHavingNilValue_compute_returnsCorrectValue() throws {
 		// given
-		let attribute = DoubleAttribute(name: "a", optional: true)
+		let attribute = DoubleAttribute(id: 0, name: "a", optional: true)
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1.0, nil, nil, 2.0, 3.0] as [Double?], for: attribute)
 		let information = AverageInformation(attribute)
 
@@ -176,7 +176,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenUnknownAttributeTypeWithNonEmptySampleArray_compute_returnsEmptyString() throws {
 		// given
-		let attribute = TextAttribute(name: "a")
+		let attribute = TextAttribute(id: 0, name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: ["a", "4"], for: attribute)
 		let information = AverageInformation(attribute)
 
@@ -189,7 +189,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenEndDateRestrictionThatFilterOutAllSamples_compute_returnsNoSamplesMessage() throws {
 		// given
-		let attribute = DoubleAttribute(name: "a")
+		let attribute = DoubleAttribute(id: 0, name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1.0, 2.0, 3.0, 4.0, 5.0], for: attribute)
 		let information = AverageInformation(attribute)
 		information.endDate = Date() - 1.days
@@ -203,7 +203,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenStartDateRestrictionThatFilterOutAllSamples_compute_returnsNoSamplesMessage() throws {
 		// given
-		let attribute = DoubleAttribute(name: "a")
+		let attribute = DoubleAttribute(id: 0, name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1.0, 2.0, 3.0, 4.0, 5.0], for: attribute)
 		let information = AverageInformation(attribute)
 		information.startDate = Date() + 1.days
@@ -220,7 +220,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 	func testGivenNoSamples_computeGraphable_returnsNoSamplesMessage() throws {
 		// given
 		let samples = [Sample]()
-		let information = AverageInformation(IntegerAttribute(name: "doesn't matter"))
+		let information = AverageInformation(IntegerAttribute(id: 0, name: "doesn't matter"))
 
 		// when
 		XCTAssertThrowsError(try information.computeGraphable(forSamples: samples)) { error in
@@ -231,7 +231,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenIntegerAttribute_computeGraphable_returnsCorrectValue() throws {
 		// given
-		let attribute = IntegerAttribute(name: "a")
+		let attribute = IntegerAttribute(id: 0, name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1, 2, 3, 4, 5], for: attribute)
 		let information = AverageInformation(attribute)
 
@@ -244,7 +244,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenOptionalIntegerAttributeWithSomeSamplesHavingNilValue_computeGraphable_returnsCorrectValue() throws {
 		// given
-		let attribute = IntegerAttribute(name: "a", optional: true)
+		let attribute = IntegerAttribute(id: 0, name: "a", optional: true)
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1, nil, nil, 2, 3] as [Int?], for: attribute)
 		let information = AverageInformation(attribute)
 
@@ -257,7 +257,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenDoubleAttribute_computeGraphable_returnsCorrectValue() throws {
 		// given
-		let attribute = DoubleAttribute(name: "a")
+		let attribute = DoubleAttribute(id: 0, name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1.0, 2.0, 3.0, 4.0, 5.0], for: attribute)
 		let information = AverageInformation(attribute)
 
@@ -270,7 +270,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenOptionalDoubleAttributeWithSomeSamplesHavingNilValue_computeGraphable_returnsCorrectValue() throws {
 		// given
-		let attribute = DoubleAttribute(name: "a", optional: true)
+		let attribute = DoubleAttribute(id: 0, name: "a", optional: true)
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1.0, nil, nil, 2.0, 3.0] as [Double?], for: attribute)
 		let information = AverageInformation(attribute)
 
@@ -361,7 +361,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenUnknownAttributeTypeWithNonEmptySampleArray_computeGraphable_returnsEmptyString() throws {
 		// given
-		let attribute = TextAttribute(name: "a")
+		let attribute = TextAttribute(id: 0, name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: ["a", "4"], for: attribute)
 		let information = AverageInformation(attribute)
 
@@ -374,7 +374,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenEndDateRestrictionThatFilterOutAllSamples_computeGraphable_throwsGenericDisplayableError() throws {
 		// given
-		let attribute = DoubleAttribute(name: "a")
+		let attribute = DoubleAttribute(id: 0, name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1.0, 2.0, 3.0, 4.0, 5.0], for: attribute)
 		let information = AverageInformation(attribute)
 		information.endDate = Date() - 1.days
@@ -388,7 +388,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenStartDateRestrictionThatFilterOutAllSamples_computeGraphable_throwsGenericDisplayableError() throws {
 		// given
-		let attribute = DoubleAttribute(name: "a")
+		let attribute = DoubleAttribute(id: 0, name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1.0, 2.0, 3.0, 4.0, 5.0], for: attribute)
 		let information = AverageInformation(attribute)
 		information.startDate = Date() + 1.days
@@ -404,7 +404,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenSameObject_equalTo_returnsTrue() {
 		// when
-		let attribute = DoubleAttribute(name: "a")
+		let attribute = DoubleAttribute(id: 0, name: "a")
 		let information = AverageInformation(attribute)
 		let areEqual = information.equalTo(information)
 
@@ -414,7 +414,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenWrongClass_equalTo_returnsFalse() {
 		// given
-		let attribute = DoubleAttribute(name: "a")
+		let attribute = DoubleAttribute(id: 0, name: "a")
 		let information = AverageInformation(attribute)
 		let other = MinimumInformation<Int>(attribute)
 
@@ -427,9 +427,9 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenDifferentRestrictedAttribute_equalTo_returnsFalse() {
 		// given
-		let attribute = DoubleAttribute(name: "a")
+		let attribute = DoubleAttribute(id: 0, name: "a")
 		let information = AverageInformation(attribute)
-		let other = AverageInformation(TextAttribute(name: "different attribute"))
+		let other = AverageInformation(TextAttribute(id: 0, name: "different attribute"))
 
 		// when
 		let areEqual = information.equalTo(other)
@@ -440,7 +440,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenSameRestrictedAttribute_equalTo_returnsTrue() {
 		// given
-		let attribute = DoubleAttribute(name: "a")
+		let attribute = DoubleAttribute(id: 0, name: "a")
 		let information = AverageInformation(attribute)
 		let other = AverageInformation(attribute)
 

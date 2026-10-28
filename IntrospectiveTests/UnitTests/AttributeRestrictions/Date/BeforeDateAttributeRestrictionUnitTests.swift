@@ -19,7 +19,7 @@ final class BeforeDateAttributeRestrictionUnitTests: UnitTest {
 
 	private typealias Me = BeforeDateAttributeRestrictionUnitTests
 	private static let dateAttribute = BeforeDateAttributeRestriction.dateAttribute
-	private static let restrictedAttribute = DateOnlyAttribute(name: "unknown")
+	private static let restrictedAttribute = DateOnlyAttribute(id: 0, name: "unknown")
 
 	private var restriction: BeforeDateAttributeRestriction!
 
@@ -213,7 +213,7 @@ final class BeforeDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
 		// given
-		let other = BeforeDateAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
+		let other = BeforeDateAttributeRestriction(restrictedAttribute: DateOnlyAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction == other
@@ -272,7 +272,7 @@ final class BeforeDateAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToAttributed_returnsFalse() {
 		// given
 		let otherAttributed: Attributed = BeforeDateAttributeRestriction(
-			restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
+			restrictedAttribute: DateOnlyAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -332,7 +332,7 @@ final class BeforeDateAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
 		let otherRestriction: AttributeRestriction = BeforeDateAttributeRestriction(
-			restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
+			restrictedAttribute: DateOnlyAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherRestriction)
@@ -379,7 +379,7 @@ final class BeforeDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let other = BeforeDateAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
+		let other = BeforeDateAttributeRestriction(restrictedAttribute: DateOnlyAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(other)

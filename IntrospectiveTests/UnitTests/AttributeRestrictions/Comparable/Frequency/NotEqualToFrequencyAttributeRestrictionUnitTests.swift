@@ -19,7 +19,7 @@ class NotEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 
 	private typealias Me = NotEqualToFrequencyAttributeRestrictionUnitTests
 	private static let valueAttribute = NotEqualToFrequencyAttributeRestriction.valueAttribute
-	private static let restrictedAttribute = FrequencyAttribute(name: "restricted")
+	private static let restrictedAttribute = FrequencyAttribute(id: 0, name: "restricted")
 
 	private var restriction: NotEqualToFrequencyAttributeRestriction!
 
@@ -214,7 +214,7 @@ class NotEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
 		// given
 		let other = NotEqualToFrequencyAttributeRestriction(
-			restrictedAttribute: FrequencyAttribute(name: "not the same attribute"))
+			restrictedAttribute: FrequencyAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction == other
@@ -275,7 +275,7 @@ class NotEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentRestrictedAttribute_equalToAttributed_returnsFalse() {
 		// given
 		let otherAttributed: Attributed = NotEqualToFrequencyAttributeRestriction(
-			restrictedAttribute: FrequencyAttribute(name: "not the same attribute"))
+			restrictedAttribute: FrequencyAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -336,7 +336,7 @@ class NotEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
 		let otherRestriction: AttributeRestriction = NotEqualToFrequencyAttributeRestriction(
-			restrictedAttribute: FrequencyAttribute(name: "not the same attribute"))
+			restrictedAttribute: FrequencyAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherRestriction)
@@ -386,7 +386,7 @@ class NotEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
 		let other = NotEqualToFrequencyAttributeRestriction(
-			restrictedAttribute: FrequencyAttribute(name: "not the same attribute"))
+			restrictedAttribute: FrequencyAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(other)

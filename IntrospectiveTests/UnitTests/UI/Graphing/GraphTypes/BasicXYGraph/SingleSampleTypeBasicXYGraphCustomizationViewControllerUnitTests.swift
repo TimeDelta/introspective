@@ -262,7 +262,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 	func testGivenXAxisSet_editXAxis_setsSelectedAttributeOnPresentedController() {
 		// given
 		let presentedController = mockXAxisSetupController()
-		let expectedAttribute = TextAttribute(name: "f")
+		let expectedAttribute = TextAttribute(id: 0, name: "f")
 		setXAxis(expectedAttribute)
 
 		// when
@@ -275,7 +275,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 	func testGivenXAxisSet_editXAxis_setsSelectedInformationOnPresentedController() {
 		// given
 		let presentedController = mockXAxisSetupController()
-		let expectedInformation = AverageInformation(TextAttribute(name: ""))
+		let expectedInformation = AverageInformation(TextAttribute(id: 0, name: ""))
 		setXAxis(expectedInformation)
 
 		// when
@@ -496,7 +496,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 
 	func testGivenUseAttributeForXAxis_xAxisSet_setsCorrectTitleForXAxisButton() {
 		// given
-		let attribute = TextAttribute(name: "fhjidso")
+		let attribute = TextAttribute(id: 0, name: "fhjidso")
 
 		// when
 		setXAxis(attribute)
@@ -540,9 +540,9 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 	func testGivenMultipleAttributesForYAxis_yAxisSet_setsYAxisButtonTitleToIncludeAllAttributeNames() {
 		// given
 		let attributes: [Attribute] = [
-			TextAttribute(name: "gjnreoq;"),
-			DoubleAttribute(name: "fdsjkl"),
-			DurationAttribute(name: "fggregeqmkp"),
+			TextAttribute(id: 0, name: "gjnreoq;"),
+			DoubleAttribute(id: 0, name: "fdsjkl"),
+			DurationAttribute(id: 0, name: "fggregeqmkp"),
 		]
 
 		// when
@@ -556,7 +556,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 
 	func test_yAxisSet_setsXAxisAccessibilityValueToTitle() {
 		// when
-		setYAxis([TextAttribute(name: "")])
+		setYAxis([TextAttribute(id: 0, name: "")])
 
 		// then
 		assertThat(yAxisButton, hasAccessibilityValue(yAxisButton.currentTitle))
@@ -624,7 +624,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 
 	func testGivenPointGrouperSetToNonNilValueFromNil_pointGrouperSet_clearsXAxis() {
 		// given
-		setXAxis(TextAttribute(name: "a"))
+		setXAxis(TextAttribute(id: 0, name: "a"))
 
 		// when
 		setPointGrouper(mockSampleGrouper())
@@ -638,7 +638,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 
 	func testGivenPointGrouperSetToNonNilValueFromNil_pointGrouperSet_clearsYAxis() {
 		// given
-		setYAxis([TextAttribute(name: "a")])
+		setYAxis([TextAttribute(id: 0, name: "a")])
 
 		// when
 		setPointGrouper(mockSampleGrouper())
@@ -655,7 +655,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 		Given(pointGrouper, .equalTo(.any(SampleGrouper.self), willReturn: false))
 		Given(pointGrouper, .copy(willReturn: pointGrouper))
 		setPointGrouper(pointGrouper)
-		setXAxis(TextAttribute(name: "a"))
+		setXAxis(TextAttribute(id: 0, name: "a"))
 
 		// when
 		setPointGrouper(mockSampleGrouper())
@@ -672,7 +672,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 		Given(pointGrouper, .equalTo(.any(SampleGrouper.self), willReturn: false))
 		Given(pointGrouper, .copy(willReturn: pointGrouper))
 		setPointGrouper(pointGrouper)
-		let yAxis = [AverageInformation(TextAttribute(name: "a"))]
+		let yAxis = [AverageInformation(TextAttribute(id: 0, name: "a"))]
 		setYAxis(yAxis)
 
 		// when
@@ -712,7 +712,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 
 	func testGivenPointGrouperSetToNilFromNonNilValue_pointGrouperSet_clearsXAxis() {
 		// given
-		setXAxis(TextAttribute(name: "a"))
+		setXAxis(TextAttribute(id: 0, name: "a"))
 		let pointGrouper = mockSampleGrouper(debugDescription: "point")
 		Given(pointGrouper, .equalTo(.any(SampleGrouper.self), willReturn: false))
 		setPointGrouper(pointGrouper)
@@ -729,7 +729,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 
 	func testGivenPointGrouperSetToNilFromNonNilValue_pointGrouperSet_clearsYAxis() {
 		// given
-		setYAxis([TextAttribute(name: "a")])
+		setYAxis([TextAttribute(id: 0, name: "a")])
 		let pointGrouper = mockSampleGrouper(debugDescription: "point")
 		Given(pointGrouper, .equalTo(.any(SampleGrouper.self), willReturn: false))
 		setPointGrouper(pointGrouper)
@@ -745,7 +745,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 
 	func testGivenPointGrouperSetToNilFromNil_pointGrouperSet_doesNotClearXAxis() {
 		// given
-		setXAxis(TextAttribute(name: "a"))
+		setXAxis(TextAttribute(id: 0, name: "a"))
 
 		// when
 		controller.clearPointGroupingButtonPressed(clearPointGrouperButton as Any)
@@ -758,7 +758,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 
 	func testGivenPointGrouperSetToNilFromNil_pointGrouperSet_doesNotClearYAxis() {
 		// given
-		let yAxis = [TextAttribute(name: "a")]
+		let yAxis = [TextAttribute(id: 0, name: "a")]
 		setYAxis(yAxis)
 
 		// when
@@ -776,7 +776,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 		// given
 		setPointGrouper(mockSampleGrouper())
 		setXAxis(usePointGroupValue: true)
-		setYAxis([TextAttribute(name: "")])
+		setYAxis([TextAttribute(id: 0, name: "")])
 
 		// then
 		assertThat(showGraphButton, isEnabled())
@@ -784,8 +784,8 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 
 	func testGivenAllRequirementsSetWithXAxisAttribute_updateShowGraphButtonState_enablesShowGraphButton() {
 		// given
-		setXAxis(TextAttribute(name: ""))
-		setYAxis([TextAttribute(name: "")])
+		setXAxis(TextAttribute(id: 0, name: ""))
+		setYAxis([TextAttribute(id: 0, name: "")])
 
 		// then
 		assertThat(showGraphButton, isEnabled())
@@ -793,8 +793,8 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 
 	func testGivenAllRequirementsSetWithXAxisInformation_updateShowGraphButtonState_enablesShowGraphButton() {
 		// given
-		setXAxis(AverageInformation(DoubleAttribute(name: "")))
-		setYAxis([TextAttribute(name: "")])
+		setXAxis(AverageInformation(DoubleAttribute(id: 0, name: "")))
+		setYAxis([TextAttribute(id: 0, name: "")])
 
 		// then
 		assertThat(showGraphButton, isEnabled())
@@ -802,8 +802,8 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 
 	func testGivenAllRequirementsSetWithYAxisInformation_updateShowGraphButtonState_enablesShowGraphButton() {
 		// given
-		setXAxis(TextAttribute(name: ""))
-		setYAxis([AverageInformation(DoubleAttribute(name: ""))])
+		setXAxis(TextAttribute(id: 0, name: ""))
+		setYAxis([AverageInformation(DoubleAttribute(id: 0, name: ""))])
 
 		// then
 		assertThat(showGraphButton, isEnabled())
@@ -811,7 +811,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 
 	func testGivenXAxisNotSetAndUsePointGroupValueFalse_updateShowGraphButtonState_disablesGraphButton() {
 		// given
-		setYAxis([TextAttribute(name: "")])
+		setYAxis([TextAttribute(id: 0, name: "")])
 
 		// then
 		assertThat(showGraphButton, not(isEnabled()))
@@ -819,7 +819,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 
 	func testGivenYAxisNotSet_updateShowGraphButtonState_disablesGraphButton() {
 		// given
-		setXAxis(TextAttribute(name: ""))
+		setXAxis(TextAttribute(id: 0, name: ""))
 
 		// then
 		assertThat(showGraphButton, not(isEnabled()))
@@ -842,7 +842,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 
 	func testGivenXAxisNotNilAndSampleTypeSetToDifferentValue_sampleTypeSet_setsXAxisToNil() {
 		// given
-		setXAxis(TextAttribute(name: ""))
+		setXAxis(TextAttribute(id: 0, name: ""))
 
 		// when
 		controller.pickerView(sampleTypePicker, didSelectRow: 1, inComponent: 0)
@@ -856,7 +856,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 
 	func testGivenYAxisNotNilAndSampleTypeSetToDifferentValue_sampleTypeSet_setsYAxisToNil() {
 		// given
-		setYAxis([TextAttribute(name: "")])
+		setYAxis([TextAttribute(id: 0, name: "")])
 
 		// when
 		controller.pickerView(sampleTypePicker, didSelectRow: 1, inComponent: 0)
@@ -908,7 +908,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 
 	func testGivenXAxisNotNilAndSampleTypeSetToSameValue_sampleTypeSet_doesNotSetXAxisToNil() {
 		// given
-		setXAxis(TextAttribute(name: ""))
+		setXAxis(TextAttribute(id: 0, name: ""))
 
 		// when
 		controller.pickerView(sampleTypePicker, didSelectRow: 0, inComponent: 0)
@@ -921,7 +921,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 
 	func testGivenYAxisNotNilAndSampleTypeSetToSameValue_sampleTypeSet_doesNotSetYAxisToNil() {
 		// given
-		setYAxis([TextAttribute(name: "")])
+		setYAxis([TextAttribute(id: 0, name: "")])
 
 		// when
 		controller.pickerView(sampleTypePicker, didSelectRow: 0, inComponent: 0)

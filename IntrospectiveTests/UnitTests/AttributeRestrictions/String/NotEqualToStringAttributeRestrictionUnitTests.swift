@@ -17,7 +17,7 @@ import SwiftyMocky
 final class NotEqualToStringAttributeRestrictionUnitTests: UnitTest {
 
 	private typealias Me = NotEqualToStringAttributeRestrictionUnitTests
-	private static let restrictedAttribute = TextAttribute(name: "text", optional: true)
+	private static let restrictedAttribute = TextAttribute(id: 0, name: "text", optional: true)
 	private static let valueAttribute = NotEqualToStringAttributeRestriction.valueAttribute
 
 	private var restriction: NotEqualToStringAttributeRestriction!
@@ -280,7 +280,7 @@ final class NotEqualToStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() throws {
 		// given
-		let other = NotEqualToStringAttributeRestriction(restrictedAttribute: TextAttribute(name: "not the same attribute"))
+		let other = NotEqualToStringAttributeRestriction(restrictedAttribute: TextAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction == other
@@ -336,7 +336,7 @@ final class NotEqualToStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToAttributed_returnsFalse() throws {
 		// given
-		let otherAttributed: Attributed = NotEqualToStringAttributeRestriction(restrictedAttribute: TextAttribute(name: "not the same attribute"))
+		let otherAttributed: Attributed = NotEqualToStringAttributeRestriction(restrictedAttribute: TextAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -394,7 +394,7 @@ final class NotEqualToStringAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() throws {
 		// given
 		let otherRestriction: AttributeRestriction = NotEqualToStringAttributeRestriction(
-			restrictedAttribute: TextAttribute(name: "not the same attribute"))
+			restrictedAttribute: TextAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherRestriction)
@@ -440,7 +440,7 @@ final class NotEqualToStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() throws {
 		// given
-		let other = NotEqualToStringAttributeRestriction(restrictedAttribute: TextAttribute(name: "not the same attribute"))
+		let other = NotEqualToStringAttributeRestriction(restrictedAttribute: TextAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(other)

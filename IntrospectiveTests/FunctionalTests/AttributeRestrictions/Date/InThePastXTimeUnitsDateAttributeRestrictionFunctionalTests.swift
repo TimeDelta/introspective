@@ -17,7 +17,7 @@ import SwiftDate
 final class InThePastXTimeUnitsDateAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	private typealias Me = InThePastXTimeUnitsDateAttributeRestrictionFunctionalTests
-	private static let restrictedAttribute = DateTimeAttribute(name: "restricted attribute")
+	private static let restrictedAttribute = DateTimeAttribute(id: 0, name: "restricted attribute")
 	private static let timeUnitAttribute = InThePastXTimeUnitsDateAttributeRestriction.timeUnitAttribute
 	private static let numberOfTimeUnitsAttribute = InThePastXTimeUnitsDateAttributeRestriction.numberOfTimeUnitsAttribute
 
@@ -238,7 +238,7 @@ final class InThePastXTimeUnitsDateAttributeRestrictionFunctionalTests: Function
 	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
 		// given
 		let otherRestriction = InThePastXTimeUnitsDateAttributeRestriction(
-			restrictedAttribute: DateTimeAttribute(name: "not the same attribute"),
+			restrictedAttribute: DateTimeAttribute(id: 0, name: "not the same attribute"),
 			restriction.numberOfTimeUnits,
 			restriction.timeUnit)
 
@@ -303,7 +303,7 @@ final class InThePastXTimeUnitsDateAttributeRestrictionFunctionalTests: Function
 	func testGivenSameClassWithDifferentRestrictedAttributes_equalToAttributed_returnsFalse() {
 		// given
 		let otherAttributed: Attributed = InThePastXTimeUnitsDateAttributeRestriction(
-			restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"),
+			restrictedAttribute: DateOnlyAttribute(id: 0, name: "not the same attribute"),
 			restriction.numberOfTimeUnits,
 			restriction.timeUnit)
 
@@ -380,7 +380,7 @@ final class InThePastXTimeUnitsDateAttributeRestrictionFunctionalTests: Function
 	func testGivenSameClassWithDifferentRestrictedAttributes_equalToRestriction_returnsFalse() {
 		// given
 		let otherRestriction: AttributeRestriction = InThePastXTimeUnitsDateAttributeRestriction(
-			restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"),
+			restrictedAttribute: DateOnlyAttribute(id: 0, name: "not the same attribute"),
 			restriction.numberOfTimeUnits,
 			restriction.timeUnit)
 
@@ -445,7 +445,7 @@ final class InThePastXTimeUnitsDateAttributeRestrictionFunctionalTests: Function
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let other = InThePastXTimeUnitsDateAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
+		let other = InThePastXTimeUnitsDateAttributeRestriction(restrictedAttribute: DateOnlyAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(other)

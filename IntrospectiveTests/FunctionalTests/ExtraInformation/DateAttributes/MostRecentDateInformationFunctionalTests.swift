@@ -446,7 +446,7 @@ final class MostRecentDateInformationFunctionalTests: FunctionalTest {
 
 	func testGivenDifferentRestrictedAttribute_equalTo_returnsFalse() {
 		// given
-		let other = MostRecentDateInformation(TextAttribute(name: "different attribute"))
+		let other = MostRecentDateInformation(TextAttribute(id: 0, name: "different attribute"))
 
 		// when
 		let areEqual = information.equalTo(other)

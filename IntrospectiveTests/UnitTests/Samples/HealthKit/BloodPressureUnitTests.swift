@@ -31,7 +31,7 @@ final class BloodPressureUnitTests: UnitTest {
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// given
-		let unknownAttribute = TextAttribute(name: "unknown")
+		let unknownAttribute = TextAttribute(id: 0, name: "unknown")
 
 		// when
 		XCTAssertThrowsError(try bloodPressure.value(of: unknownAttribute)) { error in
@@ -68,7 +68,7 @@ final class BloodPressureUnitTests: UnitTest {
 
 	func testGivenUnknownAttribute_setAttribute_throwsUnknownAttributeError() {
 		// given
-		let unknownAttribute = TextAttribute(name: "unknown")
+		let unknownAttribute = TextAttribute(id: 0, name: "unknown")
 		let value = ""
 
 		// when
@@ -208,7 +208,7 @@ final class BloodPressureUnitTests: UnitTest {
 
 	func testGivenWrongClass_equalToAttributed_returnsFalse() {
 		// given
-		let other = EqualToStringAttributeRestriction(restrictedAttribute: TextAttribute(name: ""), value: "")
+		let other = EqualToStringAttributeRestriction(restrictedAttribute: TextAttribute(id: 0, name: ""), value: "")
 
 		// when
 		let areEqual = bloodPressure.equalTo(other)

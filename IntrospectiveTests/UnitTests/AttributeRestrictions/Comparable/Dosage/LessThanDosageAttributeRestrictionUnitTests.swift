@@ -19,7 +19,7 @@ final class LessThanDosageAttributeRestrictionUnitTests: UnitTest {
 
 	private typealias Me = LessThanDosageAttributeRestrictionUnitTests
 	private static let valueAttribute = LessThanDosageAttributeRestriction.valueAttribute
-	private static let restrictedAttribute = DosageAttribute(name: "restricted")
+	private static let restrictedAttribute = DosageAttribute(id: 0, name: "restricted")
 
 	private var restriction: LessThanDosageAttributeRestriction!
 
@@ -194,7 +194,7 @@ final class LessThanDosageAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
 		// given
-		let other = LessThanDosageAttributeRestriction(restrictedAttribute: DosageAttribute(name: "not the same attribute"))
+		let other = LessThanDosageAttributeRestriction(restrictedAttribute: DosageAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction == other
@@ -253,7 +253,7 @@ final class LessThanDosageAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentRestrictedAttribute_equalToAttributed_returnsFalse() {
 		// given
 		let otherAttributed: Attributed = LessThanDosageAttributeRestriction(
-			restrictedAttribute: DosageAttribute(name: "not the same attribute"))
+			restrictedAttribute: DosageAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -313,7 +313,7 @@ final class LessThanDosageAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
 		let otherRestriction: AttributeRestriction = LessThanDosageAttributeRestriction(
-			restrictedAttribute: DosageAttribute(name: "not the same attribute"))
+			restrictedAttribute: DosageAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherRestriction)
@@ -360,7 +360,7 @@ final class LessThanDosageAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let other = LessThanDosageAttributeRestriction(restrictedAttribute: DosageAttribute(name: "not the same attribute"))
+		let other = LessThanDosageAttributeRestriction(restrictedAttribute: DosageAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(other)

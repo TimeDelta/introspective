@@ -17,7 +17,7 @@ class SplitByListElementSampleGrouperUnitTests: UnitTest {
 	// MARK: - Test Setup
 
 	private typealias Me = SplitByListElementSampleGrouperUnitTests
-	private static let textAttribute = TextAttribute(name: "text attribute")
+	private static let textAttribute = TextAttribute(id: 0, name: "text attribute")
 
 	private var grouper: SplitByListElementSampleGrouper!
 
@@ -32,7 +32,7 @@ class SplitByListElementSampleGrouperUnitTests: UnitTest {
 		// given
 		let attributes = [
 			Me.textAttribute,
-			TextAttribute(name: Me.textAttribute.name + "other stuff"),
+			TextAttribute(id: 0, name: Me.textAttribute.name + "other stuff"),
 		]
 
 		// when
@@ -47,8 +47,8 @@ class SplitByListElementSampleGrouperUnitTests: UnitTest {
 	func testGivenNonTextAttributes_init_doesNotIncludeThemAsPossibleValuesInAttributeSelectAttribute() {
 		// given
 		let attributes: [Attribute] = [
-			BooleanAttribute(name: "fenwbhij"),
-			DoubleAttribute(name: "huioyi"),
+			BooleanAttribute(id: 0, name: "fenwbhij"),
+			DoubleAttribute(id: 0, name: "huioyi"),
 		]
 
 		// when
@@ -262,7 +262,7 @@ class SplitByListElementSampleGrouperUnitTests: UnitTest {
 		}
 
 		// when
-		copy.groupByAttribute = TextAttribute(name: "fjeoqugnjk")
+		copy.groupByAttribute = TextAttribute(id: 0, name: "fjeoqugnjk")
 
 		// then
 		assertThat(grouper.groupByAttribute, equals(Me.textAttribute))
@@ -302,7 +302,7 @@ class SplitByListElementSampleGrouperUnitTests: UnitTest {
 
 	func testGivenAttributeSelectAttributeWithValidValue_set_setsGroupByAttribute() throws {
 		// given
-		grouper.groupByAttribute = TextAttribute(name: "ghjreiouq")
+		grouper.groupByAttribute = TextAttribute(id: 0, name: "ghjreiouq")
 		let expectedValue = Me.textAttribute
 
 		// when
@@ -321,7 +321,7 @@ class SplitByListElementSampleGrouperUnitTests: UnitTest {
 
 	func testGivenAttributeThatIsNotAPossibleValue_set_throwsError() throws {
 		// given
-		let value = DoubleAttribute(name: "fs")
+		let value = DoubleAttribute(id: 0, name: "fs")
 
 		// when / then
 		XCTAssertThrowsError(try grouper.set(attribute: grouper.attributeSelectAttribute, to: value))
@@ -383,7 +383,7 @@ class SplitByListElementSampleGrouperUnitTests: UnitTest {
 		// given
 		let other = SplitByListElementSampleGrouper(attributes: [Me.textAttribute])
 		grouper.groupByAttribute = Me.textAttribute
-		other.groupByAttribute = TextAttribute(name: "grejnqio")
+		other.groupByAttribute = TextAttribute(id: 0, name: "grejnqio")
 
 		// when
 		let areEqual = grouper.equalTo(other)

@@ -19,7 +19,7 @@ final class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 
 	private typealias Me = AfterTimeOfDayAttributeRestrictionUnitTests
 	private static let timeAttribute = AfterTimeOfDayAttributeRestriction.timeAttribute
-	private static let restrictedAttribute = DateTimeAttribute(name: "date")
+	private static let restrictedAttribute = DateTimeAttribute(id: 0, name: "date")
 
 	private var restriction: AfterTimeOfDayAttributeRestriction!
 
@@ -199,7 +199,7 @@ final class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
 		// given
-		let other = AfterTimeOfDayAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
+		let other = AfterTimeOfDayAttributeRestriction(restrictedAttribute: DateOnlyAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction == other
@@ -258,7 +258,7 @@ final class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToAttributed_returnsFalse() {
 		// given
 		let otherAttributed: Attributed = AfterTimeOfDayAttributeRestriction(
-			restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
+			restrictedAttribute: DateOnlyAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -320,7 +320,7 @@ final class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
 		let otherRestriction: AttributeRestriction = AfterTimeOfDayAttributeRestriction(
-			restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
+			restrictedAttribute: DateOnlyAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherRestriction)
@@ -369,7 +369,7 @@ final class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let other = AfterTimeOfDayAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
+		let other = AfterTimeOfDayAttributeRestriction(restrictedAttribute: DateOnlyAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(other)

@@ -19,7 +19,7 @@ final class EqualToDosageAttributeRestrictionUnitTests: UnitTest {
 
 	private typealias Me = EqualToDosageAttributeRestrictionUnitTests
 	private static let valueAttribute = EqualToDosageAttributeRestriction.valueAttribute
-	private static let restrictedAttribute = DosageAttribute(name: "restricted")
+	private static let restrictedAttribute = DosageAttribute(id: 0, name: "restricted")
 
 	private var restriction: EqualToDosageAttributeRestriction!
 
@@ -207,7 +207,7 @@ final class EqualToDosageAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
 		// given
-		let other = EqualToDosageAttributeRestriction(restrictedAttribute: DosageAttribute(name: "not the same attribute"))
+		let other = EqualToDosageAttributeRestriction(restrictedAttribute: DosageAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction == other
@@ -267,7 +267,7 @@ final class EqualToDosageAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentRestrictedAttribute_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = EqualToDosageAttributeRestriction(restrictedAttribute: DosageAttribute(name: "not the same attribute"))
+		let otherAttributed: Attributed = EqualToDosageAttributeRestriction(restrictedAttribute: DosageAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -329,7 +329,7 @@ final class EqualToDosageAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
 		let otherRestriction: AttributeRestriction = EqualToDosageAttributeRestriction(
-			restrictedAttribute: DosageAttribute(name: "not the same attribute"))
+			restrictedAttribute: DosageAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherRestriction)
@@ -378,7 +378,7 @@ final class EqualToDosageAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let other = EqualToDosageAttributeRestriction(restrictedAttribute: DosageAttribute(name: "not the same attribute"))
+		let other = EqualToDosageAttributeRestriction(restrictedAttribute: DosageAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(other)

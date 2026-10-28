@@ -53,7 +53,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		// given
 		let samples = SampleCreatorTestUtil.createSamplesWithoutDateAttribute(
 			withValues: [0, 2, 1],
-			for: IntegerAttribute(name: "attribute"))
+			for: IntegerAttribute(id: 0, name: "attribute"))
 
 		// when
 		controller.samples = copyArray(samples)
@@ -194,7 +194,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 	func testGivenSection0AndInformationAdded_tableViewNumberOfRowsInSection_returnsNumberOfInformationsAdded() {
 		// given
-		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(name: "")])
+		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(id: 0, name: "")])
 		Given(mockSampleUtil, .getOnly(samples: .any([Sample].self), from: .any, to: .any, willReturn: samples))
 		controller.samples = samples
 		controller.viewDidLoad()
@@ -211,7 +211,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 	func testGivenSection1WithSamplesProvided_tableViewNumberOfRowsInSection_returnsNumberOfSamples() {
 		// given
 		let expectedRows = 3
-		let samples = SampleCreatorTestUtil.createSamples(count: expectedRows, withAttributes: [TextAttribute(name: "")])
+		let samples = SampleCreatorTestUtil.createSamples(count: expectedRows, withAttributes: [TextAttribute(id: 0, name: "")])
 		Given(mockSampleUtil, .getOnly(samples: .any([Sample].self), from: .any, to: .any, willReturn: samples))
 		controller.samples = samples
 		controller.viewDidLoad()
@@ -225,7 +225,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 	func testGivenSection2_tableViewNumberOfRowsInSection_returns0() {
 		// given
-		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(name: "")])
+		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(id: 0, name: "")])
 		Given(mockSampleUtil, .getOnly(samples: .any([Sample].self), from: .any, to: .any, willReturn: samples))
 		controller.samples = samples
 		controller.viewDidLoad()
@@ -241,7 +241,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 	func testGivenSection0_tableViewCellForRowAt_returnsSampleGroupInformationTableViewCellWithCorrectInformation() {
 		// given
-		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(name: "")])
+		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(id: 0, name: "")])
 		Given(mockSampleUtil, .getOnly(samples: .any([Sample].self), from: .any, to: .any, willReturn: samples))
 		controller.samples = samples
 		controller.viewDidLoad()
@@ -260,7 +260,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 	func testGivenSection0_tableViewCellForRowAt_returnsSampleGroupInformationTableViewCellWithCorrectValue() {
 		// given
-		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(name: "")])
+		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(id: 0, name: "")])
 		Given(mockSampleUtil, .getOnly(samples: .any([Sample].self), from: .any, to: .any, willReturn: samples))
 		controller.samples = samples
 		controller.viewDidLoad()
@@ -283,7 +283,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		let expectedMood = moodMock()
 		let samples = [moodMock(), expectedMood]
 		for sample in samples {
-			Given(sample, .attributes(getter: [TextAttribute(name: "")]))
+			Given(sample, .attributes(getter: [TextAttribute(id: 0, name: "")]))
 		}
 		Given(mockSampleUtil, .getOnly(samples: .any([Sample].self), from: .any, to: .any, willReturn: samples))
 		controller.samples = samples
@@ -305,7 +305,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 	func testGivenSection0_tableViewDidSelectRowAt_setsCorrectSelectedInformationOnPresentedController() {
 		// given
-		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(name: "")])
+		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(id: 0, name: "")])
 		Given(mockSampleUtil, .getOnly(samples: .any([Sample].self), from: .any, to: .any, willReturn: samples))
 		controller.samples = samples
 		controller.viewDidLoad()
@@ -324,7 +324,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 	func testGivenSection0_tableViewDidSelectRowAt_setsCorrectSelectedAttributeOnPresentedController() {
 		// given
-		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(name: "")])
+		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(id: 0, name: "")])
 		Given(mockSampleUtil, .getOnly(samples: .any([Sample].self), from: .any, to: .any, willReturn: samples))
 		controller.samples = samples
 		controller.viewDidLoad()
@@ -353,7 +353,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 	func testGivenSection1WithNonDeletableSampleAtSpecifiedRow_tableViewCanEditRowAt_returnsFalse() {
 		// given
-		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(name: "")])
+		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(id: 0, name: "")])
 		Given(mockSampleUtil, .getOnly(samples: .any([Sample].self), from: .any, to: .any, willReturn: samples))
 		samples[0].attributedName = ""
 		controller.samples = samples
@@ -404,7 +404,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 	func testGivenMoveFromSection1ToSection1_tableViewMoveRowAt_doesNotChangeSamples() {
 		// given
-		let samples = SampleCreatorTestUtil.createSamples(count: 2, withAttributes: [TextAttribute(name: "")])
+		let samples = SampleCreatorTestUtil.createSamples(count: 2, withAttributes: [TextAttribute(id: 0, name: "")])
 		Given(mockSampleUtil, .getOnly(samples: .any([Sample].self), from: .any, to: .any, willReturn: samples))
 		controller.samples = copyArray(samples)
 		controller.viewDidLoad()
@@ -418,7 +418,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 	func testGivenMoveFromSection0ToSection1_tableViewMoveRowAt_doesNotChangeSamples() {
 		// given
-		let samples = SampleCreatorTestUtil.createSamples(count: 2, withAttributes: [TextAttribute(name: "")])
+		let samples = SampleCreatorTestUtil.createSamples(count: 2, withAttributes: [TextAttribute(id: 0, name: "")])
 		Given(mockSampleUtil, .getOnly(samples: .any([Sample].self), from: .any, to: .any, willReturn: samples))
 		controller.samples = copyArray(samples)
 		controller.viewDidLoad()
@@ -432,7 +432,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 	func testGivenMoveFromSection1ToSection0_tableViewMoveRowAt_doesNotChangeSamples() {
 		// given
-		let samples = SampleCreatorTestUtil.createSamples(count: 2, withAttributes: [TextAttribute(name: "")])
+		let samples = SampleCreatorTestUtil.createSamples(count: 2, withAttributes: [TextAttribute(id: 0, name: "")])
 		Given(mockSampleUtil, .getOnly(samples: .any([Sample].self), from: .any, to: .any, willReturn: samples))
 		controller.samples = copyArray(samples)
 		controller.viewDidLoad()
@@ -446,7 +446,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 	func testGivenMoveFromSection0ToSection0_tableViewMoveRowAt_swapsCorrectInformation() {
 		// given
-		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(name: "")])
+		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(id: 0, name: "")])
 		Given(mockSampleUtil, .getOnly(samples: .any([Sample].self), from: .any, to: .any, willReturn: samples))
 		controller.samples = samples
 		controller.viewDidLoad()
@@ -466,7 +466,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 	func testGivenSection0_trailingSwipeActionsConfigurationForRowAt_returnsActionThatUsingDeletesInformationAtSpecifiedIndex() {
 		// given
-		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(name: "")])
+		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(id: 0, name: "")])
 		Given(mockSampleUtil, .getOnly(samples: .any([Sample].self), from: .any, to: .any, willReturn: samples))
 		controller.samples = samples
 		controller.viewDidLoad()
@@ -496,7 +496,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 	func testGivenSection1WithNonDeletableSampleAtGivenIndex_trailingSwipeActionsConfigurationForRowAt_returnsArrayWithoutDeleteAction() {
 		// given
-		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(name: "")])
+		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(id: 0, name: "")])
 		Given(mockSampleUtil, .getOnly(samples: .any([Sample].self), from: .any, to: .any, willReturn: samples))
 		controller.samples = samples
 		controller.viewDidLoad()
@@ -666,7 +666,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 	func testGivenInformationEditedNotification_saveEditedSampleGroupInformation_editsCorrectInformation() {
 		// given
-		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(name: "")])
+		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(id: 0, name: "")])
 		Given(mockSampleUtil, .getOnly(samples: .any([Sample].self), from: .any, to: .any, willReturn: samples))
 		controller.samples = samples
 		controller.viewDidLoad()
@@ -692,7 +692,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 	func testGivenInformationEditedNotification_saveEditedSampleGroupInformation_computesValueForNewInformation() {
 		// given
-		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(name: "")])
+		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(id: 0, name: "")])
 		Given(mockSampleUtil, .getOnly(samples: .any([Sample].self), from: .any, to: .any, willReturn: samples))
 		controller.samples = samples
 		controller.viewDidLoad()
@@ -730,7 +730,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		let newSample = moodMock()
 		for sample in samples {
 			Given(sample, .equalTo(.any(Sample.self), willReturn: true))
-			Given(sample, .attributes(getter: [TextAttribute(name: "")]))
+			Given(sample, .attributes(getter: [TextAttribute(id: 0, name: "")]))
 		}
 		Given(mockSampleUtil, .getOnly(samples: .any([Sample].self), from: .any, to: .any, willReturn: samples))
 		controller.samples = samples
@@ -757,7 +757,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		let newSample = moodMock()
 		for sample in samples {
 			Given(sample, .equalTo(.any(Sample.self), willReturn: true))
-			Given(sample, .attributes(getter: [TextAttribute(name: "")]))
+			Given(sample, .attributes(getter: [TextAttribute(id: 0, name: "")]))
 		}
 		Given(mockSampleUtil, .getOnly(samples: .any([Sample].self), from: .any, to: .any, willReturn: samples))
 		controller.samples = samples
@@ -793,7 +793,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 	func testGivenSamplesAreDeletable_presentActions_includesActionToDeleteSamples() {
 		// given
 		let mood = moodMock()
-		Given(mood, .attributes(getter: [TextAttribute(name: "")]))
+		Given(mood, .attributes(getter: [TextAttribute(id: 0, name: "")]))
 		Given(mockSampleUtil, .getOnly(samples: .any, from: .any, to: .any, willReturn: [mood]))
 		controller.samples = [mood]
 		controller.viewDidLoad()
@@ -808,7 +808,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 	func testGivenSamplesAreNotDeletable_presentActions_doesNotIncludeActionToDeleteSamples() {
 		// given
-		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(name: "")])
+		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: [TextAttribute(id: 0, name: "")])
 		Given(mockSampleUtil, .getOnly(samples: .any([Sample].self), from: .any, to: .any, willReturn: samples))
 		controller.samples = samples
 		controller.viewDidLoad()
@@ -874,7 +874,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		Given(mock, .attributedName(getter: ""))
 		Given(mock, .debugDescription(getter: "mock " + UUID().uuidString))
 		Given(mock, .dates(willReturn: [.start: Date()]))
-		Given(mock, .attributes(getter: [TextAttribute(name: "")]))
+		Given(mock, .attributes(getter: [TextAttribute(id: 0, name: "")]))
 		return mock
 	}
 
@@ -888,7 +888,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		if let matches = matches {
 			Given(mock, .matchesSearchString(.any, willReturn: matches))
 		}
-		Given(mock, .attributes(getter: [TextAttribute(name: "")]))
+		Given(mock, .attributes(getter: [TextAttribute(id: 0, name: "")]))
 		Given(SearchableCoreDataSampleMock.self, .name(getter: "searchable sample"))
 		return mock
 	}
@@ -897,7 +897,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		let mock = MoodMock()
 		Given(mock, .attributedName(getter: ""))
 		Given(mock, .attributes(getter: []))
-		Given(mock, .attributes(getter: [TextAttribute(name: "")]))
+		Given(mock, .attributes(getter: [TextAttribute(id: 0, name: "")]))
 		Given(mock, .rating(getter: 0))
 		Given(mock, .minRating(getter: 0))
 		Given(mock, .maxRating(getter: 0))

@@ -19,7 +19,7 @@ final class GreaterThanOrEqualToDosageAttributeRestrictionUnitTests: UnitTest {
 
 	private typealias Me = GreaterThanOrEqualToDosageAttributeRestrictionUnitTests
 	private static let valueAttribute = GreaterThanOrEqualToDosageAttributeRestriction.valueAttribute
-	private static let restrictedAttribute = DosageAttribute(name: "restricted")
+	private static let restrictedAttribute = DosageAttribute(id: 0, name: "restricted")
 
 	private var restriction: GreaterThanOrEqualToDosageAttributeRestriction!
 
@@ -195,7 +195,7 @@ final class GreaterThanOrEqualToDosageAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
 		// given
 		let other = GreaterThanOrEqualToDosageAttributeRestriction(
-			restrictedAttribute: DosageAttribute(name: "not the same attribute"))
+			restrictedAttribute: DosageAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction == other
@@ -254,7 +254,7 @@ final class GreaterThanOrEqualToDosageAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentRestrictedAttribute_equalToAttributed_returnsFalse() {
 		// given
 		let otherAttributed: Attributed = GreaterThanOrEqualToDosageAttributeRestriction(
-			restrictedAttribute: DosageAttribute(name: "not the same attribute"))
+			restrictedAttribute: DosageAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -314,7 +314,7 @@ final class GreaterThanOrEqualToDosageAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
 		let otherRestriction: AttributeRestriction = GreaterThanOrEqualToDosageAttributeRestriction(
-			restrictedAttribute: DosageAttribute(name: "not the same attribute"))
+			restrictedAttribute: DosageAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherRestriction)
@@ -362,7 +362,7 @@ final class GreaterThanOrEqualToDosageAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
 		let other = GreaterThanOrEqualToDosageAttributeRestriction(
-			restrictedAttribute: DosageAttribute(name: "not the same attribute"))
+			restrictedAttribute: DosageAttribute(id: 0, name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(other)

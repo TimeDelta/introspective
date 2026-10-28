@@ -18,7 +18,7 @@ import SwiftDate
 final class MaximumInformationFunctionalTests: FunctionalTest {
 
 	private typealias Me = MaximumInformationFunctionalTests
-	private static let restrictedAttribute = IntegerAttribute(name: "abc")
+	private static let restrictedAttribute = IntegerAttribute(id: 0, name: "abc")
 
 	private final var information: MaximumInformation<Int>!
 
@@ -141,7 +141,7 @@ final class MaximumInformationFunctionalTests: FunctionalTest {
 
 	func testGivenTwoInformationObjectsOfSameTypeWithDifferentRestrictedAttributes_equalTo_returnsFalse() throws {
 		// given
-		let otherAttribute = IntegerAttribute(name: Me.restrictedAttribute.name + "some other stuff")
+		let otherAttribute = IntegerAttribute(id: 0, name: Me.restrictedAttribute.name + "some other stuff")
 		let otherInformation = MaximumInformation<Int>(otherAttribute)
 
 		// when

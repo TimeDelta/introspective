@@ -118,7 +118,7 @@ final class DurationAttributeUnitTests: UnitTest {
 	func testGivenWrongClass_equalTo_returnsFalse() {
 		// given
 		useRequiredAttribute()
-		let other = DoubleAttribute(name: "name")
+		let other = DoubleAttribute(id: 0, name: "name")
 
 		// when
 		let areEqual = attribute.equalTo(other)
@@ -142,7 +142,7 @@ final class DurationAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = DurationAttribute(
-			name: attribute.name + "other stuff",
+			id: 0, name: attribute.name + "other stuff",
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
@@ -159,7 +159,7 @@ final class DurationAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = DurationAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: (attribute.extendedDescription ?? "") + "other stuff",
 			variableName: attribute.variableName,
@@ -176,7 +176,7 @@ final class DurationAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = DurationAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: (attribute.variableName ?? "") + "other stuff",
@@ -193,7 +193,7 @@ final class DurationAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = DurationAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
@@ -210,7 +210,7 @@ final class DurationAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let other = DurationAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
@@ -227,7 +227,7 @@ final class DurationAttributeUnitTests: UnitTest {
 
 	private final func useOptionalAttribute() {
 		attribute = DurationAttribute(
-			name: "name",
+			id: 0, name: "name",
 			description: "description",
 			variableName: "variableName",
 			optional: true)
@@ -235,7 +235,7 @@ final class DurationAttributeUnitTests: UnitTest {
 
 	private final func useRequiredAttribute() {
 		attribute = DurationAttribute(
-			name: "name",
+			id: 0, name: "name",
 			description: "description",
 			variableName: "variableName",
 			optional: false)
