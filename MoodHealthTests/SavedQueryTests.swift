@@ -253,7 +253,9 @@ final class SavedQueryTests: XCTestCase {
 	}
 
 	func testBuilderRestrictionFamiliesRoundTripThroughDisk() throws {
-		let tag = try injected(TagDAO.self).getOrCreateTag(named: "fixture;tag")
+		let createdTag = try injected(TagDAO.self).getOrCreateTag(named: "fixture;tag")
+		// The builder selects tags fetched into the view context, not DAO transaction objects.
+		let tag = try injected(Database.self).pull(savedObject: createdTag)
 		let factory = injected(AttributeRestrictionFactory.self)
 		var cases: [(name: String, query: Query, tagDescription: String?)] = []
 		var failures: [String] = []
