@@ -12,7 +12,7 @@ Transfers are manual and additive. Edits and deletions after transfer are not sy
 
 CI builds an unsigned Release app and runs the focused `MoodHealthExchangeFunctionalTests` on an iPhone simulator. These tests exercise valence conversion/invalid ranges, import timestamps and deduplication, scaling and feedback prevention, export timestamps/identifiers, and old-store migration. They do not claim to validate Health authorization or real Health writes.
 
-For local simulator tests, run `pod install --deployment`, then `python3 scripts/patch-swiftymocky-for-current-xcode.py`, generate `Common/Common/GitVersion.swift` with the existing script, and run the CI-CD scheme's `IntrospectiveTests/MoodHealthExchangeFunctionalTests` on an iOS 18+ simulator. The narrow SwiftyMocky backport applies upstream's Optional-conformance fix to the pinned source; it does not change the app's dependency versions.
+For local simulator tests, run `pod install --deployment`, generate `Common/Common/GitVersion.swift` with the existing script, then run `ruby scripts/prepare-mood-health-tests.rb`. Run the generated `MoodHealthTests` scheme on an iOS 18+ simulator. CocoaPods supplies the Xcodeproj Ruby library used to generate this independent target. It uses production frameworks and an in-memory database, without the legacy suite’s stale generated mocks. The legacy suite remains unchanged and unverified.
 
 Before release, on an iPhone with iOS 18+:
 
