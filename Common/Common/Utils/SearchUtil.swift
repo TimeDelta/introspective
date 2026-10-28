@@ -122,8 +122,15 @@ public final class SearchUtilImpl: SearchUtil {
 	public final func closestItem<T>(to targetItem: T, in items: [T], distance: (T, T) -> Int) -> T {
 		precondition(!items.isEmpty, "Precondition violated: input array must have at least one element")
 
-		return items.sorted { (item1: T, item2: T) -> Bool in
-			distance(item1, targetItem) < distance(item2, targetItem)
-		}[0]
+		var closest = items[0]
+		var closestDistance = distance(closest, targetItem)
+		for item in items.dropFirst() {
+			let candidateDistance = distance(item, targetItem)
+			if candidateDistance < closestDistance {
+				closest = item
+				closestDistance = candidateDistance
+			}
+		}
+		return closest
 	}
 }
