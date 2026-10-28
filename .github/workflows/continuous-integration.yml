@@ -108,7 +108,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          xcodebuild build-for-testing \
+          ./scripts/run-ci-command.sh ci-output/test-build.log xcodebuild build-for-testing \
             -workspace Introspective.xcworkspace \
             -scheme MoodHealthTests \
             -configuration Debug \
@@ -120,8 +120,7 @@ jobs:
             -showBuildTimingSummary \
             CODE_SIGNING_ALLOWED=YES CODE_SIGNING_REQUIRED=YES CODE_SIGN_IDENTITY='-' \
             ONLY_ACTIVE_ARCH=YES COMPILER_INDEX_STORE_ENABLE=NO \
-            ENABLE_USER_SCRIPT_SANDBOXING=NO \
-            2>&1 | tee ci-output/test-build.log
+            ENABLE_USER_SCRIPT_SANDBOXING=NO
 
       - name: Run every native test without rebuilding
         if: matrix.kind == 'tests'
@@ -129,7 +128,7 @@ jobs:
         run: |
           set -euo pipefail
           xcrun simctl bootstatus "$CI_SIMULATOR_ID" -b > ci-output/simulator-boot.log 2>&1
-          xcodebuild test-without-building \
+          ./scripts/run-ci-command.sh ci-output/mood-tests.log xcodebuild test-without-building \
             -workspace Introspective.xcworkspace \
             -scheme MoodHealthTests \
             -configuration Debug \
@@ -137,8 +136,7 @@ jobs:
             -only-testing:MoodHealthTests/MoodHealthExchangeFunctionalTests \
             -only-testing:MoodHealthTests/SavedQueryTests \
             -derivedDataPath "$CI_DERIVED_DATA" \
-            -resultBundlePath "$GITHUB_WORKSPACE/ci-output/MoodTests.xcresult" \
-            2>&1 | tee ci-output/mood-tests.log
+            -resultBundlePath "$GITHUB_WORKSPACE/ci-output/MoodTests.xcresult"
           xcrun xcresulttool get test-results summary --path ci-output/MoodTests.xcresult > ci-output/mood-tests-summary.json
           python3 scripts/verify-native-test-results.py ci-output/mood-tests-summary.json
 
@@ -148,7 +146,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          xcodebuild build \
+          ./scripts/run-ci-command.sh ci-output/xcodebuild.log xcodebuild build \
             -workspace Introspective.xcworkspace \
             -scheme CI-CD \
             -configuration Release \
@@ -157,8 +155,7 @@ jobs:
             -resultBundlePath "$GITHUB_WORKSPACE/ci-output/Build.xcresult" \
             -showBuildTimingSummary \
             CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY='' \
-            COMPILER_INDEX_STORE_ENABLE=NO ENABLE_USER_SCRIPT_SANDBOXING=NO \
-            2>&1 | tee ci-output/xcodebuild.log
+            COMPILER_INDEX_STORE_ENABLE=NO ENABLE_USER_SCRIPT_SANDBOXING=NO
 
       - name: Save successful compilation for subsequent runs
         if: ${{ !cancelled() && (steps.test-build.outcome == 'success' || steps.release-build.outcome == 'success') && steps.build-cache.outputs.cache-hit != 'true' }}
