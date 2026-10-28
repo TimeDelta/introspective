@@ -29,10 +29,24 @@ def compatible_template(source):
     selection = 'let autoMockable: Bool = type.inheritedTypes.contains("AutoMockable") || type.annotations["AutoMockable"] != nil'
     if source.count(selection) != 1:
         raise RuntimeError("Unexpected SwiftyMocky type selection; review module filter")
+    variables = 'let allVariables = uniques(variables: aProtocol.allVariables.filter({ !$0.isStatic }))'
+    if source.count(variables) != 1:
+        raise RuntimeError("Unexpected SwiftyMocky property selection; review inline mock adapter")
     return (source.replace(".characters.split(", ".split(")
             .replace(old_signature, "[String: [SourceryRuntime.Attribute]]")
             .replace(old_mapping, "return attributes.values.flatMap { $0 }.map { $0.description }")
-            .replace(selection, selection + '\n    if autoMockable, let selected = argument["mockTypes"] as? [String], !selected.contains(type.name) { continue }'))
+            .replace(selection, selection + '\n    if autoMockable, let selected = argument["mockTypes"] as? [String], !selected.contains(type.name) { continue }')
+            .replace(variables, 'let manual = (argument["manualProperties"] as? [String: [String]])?[type.name] ?? []\n    let allVariables = uniques(variables: aProtocol.allVariables.filter({ !$0.isStatic && (autoMockable || !manual.contains($0.name)) }))'))
+
+
+def manual_properties():
+    properties = {}
+    for path in (ROOT / "IntrospectiveTests/CustomMocks").rglob("*.swift"):
+        prefix = path.read_text().split("// sourcery:inline:", 1)[0]
+        match = re.search(r"\bclass\s+(\w+)", prefix)
+        if match:
+            properties[match[1]] = sorted(set(re.findall(r"\bvar\s+(\w+)", prefix)))
+    return properties
 
 
 def configurations():
@@ -61,7 +75,7 @@ def configurations():
             "sources": {"include": sources},
             "templates": [str(template)],
             "output": str(output),
-            "args": {"testable": TESTABLE, "import": IMPORTS, "mockTypes": names},
+            "args": {"testable": TESTABLE, "import": IMPORTS, "mockTypes": names, "manualProperties": manual_properties()},
         }
 
 
