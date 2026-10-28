@@ -6,6 +6,7 @@ import BooleanAlgebra
 import AttributeRestrictions
 import Attributes
 @testable import DataExport
+import SampleGroupers
 @testable import SampleGroupInformation
 @testable import Persistence
 @testable import Queries
@@ -517,6 +518,11 @@ final class SavedQueryTests: XCTestCase {
 		transaction.reset()
 		try transaction.commit()
 		XCTAssertEqual(try injected(Database.self).count(MoodImpl.self), 0)
+	}
+
+	func testCalendarGroupingEmptyResultsReturnsNoGroups() throws {
+		let grouper = SameTimeUnitSampleGrouper(sampleType: MoodImpl.self)
+		XCTAssertTrue(try grouper.group(samples: []).isEmpty)
 	}
 
 }
