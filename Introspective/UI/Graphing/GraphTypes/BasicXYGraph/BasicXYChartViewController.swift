@@ -43,6 +43,7 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 	public final var displayXAxisValueLabels: Bool = false
 	public final var chartType: AAChartType!
 	public final var categories: [String]?
+	private final var finishedSetup = false
 	private final var chartView: AAChartView!
 	private final var chartModel = AAChartModel()
 		.animationType(.easeInCubic)
@@ -53,6 +54,7 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 	// MARK: - UIViewController Overrides
 
 	public final override func viewDidLoad() {
+		finishedSetup = false
 		super.viewDidLoad()
 
 		chartModel = chartModel.chartType(chartType)
@@ -63,6 +65,8 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 
 		injected(UiUtil.self).setBackButton(for: self, title: "Graph Setup", action: #selector(back))
 
+		// Preserve the readiness gate, including reentrant updates during view setup.
+		finishedSetup = true
 		// Data may arrive before UIKit loads the view. Render the latest value now.
 		if dataSeries != nil { updateChartData() }
 	}
@@ -118,7 +122,7 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 	}
 
 	private final func updateChartData() {
-		guard isViewLoaded, chartView != nil else { return }
+		guard finishedSetup, isViewLoaded, chartView != nil else { return }
 		doneWaiting()
 		chartModel = chartModel
 			.xAxisVisible(displayXAxisValueLabels)

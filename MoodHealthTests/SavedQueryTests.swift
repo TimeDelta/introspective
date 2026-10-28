@@ -47,6 +47,14 @@ private final class ReviewHealthStub: HealthKitUtil, InjectionProvider {
 	}
 }
 
+private final class ChartInsertionProbeView: UIView {
+	var onChartInsertion: (() -> Void)?
+	override func didAddSubview(_ subview: UIView) {
+		super.didAddSubview(subview)
+		if subview is AAChartView { onChartInsertion?() }
+	}
+}
+
 final class SavedQueryTests: XCTestCase {
 	private static let bundle = Bundle(for: SavedQueryTests.self)
 	private static let model = NSManagedObjectModel.mergedModel(from: [bundle])!
@@ -134,6 +142,30 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertTrue(controller.activityIndicator.isHidden)
 		XCTAssertTrue(controller.pleaseBePatientLabel.isHidden)
 		XCTAssertEqual(controller.view.subviews.filter { $0 is AAChartView }.count, 1)
+	}
+
+	@MainActor
+	func testChartDataArrivingDuringSetupWaitsUntilSetupFinishes() {
+		let controller = BasicXYChartViewControllerImpl()
+		controller.chartType = .line
+		controller.pleaseBePatientLabel = UILabel()
+		controller.activityIndicator = UIActivityIndicatorView()
+		controller.chartViewOutline = UIView(frame: CGRect(x: 10, y: 20, width: 300, height: 200))
+		let root = ChartInsertionProbeView()
+		var insertions = 0
+		root.onChartInsertion = { [weak controller] in
+			guard let controller = controller else { XCTFail("Controller released during setup"); return }
+			insertions += 1
+			controller.dataSeries = []
+			// The chart exists, but frame/outlet configuration is still in progress.
+			XCTAssertFalse(controller.activityIndicator.isHidden)
+			XCTAssertFalse(controller.pleaseBePatientLabel.isHidden)
+		}
+		controller.view = root
+		if insertions == 0 { controller.viewDidLoad() }
+		XCTAssertEqual(insertions, 1)
+		XCTAssertTrue(controller.activityIndicator.isHidden)
+		XCTAssertTrue(controller.pleaseBePatientLabel.isHidden)
 	}
 
 	@MainActor
