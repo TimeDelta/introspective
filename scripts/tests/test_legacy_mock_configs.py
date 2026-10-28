@@ -1,6 +1,7 @@
 import runpy
 from pathlib import Path
 import unittest
+import tempfile
 
 GENERATOR = runpy.run_path(str(Path(__file__).resolve().parents[1] / 'generate-legacy-mocks.py'))
 
@@ -28,3 +29,35 @@ class LegacyMockInputs(unittest.TestCase):
                      'SubQueryMatcherMock', 'AttributeRestrictionMock'):
             self.assertIn('description', properties[name])
             self.assertNotIn('matcher', properties[name])  # Generated region is excluded.
+
+    def test_single_pass_preserves_all_module_mock_types(self):
+        configs = list(dict(GENERATOR['configurations']()).values())
+        combined = GENERATOR['combined_configuration'](configs)
+        expected = {name for config in configs for name in config['args']['mockTypes']}
+        self.assertEqual(set(combined['args']['mockTypes']), expected)
+        self.assertEqual(combined['sources'], configs[0]['sources'])
+        self.assertTrue(combined['output'].endswith('/IntrospectiveTests/CommonMocks.swift'))
+
+    def test_inconsistent_dependency_inputs_are_rejected(self):
+        configs = list(dict(GENERATOR['configurations']()).values())
+        configs[-1] = dict(configs[-1], sources={'include': []})
+        with self.assertRaises(RuntimeError):
+            GENERATOR['combined_configuration'](configs)
+
+    def test_incomplete_or_duplicate_output_does_not_clear_previous_files(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / 'CommonMocks.swift'
+            previous = Path(directory) / 'SamplesMocks.swift'
+            previous.write_text('previous mocks')
+            configs = [{'output': str(output)}, {'output': str(previous)}]
+            valid = ''.join('open class ' + name + ' {}\n' for name in
+                            ['DatabaseMock', 'QueryMock', 'ActivityDAOMock', 'SampleGroupInformationMock'])
+            for source in ('', valid + 'open class QueryMock {}\n'):
+                output.write_text(source)
+                with self.assertRaises(RuntimeError):
+                    GENERATOR['finish_combined_output'](configs, {'output': str(output)})
+                self.assertEqual(previous.read_text(), 'previous mocks')
+            output.write_text(valid)
+            GENERATOR['finish_combined_output'](configs, {'output': str(output)})
+            self.assertEqual(output.read_text(), valid)
+            self.assertIn('consolidated in CommonMocks.swift', previous.read_text())

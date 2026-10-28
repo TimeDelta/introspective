@@ -86,12 +86,15 @@ class UITest: XCTestCase {
 	}
 
 	final func setDatePicker(_ queryString: String? = nil, to date: Date) {
-		let datePickers = app.datePickers
 		let datePickerWheels: XCUIElementQuery
 		if let queryString = queryString {
-			datePickerWheels = datePickers[queryString].pickerWheels
+			datePickerWheels = app.descendants(matching: .any).matching(identifier: queryString).firstMatch.pickerWheels
 		} else {
-			datePickerWheels = datePickers.pickerWheels
+			datePickerWheels = app.pickerWheels
+		}
+		guard datePickerWheels.firstMatch.waitForExistence(timeout: 5) else {
+			XCTFail("Date picker wheels did not appear")
+			return
 		}
 		let dateStrings = convertDateToStringComponents(date)
 		if datePickerWheels.count == 3 { // date only
@@ -250,9 +253,7 @@ class UITest: XCTestCase {
 		for mood in moods {
 			if app.sliders["mood slider"].exists {
 				moodRatingButton().tap()
-				moodRatingTextField().tap()
-				moodRatingTextField().tap()
-				moodRatingTextField().typeText(String(mood.rating))
+				setTextFor(field: moodRatingTextField(), to: String(mood.rating))
 				app.toolbars.buttons["Save"].tap()
 			} else {
 				app.buttons["set mood to \(Int(mood.rating)) button"].tap()

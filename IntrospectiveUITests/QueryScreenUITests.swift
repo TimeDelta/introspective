@@ -73,13 +73,13 @@ final class QueryScreenUITests: UITest {
 		app.sheets["What would you like to add?"].buttons["Attribute Restriction"].tap()
 
 		// when
-		app.tables.staticTexts["Diastolic blood pressure < 0.0"].tap()
+		app.tables.cells.element(boundBy: 1).tap()
 		setPicker("restricted attribute", to: "Timestamp", changeCase: false)
 		setPicker("attribute restriction", to: "After date", changeCase: false)
 		app.buttons["set date button"].tap()
-		app.datePickers.pickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: "June")
-		app.datePickers.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "18")
-		app.datePickers.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "2012")
+		app.pickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: "June")
+		app.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "18")
+		app.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "2012")
 		app.buttons["save button"].tap()
 		app.buttons["save attribute restriction button"].tap()
 
@@ -161,14 +161,15 @@ final class QueryScreenUITests: UITest {
 
 		// when
 		app.tables.buttons["Edit"].tap()
-		let attributeRestrictionReorderButton = app.buttons.containing(
-			NSPredicate(format: "%K BEGINSWITH[cd] %@", "label", "reorder less than")
-		).allElementsBoundByIndex[0]
+		let attributeRestrictionReorderButton = app.buttons.matching(
+			NSPredicate(format: "%K BEGINSWITH[cd] %@", "label", "reorder in current")
+		).firstMatch
+		XCTAssertTrue(attributeRestrictionReorderButton.waitForExistence(timeout: 3))
 		app.tables.buttons["Reorder Data Type"].press(forDuration: 0.5, thenDragTo: attributeRestrictionReorderButton)
 		app.tables.buttons["Done"].tap()
 
 		// then
-		XCTAssert(app.tables.staticTexts["BMI < 0.0"].exists)
+		XCTAssert(app.tables.staticTexts["Timestamp is in the current Day"].exists)
 	}
 
 	func testMovingSubSampleTypeBelowChildAttributeRestriction_correctlyChangesAttributeRestriction() {
@@ -178,14 +179,15 @@ final class QueryScreenUITests: UITest {
 
 		// when
 		app.tables.buttons["Edit"].tap()
-		let attributeRestrictionReorderButton = app.buttons.containing(
-			NSPredicate(format: "%K BEGINSWITH[cd] %@", "label", "reorder less than")
-		).allElementsBoundByIndex[0]
+		let attributeRestrictionReorderButton = app.buttons.matching(
+			NSPredicate(format: "%K BEGINSWITH[cd] %@", "label", "reorder in current")
+		).firstMatch
+		XCTAssertTrue(attributeRestrictionReorderButton.waitForExistence(timeout: 3))
 		app.tables.buttons["Reorder Data Type"].press(forDuration: 0.5, thenDragTo: attributeRestrictionReorderButton)
 		app.tables.buttons["Done"].tap()
 
 		// then
-		XCTAssert(app.tables.staticTexts["TimeDuration ≤ 0:00:00"].exists)
+		XCTAssert(app.tables.staticTexts["Start Date is in the current Day"].exists)
 	}
 
 	// MARK: - Deleting Parts
@@ -200,7 +202,7 @@ final class QueryScreenUITests: UITest {
 		app.tables.buttons["🗑️"].tap()
 
 		// then
-		XCTAssert(app.tables.staticTexts["TimeDuration ≤ 0:00:00"].exists)
+		XCTAssert(app.tables.staticTexts["Start Date is in the current Day"].exists)
 	}
 
 	// MARK: - Other

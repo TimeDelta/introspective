@@ -15,7 +15,7 @@ TESTABLE = ["Introspective", "AttributeRestrictions", "Attributes", "BooleanAlge
             "Common", "DataExport", "DataImport", "DependencyInjection", "Notifications",
             "Persistence", "Queries", "SampleGroupers", "SampleGroupInformation", "Samples",
             "Settings", "UIExtensions"]
-IMPORTS = ["HealthKit", "CoreData", "Presentr", "CSV", "SwiftDate", "UserNotifications", "Instructions"]
+IMPORTS = ["HealthKit", "CoreData", "Presentr", "CSV", "SwiftDate", "UserNotifications", "Instructions", "UIKit"]
 
 
 def compatible_template(source):
@@ -85,6 +85,34 @@ def configurations():
         }
 
 
+def combined_configuration(configs):
+    if not configs:
+        raise RuntimeError("No legacy mock inputs found")
+    result = dict(configs[0])
+    result["output"] = str(ROOT / "IntrospectiveTests/CommonMocks.swift")
+    result["args"] = dict(result["args"], mockTypes=sorted({
+        name for config in configs for name in config["args"]["mockTypes"]}))
+    if any(config["sources"] != result["sources"] for config in configs):
+        raise RuntimeError("Mock configurations must share complete protocol inputs")
+    return result
+
+
+def finish_combined_output(configs, combined):
+    output = Path(combined["output"])
+    source = output.read_text()
+    names = re.findall(r"^(?:open|public(?: final)?) class (\w+Mock)\b", source, re.MULTILINE)
+    required = {"DatabaseMock", "QueryMock", "ActivityDAOMock", "SampleGroupInformationMock"}
+    if not required.issubset(names) or len(names) != len(set(names)):
+        raise RuntimeError("Combined mock output is missing core mocks or contains duplicate declarations")
+    # Keep the original project source references; their declarations now live
+    # in CommonMocks.swift. Inline custom mocks remain in their own files.
+    for config in configs:
+        previous = Path(config["output"])
+        if previous != output:
+            previous.write_text("// Generated legacy mocks are consolidated in CommonMocks.swift.\n")
+    print(f"Generated {len(names)} protocol mocks in one pass; preserved custom inline mocks.")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config-only", action="store_true")
@@ -105,11 +133,12 @@ def main():
         path.write_text(json.dumps(config, indent=2) + "\n")
         configs.append(config)
     combined = config_dir / "all.yml"
-    combined.write_text(json.dumps({"configurations": configs}, indent=2) + "\n")
+    config = combined_configuration(configs)
+    combined.write_text(json.dumps({"configurations": [config]}, indent=2) + "\n")
     if not options.config_only:
-        # One invocation shares the compiled template cache across all modules.
-        # Source changes are handled by Sourcery's own content-based cache keys.
+        # Parse inheritance and rewrite inline mocks once, rather than once per module.
         subprocess.run([str(sourcery), "--config", str(combined)], cwd=ROOT, check=True)
+        finish_combined_output(configs, config)
 
 
 if __name__ == "__main__":
