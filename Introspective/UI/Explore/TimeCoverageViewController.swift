@@ -11,6 +11,16 @@ final class TimeCoverageViewController: UITableViewController {
 	private let period = UISegmentedControl(items: ["Day", "7 Days", "30 Days"])
 	private let sleep = UISwitch()
 	private var summary: TimeCoverageSummary?
+	private var loadFailed = false
+	private var sleepStatus = ""
+	private let intervalFormatter: DateFormatter = {
+		let formatter = DateFormatter()
+		formatter.dateStyle = .short
+		formatter.timeStyle = .short
+		formatter.locale = .autoupdatingCurrent
+		formatter.timeZone = .autoupdatingCurrent
+		return formatter
+	}()
 	private var generation = UUID()
 	private var stop: (() -> Void)?
 
@@ -47,6 +57,8 @@ final class TimeCoverageViewController: UITableViewController {
 	@objc private func reloadCoverage() {
 		stop?(); stop = nil
 		generation = UUID()
+		loadFailed = false
+		summary = nil
 		let token = generation
 		let calendar = Calendar.current
 		let day = calendar.startOfDay(for: date.date)
@@ -63,30 +75,52 @@ final class TimeCoverageViewController: UITableViewController {
 				return end > activity.start ? DateInterval(start: activity.start, end: end) : nil
 			}
 			guard sleep.isOn else { show(window, intervals); return }
-			summary = nil; tableView.reloadData()
+			// Keep useful activity-only results visible while Health is loading.
+			sleepStatus = "Showing activities only while sleep loads from Health."
+			show(window, intervals)
 			let type = HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!
 			HKHealthStore().requestAuthorization(toShare: [], read: [type]) { [weak self] _, error in
 				DispatchQueue.main.async {
 					guard let self = self, self.generation == token else { return }
-					if let error = error { self.showError(title: "Could not read sleep", error: error); return }
+					if let error = error {
+						self.sleepStatus = "Sleep is unavailable. Totals include recorded activities only."
+						self.tableView.reloadData()
+						self.showError(title: "Could not read sleep", error: error)
+						return
+					}
 					self.stop = injected(HealthKitUtil.self).getSamples(for: Sleep.self, from: start, to: end) { [weak self] samples, error in
 						DispatchQueue.main.async {
 							guard let self = self, self.generation == token else { return }
 							self.stop = nil
-							if let error = error { self.showError(title: "Could not read sleep", error: error); return }
-							let asleep = (samples ?? []).compactMap { $0 as? HKCategorySample }.filter { sample in
-								if #available(iOS 16.0, *) {
-									return [HKCategoryValueSleepAnalysis.asleepUnspecified.rawValue, HKCategoryValueSleepAnalysis.asleepCore.rawValue,
-										HKCategoryValueSleepAnalysis.asleepDeep.rawValue, HKCategoryValueSleepAnalysis.asleepREM.rawValue].contains(sample.value)
-								}
-								return sample.value == HKCategoryValueSleepAnalysis.asleep.rawValue
-							}.filter { $0.endDate > $0.startDate }.map { DateInterval(start: $0.startDate, end: $0.endDate) }
+							if let error = error {
+								self.sleepStatus = "Sleep is unavailable. Totals include recorded activities only."
+								self.tableView.reloadData()
+								self.showError(title: "Could not read sleep", error: error)
+								return
+							}
+							let asleepValues: Set<Int>
+							if #available(iOS 16.0, *) {
+								asleepValues = [HKCategoryValueSleepAnalysis.asleepUnspecified.rawValue,
+									HKCategoryValueSleepAnalysis.asleepCore.rawValue,
+									HKCategoryValueSleepAnalysis.asleepDeep.rawValue,
+									HKCategoryValueSleepAnalysis.asleepREM.rawValue]
+							} else { asleepValues = [HKCategoryValueSleepAnalysis.asleep.rawValue] }
+							let asleep = (samples ?? []).compactMap { sample -> DateInterval? in
+								guard let sample = sample as? HKCategorySample,
+									asleepValues.contains(sample.value), sample.endDate > sample.startDate else { return nil }
+								return DateInterval(start: sample.startDate, end: sample.endDate)
+							}
+							self.sleepStatus = "Sleep includes only asleep records available from Health. No sleep records may also mean read access was denied."
 							self.show(window, intervals + asleep)
 						}
 					}
 				}
 			}
-		} catch { showError(title: "Could not calculate coverage", error: error) }
+		} catch {
+			loadFailed = true
+			tableView.reloadData()
+			showError(title: "Could not calculate coverage", error: error)
+		}
 	}
 
 	private func show(_ window: DateInterval, _ intervals: [DateInterval]) {
@@ -103,7 +137,7 @@ final class TimeCoverageViewController: UITableViewController {
 	override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
 		guard section == 0 else { return nil }
 		return "Recorded activities count once even when they overlap. Ongoing activities extend to the end of the selected period, capped at now. " +
-			(sleep.isOn ? "Sleep includes only asleep records available from Health. No sleep records may also mean read access was denied." : "Sleep is excluded. Enable Health sleep to include it.")
+			(sleep.isOn ? sleepStatus : "Sleep is excluded. Enable Health sleep to include it.")
 	}
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
@@ -111,10 +145,9 @@ final class TimeCoverageViewController: UITableViewController {
 		cell.textLabel?.numberOfLines = 0
 		if indexPath.section == 0 {
 			cell.textLabel?.text = indexPath.row == 0 ? "Accounted time" : "Unaccounted time"
-			cell.detailTextLabel?.text = summary.map { TimeDuration(indexPath.row == 0 ? $0.covered : $0.unaccounted).description } ?? "Loading…"
+			cell.detailTextLabel?.text = summary.map { TimeDuration(indexPath.row == 0 ? $0.covered : $0.unaccounted).description } ?? (loadFailed ? "Unavailable" : "Loading…")
 		} else if let gap = summary?.gaps[indexPath.row] {
-			let formatter = DateFormatter(); formatter.dateStyle = .short; formatter.timeStyle = .short
-			cell.textLabel?.text = formatter.string(from: gap.start) + " – " + formatter.string(from: gap.end)
+			cell.textLabel?.text = intervalFormatter.string(from: gap.start) + " – " + intervalFormatter.string(from: gap.end)
 			cell.detailTextLabel?.text = TimeDuration(gap.duration).description
 		}
 		return cell
