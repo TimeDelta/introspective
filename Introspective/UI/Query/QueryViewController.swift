@@ -88,6 +88,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	// leave non-private for testing purposes
 	final var queries = [(sampleTypeInfo: SampleTypeInfo, parts: [BooleanExpressionPart])]()
+	private var loadedSavedQuery: StoredQuery?
 	private final var editedSampleTypeSectionIndex: Int!
 	private final var editedAttributeRestrictionIndex: IndexPath!
 
@@ -353,6 +354,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	private func load(_ query: StoredQuery) throws {
 		let restored = try query.convert()
+		loadedSavedQuery = query
 		queries = []
 		populateQuery(restored)
 		tableView.reloadData()
@@ -360,12 +362,25 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	}
 
 	@IBAction final func saveButtonPressed(_: Any) {
-		guard let query = buildQuery() else {
-			Me.log.error("buildQuery() returned nil 2")
-			showError(title: "Failed to build query")
-			return
-		}
+		guard let query = buildQuery() else { showError(title: "Failed to build query"); return }
+		guard let saved = loadedSavedQuery, !saved.isDeleted else { showQueryNamePicker(); return }
+		let alert = UIAlertController(title: "Save query", message: saved.name, preferredStyle: .alert)
+		alert.addAction(UIAlertAction(title: "Update saved query", style: .default) { [weak self, weak alert] _ in
+			alert?.dismiss(animated: false) {
+				do {
+					try injected(StoredQueriesDAO.self).update(saved, with: query)
+					self?.navigationItem.prompt = "Query saved"
+				} catch { self?.showError(title: "Could not update query", error: error) }
+			}
+		})
+		alert.addAction(UIAlertAction(title: "Save as new query", style: .default) { [weak self, weak alert] _ in
+			alert?.dismiss(animated: false) { self?.showQueryNamePicker() }
+		})
+		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+		present(alert, animated: true)
+	}
 
+	private func showQueryNamePicker() {
 		let controller: QueryNameViewController = viewController(named: "queryName")
 		controller.notificationToSendOnSave = Me.queryNameChosen
 		customPresentViewController(QueryNameViewController.presenter, viewController: controller, animated: false)
@@ -376,6 +391,8 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 			do {
 				let query = buildQuery()!
 				try injected(StoredQueriesDAO.self).save(query, name: name)
+				loadedSavedQuery = try injected(StoredQueriesDAO.self).getQueryWith(name: name)
+				navigationItem.prompt = "Query saved"
 			} catch {
 				showError(
 					title: "Failed to save query",

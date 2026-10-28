@@ -143,6 +143,28 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertEqual(try injected(Database.self).count(MoodImpl.self), 1)
 	}
 
+	func testUpdatingSavedQueryIsAtomicAndClearsRemovedRestrictionsAndSubqueries() throws {
+		let original = injected(QueryFactory.self).moodQuery()
+		original.expression = GreaterThanDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating, value: 3)
+		original.subQuery = (SameDatesSubQueryMatcher(), injected(QueryFactory.self).activityQuery())
+		original.mostRecentEntryOnly = true
+		try dao.save(original, name: "Editable")
+		let saved = try XCTUnwrap(dao.getQueryWith(name: "Editable"))
+		let id = saved.objectID
+		let replacement = injected(QueryFactory.self).moodQuery()
+		try dao.update(saved, with: replacement)
+		let updated = try XCTUnwrap(dao.getQueryWith(name: "Editable"))
+		XCTAssertEqual(updated.objectID, id)
+		XCTAssertTrue(replacement.equalTo(try updated.convert()))
+		XCTAssertEqual(try container.viewContext.count(for: NSFetchRequest<NSFetchRequestResult>(entityName: "Query")), 1)
+		XCTAssertEqual(try container.viewContext.count(for: NSFetchRequest<NSFetchRequestResult>(entityName: "BooleanExpression")), 0)
+		original.subQuery = (SameDatesSubQueryMatcher(), original)
+		XCTAssertThrowsError(try dao.update(updated, with: original))
+		original.subQuery = nil
+		try reopen()
+		XCTAssertTrue(replacement.equalTo(try XCTUnwrap(dao.getQueryWith(name: "Editable")).convert()))
+	}
+
 	func testAllDataTypesCanSaveWithoutRestrictions() throws {
 		let samples = injected(SampleFactory.self)
 		for (index, type) in samples.allTypes().enumerated() {

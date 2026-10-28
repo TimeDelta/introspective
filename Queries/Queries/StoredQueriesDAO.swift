@@ -9,6 +9,7 @@ public protocol StoredQueriesDAO {
 	func getQueryWith(name: String) throws -> StoredQuery?
 	func getAllQueries() throws -> [StoredQuery]
 	func save(_ query: Query, name: String) throws
+	func update(_ saved: StoredQuery, with query: Query) throws
 	func rename(_ query: StoredQuery, to name: String) throws
 	func delete(_ query: StoredQuery) throws
 }
@@ -40,6 +41,19 @@ public final class StoredQueriesDAOImpl: StoredQueriesDAO {
 		guard try getQueryWith(name: name) == nil else { throw GenericError("A saved query already has that name.") }
 		let transaction = injected(Database.self).transaction()
 		_ = try query.stored(withName: name, using: transaction)
+		try transaction.commit()
+	}
+
+	public func update(_ saved: StoredQuery, with query: Query) throws {
+		let transaction = injected(Database.self).transaction()
+		let stored = try transaction.pull(savedObject: saved)
+		let oldExpression = stored.storedExpression
+		let oldSubQuery = stored.storedSubQuery
+		stored.storedSubQuery = nil
+		stored.matcherData = nil
+		try stored.populate(from: query, withName: stored.name, using: transaction)
+		if let expression = oldExpression { try transaction.deleteAll([expression]) }
+		if let child = oldSubQuery { try transaction.delete(child) }
 		try transaction.commit()
 	}
 
