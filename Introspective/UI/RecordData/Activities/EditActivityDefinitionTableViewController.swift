@@ -120,9 +120,9 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 				withIdentifier: "name",
 				for: indexPath
 			) as! ActivityDefinitionNameTableViewCell
-			cell.initialName = name
 			cell.notificationToSendOnNameChange = Me.nameChanged
 			cell.notificationToSendOnInvalidName = Me.invalid
+			cell.initialName = name
 			return cell
 		} else if indexPath == Me.autoNoteIndex {
 			let cell = tableView.dequeueReusableCell(

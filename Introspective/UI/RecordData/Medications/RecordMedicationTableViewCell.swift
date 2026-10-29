@@ -131,7 +131,7 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 		}
 		lastTakenOnDateButton.setTitle(lastTakenText, for: .normal)
 		lastTakenOnDateButton.accessibilityValue = lastTakenText
-		lastTakenOnDateButton.accessibilityHint = "Show all doses of \(medication.name) taken"
+		lastTakenOnDateButton.accessibilityHint = "Edit the most recent dose of \(medication.name)"
 		lastTakenOnDateButton.accessibilityLabel = "last \(medication.name) dose button"
 		lastTakenOnDateButton.accessibilityIdentifier = "last \(medication.name) dose button"
 	}

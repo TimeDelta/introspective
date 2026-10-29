@@ -39,7 +39,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	)
 	private static let presenter = injected(UiUtil.self).customPresenter(
 		width: .full,
-		height: .custom(size: 350),
+		height: .custom(size: 300),
 		center: .topCenter
 	)
 
