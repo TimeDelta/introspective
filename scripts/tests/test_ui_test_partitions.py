@@ -1,5 +1,8 @@
 from pathlib import Path
 import runpy
+import json
+import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -61,3 +64,54 @@ class UITestPartitions(unittest.TestCase):
             path.write_text('final class ExampleUITests: UITest {\n' + methods + '\nfunc testCase0() {}\n}')
             with self.assertRaises(ValueError):
                 PARTITIONS['discover_tests'](root)
+
+    def test_preflight_is_a_nonempty_subset_and_keeps_full_inventory_unchanged(self):
+        full = PARTITIONS['selection']()
+        expected = {f'IntrospectiveUITests/{name}/{method}'
+                    for name, methods in PARTITIONS['PREFLIGHT_TESTS'].items() for method in methods}
+        for count in (1, 2):
+            selected = []
+            for index in range(1, count + 1):
+                shard = PARTITIONS['selection'](index, count)
+                preflight = PARTITIONS['preflight_selection'](index, count)
+                self.assertTrue(preflight['tests'])
+                self.assertLess(set(preflight['tests']), set(shard['tests']))
+                self.assertEqual(preflight['inventorySHA256'], full['inventorySHA256'])
+                self.assertEqual(preflight['totalTestCount'], full['totalTestCount'])
+                selected.extend(preflight['tests'])
+            self.assertEqual(set(selected), expected)
+            self.assertEqual(len(selected), len(expected))
+        self.assertEqual(PARTITIONS['selection'](), full)
+
+    def test_renamed_or_removed_preflight_tests_fail_instead_of_disappearing(self):
+        classes = PARTITIONS['discover_tests']()
+        name, methods = next(iter(PARTITIONS['PREFLIGHT_TESTS'].items()))
+        classes[name].remove(methods[0])
+        with self.assertRaisesRegex(ValueError, 'Missing UI preflight'):
+            PARTITIONS['preflight_selection'](1, 2, classes)
+
+    def test_preflight_cli_emits_case_selectors_and_cannot_satisfy_full_gate(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = root / 'selection.json'
+            result = subprocess.run([sys.executable, str(ROOT / 'partition-ui-tests.py'),
+                                     '--shard', '1', '--count', '2', '--preflight', '--json', str(manifest)],
+                                    check=True, capture_output=True, text=True)
+            data = json.loads(manifest.read_text())
+            self.assertEqual(result.stdout.splitlines(), data['tests'])
+            self.assertTrue(all(test.count('/') == 2 for test in data['tests']))
+            summary = root / 'summary.json'
+            count = len(data['tests'])
+            summary.write_text(json.dumps(dict(result='Passed', passedTests=count, totalTestCount=count,
+                                               skippedTests=0, failedTests=0, expectedFailures=0)))
+            command = [sys.executable, str(ROOT / 'verify-ui-test-results.py'), str(summary),
+                       '--shard', '1', '--count', '2']
+            self.assertNotEqual(subprocess.run(command, capture_output=True).returncode, 0)
+            self.assertEqual(subprocess.run(command + ['--preflight'], capture_output=True).returncode, 0)
+            for updates in [dict(skippedTests=1), dict(passedTests=count - 1), dict(result='Failed')]:
+                payload = json.loads(summary.read_text()) | updates
+                invalid = root / 'invalid.json'
+                invalid.write_text(json.dumps(payload))
+                bad_command = command.copy()
+                bad_command[2] = str(invalid)
+                self.assertNotEqual(subprocess.run(bad_command + ['--preflight'], capture_output=True).returncode, 0)

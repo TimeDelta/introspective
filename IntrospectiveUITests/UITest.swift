@@ -32,20 +32,21 @@ class UITest: XCTestCase {
 	}
 
 	// The app persists tutorial completion across launch(), even though each case
-	// gets a fresh database. Workers use isolated app containers and runner processes.
-	private static var dismissedInstructionScreens = Set<InstructionScreen>()
+	// gets a fresh database. Check each context once even if a previous runner
+	// already dismissed it; workers use isolated app containers and runner processes.
+	private static var checkedInstructionScreens = Set<InstructionScreen>()
 
 	final func skipInstructionsIfPresent(_ screen: InstructionScreen) {
 		let skipInstructionsButton = app.buttons["skip instructions"]
 		var present = skipInstructionsButton.exists
-		if !present && !UITest.dismissedInstructionScreens.contains(screen) {
+		if !present && !UITest.checkedInstructionScreens.contains(screen) {
 			let waitStarted = ProcessInfo.processInfo.systemUptime
 			present = skipInstructionsButton.waitForExistence(timeout: 1)
 			print("CI_UI_INSTRUCTION_WAIT_SECONDS \(ProcessInfo.processInfo.systemUptime - waitStarted)")
 		}
+		UITest.checkedInstructionScreens.insert(screen)
 		if present {
 			skipInstructionsButton.tap()
-			UITest.dismissedInstructionScreens.insert(screen)
 		}
 	}
 
@@ -443,11 +444,17 @@ class UITest: XCTestCase {
 	}
 
 	final func addDataTypeToQuery(_ type: String? = nil) {
-		let indexToEdit = app.tables.cells.allElementsBoundByIndex.count
 		app.tables.buttons["Add"].tap()
 		app.sheets["What would you like to add?"].buttons["Data Type"].tap()
 		if let type = type {
-			app.tables.cells.element(boundBy: indexToEdit).tap()
+			// A just-inserted restriction can still be missing from the previous
+			// accessibility snapshot. Find the new sample row by its stable label.
+			let sampleRows = app.tables.cells.matching(identifier: "Data Type")
+			guard waitForElement(sampleRows.firstMatch) else {
+				XCTFail("New query data type row did not appear")
+				return
+			}
+			sampleRows.element(boundBy: sampleRows.count - 1).tap()
 			setPicker("data type", to: type, changeCase: false)
 			app.buttons["save data type button"].tap()
 		}
