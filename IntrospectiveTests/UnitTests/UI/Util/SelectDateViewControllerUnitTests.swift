@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import Instructions
 import SwiftyMocky
 import Hamcrest
 import SwiftDate
@@ -47,6 +48,45 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 	}
 
 	// MARK: - viewDidLoad
+
+	func testQueryTutorialReleasesItsInitializedCallbacks() {
+		let owner = QueryViewControllerImpl()
+		weak var released: QueryViewControllerCoachMarksDataSourceAndDelegate?
+		autoreleasepool {
+			let tutorial = QueryViewControllerCoachMarksDataSourceAndDelegate(owner)
+			// Initialize both the metadata callbacks and the cleanup delegate.
+			XCTAssertEqual(tutorial.numberOfCoachMarks(for: CoachMarksController()), 6)
+			released = tutorial
+		}
+		XCTAssertNil(released)
+		XCTAssertFalse(owner.isViewLoaded)
+	}
+
+	func testActivityTutorialReleasesItsInitializedCallbacks() {
+		let owner = RecordActivityTableViewController()
+		weak var released: RecordActivityTableViewControllerCoachMarksDataSourceAndDelegate?
+		autoreleasepool {
+			let tutorial = RecordActivityTableViewControllerCoachMarksDataSourceAndDelegate(owner)
+			// Initialize both the metadata callbacks and the cleanup delegate.
+			XCTAssertEqual(tutorial.numberOfCoachMarks(for: CoachMarksController()), 12)
+			released = tutorial
+		}
+		XCTAssertNil(released)
+		XCTAssertFalse(owner.isViewLoaded)
+	}
+
+	func testMedicationTutorialReleasesItsInitializedCallbacks() {
+		let owner = RecordMedicationTableViewController()
+		weak var released: RecordMedicationTableViewControllerCoachMarksDataSourceAndDelegate?
+		autoreleasepool {
+			let tutorial = RecordMedicationTableViewControllerCoachMarksDataSourceAndDelegate(owner)
+			// Initialize both the metadata callbacks and the cleanup delegate.
+			XCTAssertEqual(tutorial.numberOfCoachMarks(for: CoachMarksController()), 5)
+			released = tutorial
+		}
+		XCTAssertNil(released)
+		XCTAssertFalse(owner.isViewLoaded)
+	}
 
 	func testLoadedDateEditorIsReleasedAfterItsOwnerReleasesIt() {
 		weak var released: SelectDateViewControllerImpl?

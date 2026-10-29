@@ -821,7 +821,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 // MARK: - Instructions
 
 /// This class is used to break retain cycles between `QueryViewController` and the closures used by `CoachMarkInfo`, preventing them from causing memory leaks
-final fileprivate class QueryViewControllerCoachMarksDataSourceAndDelegate: CoachMarksDataSourceAndDelegate {
+final class QueryViewControllerCoachMarksDataSourceAndDelegate: CoachMarksDataSourceAndDelegate {
 	private typealias Super = DefaultCoachMarksDataSourceAndDelegate
 	private typealias ControllerClass = QueryViewControllerImpl
 
@@ -834,18 +834,18 @@ final fileprivate class QueryViewControllerCoachMarksDataSourceAndDelegate: Coac
 		CoachMarkInfo(
 			hint: "This is the main data type. It determines what type of data will be returned by this query. Tap it to change the main data type.",
 			useArrow: true,
-			view: { self.controller?.tableView.visibleCells[0] }
+			view: { [weak self] in self?.controller?.tableView.visibleCells.first }
 		),
 		CoachMarkInfo(
 			hint: "Press the + button to add more parts to the query.",
 			useArrow: false,
-			view: { self.controller?.toolbar }
+			view: { [weak self] in self?.controller?.toolbar }
 		),
 		CoachMarkInfo(
 			hint: "This is an attribute restriction. It allows you to restrict which samples are returned based on their attributes. Tap it to edit.",
 			useArrow: false,
-			view: {
-				guard let controller = self.controller else { return nil }
+			view: { [weak self] in
+				guard let self = self, let controller = self.controller else { return nil }
 
 				var attributeRestrictionIndexPath = IndexPath(row: 1, section: 0)
 				for section in 0 ..< controller.queries.count {
@@ -857,10 +857,10 @@ final fileprivate class QueryViewControllerCoachMarksDataSourceAndDelegate: Coac
 					}
 				}
 				self.controller?.tableView.scrollToRow(at: attributeRestrictionIndexPath, at: .bottom, animated: true)
-				return self.controller?.tableView.visibleCells.last!
+				return self.controller?.tableView.visibleCells.last
 			},
-			setup: {
-				guard let controller = self.controller else { return }
+			setup: { [weak self] in
+				guard let self = self, let controller = self.controller else { return }
 
 				var hasAttributeRestriction = false
 				for query in controller.queries {
@@ -880,12 +880,12 @@ final fileprivate class QueryViewControllerCoachMarksDataSourceAndDelegate: Coac
 		CoachMarkInfo(
 			hint: "This is the start of a subquery. It allows you to restrict what samples are returned based on other types of data. Tap it to edit.",
 			useArrow: false,
-			view: {
-				self.controller?.tableView.scrollToRow(at: IndexPath(row: 0, section: 1), at: .bottom, animated: true)
-				return self.controller?.tableView.visibleCells[0]
+			view: { [weak self] in
+				self?.controller?.tableView.scrollToRow(at: IndexPath(row: 0, section: 1), at: .bottom, animated: true)
+				return self?.controller?.tableView.visibleCells.first
 			},
-			setup: {
-				guard let controller = self.controller else { return }
+			setup: { [weak self] in
+				guard let self = self, let controller = self.controller else { return }
 
 				if controller.queries.count < 2 {
 					let subQuerySampleType = injected(SampleFactory.self).allTypes()[1]
@@ -901,7 +901,7 @@ final fileprivate class QueryViewControllerCoachMarksDataSourceAndDelegate: Coac
 		CoachMarkInfo(
 			hint: "Swipe left on any part of the query (except the main data type) to reveal a button that will remove that part of the query.",
 			useArrow: true,
-			view: { self.controller?.tableView.visibleCells[2] }
+			view: { [weak self] in self?.controller?.tableView.visibleCells.dropFirst(2).first }
 		),
 	]
 
@@ -909,8 +909,8 @@ final fileprivate class QueryViewControllerCoachMarksDataSourceAndDelegate: Coac
 		DefaultCoachMarksDataSourceAndDelegate(
 			self.coachMarksInfo,
 			instructionsShownKey: .queryViewInstructionsShown,
-			cleanup: {
-				guard let controller = self.controller else { return }
+			cleanup: { [weak self] in
+				guard let self = self, let controller = self.controller else { return }
 
 				if self.addedSubQueryForInstructions {
 					_ = controller.queries.popLast()
