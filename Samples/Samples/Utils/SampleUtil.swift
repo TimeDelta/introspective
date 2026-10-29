@@ -329,22 +329,20 @@ public final class SampleUtilImpl: SampleUtil {
 	}
 
 	private final func getOnly(_ samples: [Sample], _ startDate: Date?, _ endDate: Date?) -> [Sample] {
-		var filteredSamples = samples
-		if let startDate = startDate {
-			filteredSamples = filteredSamples.filter { (sample: Sample) -> Bool in
-				sample.dates()[.start]!.isAfterDate(startDate, granularity: .nanosecond)
+		guard startDate != nil || endDate != nil else { return samples }
+		// One result buffer and one date lookup per sample, even with both bounds.
+		return samples.filter { sample in
+			let dates = sample.dates()
+			if let startDate = startDate,
+				!dates[.start]!.isAfterDate(startDate, granularity: .nanosecond) {
+				return false
 			}
-		}
-		if let endDate = endDate {
-			filteredSamples = filteredSamples.filter { (sample: Sample) -> Bool in
-				var date = sample.dates()[.start]!
-				if let end = sample.dates()[.end] {
-					date = end
-				}
+			if let endDate = endDate {
+				let date = dates[.end] ?? dates[.start]!
 				return date.isBeforeDate(endDate, granularity: .nanosecond)
 			}
+			return true
 		}
-		return filteredSamples
 	}
 
 	private final func aggregate(

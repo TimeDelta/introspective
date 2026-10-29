@@ -72,7 +72,12 @@ open class BaseExporter: Exporter {
 
 	public final func export(objects: inout [Exportable], using csv: CSVWriter, headerWritten: inout Bool) throws {
 		try writeHeader(for: objects, using: csv, headerWritten: &headerWritten)
+		guard !isPaused && !isCancelled else { return }
 
+		// Reverse in place so each exported row can be removed in constant time.
+		// Restore the unprocessed suffix on pause, cancellation, or error.
+		objects.reverse()
+		defer { objects.reverse() }
 		while !objects.isEmpty {
 			guard !isPaused && !isCancelled else { return }
 			if pauseOnRecord == recordsCompleted {
@@ -80,7 +85,7 @@ open class BaseExporter: Exporter {
 				pauseOnRecord = nil
 				return
 			}
-			let object = objects.removeFirst()
+			let object = objects.removeLast()
 			try object.export(to: csv)
 			csv.beginNewRow()
 			recordsCompleted += 1

@@ -11,6 +11,7 @@ import UIKit
 import Common
 import DataExport
 import DependencyInjection
+import UIExtensions
 
 public final class ActiveExportTableViewCell: UITableViewCell {
 	// MARK: - Static Variables
@@ -32,6 +33,11 @@ public final class ActiveExportTableViewCell: UITableViewCell {
 	public final var backgroundTaskId: UIBackgroundTaskIdentifier!
 	public final var exporter: Exporter! {
 		didSet {
+			timer?.invalidate()
+			timer = nil
+			if let previous = oldValue {
+				injected(UiUtil.self).stopObserving(self, name: .backgroundExportFinished, object: previous)
+			}
 			guard let exporter = exporter else { return }
 			descriptionLabel.text = exporter.dataTypePluralName
 			updateProgress()
@@ -40,16 +46,23 @@ public final class ActiveExportTableViewCell: UITableViewCell {
 		}
 	}
 
-	private final var timer: Timer!
+	private final var timer: Timer?
+	private final let percentFormatter: NumberFormatter = {
+		let formatter = NumberFormatter()
+		formatter.numberStyle = .percent
+		formatter.formatWidth = 3
+		return formatter
+	}()
+
+	deinit { timer?.invalidate() }
 
 	// MARK: - UITableViewCell Overrides
 
 	public final override func prepareForReuse() {
+		super.prepareForReuse()
+		exporter = nil
 		injected(UiUtil.self).setButton(cancelButton, enabled: true, hidden: false)
 		toolbar.isHidden = true
-		if let exporter = exporter {
-			injected(UiUtil.self).stopObserving(self, name: .backgroundExportFinished, object: exporter)
-		}
 	}
 
 	// MARK: - Actions
@@ -78,6 +91,9 @@ public final class ActiveExportTableViewCell: UITableViewCell {
 	// MARK: - Received Notifications
 
 	@objc private final func exportFinished(notification _: Notification) {
+		updateProgress()
+		timer?.invalidate()
+		timer = nil
 		injected(UiUtil.self).setButton(cancelButton, enabled: false, hidden: false)
 		toolbar.isHidden = false
 	}
@@ -85,12 +101,10 @@ public final class ActiveExportTableViewCell: UITableViewCell {
 	// MARK: - Helper Functions
 
 	@objc private final func updateProgress() {
+		guard let exporter = exporter else { return }
 		let percentComplete = exporter.percentComplete()
 		progressView.progress = Float(percentComplete)
-		let numberFormatter = NumberFormatter()
-		numberFormatter.numberStyle = .percent
-		numberFormatter.formatWidth = 3
-		if let percentString = numberFormatter.string(from: NSNumber(value: percentComplete)) {
+		if let percentString = percentFormatter.string(from: NSNumber(value: percentComplete)) {
 			percentLabel.text = percentString
 		} else {
 			Me.log.error("Unable to convert %f to string", percentComplete * 100)
@@ -101,12 +115,10 @@ public final class ActiveExportTableViewCell: UITableViewCell {
 	}
 
 	private final func setTimer() {
-		timer = Timer.scheduledTimer(
-			timeInterval: 1,
-			target: self,
-			selector: #selector(updateProgress),
-			userInfo: nil,
-			repeats: true
-		)
+		guard progressView.progress < 1 else { return }
+		timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
+			guard let self = self else { timer.invalidate(); return }
+			self.updateProgress()
+		}
 	}
 }

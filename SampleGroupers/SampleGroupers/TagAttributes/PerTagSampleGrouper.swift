@@ -67,12 +67,15 @@ public final class PerTagSampleGrouper: SampleGrouper {
 		let groupByAttribute = try getGroupByAttribute(methodName: "group(samples:)")
 		guard !samples.isEmpty else { return [] }
 		var groups = [(Any, [Sample])]()
+		// Keep first-seen group order while avoiding a scan through every prior tag.
+		var groupIndexByName = [String: Int]()
 		for sample in samples {
 			let tags = try getTagsForSample(sample, forAttribute: groupByAttribute)
 			for tag in tags {
-				if let index = groups.firstIndex(where: { $0.0 as? String == tag.name }) {
+				if let index = groupIndexByName[tag.name] {
 					groups[index].1.append(sample)
 				} else {
+					groupIndexByName[tag.name] = groups.count
 					groups.append((tag.name, [sample]))
 				}
 			}

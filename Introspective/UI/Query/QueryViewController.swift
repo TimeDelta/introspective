@@ -93,6 +93,8 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	// leave non-private for testing purposes
 	final var queries = [(sampleTypeInfo: SampleTypeInfo, parts: [BooleanExpressionPart])]()
 	private var loadedSavedQuery: StoredQuery?
+	private var cancelQueryDraft: (() -> Void)?
+	private var queryDraftGeneration: UUID?
 	private final var editedSampleTypeSectionIndex: Int!
 	private final var editedAttributeRestrictionIndex: IndexPath!
 
@@ -145,9 +147,11 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	public final override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		coachMarksController.stop(immediately: true)
+		cancelOutstandingQueryDraft()
 	}
 
 	deinit {
+		cancelQueryDraft?()
 		NotificationCenter.default.removeObserver(self)
 	}
 
@@ -350,6 +354,16 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		}
 	}
 
+	private func cancelOutstandingQueryDraft() {
+		cancelQueryDraft?()
+		cancelQueryDraft = nil
+		guard queryDraftGeneration != nil else { return }
+		queryDraftGeneration = nil
+		navigationItem.prompt = nil
+		navigationItem.rightBarButtonItem?.isEnabled = true
+		if isViewLoaded { view.isUserInteractionEnabled = true }
+	}
+
 	@objc private func describeQuery() {
 #if canImport(FoundationModels)
 		if #available(iOS 26.0, *) {
@@ -365,7 +379,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 			alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
 			alert.addAction(UIAlertAction(title: "Create draft", style: .default) { [weak self, weak alert] _ in
 				guard let text = alert?.textFields?.first?.text, !text.isEmpty, text.count <= 2000 else { return }
-				self?.generateDraft(text)
+				alert?.dismiss(animated: false) { [weak self] in self?.generateDraft(text) }
 			})
 			present(alert, animated: true)
 			return
@@ -376,19 +390,31 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 #if canImport(FoundationModels)
 	@available(iOS 26.0, *)
 	private func generateDraft(_ text: String) {
+		cancelOutstandingQueryDraft()
+		let token = UUID()
+		queryDraftGeneration = token
 		navigationItem.rightBarButtonItem?.isEnabled = false
 		navigationItem.prompt = "Creating on-device draft…"
 		view.isUserInteractionEnabled = false
-		Task { @MainActor [weak self] in
+		let task = Task { @MainActor [weak self] in
+			defer {
+				if let self = self, self.queryDraftGeneration == token {
+					self.queryDraftGeneration = nil
+					self.cancelQueryDraft = nil
+					self.navigationItem.rightBarButtonItem?.isEnabled = true
+					self.view.isUserInteractionEnabled = true
+				}
+			}
 			do {
 				let session = LanguageModelSession(instructions: "Convert the user's request to a draft query. Supported dataType values: mood, pain, fatigue, activity, workout, activeEnergy, lostItem. Only AND conditions are supported. days means relative past days. Rating limits and minimum duration/energy are inclusive. Note text is literal. Do not approximate unsupported requests, OR, negation, comparisons, subqueries, or exact calendar ranges; set canRepresent=false. Use nil for unspecified optional conditions. No medical interpretation. Never execute anything.")
 				let response = try await session.respond(to: text, generating: GeneratedQueryDraft.self)
+				try Task.checkCancellation()
+				guard let self = self, self.queryDraftGeneration == token else { return }
 				let draft = response.content
 				guard draft.canRepresent else { throw GenericDisplayableError(title: "Use the builder for this query", description: "The requested conditions cannot all be represented by this experimental draft generator.") }
 				let resolved = try OnDeviceQueryPlan(dataType: draft.dataType, days: draft.days, minimumRating: draft.minimumRating,
 					maximumRating: draft.maximumRating, noteContains: draft.noteContains, minimumDurationMinutes: draft.minimumDurationMinutes,
 					minimumEnergyKcal: draft.minimumEnergyKcal, mostRecentOnly: draft.mostRecentOnly).resolve()
-				guard let self = self else { return }
 				if let required = self.topmostSampleType, required != resolved.sampleType { throw GenericDisplayableError(title: "This editor requires a different data type.") }
 				let query = try injected(QueryFactory.self).queryFor(resolved.sampleType)
 				query.expression = resolved.expression; query.mostRecentEntryOnly = resolved.mostRecentOnly
@@ -397,12 +423,12 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 				self.queries = []; self.populateQuery(query); self.tableView.reloadData(); self.validate()
 				self.navigationItem.prompt = "Review every condition before running"
 			} catch {
+				guard !Task.isCancelled, self?.queryDraftGeneration == token else { return }
 				self?.navigationItem.prompt = nil
 				self?.showError(title: "Could not create draft", message: "The request was not applied. Try the query builder or a simpler description.")
 			}
-			self?.navigationItem.rightBarButtonItem?.isEnabled = true
-			self?.view.isUserInteractionEnabled = true
 		}
+		cancelQueryDraft = { task.cancel() }
 	}
 #endif
 
