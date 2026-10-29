@@ -17,7 +17,7 @@ class UITest: XCTestCase {
 
 	override func setUp() {
 		super.setUp()
-		continueAfterFailure = true
+		continueAfterFailure = false
 		app = XCUIApplication()
 		app.launchArguments.append("--ui-testing")
 		app.launch()
@@ -87,12 +87,8 @@ class UITest: XCTestCase {
 
 	final func setDatePicker(_ queryString: String? = nil, to date: Date) {
 		skipInstructionsIfPresent()
-		let datePickerWheels: XCUIElementQuery
-		if let queryString = queryString {
-			datePickerWheels = app.descendants(matching: .any).matching(identifier: queryString).firstMatch.pickerWheels
-		} else {
-			datePickerWheels = app.pickerWheels
-		}
+		let picker = queryString.map { app.datePickers[$0] } ?? app.datePickers.firstMatch
+		let datePickerWheels = picker.pickerWheels
 		guard datePickerWheels.firstMatch.waitForExistence(timeout: 5) else {
 			XCTFail("Date picker wheels did not appear")
 			return
