@@ -2,6 +2,12 @@ name: iOS Compatibility Build
 
 on:
   workflow_dispatch:
+    inputs:
+      runner:
+        description: macOS runner (Intel avoids current ARM capacity constraints)
+        type: choice
+        options: [macos-15-intel, macos-15]
+        default: macos-15-intel
   push:
     branches: [master]
   pull_request:
@@ -15,13 +21,18 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    name: Unsigned iOS 26 build
-    runs-on: macos-15-intel
+  validation:
+    name: ${{ matrix.kind == 'tests' && 'Simulator tests' || 'Release compilation' }}
+    runs-on: ${{ inputs.runner || 'macos-15-intel' }}
     timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        kind: [tests, release]
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
       COCOAPODS_DISABLE_STATS: 'true'
+      CI_BUILD_KIND: ${{ matrix.kind }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -33,6 +44,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p ci-output
+          echo "CI_DERIVED_DATA=$RUNNER_TEMP/IntrospectiveDerivedData-$CI_BUILD_KIND" >> "$GITHUB_ENV"
           {
             xcodebuild -version
             xcrun --sdk iphoneos --show-sdk-version
@@ -40,14 +52,31 @@ jobs:
             swiftformat --version
           } | tee ci-output/tool-versions.log
 
+      - name: Restore frozen CocoaPods dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            Pods
+            ~/Library/Caches/CocoaPods
+          key: pods-v1-${{ runner.os }}-${{ runner.arch }}-xcode26.3-${{ hashFiles('Podfile', 'Podfile.lock') }}
+
       - name: Resolve CocoaPods dependencies
         shell: bash
         run: |
           set -euo pipefail
-          # Podfile retains the modified TimeDelta/WSTagsField commit.
-          # Keep the reviewed dependency graph fixed on CI.
+          # Always verify the reviewed lockfile, even when dependencies are cached.
+          # This retains the modified TimeDelta/WSTagsField commit and frozen versions.
           pod install --deployment 2>&1 | tee ci-output/pod-install.log
           cp Podfile.lock ci-output/Podfile.lock
+
+      - name: Restore Xcode build products
+        id: build-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.CI_DERIVED_DATA }}
+          key: xcode-v1-${{ runner.os }}-${{ runner.arch }}-26.3-${{ matrix.kind }}-${{ hashFiles('Podfile.lock', '**/project.pbxproj', '!Pods/**') }}-${{ github.sha }}
+          restore-keys: |
+            xcode-v1-${{ runner.os }}-${{ runner.arch }}-26.3-${{ matrix.kind }}-${{ hashFiles('Podfile.lock', '**/project.pbxproj', '!Pods/**') }}-
 
       - name: Generate build version
         shell: bash
@@ -56,48 +85,80 @@ jobs:
           ./scripts/create-git-version-swift-file.sh
           test -s Common/Common/GitVersion.swift
 
-      - name: Test persistence and Health exchange
+      - name: Verify the test-completeness guard
+        if: matrix.kind == 'tests'
+        run: python3 -m unittest discover -s scripts/tests -v
+
+      - name: Prepare native test target and start simulator
+        if: matrix.kind == 'tests'
         shell: bash
         run: |
           set -euo pipefail
           ruby scripts/prepare-mood-health-tests.rb
           xcrun simctl list devices available --json > ci-output/simulators.json
           simulator_id=$(python3 -c 'import json; d=json.load(open("ci-output/simulators.json")); print(next(v["udid"] for k,vs in d["devices"].items() if "iOS" in k for v in vs if v["isAvailable"] and "iPhone" in v["name"]))')
-          xcrun simctl bootstatus "$simulator_id" -b > ci-output/simulator-boot.log 2>&1 &
-          simulator_boot_pid=$!
-          xcodebuild test \
-            -workspace Introspective.xcworkspace \
-            -scheme MoodHealthTests \
-            -configuration Debug \
-            -destination "platform=iOS Simulator,id=$simulator_id" \
-            -only-testing:MoodHealthTests/MoodHealthExchangeFunctionalTests \
-            -only-testing:MoodHealthTests/SavedQueryTests \
-            -derivedDataPath "$RUNNER_TEMP/MoodTestsDerivedData" \
-            -resultBundlePath "$GITHUB_WORKSPACE/ci-output/MoodTests.xcresult" \
-            CODE_SIGNING_ALLOWED=YES CODE_SIGNING_REQUIRED=YES CODE_SIGN_IDENTITY='-' \
-            ONLY_ACTIVE_ARCH=YES \
-            ENABLE_USER_SCRIPT_SANDBOXING=NO \
-            2>&1 | tee ci-output/mood-tests.log
-          wait "$simulator_boot_pid"
-          xcrun xcresulttool get test-results summary --path ci-output/MoodTests.xcresult > ci-output/mood-tests-summary.json
-          python3 -c 'import json; r=json.load(open("ci-output/mood-tests-summary.json")); assert r["passedTests"] >= 43 and r["failedTests"] == 0, r'
+          echo "CI_SIMULATOR_ID=$simulator_id" >> "$GITHUB_ENV"
+          # Start booting now; compilation can run while the simulator starts.
+          state=$(xcrun simctl list devices available --json | python3 -c 'import json,sys; d=json.load(sys.stdin); print(next(v["state"] for vs in d["devices"].values() for v in vs if v["udid"]==sys.argv[1]))' "$simulator_id")
+          if [ "$state" != Booted ]; then xcrun simctl boot "$simulator_id"; fi
 
-      - name: Build without signing
+      - name: Build simulator tests
+        if: matrix.kind == 'tests'
+        id: test-build
         shell: bash
         run: |
           set -euo pipefail
-          xcodebuild build \
+          ./scripts/run-ci-command.sh ci-output/test-build.log xcodebuild build-for-testing \
+            -workspace Introspective.xcworkspace \
+            -scheme MoodHealthTests \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=$CI_SIMULATOR_ID" \
+            -derivedDataPath "$CI_DERIVED_DATA" \
+            -resultBundlePath "$GITHUB_WORKSPACE/ci-output/TestBuild.xcresult" \
+            -showBuildTimingSummary \
+            CODE_SIGNING_ALLOWED=YES CODE_SIGNING_REQUIRED=YES CODE_SIGN_IDENTITY='-' \
+            ONLY_ACTIVE_ARCH=YES COMPILER_INDEX_STORE_ENABLE=NO \
+            ENABLE_USER_SCRIPT_SANDBOXING=NO
+
+      - name: Run every native test without rebuilding
+        if: matrix.kind == 'tests'
+        shell: bash
+        run: |
+          set -euo pipefail
+          xcrun simctl bootstatus "$CI_SIMULATOR_ID" -b > ci-output/simulator-boot.log 2>&1
+          ./scripts/run-ci-command.sh ci-output/mood-tests.log xcodebuild test-without-building \
+            -workspace Introspective.xcworkspace \
+            -scheme MoodHealthTests \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=$CI_SIMULATOR_ID" \
+            -derivedDataPath "$CI_DERIVED_DATA" \
+            -resultBundlePath "$GITHUB_WORKSPACE/ci-output/MoodTests.xcresult"
+          xcrun xcresulttool get test-results summary --path ci-output/MoodTests.xcresult > ci-output/mood-tests-summary.json
+          python3 scripts/verify-native-test-results.py ci-output/mood-tests-summary.json
+
+      - name: Build without signing
+        if: matrix.kind == 'release'
+        id: release-build
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./scripts/run-ci-command.sh ci-output/xcodebuild.log xcodebuild build \
             -workspace Introspective.xcworkspace \
             -scheme CI-CD \
             -configuration Release \
             -destination 'generic/platform=iOS' \
-            -derivedDataPath "$RUNNER_TEMP/IntrospectiveDerivedData" \
+            -derivedDataPath "$CI_DERIVED_DATA" \
             -resultBundlePath "$GITHUB_WORKSPACE/ci-output/Build.xcresult" \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGN_IDENTITY='' \
-            ENABLE_USER_SCRIPT_SANDBOXING=NO \
-            2>&1 | tee ci-output/xcodebuild.log
+            -showBuildTimingSummary \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY='' \
+            COMPILER_INDEX_STORE_ENABLE=NO ENABLE_USER_SCRIPT_SANDBOXING=NO
+
+      - name: Save successful compilation for subsequent runs
+        if: ${{ !cancelled() && (steps.test-build.outcome == 'success' || steps.release-build.outcome == 'success') && steps.build-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.CI_DERIVED_DATA }}
+          key: ${{ steps.build-cache.outputs.cache-primary-key }}
 
       - name: Record generated changes
         if: always()
@@ -111,7 +172,19 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ios-26-build-diagnostics
+          name: ios-26-${{ matrix.kind }}-diagnostics
           path: ci-output/
           retention-days: 14
           if-no-files-found: warn
+
+  build:
+    # Preserve the existing check name and require BOTH parallel jobs to succeed.
+    name: Unsigned iOS 26 build
+    needs: validation
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require simulator tests and Release compilation
+        env:
+          VALIDATION_RESULT: ${{ needs.validation.result }}
+        run: test "$VALIDATION_RESULT" = success
