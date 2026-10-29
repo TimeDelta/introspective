@@ -25,6 +25,7 @@ final class RecordMoodsUITests: UITest {
 		noteField.tap()
 		noteField.typeText("This is a note.")
 		app.toolbars["Toolbar"].buttons["Save"].tap()
+		let recordedRating = moodRatingButton().value as! String
 
 		// when
 		app.tables.buttons["save mood button"].tap()
@@ -33,6 +34,10 @@ final class RecordMoodsUITests: UITest {
 		XCTAssertEqual(moodNoteButton().value as? String, "Add Note")
 		XCTAssertEqual(moodSlider().value as? String, "50%")
 		XCTAssertEqual(moodRatingButton().value as? String, "5.5")
+		// The results scenarios seed moods; keep an end-to-end save/query check here.
+		runQueryForAll("Mood")
+		XCTAssertEqual(app.tables.cells.staticTexts["mood"].value as? String, recordedRating + " (1-10)")
+		XCTAssertEqual(app.tables.cells.staticTexts["note"].value as? String, "This is a note.")
 	}
 
 	func testSetMoodUsingRatingButton_correctlyUpdatesButtonTitleAndSlider() {
@@ -59,7 +64,7 @@ final class RecordMoodsUITests: UITest {
 		moodRatingButton().tap()
 
 		// when
-		setTextFor(field: moodRatingTextField(), to: "99")
+		setTextFor(field: moodRatingTextField(), to: "99", expectedValue: "10")
 
 		// then
 		XCTAssertEqual(moodRatingTextField().value as? String, "10")
@@ -70,7 +75,7 @@ final class RecordMoodsUITests: UITest {
 		moodRatingButton().tap()
 
 		// when
-		setTextFor(field: moodRatingTextField(), to: "-1")
+		setTextFor(field: moodRatingTextField(), to: "-1", expectedValue: "1")
 
 		// then
 		XCTAssertEqual(moodRatingTextField().value as? String, "1")

@@ -29,6 +29,8 @@ end
   Introspective/UI/RecordData/Activities/ActivityDefinitionTagsTableViewCell.swift
   Introspective/UI/ActiveImportTableViewCell.swift
   Introspective/UI/Settings/Export/ActiveExportTableViewCell.swift
+  TestSupport/UITestFixtures.swift
+  TestSupport/UITestFixtureLoader.swift
 ].each do |path|
   reference = project.files.find { |file| file.real_path.to_s == File.expand_path(path) }
   raise "Missing production source #{path}" unless reference

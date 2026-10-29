@@ -74,6 +74,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
+		tableView.accessibilityIdentifier = "recordMedications"
 
 		let addButton = barButton(
 			title: "+",

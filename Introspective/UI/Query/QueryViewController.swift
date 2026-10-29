@@ -106,6 +106,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
+		tableView.accessibilityIdentifier = "queryBuilder"
 		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Describe Query", style: .plain, target: self, action: #selector(describeQuery))
 
 		editButton.target = self

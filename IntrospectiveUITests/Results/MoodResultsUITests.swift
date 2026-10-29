@@ -22,7 +22,7 @@ final class MoodResultsUITests: UITest {
 	func testGivenMood_correctlyDisplaysMoodData() {
 		// given
 		let mood = Mood(5, "ghfjernqjil\nfewq\nfewq\nfewq\n")
-		createMoods([mood])
+		seed(moods: [mood])
 
 		// when
 		runAllMoodsQuery()
@@ -35,7 +35,7 @@ final class MoodResultsUITests: UITest {
 	func testEditingMood_correctlyDisplaysMoodData() {
 		// given
 		let mood = Mood(5, "jhgeiru")
-		createMoods([mood])
+		seed(moods: [mood])
 		runAllMoodsQuery()
 
 		let newTimestamp = Date() - 1.days - 2.hours - 3.minutes

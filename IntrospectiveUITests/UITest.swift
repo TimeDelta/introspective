@@ -13,16 +13,49 @@ class UITest: XCTestCase {
 
 	// MARK: - Set up / tear down
 
-	var app: XCUIApplication!
+	private var application: XCUIApplication!
+	private var hasLaunched = false
+	final var app: XCUIApplication {
+		if !hasLaunched { launchApp() }
+		return application
+	}
 
 	override func setUp() {
 		super.setUp()
 		continueAfterFailure = false
-		app = XCUIApplication()
-		app.launchArguments.append("--ui-testing")
+		application = XCUIApplication()
+		application.launchArguments.append("--ui-testing")
+		hasLaunched = false
+	}
+
+	/// Each case still launches once into its own clean SQLite database. A test can
+	/// supply its starting records before the first UI interaction triggers launch.
+	final func launchApp(fixtures: UITestFixtures = UITestFixtures(), file: StaticString = #file, line: UInt = #line) {
+		guard !hasLaunched else {
+			XCTFail("Fixtures must be configured before the first UI interaction", file: file, line: line)
+			return
+		}
+		do {
+			application.launchEnvironment[UITestFixtures.environmentKey] = try fixtures.encoded()
+		} catch {
+			XCTFail("Could not encode UI fixtures: \(error)", file: file, line: line)
+			return
+		}
 		let launchStarted = ProcessInfo.processInfo.systemUptime
-		app.launch()
+		application.launch()
+		hasLaunched = true
 		print("CI_UI_LAUNCH_SECONDS \(ProcessInfo.processInfo.systemUptime - launchStarted)")
+		openInitialScreen()
+	}
+
+	/// Override navigation, rather than setUp(), to allow pre-launch fixture setup.
+	func openInitialScreen() {}
+
+	final func seed(activityDefinitions: [ActivityDefinition] = [], activities: [UITestFixtures.Activity] = [],
+		medications: [Medication] = [], doses: [UITestFixtures.Dose] = [], moods: [Mood] = [],
+		file: StaticString = #file, line: UInt = #line) {
+		launchApp(fixtures: UITestFixtures(activityDefinitions: activityDefinitions, activities: activities,
+			medications: medications, doses: doses, moods: moods), file: file, line: line)
 	}
 
 	// MARK: - Instructions Helpers
@@ -59,6 +92,25 @@ class UITest: XCTestCase {
 		return element.exists || element.waitForExistence(timeout: timeout)
 	}
 
+	final func waitForValue(_ value: String, of element: XCUIElement, timeout: TimeInterval = 5,
+		file: StaticString = #file, line: UInt = #line) {
+		let predicate = NSPredicate(format: "exists == true AND value == %@", value)
+		if !predicate.evaluate(with: element) {
+			let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
+			XCTAssertEqual(XCTWaiter.wait(for: [expectation], timeout: timeout), .completed,
+				"Expected value \(value), got \(element.value ?? "missing")", file: file, line: line)
+		}
+	}
+
+	final func waitForCount(_ count: Int, in elements: XCUIElementQuery, timeout: TimeInterval = 5,
+		file: StaticString = #file, line: UInt = #line) {
+		if elements.count != count {
+			let expectation = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in elements.count == count }, object: nil)
+			XCTAssertEqual(XCTWaiter.wait(for: [expectation], timeout: timeout), .completed,
+				"Expected \(count) elements, got \(elements.count)", file: file, line: line)
+		}
+	}
+
 	final func tapCoordinate(x: Double, y: Double) {
 		let normalized = app.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0))
 		let coordinate = normalized.withOffset(CGVector(dx: x, dy: y))
@@ -73,10 +125,29 @@ class UITest: XCTestCase {
 
 	// MARK: - Go To Screen Helpers
 
+	final func openActivitiesScreen() {
+		goToTabIfNotSelected("Record")
+		if !app.tables["recordActivities"].exists {
+			app.tables.cells.staticTexts["Activities"].tap()
+		}
+		skipInstructionsIfPresent(.activities)
+		XCTAssertTrue(waitForElement(app.tables["recordActivities"]), "Activity list did not appear")
+	}
+
+	final func openMedicationsScreen() {
+		goToTabIfNotSelected("Record")
+		if !app.tables["recordMedications"].exists {
+			app.tables.cells.staticTexts["Medications"].tap()
+		}
+		skipInstructionsIfPresent(.medications)
+		XCTAssertTrue(waitForElement(app.tables["recordMedications"]), "Medication list did not appear")
+	}
+
 	final func goToQueryScreen() {
 		app.tabBars.buttons["Explore"].tap()
 		app.collectionViews.staticTexts["Query"].tap()
 		skipInstructionsIfPresent(.query)
+		XCTAssertTrue(waitForElement(app.tables["queryBuilder"]), "Query builder did not appear")
 	}
 
 	final func goToTabIfNotSelected(_ tabName: String) {
@@ -193,7 +264,7 @@ class UITest: XCTestCase {
 
 	// MARK: - Text Field Helpers
 
-	final func setTextFor(field: XCUIElement, to text: String? = nil) {
+	final func setTextFor(field: XCUIElement, to text: String? = nil, expectedValue: String? = nil) {
 		guard waitForElement(field) else {
 			XCTFail("Text input did not appear: \(field)")
 			return
@@ -204,7 +275,10 @@ class UITest: XCTestCase {
 		if let text = text, !text.isEmpty {
 			field.tap()
 			field.typeText(text)
-			let complete = NSPredicate(format: "value == %@", text)
+			// Validation can intentionally normalize the typed text (for example,
+			// clamping a mood to its allowed range). Ordinary entry still waits for
+			// every character so a save cannot race partially delivered keyboard input.
+			let complete = NSPredicate(format: "value == %@", expectedValue ?? text)
 			if !complete.evaluate(with: field) {
 				let expectation = XCTNSPredicateExpectation(predicate: complete, object: field)
 				XCTAssertEqual(XCTWaiter.wait(for: [expectation], timeout: 5), .completed,
@@ -286,15 +360,9 @@ class UITest: XCTestCase {
 
 	// MARK: - Sample Creators
 
-	struct Mood {
-		var rating: Double
-		var note: String?
-
-		init(_ rating: Double = 0, _ note: String? = nil) {
-			self.rating = rating
-			self.note = note
-		}
-	}
+	typealias Mood = UITestFixtures.Mood
+	typealias ActivityDefinition = UITestFixtures.ActivityDefinition
+	typealias Medication = UITestFixtures.Medication
 
 	final func createMoods(_ moods: [Mood]) {
 		app.tabBars.buttons["Record"].tap()
@@ -317,24 +385,8 @@ class UITest: XCTestCase {
 		}
 	}
 
-	struct ActivityDefinition {
-		var name: String
-		var autoNote: Bool?
-		var description: String?
-		var tags: [String]?
-
-		init(name: String, autoNote: Bool? = nil, description: String? = nil, tags: [String]? = nil) {
-			self.name = name
-			self.autoNote = autoNote
-			self.description = description
-			self.tags = tags
-		}
-	}
-
 	final func createActivityDefinitions(_ definitions: [ActivityDefinition]) {
-		app.tabBars.buttons["Record"].tap()
-		app.tables.cells.staticTexts["Activities"].tap()
-		skipInstructionsIfPresent(.activities)
+		openActivitiesScreen()
 		for definition in definitions {
 			createActivityDefinition(definition, goToRecordActivitiesScreen: false)
 		}
@@ -343,10 +395,7 @@ class UITest: XCTestCase {
 	final func createActivityDefinition(_ definition: ActivityDefinition, goToRecordActivitiesScreen: Bool = true) {
 		// Creating another definition already returns here. Avoid popping to the
 		// Record menu and reopening the same screen for every fixture record.
-		if goToRecordActivitiesScreen && !app.navigationBars["Activities"].exists {
-			app.tabBars.buttons["Record"].tap()
-			app.tables.cells.staticTexts["Activities"].tap()
-		}
+		if goToRecordActivitiesScreen { openActivitiesScreen() }
 		skipInstructionsIfPresent(.activities)
 		app.navigationBars.buttons["+"].tap()
 		setTextFor(field: app.tables.textFields["activity name"], to: definition.name)
@@ -361,46 +410,18 @@ class UITest: XCTestCase {
 		app.buttons["Save"].tap()
 	}
 
-	struct Medication {
-		var name: String
-		var frequency: (times: String, unit: String)?
-		var startedOn: Date?
-		var dosage: String?
-		var note: String?
-
-		public init(
-			_ name: String,
-			frequency: (times: String, unit: String)? = nil,
-			startedOn: Date? = nil,
-			dosage: String? = nil,
-			note: String? = nil)
-		{
-			self.name = name
-			self.frequency = frequency
-			self.startedOn = startedOn
-			self.dosage = dosage
-			self.note = note
-		}
-	}
-
 	final func createMedication(_ medication: Medication, save: Bool = true) {
-		goToTabIfNotSelected("Record")
-		if !app.navigationBars["Medications"].exists {
-			app.tables.cells.staticTexts["Medications"].tap()
-		}
-		skipInstructionsIfPresent(.medications)
+		openMedicationsScreen()
 
 		app.buttons["+"].tap()
 
 		let nameField = app.textFields["medication name"]
-		nameField.tap()
-		nameField.typeText(medication.name)
+		setTextFor(field: nameField, to: medication.name)
 
 		if let frequency = medication.frequency {
 			app.buttons["set frequency button"].tap()
 			let numberOfTimesField = app.textFields["number of times"]
-			numberOfTimesField.tap()
-			numberOfTimesField.typeText(frequency.times)
+			setTextFor(field: numberOfTimesField, to: frequency.times)
 			app.pickerWheels["Day"].adjust(toPickerWheelValue: frequency.unit.capitalized)
 			app.buttons["save button"].tap()
 		}
@@ -413,13 +434,11 @@ class UITest: XCTestCase {
 
 		if let dosage = medication.dosage {
 			let dosageField = app.textFields["medication dosage"]
-			dosageField.tap()
-			dosageField.typeText(dosage)
+			setTextFor(field: dosageField, to: dosage)
 		}
 
 		if let note = medication.note {
-			app.textViews["notes"].tap()
-			app.textViews["notes"].typeText(note)
+			setTextFor(field: app.textViews["notes"], to: note)
 		}
 
 		if save {
