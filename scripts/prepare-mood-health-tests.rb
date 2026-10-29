@@ -98,7 +98,7 @@ scheme.test_action.testables = [Xcodeproj::XCScheme::TestAction::TestableReferen
 scheme.test_action.build_configuration = 'Debug'
 # Include production sources compiled into the hostless bundle as well as frameworks.
 scheme.test_action.code_coverage_enabled = true
-scheme.test_action.add_code_coverage_target(target)
+scheme.test_action.add_code_coverage_target(Xcodeproj::XCScheme::BuildableReference.new(target))
 scheme.add_build_target(target, false)
 scheme.save_as('Introspective.xcodeproj', name, true)
 puts 'Prepared independent MoodHealthTests target and scheme'
