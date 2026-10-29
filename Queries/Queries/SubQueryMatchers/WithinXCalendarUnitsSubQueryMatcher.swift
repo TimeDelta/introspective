@@ -68,63 +68,57 @@ public final class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatab
 		from querySamples: [QuerySampleType],
 		matching subQuerySamples: [Sample]
 	) -> [QuerySampleType] {
-		if subQuerySamples.isEmpty {
-			return []
-		}
+		guard !querySamples.isEmpty, !subQuerySamples.isEmpty, numberOfTimeUnits >= 0 else { return [] }
 
-		var matchingSamples = [QuerySampleType]()
-
-		var subQuerySamplesByStart = injected(SampleUtil.self)
-			.sort(samples: subQuerySamples, by: .start, in: .orderedAscending)
-		var subQuerySamplesByEnd = injected(SampleUtil.self)
-			.sort(samples: subQuerySamples, by: .end, in: .orderedAscending)
+		var referenceDates = [Date]()
 		if mostRecentOnly {
-			subQuerySamplesByStart = [subQuerySamplesByStart[0]]
-			subQuerySamplesByEnd = [subQuerySamplesByStart[0]]
-		}
-
-		for sample in querySamples {
-			let closestSubQuerySampleIndexByStart = injected(SearchUtil.self)
-				.binarySearchForClosest(to: sample, in: subQuerySamplesByStart) {
-					let distanceToStart = try! injected(CalendarUtil.self)
-						.distance(from: sample.dates()[.start]!, to: $1.dates()[.start]!, in: timeUnit)
-					if let endDate = sample.dates()[.end] {
-						let distanceToEnd = try! injected(CalendarUtil.self)
-							.distance(from: endDate, to: $1.dates()[.start]!, in: timeUnit)
-						if abs(distanceToEnd) < abs(distanceToStart) {
-							return distanceToEnd
-						}
-					}
-					return distanceToStart
-				}
-			let closestSubQuerySampleIndexByEnd = injected(SearchUtil.self)
-				.binarySearchForClosest(to: sample, in: subQuerySamplesByEnd) {
-					guard let subQuerySampleEndDate = $1.dates()[.end] else {
-						return Int.max
-					}
-					let distanceToStart = try! injected(CalendarUtil.self)
-						.distance(from: sample.dates()[.start]!, to: subQuerySampleEndDate, in: timeUnit)
-					if let endDate = sample.dates()[.end] {
-						let distanceToEnd = try! injected(CalendarUtil.self)
-							.distance(from: endDate, to: subQuerySampleEndDate, in: timeUnit)
-						if abs(distanceToEnd) < abs(distanceToStart) {
-							return distanceToEnd
-						}
-					}
-					return distanceToStart
-				}
-
-			let distanceToStart = injected(SampleUtil.self)
-				.distance(between: sample, and: subQuerySamplesByStart[closestSubQuerySampleIndexByStart], in: timeUnit)
-			let distanceToEnd = injected(SampleUtil.self)
-				.distance(between: sample, and: subQuerySamplesByEnd[closestSubQuerySampleIndexByEnd], in: timeUnit)
-			let distance = min(distanceToStart, distanceToEnd)
-
-			if distance <= numberOfTimeUnits {
-				matchingSamples.append(sample)
+			// Recency follows the latest start. Keep both endpoints of that record.
+			var latest: (start: Date, end: Date?)?
+			for sample in subQuerySamples {
+				let dates = sample.dates()
+				guard let start = dates[.start] else { continue }
+				if let current = latest, start <= current.start { continue }
+				latest = (start, dates[.end])
+			}
+			if let latest = latest {
+				referenceDates.append(latest.start)
+				if let end = latest.end { referenceDates.append(end) }
+			}
+		} else {
+			referenceDates.reserveCapacity(subQuerySamples.count * 2)
+			for sample in subQuerySamples {
+				let dates = sample.dates()
+				if let start = dates[.start] { referenceDates.append(start) }
+				if let end = dates[.end] { referenceDates.append(end) }
 			}
 		}
-		return matchingSamples
+		referenceDates.sort()
+		guard !referenceDates.isEmpty else { return [] }
+		let calendar = injected(CalendarUtil.self)
+		return querySamples.filter { sample in
+			let dates = sample.dates()
+			if let start = dates[.start], isWithinWindow(start, of: referenceDates, using: calendar) { return true }
+			if let end = dates[.end], isWithinWindow(end, of: referenceDates, using: calendar) { return true }
+			return false
+		}
+	}
+
+	private final func isWithinWindow(_ date: Date, of sortedDates: [Date], using calendar: CalendarUtil) -> Bool {
+		// Search each query endpoint separately: the minimum of two signed
+		// endpoint distances is not monotonic and cannot guide a binary search.
+		var lower = 0
+		var upper = sortedDates.count
+		while lower < upper {
+			let middle = lower + (upper - lower) / 2
+			if sortedDates[middle] < date { lower = middle + 1 } else { upper = middle }
+		}
+		// Calendar distance from a fixed date is monotonic on each side. Only
+		// adjacent endpoints can be closer; compute at most two calendar distances.
+		if lower < sortedDates.count,
+			abs(try! calendar.distance(from: date, to: sortedDates[lower], in: timeUnit)) <= numberOfTimeUnits { return true }
+		if lower > 0,
+			abs(try! calendar.distance(from: date, to: sortedDates[lower - 1], in: timeUnit)) <= numberOfTimeUnits { return true }
+		return false
 	}
 
 	// MARK: - Attribute Functions

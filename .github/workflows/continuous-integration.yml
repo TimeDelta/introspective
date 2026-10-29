@@ -39,6 +39,12 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Capture build inputs before CocoaPods modifies projects
+        id: build-inputs
+        shell: bash
+        run: |
+          echo "fingerprint=${{ hashFiles('Podfile', 'Podfile.lock', '**/project.pbxproj', '!Pods/**', 'scripts/prepare-*.rb') }}" >> "$GITHUB_OUTPUT"
+
       - name: Verify build tools
         shell: bash
         run: |
@@ -74,9 +80,9 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ${{ env.CI_DERIVED_DATA }}
-          key: xcode-v1-${{ runner.os }}-${{ runner.arch }}-26.3-${{ matrix.kind }}-${{ hashFiles('Podfile.lock', '**/project.pbxproj', '!Pods/**') }}-${{ github.sha }}
+          key: xcode-v2-${{ runner.os }}-${{ runner.arch }}-26.3-${{ matrix.kind }}-${{ steps.build-inputs.outputs.fingerprint }}-${{ github.sha }}
           restore-keys: |
-            xcode-v1-${{ runner.os }}-${{ runner.arch }}-26.3-${{ matrix.kind }}-${{ hashFiles('Podfile.lock', '**/project.pbxproj', '!Pods/**') }}-
+            xcode-v2-${{ runner.os }}-${{ runner.arch }}-26.3-${{ matrix.kind }}-${{ steps.build-inputs.outputs.fingerprint }}-
 
       - name: Generate build version
         shell: bash
