@@ -157,6 +157,11 @@ jobs:
           set -euo pipefail
           ./scripts/run-ci-command.sh ci-output/mock-generation.log python3 scripts/generate-legacy-mocks.py
 
+      - name: Preserve timestamps for unchanged cached build inputs
+        if: matrix.kind != 'mocks'
+        shell: bash
+        run: python3 scripts/ci-source-mtimes.py restore --manifest "$CI_DERIVED_DATA/ci-source-mtimes.json"
+
       - name: Build simulator tests
         if: matrix.kind != 'release' && matrix.kind != 'mocks'
         id: test-build
@@ -246,6 +251,11 @@ jobs:
             -showBuildTimingSummary \
             CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY='' \
             COMPILER_INDEX_STORE_ENABLE=NO ENABLE_USER_SCRIPT_SANDBOXING=NO
+
+      - name: Record content-verified timestamps for the next incremental build
+        if: ${{ !cancelled() && (steps.test-build.outcome == 'success' || steps.release-build.outcome == 'success') }}
+        shell: bash
+        run: python3 scripts/ci-source-mtimes.py save --manifest "$CI_DERIVED_DATA/ci-source-mtimes.json"
 
       - name: Save successful compilation for subsequent runs
         if: ${{ !cancelled() && (steps.test-build.outcome == 'success' || steps.release-build.outcome == 'success') && steps.build-cache.outputs.cache-hit != 'true' }}

@@ -1,19 +1,24 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-version=$(git rev-parse --verify HEAD | cut -c 1-7)
-curdate=$(date +"%Y-%m-%d")
+git_version_script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+git_version_root=$(git -C "$git_version_script_dir" rev-parse --show-toplevel)
+git_version_sha=$(git -C "$git_version_root" rev-parse --verify HEAD)
+git_version_date=$(git -C "$git_version_root" log -1 --format=%cs)
+git_version_status=$(git -C "$git_version_root" status --porcelain --untracked-files=no)
+git_version_dirty=false
+if [[ -n "$git_version_status" ]]; then git_version_dirty=true; fi
 
-cd "`git rev-parse --show-toplevel`/Common/Common"
-echo "//  DO NOT EDIT - GENERATED FILE" > GitVersion.swift
-echo "//  GitVersion.swift" >> GitVersion.swift
-echo "//  Created on $curdate." >> GitVersion.swift
-echo "//" >> GitVersion.swift
-echo "//" >> GitVersion.swift
-echo "public let GIT_SHA_VERSION = \"$version\"" >> GitVersion.swift
-uncommitted_changes="`git status --porcelain | egrep -v '^\?\?'`"
-if [[ -z $uncommitted_changes ]]; then
-	echo "public let UNCOMMITTED_CHANGES = false" >> GitVersion.swift
-else
-	echo "public let UNCOMMITTED_CHANGES = true" >> GitVersion.swift
+git_version_target="$git_version_root/Common/Common/GitVersion.swift"
+git_version_temp=$(mktemp "$git_version_root/Common/Common/.GitVersion.XXXXXX")
+trap 'rm -f "$git_version_temp"' EXIT
+{
+  printf '// DO NOT EDIT - GENERATED FILE\n// GitVersion.swift\n// Source commit dated %s.\n\n' "$git_version_date"
+  printf 'public let GIT_SHA_VERSION = "%s"\n' "${git_version_sha:0:7}"
+  printf 'public let UNCOMMITTED_CHANGES = %s\n' "$git_version_dirty"
+} > "$git_version_temp"
+# The workflow and the app build phase both call this. Preserve the timestamp
+# when content is identical so a second invocation does not invalidate Common.
+if ! cmp -s "$git_version_temp" "$git_version_target"; then
+  mv "$git_version_temp" "$git_version_target"
 fi
-touch GitVersion.swift
