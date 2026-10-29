@@ -20,6 +20,22 @@ CLASS_SECONDS = {
     'ActivitySettingsUITests': 60,
     'GeneralResultsUITests': 18,
 }
+# Run the paths responsible for recent repeated failures before the long suite.
+# These are additional checks: the passing gate still runs every discovered case.
+PREFLIGHT_TESTS = {
+    'RecordActivitiesUITests': [
+        'testChangingStartDateOnEditActivityScreen_updatesUI',
+        'testReorderToHigherSpotWhileFiltering_correcltyReordersDefinitions',
+        'testReorderToLowerSpotWhileFiltering_correcltyReordersDefinitions',
+    ],
+    'RecordMedicationsUITests': [
+        'testClearingStartedOnDateOnNewMedicationScreen_updatesStartedOnButtonTitle',
+        'testSettingFromDateAfterToDate_doesNotAllowSavingFilter',
+    ],
+    'QueryScreenUITests': [
+        'testMovingSampleTypeAboveAttributeRestriction_correctlyChangesAttributeRestriction',
+    ],
+}
 METHOD = re.compile(r'^\s*(?:(?:public|internal|private|final|override)\s+)*func\s+(test\w+)\s*\(\s*\)', re.MULTILINE)
 CLASS = re.compile(r'\bclass\s+(\w+)\s*:\s*(?:UITest|XCTestCase)\b')
 
@@ -75,17 +91,39 @@ def selection(shard=1, count=1, classes=None):
     }
 
 
+
+def preflight_selection(shard=1, count=1, classes=None):
+    classes = discover_tests() if classes is None else classes
+    for name, methods in PREFLIGHT_TESTS.items():
+        missing = set(methods) - set(classes.get(name, []))
+        if missing:
+            raise ValueError(f'Missing UI preflight tests in {name}: {sorted(missing)}')
+    data = selection(shard, count, classes)
+    data['tests'] = [f'IntrospectiveUITests/{name}/{method}' for name in data['classes']
+                     for method in PREFLIGHT_TESTS.get(name, [])]
+    if not data['tests']:
+        raise ValueError('Each UI shard must include a preflight test')
+    data['classes'] = sorted({test.split('/')[1] for test in data['tests']})
+    data['phase'] = 'preflight'
+    return data
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--shard', type=int, default=1)
     parser.add_argument('--count', type=int, default=1)
     parser.add_argument('--json', type=Path)
+    parser.add_argument('--preflight', action='store_true', help='Select regression checks before the full suite')
     args = parser.parse_args()
-    data = selection(args.shard, args.count)
+    select = preflight_selection if args.preflight else selection
+    data = select(args.shard, args.count)
     if args.json:
         args.json.write_text(json.dumps(data, indent=2) + '\n')
-    for name in data['classes']:
-        print(f'IntrospectiveUITests/{name}')
+    if args.preflight:
+        print('\n'.join(data['tests']))
+    else:
+        for name in data['classes']:
+            print(f'IntrospectiveUITests/{name}')
 
 
 if __name__ == '__main__':

@@ -137,6 +137,7 @@ jobs:
           if [ "$CI_BUILD_KIND" = ui ]; then
             ruby scripts/prepare-ui-tests.rb
             python3 scripts/partition-ui-tests.py --shard "$CI_UI_SHARD" --count "$CI_UI_SHARD_COUNT" --json ci-output/ui-test-selection.json > ci-output/ui-test-classes.txt
+            python3 scripts/partition-ui-tests.py --shard "$CI_UI_SHARD" --count "$CI_UI_SHARD_COUNT" --preflight --json ci-output/ui-preflight-selection.json > ci-output/ui-preflight-tests.txt
           fi
           xcrun simctl list devices available --json > ci-output/simulators.json
           simulator_id=$(python3 -c 'import json; d=json.load(open("ci-output/simulators.json")); print(next(v["udid"] for k,vs in d["devices"].items() if "iOS" in k for v in vs if v["isAvailable"] and "iPhone" in v["name"]))')
@@ -180,6 +181,36 @@ jobs:
             ONLY_ACTIVE_ARCH=YES COMPILER_INDEX_STORE_ENABLE=NO \
             ENABLE_USER_SCRIPT_SANDBOXING=NO
 
+      - name: Check UI regressions before running the complete shard
+        if: matrix.kind == 'ui'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$CI_UI_WORKERS" = 1 ]; then
+            xcrun simctl bootstatus "$CI_SIMULATOR_ID" -b > ci-output/simulator-boot.log 2>&1
+          fi
+          # Fail known broken paths early. A passing preflight is followed by the
+          # entire shard, with its independent completeness/no-skips guard.
+          test_command=(xcodebuild test-without-building
+            -workspace Introspective.xcworkspace
+            -scheme "$CI_TEST_SCHEME"
+            -configuration Debug
+            -destination "platform=iOS Simulator,id=$CI_SIMULATOR_ID"
+            -derivedDataPath "$CI_DERIVED_DATA"
+            -resultBundlePath "$GITHUB_WORKSPACE/ci-output/UIPreflight.xcresult")
+          test -s ci-output/ui-preflight-tests.txt
+          while IFS= read -r test_case; do
+            test_command+=("-only-testing:$test_case")
+          done < ci-output/ui-preflight-tests.txt
+          if [ "$CI_UI_WORKERS" = 1 ]; then
+            test_command+=(-parallel-testing-enabled NO)
+          else
+            test_command+=(-parallel-testing-enabled YES -parallel-testing-worker-count "$CI_UI_WORKERS")
+          fi
+          CI_TEST_PROGRESS=1 ./scripts/run-ci-command.sh ci-output/ui-preflight.log "${test_command[@]}"
+          xcrun xcresulttool get test-results summary --path ci-output/UIPreflight.xcresult > ci-output/ui-preflight-summary.json
+          python3 scripts/verify-ui-test-results.py ci-output/ui-preflight-summary.json --shard "$CI_UI_SHARD" --count "$CI_UI_SHARD_COUNT" --preflight
+
       - name: Run selected test suite without rebuilding
         if: matrix.kind != 'release' && matrix.kind != 'mocks'
         shell: bash
@@ -221,6 +252,10 @@ jobs:
         if: always() && matrix.kind != 'release' && matrix.kind != 'mocks'
         shell: bash
         run: |
+          if [ -d ci-output/UIPreflight.xcresult ]; then
+            xcrun xcresulttool get test-results summary --path ci-output/UIPreflight.xcresult > ci-output/ui-preflight-summary.json 2> ci-output/preflight-summary-errors.log || true
+            xcrun xcresulttool export attachments --path ci-output/UIPreflight.xcresult --output-path ci-output/ui-preflight-attachments --only-failures > ci-output/preflight-attachment-export.log 2>&1 || true
+          fi
           if [ -d ci-output/MoodTests.xcresult ]; then
             xcrun xcresulttool get test-results summary --path ci-output/MoodTests.xcresult > ci-output/test-summary.json 2> ci-output/summary-errors.log || true
             if [ "$CI_BUILD_KIND" = ui ]; then
@@ -234,6 +269,11 @@ jobs:
         run: |
           python3 scripts/report-ui-test-timings.py --log ci-output/mood-tests.log --summary ci-output/test-summary.json --json ci-output/ui-timings.json > ci-output/ui-timings.md
           cat ci-output/ui-timings.md >> "$GITHUB_STEP_SUMMARY"
+          if [ -f ci-output/ui-preflight.log ]; then
+            python3 scripts/report-ui-test-timings.py --log ci-output/ui-preflight.log --summary ci-output/ui-preflight-summary.json --json ci-output/ui-preflight-timings.json > ci-output/ui-preflight-timings.md
+            echo 'Additional UI preflight (not a replacement for full-shard coverage):' >> "$GITHUB_STEP_SUMMARY"
+            cat ci-output/ui-preflight-timings.md >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Build without signing
         if: matrix.kind == 'release'
