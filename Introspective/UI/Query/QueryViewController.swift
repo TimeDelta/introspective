@@ -759,7 +759,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		case is Sleep.Type: return try injected(QueryFactory.self).sleepQuery(parts)
 		case is Steps.Type: return try injected(QueryFactory.self).stepsQuery(parts)
 		case is Weight.Type: return try injected(QueryFactory.self).weightQuery(parts)
-		default: throw GenericError("Unknown sample type: \(sampleType.name)")
+		default: return try injected(QueryFactory.self).queryFor(sampleType, parts: parts)
 		}
 	}
 

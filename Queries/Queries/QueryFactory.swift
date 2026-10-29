@@ -11,6 +11,7 @@ import os
 
 import BooleanAlgebra
 import Common
+import DependencyInjection
 import Samples
 
 // sourcery: AutoMockable
@@ -47,6 +48,19 @@ public protocol QueryFactory {
 	func weightQuery(_ parts: [BooleanExpressionPart]) throws -> WeightQuery
 	func queryFor(_ sampleType: Sample.Type) throws -> Query
 	func sampleTypeFor(_ query: Query) throws -> Sample.Type
+}
+
+public extension QueryFactory {
+	/// Build new sample types through the same parser used by the named queries.
+	func queryFor(_ sampleType: Sample.Type, parts: [BooleanExpressionPart]) throws -> Query {
+		let query = try queryFor(sampleType)
+		if parts.isEmpty {
+			query.expression = nil
+		} else {
+			query.expression = try injected(BooleanExpressionParser.self).parse(parts)
+		}
+		return query
+	}
 }
 
 public final class QueryFactoryImpl: QueryFactory {

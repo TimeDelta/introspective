@@ -1844,6 +1844,35 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertEqual(try injected(Database.self).count(MoodImpl.self), 0)
 	}
 
+	func testNewSampleTypesSupportManualQueryRestrictionsAndStoredRoundTrips() throws {
+		let types: [Sample.Type] = [ActiveEnergy.self, Workout.self, LostItemEvent.self, MetricContextEntry.self]
+		let factory = injected(QueryFactory.self)
+		for sampleType in types {
+			let attribute = try XCTUnwrap(sampleType.defaultIndependentAttribute as? DateAttribute)
+			let restriction = InThePastXTimeUnitsDateAttributeRestriction(restrictedAttribute: attribute, 7, .day)
+			let query = try factory.queryFor(sampleType, parts: [(type: .expression, expression: restriction)])
+			XCTAssertTrue(try factory.sampleTypeFor(query) == sampleType)
+			XCTAssertTrue((query.expression as? InThePastXTimeUnitsDateAttributeRestriction) === restriction)
+			try dao.save(query, name: "Manual " + sampleType.name)
+			let saved = try XCTUnwrap(dao.getQueryWith(name: "Manual " + sampleType.name))
+			let restored = try saved.convert()
+			XCTAssertTrue(try factory.sampleTypeFor(restored) == sampleType)
+			XCTAssertTrue(try XCTUnwrap(restored.expression).equalTo(restriction))
+		}
+	}
+
+	func testGenericManualQueryAllowsNoRestrictionsAndRejectsIncompleteExpressions() throws {
+		let factory = injected(QueryFactory.self)
+		let types: [Sample.Type] = [ActiveEnergy.self, Workout.self, LostItemEvent.self, MetricContextEntry.self]
+		let invalidParts: [[BooleanExpressionPart]] = [[(type: .and, expression: nil)], [(type: .expression, expression: nil)]]
+		for sampleType in types {
+			XCTAssertNil(try factory.queryFor(sampleType, parts: []).expression)
+			for parts in invalidParts {
+				XCTAssertThrowsError(try factory.queryFor(sampleType, parts: parts))
+			}
+		}
+	}
+
 	func testMetricContextPersistsAndCanBeSavedAndQueriedByNotes() throws {
 		let start = Date(timeIntervalSince1970: 1_700_000_023.5)
 		try MetricContextEntry.record(category: .device, metric: .steps, at: start, until: start.addingTimeInterval(600), note: "Watch charging")
