@@ -11,6 +11,12 @@ final class ActivityLevelsViewController: UITableViewController {
 	private var generation = UUID()
 	private var values = ["—", "—", "—"]
 	private var status = ""
+	private let formatter: NumberFormatter = {
+		let value = NumberFormatter()
+		value.numberStyle = .decimal
+		value.maximumFractionDigits = 1
+		return value
+	}()
 	deinit { for query in queries { store.stop(query) } }
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -22,9 +28,19 @@ final class ActivityLevelsViewController: UITableViewController {
 		period.addTarget(self, action: #selector(load), for: .valueChanged)
 	}
 	override func viewWillAppear(_ animated: Bool) { super.viewWillAppear(animated); load() }
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		cancelQueries()
+	}
+	private func cancelQueries() {
+		// Also invalidate an authorization callback that has not started its queries yet.
+		generation = UUID()
+		for query in queries { store.stop(query) }
+		queries.removeAll()
+	}
 	@objc private func load() {
-		for query in queries { store.stop(query) }; queries = []
-		generation = UUID(); let token = generation
+		cancelQueries()
+		let token = generation
 		values = ["Loading…", "Loading…", "Loading…"]; status = ""
 		tableView.reloadData()
 		guard HKHealthStore.isHealthDataAvailable() else { values = ["Unavailable", "Unavailable", "Unavailable"]; tableView.reloadData(); return }
@@ -39,9 +55,11 @@ final class ActivityLevelsViewController: UITableViewController {
 				self.sum(ActiveEnergy.quantityType, unit: .kilocalorie(), suffix: " kcal", row: 0, predicate: predicate, token: token)
 				self.sum(Steps.quantityType, unit: .count(), suffix: " steps", row: 1, predicate: predicate, token: token)
 				let query = HKSampleQuery(sampleType: Workout.sampleType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { [weak self] _, samples, error in
+					// Release Health's sample array before waiting for the main queue.
+					let count = samples?.count ?? 0
 					DispatchQueue.main.async {
 						guard let self = self, self.generation == token else { return }
-						self.values[2] = error == nil ? "\(samples?.count ?? 0) recorded workouts" : "Unavailable"
+						self.values[2] = error == nil ? "\(count) recorded workouts" : "Unavailable"
 						self.tableView.reloadData()
 					}
 				}
@@ -54,8 +72,7 @@ final class ActivityLevelsViewController: UITableViewController {
 			DispatchQueue.main.async {
 				guard let self = self, self.generation == token else { return }
 				if let quantity = result?.sumQuantity(), error == nil {
-					let formatter = NumberFormatter(); formatter.numberStyle = .decimal; formatter.maximumFractionDigits = 1
-					self.values[row] = (formatter.string(from: NSNumber(value: quantity.doubleValue(for: unit))) ?? "—") + suffix
+					self.values[row] = (self.formatter.string(from: NSNumber(value: quantity.doubleValue(for: unit))) ?? "—") + suffix
 				} else { self.values[row] = "No available data" }
 				self.tableView.reloadData()
 			}
@@ -67,7 +84,7 @@ final class ActivityLevelsViewController: UITableViewController {
 		"Active energy and steps use Health's cumulative statistics. Workouts count records started in the selected period. Missing data may mean no records or denied read access. Phone motion is not collected. These measurements describe recorded activity; device placement, exercise type, and daily circumstances affect them. They are not an ADHD or restfulness score." + (status.isEmpty ? "" : " " + status)
 	}
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
+		let cell = tableView.dequeueReusableCell(withIdentifier: "activity-level") ?? UITableViewCell(style: .subtitle, reuseIdentifier: "activity-level")
 		cell.selectionStyle = .none
 		cell.textLabel?.text = ["Active Energy", "Steps", "Workouts"][indexPath.row]
 		cell.detailTextLabel?.text = values[indexPath.row]
