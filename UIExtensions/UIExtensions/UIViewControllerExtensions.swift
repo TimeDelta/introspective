@@ -67,13 +67,14 @@ public extension UIViewController {
 	@objc final func dismissKeyboard(_ tapRecognizer: UITapGestureRecognizer) {
 		let view = tapRecognizer.view
 		let loc = tapRecognizer.location(in: view)
-		if let tappedView = view?.hitTest(loc, with: nil) {
-			if !(tappedView is UITextInputTraits) {
-				self.view.endEditing(true)
-			}
-		} else {
-			self.view.endEditing(true)
+		var tappedView = view?.hitTest(loc, with: nil)
+		// UIKit text controls contain rendering/selection views that do not
+		// conform to UITextInputTraits. Tapping those still means editing text.
+		while let current = tappedView {
+			if current is UITextInputTraits { return }
+			tappedView = current.superview
 		}
+		self.view.endEditing(true)
 	}
 
 	/// Retrieve the value for the specified `UserInfoKey` from the given notification.

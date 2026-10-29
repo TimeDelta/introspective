@@ -1994,3 +1994,56 @@ final class ReorderGestureTests: XCTestCase {
 		XCTAssertTrue(controller.cellWasVisibleBeforeMove)
 	}
 }
+
+private final class KeyboardDismissalProbeView: UIView {
+	var endEditingCalls = 0
+	override func endEditing(_ force: Bool) -> Bool {
+		endEditingCalls += 1
+		return true
+	}
+}
+
+private final class KeyboardDismissalTap: UITapGestureRecognizer {
+	var point = CGPoint.zero
+	override func location(in view: UIView?) -> CGPoint { point }
+}
+
+final class KeyboardDismissalTests: XCTestCase {
+	@MainActor
+	func testTappingTextControlDescendantsKeepsTheKeyboardOpen() {
+		let controller = UIViewController()
+		let root = KeyboardDismissalProbeView(frame: CGRect(x: 0, y: 0, width: 320, height: 480))
+		controller.view = root
+		let tap = KeyboardDismissalTap()
+		root.addGestureRecognizer(tap)
+		let controls: [UIView] = [UITextField(), UITextView()]
+		for control in controls {
+			control.frame = CGRect(x: 20, y: 20, width: 200, height: 100)
+			root.addSubview(control)
+			control.layoutIfNeeded()
+			let renderingView = UIView(frame: CGRect(x: 5, y: 5, width: 40, height: 30))
+			control.addSubview(renderingView)
+			tap.point = CGPoint(x: 30, y: 30)
+			XCTAssertTrue(root.hitTest(tap.point, with: nil) === renderingView)
+
+			controller.dismissKeyboard(tap)
+
+			XCTAssertEqual(root.endEditingCalls, 0)
+			control.removeFromSuperview()
+		}
+	}
+
+	@MainActor
+	func testTappingBackgroundAndOutsideTheViewStillDismissesTheKeyboard() {
+		let controller = UIViewController()
+		let root = KeyboardDismissalProbeView(frame: CGRect(x: 0, y: 0, width: 320, height: 480))
+		controller.view = root
+		let tap = KeyboardDismissalTap()
+		root.addGestureRecognizer(tap)
+		for point in [CGPoint(x: 100, y: 100), CGPoint(x: -10, y: -10)] {
+			tap.point = point
+			controller.dismissKeyboard(tap)
+		}
+		XCTAssertEqual(root.endEditingCalls, 2)
+	}
+}
