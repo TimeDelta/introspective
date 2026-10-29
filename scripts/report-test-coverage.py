@@ -6,7 +6,7 @@ from pathlib import Path
 import subprocess
 import xml.etree.ElementTree as ET
 
-TEST_DIRS = {'IntrospectiveTests', 'IntrospectiveUITests', 'MoodHealthTests'}
+TEST_DIRS = {'IntrospectiveTests', 'IntrospectiveUITests', 'MoodHealthTests', 'TestSupport'}
 IGNORED_DIRS = TEST_DIRS | {'Pods', 'Carthage', '.build', 'build', 'ci-output'}
 
 

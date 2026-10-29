@@ -14,7 +14,8 @@ class CoverageReport(unittest.TestCase):
         self.directory = tempfile.TemporaryDirectory()
         self.addCleanup(self.directory.cleanup)
         self.root = Path(self.directory.name)
-        self.sources = ['App/Used.swift', 'App/Unmeasured.swift', 'Pods/Vendor.swift', 'MoodHealthTests/Test.swift']
+        self.sources = ['App/Used.swift', 'App/Unmeasured.swift', 'Pods/Vendor.swift', 'MoodHealthTests/Test.swift',
+                        'TestSupport/UITestFixtureLoader.swift', 'TestSupport/UITestFixtures.swift']
         self.file = {'path': str(self.root / 'App/Used.swift'), 'coveredLines': 4, 'executableLines': 10,
                      'functions': [{'name': 'save()', 'lineNumber': 12, 'coveredLines': 0,
                                     'executableLines': 6, 'executionCount': 0}]}
