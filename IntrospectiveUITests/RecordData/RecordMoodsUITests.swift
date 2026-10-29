@@ -64,7 +64,7 @@ final class RecordMoodsUITests: UITest {
 		moodRatingButton().tap()
 
 		// when
-		setTextFor(field: moodRatingTextField(), to: "99")
+		setTextFor(field: moodRatingTextField(), to: "99", expectedValue: "10")
 
 		// then
 		XCTAssertEqual(moodRatingTextField().value as? String, "10")
@@ -75,7 +75,7 @@ final class RecordMoodsUITests: UITest {
 		moodRatingButton().tap()
 
 		// when
-		setTextFor(field: moodRatingTextField(), to: "-1")
+		setTextFor(field: moodRatingTextField(), to: "-1", expectedValue: "1")
 
 		// then
 		XCTAssertEqual(moodRatingTextField().value as? String, "1")

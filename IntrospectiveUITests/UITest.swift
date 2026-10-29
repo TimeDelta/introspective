@@ -264,7 +264,7 @@ class UITest: XCTestCase {
 
 	// MARK: - Text Field Helpers
 
-	final func setTextFor(field: XCUIElement, to text: String? = nil) {
+	final func setTextFor(field: XCUIElement, to text: String? = nil, expectedValue: String? = nil) {
 		guard waitForElement(field) else {
 			XCTFail("Text input did not appear: \(field)")
 			return
@@ -275,7 +275,10 @@ class UITest: XCTestCase {
 		if let text = text, !text.isEmpty {
 			field.tap()
 			field.typeText(text)
-			let complete = NSPredicate(format: "value == %@", text)
+			// Validation can intentionally normalize the typed text (for example,
+			// clamping a mood to its allowed range). Ordinary entry still waits for
+			// every character so a save cannot race partially delivered keyboard input.
+			let complete = NSPredicate(format: "value == %@", expectedValue ?? text)
 			if !complete.evaluate(with: field) {
 				let expectation = XCTNSPredicateExpectation(predicate: complete, object: field)
 				XCTAssertEqual(XCTWaiter.wait(for: [expectation], timeout: 5), .completed,
