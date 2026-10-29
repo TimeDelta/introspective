@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5C446A57A18AD20881AE82FF /* TimeCoverageSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25137F308E23E99D8421A4EE /* TimeCoverageSummary.swift */; };
 		A2034F1724A700F200557F69 /* MoodDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2034F1624A700F200557F69 /* MoodDAO.swift */; };
 		A2034F8124ADB58800557F69 /* TagDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2034F8024ADB58700557F69 /* TagDAO.swift */; };
 		A224F6662679BB0A007C3577 /* Pain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A224F6652679BB0A007C3577 /* Pain.swift */; };
@@ -69,6 +70,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		25137F308E23E99D8421A4EE /* TimeCoverageSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCoverageSummary.swift; sourceTree = "<group>"; };
 		0FD9205055C3D47CACA310F2 /* Pods_Samples.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Samples.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		398DBEC9CC741AD39131D0DA /* Pods-Samples.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Samples.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-Samples/Pods-Samples.debug.xcconfig"; sourceTree = "<group>"; };
 		9A03171CF18F3FF66913B6CC /* Pods-Samples.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Samples.release.xcconfig"; path = "../Pods/Target Support Files/Pods-Samples/Pods-Samples.release.xcconfig"; sourceTree = "<group>"; };
@@ -188,6 +190,7 @@
 				A22D6276234398C40023470F /* SamplesInjectionProvider.swift */,
 				A22D6259234398AF0023470F /* SampleFactory.swift */,
 				A22D6257234398AF0023470F /* Sample.swift */,
+				25137F308E23E99D8421A4EE /* TimeCoverageSummary.swift */,
 				A2A0E7542496969A006C0A6E /* SearchableSample.swift */,
 				A22D623B234398AE0023470F /* AnySample.swift */,
 				A22D6258234398AF0023470F /* SampleErrors.swift */,
@@ -425,6 +428,7 @@
 				A22D6270234398AF0023470F /* HealthKitQuantitySample.swift in Sources */,
 				A22D6265234398AF0023470F /* CoreDataSample.swift in Sources */,
 				A22D6273234398AF0023470F /* Sample.swift in Sources */,
+				5C446A57A18AD20881AE82FF /* TimeCoverageSummary.swift in Sources */,
 				A22D6275234398AF0023470F /* SampleFactory.swift in Sources */,
 				A287DEB325806183000B8166 /* Fatigue.swift in Sources */,
 				A2AF1FDB2343C12100E04517 /* TagsAttribute.swift in Sources */,

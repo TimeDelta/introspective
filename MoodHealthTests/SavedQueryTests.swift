@@ -1,4 +1,6 @@
 import XCTest
+import UIKit
+import DataImport
 import HealthKit
 import CoreData
 import UIKit
@@ -69,6 +71,38 @@ private final class ExportBufferProbe: Exportable {
 	func export(to csv: CSVWriter) throws { try write(value); try csv.write(field: String(value)) }
 }
 
+// Exercise real SQLite fetches while recording the number of returned objects.
+private final class ActivityLookupDatabase: Database {
+	let base: Database
+	var returnedCounts = [Int]()
+	init(_ base: Database) { self.base = base }
+	func transaction() -> Transaction { base.transaction() }
+	func setModifiedExternally(_ modified: Bool) { base.setModifiedExternally(modified) }
+	func refreshContext() { base.refreshContext() }
+	func fetchedResultsController<T: NSManagedObject>(type: T.Type, sortDescriptors: [NSSortDescriptor],
+		cacheName: String?) -> NSFetchedResultsController<T> {
+		base.fetchedResultsController(type: type, sortDescriptors: sortDescriptors, cacheName: cacheName)
+	}
+	func query<T: NSManagedObject>(_ request: NSFetchRequest<T>) throws -> [T] {
+		let result = try base.query(request)
+		returnedCounts.append(result.count)
+		return result
+	}
+	func count<T: NSManagedObject>(_ type: T.Type) throws -> Int { try base.count(type) }
+	func count<T: NSFetchRequestResult>(_ request: NSFetchRequest<T>) throws -> Int { try base.count(request) }
+	func pull<T: NSManagedObject>(savedObject: T) throws -> T { try base.pull(savedObject: savedObject) }
+	func pull<T: NSManagedObject>(savedObject: T, fromSameContextAs otherObject: NSManagedObject) throws -> T {
+		try base.pull(savedObject: savedObject, fromSameContextAs: otherObject)
+	}
+	func pull<T: NSManagedObject>(savedObject: T, fromContext context: NSManagedObjectContext) throws -> T {
+		try base.pull(savedObject: savedObject, fromContext: context)
+	}
+	func deleteEverything() throws { try base.deleteEverything() }
+	func cleanUpManagedObjectWithStrongReferenceCycle<T: NSManagedObject>(_ object: T) {
+		base.cleanUpManagedObjectWithStrongReferenceCycle(object)
+	}
+}
+
 final class SavedQueryTests: XCTestCase {
 	private static let bundle = Bundle(for: SavedQueryTests.self)
 	private static let model = NSManagedObjectModel.mergedModel(from: [bundle])!
@@ -118,6 +152,27 @@ final class SavedQueryTests: XCTestCase {
 		DependencyInjector.register([CommonInjectionProvider(), BooleanAlgebraInjectionProvider(),
 			SamplesInjectionProvider(), QueriesInjectionProvider(), AttributeRestrictionsInjectionProvider(),
 			SavedQueryTestProvider(DatabaseImpl(container), settings)])
+	}
+
+	@MainActor
+	func testActivityDurationTimerDoesNotRetainCell() throws {
+		let definition = ActivityDefinition(context: container.viewContext)
+		definition.name = "Timer lifecycle"
+		definition.recordScreenIndex = 0
+		try container.viewContext.save()
+		weak var weakCell: RecordActivityDefinitionTableViewCell?
+		autoreleasepool {
+			let cell = RecordActivityDefinitionTableViewCell()
+			cell.nameLabel = UILabel()
+			cell.mostRecentTimeLabel = UILabel()
+			cell.totalDurationTodayLabel = UILabel()
+			cell.currentInstanceDurationLabel = UILabel()
+			cell.progressIndicator = UIActivityIndicatorView()
+			cell.activityDefinition = definition
+			XCTAssertEqual(cell.nameLabel.text, definition.name)
+			weakCell = cell
+		}
+		XCTAssertNil(weakCell)
 	}
 
 	private func reopen() throws {
@@ -175,6 +230,89 @@ final class SavedQueryTests: XCTestCase {
 		let matcher = WithinXCalendarUnitsSubQueryMatcher(numberOfTimeUnits: 2, timeUnit: .second, mostRecentOnly: true)
 		let result = matcher.getSamples(from: [nearStart, nearEnd, nearOlderEnd], matching: [older, newer])
 		XCTAssertEqual(result.map { $0.objectID }, [nearStart.objectID, nearEnd.objectID])
+	}
+
+	private func lookupDefinition(_ name: String, index: Int = 0) throws -> ActivityDefinition {
+		let entity = try XCTUnwrap(NSEntityDescription.entity(forEntityName: ActivityDefinition.entityName, in: container.viewContext))
+		let definition = ActivityDefinition(entity: entity, insertInto: container.viewContext)
+		definition.name = name
+		definition.recordScreenIndex = Int16(index)
+		return definition
+	}
+
+	private func lookupActivity(_ definition: ActivityDefinition, start: Date, end: Date? = nil) throws -> Activity {
+		let entity = try XCTUnwrap(NSEntityDescription.entity(forEntityName: Activity.entityName, in: container.viewContext))
+		let activity = Activity(entity: entity, insertInto: container.viewContext)
+		activity.definition = definition
+		activity.start = start
+		activity.end = end
+		return activity
+	}
+
+	private func recordLookupResults() -> ActivityLookupDatabase {
+		let database = ActivityLookupDatabase(injected(Database.self))
+		DependencyInjector.register([SavedQueryTestProvider(database, injected(Settings.self))])
+		return database
+	}
+
+	func testActivityLookupsReturnOneRowFromLargeUnsortedHistory() throws {
+		let definition = try lookupDefinition("Résumé")
+		let other = try lookupDefinition("Other", index: 1)
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		var latest: Activity?
+		for number in 0..<1_024 {
+			let offset = (number * 73) % 1_024 // Deliberately not insertion/date order.
+			let start = base.addingTimeInterval(Double(offset * 60))
+			let activity = try lookupActivity(definition, start: start,
+				end: offset.isMultiple(of: 2) ? start.addingTimeInterval(30) : nil)
+			if offset == 1_023 { latest = activity }
+		}
+		let otherStart = base.addingTimeInterval(6_000 * 60)
+		let otherEnd = otherStart.addingTimeInterval(30)
+		_ = try lookupActivity(other, start: otherStart, end: otherEnd)
+		try container.viewContext.save()
+		let latestID = try XCTUnwrap(latest).objectID
+		let database = recordLookupResults()
+		let dao = ActivityDAOImpl()
+		XCTAssertEqual(try dao.getMostRecentActivityEndDate(), otherEnd)
+		XCTAssertEqual(try dao.getMostRecentlyStartedActivity(for: definition)?.objectID, latestID)
+		XCTAssertEqual(try dao.getMostRecentlyStartedIncompleteActivity(for: definition)?.objectID, latestID)
+		XCTAssertTrue(try dao.hasUnfinishedActivity(definition))
+		XCTAssertTrue(try dao.activityDefinitionWithNameExists("RESUME"))
+		// This fails if a lookup materializes the full matching history again.
+		XCTAssertEqual(database.returnedCounts, [1, 1, 1, 1, 1])
+	}
+
+	func testActivityLookupsPreserveEmptyAndCompletedOnlyResults() throws {
+		let definition = try lookupDefinition("Empty")
+		let other = try lookupDefinition("Unrelated", index: 1)
+		try container.viewContext.save()
+		let database = recordLookupResults()
+		let dao = ActivityDAOImpl()
+		XCTAssertNil(try dao.getMostRecentActivityEndDate())
+		XCTAssertNil(try dao.getMostRecentlyStartedActivity(for: definition))
+		XCTAssertNil(try dao.getMostRecentlyStartedIncompleteActivity(for: definition))
+		XCTAssertFalse(try dao.hasUnfinishedActivity(definition))
+		XCTAssertFalse(try dao.activityDefinitionWithNameExists("Missing"))
+		XCTAssertEqual(database.returnedCounts, [0, 0, 0, 0, 0])
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		_ = try lookupActivity(definition, start: base, end: base.addingTimeInterval(60))
+		_ = try lookupActivity(other, start: base)
+		try container.viewContext.save()
+		XCTAssertNil(try dao.getMostRecentlyStartedIncompleteActivity(for: definition))
+		XCTAssertFalse(try dao.hasUnfinishedActivity(definition))
+	}
+
+	func testDefinitionExistenceRemainsCaseInsensitiveAndDuplicateLookupStillThrows() throws {
+		_ = try lookupDefinition("Résumé")
+		_ = try lookupDefinition("RESUME", index: 1)
+		try container.viewContext.save()
+		let database = recordLookupResults()
+		let dao = ActivityDAOImpl()
+		XCTAssertTrue(try dao.activityDefinitionWithNameExists("resume"))
+		XCTAssertEqual(database.returnedCounts, [1])
+		XCTAssertThrowsError(try dao.getDefinitionWith(name: "resume"))
+		XCTAssertEqual(database.returnedCounts, [1, 2])
 	}
 
 	func testGraphNumericSortResolvesKeysOnceAndPreservesRoundingTies() {
@@ -962,6 +1100,169 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertEqual(stub.stopCount, 1)
 	}
 
+	func testEstimatedDatesPercentageIgnoresNonzeroSecondsAndFractions() throws {
+		let exactMinute = try mood(3)
+		exactMinute.date = Date(timeIntervalSince1970: 1_700_000_040)
+		let seconds = try mood(4)
+		seconds.date = exactMinute.date.addingTimeInterval(23)
+		let fractions = try mood(5)
+		fractions.date = exactMinute.date.addingTimeInterval(0.5)
+		let info = EstimatedDatesInformation(CommonSampleAttributes.timestamp)
+		XCTAssertEqual(try XCTUnwrap(Double(info.computeGraphable(forSamples: [exactMinute, seconds, fractions]))), 100.0 / 3.0, accuracy: 0.00001)
+		XCTAssertThrowsError(try info.computeGraphable(forSamples: []))
+	}
+
+	func testEstimatedDateStatisticIsAvailableForResultsAndGraphs() throws {
+		let factory = SampleGroupInformationFactoryImpl()
+		let attribute = CommonSampleAttributes.timestamp
+		XCTAssertTrue(factory.getApplicableInformationTypes(forAttribute: attribute).contains { $0 == EstimatedDatesInformation.self })
+		XCTAssertTrue(factory.getApplicableNumericInformationTypes(forAttribute: attribute).contains { $0 == EstimatedDatesInformation.self })
+	}
+
+	func testTimeCoverageMergesNestedAdjacentAndOverlappingIntervals() throws {
+		let start = Date(timeIntervalSince1970: 0)
+		func interval(_ a: Double, _ b: Double) -> DateInterval {
+			DateInterval(start: start.addingTimeInterval(a), end: start.addingTimeInterval(b))
+		}
+		let result = TimeCoverageSummary(interval: interval(0, 100), recordedIntervals: [interval(50, 90), interval(-10, 20), interval(10, 15), interval(20, 30), interval(80, 120)])
+		XCTAssertEqual(result.covered, 80)
+		XCTAssertEqual(result.unaccounted, 20)
+		XCTAssertEqual(result.gaps, [interval(30, 50)])
+	}
+
+	func testTimeCoverageEmptyAndFullyCoveredPeriods() throws {
+		let window = DateInterval(start: Date(timeIntervalSince1970: 100), duration: 3600)
+		let empty = TimeCoverageSummary(interval: window, recordedIntervals: [])
+		XCTAssertEqual(empty.unaccounted, 3600)
+		XCTAssertEqual(empty.gaps, [window])
+		let full = TimeCoverageSummary(interval: window, recordedIntervals: [window, window])
+		XCTAssertEqual(full.covered, 3600)
+		XCTAssertTrue(full.gaps.isEmpty)
+	}
+
+	func testTimeCoveragePreservesRealDaylightSavingDayLength() throws {
+		var calendar = Calendar(identifier: .gregorian)
+		calendar.timeZone = try XCTUnwrap(TimeZone(identifier: "America/New_York"))
+		let date = try XCTUnwrap(calendar.date(from: DateComponents(year: 2024, month: 3, day: 10)))
+		let window = MoodReviewSummary.dateInterval(forLastDays: 1, endingOn: date, calendar: calendar)
+		XCTAssertEqual(TimeCoverageSummary(interval: window, recordedIntervals: []).unaccounted, 23 * 3600)
+	}
+
+}
+
+private final class TransferProgressProbe: NSObject, Importer, Exporter {
+	let dataTypePluralName = "test records"
+	let sourceName = "test source"
+	let customImportMessage: String? = nil
+	let lastImport: Date? = nil
+	let isPaused = false
+	let isCancelled = false
+	var importOnlyNewData = true
+	let url = URL(fileURLWithPath: "/unused-test-export")
+	var progress = 0.25
+	var progressReads = 0
+	func percentComplete() -> Double { progressReads += 1; return progress }
+	func importData(from url: URL) throws {}
+	func exportData() throws {}
+	func resetLastImportDate() throws {}
+	func cancel() {}
+	func pause() {}
+	func resume() throws {}
+}
+
+final class TransferCellLifecycleTests: XCTestCase {
+	@MainActor private func importCell() -> ActiveImportTableViewCell {
+		let cell = ActiveImportTableViewCell()
+		cell.cancelButton = UIButton()
+		cell.descriptionLabel = UILabel()
+		cell.progressView = UIProgressView()
+		cell.percentLabel = UILabel()
+		return cell
+	}
+
+	@MainActor private func exportCell() -> ActiveExportTableViewCell {
+		let cell = ActiveExportTableViewCell()
+		cell.cancelButton = UIButton()
+		cell.descriptionLabel = UILabel()
+		cell.progressView = UIProgressView()
+		cell.percentLabel = UILabel()
+		cell.toolbar = UIToolbar()
+		return cell
+	}
+
+	@MainActor
+	func testActiveTransferTimersDoNotRetainCells() {
+		DependencyInjector.register([CommonInjectionProvider()])
+		weak var weakImport: ActiveImportTableViewCell?
+		weak var weakExport: ActiveExportTableViewCell?
+		autoreleasepool {
+			let importing = importCell()
+			let exporting = exportCell()
+			importing.importer = TransferProgressProbe()
+			exporting.exporter = TransferProgressProbe()
+			weakImport = importing
+			weakExport = exporting
+		}
+		XCTAssertNil(weakImport)
+		XCTAssertNil(weakExport)
+	}
+
+	@MainActor
+	func testReuseReleasesTransferObjectsAndStopsPolling() {
+		DependencyInjector.register([CommonInjectionProvider()])
+		let importing = importCell()
+		let exporting = exportCell()
+		weak var weakImporter: TransferProgressProbe?
+		weak var weakExporter: TransferProgressProbe?
+		autoreleasepool {
+			let importer = TransferProgressProbe()
+			let exporter = TransferProgressProbe()
+			weakImporter = importer
+			weakExporter = exporter
+			importing.importer = importer
+			exporting.exporter = exporter
+			importing.prepareForReuse()
+			exporting.prepareForReuse()
+		}
+		XCTAssertNil(weakImporter)
+		XCTAssertNil(weakExporter)
+		XCTAssertNil(importing.importer)
+		XCTAssertNil(exporting.exporter)
+		// A stale timer must not poll a nil or recycled transfer.
+		RunLoop.main.run(until: Date().addingTimeInterval(1.2))
+	}
+
+	@MainActor
+	func testRebindingExportIgnoresPreviousCompletionNotification() {
+		DependencyInjector.register([CommonInjectionProvider()])
+		let cell = exportCell()
+		let previous = TransferProgressProbe()
+		let current = TransferProgressProbe()
+		cell.toolbar.isHidden = true
+		cell.exporter = previous
+		cell.exporter = current
+		NotificationCenter.default.post(name: NotificationName.backgroundExportFinished.toName(), object: previous)
+		XCTAssertTrue(cell.toolbar.isHidden)
+		NotificationCenter.default.post(name: NotificationName.backgroundExportFinished.toName(), object: current)
+		XCTAssertFalse(cell.toolbar.isHidden)
+		XCTAssertFalse(cell.cancelButton.isEnabled)
+	}
+
+	@MainActor
+	func testCompletedTransfersDoNotStartPollingTimers() {
+		DependencyInjector.register([CommonInjectionProvider()])
+		let importing = importCell()
+		let exporting = exportCell()
+		let importer = TransferProgressProbe()
+		let exporter = TransferProgressProbe()
+		importer.progress = 1
+		exporter.progress = 1
+		importing.importer = importer
+		exporting.exporter = exporter
+		RunLoop.main.run(until: Date().addingTimeInterval(1.2))
+		XCTAssertEqual(importer.progressReads, 1)
+		XCTAssertEqual(exporter.progressReads, 1)
+	}
 }
 
 final class ClosestItemSearchTests: XCTestCase {

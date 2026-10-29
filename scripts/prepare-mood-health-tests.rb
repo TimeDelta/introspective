@@ -22,6 +22,17 @@ if File.exist?(File.join(name, saved_tests)) && !target.source_build_phase.files
   target.add_file_references([group.new_file(saved_tests)])
 end
 
+# Compile the production transfer cells into the hostless lifecycle tests.
+%w[
+  Introspective/UI/RecordData/Activities/RecordActivityDefinitionTableViewCell.swift
+  Introspective/UI/ActiveImportTableViewCell.swift
+  Introspective/UI/Settings/Export/ActiveExportTableViewCell.swift
+].each do |path|
+  reference = project.files.find { |file| file.real_path.to_s == File.expand_path(path) }
+  raise "Missing production source #{path}" unless reference
+  target.add_file_references([reference]) unless target.source_build_phase.files_references.include?(reference)
+end
+
 # Compile the actual app graph sources into the hostless regression target.
 # They depend on production frameworks, not on the app's entry point or UI state.
 %w[XYGraphDataGenerator SingleSampleTypeXYGraphDataGenerator].each do |basename|

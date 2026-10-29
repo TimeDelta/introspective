@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7E8B81DC95888D034A604DEC /* TimeCoverageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FABD70E72A7B0CD487637A /* TimeCoverageViewController.swift */; };
 		002860D0C159FA869343468230899D6F /* MedicationMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE94CCD5ECDC571D829C20B4C9B8BACD /* MedicationMatchers.swift */; };
 		00351062FC0728C1E4DF5B5AA7AC39DE /* RecordActivityTableViewControllerFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DE9D31516B68C3DC254B112DD5CE26 /* RecordActivityTableViewControllerFunctionalTests.swift */; };
 		003F8D34118DC91DE69E6133A54CCBEF /* GlobalsMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09891C9CC2849CFB15995EBA47FB169B /* GlobalsMocks.swift */; };
@@ -632,6 +633,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		28FABD70E72A7B0CD487637A /* TimeCoverageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCoverageViewController.swift; sourceTree = "<group>"; };
 		CAFE00000000000000000003 /* LegacySavedQueries.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = LegacySavedQueries.xcdatamodel; sourceTree = "<group>"; };
 		CAFE00000000000000000002 /* SavedQueries.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SavedQueries.xcdatamodel; sourceTree = "<group>"; };
 		CAFE00000000000000000001 /* HealthMood.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HealthMood.xcdatamodel; sourceTree = "<group>"; };
@@ -2563,6 +2565,7 @@
 				60B78A2C632B922EA1990AAE8BAB1D5A /* UnifiedView */,
 				FA9BDBBE86B58A0695737C9DFE09315D /* Explore.storyboard */,
 				E51488F43C1C1AF3E357896B07AFDE4C /* ExploreCollectionViewController.swift */,
+				28FABD70E72A7B0CD487637A /* TimeCoverageViewController.swift */,
 				648D525A4938C080CB18481960154140 /* Timeline */,
 			);
 			path = Explore;
@@ -3977,6 +3980,7 @@
 				44321AC05D9EDA55D6751DAD17861C8F /* SleepTimelineTableViewCellDelegate.swift in Sources */,
 				7017E4FA64867F3DA5114DBF3DA6C481 /* EditMoodTableViewController.swift in Sources */,
 				1F16E03DE617923DA6BA3DABB7DA64B0 /* ExploreCollectionViewController.swift in Sources */,
+				7E8B81DC95888D034A604DEC /* TimeCoverageViewController.swift in Sources */,
 				B908AF85D77043721F00F734D899E557 /* ActivityTableViewCell.swift in Sources */,
 				BA854AF9314FE78E97A840D63E7FF50C /* BasicXYChartViewController.swift in Sources */,
 				DF7D1F3E86F26032005D542504A64D0D /* BasicXYGraphTypeSetupViewController.swift in Sources */,

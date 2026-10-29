@@ -11,6 +11,7 @@ import UIKit
 import Common
 import DataImport
 import DependencyInjection
+import UIExtensions
 
 public final class ActiveImportTableViewCell: UITableViewCell {
 	// MARK: - Static Variables
@@ -31,6 +32,8 @@ public final class ActiveImportTableViewCell: UITableViewCell {
 	public final var backgroundTaskId: UIBackgroundTaskIdentifier!
 	public final var importer: Importer! {
 		didSet {
+			timer?.invalidate()
+			timer = nil
 			guard let importer = importer else { return }
 			descriptionLabel.text = importer.sourceName + " " + importer.dataTypePluralName
 			updateProgress()
@@ -38,11 +41,21 @@ public final class ActiveImportTableViewCell: UITableViewCell {
 		}
 	}
 
-	private final var timer: Timer!
+	private final var timer: Timer?
+	private final let percentFormatter: NumberFormatter = {
+		let formatter = NumberFormatter()
+		formatter.numberStyle = .percent
+		formatter.formatWidth = 3
+		return formatter
+	}()
+
+	deinit { timer?.invalidate() }
 
 	// MARK: - UITableViewCell Overrides
 
 	public final override func prepareForReuse() {
+		super.prepareForReuse()
+		importer = nil
 		injected(UiUtil.self).setButton(cancelButton, enabled: true, hidden: false)
 	}
 
@@ -68,12 +81,10 @@ public final class ActiveImportTableViewCell: UITableViewCell {
 	// MARK: - Helper Functions
 
 	@objc private final func updateProgress() {
+		guard let importer = importer else { return }
 		let percentComplete = importer.percentComplete()
 		progressView.progress = Float(percentComplete)
-		let numberFormatter = NumberFormatter()
-		numberFormatter.numberStyle = .percent
-		numberFormatter.formatWidth = 3
-		if let percentString = numberFormatter.string(from: NSNumber(value: percentComplete)) {
+		if let percentString = percentFormatter.string(from: NSNumber(value: percentComplete)) {
 			percentLabel.text = percentString
 		} else {
 			Me.log.error("Unable to convert %f to string", percentComplete * 100)
@@ -84,12 +95,10 @@ public final class ActiveImportTableViewCell: UITableViewCell {
 	}
 
 	private final func setTimer() {
-		timer = Timer.scheduledTimer(
-			timeInterval: 1,
-			target: self,
-			selector: #selector(updateProgress),
-			userInfo: nil,
-			repeats: true
-		)
+		guard progressView.progress < 1 else { return }
+		timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
+			guard let self = self else { timer.invalidate(); return }
+			self.updateProgress()
+		}
 	}
 }
