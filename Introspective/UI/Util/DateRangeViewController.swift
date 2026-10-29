@@ -23,6 +23,8 @@ public protocol DateRangeViewController: UIViewController {
 }
 
 public final class DateRangeViewControllerImpl: UIViewController, DateRangeViewController {
+	public static let preferredHeight: CGFloat = 600
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var enableFromDateSwitch: UISwitch!
@@ -30,6 +32,8 @@ public final class DateRangeViewControllerImpl: UIViewController, DateRangeViewC
 	@IBOutlet final var enableToDateSwitch: UISwitch!
 	@IBOutlet final var toDatePicker: UIDatePicker!
 	@IBOutlet final var saveButton: UIButton!
+	@IBOutlet final var fromDateLabel: UILabel!
+	@IBOutlet final var toDateLabel: UILabel!
 
 	// MARK: - Instance Variables
 
@@ -78,6 +82,43 @@ public final class DateRangeViewControllerImpl: UIViewController, DateRangeViewC
 
 		fromDatePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)
 		toDatePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)
+		layoutDatePickers()
+	}
+
+	private func layoutDatePickers() {
+		guard let parent = fromDatePicker.superview, let fromLabel = fromDateLabel,
+			let toLabel = toDateLabel, toDatePicker.superview === parent,
+			saveButton.superview === parent else { return }
+		preferredContentSize = CGSize(width: 375, height: Self.preferredHeight)
+		let movedViews: [UIView] = [fromDatePicker, toDatePicker, enableFromDateSwitch, enableToDateSwitch, saveButton, fromLabel, toLabel]
+		NSLayoutConstraint.deactivate(parent.constraints.filter { constraint in
+			movedViews.contains { $0 === constraint.firstItem as? UIView || $0 === constraint.secondItem as? UIView }
+		})
+		let fromRow = UIStackView(arrangedSubviews: [fromLabel, enableFromDateSwitch])
+		let toRow = UIStackView(arrangedSubviews: [toLabel, enableToDateSwitch])
+		let content = UIStackView(arrangedSubviews: [fromRow, fromDatePicker, toRow, toDatePicker])
+		content.axis = .vertical; content.spacing = 8
+		let scroll = UIScrollView()
+		scroll.addSubview(content); parent.addSubview(scroll)
+		let controls: [UIView] = [scroll, content, saveButton]
+		for control in controls { control.translatesAutoresizingMaskIntoConstraints = false }
+		NSLayoutConstraint.activate([
+			scroll.topAnchor.constraint(equalTo: parent.safeAreaLayoutGuide.topAnchor, constant: 8),
+			scroll.leadingAnchor.constraint(equalTo: parent.leadingAnchor),
+			scroll.trailingAnchor.constraint(equalTo: parent.trailingAnchor),
+			scroll.bottomAnchor.constraint(equalTo: saveButton.topAnchor, constant: -8),
+			content.topAnchor.constraint(equalTo: scroll.contentLayoutGuide.topAnchor),
+			content.leadingAnchor.constraint(equalTo: scroll.contentLayoutGuide.leadingAnchor, constant: 8),
+			content.trailingAnchor.constraint(equalTo: scroll.contentLayoutGuide.trailingAnchor, constant: -8),
+			content.bottomAnchor.constraint(equalTo: scroll.contentLayoutGuide.bottomAnchor),
+			content.widthAnchor.constraint(equalTo: scroll.frameLayoutGuide.widthAnchor, constant: -16),
+			fromDatePicker.heightAnchor.constraint(equalToConstant: 216),
+			toDatePicker.heightAnchor.constraint(equalToConstant: 216),
+			saveButton.leadingAnchor.constraint(equalTo: parent.leadingAnchor),
+			saveButton.trailingAnchor.constraint(equalTo: parent.trailingAnchor),
+			saveButton.heightAnchor.constraint(equalToConstant: 45),
+			saveButton.bottomAnchor.constraint(equalTo: parent.safeAreaLayoutGuide.bottomAnchor, constant: -8),
+		])
 	}
 
 	// MARK: - Actions

@@ -283,7 +283,6 @@
                                 </state>
                                 <connections>
                                     <action selector="saveButtonPressed:" destination="QBn-na-xdj" eventType="touchUpInside" id="0by-iz-mtK"/>
-                                    <action selector="saveButtonPressed:" destination="rCb-Gg-DZ9" eventType="touchUpInside" id="Qfb-k8-Cme"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="From" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="McI-ZG-bEW">
@@ -318,6 +317,8 @@
                         <outlet property="enableToDateSwitch" destination="QWc-he-pur" id="uiK-vO-lB3"/>
                         <outlet property="fromDatePicker" destination="mmE-3q-VO6" id="3bW-mX-SJk"/>
                         <outlet property="saveButton" destination="sco-id-gGv" id="fdN-zg-UYE"/>
+                        <outlet property="fromDateLabel" destination="McI-ZG-bEW" id="from-date-label-outlet"/>
+                        <outlet property="toDateLabel" destination="jtX-Ze-Drr" id="to-date-label-outlet"/>
                         <outlet property="toDatePicker" destination="d4V-cc-kkr" id="Lvp-Dj-1em"/>
                     </connections>
                 </viewController>
@@ -418,6 +419,7 @@
                     <connections>
                         <outlet property="datePicker" destination="MIp-es-gdi" id="7sc-V0-TOQ"/>
                         <outlet property="toolbar" destination="wxK-bj-fIl" id="oBO-Kg-0xq"/>
+                        <outlet property="saveButton" destination="jdD-DW-9Fl" id="date-save-outlet"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zj9-ZU-Syd" userLabel="First Responder" sceneMemberID="firstResponder"/>
