@@ -18,6 +18,7 @@ import SampleGroupers
 @testable import Queries
 @testable import Samples
 @testable import Settings
+@testable import UIExtensions
 
 private final class SavedQueryTestProvider: InjectionProvider {
 	let types: [Any.Type] = [Database.self, Settings.self]
@@ -1231,5 +1232,96 @@ final class ClosestItemSearchTests: XCTestCase {
 		// The caller supplies the ordering score; do not reinterpret its sign.
 		XCTAssertEqual(util.closestItem(to: 0, in: [4, -7, 2]) { item, _ in item }, -7)
 		XCTAssertEqual(util.closestItem(to: 20, in: [7]) { abs($0 - $1) }, 7)
+	}
+}
+
+private final class ReorderTableProbe: UITableViewController {
+	var moves = [(IndexPath, IndexPath)]()
+	var cellWasVisibleBeforeMove = false
+	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 3 }
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
+		cell.textLabel?.text = "Row \(indexPath.row)"
+		return cell
+	}
+	override func tableView(_ tableView: UITableView, moveRowAt source: IndexPath, to destination: IndexPath) {
+		let cell = tableView.cellForRow(at: source)
+		cellWasVisibleBeforeMove = cell?.isHidden == false && cell?.alpha == 1
+		moves.append((source, destination))
+	}
+}
+
+final class ReorderGestureTests: XCTestCase {
+	private func table() -> ReorderTableProbe {
+		let controller = ReorderTableProbe(style: .plain)
+		controller.loadViewIfNeeded()
+		controller.tableView.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
+		controller.tableView.reloadData()
+		controller.tableView.layoutIfNeeded()
+		return controller
+	}
+
+	private func point(_ row: Int, in controller: ReorderTableProbe) -> CGPoint {
+		let rect = controller.tableView.rectForRow(at: IndexPath(row: row, section: 0))
+		return CGPoint(x: rect.midX, y: rect.midY)
+	}
+
+	func testLongPressOutsideRowsDoesNotStartMoveOrCrashOnLaterEvents() {
+		let controller = table()
+		let gesture = LongPressReorderGestureRecognizer(controller)
+		let outside = CGPoint(x: 10, y: -100)
+		gesture.beginDragging(at: outside)
+		gesture.updateDrag(at: point(1, in: controller))
+		gesture.finishDragging(at: point(1, in: controller))
+		XCTAssertTrue(controller.moves.isEmpty)
+	}
+
+	func testRejectedStartRemainsSafeThroughChangeAndEnd() {
+		let controller = table()
+		let gesture = LongPressReorderGestureRecognizer(controller, allowReorder: { _, _ in false })
+		gesture.beginDragging(at: point(0, in: controller))
+		gesture.updateDrag(at: point(1, in: controller))
+		gesture.finishDragging(at: point(1, in: controller))
+		XCTAssertTrue(controller.moves.isEmpty)
+		XCTAssertFalse(controller.tableView.cellForRow(at: IndexPath(row: 0, section: 0))!.isHidden)
+	}
+
+	func testCancelRestoresCellAndRemovesSnapshotWithoutMoving() {
+		let controller = table()
+		let gesture = LongPressReorderGestureRecognizer(controller)
+		let cell = controller.tableView.cellForRow(at: IndexPath(row: 0, section: 0))!
+		let originalSubviews = controller.tableView.subviews.count
+		UIView.performWithoutAnimation { gesture.beginDragging(at: point(0, in: controller)) }
+		gesture.updateDrag(at: point(2, in: controller))
+		gesture.cancelDragging()
+		XCTAssertFalse(cell.isHidden)
+		XCTAssertEqual(cell.alpha, 1)
+		XCTAssertEqual(controller.tableView.subviews.count, originalSubviews)
+		XCTAssertTrue(controller.moves.isEmpty)
+	}
+
+	func testEndOutsideRowsAndRejectedDestinationRestoreCellWithoutMoving() {
+		let controller = table()
+		let gesture = LongPressReorderGestureRecognizer(controller, allowReorder: { _, destination in destination?.row != 2 })
+		let cell = controller.tableView.cellForRow(at: IndexPath(row: 0, section: 0))!
+		for destination in [CGPoint(x: 10, y: -100), point(2, in: controller), point(0, in: controller)] {
+			UIView.performWithoutAnimation { gesture.beginDragging(at: point(0, in: controller)) }
+			gesture.finishDragging(at: destination)
+			XCTAssertFalse(cell.isHidden)
+			XCTAssertEqual(cell.alpha, 1)
+		}
+		XCTAssertTrue(controller.moves.isEmpty)
+	}
+
+	func testSuccessfulMoveRestoresCellBeforeCallingDelegate() {
+		let controller = table()
+		let gesture = LongPressReorderGestureRecognizer(controller)
+		UIView.performWithoutAnimation { gesture.beginDragging(at: point(0, in: controller)) }
+		gesture.updateDrag(at: point(2, in: controller))
+		gesture.finishDragging(at: point(2, in: controller))
+		XCTAssertEqual(controller.moves.count, 1)
+		XCTAssertEqual(controller.moves.first?.0, IndexPath(row: 0, section: 0))
+		XCTAssertEqual(controller.moves.first?.1, IndexPath(row: 2, section: 0))
+		XCTAssertTrue(controller.cellWasVisibleBeforeMove)
 	}
 }
