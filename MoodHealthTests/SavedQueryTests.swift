@@ -5,7 +5,6 @@ import DataImport
 import HealthKit
 import CoreData
 import UIKit
-import WSTagsField
 import AAInfographics
 import CSV
 @testable import Common
