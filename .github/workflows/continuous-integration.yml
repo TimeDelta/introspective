@@ -223,6 +223,21 @@ jobs:
             fi
           fi
 
+      - name: Report measured coverage and test-writing priorities
+        if: always() && matrix.kind != 'release' && matrix.kind != 'mocks'
+        shell: bash
+        run: |
+          if [ -d ci-output/MoodTests.xcresult ]; then
+            xcrun xccov view --report --json ci-output/MoodTests.xcresult > ci-output/coverage-raw.json 2> ci-output/coverage-export.log || true
+          fi
+          python3 scripts/report-test-coverage.py \
+            --coverage ci-output/coverage-raw.json \
+            --summary ci-output/test-summary.json \
+            --scheme Introspective.xcodeproj/xcshareddata/xcschemes/CI-CD.xcscheme \
+            --label "$CI_BUILD_KIND (UI shard $CI_UI_SHARD/$CI_UI_SHARD_COUNT)" \
+            --json ci-output/coverage-priorities.json > ci-output/coverage.md
+          cat ci-output/coverage.md >> "$GITHUB_STEP_SUMMARY"
+
       - name: Report UI execution timings
         if: always() && matrix.kind == 'ui'
         shell: bash
