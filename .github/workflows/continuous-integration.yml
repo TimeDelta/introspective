@@ -244,6 +244,8 @@ jobs:
             python3 scripts/verify-native-test-results.py ci-output/mood-tests-summary.json
           elif [ "$CI_BUILD_KIND" = ui ]; then
             python3 scripts/verify-ui-test-results.py ci-output/mood-tests-summary.json --shard "$CI_UI_SHARD" --count "$CI_UI_SHARD_COUNT"
+          elif [ "$CI_BUILD_KIND" = legacy ]; then
+            python3 scripts/verify-legacy-test-results.py ci-output/mood-tests-summary.json
           else
             cat ci-output/mood-tests-summary.json
           fi
