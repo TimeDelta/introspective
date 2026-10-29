@@ -525,7 +525,7 @@ extension RecordMedicationTableViewController: UISearchResultsUpdating {
 // MARK: - Instructions
 
 /// This class is used to break retain cycles between `RecordMedicationTableViewController` and the closures used by `CoachMarkInfo`, preventing them from causing memory leaks
-final fileprivate class RecordMedicationTableViewControllerCoachMarksDataSourceAndDelegate: CoachMarksDataSourceAndDelegate {
+final class RecordMedicationTableViewControllerCoachMarksDataSourceAndDelegate: CoachMarksDataSourceAndDelegate {
 	// MARK: Type Aliases
 
 	private typealias Me = RecordMedicationTableViewControllerCoachMarksDataSourceAndDelegate
@@ -546,14 +546,14 @@ final fileprivate class RecordMedicationTableViewControllerCoachMarksDataSourceA
 		CoachMarkInfo(
 			hint: "Tap the + button to create new medications. You can also type the name of a new medication in the search bar and long press the + button to quickly create and mark it as taken.",
 			useArrow: true,
-			view: { self.controller?.navigationItem.rightBarButtonItem?.value(forKey: "view") as? UIView }
+			view: { [weak self] in self?.controller?.navigationItem.rightBarButtonItem?.value(forKey: "view") as? UIView }
 		),
 		CoachMarkInfo(
 			hint: "This is the name of the medication. Tap it to view dose history.",
 			useArrow: true,
-			view: { self.getExampleMedicationCell()?.medicationNameLabel },
-			setup: {
-				guard let controller = self.controller else { return }
+			view: { [weak self] in self?.getExampleMedicationCell()?.medicationNameLabel },
+			setup: { [weak self] in
+				guard let self = self, let controller = self.controller else { return }
 				if controller.tableView.visibleCells.isEmpty {
 					controller.searchController.searchBar.text = Me.exampleMedicationName
 					controller.quickCreateAndTake()
@@ -563,17 +563,17 @@ final fileprivate class RecordMedicationTableViewControllerCoachMarksDataSourceA
 		CoachMarkInfo(
 			hint: "Press this button to quickly mark this medication as taken. Long pressing allows setting the dosage and date / time that it was taken.",
 			useArrow: true,
-			view: { self.getExampleMedicationCell()?.takeButton }
+			view: { [weak self] in self?.getExampleMedicationCell()?.takeButton }
 		),
 		CoachMarkInfo(
 			hint: "This displays the most recent date and time that this medication was taken. Tap to edit the most recent dose.",
 			useArrow: true,
-			view: { self.getExampleMedicationCell()?.lastTakenOnDateButton }
+			view: { [weak self] in self?.getExampleMedicationCell()?.lastTakenOnDateButton }
 		),
 		CoachMarkInfo(
 			hint: "Sorting options can be accessed here.",
 			useArrow: true,
-			view: { self.controller?.sortButton.value(forKey: "view") as? UIView }
+			view: { [weak self] in self?.controller?.sortButton.value(forKey: "view") as? UIView }
 		),
 	]
 
@@ -581,7 +581,7 @@ final fileprivate class RecordMedicationTableViewControllerCoachMarksDataSourceA
 		DefaultCoachMarksDataSourceAndDelegate(
 			coachMarksInfo,
 			instructionsShownKey: .recordMedicationsInstructionsShown,
-			cleanup: deleteExampleMedication,
+			cleanup: { [weak self] in self?.deleteExampleMedication() },
 			skipViewLayoutConstraints: Super.defaultCoachMarkSkipViewConstraints()
 		)
 	}()

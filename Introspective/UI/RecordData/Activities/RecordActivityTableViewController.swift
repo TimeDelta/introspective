@@ -881,7 +881,7 @@ extension RecordActivityTableViewController: UISearchResultsUpdating {
 // MARK: - Instructions
 
 /// This class is used to break retain cycles between `RecordActivityTableViewController` and the closures used by `CoachMarkInfo`, preventing them from causing memory leaks
-final fileprivate class RecordActivityTableViewControllerCoachMarksDataSourceAndDelegate: CoachMarksDataSourceAndDelegate {
+final class RecordActivityTableViewControllerCoachMarksDataSourceAndDelegate: CoachMarksDataSourceAndDelegate {
 	private typealias Me = RecordActivityTableViewControllerCoachMarksDataSourceAndDelegate
 	private typealias Super = DefaultCoachMarksDataSourceAndDelegate
 	private typealias ControllerClass = RecordActivityTableViewController
@@ -900,19 +900,19 @@ final fileprivate class RecordActivityTableViewControllerCoachMarksDataSourceAnd
 		CoachMarkInfo(
 			hint: "Tap the + button to create new activities. You can also type the name of a new activity in the search bar and long press the + button to quickly create and start it.",
 			useArrow: true,
-			view: { self.controller?.navigationItem.rightBarButtonItems?[0].value(forKey: "view") as? UIView }
+			view: { [weak self] in self?.controller?.navigationItem.rightBarButtonItems?.first?.value(forKey: "view") as? UIView }
 		),
 		CoachMarkInfo(
 			hint: "You can filter on the name of an activity, its description or its tags.",
 			useArrow: true,
-			view: { self.controller?.searchController.searchBar }
+			view: { [weak self] in self?.controller?.searchController.searchBar }
 		),
 		CoachMarkInfo(
 			hint: "This is the name of the activity.",
 			useArrow: true,
-			view: { self.getExampleActivityCell()?.nameLabel },
-			setup: {
-				guard let controller = self.controller else { return }
+			view: { [weak self] in self?.getExampleActivityCell()?.nameLabel },
+			setup: { [weak self] in
+				guard let self = self, let controller = self.controller else { return }
 				if controller.tableView.visibleCells.isEmpty {
 					controller.searchController.searchBar.text = Me.exampleActivityName
 					controller.quickCreateAndStart()
@@ -922,17 +922,17 @@ final fileprivate class RecordActivityTableViewControllerCoachMarksDataSourceAnd
 		CoachMarkInfo(
 			hint: "If an activity is currently running, meaning it was started and has not yet been stopped, it will have a progress indicator here.",
 			useArrow: true,
-			view: { self.getExampleActivityCell()?.progressIndicator }
+			view: { [weak self] in self?.getExampleActivityCell()?.progressIndicator }
 		),
 		CoachMarkInfo(
 			hint: "All running activities will be bubbled to the top of the list",
 			useArrow: true,
-			view: { self.controller?.tableView.visibleCells[0] },
-			setup: {
-				if let exampleActivityCell = self.getExampleActivityCell() {
+			view: { [weak self] in self?.controller?.tableView.visibleCells.first },
+			setup: { [weak self] in
+				if let exampleActivityCell = self?.getExampleActivityCell() {
 					if !exampleActivityCell.running {
-						self.controller?.searchController.searchBar.text = Me.exampleActivityName
-						self.controller?.quickCreateAndStart()
+						self?.controller?.searchController.searchBar.text = Me.exampleActivityName
+						self?.controller?.quickCreateAndStart()
 					}
 				}
 			}
@@ -940,43 +940,43 @@ final fileprivate class RecordActivityTableViewControllerCoachMarksDataSourceAnd
 		CoachMarkInfo(
 			hint: "To start or stop an activity, simply tap it.",
 			useArrow: true,
-			view: { self.controller?.tableView.visibleCells[0] }
+			view: { [weak self] in self?.controller?.tableView.visibleCells.first }
 		),
 		CoachMarkInfo(
 			hint: "You can also stop all activities by tapping this button.",
 			useArrow: true,
-			view: { self.controller?.navigationItem.rightBarButtonItems?[1].value(forKey: "view") as? UIView }
+			view: { [weak self] in self?.controller?.navigationItem.rightBarButtonItems?.dropFirst().first?.value(forKey: "view") as? UIView }
 		),
 		CoachMarkInfo(
 			hint: "This is the total amount of time spent on this activity today.",
 			useArrow: true,
-			view: {
-				self.getExampleActivityCell()?.totalDurationTodayLabel
+			view: { [weak self] in
+				self?.getExampleActivityCell()?.totalDurationTodayLabel
 			}
 		),
 		CoachMarkInfo(
 			hint: "This is the duration of the most recent time this activity was done.",
 			useArrow: true,
-			view: {
-				self.getExampleActivityCell()?.currentInstanceDurationLabel
+			view: { [weak self] in
+				self?.getExampleActivityCell()?.currentInstanceDurationLabel
 			}
 		),
 		CoachMarkInfo(
 			hint: "This is the start and end timestamps for the most recent instance of this activity.",
 			useArrow: true,
-			view: {
-				self.getExampleActivityCell()?.mostRecentTimeLabel
+			view: { [weak self] in
+				self?.getExampleActivityCell()?.mostRecentTimeLabel
 			}
 		),
 		CoachMarkInfo(
 			hint: "Swipe left for actions related to individual instances of this activity. Swipe right for actions related to all instances of this activity.",
 			useArrow: true,
-			view: { self.controller?.tableView.visibleCells[0] }
+			view: { [weak self] in self?.controller?.tableView.visibleCells.first }
 		),
 		CoachMarkInfo(
 			hint: "Long press on an activity to reorder it.",
 			useArrow: true,
-			view: { self.controller?.tableView.visibleCells[0] }
+			view: { [weak self] in self?.controller?.tableView.visibleCells.first }
 		),
 	]
 
@@ -984,7 +984,7 @@ final fileprivate class RecordActivityTableViewControllerCoachMarksDataSourceAnd
 		DefaultCoachMarksDataSourceAndDelegate(
 			coachMarksInfo,
 			instructionsShownKey: .recordActivitiesInstructionsShown,
-			cleanup: deleteExampleActivity,
+			cleanup: { [weak self] in self?.deleteExampleActivity() },
 			skipViewLayoutConstraints: Super.defaultCoachMarkSkipViewConstraints()
 		)
 	}()
@@ -1053,7 +1053,7 @@ final fileprivate class RecordActivityTableViewControllerCoachMarksDataSourceAnd
 			Me.log.error("No visible cells while trying to present instruction")
 			return nil
 		}
-		let cell = controller.tableView.visibleCells[0]
+		let cell = controller.tableView.visibleCells.first
 		guard let exampleActivityCell = cell as? RecordActivityDefinitionTableViewCell else {
 			Me.log.error(
 				"unable to cast to RecordActivityDefinitionTableViewCell: was a %@",
