@@ -65,6 +65,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		super.viewDidLoad()
 		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Mood History", style: .plain,
 			target: self, action: #selector(showMoodHistory))
+		navigationItem.rightBarButtonItems = [navigationItem.rightBarButtonItem!, UIBarButtonItem(title: "Lost Items", style: .plain, target: self, action: #selector(showLostItems))]
 		observe(selector: #selector(showViewController), name: Me.showViewController)
 		observe(selector: #selector(showErrorMessage), name: Me.showErrorMessage)
 		observe(selector: #selector(showRecordActivitiesScreen), name: .showRecordActivitiesScreen)
@@ -75,6 +76,8 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 
 		hideKeyboardOnTapNonTextInput()
 	}
+
+	@objc private func showLostItems() { pushToNavigationController(LostItemsViewController(style: .grouped)) }
 
 	@objc private func showMoodHistory() {
 		pushToNavigationController(MoodHistoryViewController(style: .grouped))

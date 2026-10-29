@@ -1388,6 +1388,65 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertTrue(try XCTUnwrap(dao.getQueryWith(name: "Workout")).convert() is WorkoutQueryImpl)
 	}
 
+	func testLostItemCounterEventsPersistAndRemainQueryable() throws {
+		let date = Date(timeIntervalSince1970: 1_700_000_023.5)
+		try LostItemEvent.record(change: 1, at: date, note: "Keys")
+		try LostItemEvent.record(change: 1, at: date.addingTimeInterval(60))
+		try LostItemEvent.record(change: -1, at: date.addingTimeInterval(120), note: "Keys found")
+		XCTAssertThrowsError(try LostItemEvent.record(change: 0))
+		try reopen()
+		let records = try injected(Database.self).query(LostItemEvent.fetchRequest())
+		XCTAssertEqual(records.count, 3)
+		XCTAssertEqual(records.reduce(0) { $0 + Int($1.delta) }, 1)
+		XCTAssertEqual(records.first(where: { $0.note == "Keys" })?.timestamp, date)
+		let query = try injected(QueryFactory.self).queryFor(LostItemEvent.self)
+		query.expression = EqualToIntegerAttributeRestriction(restrictedAttribute: LostItemEvent.change, value: 1)
+		try dao.save(query, name: "Losses")
+		let restored = try XCTUnwrap(dao.getQueryWith(name: "Losses")).convert()
+		var completed = false
+		restored.runQuery { (result: QueryResult?, error: Error?) in
+			XCTAssertNil(error); XCTAssertEqual(result?.samples.count, 2); completed = true
+		}
+		XCTAssertTrue(completed)
+	}
+
+	func testLostItemExportPreservesTimestampSignsAndQuotedMultilineNotes() throws {
+		let date = Date(timeIntervalSince1970: 1_700_000_023.5)
+		let lost = try LostItemEvent.record(change: 1, at: date, note: "Keys, \"front door\"\nfound later")
+		let found = try LostItemEvent.record(change: -1, at: date.addingTimeInterval(60))
+		let stream = OutputStream.toMemory()
+		let csv = try CSVWriter(stream: stream, delimiter: ",", newline: .lf)
+		try LostItemEvent.exportHeaderRow(to: csv)
+		csv.beginNewRow()
+		try lost.export(to: csv)
+		csv.beginNewRow()
+		try found.export(to: csv)
+		let data = try XCTUnwrap(stream.property(forKey: .dataWrittenToMemoryStreamKey) as? Data)
+		let expected = "\"Timestamp\",\"Change\",\"Note\"\n" +
+			"\"2023-11-14T22:13:43.500Z\",\"1\",\"Keys, \"\"front door\"\"\nfound later\"\n" +
+			"\"2023-11-14T22:14:43.500Z\",\"-1\",\"\""
+		XCTAssertEqual(String(data: data, encoding: .utf8), expected)
+	}
+
+	func testLostItemModelMigratesExistingSavedQueriesAndMoods() throws {
+		let modelURL = try XCTUnwrap(Self.bundle.url(forResource: "Introspective", withExtension: "momd"))
+		let oldModel = try XCTUnwrap(NSManagedObjectModel(contentsOf: modelURL.appendingPathComponent("SavedQueries.mom")))
+		let url = directory.appendingPathComponent("lost-items-migration.sqlite")
+		let old = try open(oldModel, at: url)
+		let mood = NSEntityDescription.insertNewObject(forEntityName: "Mood", into: old.viewContext)
+		mood.setValue(Date(), forKey: "timestamp"); mood.setValue(4.0, forKey: "rating")
+		let query = NSEntityDescription.insertNewObject(forEntityName: "Query", into: old.viewContext)
+		query.setValue("Existing mood query", forKey: "name"); query.setValue(8, forKey: "sampleTypeId")
+		try old.viewContext.save(); old.viewContext.reset()
+		for store in old.persistentStoreCoordinator.persistentStores { try old.persistentStoreCoordinator.remove(store) }
+		let migrated = try open(Self.model, at: url)
+		XCTAssertEqual(try migrated.viewContext.fetch(MoodImpl.fetchRequest()).first?.rating, 4)
+		XCTAssertEqual(try migrated.viewContext.fetch(StoredQuery.fetchRequest()).first?.name, "Existing mood query")
+		XCTAssertEqual(try migrated.viewContext.count(for: LostItemEvent.fetchRequest()), 0)
+		migrated.viewContext.reset()
+		for store in migrated.persistentStoreCoordinator.persistentStores { try migrated.persistentStoreCoordinator.remove(store) }
+	}
+
 }
 
 private final class TransferProgressProbe: NSObject, Importer, Exporter {
