@@ -184,9 +184,17 @@ final class SavedQueryTests: XCTestCase {
 		let definition = try lookupDefinition("Auto-ignore threshold")
 		let start = Date(timeIntervalSince1970: 1_700_000_000)
 		let dao = ActivityDAOImpl()
+		let database = injected(Database.self)
+		try container.viewContext.save()
 		for seconds in [1.999999, 2.0, 2.000001] {
-			let activity = try lookupActivity(definition, start: start)
-			try container.viewContext.save()
+			// Create each fixture through the same transaction API as the app. A
+			// direct view-context relationship edit can race the previous deletion's merge.
+			let transaction = database.transaction()
+			let created = try transaction.new(Activity.self)
+			created.definition = try transaction.pull(savedObject: definition)
+			created.start = start
+			try transaction.commit()
+			let activity = try database.pull(savedObject: created)
 			let id = activity.objectID
 			XCTAssertEqual(dao.autoIgnoreIfAppropriate(activity, end: start.addingTimeInterval(seconds)), seconds < 2)
 			let persisted = try container.viewContext.fetch(Activity.fetchRequest()).contains { $0.objectID == id }

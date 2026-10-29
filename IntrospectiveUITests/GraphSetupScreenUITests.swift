@@ -209,6 +209,7 @@ final class GraphSetupScreenUITests: UITest {
 
 		// when
 		app.buttons["choose query button"].tap()
+		skipInstructionsIfPresent()
 		app.buttons["Use Query"].tap()
 
 		// then
@@ -219,6 +220,7 @@ final class GraphSetupScreenUITests: UITest {
 		// given
 		goToSingleDataTypeGraphSetupScreen()
 		app.buttons["choose query button"].tap()
+		skipInstructionsIfPresent()
 		app.buttons["Use Query"].tap()
 
 		// when
@@ -233,6 +235,7 @@ final class GraphSetupScreenUITests: UITest {
 		goToSingleDataTypeGraphSetupScreen()
 		setPicker(to: "Blood Pressure")
 		app.buttons["choose query button"].tap()
+		skipInstructionsIfPresent()
 		app.buttons["Use Query"].tap()
 		setGrouping(groupingType: "series", timeUnit: "day")
 		setGrouping(groupingType: "point", timeUnit: "day")
@@ -299,6 +302,7 @@ final class GraphSetupScreenUITests: UITest {
 
 		// when
 		app.buttons["choose x-axis query button"].tap()
+		skipInstructionsIfPresent()
 		app.buttons["Use Query"].tap()
 
 		// then
@@ -310,6 +314,7 @@ final class GraphSetupScreenUITests: UITest {
 		goToMultipleDataTypesGraphSetupScreen()
 		setXAxisDataType()
 		app.buttons["choose x-axis query button"].tap()
+		skipInstructionsIfPresent()
 		app.buttons["Use Query"].tap()
 
 		// when
@@ -326,6 +331,7 @@ final class GraphSetupScreenUITests: UITest {
 
 		// when
 		app.buttons["choose y-axis query button"].tap()
+		skipInstructionsIfPresent()
 		app.buttons["Use Query"].tap()
 
 		// then
@@ -337,6 +343,7 @@ final class GraphSetupScreenUITests: UITest {
 		goToMultipleDataTypesGraphSetupScreen()
 		setYAxisDataType()
 		app.buttons["choose y-axis query button"].tap()
+		skipInstructionsIfPresent()
 		app.buttons["Use Query"].tap()
 
 		// when
@@ -351,12 +358,14 @@ final class GraphSetupScreenUITests: UITest {
 		goToMultipleDataTypesGraphSetupScreen()
 		setXAxisDataType()
 		app.buttons["choose x-axis query button"].tap()
+		skipInstructionsIfPresent()
 		populateQueryScreen()
 		let parts = getStaticTextsFromQueryParts()
 		app.buttons["Use Query"].tap()
 
 		// when
 		app.buttons["choose x-axis query button"].tap()
+		skipInstructionsIfPresent()
 
 		// then
 		XCTAssertEqual(app.tables.cells.count, parts.count)

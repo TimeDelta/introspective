@@ -94,10 +94,25 @@ class UITest: XCTestCase {
 
 	final func setDatePicker(_ queryString: String? = nil, to date: Date) {
 		skipInstructionsIfPresent()
-		let picker = queryString.map { app.datePickers[$0] } ?? app.datePickers.firstMatch
-		let datePickerWheels = picker.pickerWheels
+		// UIKit exposes date-and-time wheels without a DatePicker ancestor on some
+		// simulator versions. Keep named range pickers scoped by identifier regardless
+		// of their accessibility element type; the single-picker editor needs no scope.
+		let datePickerWheels: XCUIElementQuery
+		if let identifier = queryString {
+			datePickerWheels = app.descendants(matching: .any).matching(identifier: identifier).firstMatch.pickerWheels
+		} else {
+			datePickerWheels = app.pickerWheels
+		}
 		guard waitForElement(datePickerWheels.firstMatch) else {
+			let hierarchy = XCTAttachment(string: app.debugDescription)
+			hierarchy.name = "Missing date picker accessibility hierarchy"
+			hierarchy.lifetime = .keepAlways
+			add(hierarchy)
 			XCTFail("Date picker wheels did not appear")
+			return
+		}
+		guard [3, 4].contains(datePickerWheels.count) else {
+			XCTFail("Unexpected date picker wheel count: \(datePickerWheels.count)")
 			return
 		}
 		let dateStrings = convertDateToStringComponents(date)

@@ -98,7 +98,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenDosageAttribute_compute_returnsCorrectValue() throws {
 		// given
-		let attribute = DosageAttribute()
+		let attribute = DosageAttribute(id: 0)
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [
 			Dosage(1.0, "L"),
 			Dosage(20.0, "dl"),
@@ -136,7 +136,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenDurationAttribute_compute_returnsCorrectValue() throws {
 		// given
-		let attribute = DurationAttribute()
+		let attribute = DurationAttribute(id: 0)
 		let date = Date()
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [
 			TimeDuration(start: date, end: date + 4.days),
@@ -155,7 +155,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenOptionalDurationAttributeWithSomeSamplesHavingNilValue_compute_returnsCorrectValue() throws {
 		// given
-		let attribute = DurationAttribute()
+		let attribute = DurationAttribute(id: 0)
 		let date = Date()
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [
 			TimeDuration(start: date, end: date + 4.days),
@@ -283,7 +283,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenDosageAttribute_computeGraphable_returnsCorrectValue() throws {
 		// given
-		let attribute = DosageAttribute()
+		let attribute = DosageAttribute(id: 0)
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [
 			Dosage(1.0, "L"),
 			Dosage(20.0, "dl"),
@@ -321,7 +321,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenDurationAttribute_computeGraphable_returnsCorrectValue() throws {
 		// given
-		let attribute = DurationAttribute()
+		let attribute = DurationAttribute(id: 0)
 		let date = Date()
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [
 			TimeDuration(start: date, end: date + 4.hours),
@@ -340,7 +340,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 
 	func testGivenOptionalDurationAttributeWithSomeSamplesHavingNilValue_computeGraphable_returnsCorrectValue() throws {
 		// given
-		let attribute = DurationAttribute()
+		let attribute = DurationAttribute(id: 0)
 		let date = Date()
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [
 			TimeDuration(start: date, end: date + 4.hours),
