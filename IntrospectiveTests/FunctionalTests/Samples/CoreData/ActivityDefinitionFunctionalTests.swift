@@ -8,7 +8,10 @@
 
 import XCTest
 import Hamcrest
+import SwiftyMocky
+import DependencyInjection
 @testable import Introspective
+@testable import Common
 @testable import Samples
 
 final class ActivityDefinitionFunctionalTests: FunctionalTest {
@@ -24,6 +27,37 @@ final class ActivityDefinitionFunctionalTests: FunctionalTest {
 		super.setUp()
 		tags = [TagDataTestUtil.createTag(name: "tag")]
 		definition = ActivityDataTestUtil.createActivityDefinition(name: Me.name, description: Me.description, tags: tags)
+	}
+
+	func testActivityEditorConfiguresNameNotificationsBeforeLoadingTheNameCell() {
+		Given(injectionProvider, .get(.value(UiUtil.self), willReturn: UiUtilImpl()))
+		let storyboard = UIStoryboard(name: "RecordData", bundle: nil)
+		let editor = storyboard.instantiateViewController(withIdentifier: "editActivityDefinition") as! EditActivityDefinitionTableViewController
+		editor.loadViewIfNeeded()
+		let cell = editor.tableView(editor.tableView, cellForRowAt: IndexPath(row: 0, section: 0)) as! ActivityDefinitionNameTableViewCell
+		cell.nameTextField.text = "Complete initialized name"; cell.nameChanged(cell)
+		XCTAssertTrue(editor.navigationItem.rightBarButtonItem?.isEnabled == true)
+	}
+
+	func testNameEditingPublishesTheFinalValueBeforeSaveCanRun() {
+		Given(injectionProvider, .get(.value(UiUtil.self), willReturn: UiUtilImpl()))
+		let cell = ActivityDefinitionNameTableViewCell(style: .default, reuseIdentifier: nil)
+		cell.nameLabel = UILabel(); cell.nameTextField = UITextField()
+		let changed = Notification.Name("NameEdited-" + UUID().uuidString)
+		let invalid = Notification.Name("NameInvalid-" + UUID().uuidString)
+		cell.notificationToSendOnNameChange = changed; cell.notificationToSendOnInvalidName = invalid
+		var received: String?; var invalidCount = 0
+		let changedToken = NotificationCenter.default.addObserver(forName: changed, object: cell, queue: nil) {
+			received = $0.userInfo?[UserInfoKey.text] as? String
+		}
+		let invalidToken = NotificationCenter.default.addObserver(forName: invalid, object: cell, queue: nil) { _ in invalidCount += 1 }
+		defer { NotificationCenter.default.removeObserver(changedToken); NotificationCenter.default.removeObserver(invalidToken) }
+		cell.nameTextField.text = "First complete name"; cell.nameChanged(cell)
+		XCTAssertEqual(received, "First complete name")
+		cell.nameTextField.text = ""; cell.nameChanged(cell)
+		XCTAssertEqual(invalidCount, 1)
+		cell.nameTextField.text = "Final complete name"; cell.nameChanged(cell)
+		XCTAssertEqual(received, "Final complete name")
 	}
 
 	// MARK: - setSource()
@@ -50,9 +84,10 @@ final class ActivityDefinitionFunctionalTests: FunctionalTest {
 		try definition.setTags([expectedTag1, expectedTag2])
 
 		// then
-		assertThat(definition.tagsArray(), containsInAnyOrder(expectedTag1, expectedTag2))
+		let actualIDs = Set(definition.tagsArray().map { $0.objectID })
+		XCTAssertEqual(actualIDs, Set([expectedTag1.objectID, expectedTag2.objectID]))
 		for tag in tags {
-			assertThat(definition.tagsArray(), not(containsInAnyOrder(tag)))
+			XCTAssertFalse(actualIDs.contains(tag.objectID))
 		}
 	}
 

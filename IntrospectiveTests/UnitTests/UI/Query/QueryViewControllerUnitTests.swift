@@ -65,6 +65,8 @@ final class QueryViewControllerUnitTests: UnitTest {
 
 	func testGivenInitialQuery_viewDidLoad_properlyPopulatesQueryParts() throws {
 		// given
+		Given(mockQueryFactory, .heartRateQuery(.any, willReturn: HeartRateQueryImpl()))
+		Given(mockQueryFactory, .weightQuery(.any, willReturn: WeightQueryImpl()))
 		let restriction1 = LessThanDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
 		let restriction2 = GreaterThanDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
 		let restriction3 = EqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
@@ -81,8 +83,10 @@ final class QueryViewControllerUnitTests: UnitTest {
 					restriction3)),
 			restriction4)
 		let mainQuery = try HeartRateQueryMock(parts: [])
+		mainQuery.mostRecentEntryOnly = false
 		Given(mainQuery, .expression(getter: mainExpression))
 		let subQuery = try WeightQueryMock(parts: [])
+		subQuery.mostRecentEntryOnly = false
 		Given(subQuery, .expression(getter: subQueryRestriction))
 		let matcher = SameDatesSubQueryMatcher(mostRecentOnly: false)
 		Given(mainQuery, .subQuery(getter: (matcher: matcher, query: subQuery)))
@@ -116,9 +120,13 @@ final class QueryViewControllerUnitTests: UnitTest {
 
 	func testGivenInitialQueryWithWithSubQueryButNoExpression_viewDidLoad_properlyPopulatesQueryParts() throws {
 		// given
+		Given(mockQueryFactory, .heartRateQuery(.any, willReturn: HeartRateQueryImpl()))
+		Given(mockQueryFactory, .weightQuery(.any, willReturn: WeightQueryImpl()))
 		let mainQuery = try HeartRateQueryMock(parts: [])
+		mainQuery.mostRecentEntryOnly = false
 		Given(mainQuery, .expression(getter: nil))
 		let subQuery = try WeightQueryMock(parts: [])
+		subQuery.mostRecentEntryOnly = false
 		Given(subQuery, .expression(getter: nil))
 		let matcher = SameDatesSubQueryMatcher(mostRecentOnly: false)
 		Given(mainQuery, .subQuery(getter: (matcher: matcher, query: subQuery)))
@@ -137,8 +145,11 @@ final class QueryViewControllerUnitTests: UnitTest {
 
 	func testGivenInitialQuery_viewDidLoad_enablesFinishedButton() throws {
 		// given
+		Given(mockQueryFactory, .heartRateQuery(.any, willReturn: HeartRateQueryImpl()))
+		Given(mockQueryFactory, .weightQuery(.any, willReturn: WeightQueryImpl()))
 		let restriction = LessThanDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
 		let query = try HeartRateQueryMock(parts: [])
+		query.mostRecentEntryOnly = false
 		Given(query, .expression(getter: restriction))
 		controller.initialQuery = query
 		controller.finishedButton.isEnabled = false

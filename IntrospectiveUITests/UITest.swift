@@ -204,6 +204,12 @@ class UITest: XCTestCase {
 		if let text = text, !text.isEmpty {
 			field.tap()
 			field.typeText(text)
+			let complete = NSPredicate(format: "value == %@", text)
+			if !complete.evaluate(with: field) {
+				let expectation = XCTNSPredicateExpectation(predicate: complete, object: field)
+				XCTAssertEqual(XCTWaiter.wait(for: [expectation], timeout: 5), .completed,
+					"Text input did not finish before saving: \(field.value ?? "nil")")
+			}
 		}
 	}
 
@@ -335,7 +341,9 @@ class UITest: XCTestCase {
 	}
 
 	final func createActivityDefinition(_ definition: ActivityDefinition, goToRecordActivitiesScreen: Bool = true) {
-		if goToRecordActivitiesScreen {
+		// Creating another definition already returns here. Avoid popping to the
+		// Record menu and reopening the same screen for every fixture record.
+		if goToRecordActivitiesScreen && !app.navigationBars["Activities"].exists {
 			app.tabBars.buttons["Record"].tap()
 			app.tables.cells.staticTexts["Activities"].tap()
 		}

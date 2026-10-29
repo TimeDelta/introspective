@@ -153,7 +153,7 @@ final class RecordMedicationsUITests: UITest {
 		let editedDoseDate = originalDoseDate - 1.months
 		createMedication(medication)
 		takeDoseOf(medication, at: originalDoseDate, dosage: originalDosage)
-		app.buttons["last \(medication.name) dose button"].tap()
+		app.tables.cells.staticTexts[medication.name].tap()
 
 		// when
 		let originalDoseDescription = doseDescription(dosage: originalDosage, date: originalDoseDate)
@@ -183,7 +183,7 @@ final class RecordMedicationsUITests: UITest {
 		takeDoseOf(medication, at: doseTakenDate)
 
 		// when
-		app.buttons["last \(medication.name) dose button"].tap()
+		app.tables.cells.staticTexts[medication.name].tap()
 
 		// then
 		XCTAssert(app.tables.staticTexts[doseDescription(dosage: medication.dosage, date: doseTakenDate)].exists)
@@ -224,7 +224,7 @@ final class RecordMedicationsUITests: UITest {
 		takeDoseOf(medication, at: dose2Date)
 		takeDoseOf(medication, at: dose3Date)
 		takeDoseOf(medication, at: dose4Date)
-		app.buttons["last \(medication.name) dose button"].tap()
+		app.tables.cells.staticTexts[medication.name].tap()
 		filterDoseDates(from: dose2Date, to: dose4Date)
 		let dose3Description = doseDescription(date: dose3Date)
 
@@ -246,7 +246,7 @@ final class RecordMedicationsUITests: UITest {
 		// This specifically guards against a bug that was found where the dose was
 		// deleted but the UI wasn't updated because an error was thrown.
 		app.navigationBars.buttons["Medications"].tap()
-		app.buttons["last \(medication.name) dose button"].tap()
+		app.tables.cells.staticTexts[medication.name].tap()
 		XCTAssert(app.tables.staticTexts[doseDescription(date: dose1Date)].exists)
 		XCTAssert(app.tables.staticTexts[doseDescription(date: dose2Date)].exists)
 		XCTAssert(!app.tables.staticTexts[dose3Description].exists)
@@ -263,7 +263,7 @@ final class RecordMedicationsUITests: UITest {
 		takeDoseOf(medication, at: dose1Date)
 		takeDoseOf(medication, at: dose2Date)
 		takeDoseOf(medication, at: dose3Date)
-		app.buttons["last \(medication.name) dose button"].tap()
+		app.tables.cells.staticTexts[medication.name].tap()
 		let dose2Description = doseDescription(date: dose2Date)
 
 		// when
@@ -282,7 +282,7 @@ final class RecordMedicationsUITests: UITest {
 		// This specifically guards against a bug that was found where the dose was
 		// deleted but the UI wasn't updated because an error was thrown.
 		app.navigationBars.buttons["Medications"].tap()
-		app.buttons["last \(medication.name) dose button"].tap()
+		app.tables.cells.staticTexts[medication.name].tap()
 		XCTAssert(app.tables.staticTexts[doseDescription(date: dose1Date)].exists)
 		XCTAssert(!app.tables.staticTexts[dose2Description].exists)
 		XCTAssert(app.tables.staticTexts[doseDescription(date: dose3Date)].exists)
@@ -399,7 +399,7 @@ final class RecordMedicationsUITests: UITest {
 		createMedication(medication)
 		takeDoseOf(medication, at: dose1Date)
 		takeDoseOf(medication, at: dose2Date)
-		app.buttons["last \(medication.name) dose button"].tap()
+		app.tables.cells.staticTexts[medication.name].tap()
 		filterDoseDates(from: filterStart, to: filterEnd)
 
 		// when
@@ -431,7 +431,7 @@ final class RecordMedicationsUITests: UITest {
 		createMedication(medication)
 		takeDoseOf(medication, at: dose1Date)
 		takeDoseOf(medication, at: dose2Date)
-		app.buttons["last \(medication.name) dose button"].tap()
+		app.tables.cells.staticTexts[medication.name].tap()
 		filterDoseDates(from: filterStart, to: filterEnd)
 
 		// when
@@ -456,7 +456,7 @@ final class RecordMedicationsUITests: UITest {
 		let medication = Medication("ghrui")
 		createMedication(medication)
 		takeDoseOf(medication, at: Date())
-		app.buttons["last \(medication.name) dose button"].tap()
+		app.tables.cells.staticTexts[medication.name].tap()
 		app.tables.buttons["filter dates button"].tap()
 
 		// when
@@ -472,7 +472,7 @@ final class RecordMedicationsUITests: UITest {
 		let medication = Medication("ghrui")
 		createMedication(medication)
 		takeDoseOf(medication, at: Date())
-		app.buttons["last \(medication.name) dose button"].tap()
+		app.tables.cells.staticTexts[medication.name].tap()
 		app.tables.buttons["filter dates button"].tap()
 
 		// when
@@ -487,7 +487,10 @@ final class RecordMedicationsUITests: UITest {
 	// MARK: - Helper Functions
 
 	private final func takeDoseOf(_ medication: Medication, at date: Date, dosage: String? = nil) {
+		// Take records the default dose immediately. Edit that new dose to set
+		// the historical timestamp and dosage needed by the scenario.
 		app.buttons["take \(medication.name) button"].tap()
+		app.buttons["last \(medication.name) dose button"].tap()
 
 		setDatePicker(to: date)
 
