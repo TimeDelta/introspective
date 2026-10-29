@@ -148,11 +148,7 @@ final class WellnessMoodImporterFunctionalTests: ImporterTest {
 	func testGivenImportCancelled_importData_startsNewImport() throws {
 		// given
 		useInput(Me.validImportFileText)
-		DispatchQueue.global(qos: .background).async {
-			try! self.importer.importData(from: self.url)
-		}
-		while importer.percentComplete() == 0 {}
-		importer.cancel()
+		cancelActiveImport(importer, execution: importer.execution)
 		let originalPercentComplete = importer.percentComplete()
 
 		// when
@@ -315,13 +311,9 @@ wrong number of columns
 	func testGivenCurrentlyImporting_cancel_stopsImportAndSetsIsCancelledToTrue() {
 		// given
 		useInput(Me.validImportFileText)
-		DispatchQueue.global(qos: .background).async {
-			try! self.importer.importData(from: self.url)
-		}
+		cancelActiveImport(importer, execution: importer.execution)
 
 		// when
-		while importer.percentComplete() == 0 {}
-		importer.cancel()
 
 		// then
 		XCTAssertLessThanOrEqual(importer.percentComplete(), 1)
@@ -333,11 +325,7 @@ wrong number of columns
 	func testGivenImportCancelled_resume_doesNotContinue() throws {
 		// given
 		useInput(Me.validImportFileText)
-		DispatchQueue.global(qos: .background).async {
-			try! self.importer.importData(from: self.url)
-		}
-		while importer.percentComplete() == 0 {}
-		importer.cancel()
+		cancelActiveImport(importer, execution: importer.execution)
 		let expectedPerentComplete = importer.percentComplete()
 
 		// when

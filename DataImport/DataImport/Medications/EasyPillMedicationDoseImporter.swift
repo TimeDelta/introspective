@@ -37,11 +37,24 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 	public final let customImportMessage: String? = nil
 
 	public final var importOnlyNewData: Bool = true
-	public final var isPaused: Bool = false
-	public final var isCancelled: Bool = false
+	public final var isPaused: Bool {
+		get { execution.isPaused }
+		set { execution.isPaused = newValue }
+	}
+	public final var isCancelled: Bool {
+		get { execution.isCancelled }
+		set { execution.isCancelled = newValue }
+	}
 
-	private final var recordNumber: Int = -1
-	private final var totalLines: Int = -1
+	internal let execution = ImporterExecution()
+	private final var recordNumber: Int {
+		get { execution.recordNumber }
+		set { execution.recordNumber = newValue }
+	}
+	private final var totalLines: Int {
+		get { execution.totalLines }
+		set { execution.totalLines = newValue }
+	}
 	private final let mainTransaction = injected(Database.self).transaction()
 	private final var latestDate: Date!
 	private final var lines = [String]()
@@ -49,18 +62,18 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 	// MARK: - Functions
 
 	public final func importData(from url: URL) throws {
-		let contents = try injected(IOUtil.self).contentsOf(url)
-		lines = contents.components(separatedBy: "\n")
-		lines.removeFirst()
-		recordNumber = 1
-		totalLines = lines.count
+		try execution.execute(newImport: true, rollback: { self.lines.removeAll(); self.mainTransaction.reset() }) {
+			mainTransaction.reset()
+			let contents = try injected(IOUtil.self).contentsOf(url)
+			lines = contents.components(separatedBy: "\n")
+			lines.removeFirst()
+			recordNumber = 1
+			totalLines = lines.count
 
-		isPaused = false
-		isCancelled = false
+			latestDate = lastImport // use temp var to avoid bug where initial import doesn't import anything
 
-		latestDate = lastImport // use temp var to avoid bug where initial import doesn't import anything
-
-		try resume()
+			try resume()
+		}
 	}
 
 	public final func resetLastImportDate() throws {
@@ -79,9 +92,7 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 	}
 
 	public final func cancel() {
-		isCancelled = true
-		lines = []
-		mainTransaction.reset()
+		execution.cancel { self.lines.removeAll(); self.mainTransaction.reset() }
 	}
 
 	public final func pause() {
@@ -89,24 +100,29 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 	}
 
 	public final func resume() throws {
-		guard !isCancelled else {
-			Me.log.error("Tried to resume a cancelled medicaiton dose import from EasyPill")
-			return
-		}
-		isPaused = false
-		do {
-			while !lines.isEmpty {
-				guard !isPaused && !isCancelled else { return }
-				let line = lines.removeFirst()
-				try processLine(line, latestDate: &latestDate, using: mainTransaction)
-				recordNumber += 1
+		try execution.execute(rollback: { self.lines.removeAll(); self.mainTransaction.reset() }) {
+			execution.beforeResume?()
+			guard !isCancelled else {
+				Me.log.error("Tried to resume a cancelled medicaiton dose import from EasyPill")
+				return
 			}
+			isPaused = false
+			do {
+				while !lines.isEmpty {
+					guard !isPaused && !isCancelled else { return }
+					let line = lines.removeFirst()
+					try processLine(line, latestDate: &latestDate, using: mainTransaction)
+					recordNumber += 1
+				}
 
-			lastImport = latestDate
-			try retryOnFail({ try mainTransaction.commit() }, maxRetries: 2)
-		} catch {
-			Me.log.error("Failed to import medication doses from EasyPill: %@", errorInfo(error))
-			throw error
+				try execution.commit {
+					lastImport = latestDate
+					try retryOnFail({ try mainTransaction.commit() }, maxRetries: 2)
+				}
+			} catch {
+				Me.log.error("Failed to import medication doses from EasyPill: %@", errorInfo(error))
+				throw error
+			}
 		}
 	}
 
