@@ -171,7 +171,7 @@ jobs:
             # Xcode gives each worker an isolated simulator clone; compile once.
             test_command+=(-parallel-testing-enabled YES -parallel-testing-worker-count "$CI_UI_WORKERS")
           fi
-          ./scripts/run-ci-command.sh ci-output/mood-tests.log "${test_command[@]}"
+          CI_TEST_PROGRESS=1 ./scripts/run-ci-command.sh ci-output/mood-tests.log "${test_command[@]}"
           xcrun xcresulttool get test-results summary --path ci-output/MoodTests.xcresult > ci-output/mood-tests-summary.json
           if [ "$CI_BUILD_KIND" = tests ]; then
             python3 scripts/verify-native-test-results.py ci-output/mood-tests-summary.json
