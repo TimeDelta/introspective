@@ -1227,6 +1227,24 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertTrue(completed)
 	}
 
+	func testLostItemExportPreservesTimestampSignsAndQuotedMultilineNotes() throws {
+		let date = Date(timeIntervalSince1970: 1_700_000_023.5)
+		let lost = try LostItemEvent.record(change: 1, at: date, note: "Keys, \"front door\"\nfound later")
+		let found = try LostItemEvent.record(change: -1, at: date.addingTimeInterval(60))
+		let stream = OutputStream.toMemory()
+		let csv = try CSVWriter(stream: stream, delimiter: ",", newline: .lf)
+		try LostItemEvent.exportHeaderRow(to: csv)
+		csv.beginNewRow()
+		try lost.export(to: csv)
+		csv.beginNewRow()
+		try found.export(to: csv)
+		let data = try XCTUnwrap(stream.property(forKey: .dataWrittenToMemoryStreamKey) as? Data)
+		let expected = "\"Timestamp\",\"Change\",\"Note\"\n" +
+			"\"2023-11-14T22:13:43.500Z\",\"1\",\"Keys, \"\"front door\"\"\nfound later\"\n" +
+			"\"2023-11-14T22:14:43.500Z\",\"-1\",\"\""
+		XCTAssertEqual(String(data: data, encoding: .utf8), expected)
+	}
+
 	func testLostItemModelMigratesExistingSavedQueriesAndMoods() throws {
 		let modelURL = try XCTUnwrap(Self.bundle.url(forResource: "Introspective", withExtension: "momd"))
 		let oldModel = try XCTUnwrap(NSManagedObjectModel(contentsOf: modelURL.appendingPathComponent("SavedQueries.mom")))
