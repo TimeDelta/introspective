@@ -9,6 +9,7 @@
 import XCTest
 import Hamcrest
 @testable import Introspective
+@testable import Common
 @testable import Samples
 
 final class ActivityDefinitionFunctionalTests: FunctionalTest {
@@ -24,6 +25,15 @@ final class ActivityDefinitionFunctionalTests: FunctionalTest {
 		super.setUp()
 		tags = [TagDataTestUtil.createTag(name: "tag")]
 		definition = ActivityDataTestUtil.createActivityDefinition(name: Me.name, description: Me.description, tags: tags)
+	}
+
+	func testActivityEditorConfiguresNameNotificationsBeforeLoadingTheNameCell() {
+		let storyboard = UIStoryboard(name: "RecordData", bundle: nil)
+		let editor = storyboard.instantiateViewController(withIdentifier: "editActivityDefinition") as! EditActivityDefinitionTableViewController
+		editor.loadViewIfNeeded()
+		let cell = editor.tableView(editor.tableView, cellForRowAt: IndexPath(row: 0, section: 0)) as! ActivityDefinitionNameTableViewCell
+		cell.nameTextField.text = "Complete initialized name"; cell.nameChanged(cell)
+		XCTAssertTrue(editor.navigationItem.rightBarButtonItem?.isEnabled == true)
 	}
 
 	func testNameEditingPublishesTheFinalValueBeforeSaveCanRun() {
