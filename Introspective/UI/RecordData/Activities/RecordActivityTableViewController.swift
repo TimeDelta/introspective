@@ -52,11 +52,21 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final var finishedLoading = false {
 		didSet {
-			DispatchQueue.main.async {
-				self.searchController.searchBar.isUserInteractionEnabled = self.finishedLoading
-				self.tableView.reloadData()
+			if Thread.isMainThread {
+				updateLoadingState()
+			} else {
+				DispatchQueue.main.async { [weak self] in self?.updateLoadingState() }
 			}
 		}
+	}
+	// A fetched-results controller can change independently of UITableView's last
+	// row counts. Publish stable row snapshots and reload them together on main.
+	private var activeDefinitions: [ActivityDefinition] = []
+	private var inactiveDefinitions: [ActivityDefinition] = []
+
+	private func updateLoadingState() {
+		searchController.searchBar.isUserInteractionEnabled = finishedLoading
+		tableView.reloadData()
 	}
 
 	private final var definitionEditIndex: IndexPath?
@@ -143,16 +153,8 @@ public final class RecordActivityTableViewController: UITableViewController {
 		if !finishedLoading {
 			return 1
 		}
-		if section == 0 {
-			if let fetchedObjects = activeActivitiesFetchedResultsController.fetchedObjects {
-				return fetchedObjects.count
-			}
-		} else if section == 1 {
-			if let fetchedObjects = inactiveActivitiesFetchedResultsController.fetchedObjects {
-				return fetchedObjects.count
-			}
-		}
-		Me.log.error("Unable to determine number of expected rows because fetched objects was nil")
+		if section == 0 { return activeDefinitions.count }
+		if section == 1 { return inactiveDefinitions.count }
 		return 0
 	}
 
@@ -238,8 +240,9 @@ public final class RecordActivityTableViewController: UITableViewController {
 		} catch {
 			Me.log.error("Failed to reorder activities: %@", errorInfo(error))
 		}
-		resetInactiveActivitiesFetchedResultsController()
-		tableView.reloadSections(IndexSet(arrayLiteral: 1), with: .automatic)
+		// Cancel the old row layout instead of animating it while search callbacks
+		// publish a different number of rows.
+		loadActivitiyDefinitions()
 	}
 
 	// MARK: - Swipe Actions
@@ -608,7 +611,13 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	final fileprivate func loadActivitiyDefinitions() {
+		guard Thread.isMainThread else {
+			DispatchQueue.main.async { [weak self] in self?.loadActivitiyDefinitions() }
+			return
+		}
 		resetFetchedResultsControllers()
+		activeDefinitions = activeActivitiesFetchedResultsController.fetchedObjects ?? []
+		inactiveDefinitions = inactiveActivitiesFetchedResultsController.fetchedObjects ?? []
 		finishedLoading = true
 	}
 
@@ -752,11 +761,8 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func definition(at indexPath: IndexPath) -> ActivityDefinition {
-		if indexPath.section == 0 {
-			return activeActivitiesFetchedResultsController.object(at: indexPath)
-		}
-		let offsetIndexPath = IndexPath(row: indexPath.row, section: 0)
-		return inactiveActivitiesFetchedResultsController.object(at: offsetIndexPath)
+		if indexPath.section == 0 { return activeDefinitions[indexPath.row] }
+		return inactiveDefinitions[indexPath.row]
 	}
 
 	private final func visibleCellFor(_ indexPath: IndexPath) -> RecordActivityDefinitionTableViewCell? {
