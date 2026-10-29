@@ -1962,6 +1962,34 @@ final class SavedQueryTests: XCTestCase {
 	}
 
 	@MainActor
+	func testMetricContextTogglingExistingEndPreservesItsFullPrecision() throws {
+		let start = Date(timeIntervalSince1970: 1_700_000_023.125)
+		let end = start.addingTimeInterval(600.75)
+		try MetricContextEntry.record(category: .travel, metric: .all, at: start, until: end)
+		let entry = try XCTUnwrap(injected(Database.self).query(MetricContextEntry.fetchRequest()).first)
+		let editor = MetricContextEditor(entry: entry, metric: .all)
+		editor.loadViewIfNeeded()
+		editor.includeEnd.isOn = false; editor.toggleEnd()
+		editor.includeEnd.isOn = true; editor.toggleEnd(); editor.save()
+		XCTAssertEqual(entry.timestamp, start)
+		XCTAssertEqual(entry.endDate, end)
+	}
+
+	@MainActor
+	func testMetricContextEnablingAnEndAfterNowNeverCreatesAnEarlierBoundary() throws {
+		let editor = MetricContextEditor(metric: .all)
+		editor.loadViewIfNeeded()
+		editor.startPicker.date = Date(timeIntervalSince1970: 0); editor.startChanged()
+		let before = Date(); editor.now(); let after = Date()
+		editor.includeEnd.isOn = true; editor.toggleEnd(); editor.save()
+		let entry = try XCTUnwrap(injected(Database.self).query(MetricContextEntry.fetchRequest()).first)
+		XCTAssertGreaterThanOrEqual(entry.timestamp, before)
+		XCTAssertLessThanOrEqual(entry.timestamp, after)
+		// Equal boundaries are stored as a point; no invisible rounded end predates Now.
+		XCTAssertNil(entry.endDate)
+	}
+
+	@MainActor
 	func testMetricContextNowKeepsFullPrecision() throws {
 		let editor = MetricContextEditor(metric: .all)
 		editor.loadViewIfNeeded()

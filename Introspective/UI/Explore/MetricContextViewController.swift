@@ -87,10 +87,14 @@ final class MetricContextEditor: UITableViewController {
 	private let note = UITextView()
 	private var start: Date
 	private var end: Date?
+	// Keep the logical value outside UIDatePicker, which can round displayed dates.
+	private var draftEnd: Date
 	init(entry: MetricContextEntry? = nil, metric: ContextMetric) {
 		self.entry = entry; self.metric = entry?.metric ?? metric
 		category = entry.flatMap { ContextCategory(rawValue: $0.category) } ?? .other
-		start = entry?.timestamp ?? Date(); end = entry?.endDate
+		let initialStart = entry?.timestamp ?? Date()
+		start = initialStart; end = entry?.endDate
+		draftEnd = entry?.endDate ?? initialStart
 		super.init(style: .grouped)
 	}
 	required init?(coder: NSCoder) { fatalError("Use init(entry:metric:)") }
@@ -102,7 +106,7 @@ final class MetricContextEditor: UITableViewController {
 			picker.datePickerMode = .dateAndTime
 			if #available(iOS 13.4, *) { picker.preferredDatePickerStyle = .wheels }
 		}
-		startPicker.date = start; endPicker.date = end ?? Date()
+		startPicker.date = start; endPicker.date = draftEnd
 		startPicker.addTarget(self, action: #selector(startChanged), for: .valueChanged)
 		endPicker.addTarget(self, action: #selector(endChanged), for: .valueChanged)
 		includeEnd.isOn = end != nil
@@ -117,11 +121,18 @@ final class MetricContextEditor: UITableViewController {
 		startPicker.date = start
 	}
 	@objc func endChanged() {
-		end = injected(CalendarUtil.self).start(of: .minute, in: endPicker.date)
-		endPicker.date = end!
+		draftEnd = injected(CalendarUtil.self).start(of: .minute, in: endPicker.date)
+		end = includeEnd.isOn ? draftEnd : nil
+		endPicker.date = draftEnd
 	}
 	@objc func toggleEnd() {
-		end = includeEnd.isOn ? endPicker.date : nil
+		if includeEnd.isOn {
+			draftEnd = max(start, draftEnd)
+			end = draftEnd
+			endPicker.date = draftEnd
+		} else {
+			end = nil
+		}
 		tableView.reloadSections(IndexSet(integer: 2), with: .none)
 	}
 	@objc func now() { start = Date(); startPicker.date = start }
