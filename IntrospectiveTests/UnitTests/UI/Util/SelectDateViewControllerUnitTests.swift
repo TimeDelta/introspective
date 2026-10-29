@@ -48,6 +48,18 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 	// MARK: - viewDidLoad
 
+	func testLoadedDateEditorIsReleasedAfterItsOwnerReleasesIt() {
+		weak var released: SelectDateViewControllerImpl?
+		autoreleasepool {
+			let editor = SelectDateViewControllerImpl()
+			editor.datePicker = UIDatePicker()
+			editor.toolbar = UIToolbar()
+			editor.viewDidLoad()
+			released = editor
+		}
+		XCTAssertNil(released)
+	}
+
 	func testGivenInitialDate_viewDidLoad_setsDatePickerToInitialDate() {
 		// given
 		let initialDate = Date() - 2.days

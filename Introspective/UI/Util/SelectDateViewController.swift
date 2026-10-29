@@ -67,7 +67,7 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 		CoachMarkInfo(
 			hint: "Use these buttons to increment / decrement the time by the corresponding number of minutes. You can also long press them to increment / decrement by a time unit of your choosing.",
 			useArrow: true,
-			view: { self.decrementByThirtyButton.value(forKey: "view") as? UIView }
+			view: { [weak self] in self?.decrementByThirtyButton?.value(forKey: "view") as? UIView }
 		),
 	]
 
