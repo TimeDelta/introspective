@@ -1,5 +1,6 @@
 import XCTest
 import UIKit
+import WSTagsField
 import DataImport
 import HealthKit
 import CoreData
@@ -369,6 +370,64 @@ final class SavedQueryTests: XCTestCase {
 				}
 			}
 		}
+	}
+
+	@MainActor
+	func testTagCallbacksDoNotRetainEitherEditorCell() {
+		let field = WSTagsField(frame: CGRect(x: 0, y: 0, width: 300, height: 100))
+		let definitionField = WSTagsField(frame: CGRect(x: 0, y: 0, width: 300, height: 100))
+		weak var weakCell: ActivityTagsTableViewCellImpl?
+		weak var weakDefinitionCell: ActivityDefinitionTagsTableViewCell?
+		autoreleasepool {
+			let cell = ActivityTagsTableViewCellImpl()
+			let definitionCell = ActivityDefinitionTagsTableViewCell()
+			cell.tagsField = field
+			definitionCell.tagsField = definitionField
+			weakCell = cell; weakDefinitionCell = definitionCell
+		}
+		XCTAssertNil(weakCell)
+		XCTAssertNil(weakDefinitionCell)
+		XCTAssertNil(field.textDelegate)
+		XCTAssertNil(definitionField.textDelegate)
+		// Externally retained fields can safely deliver a late callback.
+		field.onDidAddTag?(field, WSTag("late"))
+		definitionField.onDidRemoveTag?(definitionField, WSTag("late"))
+	}
+
+	@MainActor
+	func testWeakTagCallbacksStillApplyAdditionsAndRemovals() {
+		let cell = ActivityTagsTableViewCellImpl()
+		let definitionCell = ActivityDefinitionTagsTableViewCell()
+		let field = WSTagsField(frame: CGRect(x: 0, y: 0, width: 300, height: 100))
+		let definitionField = WSTagsField(frame: CGRect(x: 0, y: 0, width: 300, height: 100))
+		cell.notificationToSendOnChange = Notification.Name("TagEditorTest")
+		definitionCell.notificationToSendOnChange = Notification.Name("DefinitionTagEditorTest")
+		cell.tagsField = field; definitionCell.tagsField = definitionField
+		cell.tagNames = ["work"]; definitionCell.tagNames = ["work"]
+		field.addTag("rest"); definitionField.addTag("rest")
+		XCTAssertEqual(cell.tagNames, ["work", "rest"])
+		XCTAssertEqual(definitionCell.tagNames, ["work", "rest"])
+		field.removeTag(WSTag("work")); definitionField.removeTag(WSTag("work"))
+		XCTAssertEqual(cell.tagNames, ["rest"])
+		XCTAssertEqual(definitionCell.tagNames, ["rest"])
+		XCTAssertEqual(field.textField.accessibilityValue, "rest")
+		XCTAssertEqual(definitionField.textField.accessibilityValue, "rest")
+	}
+
+	@MainActor
+	func testRetiredTagFieldsCannotUpdateReboundCells() {
+		let cell = ActivityTagsTableViewCellImpl()
+		let oldField = WSTagsField(frame: CGRect(x: 0, y: 0, width: 300, height: 100))
+		let newField = WSTagsField(frame: CGRect(x: 0, y: 0, width: 300, height: 100))
+		cell.notificationToSendOnChange = Notification.Name("ReboundTagEditorTest")
+		cell.tagsField = oldField
+		cell.tagNames = []
+		cell.tagsField = newField
+		oldField.addTag("retired")
+		XCTAssertTrue(cell.tagNames.isEmpty)
+		XCTAssertNil(oldField.textDelegate)
+		newField.addTag("current")
+		XCTAssertEqual(cell.tagNames, ["current"])
 	}
 
 	func testGraphNumericSortResolvesKeysOnceAndPreservesRoundingTies() {

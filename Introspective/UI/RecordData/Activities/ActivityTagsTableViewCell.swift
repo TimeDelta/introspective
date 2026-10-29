@@ -14,6 +14,7 @@ import Common
 import DependencyInjection
 import Persistence
 import Samples
+import UIExtensions
 
 public protocol ActivityTagsTableViewCell: UITableViewCell {
 	var notificationToSendOnChange: Notification.Name! { get set }
@@ -30,12 +31,15 @@ public final class ActivityTagsTableViewCellImpl: UITableViewCell, ActivityTagsT
 	/// This field automatically prevents duplication of tags
 	@IBOutlet final var tagsField: WSTagsField! {
 		didSet {
+			oldValue?.onDidAddTag = nil
+			oldValue?.onDidRemoveTag = nil
+			if oldValue?.textDelegate === self { oldValue?.textDelegate = nil }
 			guard let tagsField = tagsField else { return }
 			tagsField.spaceBetweenLines = 20
 			tagsField.contentInset = .init(top: 8, left: 0, bottom: 0, right: 0)
 			tagsField.textField.returnKeyType = .next
-			tagsField.onDidAddTag = addedTag
-			tagsField.onDidRemoveTag = removedTag
+			tagsField.onDidAddTag = { [weak self] field, tag in self?.addedTag(field, tag) }
+			tagsField.onDidRemoveTag = { [weak self] field, tag in self?.removedTag(field, tag) }
 			tagsField.textField.accessibilityLabel = "activity tags"
 			tagsField.textDelegate = self
 			tagsField.maxHeight = 109
@@ -88,6 +92,7 @@ public final class ActivityTagsTableViewCellImpl: UITableViewCell, ActivityTagsT
 	}
 
 	private final func sendTagsChangedNotification() {
+		// Retain the source only until this queued change is delivered.
 		DispatchQueue.main.async {
 			NotificationCenter.default.post(
 				name: self.notificationToSendOnChange,
