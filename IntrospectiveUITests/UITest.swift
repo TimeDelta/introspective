@@ -101,7 +101,10 @@ class UITest: XCTestCase {
 		if let identifier = queryString {
 			datePickerWheels = app.descendants(matching: .any).matching(identifier: identifier).firstMatch.pickerWheels
 		} else {
-			datePickerWheels = app.pickerWheels
+			let scopedWheels = app.datePickers.firstMatch.pickerWheels
+			// Attribute editors also contain ordinary wheels behind the date modal.
+			// Prefer the DatePicker scope whenever UIKit exposes it.
+			datePickerWheels = scopedWheels.firstMatch.exists ? scopedWheels : app.pickerWheels
 		}
 		guard waitForElement(datePickerWheels.firstMatch) else {
 			let hierarchy = XCTAttachment(string: app.debugDescription)
