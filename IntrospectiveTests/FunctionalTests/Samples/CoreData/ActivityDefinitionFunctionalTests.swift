@@ -8,6 +8,8 @@
 
 import XCTest
 import Hamcrest
+import SwiftyMocky
+import DependencyInjection
 @testable import Introspective
 @testable import Common
 @testable import Samples
@@ -28,6 +30,7 @@ final class ActivityDefinitionFunctionalTests: FunctionalTest {
 	}
 
 	func testActivityEditorConfiguresNameNotificationsBeforeLoadingTheNameCell() {
+		Given(injectionProvider, .get(.value(UiUtil.self), willReturn: UiUtilImpl()))
 		let storyboard = UIStoryboard(name: "RecordData", bundle: nil)
 		let editor = storyboard.instantiateViewController(withIdentifier: "editActivityDefinition") as! EditActivityDefinitionTableViewController
 		editor.loadViewIfNeeded()
@@ -37,6 +40,7 @@ final class ActivityDefinitionFunctionalTests: FunctionalTest {
 	}
 
 	func testNameEditingPublishesTheFinalValueBeforeSaveCanRun() {
+		Given(injectionProvider, .get(.value(UiUtil.self), willReturn: UiUtilImpl()))
 		let cell = ActivityDefinitionNameTableViewCell(style: .default, reuseIdentifier: nil)
 		cell.nameLabel = UILabel(); cell.nameTextField = UITextField()
 		let changed = Notification.Name("NameEdited-" + UUID().uuidString)
