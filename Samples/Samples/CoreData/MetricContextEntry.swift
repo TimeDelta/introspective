@@ -36,8 +36,8 @@ public enum ContextCategory: String, CaseIterable {
 public final class MetricContextEntry: NSManagedObject, CoreDataSample, SearchableSample {
 	public static let entityName = "MetricContextEntry"
 	public static let name = "Metric Context"
-	public static let categoryAttribute = TypedEquatableSelectOneAttribute<String>(id: 0, name: "Context", typeName: "Context", possibleValues: ContextCategory.allCases.map { $0.rawValue }, variableName: "category", possibleValueToString: { $0 })
-	public static let metricAttribute = TypedEquatableSelectOneAttribute<String>(id: 1, name: "Metric", typeName: "Metric", possibleValues: ContextMetric.allCases.map { $0.rawValue }, variableName: "metricKey", possibleValueToString: { ContextMetric(rawValue: $0)?.title ?? $0 })
+	public static let categoryAttribute = TypedEquatableSelectOneAttribute<String>(id: 0, name: "Context", typeName: "Context", variableName: "category", possibleValues: ContextCategory.allCases.map { $0.rawValue }, possibleValueToString: { $0 })
+	public static let metricAttribute = TypedEquatableSelectOneAttribute<String>(id: 1, name: "Metric", typeName: "Metric", variableName: "metricKey", possibleValues: ContextMetric.allCases.map { $0.rawValue }, possibleValueToString: { ContextMetric(rawValue: $0)?.title ?? $0 })
 	public static let noteAttribute = TextAttribute(id: 2, name: "Note", variableName: "note", optional: true)
 	public static let endAttribute = DateTimeAttribute(id: 3, name: "End Date", variableName: "endDate", optional: true)
 	public static let attributes: [Attribute] = [CommonSampleAttributes.timestamp, categoryAttribute, metricAttribute, noteAttribute, endAttribute]
