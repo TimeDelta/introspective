@@ -14,7 +14,12 @@ on:
         options: [macos-15-intel, macos-15]
         default: macos-15-intel
       ui_workers:
-        description: Parallel UI workers (one keeps a serial comparison available)
+        description: Simulator workers per UI runner
+        type: choice
+        options: ['1', '2']
+        default: '1'
+      ui_shards:
+        description: UI runners (one runs the complete suite on a single runner)
         type: choice
         options: ['2', '1']
         default: '2'
@@ -32,19 +37,27 @@ concurrency:
 
 jobs:
   validation:
-    name: ${{ matrix.kind == 'release' && 'Release compilation' || matrix.kind == 'legacy' && 'Legacy unit and functional tests' || matrix.kind == 'ui' && 'Legacy UI tests' || matrix.kind == 'mocks' && 'Legacy mocking SDK check' || 'Simulator tests' }}
+    name: ${{ matrix.kind == 'release' && 'Release compilation' || matrix.kind == 'legacy' && 'Legacy unit and functional tests' || matrix.kind == 'ui' && format('Legacy UI tests ({0}/{1})', matrix.shard, matrix.shard_count) || matrix.kind == 'mocks' && 'Legacy mocking SDK check' || 'Simulator tests' }}
     runs-on: ${{ inputs.runner || 'macos-15-intel' }}
     # Restored suites include thousands of tests / UI flows after a cold build.
     timeout-minutes: ${{ matrix.kind == 'ui' && 120 || matrix.kind == 'legacy' && 90 || 45 }}
     strategy:
       fail-fast: false
       matrix:
-        kind: ${{ inputs.suite == 'legacy' && fromJSON('["legacy"]') || inputs.suite == 'ui' && fromJSON('["ui"]') || inputs.suite == 'mocks' && fromJSON('["mocks"]') || inputs.suite == 'focused' && fromJSON('["tests", "release"]') || fromJSON('["tests", "legacy", "ui", "release"]') }}
+        include: >-
+          ${{ inputs.suite == 'legacy' && fromJSON('[{"kind":"legacy"}]') ||
+              inputs.suite == 'ui' && (inputs.ui_shards == '1' && fromJSON('[{"kind":"ui","shard":1,"shard_count":1}]') || fromJSON('[{"kind":"ui","shard":1,"shard_count":2},{"kind":"ui","shard":2,"shard_count":2}]')) ||
+              inputs.suite == 'mocks' && fromJSON('[{"kind":"mocks"}]') ||
+              inputs.suite == 'focused' && fromJSON('[{"kind":"tests"},{"kind":"release"}]') ||
+              inputs.ui_shards == '1' && fromJSON('[{"kind":"tests"},{"kind":"legacy"},{"kind":"ui","shard":1,"shard_count":1},{"kind":"release"}]') ||
+              fromJSON('[{"kind":"tests"},{"kind":"legacy"},{"kind":"ui","shard":1,"shard_count":2},{"kind":"ui","shard":2,"shard_count":2},{"kind":"release"}]') }}
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
       COCOAPODS_DISABLE_STATS: 'true'
       CI_BUILD_KIND: ${{ matrix.kind }}
-      CI_UI_WORKERS: ${{ inputs.ui_workers || '2' }}
+      CI_UI_WORKERS: ${{ inputs.ui_workers || '1' }}
+      CI_UI_SHARD: ${{ matrix.shard || '1' }}
+      CI_UI_SHARD_COUNT: ${{ matrix.shard_count || '1' }}
       CI_TEST_SCHEME: ${{ matrix.kind == 'legacy' && 'CI-CD' || matrix.kind == 'ui' && 'UIRegressionTests' || 'MoodHealthTests' }}
     steps:
       - name: Checkout
@@ -121,7 +134,10 @@ jobs:
         run: |
           set -euo pipefail
           if [ "$CI_BUILD_KIND" = tests ]; then ruby scripts/prepare-mood-health-tests.rb; fi
-          if [ "$CI_BUILD_KIND" = ui ]; then ruby scripts/prepare-ui-tests.rb; fi
+          if [ "$CI_BUILD_KIND" = ui ]; then
+            ruby scripts/prepare-ui-tests.rb
+            python3 scripts/partition-ui-tests.py --shard "$CI_UI_SHARD" --count "$CI_UI_SHARD_COUNT" --json ci-output/ui-test-selection.json > ci-output/ui-test-classes.txt
+          fi
           xcrun simctl list devices available --json > ci-output/simulators.json
           simulator_id=$(python3 -c 'import json; d=json.load(open("ci-output/simulators.json")); print(next(v["udid"] for k,vs in d["devices"].items() if "iOS" in k for v in vs if v["isAvailable"] and "iPhone" in v["name"]))')
           echo "CI_SIMULATOR_ID=$simulator_id" >> "$GITHUB_ENV"
@@ -175,6 +191,10 @@ jobs:
             -derivedDataPath "$CI_DERIVED_DATA"
             -resultBundlePath "$GITHUB_WORKSPACE/ci-output/MoodTests.xcresult")
           if [ "$CI_BUILD_KIND" = ui ]; then
+            test -s ci-output/ui-test-classes.txt
+            while IFS= read -r test_class; do
+              test_command+=("-only-testing:$test_class")
+            done < ci-output/ui-test-classes.txt
             if [ "$CI_UI_WORKERS" = 1 ]; then
               test_command+=(-parallel-testing-enabled NO)
             else
@@ -187,7 +207,7 @@ jobs:
           if [ "$CI_BUILD_KIND" = tests ]; then
             python3 scripts/verify-native-test-results.py ci-output/mood-tests-summary.json
           elif [ "$CI_BUILD_KIND" = ui ]; then
-            python3 scripts/verify-ui-test-results.py ci-output/mood-tests-summary.json
+            python3 scripts/verify-ui-test-results.py ci-output/mood-tests-summary.json --shard "$CI_UI_SHARD" --count "$CI_UI_SHARD_COUNT"
           else
             cat ci-output/mood-tests-summary.json
           fi
@@ -246,7 +266,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ios-26-${{ matrix.kind }}-diagnostics
+          name: ios-26-${{ matrix.kind == 'ui' && format('ui-{0}', matrix.shard) || matrix.kind }}-diagnostics
           path: ci-output/
           retention-days: 14
           if-no-files-found: warn

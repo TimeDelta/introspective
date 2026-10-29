@@ -42,7 +42,9 @@ def report(log, summary, workers):
 
 def markdown(data):
     wall = 'unavailable (run did not produce a summary)' if data['wallSeconds'] is None else f"{data['wallSeconds'] / 60:.1f} minutes"
-    lines = ['### Legacy UI timings', '', f"Configured UI workers: {data['workers']}. Test execution wall time: {wall}.",
+    shard = os.environ.get('CI_UI_SHARD', '1')
+    count = os.environ.get('CI_UI_SHARD_COUNT', '1')
+    lines = [f'### Legacy UI timings — shard {shard}/{count}', '', f"Configured UI workers per runner: {data['workers']}. Test execution wall time: {wall}.",
              f"Timed {data['recordedCases']} unique cases in {data['attempts']} attempts; result bundle reports {data['reportedTotal'] or 'unknown'} cases.",
              f"Worker destinations observed in the log: {len(data['observedWorkers']) if data['observedWorkers'] else 'not reported'}.", '', 'Cumulative times below add work across workers; they are not wall time.', '',
              '| Test class | Attempts | Failed | Cumulative minutes |', '| --- | ---: | ---: | ---: |']
