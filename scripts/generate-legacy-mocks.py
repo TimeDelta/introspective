@@ -5,6 +5,7 @@ The SwiftyMocky pod ships its template, so a separately installed CLI is not
 needed. JSON configs are valid YAML and avoid a Python package dependency.
 """
 import argparse
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -152,6 +153,8 @@ def finish_combined_output(configs, combined):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config-only", action="store_true")
+    parser.add_argument("--cache-path", type=Path,
+                        help="Preserve Sourcery's parsed-source and compiled-template caches")
     options = parser.parse_args()
     config_dir = ROOT / "ci-output/mock-configs"
     config_dir.mkdir(parents=True, exist_ok=True)
@@ -173,7 +176,16 @@ def main():
     combined.write_text(json.dumps({"configurations": [config]}, indent=2) + "\n")
     if not options.config_only:
         # Parse inheritance and rewrite inline mocks once, rather than once per module.
-        subprocess.run([str(sourcery), "--config", str(combined)], cwd=ROOT, check=True)
+        command = [str(sourcery), "--config", str(combined)]
+        if options.cache_path:
+            compiler = subprocess.check_output(["xcrun", "swiftc", "--version"])
+            # The frozen template's executable key does not include the compiler
+            # or runtime version. Keep its cache isolated when either changes.
+            identity = b"\0".join([(ROOT / "Podfile.lock").read_bytes(),
+                                    template.read_bytes(), compiler])
+            namespace = hashlib.sha256(identity).hexdigest()
+            command += ["--cacheBasePath", str(options.cache_path / namespace)]
+        subprocess.run(command, cwd=ROOT, check=True)
         finish_combined_output(configs, config)
 
 
