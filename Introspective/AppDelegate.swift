@@ -48,6 +48,15 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		Me.registerDependencies()
 
+		#if DEBUG
+		// Seed only the UI runner's fresh database, before storyboard controllers fetch.
+		do {
+			try UITestFixtureLoader.load(environment: ProcessInfo.processInfo.environment, isUITesting: Globals.uiTesting)
+		} catch {
+			fatalError("Failed to prepare UI test fixtures: \(error)")
+		}
+		#endif
+
 		userNotificationDelegate = UserNotificationDelegate(window)
 
 		let center = UNUserNotificationCenter.current()

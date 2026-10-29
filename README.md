@@ -158,7 +158,30 @@ There are 5 main build targets in this project:
 There are 3 different types of tests in this project:
 - [UnitTest](IntrospectiveTests/UnitTests/UnitTest.swift) - There are many of these and each one is very quick and specific as to what it tests.
 - [FunctionalTest](IntrospectiveTests/FunctionalTests/FunctionalTest.swift) - Functional tests use very little mocking and test the full stack from a specific class down.
-- [UITest](IntrospectiveUITests/UITest.swift) - Fragile but test the entirety of the stack all at once.
+- [UITest](IntrospectiveUITests/UITest.swift) - XCUITest scenarios exercise the visible application and its real persistence layer.
+
+UI cases launch once with a fresh SQLite store. Editing, sorting, deletion, and
+results cases can provide starting records before their first UI interaction:
+
+```swift
+let definition = ActivityDefinition(name: "Read", tags: ["restful"])
+seed(activityDefinitions: [definition], activities: [.init(definition)])
+// Exercise the editing/deletion action through app controls, then assert its result.
+```
+
+The shared schema is in [TestSupport](TestSupport/UITestFixtures.swift). The Debug
+app consumes it only with `--ui-testing`, before screens fetch their data; records
+are created by the real DAOs. Invalid fixtures fail launch rather than falling
+back to an empty screen. Override `openInitialScreen()` for navigation in fixture
+based classes so `setUp()` does not launch before records are configured.
+
+Keep creation and recording scenarios using the UI creation helpers. Use
+`waitForElement`, `waitForValue`, or `waitForCount` for asynchronous UI changes;
+retain deliberate delays where elapsed time is the behavior under test. Stable
+screen identifiers and navigation helpers live in `UITest.swift`. Native and
+functional tests cover detailed state combinations and storyboard/control wiring
+in process, alongside the complete UI suite. CI checks every UI scenario runs,
+rejects skips, and publishes full-suite timings for comparison.
 
 
 ### Test Pre-requisites

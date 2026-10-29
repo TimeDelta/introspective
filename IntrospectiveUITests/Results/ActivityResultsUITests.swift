@@ -13,8 +13,7 @@ final class ActivityResultsUITests: UITest {
 	func testDeletingOnlyActivityInResults_goesBackToQueryScreen() {
 		// given
 		let definition = ActivityDefinition(name: "fdshjkl")
-		createActivityDefinition(definition)
-		addActivity(name: definition.name)
+		seed(activityDefinitions: [definition], activities: [.init(definition)])
 		runAllActivitiesQuery()
 
 		// when
@@ -29,8 +28,7 @@ final class ActivityResultsUITests: UITest {
 	func testDeleteAllActivityResults_goesBackToQueryScreen() {
 		// given
 		let definition = ActivityDefinition(name: "fnsjka")
-		createActivityDefinition(definition)
-		addActivity(name: definition.name)
+		seed(activityDefinitions: [definition], activities: [.init(definition)])
 		runAllActivitiesQuery()
 
 		// when
@@ -39,8 +37,8 @@ final class ActivityResultsUITests: UITest {
 		app.buttons["Yes"].tap()
 
 		// then
-		// the navigation item is asynchronously popped so UI test doesn't know how to wait for it
-		sleep(1)
+		// Wait for the actual navigation completion.
+		_ = waitForElement(app.navigationBars.buttons["Explore"])
 		XCTAssert(app.navigationBars.buttons["Explore"].exists)
 	}
 
@@ -56,9 +54,4 @@ final class ActivityResultsUITests: UITest {
 		app.buttons["Run"].tap()
 	}
 
-	private final func addActivity(name: String) {
-		app.tables.cells.staticTexts[name].swipeLeft()
-		app.tables.buttons["+"].tap()
-		app.buttons["Save"].tap()
-	}
 }

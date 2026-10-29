@@ -141,6 +141,119 @@ final class SavedQueryTests: XCTestCase {
 		return value
 	}
 
+	func testUIFixturesSurviveSQLiteReopenWithRelationshipsOrderAndPreciseDates() throws {
+		let timestamp = Date(timeIntervalSince1970: 1_700_000_000.123456)
+		let first = UITestFixtures.ActivityDefinition(name: "Café 🧠", autoNote: true,
+			description: "Multiple\nlines, \"quoted\"", tags: ["restful", "shared"])
+		let second = UITestFixtures.ActivityDefinition(name: "Second")
+		let medication = UITestFixtures.Medication("Medication", frequency: ("12", "month"),
+			startedOn: timestamp, dosage: "12 mg", note: "Line 1\nLine 2")
+		let payload = UITestFixtures(activityDefinitions: [first, second],
+			activities: [.init(first, start: timestamp, end: timestamp.addingTimeInterval(3600),
+				note: "Activity note", tags: ["shared", "extra"])], medications: [medication],
+			doses: [.init(medication, at: timestamp), .init(medication, at: timestamp.addingTimeInterval(60), dosage: "7 cL")],
+			moods: [.init(5, "Private\nnote 🧠", timestamp: timestamp)])
+		XCTAssertTrue(try UITestFixtureLoader.load(environment: [UITestFixtures.environmentKey: payload.encoded()], isUITesting: true))
+		try reopen()
+		let definitions = try container.viewContext.fetch(ActivityDefinition.fetchRequest()).sorted { $0.recordScreenIndex < $1.recordScreenIndex }
+		XCTAssertEqual(definitions.map { $0.name }, [first.name, second.name])
+		XCTAssertEqual(definitions.map { $0.recordScreenIndex }, [0, 1])
+		XCTAssertEqual(definitions[0].activityDescription, first.description)
+		XCTAssertTrue(definitions[0].autoNote)
+		XCTAssertEqual(Set(definitions[0].tagsArray().map { $0.name }), Set(first.tags!))
+		let activity = try XCTUnwrap(container.viewContext.fetch(Activity.fetchRequest()).first)
+		XCTAssertEqual(activity.definition.objectID, definitions[0].objectID)
+		XCTAssertEqual(activity.start.timeIntervalSince1970, timestamp.timeIntervalSince1970, accuracy: 0.000001)
+		XCTAssertEqual(try XCTUnwrap(activity.end).timeIntervalSince(activity.start), 3600, accuracy: 0.000001)
+		XCTAssertEqual(Set(activity.tagsArray().map { $0.name }), Set(["shared", "extra"]))
+		XCTAssertEqual(activity.note, "Activity note")
+		let storedMedication = try XCTUnwrap(container.viewContext.fetch(Medication.fetchRequest()).first)
+		XCTAssertEqual(storedMedication.frequency?.description, "12 times per month")
+		XCTAssertEqual(storedMedication.dosage?.description, medication.dosage)
+		XCTAssertEqual(storedMedication.notes, medication.note)
+		let doses = try container.viewContext.fetch(MedicationDose.fetchRequest()).sorted { $0.date < $1.date }
+		XCTAssertEqual(doses.map { $0.medication.objectID }, [storedMedication.objectID, storedMedication.objectID])
+		XCTAssertEqual(doses.map { $0.dosage?.description }, ["12 mg", "7 cL"])
+		XCTAssertEqual(doses[0].date.timeIntervalSince1970, timestamp.timeIntervalSince1970, accuracy: 0.000001)
+		let mood = try XCTUnwrap(container.viewContext.fetch(MoodImpl.fetchRequest()).first)
+		XCTAssertEqual(mood.rating, 5)
+		XCTAssertEqual(mood.note, "Private\nnote 🧠")
+		XCTAssertEqual(mood.date.timeIntervalSince1970, timestamp.timeIntervalSince1970, accuracy: 0.000001)
+		XCTAssertEqual(container.persistentStoreCoordinator.persistentStores.first?.type, NSSQLiteStoreType)
+	}
+
+	func testInvalidUIFixturesFailBeforeWritingStartingRecords() throws {
+		let valid = UITestFixtures.ActivityDefinition(name: "Valid")
+		let medication = UITestFixtures.Medication("Medication")
+		let invalid = [
+			UITestFixtures(activityDefinitions: [valid, .init(name: "VALID")]),
+			UITestFixtures(activityDefinitions: [valid, .init(name: " ")]),
+			UITestFixtures(activityDefinitions: [valid], activities: [.init(.init(name: "Missing"))]),
+			UITestFixtures(activityDefinitions: [valid], doses: [.init(medication, at: Date())]),
+			UITestFixtures(activityDefinitions: [valid], medications: [.init("Bad frequency", frequency: ("12", "invalid"))]),
+			UITestFixtures(activityDefinitions: [valid], medications: [.init("Bad dosage", dosage: "invalid")]),
+			UITestFixtures(activityDefinitions: [valid], activities: [.init(valid, start: Date(), end: .distantPast)]),
+		]
+		for payload in invalid {
+			XCTAssertThrowsError(try UITestFixtureLoader.seed(payload))
+			XCTAssertEqual(try container.viewContext.count(for: ActivityDefinition.fetchRequest()), 0)
+			XCTAssertEqual(try container.viewContext.count(for: Medication.fetchRequest()), 0)
+			XCTAssertEqual(try container.viewContext.count(for: Tag.fetchRequest()), 0)
+		}
+	}
+
+	func testUIFixtureEnvironmentRequiresExplicitUITestMode() throws {
+		_ = try mood(7)
+		// Even invalid fixture input must be ignored outside the UI-test launch path.
+		XCTAssertFalse(try UITestFixtureLoader.load(environment: [UITestFixtures.environmentKey: "invalid"], isUITesting: false))
+		XCTAssertFalse(try UITestFixtureLoader.load(environment: [:], isUITesting: true))
+		XCTAssertEqual(try container.viewContext.fetch(MoodImpl.fetchRequest()).map { $0.rating }, [7])
+	}
+
+	func testUIFixturesRefuseToAppendToAnExistingStore() throws {
+		let first = UITestFixtures.ActivityDefinition(name: "Original")
+		try UITestFixtureLoader.seed(UITestFixtures(activityDefinitions: [first]))
+		XCTAssertThrowsError(try UITestFixtureLoader.seed(UITestFixtures(activityDefinitions: [.init(name: "Replacement")])))
+		try reopen()
+		XCTAssertEqual(try container.viewContext.fetch(ActivityDefinition.fetchRequest()).map { $0.name }, [first.name])
+	}
+
+	func testMalformedUIFixtureEnvironmentDoesNotPartiallyPopulateStore() throws {
+		for text in ["invalid", "{}", "{\"activityDefinitions\":[{\"name\":\"Incomplete\"}]}"] {
+			XCTAssertThrowsError(try UITestFixtureLoader.load(environment: [UITestFixtures.environmentKey: text], isUITesting: true))
+			XCTAssertEqual(try container.viewContext.count(for: ActivityDefinition.fetchRequest()), 0)
+		}
+	}
+
+	@MainActor
+	func testActivityCellsRenderSeededCompletedAndRunningStatesInProcess() throws {
+		let completed = UITestFixtures.ActivityDefinition(name: "Completed")
+		let running = UITestFixtures.ActivityDefinition(name: "Running")
+		let start = Calendar.current.startOfDay(for: Date()).addingTimeInterval(3600)
+		try UITestFixtureLoader.seed(UITestFixtures(activityDefinitions: [completed, running], activities: [
+			.init(completed, start: start, end: start.addingTimeInterval(3600)),
+			.init(running, start: Date().addingTimeInterval(-60)),
+		]))
+		let definitions = try container.viewContext.fetch(ActivityDefinition.fetchRequest()).sorted { $0.recordScreenIndex < $1.recordScreenIndex }
+		let cell = RecordActivityDefinitionTableViewCell()
+		cell.nameLabel = UILabel()
+		cell.mostRecentTimeLabel = UILabel()
+		cell.totalDurationTodayLabel = UILabel()
+		cell.currentInstanceDurationLabel = UILabel()
+		cell.progressIndicator = UIActivityIndicatorView()
+		cell.activityDefinition = definitions[0]
+		XCTAssertEqual(cell.nameLabel.text, completed.name)
+		XCTAssertEqual(cell.currentInstanceDurationLabel.text, "1:00:00")
+		XCTAssertFalse(cell.running)
+		XCTAssertTrue(cell.progressIndicator.isHidden)
+		cell.activityDefinition = definitions[1]
+		XCTAssertEqual(cell.nameLabel.text, running.name)
+		XCTAssertTrue(cell.running)
+		XCTAssertFalse(cell.progressIndicator.isHidden)
+		XCTAssertFalse(cell.currentInstanceDurationLabel.text?.isEmpty ?? true)
+		cell.prepareForReuse()
+	}
+
 	private func registerStore() throws {
 		let context = container.viewContext
 		let request = SettingsImpl.fetchRequest()

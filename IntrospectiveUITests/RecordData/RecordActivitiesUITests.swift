@@ -11,11 +11,8 @@ import SwiftDate
 
 final class RecordActivitiesUITests: UITest {
 
-	final override func setUp() {
-		super.setUp()
-		app.tabBars.buttons["Record"].tap()
-		app.tables.cells.staticTexts["Activities"].tap()
-		skipInstructionsIfPresent(.activities)
+	final override func openInitialScreen() {
+		openActivitiesScreen()
 	}
 
 	// MARK: - ActivityDefinition
@@ -34,7 +31,8 @@ final class RecordActivitiesUITests: UITest {
 
 	func testCreatingActivityDefinition_showsNameAndDescriptionInActivityListAfterSave() {
 		// given
-		let definition = ActivityDefinition(name: "this is an activity", description: "this describes the activity")
+		let definition = ActivityDefinition(name: "this is an activity", autoNote: true,
+			description: "this describes the activity", tags: ["restful", "reading"])
 
 		// when
 		createActivityDefinition(definition)
@@ -42,6 +40,13 @@ final class RecordActivitiesUITests: UITest {
 		// then
 		XCTAssert(app.tables.cells.staticTexts[definition.name].exists)
 		XCTAssert(app.tables.cells.staticTexts[definition.description!].exists)
+		// Preserve creation coverage for optional fields now that other cases seed setup.
+		app.tables.staticTexts[definition.name].gentleSwipe(.right)
+		app.tables.buttons["edit \(definition.name)"].tap()
+		XCTAssertEqual(activityDefinitionNameField().value as? String, definition.name)
+		XCTAssertEqual(app.textViews["activity description"].value as? String, definition.description)
+		XCTAssertEqual(definitionTagsFieldAccessibilityValueAsSet(), Set(definition.tags!))
+		XCTAssertEqual(activityDefinitionAutoNoteField().value as? String, "1")
 	}
 
 	func testEditingActivityDefinition_correctlyPopulatesAllFields() {
@@ -51,7 +56,7 @@ final class RecordActivitiesUITests: UITest {
 			autoNote: true,
 			description: "fejhwioqp fewj qiop",
 			tags: ["fhewui", "geqr", "hyrw"])
-		createActivityDefinition(definition)
+		seed(activityDefinitions: [definition])
 
 		// when
 		// this is triggering the navigate back gesture all of the sudden
@@ -71,7 +76,7 @@ final class RecordActivitiesUITests: UITest {
 			name: "hfuewipq",
 			description: "fejhwioqp fewj qiop",
 			tags: ["fhewui", "geqr", "hyrw"])
-		createActivityDefinition(definition)
+		seed(activityDefinitions: [definition])
 
 		// when
 		app.tables.staticTexts[definition.name].gentleSwipe(.right)
@@ -96,7 +101,7 @@ final class RecordActivitiesUITests: UITest {
 	func testActivityDefinitionWithNameAlreadyExists_editActivityDefinitionScreenDisablesSaveButton() {
 		// given
 		let definition = ActivityDefinition(name: "greq")
-		createActivityDefinition(definition)
+		seed(activityDefinitions: [definition])
 
 		// when
 		app.buttons["+"].tap()
@@ -112,20 +117,20 @@ final class RecordActivitiesUITests: UITest {
 	func testTapOnActivityDefinition_startsActivity() {
 		// given
 		let definition = ActivityDefinition(name: "grneoq")
-		createActivityDefinition(definition)
+		seed(activityDefinitions: [definition])
 
 		// when
 		app.tables.staticTexts[definition.name].tap()
 
 		// then
-		sleep(1)
+		waitForCount(1, in: app.activityIndicators)
 		XCTAssertEqual(app.activityIndicators.allElementsBoundByIndex.count, 1)
 	}
 
 	func testTapOnActivityDefinitionThatHasRunningInstance_stopsRunningInstanceAndUpdatesLastInstanceInfo() {
 		// given
 		let definition = ActivityDefinition(name: "grnejioqu")
-		createActivityDefinition(definition)
+		seed(activityDefinitions: [definition])
 		let earliestStart = Date()
 		app.tables.staticTexts[definition.name].tap()
 		let latestStart = Date()
@@ -153,11 +158,9 @@ final class RecordActivitiesUITests: UITest {
 	func testChangingActivityDefinitionWhileEditingLastActivity_updatesUI() {
 		// given
 		let definition = ActivityDefinition(name: "fjhwi")
-		createActivityDefinition(definition)
 		let targetDefinition = ActivityDefinition(name: "greqnji" + definition.name)
-		createActivityDefinition(targetDefinition)
+		seed(activityDefinitions: [definition, targetDefinition], activities: [.init(definition)])
 
-		app.tables.staticTexts[definition.name].tap()
 		app.tables.staticTexts[definition.name].swipeLeft()
 		app.tables.buttons["✎ Last"].tap()
 
@@ -173,11 +176,8 @@ final class RecordActivitiesUITests: UITest {
 	func testClearingEndDateOnEditActivityScreen_updatesUI() {
 		// given
 		let definition = ActivityDefinition(name: "greq")
-		createActivityDefinition(definition)
-		app.tables.cells.staticTexts[definition.name].tap()
-		sleep(1)
-		app.tables.cells.staticTexts[definition.name].tap()
 		let endDate = Date()
+		seed(activityDefinitions: [definition], activities: [.init(definition, start: Date().addingTimeInterval(-60), end: endDate)])
 		app.tables.cells.staticTexts[definition.name].swipeLeft()
 		app.tables.buttons["✎ Last"].tap()
 
@@ -185,14 +185,14 @@ final class RecordActivitiesUITests: UITest {
 		app.tables.cells.buttons["clear end date button"].tap()
 
 		// then
+		waitForValue("", of: app.tables.cells.staticTexts["end date"])
 		XCTAssert(!app.tables.cells.staticTexts[editActivityDateString(for: endDate)].exists)
 	}
 
 	func testChangingStartDateOnEditActivityScreen_updatesUI() {
 		// given
 		let definition = ActivityDefinition(name: "gteq")
-		createActivityDefinition(definition)
-		app.tables.cells.staticTexts[definition.name].tap()
+		seed(activityDefinitions: [definition], activities: [.init(definition)])
 		let expectedStartDate = (Date() - 1.days - 1.hours).dateBySet(hour: nil, min: nil, secs: 0)!
 		app.tables.cells.staticTexts[definition.name].swipeLeft()
 		app.tables.cells.buttons["✎ Last"].tap()
@@ -203,15 +203,14 @@ final class RecordActivitiesUITests: UITest {
 		app.buttons["save button"].tap()
 
 		// then
-		sleep(1) // table view has to reload data before UI is updated
+		waitForValue(editActivityDateString(for: expectedStartDate), of: app.tables.cells.staticTexts["start date"])
 		XCTAssertEqual(app.tables.cells.staticTexts["start date"].value as? String, editActivityDateString(for: expectedStartDate))
 	}
 
 	func testChangingEndDateOnEditActivityScreen_updatesUI() {
 		// given
 		let definition = ActivityDefinition(name: "gteq")
-		createActivityDefinition(definition)
-		app.tables.cells.staticTexts[definition.name].tap()
+		seed(activityDefinitions: [definition], activities: [.init(definition)])
 		app.tables.cells.staticTexts[definition.name].swipeLeft()
 		app.tables.cells.buttons["✎ Last"].tap()
 
@@ -222,15 +221,14 @@ final class RecordActivitiesUITests: UITest {
 		app.buttons["save button"].tap()
 
 		// then
-		sleep(1) // table view has to reload data before UI is updated
+		waitForValue(editActivityDateString(for: expectedEndDate), of: app.tables.cells.staticTexts["end date"])
 		XCTAssertEqual(app.tables.cells.staticTexts["end date"].value as? String, editActivityDateString(for: expectedEndDate))
 	}
 
 	func testEditingLastActivity_correctlyUpdatesCorrespondingActivityDefinitionCell() {
 		// given
 		let definition = ActivityDefinition(name: "gteq")
-		createActivityDefinition(definition)
-		app.tables.cells.staticTexts[definition.name].tap()
+		seed(activityDefinitions: [definition], activities: [.init(definition)])
 		app.tables.cells.staticTexts[definition.name].swipeLeft()
 		app.tables.cells.buttons["✎ Last"].tap()
 
@@ -244,7 +242,7 @@ final class RecordActivitiesUITests: UITest {
 		app.buttons["Save"].tap()
 
 		// then
-		sleep(1) // table view has to reload data before UI is updated
+		waitForValue(startToEndTimeLabelText(from: startDate, to: endDate), of: app.tables.cells.staticTexts["last start / end time"])
 		XCTAssertEqual(app.activityIndicators.allElementsBoundByIndex.count, 0)
 		XCTAssertEqual(app.tables.cells.staticTexts["last start / end time"].value as? String, startToEndTimeLabelText(from: startDate, to: endDate))
 		XCTAssertEqual(app.tables.cells.staticTexts["total duration for today"].value as? String, "1:02:00")
@@ -254,9 +252,8 @@ final class RecordActivitiesUITests: UITest {
 	func testAddNewActivityScreen_startsWithCorrectActivityDefinitionSelected() {
 		// given
 		let definition1 = ActivityDefinition(name: "htgerq")
-		createActivityDefinition(definition1)
 		let definition2 = ActivityDefinition(name: "gheiqu")
-		createActivityDefinition(definition2)
+		seed(activityDefinitions: [definition1, definition2])
 
 		// when
 		app.tables.cells.staticTexts[definition2.name].swipeLeft()
@@ -272,7 +269,7 @@ final class RecordActivitiesUITests: UITest {
 		let expectedStartDate = (Date() - 1.days - 1.hours).dateBySet(hour: nil, min: nil, secs: 0)!
 		let expectedEndDate = (Date() - 1.days).dateBySet(hour: nil, min: nil, secs: 0)!
 
-		createActivityDefinition(definition)
+		seed(activityDefinitions: [definition])
 		app.tables.cells.staticTexts[definition.name].swipeLeft()
 		app.tables.cells.buttons["+"].tap()
 
@@ -304,8 +301,7 @@ final class RecordActivitiesUITests: UITest {
 		let expectedStartDate = (Date() - 1.days - 1.hours).dateBySet(hour: nil, min: nil, secs: 0)!
 		let expectedEndDate = (Date() - 1.days).dateBySet(hour: nil, min: nil, secs: 0)!
 
-		createActivityDefinition(definition)
-		app.tables.cells.staticTexts[definition.name].tap()
+		seed(activityDefinitions: [definition], activities: [.init(definition)])
 		app.tables.cells.staticTexts[definition.name].swipeLeft()
 		app.tables.cells.buttons["✎ Last"].tap()
 
@@ -336,10 +332,7 @@ final class RecordActivitiesUITests: UITest {
 		let definition = ActivityDefinition(name: "gteqas")
 		let startDate = Date() + 1.days
 
-		createActivityDefinition(definition)
-		app.tables.cells.staticTexts[definition.name].tap()
-		sleep(1)
-		app.tables.cells.staticTexts[definition.name].tap()
+		seed(activityDefinitions: [definition], activities: [.init(definition, start: Date().addingTimeInterval(-60), end: Date())])
 		app.tables.cells.staticTexts[definition.name].swipeLeft()
 		app.tables.cells.buttons["✎ Last"].tap()
 
@@ -355,10 +348,7 @@ final class RecordActivitiesUITests: UITest {
 		let definition = ActivityDefinition(name: "gteqas")
 		let endDate = Date() - 1.days
 
-		createActivityDefinition(definition)
-		app.tables.cells.staticTexts[definition.name].tap()
-		sleep(1)
-		app.tables.cells.staticTexts[definition.name].tap()
+		seed(activityDefinitions: [definition], activities: [.init(definition, start: Date().addingTimeInterval(-60), end: Date())])
 		app.tables.cells.staticTexts[definition.name].swipeLeft()
 		app.tables.cells.buttons["✎ Last"].tap()
 
@@ -373,7 +363,7 @@ final class RecordActivitiesUITests: UITest {
 		// given
 		let definition = ActivityDefinition(name: "grehuiq")
 		let minTime = 60
-		createActivityDefinition(definition)
+		seed(activityDefinitions: [definition])
 		app.tabBars.buttons["Settings"].tap()
 		app.tables.cells.staticTexts["Activity"].tap()
 		setAutoIgnore(enabled: true, seconds: String(minTime))
@@ -395,7 +385,7 @@ final class RecordActivitiesUITests: UITest {
 		// given
 		let definition = ActivityDefinition(name: "grehuiq")
 		let minTime = 1
-		createActivityDefinition(definition)
+		seed(activityDefinitions: [definition])
 		app.tabBars.buttons["Settings"].tap()
 		app.tables.cells.staticTexts["Activity"].tap()
 		setAutoIgnore(enabled: true, seconds: String(minTime))
@@ -418,7 +408,7 @@ final class RecordActivitiesUITests: UITest {
 	func testFinishingActivityWithAutoNoteEnabled_showsEditActivityScreen() {
 		// given
 		let definition = ActivityDefinition(name: "njgkort", autoNote: true)
-		createActivityDefinition(definition)
+		seed(activityDefinitions: [definition])
 		app.tables.cells.staticTexts[definition.name].tap()
 
 		// when
@@ -441,7 +431,7 @@ final class RecordActivitiesUITests: UITest {
 	func testLongPressOnAddButtonWhenSearchBarHasNameOfExistingActiviyt_doesNotCreateActivityOrClearSearchBar() {
 		// given
 		let definition = ActivityDefinition(name: "freqgr")
-		createActivityDefinition(definition)
+		seed(activityDefinitions: [definition])
 		app.searchFields["Search Activities"].tap()
 		app.searchFields["Search Activities"].typeText(definition.name)
 
@@ -466,7 +456,7 @@ final class RecordActivitiesUITests: UITest {
 
 		// then
 		XCTAssert(app.tables.cells.staticTexts[definition.name].exists)
-		sleep(1)
+		waitForCount(1, in: app.activityIndicators)
 		XCTAssertEqual(app.activityIndicators.allElementsBoundByIndex.count, 1)
 	}
 
@@ -476,8 +466,7 @@ final class RecordActivitiesUITests: UITest {
 		// given
 		let definition1 = ActivityDefinition(name: "grnueio")
 		let definition2 = ActivityDefinition(name: "htrw")
-		createActivityDefinition(definition1)
-		createActivityDefinition(definition2)
+		seed(activityDefinitions: [definition1, definition2])
 
 		// when
 		app.searchFields["Search Activities"].tap()
@@ -492,8 +481,7 @@ final class RecordActivitiesUITests: UITest {
 		let searchText = "abc"
 		let definition = ActivityDefinition(name: "geqr", description: searchText + "gfjeiorq fj")
 		let otherDefinition = ActivityDefinition(name: definition.name + "some other stuff")
-		createActivityDefinition(definition)
-		createActivityDefinition(otherDefinition)
+		seed(activityDefinitions: [definition, otherDefinition])
 
 		// when
 		filterActivities(by: searchText)
@@ -509,8 +497,7 @@ final class RecordActivitiesUITests: UITest {
 			name: "gteqrwfd",
 			tags: ["this tag " + searchText + " contains the search text"])
 		let otherDefinition = ActivityDefinition(name: definition.name + "some other stuff")
-		createActivityDefinition(definition)
-		createActivityDefinition(otherDefinition)
+		seed(activityDefinitions: [definition, otherDefinition])
 
 		// when
 		filterActivities(by: searchText)
@@ -523,8 +510,7 @@ final class RecordActivitiesUITests: UITest {
 		// given
 		let definition1 = ActivityDefinition(name: "grnueio")
 		let definition2 = ActivityDefinition(name: "htrw")
-		createActivityDefinition(definition1)
-		createActivityDefinition(definition2)
+		seed(activityDefinitions: [definition1, definition2])
 		app.searchFields["Search Activities"].tap()
 		app.searchFields["Search Activities"].typeText(definition1.name)
 
@@ -537,12 +523,11 @@ final class RecordActivitiesUITests: UITest {
 
 	// MARK: - Deleting
 
-	/// This test is flaky - run it a few times before believing a failure
+	/// Wait for the deletion to reach the visible cell before checking its values.
 	func testDeletingRunningActivity_correctlyUpdatesUI() {
 		// given
 		let definition = ActivityDefinition(name: "grenqj")
-		createActivityDefinition(definition)
-		app.tables.cells.staticTexts[definition.name].tap()
+		seed(activityDefinitions: [definition], activities: [.init(definition)])
 
 		// when
 		app.tables.cells.staticTexts[definition.name].swipeLeft()
@@ -550,7 +535,8 @@ final class RecordActivitiesUITests: UITest {
 		app.buttons["Yes"].tap()
 
 		// then
-		sleep(2)
+		waitForCount(0, in: app.activityIndicators)
+		waitForValue("", of: app.tables.cells.staticTexts["last start / end time"])
 		XCTAssertEqual(app.activityIndicators.allElementsBoundByIndex.count, 0)
 		XCTAssertEqual(app.tables.cells.staticTexts["last start / end time"].value as? String, "")
 		XCTAssertEqual(app.tables.cells.staticTexts["total duration for today"].value as? String, "")
@@ -562,9 +548,7 @@ final class RecordActivitiesUITests: UITest {
 		let definition1 = ActivityDefinition(name: "geq")
 		let definition2 = ActivityDefinition(name: "tqe")
 		let definition3 = ActivityDefinition(name: "ghrjeq")
-		createActivityDefinition(definition1)
-		createActivityDefinition(definition2)
-		createActivityDefinition(definition3)
+		seed(activityDefinitions: [definition1, definition2, definition3])
 
 		// when
 		app.tables.cells.staticTexts[definition2.name].gentleSwipe(.right)
@@ -586,10 +570,7 @@ final class RecordActivitiesUITests: UITest {
 		let definition2 = ActivityDefinition(name: "z")
 		let definition3 = ActivityDefinition(name: "zz")
 		let definition4 = ActivityDefinition(name: "zzz")
-		createActivityDefinition(definition1)
-		createActivityDefinition(definition2)
-		createActivityDefinition(definition3)
-		createActivityDefinition(definition4)
+		seed(activityDefinitions: [definition1, definition2, definition3, definition4])
 		filterActivities(by: "z")
 
 		// when
@@ -617,10 +598,7 @@ final class RecordActivitiesUITests: UITest {
 		let definition2 = ActivityDefinition(name: "definition 2")
 		let definition3 = ActivityDefinition(name: "\(filterString) definition 3")
 		let definition4 = ActivityDefinition(name: "definition 4 \(filterString)")
-		createActivityDefinition(definition1)
-		createActivityDefinition(definition2)
-		createActivityDefinition(definition3)
-		createActivityDefinition(definition4)
+		seed(activityDefinitions: [definition1, definition2, definition3, definition4])
 		filterActivities(by: filterString)
 
 		// when
@@ -640,10 +618,7 @@ final class RecordActivitiesUITests: UITest {
 		let definition2 = ActivityDefinition(name: "definition 2")
 		let definition3 = ActivityDefinition(name: "\(filterString) definition 3")
 		let definition4 = ActivityDefinition(name: "definition 4 \(filterString)")
-		createActivityDefinition(definition1)
-		createActivityDefinition(definition2)
-		createActivityDefinition(definition3)
-		createActivityDefinition(definition4)
+		seed(activityDefinitions: [definition1, definition2, definition3, definition4])
 		filterActivities(by: filterString)
 
 		// when
@@ -661,9 +636,7 @@ final class RecordActivitiesUITests: UITest {
 		let definition1 = ActivityDefinition(name: "definition 1")
 		let definition2 = ActivityDefinition(name: "definition 2")
 		let definition3 = ActivityDefinition(name: "definition 3")
-		createActivityDefinition(definition1)
-		createActivityDefinition(definition2)
-		createActivityDefinition(definition3)
+		seed(activityDefinitions: [definition1, definition2, definition3])
 
 		// when - re-order
 		definitionCell(definition1).press(forDuration: 0.5, thenDragTo: definitionCell(definition2))
@@ -686,9 +659,7 @@ final class RecordActivitiesUITests: UITest {
 		let definition1 = ActivityDefinition(name: "definition 1")
 		let definition2 = ActivityDefinition(name: "definition 2")
 		let definition3 = ActivityDefinition(name: "definition 3")
-		createActivityDefinition(definition1)
-		createActivityDefinition(definition2)
-		createActivityDefinition(definition3)
+		seed(activityDefinitions: [definition1, definition2, definition3])
 
 		// when - re-order
 		definitionCell(definition3).press(forDuration: 0.5, thenDragTo: definitionCell(definition2))
