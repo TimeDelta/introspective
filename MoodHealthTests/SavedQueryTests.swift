@@ -218,6 +218,35 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertEqual(try container.viewContext.count(for: Activity.fetchRequest()), 1)
 	}
 
+	func testUIStoreResetBeforeOpeningKeepsFreshRealSQLitePersistence() throws {
+		_ = try mood(3)
+		let url = try XCTUnwrap(container.persistentStoreDescriptions.first?.url)
+		let unrelated = directory.appendingPathComponent("unrelated.txt")
+		try Data("Keep this file".utf8).write(to: unrelated)
+		container.viewContext.reset()
+		for store in container.persistentStoreCoordinator.persistentStores {
+			try container.persistentStoreCoordinator.remove(store)
+		}
+		let replacement = NSPersistentContainer(name: "SavedQueryTests", managedObjectModel: Self.model)
+		let description = NSPersistentStoreDescription(url: url)
+		description.shouldAddStoreAsynchronously = false
+		replacement.persistentStoreDescriptions = [description]
+		try DatabaseImpl.resetPersistentStores(in: replacement)
+		// A fresh installation and a second reset both have no existing store file.
+		try DatabaseImpl.resetPersistentStores(in: replacement)
+		XCTAssertEqual(try Data(contentsOf: unrelated), Data("Keep this file".utf8))
+		var failure: Error?
+		replacement.loadPersistentStores { _, error in failure = error }
+		if let error = failure { throw error }
+		container = replacement
+		try registerStore()
+		XCTAssertEqual(try container.viewContext.count(for: MoodImpl.fetchRequest()), 0)
+		XCTAssertEqual(container.persistentStoreCoordinator.persistentStores.first?.type, NSSQLiteStoreType)
+		_ = try mood(7)
+		try reopen()
+		XCTAssertEqual(try container.viewContext.fetch(MoodImpl.fetchRequest()).map { $0.rating }, [7])
+	}
+
 	private func reopen() throws {
 		let url = try XCTUnwrap(container.persistentStoreDescriptions.first?.url)
 		container.viewContext.reset()

@@ -74,9 +74,14 @@ internal class DatabaseImpl: Database {
 		persistentContainer = container
 	}
 
-	public init(_ objectModel: NSManagedObjectModel) {
+	public init(_ objectModel: NSManagedObjectModel, resetPersistentStores: Bool = false) {
 		persistentContainer = {
 			let container = SharedPersistentContainer(name: "Introspective", managedObjectModel: objectModel)
+			if resetPersistentStores {
+				// UI tests need a clean real SQLite store. Clear it before opening so
+				// launch does not load an old store, destroy it, and load a second time.
+				try! Me.resetPersistentStores(in: container)
+			}
 			container.loadPersistentStores(completionHandler: { _, error in
 				if let error = error {
 					/*
@@ -99,6 +104,14 @@ internal class DatabaseImpl: Database {
 			container.viewContext.retainsRegisteredObjects = false
 			return container
 		}()
+	}
+
+	internal static func resetPersistentStores(in container: NSPersistentContainer) throws {
+		for description in container.persistentStoreDescriptions {
+			guard description.type == NSSQLiteStoreType, let url = description.url,
+				FileManager.default.fileExists(atPath: url.path) else { continue }
+			try container.persistentStoreCoordinator.destroyPersistentStore(at: url, ofType: description.type, options: nil)
+		}
 	}
 
 	// MARK: - Fetching
