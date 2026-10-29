@@ -295,11 +295,14 @@ jobs:
           if [ -d ci-output/MoodTests.xcresult ]; then
             xcrun xccov view --report --json ci-output/MoodTests.xcresult > ci-output/coverage-raw.json 2> ci-output/coverage-export.log || true
           fi
+          label="$CI_TEST_SCHEME"
+          if [ "$CI_BUILD_KIND" = ui ]; then label="$label (shard $CI_UI_SHARD/$CI_UI_SHARD_COUNT)"; fi
           python3 scripts/report-test-coverage.py \
             --coverage ci-output/coverage-raw.json \
             --summary ci-output/test-summary.json \
-            --scheme Introspective.xcodeproj/xcshareddata/xcschemes/CI-CD.xcscheme \
-            --label "$CI_BUILD_KIND (UI shard $CI_UI_SHARD/$CI_UI_SHARD_COUNT)" \
+            --scheme "Introspective.xcodeproj/xcshareddata/xcschemes/$CI_TEST_SCHEME.xcscheme" \
+            --kind "$CI_BUILD_KIND" --shard "$CI_UI_SHARD" --shard-count "$CI_UI_SHARD_COUNT" \
+            --label "$label" \
             --json ci-output/coverage-priorities.json > ci-output/coverage.md
           cat ci-output/coverage.md >> "$GITHUB_STEP_SUMMARY"
 

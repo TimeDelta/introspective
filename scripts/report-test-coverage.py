@@ -3,6 +3,7 @@
 import argparse
 import json
 from pathlib import Path
+import runpy
 import subprocess
 import xml.etree.ElementTree as ET
 
@@ -40,7 +41,30 @@ def scheme_exclusions(scheme):
     return excluded
 
 
-def build_report(coverage, summary, root, sources, exclusions, label):
+def execution_status(summary, expected):
+    if not summary:
+        return {'status': 'unverified', 'reason': 'No test result was produced.'}
+    if expected is None:
+        return {'status': 'unverified', 'reason': 'The selected test count was not supplied.'}
+    validate = runpy.run_path(str(Path(__file__).with_name('verify-native-test-results.py')))['validate']
+    try:
+        validate(summary, expected)
+    except ValueError as error:
+        return {'status': 'partial', 'reason': str(error)}
+    return {'status': 'complete', 'reason': f'All {expected} selected tests passed without failures or skips.'}
+
+
+def expected_test_count(kind, root, scheme, shard, shard_count):
+    scripts = root / 'scripts'
+    if kind == 'tests':
+        return runpy.run_path(str(scripts / 'verify-native-test-results.py'))['expected_test_count']()
+    if kind == 'ui':
+        return runpy.run_path(str(scripts / 'verify-ui-test-results.py'))['expected_test_count'](shard, shard_count)
+    inventory = runpy.run_path(str(scripts / 'verify-legacy-test-results.py'))['inventory']
+    return len(inventory(root / 'IntrospectiveTests', scheme)['selected'])
+
+
+def build_report(coverage, summary, root, sources, exclusions, label, expected_tests=None):
     files, gaps = [], []
     measured = set()
     if coverage is not None:
@@ -66,7 +90,9 @@ def build_report(coverage, summary, root, sources, exclusions, label):
     gaps.sort(key=lambda f: (-f['uncoveredLines'], f['path'], f['line'] or 0, f['name'], f['target']))
     inventory = {path for source in sources if (path := production_path(root / source, root)) is not None}
     return {'suite': label, 'measurementStatus': 'available' if files else 'unavailable',
-            'testResult': summary, 'schemeExclusions': exclusions, 'files': files,
+            'testResult': summary, 'expectedTestCount': expected_tests,
+            'testExecution': execution_status(summary, expected_tests),
+            'schemeExclusions': exclusions, 'files': files,
             'functionsNeedingTests': gaps, 'sourceFilesNotMeasured': sorted(inventory - measured)}
 
 
@@ -81,10 +107,14 @@ def markdown(report):
         lines += [f"Test result: **{cell(result.get('result', 'Unknown'))}**; "
                   f"{result.get('passedTests', '?')} passed, {result.get('failedTests', '?')} failed, "
                   f"{result.get('skippedTests', '?')} skipped.", '']
-        if result.get('result') != 'Passed':
-            lines += ['Coverage is partial because this suite did not pass. Fix failing/unrun tests before treating these gaps as missing assertions.', '']
+    execution = report['testExecution']
+    if execution['status'] == 'partial':
+        lines += ['Coverage is partial because the complete selected suite did not pass without skips. '
+                  'Fix failing/skipped/unrun tests before treating these gaps as missing assertions.', '']
+    elif execution['status'] == 'unverified':
+        lines += [f"{cell(execution['reason'])} Test execution is unverified.", '']
     else:
-        lines += ['No test result was produced. Test execution is unverified.', '']
+        lines += [execution['reason'], '']
     lines += ['Each job reports its own measurements. Percentages from separate jobs must not be added or averaged. '
               'Line coverage does not prove branch coverage or assertion quality.', '']
     if report['measurementStatus'] == 'unavailable':
@@ -102,8 +132,10 @@ def markdown(report):
         lines += ['']
     lines += [f"{len(report['sourceFilesNotMeasured'])} tracked production Swift files have no measurement in this job. "
               'They may be outside the selected target or absent from instrumentation; they are not counted as uncovered.', '']
-    lines += [f"Explicit scheme exclusions: {len(report['schemeExclusions'])}.", '']
-    for item in report['schemeExclusions']:
+    exclusions = report['schemeExclusions']
+    lines += [f"Explicit scheme exclusions: {len(exclusions)}." if exclusions is not None else
+              'Scheme exclusions unavailable: the selected scheme was not generated.', '']
+    for item in exclusions or []:
         lines.append(f"- {cell(item['target'])}/{cell(item['identifier'])}: {cell(item['reason'])}")
     lines += ['', 'The JSON artifact contains every measured file/function, every unmeasured source path, '
               'and all explicit exclusions for test planning.', '']
@@ -116,13 +148,19 @@ def main():
     parser.add_argument('--summary', type=Path, required=True)
     parser.add_argument('--root', type=Path, default=Path(__file__).resolve().parent.parent)
     parser.add_argument('--scheme', type=Path, required=True)
+    parser.add_argument('--kind', choices=['tests', 'legacy', 'ui'], required=True)
+    parser.add_argument('--shard', type=int, default=1)
+    parser.add_argument('--shard-count', type=int, default=1)
     parser.add_argument('--label', required=True)
     parser.add_argument('--json', type=Path, required=True)
     args = parser.parse_args()
     coverage = json.loads(args.coverage.read_text()) if args.coverage.is_file() and args.coverage.stat().st_size else None
     summary = json.loads(args.summary.read_text()) if args.summary.is_file() and args.summary.stat().st_size else None
     sources = subprocess.check_output(['git', 'ls-files', '-z', '--', '*.swift'], cwd=args.root).decode().split('\0')
-    report = build_report(coverage, summary, args.root, [p for p in sources if p], scheme_exclusions(args.scheme), args.label)
+    exclusions = scheme_exclusions(args.scheme) if args.scheme.is_file() else None
+    expected = expected_test_count(args.kind, args.root, args.scheme, args.shard, args.shard_count)
+    report = build_report(coverage, summary, args.root, [p for p in sources if p], exclusions, args.label, expected)
+    report['scheme'] = str(args.scheme)
     args.json.write_text(json.dumps(report, indent=2) + '\n')
     print(markdown(report))
 

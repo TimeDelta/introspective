@@ -21,8 +21,8 @@ class CoverageReport(unittest.TestCase):
                                     'executableLines': 6, 'executionCount': 0}]}
         self.coverage = {'targets': [{'name': 'App.app', 'files': [self.file]}]}
 
-    def report(self, coverage=None, summary=None):
-        return module.build_report(coverage, summary, self.root, self.sources, [], 'native')
+    def report(self, coverage=None, summary=None, expected=1, exclusions=None):
+        return module.build_report(coverage, summary, self.root, self.sources, exclusions, 'native', expected)
 
     def test_unmeasured_sources_are_distinct_from_measured_uncovered_lines(self):
         report = self.report(self.coverage)
@@ -53,6 +53,27 @@ class CoverageReport(unittest.TestCase):
         self.assertIn('Coverage is partial', text)
         self.assertIn('87 passed, 1 failed, 0 skipped', text)
         self.assertIn('must not be added or averaged', text)
+
+    def test_passed_but_skipped_or_incomplete_run_does_not_claim_complete_coverage(self):
+        summary = {'result': 'Passed', 'passedTests': 1, 'totalTestCount': 1,
+                   'failedTests': 0, 'skippedTests': 0, 'expectedFailures': 0}
+        for changes, expected in [({'skippedTests': 1}, 1), ({'expectedFailures': 1}, 1),
+                                  ({'totalTestCount': 2}, 1), ({}, 2)]:
+            with self.subTest(changes=changes, expected=expected):
+                report = self.report(self.coverage, dict(summary, **changes), expected=expected)
+                self.assertEqual(report['testExecution']['status'], 'partial')
+                self.assertIn('Coverage is partial', module.markdown(report))
+        report = self.report(self.coverage, summary)
+        self.assertEqual(report['testExecution']['status'], 'complete')
+        self.assertIn('All 1 selected tests passed', module.markdown(report))
+
+    def test_missing_scheme_and_missing_inventory_are_explicitly_unverified(self):
+        report = self.report(self.coverage, {'result': 'Passed'}, expected=None)
+        self.assertEqual(report['testExecution']['status'], 'unverified')
+        text = module.markdown(report)
+        self.assertIn('Test execution is unverified', text)
+        self.assertIn('Scheme exclusions unavailable', text)
+        self.assertNotIn('Explicit scheme exclusions: 0', text)
 
     def test_scheme_exclusions_include_disabled_targets_and_individual_cases(self):
         scheme = self.root / 'CI.xcscheme'

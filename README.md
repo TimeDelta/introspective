@@ -183,6 +183,23 @@ functional tests cover detailed state combinations and storyboard/control wiring
 in process, alongside the complete UI suite. CI checks every UI scenario runs,
 rejects skips, and publishes full-suite timings for comparison.
 
+### Using coverage to plan tests
+
+Each native, legacy, and UI job publishes `coverage.md` in its GitHub Actions
+summary and `coverage-priorities.json` in its diagnostics artifact. The report
+ranks production files and functions by uncovered executable lines, includes
+source locations, and records the selected scheme's exclusions. Use it to choose
+behavioral regressions for missing branches and edge cases; executing a line does
+not demonstrate that its result was checked.
+
+Treat failed, skipped, or incomplete suites as partial measurements. Sources
+without instrumentation are listed separately from measured uncovered code.
+Reports from different jobs or UI shards describe their own executions; do not
+add or average their percentages. The JSON retains every entry beyond the short
+ranked lists in the summary. Linux can validate the reporting helpers with
+`python3 -m unittest discover -s scripts/tests -v`; actual coverage comes from Mac
+CI running the application and test targets.
+
 
 ### Test Pre-requisites
 Any time you need to run a FunctionalTest class that requires Health App integration on a new simulator, you will first need to:
