@@ -77,7 +77,7 @@ final class QueryScreenUITests: UITest {
 		setPicker("restricted attribute", to: "Timestamp", changeCase: false)
 		setPicker("attribute restriction", to: "After date", changeCase: false)
 		app.buttons["set date button"].tap()
-		skipInstructionsIfPresent()
+		skipInstructionsIfPresent(.date)
 		app.datePickers.pickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: "June")
 		app.datePickers.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "18")
 		app.datePickers.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "2012")

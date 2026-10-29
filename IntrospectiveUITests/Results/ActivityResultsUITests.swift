@@ -49,7 +49,7 @@ final class ActivityResultsUITests: UITest {
 	private final func runAllActivitiesQuery() {
 		app.tabBars.buttons["Explore"].tap()
 		app.collectionViews.staticTexts["Query"].tap()
-		skipInstructionsIfPresent()
+		skipInstructionsIfPresent(.query)
 		app.tables.cells.allElementsBoundByIndex[0].tap()
 		setPicker(to: "Activity")
 		app.buttons["save button"].tap()
