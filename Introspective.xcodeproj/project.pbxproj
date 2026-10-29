@@ -593,6 +593,7 @@
 		FF7B0979EA803DB500EB326566BD18B9 /* GreaterThanOrEqualToFrequencyAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D3AFC24DD7F06244A4014E823775E36 /* GreaterThanOrEqualToFrequencyAttributeRestrictionUnitTests.swift */; };
 		FF89D114869814445AE1A9FE91402BAB /* ChooseSampleTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C0748CFAA17C63833134DA662F307D /* ChooseSampleTypeViewController.swift */; };
 		FFF10B1E718D9F9082E962362B8C3EB4 /* Pods_IntrospectiveTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2763BD3734CEB18405B1CE4963F5E012 /* Pods_IntrospectiveTests.framework */; };
+		E4CB765DBC9B06EEB5543889 /* MetricContextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6792693A1FE285C81BD89E2B /* MetricContextViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1240,6 +1241,8 @@
 		FF8C7CE5B285255CEE4CD6ADF783BA8B /* TextViewMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewMatchers.swift; sourceTree = "<group>"; };
 		FF95B526BDD3B050C960D09F8EDA298A /* TestDataGenerationTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDataGenerationTableViewController.swift; sourceTree = "<group>"; };
 		FFD646AFB07A1852F3B1602AB3F5619B /* SingleSampleTypeXYGraphDataGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleSampleTypeXYGraphDataGenerator.swift; sourceTree = "<group>"; };
+		6792693A1FE285C81BD89E2B /* MetricContextViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MetricContextViewController.swift; sourceTree = "<group>"; };
+		A919C83E0139BB9E3DAF8008 /* MetricContext.xcdatamodel */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.xcdatamodel; path = MetricContext.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2600,6 +2603,7 @@
 				F8C8B5B1816552481720221C /* ActivityLevelsViewController.swift */,
 				28FABD70E72A7B0CD487637A /* TimeCoverageViewController.swift */,
 				648D525A4938C080CB18481960154140 /* Timeline */,
+				6792693A1FE285C81BD89E2B /* MetricContextViewController.swift */,
 			);
 			path = Explore;
 			sourceTree = "<group>";
@@ -4107,6 +4111,7 @@
 				229D2710ECBF664F1F80F75E /* UITestFixtures.swift in Sources */,
 				509C4960D63C05762C12CA8A /* UITestFixtureLoader.swift in Sources */,
 				5C7FDD912B7223A26CBEAA74 /* ResultsProcessing.swift in Sources */,
+				E4CB765DBC9B06EEB5543889 /* MetricContextViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4601,8 +4606,9 @@
 				CAFE00000000000000000004 /* LostItems.xcdatamodel */,
 				CAFE00000000000000000001 /* HealthMood.xcdatamodel */,
 				6ABD42B5BE3FEFE618570A03FC26467C /* Introspective.xcdatamodel */,
+				A919C83E0139BB9E3DAF8008 /* MetricContext.xcdatamodel */,
 			);
-			currentVersion = CAFE00000000000000000004 /* LostItems.xcdatamodel */;
+			currentVersion = A919C83E0139BB9E3DAF8008 /* MetricContext.xcdatamodel */;
 			path = Introspective.xcdatamodeld;
 			sourceTree = "<group>";
 		};

@@ -1844,6 +1844,107 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertEqual(try injected(Database.self).count(MoodImpl.self), 0)
 	}
 
+	func testMetricContextPersistsAndCanBeSavedAndQueriedByNotes() throws {
+		let start = Date(timeIntervalSince1970: 1_700_000_023.5)
+		try MetricContextEntry.record(category: .device, metric: .steps, at: start, until: start.addingTimeInterval(600), note: "Watch charging")
+		try reopen()
+		let entry = try XCTUnwrap(injected(Database.self).query(MetricContextEntry.fetchRequest()).first)
+		XCTAssertEqual(entry.timestamp, start); XCTAssertEqual(entry.endDate, start.addingTimeInterval(600))
+		XCTAssertEqual(entry.category, ContextCategory.device.rawValue); XCTAssertEqual(entry.metric, .steps)
+		let factory = injected(SampleFactory.self)
+		XCTAssertEqual(factory.sampleTypeId(for: MetricContextEntry.self), 18)
+		XCTAssertTrue(try factory.sampleType(for: 18) == MetricContextEntry.self)
+		let query = try injected(QueryFactory.self).queryFor(MetricContextEntry.self)
+		query.expression = ContainsStringAttributeRestriction(restrictedAttribute: MetricContextEntry.noteAttribute, substring: "charging")
+		try dao.save(query, name: "Wearable context")
+		let restored = try XCTUnwrap(dao.getQueryWith(name: "Wearable context")).convert()
+		var completed = false
+		restored.runQuery { (result: QueryResult?, error: Error?) in
+			XCTAssertNil(error); XCTAssertEqual(result?.samples.count, 1); completed = true
+		}
+		XCTAssertTrue(completed)
+		XCTAssertThrowsError(try MetricContextEntry.record(category: .other, metric: .all, at: start, until: start.addingTimeInterval(-1)))
+		XCTAssertThrowsError(try entry.set(attribute: MetricContextEntry.metricAttribute, to: "unknown"))
+		XCTAssertTrue(entry.matchesSearchString("CHARGING"))
+		XCTAssertEqual(try injected(Database.self).count(MetricContextEntry.fetchRequest()), 1)
+	}
+
+	func testMetricContextFiltersPointAndOverlappingIntervalsAtExactBoundaries() throws {
+		let start = Date(timeIntervalSince1970: 1_700_000_000)
+		let interval = DateInterval(start: start, duration: 100)
+		try MetricContextEntry.record(category: .illness, metric: .all, at: start, note: "Included point")
+		try MetricContextEntry.record(category: .device, metric: .steps, at: start.addingTimeInterval(-10), until: start.addingTimeInterval(1), note: "Included overlap")
+		try MetricContextEntry.record(category: .travel, metric: .workouts, at: start.addingTimeInterval(1))
+		try MetricContextEntry.record(category: .other, metric: .all, at: interval.end)
+		try MetricContextEntry.record(category: .other, metric: .all, at: start.addingTimeInterval(-10), until: start)
+		try MetricContextEntry.record(category: .other, metric: .all, at: start.addingTimeInterval(-1))
+		let database = injected(Database.self)
+		let selected = try database.query(MetricContextEntry.request(metric: .steps, interval: interval))
+		XCTAssertEqual(Set(selected.compactMap { $0.note }), Set(["Included point", "Included overlap"]))
+		XCTAssertEqual(try database.count(MetricContextEntry.request(metric: .all, interval: interval)), 3)
+		XCTAssertEqual(try database.count(MetricContextEntry.request(metric: .workouts, interval: interval)), 2)
+		XCTAssertEqual(try database.count(MetricContextEntry.request()), 6)
+		XCTAssertEqual(try database.count(MetricContextEntry.request(interval: DateInterval(start: start, duration: 0))), 0)
+	}
+
+	func testMetricContextCSVPreservesPreciseInstantsRangeAndQuotedNotes() throws {
+		let start = Date(timeIntervalSince1970: 1_700_000_023.5)
+		let entry = try MetricContextEntry.record(category: .device, metric: .steps, at: start, until: start.addingTimeInterval(60), note: "Watch, \"charging\"\nthen worn")
+		let stream = OutputStream.toMemory()
+		let csv = try CSVWriter(stream: stream, delimiter: ",", newline: .lf)
+		try MetricContextEntry.exportHeaderRow(to: csv); csv.beginNewRow(); try entry.export(to: csv)
+		let data = try XCTUnwrap(stream.property(forKey: .dataWrittenToMemoryStreamKey) as? Data)
+		XCTAssertEqual(String(data: data, encoding: .utf8), "\"Timestamp\",\"End\",\"Context\",\"Metric\",\"Note\"\n\"2023-11-14T22:13:43.500Z\",\"2023-11-14T22:14:43.500Z\",\"Device not worn\",\"steps\",\"Watch, \"\"charging\"\"\nthen worn\"")
+	}
+
+	func testMetricContextModelMigrationPreservesMoodsSavedQueriesAndLostItems() throws {
+		let modelURL = try XCTUnwrap(Self.bundle.url(forResource: "Introspective", withExtension: "momd"))
+		let oldModel = try XCTUnwrap(NSManagedObjectModel(contentsOf: modelURL.appendingPathComponent("LostItems.mom")))
+		let url = directory.appendingPathComponent("context-migration.sqlite")
+		let old = try open(oldModel, at: url)
+		let mood = NSEntityDescription.insertNewObject(forEntityName: "Mood", into: old.viewContext)
+		mood.setValue(Date(), forKey: "timestamp"); mood.setValue(4.0, forKey: "rating")
+		let query = NSEntityDescription.insertNewObject(forEntityName: "Query", into: old.viewContext)
+		query.setValue("Existing query", forKey: "name"); query.setValue(8, forKey: "sampleTypeId")
+		let event = NSEntityDescription.insertNewObject(forEntityName: "LostItemEvent", into: old.viewContext)
+		event.setValue(Date(), forKey: "timestamp"); event.setValue(-1, forKey: "delta"); event.setValue("Keys", forKey: "note")
+		try old.viewContext.save(); old.viewContext.reset()
+		for store in old.persistentStoreCoordinator.persistentStores { try old.persistentStoreCoordinator.remove(store) }
+		let migrated = try open(Self.model, at: url)
+		XCTAssertEqual(try migrated.viewContext.fetch(MoodImpl.fetchRequest()).first?.rating, 4)
+		XCTAssertEqual(try migrated.viewContext.fetch(StoredQuery.fetchRequest()).first?.name, "Existing query")
+		XCTAssertEqual(try migrated.viewContext.fetch(LostItemEvent.fetchRequest()).first?.delta, -1)
+		XCTAssertEqual(try migrated.viewContext.count(for: MetricContextEntry.fetchRequest()), 0)
+		migrated.viewContext.reset()
+		for store in migrated.persistentStoreCoordinator.persistentStores { try migrated.persistentStoreCoordinator.remove(store) }
+	}
+
+	@MainActor
+	func testMetricContextManualDateEditsClearSecondsAndFractions() throws {
+		let editor = MetricContextEditor(metric: .steps)
+		editor.loadViewIfNeeded()
+		let start = Date(timeIntervalSince1970: 1_700_000_023.5)
+		editor.startPicker.date = start; editor.startChanged()
+		editor.endPicker.date = start.addingTimeInterval(600); editor.includeEnd.isOn = true
+		editor.toggleEnd(); editor.endChanged(); editor.save()
+		let stored = try XCTUnwrap(injected(Database.self).query(MetricContextEntry.fetchRequest()).first)
+		XCTAssertEqual(stored.timestamp.timeIntervalSince1970, floor(start.timeIntervalSince1970 / 60) * 60)
+		XCTAssertEqual(stored.endDate?.timeIntervalSince1970, floor(start.addingTimeInterval(600).timeIntervalSince1970 / 60) * 60)
+	}
+
+	@MainActor
+	func testMetricContextNowKeepsFullPrecision() throws {
+		let editor = MetricContextEditor(metric: .all)
+		editor.loadViewIfNeeded()
+		editor.startPicker.date = Date(timeIntervalSince1970: 0); editor.startChanged()
+		let before = Date(); editor.now(); let after = Date()
+		editor.save()
+		let stored = try XCTUnwrap(injected(Database.self).query(MetricContextEntry.fetchRequest()).first)
+		XCTAssertGreaterThanOrEqual(stored.timestamp, before)
+		XCTAssertLessThanOrEqual(stored.timestamp, after)
+	}
+
+
 }
 
 private final class TransferProgressProbe: NSObject, Importer, Exporter {

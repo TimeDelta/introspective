@@ -2,6 +2,8 @@ import UIKit
 import HealthKit
 import Common
 import Samples
+import DependencyInjection
+import Persistence
 
 /// Descriptive Health measurements, not an inferred attention or rest score.
 final class ActivityLevelsViewController: UITableViewController {
@@ -11,6 +13,8 @@ final class ActivityLevelsViewController: UITableViewController {
 	private var generation = UUID()
 	private var values = ["—", "—", "—"]
 	private var status = ""
+	private var contextCounts: [Int?] = [nil, nil, nil]
+	private let metrics: [ContextMetric] = [.activeEnergy, .steps, .workouts]
 	private let formatter: NumberFormatter = {
 		let value = NumberFormatter()
 		value.numberStyle = .decimal
@@ -21,6 +25,7 @@ final class ActivityLevelsViewController: UITableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		title = "Activity Levels"
+		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Context", style: .plain, target: self, action: #selector(showAllContext))
 		period.selectedSegmentIndex = 0
 		period.frame = CGRect(x: 16, y: 8, width: view.bounds.width - 32, height: 36)
 		let header = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 52))
@@ -38,10 +43,19 @@ final class ActivityLevelsViewController: UITableViewController {
 		for query in queries { store.stop(query) }
 		queries.removeAll()
 	}
+	private func selectedInterval() -> DateInterval {
+		DateInterval(start: MoodReviewSummary.dateInterval(forLastDays: [1, 7, 30][period.selectedSegmentIndex]).start, end: Date())
+	}
+	@objc private func showAllContext() { showContext(.all) }
+	private func showContext(_ metric: ContextMetric) {
+		navigationController?.pushViewController(MetricContextViewController(metric: metric, interval: selectedInterval()), animated: true)
+	}
 	@objc private func load() {
 		cancelQueries()
 		let token = generation
 		values = ["Loading…", "Loading…", "Loading…"]; status = ""
+		let contextInterval = selectedInterval()
+		contextCounts = metrics.map { try? injected(Database.self).count(MetricContextEntry.request(metric: $0, interval: contextInterval)) }
 		tableView.reloadData()
 		guard HKHealthStore.isHealthDataAvailable() else { values = ["Unavailable", "Unavailable", "Unavailable"]; tableView.reloadData(); return }
 		let types: Set<HKObjectType> = [ActiveEnergy.sampleType, Steps.sampleType, Workout.sampleType]
@@ -79,15 +93,21 @@ final class ActivityLevelsViewController: UITableViewController {
 		}
 		queries.append(query); store.execute(query)
 	}
-	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 3 }
+	override func numberOfSections(in tableView: UITableView) -> Int { metrics.count }
+	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 1 }
 	override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-		"Active energy and steps use Health's cumulative statistics. Workouts count records started in the selected period. Missing data may mean no records or denied read access. Phone motion is not collected. These measurements describe recorded activity; device placement, exercise type, and daily circumstances affect them. They are not an ADHD or restfulness score." + (status.isEmpty ? "" : " " + status)
+		metrics[section].limitations + " Missing Health data may mean no records or denied access. Tap to review or add dated context." + (status.isEmpty ? "" : " " + status)
 	}
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "activity-level") ?? UITableViewCell(style: .subtitle, reuseIdentifier: "activity-level")
-		cell.selectionStyle = .none
-		cell.textLabel?.text = ["Active Energy", "Steps", "Workouts"][indexPath.row]
-		cell.detailTextLabel?.text = values[indexPath.row]
+		let index = indexPath.section
+		cell.textLabel?.text = metrics[index].title
+		cell.detailTextLabel?.text = values[index] + " · " + (contextCounts[index].map { "\($0) context entries" } ?? "Context unavailable")
+		cell.detailTextLabel?.numberOfLines = 0; cell.accessoryType = .disclosureIndicator
 		return cell
+	}
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		tableView.deselectRow(at: indexPath, animated: false)
+		showContext(metrics[indexPath.section])
 	}
 }

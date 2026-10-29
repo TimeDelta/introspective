@@ -50,6 +50,7 @@ public final class SampleFactoryImpl: SampleFactory {
 		ActiveEnergy.self,
 		Workout.self,
 		LostItemEvent.self,
+		MetricContextEntry.self,
 	]
 	private static let healthKitTypes: [HealthKitSample.Type] = [
 		BloodPressure.self,
@@ -86,6 +87,7 @@ public final class SampleFactoryImpl: SampleFactory {
 		case activeEnergy = 15
 		case workout = 16
 		case lostItem = 17
+		case metricContext = 18
 
 		/// Ordered by enum value
 		static fileprivate var sampleTypes: [Sample.Type] = [
@@ -107,6 +109,7 @@ public final class SampleFactoryImpl: SampleFactory {
 			ActiveEnergy.self,
 			Workout.self,
 			LostItemEvent.self,
+			MetricContextEntry.self,
 		]
 	}
 

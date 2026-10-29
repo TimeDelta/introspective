@@ -277,6 +277,11 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				) as! StepsTableViewCell)
 				cell.steps = (sample as! Steps)
 				return cell
+			case let context as MetricContextEntry:
+				let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
+				cell.textLabel?.text = context.category + " · " + context.metric.title + " · " + (context.note ?? "")
+				cell.detailTextLabel?.text = injected(CalendarUtil.self).string(for: context.timestamp, dateStyle: .medium, timeStyle: .short)
+				return cell
 			case let event as LostItemEvent:
 				let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
 				cell.textLabel?.text = event.description + " · " + (event.note ?? "")
