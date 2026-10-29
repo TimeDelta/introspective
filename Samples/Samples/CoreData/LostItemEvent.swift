@@ -39,9 +39,17 @@ public final class LostItemEvent: NSManagedObject, CoreDataSample, SearchableSam
 		throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 	}
 	public static let exportFileDescription = "Lost item events"
+	private static var exportTimestampFormatter: ISO8601DateFormatter {
+		let key = "Introspective.LostItemEvent.exportTimestampFormatter"
+		if let formatter = Thread.current.threadDictionary[key] as? ISO8601DateFormatter { return formatter }
+		let formatter = ISO8601DateFormatter()
+		formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+		Thread.current.threadDictionary[key] = formatter
+		return formatter
+	}
 	public static func exportHeaderRow(to csv: CSVWriter) throws { try csv.write(row: ["Timestamp", "Change", "Note"], quotedAtIndex: { _ in true }) }
 	public func export(to csv: CSVWriter) throws {
-		let formatter = ISO8601DateFormatter(); formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+		let formatter = Self.exportTimestampFormatter
 		for field in [formatter.string(from: timestamp), String(delta), note ?? ""] { try csv.write(field: field, quoted: true) }
 	}
 
