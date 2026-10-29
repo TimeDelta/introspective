@@ -139,7 +139,7 @@ public final class CalendarUtilImpl: CalendarUtil {
 
 	public final func date(_ date: Date, isOnA dayOfWeek: DayOfWeek) -> Bool {
 		let calendar = Calendar.current
-		let dayOfWeekIntForDate = calendar.component(.weekday, from: date)
+		let dayOfWeekIntForDate = calendar.component(.weekday, from: date) - 1
 		let dayOfWeekForDate = DayOfWeek.fromInt(dayOfWeekIntForDate)
 		return dayOfWeekForDate == dayOfWeek
 	}
