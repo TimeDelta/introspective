@@ -1,4 +1,6 @@
 from pathlib import Path
+import os
+import select
 import subprocess
 import sys
 import tempfile
@@ -8,6 +10,34 @@ RUNNER = Path(__file__).resolve().parents[1] / 'run-ci-command.sh'
 
 
 class TestCommandCapture(unittest.TestCase):
+    def test_progress_arrives_before_exit_and_preserves_failure_and_full_log(self):
+        with tempfile.TemporaryDirectory() as directory:
+            log = Path(directory) / 'tests.log'
+            release = Path(directory) / 'release'
+            progress = "Test case 'Example.testOne()' passed on 'Clone 1 of iPhone' (1.000 seconds)"
+            program = '''import pathlib, sys, time
+print('verbose diagnostic retained in artifact', flush=True)
+print(sys.argv[2], flush=True)
+deadline = time.monotonic() + 5
+while not pathlib.Path(sys.argv[1]).exists() and time.monotonic() < deadline:
+    time.sleep(0.01)
+sys.exit(23)
+'''
+            with subprocess.Popen([str(RUNNER), str(log), sys.executable, '-c', program,
+                                   str(release), progress], env=dict(os.environ, CI_TEST_PROGRESS='1'),
+                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as process:
+                try:
+                    ready, _, _ = select.select([process.stdout], [], [], 3)
+                    self.assertTrue(ready, 'Progress was buffered until command exit')
+                    self.assertEqual(process.stdout.readline().strip(), progress)
+                    self.assertIsNone(process.poll())
+                finally:
+                    release.touch()
+                    _, errors = process.communicate(timeout=3)
+                self.assertEqual(process.returncode, 23)
+                self.assertIn('verbose diagnostic retained in artifact', log.read_text())
+                self.assertIn('verbose diagnostic retained in artifact', errors)
+
     def test_full_log_is_preserved_and_console_output_is_bounded(self):
         with tempfile.TemporaryDirectory() as directory:
             log = Path(directory) / 'build.log'
