@@ -198,6 +198,9 @@ jobs:
             -destination "platform=iOS Simulator,id=$CI_SIMULATOR_ID"
             -derivedDataPath "$CI_DERIVED_DATA"
             -resultBundlePath "$GITHUB_WORKSPACE/ci-output/UIPreflight.xcresult")
+          test_command+=(-test-timeouts-enabled YES
+            -default-test-execution-time-allowance 300
+            -maximum-test-execution-time-allowance 300)
           test -s ci-output/ui-preflight-tests.txt
           while IFS= read -r test_case; do
             test_command+=("-only-testing:$test_case")
@@ -210,6 +213,19 @@ jobs:
           CI_TEST_PROGRESS=1 ./scripts/run-ci-command.sh ci-output/ui-preflight.log "${test_command[@]}"
           xcrun xcresulttool get test-results summary --path ci-output/UIPreflight.xcresult > ci-output/ui-preflight-summary.json
           python3 scripts/verify-ui-test-results.py ci-output/ui-preflight-summary.json --shard "$CI_UI_SHARD" --count "$CI_UI_SHARD_COUNT" --preflight
+
+      - name: Restart UI simulator after smoke checks
+        if: matrix.kind == 'ui'
+        shell: bash
+        run: |
+          set -euo pipefail
+          # End the previous XCTest automation session before the full suite.
+          # A stuck accessibility/event-loop service can otherwise hang app.launch().
+          xcrun simctl shutdown all > ci-output/simulator-restart.log 2>&1
+          if [ "$CI_UI_WORKERS" = 1 ]; then
+            xcrun simctl boot "$CI_SIMULATOR_ID" >> ci-output/simulator-restart.log 2>&1
+            xcrun simctl bootstatus "$CI_SIMULATOR_ID" -b >> ci-output/simulator-restart.log 2>&1
+          fi
 
       - name: Run selected test suite without rebuilding
         if: matrix.kind != 'release' && matrix.kind != 'mocks'
@@ -227,6 +243,9 @@ jobs:
             -derivedDataPath "$CI_DERIVED_DATA"
             -resultBundlePath "$GITHUB_WORKSPACE/ci-output/MoodTests.xcresult")
           if [ "$CI_BUILD_KIND" = ui ]; then
+            test_command+=(-test-timeouts-enabled YES
+              -default-test-execution-time-allowance 300
+              -maximum-test-execution-time-allowance 300)
             test -s ci-output/ui-test-classes.txt
             while IFS= read -r test_class; do
               test_command+=("-only-testing:$test_class")
