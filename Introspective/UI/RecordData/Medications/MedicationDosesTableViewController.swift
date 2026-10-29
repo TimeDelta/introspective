@@ -36,7 +36,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 	private static let dateFilterPresenter: Presentr = {
 		let customType = PresentationType.custom(
 			width: .default,
-			height: .custom(size: 300),
+			height: .custom(size: DateRangeViewControllerImpl.preferredHeight),
 			center: .center
 		)
 		let customPresenter = Presentr(presentationType: customType)

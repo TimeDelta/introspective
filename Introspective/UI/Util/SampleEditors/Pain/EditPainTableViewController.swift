@@ -42,7 +42,7 @@ public final class EditPainTableViewControllerImpl: UITableViewController, EditP
 
 	private static let datePresenter = injected(UiUtil.self).customPresenter(
 		width: .full,
-		height: .fluid(percentage: 0.4),
+		height: .custom(size: SelectDateViewControllerImpl.preferredHeight),
 		center: .bottomCenter
 	)
 
