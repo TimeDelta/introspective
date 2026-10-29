@@ -77,10 +77,12 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		controller.tableView.layoutIfNeeded()
 		XCTAssertEqual(controller.tableView.numberOfRows(inSection: 1), 4)
 		controller.setSearchText("match")
+		controller.updateSearchResults(for: UISearchController())
 		controller.tableView.layoutIfNeeded()
 		XCTAssertEqual(controller.tableView.numberOfRows(inSection: 1), 3)
 		controller.tableView(controller.tableView, moveRowAt: inactiveCellIndex(0), to: inactiveCellIndex(2))
 		controller.setSearchText("")
+		controller.updateSearchResults(for: UISearchController())
 		controller.tableView.layoutIfNeeded()
 		XCTAssertEqual(controller.tableView.numberOfRows(inSection: 1), 4)
 		let names = (0..<4).map { row -> String? in
@@ -483,6 +485,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 
 	private final func filterDefinitions(by filterString: String) {
 		controller.setSearchText(filterString)
+		controller.updateSearchResults(for: UISearchController())
 	}
 
 	private final func inactiveCellIndex(_ i: Int) -> IndexPath {
