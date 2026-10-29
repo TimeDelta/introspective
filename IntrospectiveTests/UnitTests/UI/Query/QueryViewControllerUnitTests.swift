@@ -61,6 +61,36 @@ final class QueryViewControllerUnitTests: UnitTest {
 		controller.toolbar = toolbar
 	}
 
+	func testSavedActiveEnergyQueryRestoresItsTypeAndRecentOnlySetting() throws {
+		try assertRestoresRegisteredSampleType(ActiveEnergy.self)
+	}
+
+	func testSavedWorkoutQueryRestoresItsTypeAndRecentOnlySetting() throws {
+		try assertRestoresRegisteredSampleType(Workout.self)
+	}
+
+	func testSavedLostItemQueryRestoresItsTypeAndRecentOnlySetting() throws {
+		try assertRestoresRegisteredSampleType(LostItemEvent.self)
+	}
+
+	func testSavedMetricContextQueryRestoresItsTypeAndRecentOnlySetting() throws {
+		try assertRestoresRegisteredSampleType(MetricContextEntry.self)
+	}
+
+	private func assertRestoresRegisteredSampleType(_ sampleType: Sample.Type) throws {
+		let factory = QueryFactoryImpl()
+		Given(injectionProvider, .get(.value(QueryFactory.self), willReturn: factory))
+		let query = try factory.queryFor(sampleType)
+		query.mostRecentEntryOnly = true
+		controller.initialQuery = query
+		controller.viewDidLoad()
+		XCTAssertEqual(controller.queries.count, 1)
+		let restored = try XCTUnwrap(controller.queries.first?.sampleTypeInfo)
+		XCTAssertTrue(restored.sampleType == sampleType)
+		XCTAssertTrue(restored.mostRecentEntryOnly)
+		XCTAssertTrue(controller.finishedButton.isEnabled)
+	}
+
 	// MARK: - viewDidLoad()
 
 	func testGivenInitialQuery_viewDidLoad_properlyPopulatesQueryParts() throws {

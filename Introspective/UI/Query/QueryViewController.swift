@@ -687,7 +687,14 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		case is SleepQuery: addQuerySampleType(Sleep.self, matcher); break
 		case is StepsQuery: addQuerySampleType(Steps.self, matcher); break
 		case is WeightQuery: addQuerySampleType(Weight.self, matcher); break
-		default: Me.log.error("Forgot query type: %@", String(describing: type(of: query)))
+		default:
+			do {
+				let type = try injected(QueryFactory.self).sampleTypeFor(query)
+				addQuerySampleType(type, matcher)
+			} catch {
+				Me.log.error("Could not restore query type: %@", errorInfo(error))
+				return
+			}
 		}
 		queries[queries.count - 1].sampleTypeInfo.mostRecentEntryOnly = query.mostRecentEntryOnly
 		if let expression = query.expression {
