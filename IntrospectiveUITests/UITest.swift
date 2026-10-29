@@ -290,6 +290,11 @@ class UITest: XCTestCase {
 	@discardableResult
 	final func deleteContentOf(textField: XCUIElement) -> Bool {
 		textField.tap()
+		let clearButton = textField.buttons["Clear text"].firstMatch
+		if clearButton.exists && clearButton.isHittable {
+			clearButton.tap()
+			return true
+		}
 		textField.press(forDuration: 1)
 		// UIKit's newer edit menu exposes actions as buttons instead of menu items.
 		let menuItem = app.menuItems["Select All"]

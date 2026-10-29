@@ -34,6 +34,11 @@ public final class ContinuousMoodRatingTableViewCell: UITableViewCell {
 		didSet { updateUI() }
 	}
 
+	public override func awakeFromNib() {
+		super.awakeFromNib()
+		ratingTextField.clearButtonMode = .whileEditing
+	}
+
 	// MARK: - Actions
 
 	@IBAction final func sliderValueChanged(_: Any) {
