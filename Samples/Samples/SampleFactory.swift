@@ -47,6 +47,8 @@ public final class SampleFactoryImpl: SampleFactory {
 		Sleep.self,
 		Steps.self,
 		Weight.self,
+		ActiveEnergy.self,
+		Workout.self,
 	]
 	private static let healthKitTypes: [HealthKitSample.Type] = [
 		BloodPressure.self,
@@ -59,6 +61,8 @@ public final class SampleFactoryImpl: SampleFactory {
 		Sleep.self,
 		Steps.self,
 		Weight.self,
+		ActiveEnergy.self,
+		Workout.self,
 	]
 
 	/// IMPORTANT: Only add unique values to the end of this list otherwise saved queries will be messed up.
@@ -78,6 +82,8 @@ public final class SampleFactoryImpl: SampleFactory {
 		case sleep = 12
 		case weight = 13
 		case steps = 14
+		case activeEnergy = 15
+		case workout = 16
 
 		/// Ordered by enum value
 		static fileprivate var sampleTypes: [Sample.Type] = [
@@ -96,6 +102,8 @@ public final class SampleFactoryImpl: SampleFactory {
 			Sleep.self,
 			Weight.self,
 			Steps.self,
+			ActiveEnergy.self,
+			Workout.self,
 		]
 	}
 

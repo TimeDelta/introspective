@@ -1169,6 +1169,42 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertEqual(TimeCoverageSummary(interval: window, recordedIntervals: []).unaccounted, 23 * 3600)
 	}
 
+	func testActiveEnergyConvertsJoulesAndExposesDuration() throws {
+		let start = Date(timeIntervalSince1970: 1_700_000_000)
+		let sample = HKQuantitySample(type: ActiveEnergy.quantityType, quantity: HKQuantity(unit: .joule(), doubleValue: 4184), start: start, end: start.addingTimeInterval(60))
+		let energy = ActiveEnergy(sample)
+		XCTAssertEqual(energy.quantityValue(), 1, accuracy: 0.00001)
+		XCTAssertEqual((try energy.value(of: ActiveEnergy.durationAttribute) as? TimeDuration)?.inUnit(.second), 60)
+		XCTAssertTrue(ActiveEnergy.writePermissions.isEmpty)
+	}
+
+	func testWorkoutPreservesIdentityMetricsAndSearchableType() throws {
+		let start = Date(timeIntervalSince1970: 1_700_000_000)
+		let raw = HKWorkout(activityType: .running, start: start, end: start.addingTimeInterval(120), duration: 90,
+			totalEnergyBurned: HKQuantity(unit: .kilocalorie(), doubleValue: 20), totalDistance: HKQuantity(unit: .meter(), doubleValue: 400), metadata: nil)
+		let workout = Workout(raw)
+		XCTAssertEqual(workout.hkSample().uuid, raw.uuid)
+		XCTAssertEqual((try workout.value(of: Workout.durationAttribute) as? TimeDuration)?.inUnit(.second), 90)
+		XCTAssertEqual(try workout.value(of: Workout.energy) as? Double, 20)
+		XCTAssertEqual(try workout.value(of: Workout.distance) as? Double, 400)
+		XCTAssertTrue(workout.matchesSearchString("RUNNING"))
+		XCTAssertThrowsError(try workout.set(attribute: Workout.kind, to: "Walking"))
+	}
+
+	func testAdditionalHealthQueriesPreserveStableIDsAndSavedRestrictions() throws {
+		let factory = injected(SampleFactory.self)
+		XCTAssertEqual(factory.sampleTypeId(for: Steps.self), 14)
+		XCTAssertEqual(factory.sampleTypeId(for: ActiveEnergy.self), 15)
+		XCTAssertEqual(factory.sampleTypeId(for: Workout.self), 16)
+		for type: Sample.Type in [ActiveEnergy.self, Workout.self] {
+			let query = try injected(QueryFactory.self).queryFor(type)
+			try dao.save(query, name: type.name)
+		}
+		try reopen()
+		XCTAssertTrue(try XCTUnwrap(dao.getQueryWith(name: "Active Energy")).convert() is ActiveEnergyQueryImpl)
+		XCTAssertTrue(try XCTUnwrap(dao.getQueryWith(name: "Workout")).convert() is WorkoutQueryImpl)
+	}
+
 }
 
 private final class TransferProgressProbe: NSObject, Importer, Exporter {
