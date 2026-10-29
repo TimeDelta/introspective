@@ -92,6 +92,7 @@ final class MoodSettingsUITests: UITest {
 		createMoods([Mood(5)])
 		runQueryForAll("Mood")
 		app.tables.cells.staticTexts["mood"].firstMatch.tap()
+		app.tables.staticTexts["Note"].firstMatch.tap() // dismiss the note keyboard before switching tabs
 		app.tabBars.buttons["Settings"].tap()
 		let minMood = minMoodField().value as! String
 		app.switches["use integers only switch"].tap()
@@ -128,6 +129,7 @@ final class MoodSettingsUITests: UITest {
 		createMoods([Mood(5)])
 		runQueryForAll("Mood")
 		app.tables.cells.staticTexts["mood"].firstMatch.tap()
+		app.tables.staticTexts["Note"].firstMatch.tap() // dismiss the note keyboard before switching tabs
 		app.tabBars.buttons["Settings"].tap()
 		app.staticTexts["Mood"].tap()
 		app.switches["use integers only switch"].tap()

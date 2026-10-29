@@ -27,12 +27,19 @@ class UITest: XCTestCase {
 
 	final func skipInstructionsIfPresent() {
 		let skipInstructionsButton = app.buttons["skip instructions"]
-		if skipInstructionsButton.waitForExistence(timeout: 1) {
+		if waitForElement(skipInstructionsButton, timeout: 1) {
 			skipInstructionsButton.tap()
 		}
 	}
 
 	// MARK: - Generic UI Helpers
+
+	@discardableResult
+	final func waitForElement(_ element: XCUIElement, timeout: TimeInterval = 5) -> Bool {
+		// XCTest polls after a delay even when the control is already on screen.
+		// Keep the full wait available for controls that are still loading.
+		return element.exists || element.waitForExistence(timeout: timeout)
+	}
 
 	final func tapCoordinate(x: Double, y: Double) {
 		let normalized = app.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0))
@@ -89,7 +96,7 @@ class UITest: XCTestCase {
 		skipInstructionsIfPresent()
 		let picker = queryString.map { app.datePickers[$0] } ?? app.datePickers.firstMatch
 		let datePickerWheels = picker.pickerWheels
-		guard datePickerWheels.firstMatch.waitForExistence(timeout: 5) else {
+		guard waitForElement(datePickerWheels.firstMatch) else {
 			XCTFail("Date picker wheels did not appear")
 			return
 		}
@@ -153,7 +160,7 @@ class UITest: XCTestCase {
 	// MARK: - Text Field Helpers
 
 	final func setTextFor(field: XCUIElement, to text: String? = nil) {
-		guard field.waitForExistence(timeout: 5) else {
+		guard waitForElement(field) else {
 			XCTFail("Text input did not appear: \(field)")
 			return
 		}
@@ -173,9 +180,13 @@ class UITest: XCTestCase {
 		// UIKit's newer edit menu exposes actions as buttons instead of menu items.
 		let menuItem = app.menuItems["Select All"]
 		let button = app.buttons["Select All"]
-		if menuItem.waitForExistence(timeout: 1) {
+		if menuItem.exists {
 			menuItem.tap()
-		} else if button.waitForExistence(timeout: 1) {
+		} else if button.exists {
+			button.tap()
+		} else if waitForElement(menuItem, timeout: 1) {
+			menuItem.tap()
+		} else if waitForElement(button, timeout: 1) {
 			button.tap()
 		} else {
 			XCTFail("Select All did not appear for \(textField)")

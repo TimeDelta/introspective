@@ -304,7 +304,7 @@ final class RecordMedicationsUITests: UITest {
 		filterMedications(by: filterString)
 
 		// when
-		medicationCell(medication1).press(forDuration: 0.5, thenDragTo: medicationCell(medication4))
+		reorderMedication(medication1, to: medication4)
 		app.buttons["Cancel"].tap()
 
 		// then
@@ -327,7 +327,7 @@ final class RecordMedicationsUITests: UITest {
 		filterMedications(by: filterString)
 
 		// when
-		medicationCell(medication3).press(forDuration: 0.5, thenDragTo: medicationCell(medication1))
+		reorderMedication(medication3, to: medication1)
 		app.buttons["Cancel"].tap()
 
 		// then
@@ -346,7 +346,7 @@ final class RecordMedicationsUITests: UITest {
 		createMedication(medication3)
 
 		// when - re-order
-		medicationCell(medication1).press(forDuration: 0.5, thenDragTo: medicationCell(medication2))
+		reorderMedication(medication1, to: medication2)
 
 		// then - correct order before
 		XCTAssertLessThanOrEqual(medicationCell(medication2).frame.maxY, medicationCell(medication1).frame.minY)
@@ -371,7 +371,7 @@ final class RecordMedicationsUITests: UITest {
 		createMedication(medication3)
 
 		// when - re-order
-		medicationCell(medication3).press(forDuration: 0.5, thenDragTo: medicationCell(medication2))
+		reorderMedication(medication3, to: medication2)
 
 		// then - correct order before
 		XCTAssertLessThanOrEqual(medicationCell(medication1).frame.maxY, medicationCell(medication3).frame.minY)
@@ -538,6 +538,17 @@ final class RecordMedicationsUITests: UITest {
 		dateFormatter.timeStyle = .short
 		dosageDescription += dateFormatter.string(from: date)
 		return dosageDescription
+	}
+
+	private final func reorderMedication(_ source: Medication, to destination: Medication) {
+		app.buttons["⇅"].tap()
+		app.buttons["Edit Default Sort Order"].tap()
+		let handle = app.tables.cells.containing(.staticText, identifier: source.name).buttons
+			.matching(NSPredicate(format: "label BEGINSWITH %@", "Reorder")).firstMatch
+		XCTAssertTrue(waitForElement(handle), "The medication reorder handle did not appear")
+		handle.press(forDuration: 0.5, thenDragTo: medicationCell(destination))
+		app.buttons["⇅"].tap()
+		app.buttons["Done Editing Default Sort Order"].tap()
 	}
 
 	private final func medicationCell(_ medication: Medication) -> XCUIElement {
