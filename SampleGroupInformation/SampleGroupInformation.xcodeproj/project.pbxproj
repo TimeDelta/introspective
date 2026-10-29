@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5E248A603BE3328275B23EC0 /* EstimatedDatesInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 573FAA45FB663F84DE126950 /* EstimatedDatesInformation.swift */; };
 		A29700CA2344F95F004B97E6 /* SampleGroupInformation.h in Headers */ = {isa = PBXBuildFile; fileRef = A29700C82344F95F004B97E6 /* SampleGroupInformation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A29700DF2344F9AD004B97E6 /* SampleGroupInformationFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29700D02344F9AC004B97E6 /* SampleGroupInformationFactory.swift */; };
 		A29700E02344F9AD004B97E6 /* MostRecentDateInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29700D22344F9AC004B97E6 /* MostRecentDateInformation.swift */; };
@@ -29,6 +30,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		573FAA45FB663F84DE126950 /* EstimatedDatesInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EstimatedDatesInformation.swift; sourceTree = "<group>"; };
 		1A144C6E22EE9F9915F69847 /* Pods_SampleGroupInformation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SampleGroupInformation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EB6ABD77A658D47811FA19F /* Pods-SampleGroupInformation.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SampleGroupInformation.release.xcconfig"; path = "../Pods/Target Support Files/Pods-SampleGroupInformation/Pods-SampleGroupInformation.release.xcconfig"; sourceTree = "<group>"; };
 		A29700C52344F95F004B97E6 /* SampleGroupInformation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SampleGroupInformation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -117,6 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				A29700D22344F9AC004B97E6 /* MostRecentDateInformation.swift */,
+				573FAA45FB663F84DE126950 /* EstimatedDatesInformation.swift */,
 				A29700D32344F9AC004B97E6 /* OldestDateInformation.swift */,
 			);
 			path = DateAttributes;
@@ -271,6 +274,7 @@
 				A29700EB2344FB57004B97E6 /* SampleGroupInformationInjectionProvider.swift in Sources */,
 				A29700E92344F9AD004B97E6 /* SumInformation.swift in Sources */,
 				A29700E02344F9AD004B97E6 /* MostRecentDateInformation.swift in Sources */,
+				5E248A603BE3328275B23EC0 /* EstimatedDatesInformation.swift in Sources */,
 				A29700E52344F9AD004B97E6 /* MaximumInformation.swift in Sources */,
 				A29700E12344F9AD004B97E6 /* OldestDateInformation.swift in Sources */,
 				A29700E62344F9AD004B97E6 /* MinimumInformation.swift in Sources */,
