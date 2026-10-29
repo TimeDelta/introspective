@@ -341,7 +341,9 @@ class UITest: XCTestCase {
 	}
 
 	final func createActivityDefinition(_ definition: ActivityDefinition, goToRecordActivitiesScreen: Bool = true) {
-		if goToRecordActivitiesScreen {
+		// Creating another definition already returns here. Avoid popping to the
+		// Record menu and reopening the same screen for every fixture record.
+		if goToRecordActivitiesScreen && !app.navigationBars["Activities"].exists {
 			app.tabBars.buttons["Record"].tap()
 			app.tables.cells.staticTexts["Activities"].tap()
 		}
