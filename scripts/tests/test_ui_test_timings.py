@@ -26,3 +26,18 @@ Test case 'OtherUITests.testSecond()' passed on 'Clone 2 of iPhone' (10.000 seco
         self.assertEqual(data['recordedCases'], 0)
         self.assertIsNone(data['wallSeconds'])
         self.assertIn('unavailable', REPORTER['markdown'](data))
+
+    def test_launch_and_optional_wait_timings_include_all_recorded_attempts(self):
+        log = "CI_UI_LAUNCH_SECONDS 2.5\nCI_UI_LAUNCH_SECONDS 3.5\nCI_UI_LAUNCH_SECONDS 1e-4\nCI_UI_INSTRUCTION_WAIT_SECONDS 1.1\n"
+        data = REPORTER['report'](log, {}, 1)
+        self.assertEqual(data['launchAttempts'], 3)
+        self.assertAlmostEqual(data['launchSeconds'], 6.0001)
+        self.assertAlmostEqual(data['instructionWaitSeconds'], 1.1)
+        self.assertIn('App launch calls: 6.0s across 3 attempts', REPORTER['markdown'](data))
+        self.assertIsNone(data['wallSeconds'])
+
+    def test_old_logs_without_markers_do_not_claim_zero_launch_or_wait_cost(self):
+        data = REPORTER['report']("Test Case '-[ExampleUITests testFirst]' passed (10.000 seconds).", {}, 1)
+        self.assertIsNone(data['launchSeconds'])
+        self.assertIsNone(data['instructionWaitSeconds'])
+        self.assertNotIn('App launch calls:', REPORTER['markdown'](data))

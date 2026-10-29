@@ -218,6 +218,35 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertEqual(try container.viewContext.count(for: Activity.fetchRequest()), 1)
 	}
 
+	func testUIStoreResetBeforeOpeningKeepsFreshRealSQLitePersistence() throws {
+		_ = try mood(3)
+		let url = try XCTUnwrap(container.persistentStoreDescriptions.first?.url)
+		let unrelated = directory.appendingPathComponent("unrelated.txt")
+		try Data("Keep this file".utf8).write(to: unrelated)
+		container.viewContext.reset()
+		for store in container.persistentStoreCoordinator.persistentStores {
+			try container.persistentStoreCoordinator.remove(store)
+		}
+		let replacement = NSPersistentContainer(name: "SavedQueryTests", managedObjectModel: Self.model)
+		let description = NSPersistentStoreDescription(url: url)
+		description.shouldAddStoreAsynchronously = false
+		replacement.persistentStoreDescriptions = [description]
+		try DatabaseImpl.resetPersistentStores(in: replacement)
+		// A fresh installation and a second reset both have no existing store file.
+		try DatabaseImpl.resetPersistentStores(in: replacement)
+		XCTAssertEqual(try Data(contentsOf: unrelated), Data("Keep this file".utf8))
+		var failure: Error?
+		replacement.loadPersistentStores { _, error in failure = error }
+		if let error = failure { throw error }
+		container = replacement
+		try registerStore()
+		XCTAssertEqual(try container.viewContext.count(for: MoodImpl.fetchRequest()), 0)
+		XCTAssertEqual(container.persistentStoreCoordinator.persistentStores.first?.type, NSSQLiteStoreType)
+		_ = try mood(7)
+		try reopen()
+		XCTAssertEqual(try container.viewContext.fetch(MoodImpl.fetchRequest()).map { $0.rating }, [7])
+	}
+
 	private func reopen() throws {
 		let url = try XCTUnwrap(container.persistentStoreDescriptions.first?.url)
 		container.viewContext.reset()
@@ -1445,6 +1474,36 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertEqual(try migrated.viewContext.count(for: LostItemEvent.fetchRequest()), 0)
 		migrated.viewContext.reset()
 		for store in migrated.persistentStoreCoordinator.persistentStores { try migrated.persistentStoreCoordinator.remove(store) }
+	}
+
+	func testOnDeviceQueryPlanCompilesRatingAndLiteralNotes() throws {
+		let record = try mood(5)
+		record.note = "worked on a project"
+		let plan = try OnDeviceQueryPlan(dataType: "mood", minimumRating: 4, maximumRating: 6, noteContains: "project", mostRecentOnly: true).resolve()
+		XCTAssertTrue(plan.sampleType == MoodImpl.self)
+		XCTAssertTrue(plan.mostRecentOnly)
+		XCTAssertTrue(try XCTUnwrap(plan.expression).evaluate([.sample: record]))
+		record.rating = 2
+		XCTAssertFalse(try XCTUnwrap(plan.expression).evaluate([.sample: record]))
+	}
+
+	func testOnDeviceQueryPlanRejectsUnsupportedAndInvalidConditions() throws {
+		XCTAssertThrowsError(try OnDeviceQueryPlan(dataType: "arbitrary SQL").resolve())
+		XCTAssertThrowsError(try OnDeviceQueryPlan(dataType: "workout", minimumRating: 4).resolve())
+		XCTAssertThrowsError(try OnDeviceQueryPlan(dataType: "mood", minimumDurationMinutes: 5).resolve())
+		XCTAssertThrowsError(try OnDeviceQueryPlan(dataType: "mood", minimumEnergyKcal: 50).resolve())
+		XCTAssertThrowsError(try OnDeviceQueryPlan(dataType: "mood", days: 0).resolve())
+		XCTAssertThrowsError(try OnDeviceQueryPlan(dataType: "mood", minimumRating: .nan).resolve())
+		XCTAssertThrowsError(try OnDeviceQueryPlan(dataType: "mood", minimumRating: 5, maximumRating: 1).resolve())
+	}
+
+	func testOnDeviceQueryPlanSupportsDurationsAndEnergyWithoutRunning() throws {
+		let energy = ActiveEnergy(50)
+		let resolved = try OnDeviceQueryPlan(dataType: "activeEnergy", minimumEnergyKcal: 100).resolve()
+		XCTAssertFalse(try XCTUnwrap(resolved.expression).evaluate([.sample: energy]))
+		let duration = try OnDeviceQueryPlan(dataType: "workout", days: 7, minimumDurationMinutes: 30).resolve()
+		XCTAssertTrue(try XCTUnwrap(duration.expression).isValid())
+		XCTAssertEqual(try injected(Database.self).count(MoodImpl.self), 0)
 	}
 
 }

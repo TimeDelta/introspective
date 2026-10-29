@@ -30,9 +30,11 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 
 	private static let log = Log()
 
+	public static let preferredHeight: CGFloat = 360
+
 	public static let presenter = injected(UiUtil.self).customPresenter(
 		width: .custom(size: 350),
-		height: .custom(size: 225),
+		height: .custom(size: Float(preferredHeight)),
 		center: .bottomCenter
 	)
 
@@ -40,6 +42,7 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 
 	@IBOutlet final var datePicker: UIDatePicker!
 	@IBOutlet final var toolbar: UIToolbar!
+	@IBOutlet final var saveButton: UIButton!
 
 	// MARK: - Instance Variables
 
@@ -140,6 +143,7 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 			UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
 			UIBarButtonItem(title: nowButtonTitle, style: .plain, target: self, action: #selector(nowButtonPressed)),
 		], animated: false)
+		layoutDatePicker()
 	}
 
 	public final override func viewDidAppear(_ animated: Bool) {
@@ -152,6 +156,34 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 	public final override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		coachMarksController.stop(immediately: true)
+	}
+
+	private func layoutDatePicker() {
+		// The old fixed-frame storyboard disabled autoresizing translation without
+		// supplying constraints. Modern wheel pickers consequently collapsed to zero.
+		guard let parent = datePicker.superview, let save = saveButton,
+			toolbar.superview === parent, save.superview === parent else { return }
+		preferredContentSize = CGSize(width: 350, height: Me.preferredHeight)
+		let controls: [UIView] = [datePicker, toolbar, save]
+		NSLayoutConstraint.deactivate(parent.constraints.filter { constraint in
+			controls.contains { $0 === constraint.firstItem as? UIView || $0 === constraint.secondItem as? UIView }
+		})
+		for control in controls { control.translatesAutoresizingMaskIntoConstraints = false }
+		NSLayoutConstraint.activate([
+			toolbar.topAnchor.constraint(equalTo: parent.safeAreaLayoutGuide.topAnchor),
+			toolbar.leadingAnchor.constraint(equalTo: parent.leadingAnchor),
+			toolbar.trailingAnchor.constraint(equalTo: parent.trailingAnchor),
+			toolbar.heightAnchor.constraint(equalToConstant: 44),
+			datePicker.topAnchor.constraint(equalTo: toolbar.bottomAnchor),
+			datePicker.leadingAnchor.constraint(equalTo: parent.leadingAnchor),
+			datePicker.trailingAnchor.constraint(equalTo: parent.trailingAnchor),
+			datePicker.heightAnchor.constraint(equalToConstant: 216),
+			save.topAnchor.constraint(equalTo: datePicker.bottomAnchor, constant: 8),
+			save.leadingAnchor.constraint(equalTo: parent.leadingAnchor),
+			save.trailingAnchor.constraint(equalTo: parent.trailingAnchor),
+			save.heightAnchor.constraint(equalToConstant: 45),
+			save.bottomAnchor.constraint(lessThanOrEqualTo: parent.safeAreaLayoutGuide.bottomAnchor, constant: -8),
+		])
 	}
 
 	// MARK: - Actions

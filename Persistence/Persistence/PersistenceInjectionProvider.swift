@@ -36,11 +36,7 @@ public class PersistenceInjectionProvider: InjectionProvider {
 			return Me.codableStorage as! Type
 		case is Database.Protocol:
 			if Me.database == nil {
-				Me.database = DatabaseImpl(objectModel)
-				if Globals.uiTesting {
-					try! Me.database.deleteEverything()
-					Me.database = DatabaseImpl(objectModel)
-				}
+				Me.database = DatabaseImpl(objectModel, resetPersistentStores: Globals.uiTesting)
 			}
 			return Me.database as! Type
 		default:

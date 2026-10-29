@@ -28,8 +28,11 @@ final class ExploreCollectionViewController: UICollectionViewController {
 	final override func viewDidLoad() {
 		super.viewDidLoad()
 		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Time Coverage", style: .plain, target: self, action: #selector(showTimeCoverage))
+		navigationItem.rightBarButtonItems = [navigationItem.rightBarButtonItem!, UIBarButtonItem(title: "Activity Levels", style: .plain, target: self, action: #selector(showActivityLevels))]
 		observe(selector: #selector(showResultsScreen), name: .showResultsScreen)
 	}
+
+	@objc private func showActivityLevels() { pushToNavigationController(ActivityLevelsViewController(style: .grouped)) }
 
 	@objc private func showTimeCoverage() {
 		pushToNavigationController(TimeCoverageViewController(style: .grouped))

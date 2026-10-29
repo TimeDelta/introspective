@@ -67,6 +67,31 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		assertThat(activity, equivalentDoesNotExistInDatabase())
 	}
 
+	func testFilteringReorderingAndClearingSearchKeepVisibleRowsConsistent() throws {
+		_ = ActivityDataTestUtil.createActivityDefinition(name: "match one", recordScreenIndex: 0)
+		_ = ActivityDataTestUtil.createActivityDefinition(name: "other", recordScreenIndex: 1)
+		_ = ActivityDataTestUtil.createActivityDefinition(name: "match two", recordScreenIndex: 2)
+		_ = ActivityDataTestUtil.createActivityDefinition(name: "match three", recordScreenIndex: 3)
+		controller.loadViewIfNeeded()
+		controller.tableView.frame = CGRect(x: 0, y: 0, width: 375, height: 700)
+		controller.tableView.layoutIfNeeded()
+		XCTAssertEqual(controller.tableView.numberOfRows(inSection: 1), 4)
+		controller.setSearchText("match")
+		controller.updateSearchResults(for: UISearchController())
+		controller.tableView.layoutIfNeeded()
+		XCTAssertEqual(controller.tableView.numberOfRows(inSection: 1), 3)
+		controller.tableView(controller.tableView, moveRowAt: inactiveCellIndex(0), to: inactiveCellIndex(2))
+		controller.setSearchText("")
+		controller.updateSearchResults(for: UISearchController())
+		controller.tableView.layoutIfNeeded()
+		XCTAssertEqual(controller.tableView.numberOfRows(inSection: 1), 4)
+		let names = (0..<4).map { row -> String? in
+			let cell = controller.tableView(controller.tableView, cellForRowAt: inactiveCellIndex(row)) as! RecordActivityDefinitionTableViewCell
+			return cell.activityDefinition?.name
+		}
+		XCTAssertEqual(names, ["other", "match two", "match three", "match one"])
+	}
+
 	// MARK: - Reordering
 
 	// MARK: Without running activities
@@ -460,6 +485,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 
 	private final func filterDefinitions(by filterString: String) {
 		controller.setSearchText(filterString)
+		controller.updateSearchResults(for: UISearchController())
 	}
 
 	private final func inactiveCellIndex(_ i: Int) -> IndexPath {

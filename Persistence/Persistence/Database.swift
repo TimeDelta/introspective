@@ -74,31 +74,54 @@ internal class DatabaseImpl: Database {
 		persistentContainer = container
 	}
 
+	// Keep this designated initializer available to FunctionalTestDatabase.
 	public init(_ objectModel: NSManagedObjectModel) {
-		persistentContainer = {
-			let container = SharedPersistentContainer(name: "Introspective", managedObjectModel: objectModel)
-			container.loadPersistentStores(completionHandler: { _, error in
-				if let error = error {
-					/*
-					 Typical reasons for an error here include:
-					 * The parent directory does not exist, cannot be created, or disallows writing.
-					 * The persistent store is not accessible, due to permissions or data protection when the device is locked.
-					 * The device is out of space.
-					 * The store could not be migrated to the current model version.
-					 Check the error message to determine what the actual problem was.
-					 */
-					Log().fault("Unresolved error while loading persistent stores: %@", errorInfo(error))
-					NotificationBanner(
-						title: "Failed to load saved data",
-						subtitle: "App functionality will be limited.",
-						style: .danger
-					).show()
-				}
-			})
-			container.viewContext.automaticallyMergesChangesFromParent = true
-			container.viewContext.retainsRegisteredObjects = false
-			return container
-		}()
+		persistentContainer = Me.makePersistentContainer(objectModel, resetPersistentStores: false)
+	}
+
+	public init(_ objectModel: NSManagedObjectModel, resetPersistentStores: Bool) {
+		persistentContainer = Me.makePersistentContainer(objectModel, resetPersistentStores: resetPersistentStores)
+	}
+
+	private static func makePersistentContainer(
+		_ objectModel: NSManagedObjectModel,
+		resetPersistentStores: Bool
+	) -> NSPersistentContainer {
+		let container = SharedPersistentContainer(name: "Introspective", managedObjectModel: objectModel)
+		if resetPersistentStores {
+			// UI tests need a clean real SQLite store. Clear it before opening so
+			// launch does not load an old store, destroy it, and load a second time.
+			try! Me.resetPersistentStores(in: container)
+		}
+		container.loadPersistentStores(completionHandler: { _, error in
+			if let error = error {
+				/*
+				 Typical reasons for an error here include:
+				 * The parent directory does not exist, cannot be created, or disallows writing.
+				 * The persistent store is not accessible, due to permissions or data protection when the device is locked.
+				 * The device is out of space.
+				 * The store could not be migrated to the current model version.
+				 Check the error message to determine what the actual problem was.
+				 */
+				Log().fault("Unresolved error while loading persistent stores: %@", errorInfo(error))
+				NotificationBanner(
+					title: "Failed to load saved data",
+					subtitle: "App functionality will be limited.",
+					style: .danger
+				).show()
+			}
+		})
+		container.viewContext.automaticallyMergesChangesFromParent = true
+		container.viewContext.retainsRegisteredObjects = false
+		return container
+	}
+
+	internal static func resetPersistentStores(in container: NSPersistentContainer) throws {
+		for description in container.persistentStoreDescriptions {
+			guard description.type == NSSQLiteStoreType, let url = description.url,
+				FileManager.default.fileExists(atPath: url.path) else { continue }
+			try container.persistentStoreCoordinator.destroyPersistentStore(at: url, ofType: description.type, options: nil)
+		}
 	}
 
 	// MARK: - Fetching

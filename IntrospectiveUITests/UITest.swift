@@ -20,14 +20,32 @@ class UITest: XCTestCase {
 		continueAfterFailure = false
 		app = XCUIApplication()
 		app.launchArguments.append("--ui-testing")
+		let launchStarted = ProcessInfo.processInfo.systemUptime
 		app.launch()
+		print("CI_UI_LAUNCH_SECONDS \(ProcessInfo.processInfo.systemUptime - launchStarted)")
 	}
 
 	// MARK: - Instructions Helpers
 
-	final func skipInstructionsIfPresent() {
+	enum InstructionScreen: Hashable {
+		case query, activities, medications, date
+	}
+
+	// The app persists tutorial completion across launch(), even though each case
+	// gets a fresh database. Check each context once even if a previous runner
+	// already dismissed it; workers use isolated app containers and runner processes.
+	private static var checkedInstructionScreens = Set<InstructionScreen>()
+
+	final func skipInstructionsIfPresent(_ screen: InstructionScreen) {
 		let skipInstructionsButton = app.buttons["skip instructions"]
-		if waitForElement(skipInstructionsButton, timeout: 1) {
+		var present = skipInstructionsButton.exists
+		if !present && !UITest.checkedInstructionScreens.contains(screen) {
+			let waitStarted = ProcessInfo.processInfo.systemUptime
+			present = skipInstructionsButton.waitForExistence(timeout: 1)
+			print("CI_UI_INSTRUCTION_WAIT_SECONDS \(ProcessInfo.processInfo.systemUptime - waitStarted)")
+		}
+		UITest.checkedInstructionScreens.insert(screen)
+		if present {
 			skipInstructionsButton.tap()
 		}
 	}
@@ -58,7 +76,7 @@ class UITest: XCTestCase {
 	final func goToQueryScreen() {
 		app.tabBars.buttons["Explore"].tap()
 		app.collectionViews.staticTexts["Query"].tap()
-		skipInstructionsIfPresent()
+		skipInstructionsIfPresent(.query)
 	}
 
 	final func goToTabIfNotSelected(_ tabName: String) {
@@ -93,7 +111,7 @@ class UITest: XCTestCase {
 	}
 
 	final func setDatePicker(_ queryString: String? = nil, to date: Date) {
-		skipInstructionsIfPresent()
+		skipInstructionsIfPresent(.date)
 		// UIKit exposes date-and-time wheels without a DatePicker ancestor on some
 		// simulator versions. Keep named range pickers scoped by identifier regardless
 		// of their accessibility element type; the single-picker editor needs no scope.
@@ -101,7 +119,10 @@ class UITest: XCTestCase {
 		if let identifier = queryString {
 			datePickerWheels = app.descendants(matching: .any).matching(identifier: identifier).firstMatch.pickerWheels
 		} else {
-			datePickerWheels = app.pickerWheels
+			let scopedWheels = app.datePickers.firstMatch.pickerWheels
+			// Attribute editors also contain ordinary wheels behind the date modal.
+			// Prefer the DatePicker scope whenever UIKit exposes it.
+			datePickerWheels = scopedWheels.firstMatch.exists ? scopedWheels : app.pickerWheels
 		}
 		guard waitForElement(datePickerWheels.firstMatch) else {
 			let hierarchy = XCTAttachment(string: app.debugDescription)
@@ -307,7 +328,7 @@ class UITest: XCTestCase {
 	final func createActivityDefinitions(_ definitions: [ActivityDefinition]) {
 		app.tabBars.buttons["Record"].tap()
 		app.tables.cells.staticTexts["Activities"].tap()
-		skipInstructionsIfPresent()
+		skipInstructionsIfPresent(.activities)
 		for definition in definitions {
 			createActivityDefinition(definition, goToRecordActivitiesScreen: false)
 		}
@@ -318,7 +339,7 @@ class UITest: XCTestCase {
 			app.tabBars.buttons["Record"].tap()
 			app.tables.cells.staticTexts["Activities"].tap()
 		}
-		skipInstructionsIfPresent()
+		skipInstructionsIfPresent(.activities)
 		app.navigationBars.buttons["+"].tap()
 		setTextFor(field: app.tables.textFields["activity name"], to: definition.name)
 		if let autoNote = definition.autoNote {
@@ -359,7 +380,7 @@ class UITest: XCTestCase {
 		if !app.navigationBars["Medications"].exists {
 			app.tables.cells.staticTexts["Medications"].tap()
 		}
-		skipInstructionsIfPresent()
+		skipInstructionsIfPresent(.medications)
 
 		app.buttons["+"].tap()
 
@@ -423,11 +444,17 @@ class UITest: XCTestCase {
 	}
 
 	final func addDataTypeToQuery(_ type: String? = nil) {
-		let indexToEdit = app.tables.cells.allElementsBoundByIndex.count
 		app.tables.buttons["Add"].tap()
 		app.sheets["What would you like to add?"].buttons["Data Type"].tap()
 		if let type = type {
-			app.tables.cells.element(boundBy: indexToEdit).tap()
+			// A just-inserted restriction can still be missing from the previous
+			// accessibility snapshot. Find the new sample row by its stable label.
+			let sampleRows = app.tables.cells.matching(identifier: "Data Type")
+			guard waitForElement(sampleRows.firstMatch) else {
+				XCTFail("New query data type row did not appear")
+				return
+			}
+			sampleRows.element(boundBy: sampleRows.count - 1).tap()
 			setPicker("data type", to: type, changeCase: false)
 			app.buttons["save data type button"].tap()
 		}

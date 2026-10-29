@@ -40,7 +40,7 @@ public final class EditFatigueTableViewControllerImpl: UITableViewController, Ed
 
 	private static let datePresenter = injected(UiUtil.self).customPresenter(
 		width: .full,
-		height: .fluid(percentage: 0.4),
+		height: .custom(size: Float(SelectDateViewControllerImpl.preferredHeight)),
 		center: .bottomCenter
 	)
 

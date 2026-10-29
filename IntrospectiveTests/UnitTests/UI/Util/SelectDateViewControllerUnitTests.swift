@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import Instructions
 import SwiftyMocky
 import Hamcrest
 import SwiftDate
@@ -47,6 +48,74 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 	}
 
 	// MARK: - viewDidLoad
+
+	func testQueryTutorialReleasesItsInitializedCallbacks() {
+		let owner = QueryViewControllerImpl()
+		weak var released: QueryViewControllerCoachMarksDataSourceAndDelegate?
+		autoreleasepool {
+			let tutorial = QueryViewControllerCoachMarksDataSourceAndDelegate(owner)
+			// Initialize both the metadata callbacks and the cleanup delegate.
+			XCTAssertEqual(tutorial.numberOfCoachMarks(for: CoachMarksController()), 6)
+			released = tutorial
+		}
+		XCTAssertNil(released)
+		XCTAssertFalse(owner.isViewLoaded)
+	}
+
+	func testActivityTutorialReleasesItsInitializedCallbacks() {
+		let owner = RecordActivityTableViewController()
+		weak var released: RecordActivityTableViewControllerCoachMarksDataSourceAndDelegate?
+		autoreleasepool {
+			let tutorial = RecordActivityTableViewControllerCoachMarksDataSourceAndDelegate(owner)
+			// Initialize both the metadata callbacks and the cleanup delegate.
+			XCTAssertEqual(tutorial.numberOfCoachMarks(for: CoachMarksController()), 12)
+			released = tutorial
+		}
+		XCTAssertNil(released)
+		XCTAssertFalse(owner.isViewLoaded)
+	}
+
+	func testMedicationTutorialReleasesItsInitializedCallbacks() {
+		let owner = RecordMedicationTableViewController()
+		weak var released: RecordMedicationTableViewControllerCoachMarksDataSourceAndDelegate?
+		autoreleasepool {
+			let tutorial = RecordMedicationTableViewControllerCoachMarksDataSourceAndDelegate(owner)
+			// Initialize both the metadata callbacks and the cleanup delegate.
+			XCTAssertEqual(tutorial.numberOfCoachMarks(for: CoachMarksController()), 5)
+			released = tutorial
+		}
+		XCTAssertNil(released)
+		XCTAssertFalse(owner.isViewLoaded)
+	}
+
+	func testRealDateEditorStoryboardLaysOutVisibleWheelAndSaveButton() {
+		let storyboard = UIStoryboard(name: "Util", bundle: nil)
+		let editor = storyboard.instantiateViewController(withIdentifier: "datePicker") as! SelectDateViewControllerImpl
+		editor.loadViewIfNeeded()
+		editor.view.frame = CGRect(x: 0, y: 0, width: 350, height: SelectDateViewControllerImpl.preferredHeight)
+		editor.view.layoutIfNeeded()
+		XCTAssertGreaterThanOrEqual(editor.datePicker.bounds.width, 320)
+		XCTAssertEqual(editor.datePicker.bounds.height, 216)
+		XCTAssertFalse(editor.datePicker.hasAmbiguousLayout)
+		XCTAssertGreaterThanOrEqual(editor.saveButton.frame.minY, editor.datePicker.frame.maxY)
+		XCTAssertLessThanOrEqual(editor.saveButton.frame.maxY, editor.view.bounds.height)
+	}
+
+	func testRealDateRangeStoryboardLaysOutBothWheelsAndSaveButton() {
+		let storyboard = UIStoryboard(name: "Util", bundle: nil)
+		let editor = storyboard.instantiateViewController(withIdentifier: "dateRangeChooser") as! DateRangeViewControllerImpl
+		editor.initialFromDate = Date(); editor.initialToDate = Date()
+		editor.loadViewIfNeeded()
+		editor.view.frame = CGRect(x: 0, y: 0, width: 375, height: DateRangeViewControllerImpl.preferredHeight)
+		editor.view.layoutIfNeeded()
+		for picker in [editor.fromDatePicker!, editor.toDatePicker!] {
+			XCTAssertGreaterThanOrEqual(picker.bounds.width, 320)
+			XCTAssertEqual(picker.bounds.height, 216)
+			XCTAssertFalse(picker.hasAmbiguousLayout)
+		}
+		XCTAssertEqual(editor.saveButton.bounds.height, 45)
+		XCTAssertLessThanOrEqual(editor.saveButton.frame.maxY, editor.view.bounds.height)
+	}
 
 	func testLoadedDateEditorIsReleasedAfterItsOwnerReleasesIt() {
 		weak var released: SelectDateViewControllerImpl?
