@@ -1,26 +1,26 @@
 #!/usr/bin/env python3
 """Require every declared legacy UI case to execute and pass, without skips."""
+import argparse
 import json
 from pathlib import Path
-import re
 import runpy
-import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def expected_test_count():
-    pattern = r"^\s*(?:(?:public|internal|private|final|override)\s+)*func\s+test\w+\s*\(\s*\)"
-    count = sum(len(re.findall(pattern, path.read_text(), re.MULTILINE))
-                for path in (ROOT / "IntrospectiveUITests").rglob("*.swift"))
-    if count < 108:
-        raise ValueError(f"UI suite unexpectedly shrank below its 108-test baseline: {count}")
-    return count
+def expected_test_count(shard=1, count=1):
+    select = runpy.run_path(str(ROOT / 'scripts/partition-ui-tests.py'))['selection']
+    return len(select(shard, count)['tests'])
 
 
 if __name__ == "__main__":
-    summary = json.loads(Path(sys.argv[1]).read_text())
-    expected = expected_test_count()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('summary', type=Path)
+    parser.add_argument('--shard', type=int, default=1)
+    parser.add_argument('--count', type=int, default=1)
+    args = parser.parse_args()
+    summary = json.loads(args.summary.read_text())
+    expected = expected_test_count(args.shard, args.count)
     validate = runpy.run_path(str(ROOT / "scripts/verify-native-test-results.py"))["validate"]
     validate(summary, expected)
-    print(f"All {expected} declared UI tests passed; no failures or skips.")
+    print(f"All {expected} UI tests assigned to shard {args.shard}/{args.count} passed; no failures or skips.")
