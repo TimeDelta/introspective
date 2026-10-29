@@ -844,7 +844,6 @@
                                             <state key="normal" title="x"/>
                                             <connections>
                                                 <action selector="clearButtonPressed:" destination="vQH-6v-H84" eventType="touchUpInside" id="BkA-LH-CD5"/>
-                                                <action selector="resetFrequencyButtonPressed:" destination="OjQ-bK-Yuz" eventType="touchUpInside" id="kCf-lX-tyZ"/>
                                             </connections>
                                         </button>
                                     </subviews>

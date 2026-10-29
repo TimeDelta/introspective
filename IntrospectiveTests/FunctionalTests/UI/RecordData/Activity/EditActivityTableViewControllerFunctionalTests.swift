@@ -202,6 +202,23 @@ class EditActivityTableViewControllerFunctionalTests: FunctionalTest {
 
 	// MARK: - endDateChanged()
 
+	func testStoryboardClearEndButtonClearsCellAndControllerWithoutMedicationActions() throws {
+		// Exercise the real storyboard/control/notification path in process.
+		Given(injectionProvider, .get(.value(UiUtil.self), willReturn: UiUtilImpl()))
+		controller.endDate = Date()
+		let cell = try XCTUnwrap(controller.tableView(tableView, cellForRowAt: Class.endIndex) as? ActivityEndDateTableViewCellImpl)
+		let actions = cell.clearButton.allTargets.flatMap {
+			cell.clearButton.actions(forTarget: $0.base, forControlEvent: .touchUpInside) ?? []
+		}
+		XCTAssertEqual(actions, ["clearButtonPressed:"])
+		let changed = expectation(forNotification: Class.endDateChanged, object: cell)
+		cell.clearButton.sendActions(for: .touchUpInside)
+		wait(for: [changed], timeout: 2)
+		XCTAssertNil(cell.endDate)
+		XCTAssertNil(controller.endDate)
+		XCTAssertTrue(cell.clearButton.isHidden)
+	}
+
 	func testGivenNewEndDate_endDateChanged_updatesEndDate() {
 		// given
 		let originalDate = Date()

@@ -84,6 +84,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
+		tableView.accessibilityIdentifier = "recordActivities"
 
 		let addButton = barButton(
 			title: "+",
