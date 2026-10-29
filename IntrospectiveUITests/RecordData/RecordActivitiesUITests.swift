@@ -126,20 +126,33 @@ final class RecordActivitiesUITests: UITest {
 		// given
 		let definition = ActivityDefinition(name: "grnejioqu")
 		createActivityDefinition(definition)
+		let earliestStart = Date()
 		app.tables.staticTexts[definition.name].tap()
-		let startDate = Date()
+		let latestStart = Date()
 		sleep(1)
 
 		// when
+		let earliestEnd = Date()
 		app.tables.staticTexts[definition.name].tap()
-		let endDate = Date()
+		let latestEnd = Date()
 
-		// then
-		sleep(1)
+		// then: automation itself takes time, so bracket the actual tap events.
 		XCTAssertEqual(app.activityIndicators.allElementsBoundByIndex.count, 0)
-		XCTAssert(app.tables.cells.staticTexts[startToEndTimeLabelText(from: startDate, to: endDate)].exists)
-		XCTAssertEqual(app.tables.cells.staticTexts["total duration for today"].value as? String, "0:00:01")
-		XCTAssertEqual(app.tables.cells.staticTexts["most recent duration"].value as? String, "0:00:01")
+		let displayedTimes = app.tables.cells.staticTexts["last start / end time"].value as? String
+		let starts = wholeSecondDates(from: earliestStart, to: latestStart)
+		let ends = wholeSecondDates(from: earliestEnd, to: latestEnd)
+		XCTAssertTrue(starts.contains { start in ends.contains { end in
+			startToEndTimeLabelText(from: start, to: end) == displayedTimes
+		} }, "Recorded start/end times must fall within the start/stop tap events")
+		let total = app.tables.cells.staticTexts["total duration for today"].value as? String
+		let recent = app.tables.cells.staticTexts["most recent duration"].value as? String
+		XCTAssertEqual(total, recent)
+		let minimumSeconds = Int(earliestEnd.timeIntervalSince(latestStart))
+		let maximumSeconds = Int(latestEnd.timeIntervalSince(earliestStart))
+		let possibleDurations = (minimumSeconds...maximumSeconds).map {
+			String(format: "%d:%02d:%02d", $0 / 3600, ($0 / 60) % 60, $0 % 60)
+		}
+		XCTAssertTrue(possibleDurations.contains(total ?? ""), "Duration must match the measured start/stop interval")
 	}
 
 	func testChangingActivityDefinitionWhileEditingLastActivity_updatesUI() {
@@ -697,6 +710,12 @@ final class RecordActivitiesUITests: UITest {
 	}
 
 	// MARK: - Helper Functions
+
+	private final func wholeSecondDates(from start: Date, to end: Date) -> [Date] {
+		return (Int(floor(start.timeIntervalSince1970))...Int(floor(end.timeIntervalSince1970))).map {
+			Date(timeIntervalSince1970: TimeInterval($0))
+		}
+	}
 
 	private final func filterActivities(by searchText: String) {
 		let searchActivitiesField = app.searchFields["Search Activities"]
