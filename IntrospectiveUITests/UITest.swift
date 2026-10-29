@@ -110,9 +110,7 @@ class UITest: XCTestCase {
 			let monthAndDayText = String(dateStrings[.month]!.prefix(3)) + " " + dateStrings[.day]!
 			var hourText = dateStrings[.hour]!
 			let hour = Int(hourText)!
-			if hour > 12 {
-				hourText = String(hour - 12)
-			}
+			hourText = String(hour % 12 == 0 ? 12 : hour % 12)
 			datePickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: monthAndDayText)
 			datePickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: hourText)
 			datePickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: dateStrings[.minute]!)
