@@ -20,13 +20,13 @@ CLASS_SECONDS = {
     'ActivitySettingsUITests': 60,
     'GeneralResultsUITests': 18,
 }
-# Run the paths responsible for recent repeated failures before the long suite.
-# These are additional checks: the passing gate still runs every discovered case.
+# Check fixture bootstrap, actual UI creation, date editing, and reordering before
+# the long suite. These are additional checks; the gate still runs every case.
 PREFLIGHT_TESTS = {
     'RecordActivitiesUITests': [
         'testChangingStartDateOnEditActivityScreen_updatesUI',
         'testReorderToHigherSpotWhileFiltering_correcltyReordersDefinitions',
-        'testReorderToLowerSpotWhileFiltering_correcltyReordersDefinitions',
+        'testCreatingActivityDefinition_showsNameAndDescriptionInActivityListAfterSave',
     ],
     'RecordMedicationsUITests': [
         'testClearingStartedOnDateOnNewMedicationScreen_updatesStartedOnButtonTitle',
