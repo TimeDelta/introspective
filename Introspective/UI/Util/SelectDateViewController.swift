@@ -34,7 +34,7 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 
 	public static let presenter = injected(UiUtil.self).customPresenter(
 		width: .custom(size: 350),
-		height: .custom(size: preferredHeight),
+		height: .custom(size: Float(preferredHeight)),
 		center: .bottomCenter
 	)
 

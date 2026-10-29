@@ -49,7 +49,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 	)
 	private static let datePresenter: Presentr = injected(UiUtil.self).customPresenter(
 		width: .full,
-		height: .custom(size: SelectDateViewControllerImpl.preferredHeight),
+		height: .custom(size: Float(SelectDateViewControllerImpl.preferredHeight)),
 		center: .bottomCenter
 	)
 
