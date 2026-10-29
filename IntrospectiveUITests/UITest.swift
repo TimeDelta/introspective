@@ -290,6 +290,12 @@ class UITest: XCTestCase {
 	@discardableResult
 	final func deleteContentOf(textField: XCUIElement) -> Bool {
 		textField.tap()
+		// Some storyboard fields clear on focus. Check again after tapping: an
+		// empty field has neither a clear button nor a Select All menu action.
+		let currentText = textField.value as? String ?? ""
+		if currentText.isEmpty || currentText == textField.placeholderValue {
+			return true
+		}
 		let clearButton = textField.buttons["Clear text"].firstMatch
 		if clearButton.exists && clearButton.isHittable {
 			clearButton.tap()

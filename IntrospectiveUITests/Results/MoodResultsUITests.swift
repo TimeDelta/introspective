@@ -47,7 +47,8 @@ final class MoodResultsUITests: UITest {
 		app.tables.cells.staticTexts["Date"].tap()
 		setDatePicker(to: newTimestamp)
 		app.buttons["save button"].tap()
-		setTextFor(field: app.tables.cells.textFields["mood rating"], to: String(newRating))
+		// The editor formats integral ratings without a trailing decimal zero.
+		setTextFor(field: app.tables.cells.textFields["mood rating"], to: String(newRating), expectedValue: "6")
 		setTextFor(field: app.tables.cells.textViews["note"], to: newNote)
 		app.buttons["Save"].tap()
 
