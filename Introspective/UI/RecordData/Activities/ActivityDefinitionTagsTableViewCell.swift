@@ -86,8 +86,8 @@ public final class ActivityDefinitionTagsTableViewCell: UITableViewCell {
 	}
 
 	private final func sendTagsChangedNotification() {
-		DispatchQueue.main.async { [weak self] in
-			guard let self = self else { return }
+		// Retain the source only until this queued change is delivered.
+		DispatchQueue.main.async {
 			NotificationCenter.default.post(
 				name: self.notificationToSendOnChange,
 				object: self,
