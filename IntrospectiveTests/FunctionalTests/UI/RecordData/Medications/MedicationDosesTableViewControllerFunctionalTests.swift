@@ -43,6 +43,20 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 		controller.nextDateRangeButton = nextDateRangeButton
 	}
 
+	func testRealDoseEditorStoryboardHasVisibleDateWheelDosageAndSaveButton() {
+		let storyboard = UIStoryboard(name: "RecordData", bundle: nil)
+		let editor = storyboard.instantiateViewController(withIdentifier: "medicationDoseEditor") as! MedicationDoseEditorViewControllerImpl
+		editor.medication = MedicationDataTestUtil.createMedication(name: "Dose layout")
+		editor.loadViewIfNeeded()
+		editor.view.frame = CGRect(x: 0, y: 0, width: 350, height: MedicationDoseEditorViewControllerImpl.preferredHeight)
+		editor.view.layoutIfNeeded()
+		XCTAssertGreaterThanOrEqual(editor.datePicker.bounds.width, 320)
+		XCTAssertEqual(editor.datePicker.bounds.height, 216)
+		XCTAssertFalse(editor.datePicker.hasAmbiguousLayout)
+		XCTAssertEqual(editor.saveButton.bounds.height, 45)
+		XCTAssertLessThanOrEqual(editor.saveButton.convert(editor.saveButton.bounds, to: editor.view).maxY, editor.view.bounds.height)
+	}
+
 	// MARK: - viewDidLoad()
 
 	func test_viewDidLoad_setsNavigationItemTitleToMedicationName() {

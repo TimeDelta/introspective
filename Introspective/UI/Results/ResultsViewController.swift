@@ -45,7 +45,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	private static let sortPresenter: Presentr = injected(UiUtil.self)
 		.customPresenter(width: .custom(size: 300), height: .custom(size: 245), center: .center)
 	private static let setDosePresenter: Presentr = injected(UiUtil.self)
-		.customPresenter(width: .custom(size: 300), height: .custom(size: 250), center: .center)
+		.customPresenter(width: .custom(size: 350), height: .custom(size: Float(MedicationDoseEditorViewControllerImpl.preferredHeight)), center: .center)
 
 	// MARK: Logging
 

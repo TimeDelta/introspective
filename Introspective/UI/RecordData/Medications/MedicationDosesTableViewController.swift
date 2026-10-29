@@ -47,8 +47,8 @@ public final class MedicationDosesTableViewController: UITableViewController {
 
 	private static let medicationDosePresenter: Presentr = {
 		let customType = PresentationType.custom(
-			width: .custom(size: 300),
-			height: .custom(size: 250),
+			width: .custom(size: 350),
+			height: .custom(size: Float(MedicationDoseEditorViewControllerImpl.preferredHeight)),
 			center: .topCenter
 		)
 		let customPresenter = Presentr(presentationType: customType)

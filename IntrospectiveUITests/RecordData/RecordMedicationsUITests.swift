@@ -487,7 +487,10 @@ final class RecordMedicationsUITests: UITest {
 	// MARK: - Helper Functions
 
 	private final func takeDoseOf(_ medication: Medication, at date: Date, dosage: String? = nil) {
+		// Take records the default dose immediately. Edit that new dose to set
+		// the historical timestamp and dosage needed by the scenario.
 		app.buttons["take \(medication.name) button"].tap()
+		app.buttons["last \(medication.name) dose button"].tap()
 
 		setDatePicker(to: date)
 

@@ -26,6 +26,26 @@ final class ActivityDefinitionFunctionalTests: FunctionalTest {
 		definition = ActivityDataTestUtil.createActivityDefinition(name: Me.name, description: Me.description, tags: tags)
 	}
 
+	func testNameEditingPublishesTheFinalValueBeforeSaveCanRun() {
+		let cell = ActivityDefinitionNameTableViewCell(style: .default, reuseIdentifier: nil)
+		cell.nameLabel = UILabel(); cell.nameTextField = UITextField()
+		let changed = Notification.Name("NameEdited-" + UUID().uuidString)
+		let invalid = Notification.Name("NameInvalid-" + UUID().uuidString)
+		cell.notificationToSendOnNameChange = changed; cell.notificationToSendOnInvalidName = invalid
+		var received: String?; var invalidCount = 0
+		let changedToken = NotificationCenter.default.addObserver(forName: changed, object: cell, queue: nil) {
+			received = $0.userInfo?[UserInfoKey.text] as? String
+		}
+		let invalidToken = NotificationCenter.default.addObserver(forName: invalid, object: cell, queue: nil) { _ in invalidCount += 1 }
+		defer { NotificationCenter.default.removeObserver(changedToken); NotificationCenter.default.removeObserver(invalidToken) }
+		cell.nameTextField.text = "First complete name"; cell.nameChanged(cell)
+		XCTAssertEqual(received, "First complete name")
+		cell.nameTextField.text = ""; cell.nameChanged(cell)
+		XCTAssertEqual(invalidCount, 1)
+		cell.nameTextField.text = "Final complete name"; cell.nameChanged(cell)
+		XCTAssertEqual(received, "Final complete name")
+	}
+
 	// MARK: - setSource()
 
 	func testGivenNewSourceValue_setSource_correctlySetsSource() {
