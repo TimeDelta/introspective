@@ -33,7 +33,7 @@ public final class EditMedicationViewController: UIViewController {
 	)
 	private static let startedOnPresenter = injected(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
-		height: .custom(size: SelectDateViewControllerImpl.preferredHeight),
+		height: .custom(size: Float(SelectDateViewControllerImpl.preferredHeight)),
 		center: .center
 	)
 	private static let descriptionPresenter = injected(UiUtil.self).customPresenter(

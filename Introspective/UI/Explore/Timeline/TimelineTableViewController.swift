@@ -43,7 +43,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 
 	private static let dateFilterPresenter: Presentr = injected(UiUtil.self).customPresenter(
 		width: .full,
-		height: .custom(size: DateRangeViewControllerImpl.preferredHeight),
+		height: .custom(size: Float(DateRangeViewControllerImpl.preferredHeight)),
 		center: .center
 	)
 
