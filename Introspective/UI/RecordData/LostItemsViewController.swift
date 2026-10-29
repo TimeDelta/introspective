@@ -40,7 +40,8 @@ final class LostItemsViewController: UITableViewController {
 				return try database.count(request)
 			}
 			lost = try count(1, from: start); found = try count(-1, from: start)
-			balance = try count(1, from: nil) - count(-1, from: nil)
+			if period.selectedSegmentIndex == 2 { balance = lost - found }
+			else { balance = try count(1, from: nil) - count(-1, from: nil) }
 			let request = LostItemEvent.fetchRequest()
 			request.predicate = start.map { NSPredicate(format: "timestamp >= %@", $0 as NSDate) }
 			request.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
@@ -56,13 +57,14 @@ final class LostItemsViewController: UITableViewController {
 		section == 0 ? "Net recorded losses include all time and may be negative if earlier losses were not logged. Tap an event to add a note; swipe to remove an accidental entry." : "Showing up to 200 recent events. Summary counts include all matching events."
 	}
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
+		let identifier = "LostItemEventCell"
+		let cell = tableView.dequeueReusableCell(withIdentifier: identifier) ?? UITableViewCell(style: .subtitle, reuseIdentifier: identifier)
+		cell.selectionStyle = indexPath.section == 0 ? .none : .default
 		cell.textLabel?.numberOfLines = 0
 		cell.detailTextLabel?.numberOfLines = 0
 		if indexPath.section == 0 {
 			cell.textLabel?.text = "Lost: \(lost) · Found: \(found)"
 			cell.detailTextLabel?.text = "Net recorded losses (all time): \(balance)"
-			cell.selectionStyle = .none
 		} else {
 			let event = events[indexPath.row]
 			cell.textLabel?.text = event.description + (event.note.map { " · " + $0 } ?? "")
@@ -78,11 +80,16 @@ final class LostItemsViewController: UITableViewController {
 		alert.addTextField { $0.text = event.note; $0.placeholder = "What was lost or found?" }
 		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
 		alert.addAction(UIAlertAction(title: "Save", style: .default) { [weak self, weak alert] _ in
-			do {
-				let transaction = try injected(Database.self).viewContextTransaction(for: LostItemEvent.self, sortedBy: "timestamp")
-				try transaction.pull(savedObject: event).note = alert?.textFields?.first?.text
-				try transaction.commit(); self?.reloadEvents()
-			} catch { self?.showError(title: "Could not save note", error: error) }
+			guard let alert = alert else { return }
+			let note = alert.textFields?.first?.text
+			alert.dismiss(animated: false) { [weak self] in
+				guard let self = self else { return }
+				do {
+					let transaction = try injected(Database.self).viewContextTransaction(for: LostItemEvent.self, sortedBy: "timestamp")
+					try transaction.pull(savedObject: event).note = note
+					try transaction.commit(); self.reloadEvents()
+				} catch { self.showError(title: "Could not save note", error: error) }
+			}
 		})
 		present(alert, animated: true)
 	}
@@ -92,11 +99,14 @@ final class LostItemsViewController: UITableViewController {
 		let event = events[indexPath.row]
 		let alert = UIAlertController(title: "Delete this event?", message: "This corrects the lost/found counts.", preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-		alert.addAction(UIAlertAction(title: "Delete", style: .destructive) { [weak self] _ in
-			do {
-				let transaction = try injected(Database.self).viewContextTransaction(for: LostItemEvent.self, sortedBy: "timestamp")
-				try transaction.delete(event); try transaction.commit(); self?.reloadEvents()
-			} catch { self?.showError(title: "Could not delete event", error: error) }
+		alert.addAction(UIAlertAction(title: "Delete", style: .destructive) { [weak self, weak alert] _ in
+			alert?.dismiss(animated: false) { [weak self] in
+				guard let self = self else { return }
+				do {
+					let transaction = try injected(Database.self).viewContextTransaction(for: LostItemEvent.self, sortedBy: "timestamp")
+					try transaction.delete(event); try transaction.commit(); self.reloadEvents()
+				} catch { self.showError(title: "Could not delete event", error: error) }
+			}
 		})
 		present(alert, animated: true)
 	}
