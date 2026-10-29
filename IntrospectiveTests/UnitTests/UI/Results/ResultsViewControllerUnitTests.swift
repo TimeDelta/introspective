@@ -889,8 +889,8 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 	private final func coreDataSampleMock() -> CoreDataSampleMock {
 		let mock = CoreDataSampleMock()
-		Given(mock, .equalTo(.matching { [weak mock] in ($0 as AnyObject) === mock }, willReturn: true))
-		Given(mock, .equalTo(.matching { [weak mock] in ($0 as AnyObject) !== mock }, willReturn: false))
+		Given(mock, .equalTo(Parameter<Sample>.matching { [weak mock] in ($0 as AnyObject) === mock }, willReturn: true))
+		Given(mock, .equalTo(Parameter<Sample>.matching { [weak mock] in ($0 as AnyObject) !== mock }, willReturn: false))
 		Given(mock, .attributedName(getter: ""))
 		Given(mock, .debugDescription(getter: "mock " + UUID().uuidString))
 		// Equal timestamps preserve fixture order; sorting is covered separately.
