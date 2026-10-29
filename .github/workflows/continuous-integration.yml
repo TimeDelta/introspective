@@ -125,9 +125,14 @@ jobs:
           xcrun simctl list devices available --json > ci-output/simulators.json
           simulator_id=$(python3 -c 'import json; d=json.load(open("ci-output/simulators.json")); print(next(v["udid"] for k,vs in d["devices"].items() if "iOS" in k for v in vs if v["isAvailable"] and "iPhone" in v["name"]))')
           echo "CI_SIMULATOR_ID=$simulator_id" >> "$GITHUB_ENV"
-          # Start booting now; compilation can run while the simulator starts.
+          # Native/serial tests use this device. Parallel UI tests boot their
+          # own clones; leave the template shut down to avoid a third simulator.
           state=$(xcrun simctl list devices available --json | python3 -c 'import json,sys; d=json.load(sys.stdin); print(next(v["state"] for vs in d["devices"].values() for v in vs if v["udid"]==sys.argv[1]))' "$simulator_id")
-          if [ "$state" != Booted ]; then xcrun simctl boot "$simulator_id"; fi
+          if [ "$CI_BUILD_KIND" = ui ] && [ "$CI_UI_WORKERS" != 1 ]; then
+            if [ "$state" = Booted ]; then xcrun simctl shutdown "$simulator_id"; fi
+          elif [ "$state" != Booted ]; then
+            xcrun simctl boot "$simulator_id"
+          fi
 
       - name: Regenerate original test mocks from frozen dependencies
         if: matrix.kind == 'legacy'
@@ -159,7 +164,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          xcrun simctl bootstatus "$CI_SIMULATOR_ID" -b > ci-output/simulator-boot.log 2>&1
+          if [ "$CI_BUILD_KIND" != ui ] || [ "$CI_UI_WORKERS" = 1 ]; then
+            xcrun simctl bootstatus "$CI_SIMULATOR_ID" -b > ci-output/simulator-boot.log 2>&1
+          fi
           test_command=(xcodebuild test-without-building
             -workspace Introspective.xcworkspace
             -scheme "$CI_TEST_SCHEME"
@@ -168,8 +175,12 @@ jobs:
             -derivedDataPath "$CI_DERIVED_DATA"
             -resultBundlePath "$GITHUB_WORKSPACE/ci-output/MoodTests.xcresult")
           if [ "$CI_BUILD_KIND" = ui ]; then
-            # Xcode gives each worker an isolated simulator clone; compile once.
-            test_command+=(-parallel-testing-enabled YES -parallel-testing-worker-count "$CI_UI_WORKERS")
+            if [ "$CI_UI_WORKERS" = 1 ]; then
+              test_command+=(-parallel-testing-enabled NO)
+            else
+              # Xcode gives each worker an isolated simulator clone; compile once.
+              test_command+=(-parallel-testing-enabled YES -parallel-testing-worker-count "$CI_UI_WORKERS")
+            fi
           fi
           CI_TEST_PROGRESS=1 ./scripts/run-ci-command.sh ci-output/mood-tests.log "${test_command[@]}"
           xcrun xcresulttool get test-results summary --path ci-output/MoodTests.xcresult > ci-output/mood-tests-summary.json
