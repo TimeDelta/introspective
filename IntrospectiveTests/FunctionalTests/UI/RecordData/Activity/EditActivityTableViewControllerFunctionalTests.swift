@@ -38,6 +38,13 @@ class EditActivityTableViewControllerFunctionalTests: FunctionalTest {
 		let _ = tableView.allowsMultipleSelection
 	}
 
+	final override func tearDown() {
+		if let controller = controller { NotificationCenter.default.removeObserver(controller) }
+		controller = nil
+		uiUtil.resetMock()
+		super.tearDown()
+	}
+
 	// MARK: - viewDidLoad()
 
 	func testGivenActivityExists_viewDidLoad_setsInitialStartDateOfEndDateForLastActivity() {
