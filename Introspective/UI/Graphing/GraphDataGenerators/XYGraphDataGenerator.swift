@@ -8,6 +8,7 @@
 
 import AAInfographics
 import Foundation
+import UIKit
 
 import Common
 import DependencyInjection
@@ -109,11 +110,7 @@ public class XYGraphDataGenerator {
 		by valueResolver: (ValueType) -> String
 	) -> [ValueType] {
 		signpost?.begin(name: "Sort values as numbers", "Number of values: %d", values.count)
-		let sortedValues: [ValueType] = values.sorted {
-			let first = Double(formatNumber(valueResolver($0)))!
-			let second = Double(formatNumber(valueResolver($1)))!
-			return first < second
-		}
+		let sortedValues = sortByCachedKey(values) { Double(formatNumber(valueResolver($0)))! }
 		signpost?.end(name: "Sort values as numbers")
 		return sortedValues
 	}
@@ -128,9 +125,7 @@ public class XYGraphDataGenerator {
 		by valueResolver: (ValueType) -> String
 	) -> [ValueType] {
 		signpost?.begin(name: "Sort values as dates", "Number of values: %d", values.count)
-		let sortedValues: [ValueType] = values.sorted {
-			getDate(valueResolver($0))! < getDate(valueResolver($1))!
-		}
+		let sortedValues = sortByCachedKey(values) { getDate(valueResolver($0))! }
 		signpost?.end(name: "Sort values as dates")
 		return sortedValues
 	}
@@ -145,13 +140,20 @@ public class XYGraphDataGenerator {
 		by valueResolver: (ValueType) -> String
 	) -> [ValueType] {
 		signpost?.begin(name: "Sort values as days of week", "Number of values: %d", values.count)
-		let sortedValues: [ValueType] = values.sorted {
-			let day1 = try! DayOfWeek.fromString(valueResolver($0))
-			let day2 = try! DayOfWeek.fromString(valueResolver($1))
-			return day1 < day2
-		}
+		let sortedValues = sortByCachedKey(values) { try! DayOfWeek.fromString(valueResolver($0)) }
 		signpost?.end(name: "Sort values as days of week")
 		return sortedValues
+	}
+
+	/// Parse each key once rather than resolving it again for every comparison.
+	/// Keep keys local to the sort so later graph generations cannot reuse stale values.
+	private func sortByCachedKey<ValueType, Key: Comparable>(
+		_ values: [ValueType],
+		key: (ValueType) -> Key
+	) -> [ValueType] {
+		var keyedValues = values.map { (value: $0, key: key($0)) }
+		keyedValues.sort { $0.key < $1.key }
+		return keyedValues.map { $0.value }
 	}
 
 	// MARK: - Misc.
