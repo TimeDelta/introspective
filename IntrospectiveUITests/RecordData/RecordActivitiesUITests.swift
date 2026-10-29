@@ -15,7 +15,7 @@ final class RecordActivitiesUITests: UITest {
 		super.setUp()
 		app.tabBars.buttons["Record"].tap()
 		app.tables.cells.staticTexts["Activities"].tap()
-		skipInstructionsIfPresent()
+		skipInstructionsIfPresent(.activities)
 	}
 
 	// MARK: - ActivityDefinition

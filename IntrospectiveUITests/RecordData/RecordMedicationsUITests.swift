@@ -22,7 +22,7 @@ final class RecordMedicationsUITests: UITest {
 		super.setUp()
 		app.tabBars.buttons["Record"].tap()
 		app.tables.cells.staticTexts["Medications"].tap()
-		skipInstructionsIfPresent()
+		skipInstructionsIfPresent(.medications)
 	}
 
 	// MARK: - Creation

@@ -25,10 +25,20 @@ class UITest: XCTestCase {
 
 	// MARK: - Instructions Helpers
 
-	final func skipInstructionsIfPresent() {
+	enum InstructionScreen: Hashable {
+		case query, activities, medications, date
+	}
+
+	// The app persists tutorial completion across launch(), even though each case
+	// gets a fresh database. Workers use isolated app containers and runner processes.
+	private static var dismissedInstructionScreens = Set<InstructionScreen>()
+
+	final func skipInstructionsIfPresent(_ screen: InstructionScreen) {
 		let skipInstructionsButton = app.buttons["skip instructions"]
-		if waitForElement(skipInstructionsButton, timeout: 1) {
+		if skipInstructionsButton.exists ||
+			(!UITest.dismissedInstructionScreens.contains(screen) && skipInstructionsButton.waitForExistence(timeout: 1)) {
 			skipInstructionsButton.tap()
+			UITest.dismissedInstructionScreens.insert(screen)
 		}
 	}
 
@@ -58,7 +68,7 @@ class UITest: XCTestCase {
 	final func goToQueryScreen() {
 		app.tabBars.buttons["Explore"].tap()
 		app.collectionViews.staticTexts["Query"].tap()
-		skipInstructionsIfPresent()
+		skipInstructionsIfPresent(.query)
 	}
 
 	final func goToTabIfNotSelected(_ tabName: String) {
@@ -93,7 +103,7 @@ class UITest: XCTestCase {
 	}
 
 	final func setDatePicker(_ queryString: String? = nil, to date: Date) {
-		skipInstructionsIfPresent()
+		skipInstructionsIfPresent(.date)
 		// UIKit exposes date-and-time wheels without a DatePicker ancestor on some
 		// simulator versions. Keep named range pickers scoped by identifier regardless
 		// of their accessibility element type; the single-picker editor needs no scope.
@@ -310,7 +320,7 @@ class UITest: XCTestCase {
 	final func createActivityDefinitions(_ definitions: [ActivityDefinition]) {
 		app.tabBars.buttons["Record"].tap()
 		app.tables.cells.staticTexts["Activities"].tap()
-		skipInstructionsIfPresent()
+		skipInstructionsIfPresent(.activities)
 		for definition in definitions {
 			createActivityDefinition(definition, goToRecordActivitiesScreen: false)
 		}
@@ -321,7 +331,7 @@ class UITest: XCTestCase {
 			app.tabBars.buttons["Record"].tap()
 			app.tables.cells.staticTexts["Activities"].tap()
 		}
-		skipInstructionsIfPresent()
+		skipInstructionsIfPresent(.activities)
 		app.navigationBars.buttons["+"].tap()
 		setTextFor(field: app.tables.textFields["activity name"], to: definition.name)
 		if let autoNote = definition.autoNote {
@@ -362,7 +372,7 @@ class UITest: XCTestCase {
 		if !app.navigationBars["Medications"].exists {
 			app.tables.cells.staticTexts["Medications"].tap()
 		}
-		skipInstructionsIfPresent()
+		skipInstructionsIfPresent(.medications)
 
 		app.buttons["+"].tap()
 
