@@ -112,6 +112,9 @@ public final class ActiveEnergy: HealthKitQuantitySample {
 	// MARK: - Attributed Functions
 
 	public final func value(of attribute: Attribute) throws -> Any? {
+		if attribute.equalTo(Me.durationAttribute) {
+			return TimeDuration(start: start, end: end)
+		}
 		if attribute.equalTo(Me.energyBurned) {
 			return energy
 		}
