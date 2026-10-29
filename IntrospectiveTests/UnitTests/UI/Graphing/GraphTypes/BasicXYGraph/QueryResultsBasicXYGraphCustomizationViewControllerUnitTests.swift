@@ -847,7 +847,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	private final func setXAxis(_ information: SampleGroupInformation) {
 		Given(mockUiUtil, .value(for: .value(.information), from: .any, keyIsOptional: .any, willReturn: information))
-		Given(mockUiUtil, .value(for: .value(.attribute), from: .any, keyIsOptional: .any, willReturn: nil as Attribute?))
+		Given(mockUiUtil, .value(for: .value(.attribute), from: .any, keyIsOptional: .any, willReturn: nil as Attribute??))
 		Given(
 			mockUiUtil,
 			.value(for: .value(.usePointGroupValue), from: .any, keyIsOptional: .any, willReturn: nil as Bool?))
@@ -863,7 +863,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 		Given(
 			mockUiUtil,
 			.value(for: .value(.information), from: .any, keyIsOptional: .any, willReturn: nil as SampleGroupInformation?))
-		Given(mockUiUtil, .value(for: .value(.attribute), from: .any, keyIsOptional: .any, willReturn: nil as Attribute?))
+		Given(mockUiUtil, .value(for: .value(.attribute), from: .any, keyIsOptional: .any, willReturn: nil as Attribute??))
 		Given(
 			mockUiUtil,
 			.value(for: .value(.usePointGroupValue), from: .any, keyIsOptional: .any, willReturn: usePointGroupValue))

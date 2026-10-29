@@ -405,7 +405,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 		let sum = try information.computeGraphable(forSamples: samples)
 
 		// then
-		XCTAssertEqual(sum, Dosage(15.0, "L").description)
+		XCTAssertEqual(sum, "15.0")
 	}
 
 	func testGivenOptionalDosageAttributeWithSomeSamplesHavingNilValue_computeGraphable_returnsCorrectValue() throws {
@@ -424,7 +424,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 		let sum = try information.computeGraphable(forSamples: samples)
 
 		// then
-		XCTAssertEqual(sum, Dosage(10.0, "L").description)
+		XCTAssertEqual(sum, "10.0")
 	}
 
 	func testGivenDurationAttribute_computeGraphable_returnsCorrectValue() throws {

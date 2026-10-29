@@ -80,9 +80,10 @@ final class ActivityDefinitionFunctionalTests: FunctionalTest {
 		try definition.setTags([expectedTag1, expectedTag2])
 
 		// then
-		assertThat(definition.tagsArray(), containsInAnyOrder(expectedTag1, expectedTag2))
+		let actualIDs = Set(definition.tagsArray().map { $0.objectID })
+		XCTAssertEqual(actualIDs, Set([expectedTag1.objectID, expectedTag2.objectID]))
 		for tag in tags {
-			assertThat(definition.tagsArray(), not(containsInAnyOrder(tag)))
+			XCTAssertFalse(actualIDs.contains(tag.objectID))
 		}
 	}
 

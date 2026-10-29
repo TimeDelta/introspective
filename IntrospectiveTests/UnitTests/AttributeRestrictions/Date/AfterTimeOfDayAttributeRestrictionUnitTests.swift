@@ -210,8 +210,10 @@ final class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentTimesOfDay_equalToOperator_returnsFalse() {
 		// given
-		var timeOfDay = restriction.timeOfDay
-		timeOfDay.hour += 1
+		let timeOfDay = TimeOfDay()
+		timeOfDay.hour = (restriction.timeOfDay.hour + 1) % 24
+		timeOfDay.minute = restriction.timeOfDay.minute
+		timeOfDay.second = restriction.timeOfDay.second
 		let other = AfterTimeOfDayAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, timeOfDay: timeOfDay)
 
 		// when
@@ -269,8 +271,10 @@ final class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentTimesOfDay_equalToAttributed_returnsFalse() {
 		// given
-		var timeOfDay = restriction.timeOfDay
-		timeOfDay.hour += 1
+		let timeOfDay = TimeOfDay()
+		timeOfDay.hour = (restriction.timeOfDay.hour + 1) % 24
+		timeOfDay.minute = restriction.timeOfDay.minute
+		timeOfDay.second = restriction.timeOfDay.second
 		let otherAttributed: Attributed = AfterTimeOfDayAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
 			timeOfDay: timeOfDay)
@@ -331,8 +335,10 @@ final class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentTimesOfDay_equalToRestriction_returnsFalse() {
 		// given
-		var timeOfDay = restriction.timeOfDay
-		timeOfDay.hour += 1
+		let timeOfDay = TimeOfDay()
+		timeOfDay.hour = (restriction.timeOfDay.hour + 1) % 24
+		timeOfDay.minute = restriction.timeOfDay.minute
+		timeOfDay.second = restriction.timeOfDay.second
 		let otherRestriction: AttributeRestriction = AfterTimeOfDayAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
 			timeOfDay: timeOfDay)
@@ -380,8 +386,10 @@ final class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentTimesOfDay_equalTo_returnsFalse() {
 		// given
-		var timeOfDay = restriction.timeOfDay
-		timeOfDay.hour += 1
+		let timeOfDay = TimeOfDay()
+		timeOfDay.hour = (restriction.timeOfDay.hour + 1) % 24
+		timeOfDay.minute = restriction.timeOfDay.minute
+		timeOfDay.second = restriction.timeOfDay.second
 		let other = AfterTimeOfDayAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, timeOfDay: timeOfDay)
 
 		// when

@@ -448,7 +448,7 @@ final class SampleUtilUnitTests: UnitTest {
 	func testGivenSamplesHaveStartDatesThatAreOneDayApartAndEndDatesThatAreTwoDaysApart_distanceInDays_returnsOne() throws {
 		// given
 		let startDate = Date()
-		let endDate = Date()
+		let endDate = startDate
 		let sample1 = SampleCreatorTestUtil.createSample(startDate: startDate, endDate: endDate)
 		let sample2 = SampleCreatorTestUtil.createSample(startDate: startDate + 1.days, endDate: endDate + 2.days)
 
@@ -462,7 +462,7 @@ final class SampleUtilUnitTests: UnitTest {
 	func testGivenSamplesHaveStartDatesThatAreTwoDaysApartAndEndDatesThatAreOneDayApart_distanceInDays_returnsOne() throws {
 		// given
 		let startDate = Date()
-		let endDate = Date()
+		let endDate = startDate
 		let sample1 = SampleCreatorTestUtil.createSample(startDate: startDate, endDate: endDate)
 		let sample2 = SampleCreatorTestUtil.createSample(startDate: startDate + 2.days, endDate: endDate + 1.days)
 

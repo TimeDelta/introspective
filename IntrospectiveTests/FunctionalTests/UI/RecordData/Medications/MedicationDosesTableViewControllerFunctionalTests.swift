@@ -583,7 +583,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 	func testGivenFromDatePreviouslySet_filterDatesButtonPressed_setsInitialFromDateOnPresentedController() throws {
 		// given
 		controller.medication = try createMedicationWith(numberOfDoses: 0)
-		let expectedInitialFromDate = Date() - 1.days
+		let expectedInitialFromDate = injected(CalendarUtil.self).start(of: .day, in: Date() - 1.days)
 		setDateRange(from: expectedInitialFromDate, to: nil)
 		let presentedController = mockDateRangeViewController()
 
@@ -597,7 +597,7 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 	func testGivenToDatePreviouslySet_filterDatesButtonPressed_setsInitialToDateOnPresentedController() throws {
 		// given
 		controller.medication = try createMedicationWith(numberOfDoses: 0)
-		let expectedInitialToDate = Date() - 1.days
+		let expectedInitialToDate = injected(CalendarUtil.self).start(of: .day, in: Date() - 1.days)
 		setDateRange(from: nil, to: expectedInitialToDate)
 		let presentedController = mockDateRangeViewController()
 

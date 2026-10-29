@@ -88,7 +88,7 @@ final class GlobalFunctionsUnitTests: UnitTest {
 		do {
 			let _: Bool = try retryOnFail({
 				numberOfTimesRan += 1
-				throw NSError()
+				throw NSError(domain: "RetryTests", code: 1)
 			}, maxRetries: maxRetries)
 		} catch { /* do nothing - it's supposed to throw */ }
 
@@ -146,7 +146,7 @@ final class GlobalFunctionsUnitTests: UnitTest {
 		do {
 			try retryOnFail({
 				numberOfTimesRan += 1
-				throw NSError()
+				throw NSError(domain: "RetryTests", code: 1)
 			}, maxRetries: maxRetries)
 		} catch { /* do nothing - it's supposed to throw */ }
 

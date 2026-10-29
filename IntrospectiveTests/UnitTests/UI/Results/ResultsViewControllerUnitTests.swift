@@ -37,6 +37,9 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		controller = (storyboard.instantiateViewController(withIdentifier: "results") as! ResultsViewControllerImpl)
 
 		controller.actionsButton = actionsButton
+		// Resolve the asynchronous setup before testing loaded rows and actions.
+		// Keep production's loading guard; these tests exercise the ready state.
+		Perform(mockAsyncUtil, .run(qos: .any, code: .any, perform: { _, code in code() }))
 
 		Given(mockUiUtil, .setBackButton(for: .any, title: .any, action: .any, willReturn: UIBarButtonItem()))
 
@@ -45,6 +48,14 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		Given(mockInformation, .description(getter: "mock " + UUID().uuidString))
 		Given(mockInformation, .compute(forSamples: .any, willReturn: ""))
 		Given(mockSampleGroupInformationFactory, .initInformation(.any, .any, willReturn: mockInformation))
+	}
+
+	func testRecomputingInformationBeforeSamplesArriveKeepsTheLoadingState() {
+		let information = SampleGroupInformationMock()
+		controller.information = [information]
+		controller.recomputeInformation()
+		XCTAssertEqual(controller.tableView(tableView, numberOfRowsInSection: 0), 1)
+		Verify(information, .never, .compute(forSamples: .any))
 	}
 
 	// MARK: - samplesDidSet()
@@ -67,6 +78,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 		// then
 		assertThat(controller.samples, contains(equals(samples[0]), equals(samples[1]), equals(samples[2])))
+		XCTAssertEqual(controller.tableView(tableView, numberOfRowsInSection: 1), samples.count)
 	}
 
 	func testGivenSamplesWithDateAttributeInRandomOrder_samplesDidSet_sortsInDescendingOrderOfDate() {

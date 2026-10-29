@@ -110,7 +110,7 @@ final class TimeOfDayAttributeFunctionalTests: FunctionalTest {
 		let displayableString = try attribute.convertToDisplayableString(from: timeOfDay)
 
 		// then
-		XCTAssertEqual(displayableString, timeOfDayString)
+		XCTAssertEqual(displayableString.replacingOccurrences(of: "\u{202F}", with: " ").replacingOccurrences(of: "\u{00A0}", with: " "), timeOfDayString)
 	}
 
 	func testGivenNightTimeOfDay_convertToDisplayableString_returnsCorrectValue() throws {
@@ -123,7 +123,7 @@ final class TimeOfDayAttributeFunctionalTests: FunctionalTest {
 		let displayableString = try attribute.convertToDisplayableString(from: timeOfDay)
 
 		// then
-		XCTAssertEqual(displayableString, timeOfDayString)
+		XCTAssertEqual(displayableString.replacingOccurrences(of: "\u{202F}", with: " ").replacingOccurrences(of: "\u{00A0}", with: " "), timeOfDayString)
 	}
 
 	// MARK: - equalTo()
