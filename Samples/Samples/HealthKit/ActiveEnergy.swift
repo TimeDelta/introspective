@@ -112,7 +112,7 @@ public final class ActiveEnergy: HealthKitQuantitySample {
 	// MARK: - Attributed Functions
 
 	public final func value(of attribute: Attribute) throws -> Any? {
-		if attribute.equalTo(Me.activeEnergyBurned) {
+		if attribute.equalTo(Me.energyBurned) {
 			return energy
 		}
 		if attribute.equalTo(CommonSampleAttributes.healthKitStartDate) {
@@ -125,7 +125,7 @@ public final class ActiveEnergy: HealthKitQuantitySample {
 	}
 
 	public final func set(attribute: Attribute, to value: Any?) throws {
-		if attribute.equalTo(Me.activeEnergyBurned) {
+		if attribute.equalTo(Me.energyBurned) {
 			guard let castedValue = value as? Double else {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 			}

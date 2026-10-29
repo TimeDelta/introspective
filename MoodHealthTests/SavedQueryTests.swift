@@ -1,7 +1,12 @@
 import XCTest
+import UIKit
+import DataImport
 import HealthKit
 import CoreData
-import Common
+import UIKit
+import AAInfographics
+import CSV
+@testable import Common
 import DependencyInjection
 import BooleanAlgebra
 import AttributeRestrictions
@@ -42,6 +47,59 @@ private final class ReviewHealthStub: HealthKitUtil, InjectionProvider {
 		samples = callback
 		// Model HealthKit retaining the result handler until stopped.
 		return { _ = callback; self.stopCount += 1 }
+	}
+}
+
+private final class ChartInsertionProbeView: UIView {
+	var onChartInsertion: (() -> Void)?
+	override func didAddSubview(_ subview: UIView) {
+		super.didAddSubview(subview)
+		if subview is AAChartView { onChartInsertion?() }
+	}
+}
+
+private final class ExportBufferProbe: Exportable {
+	static let exportFileDescription = "Probe"
+	let value: Int
+	let write: (Int) throws -> Void
+	let released: () -> Void
+	init(_ value: Int, write: @escaping (Int) throws -> Void, released: @escaping () -> Void = {}) {
+		self.value = value; self.write = write; self.released = released
+	}
+	deinit { released() }
+	static func exportHeaderRow(to csv: CSVWriter) throws { try csv.write(field: "value") }
+	func export(to csv: CSVWriter) throws { try write(value); try csv.write(field: String(value)) }
+}
+
+// Exercise real SQLite fetches while recording the number of returned objects.
+private final class ActivityLookupDatabase: Database {
+	let base: Database
+	var returnedCounts = [Int]()
+	init(_ base: Database) { self.base = base }
+	func transaction() -> Transaction { base.transaction() }
+	func setModifiedExternally(_ modified: Bool) { base.setModifiedExternally(modified) }
+	func refreshContext() { base.refreshContext() }
+	func fetchedResultsController<T: NSManagedObject>(type: T.Type, sortDescriptors: [NSSortDescriptor],
+		cacheName: String?) -> NSFetchedResultsController<T> {
+		base.fetchedResultsController(type: type, sortDescriptors: sortDescriptors, cacheName: cacheName)
+	}
+	func query<T: NSManagedObject>(_ request: NSFetchRequest<T>) throws -> [T] {
+		let result = try base.query(request)
+		returnedCounts.append(result.count)
+		return result
+	}
+	func count<T: NSManagedObject>(_ type: T.Type) throws -> Int { try base.count(type) }
+	func count<T: NSFetchRequestResult>(_ request: NSFetchRequest<T>) throws -> Int { try base.count(request) }
+	func pull<T: NSManagedObject>(savedObject: T) throws -> T { try base.pull(savedObject: savedObject) }
+	func pull<T: NSManagedObject>(savedObject: T, fromSameContextAs otherObject: NSManagedObject) throws -> T {
+		try base.pull(savedObject: savedObject, fromSameContextAs: otherObject)
+	}
+	func pull<T: NSManagedObject>(savedObject: T, fromContext context: NSManagedObjectContext) throws -> T {
+		try base.pull(savedObject: savedObject, fromContext: context)
+	}
+	func deleteEverything() throws { try base.deleteEverything() }
+	func cleanUpManagedObjectWithStrongReferenceCycle<T: NSManagedObject>(_ object: T) {
+		base.cleanUpManagedObjectWithStrongReferenceCycle(object)
 	}
 }
 
@@ -96,6 +154,27 @@ final class SavedQueryTests: XCTestCase {
 			SavedQueryTestProvider(DatabaseImpl(container), settings)])
 	}
 
+	@MainActor
+	func testActivityDurationTimerDoesNotRetainCell() throws {
+		let definition = ActivityDefinition(context: container.viewContext)
+		definition.name = "Timer lifecycle"
+		definition.recordScreenIndex = 0
+		try container.viewContext.save()
+		weak var weakCell: RecordActivityDefinitionTableViewCell?
+		autoreleasepool {
+			let cell = RecordActivityDefinitionTableViewCell()
+			cell.nameLabel = UILabel()
+			cell.mostRecentTimeLabel = UILabel()
+			cell.totalDurationTodayLabel = UILabel()
+			cell.currentInstanceDurationLabel = UILabel()
+			cell.progressIndicator = UIActivityIndicatorView()
+			cell.activityDefinition = definition
+			XCTAssertEqual(cell.nameLabel.text, definition.name)
+			weakCell = cell
+		}
+		XCTAssertNil(weakCell)
+	}
+
 	private func reopen() throws {
 		let url = try XCTUnwrap(container.persistentStoreDescriptions.first?.url)
 		container.viewContext.reset()
@@ -113,6 +192,382 @@ final class SavedQueryTests: XCTestCase {
 		mood.minRating = 0; mood.maxRating = 7; mood.rating = rating
 		try context.save()
 		return mood
+	}
+
+	private func lookupDefinition(_ name: String, index: Int = 0) throws -> ActivityDefinition {
+		let entity = try XCTUnwrap(NSEntityDescription.entity(forEntityName: ActivityDefinition.entityName, in: container.viewContext))
+		let definition = ActivityDefinition(entity: entity, insertInto: container.viewContext)
+		definition.name = name
+		definition.recordScreenIndex = Int16(index)
+		return definition
+	}
+
+	private func lookupActivity(_ definition: ActivityDefinition, start: Date, end: Date? = nil) throws -> Activity {
+		let entity = try XCTUnwrap(NSEntityDescription.entity(forEntityName: Activity.entityName, in: container.viewContext))
+		let activity = Activity(entity: entity, insertInto: container.viewContext)
+		activity.definition = definition
+		activity.start = start
+		activity.end = end
+		return activity
+	}
+
+	private func recordLookupResults() -> ActivityLookupDatabase {
+		let database = ActivityLookupDatabase(injected(Database.self))
+		DependencyInjector.register([SavedQueryTestProvider(database, injected(Settings.self))])
+		return database
+	}
+
+	func testActivityLookupsReturnOneRowFromLargeUnsortedHistory() throws {
+		let definition = try lookupDefinition("Résumé")
+		let other = try lookupDefinition("Other", index: 1)
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		var latest: Activity?
+		for number in 0..<1_024 {
+			let offset = (number * 73) % 1_024 // Deliberately not insertion/date order.
+			let start = base.addingTimeInterval(Double(offset * 60))
+			let activity = try lookupActivity(definition, start: start,
+				end: offset.isMultiple(of: 2) ? start.addingTimeInterval(30) : nil)
+			if offset == 1_023 { latest = activity }
+		}
+		let otherStart = base.addingTimeInterval(6_000 * 60)
+		let otherEnd = otherStart.addingTimeInterval(30)
+		_ = try lookupActivity(other, start: otherStart, end: otherEnd)
+		try container.viewContext.save()
+		let latestID = try XCTUnwrap(latest).objectID
+		let database = recordLookupResults()
+		let dao = ActivityDAOImpl()
+		XCTAssertEqual(try dao.getMostRecentActivityEndDate(), otherEnd)
+		XCTAssertEqual(try dao.getMostRecentlyStartedActivity(for: definition)?.objectID, latestID)
+		XCTAssertEqual(try dao.getMostRecentlyStartedIncompleteActivity(for: definition)?.objectID, latestID)
+		XCTAssertTrue(try dao.hasUnfinishedActivity(definition))
+		XCTAssertTrue(try dao.activityDefinitionWithNameExists("RESUME"))
+		// This fails if a lookup materializes the full matching history again.
+		XCTAssertEqual(database.returnedCounts, [1, 1, 1, 1, 1])
+	}
+
+	func testActivityLookupsPreserveEmptyAndCompletedOnlyResults() throws {
+		let definition = try lookupDefinition("Empty")
+		let other = try lookupDefinition("Unrelated", index: 1)
+		try container.viewContext.save()
+		let database = recordLookupResults()
+		let dao = ActivityDAOImpl()
+		XCTAssertNil(try dao.getMostRecentActivityEndDate())
+		XCTAssertNil(try dao.getMostRecentlyStartedActivity(for: definition))
+		XCTAssertNil(try dao.getMostRecentlyStartedIncompleteActivity(for: definition))
+		XCTAssertFalse(try dao.hasUnfinishedActivity(definition))
+		XCTAssertFalse(try dao.activityDefinitionWithNameExists("Missing"))
+		XCTAssertEqual(database.returnedCounts, [0, 0, 0, 0, 0])
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		_ = try lookupActivity(definition, start: base, end: base.addingTimeInterval(60))
+		_ = try lookupActivity(other, start: base)
+		try container.viewContext.save()
+		XCTAssertNil(try dao.getMostRecentlyStartedIncompleteActivity(for: definition))
+		XCTAssertFalse(try dao.hasUnfinishedActivity(definition))
+	}
+
+	func testDefinitionExistenceRemainsCaseInsensitiveAndDuplicateLookupStillThrows() throws {
+		_ = try lookupDefinition("Résumé")
+		_ = try lookupDefinition("RESUME", index: 1)
+		try container.viewContext.save()
+		let database = recordLookupResults()
+		let dao = ActivityDAOImpl()
+		XCTAssertTrue(try dao.activityDefinitionWithNameExists("resume"))
+		XCTAssertEqual(database.returnedCounts, [1])
+		XCTAssertThrowsError(try dao.getDefinitionWith(name: "resume"))
+		XCTAssertEqual(database.returnedCounts, [1, 2])
+	}
+
+	func testGraphNumericSortResolvesKeysOnceAndPreservesRoundingTies() {
+		let generator = XYGraphDataGenerator(log: Log())
+		let values = Array((0..<512).reversed())
+		var resolutions = 0
+		let sorted = generator.sortValuesAsNumbers(values) { value in
+			resolutions += 1
+			return String(value)
+		}
+		XCTAssertEqual(sorted, Array(0..<512))
+		XCTAssertEqual(resolutions, values.count)
+		XCTAssertEqual(generator.sortValuesAsNumbers(["2.019", "1", "2.011"], by: { $0 }),
+			["1", "2.019", "2.011"])
+		XCTAssertTrue(generator.sortValuesAsNumbers([Int](), by: { String($0) }).isEmpty)
+	}
+
+	func testGraphDateSortResolvesKeysOnce() {
+		let generator = XYGraphDataGenerator(log: Log())
+		let calendar = injected(CalendarUtil.self)
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		let dates = (0..<16).reversed().map { base.addingTimeInterval(Double($0) * 86_400) }
+		var resolutions = 0
+		let sorted = generator.sortValuesAsDates(dates) { date in
+			resolutions += 1
+			return calendar.string(for: date, inFormat: defaultDateFormat)
+		}
+		XCTAssertEqual(sorted, dates.sorted())
+		XCTAssertEqual(resolutions, dates.count)
+	}
+
+	func testGraphWeekdaySortResolvesKeysOnceAndPreservesDuplicates() {
+		let generator = XYGraphDataGenerator(log: Log())
+		let days = [DayOfWeek.Saturday, .Tuesday, .Sunday, .Tuesday]
+		var resolutions = 0
+		let sorted = generator.sortValuesAsDaysOfWeek(days) { day in
+			resolutions += 1
+			return day.fullDayName
+		}
+		XCTAssertEqual(sorted, [.Sunday, .Tuesday, .Tuesday, .Saturday])
+		XCTAssertEqual(resolutions, days.count)
+	}
+
+	func testGraphPointGroupsDeduplicateAcrossManySeriesInFirstSeenOrder() throws {
+		let first = try mood(1), second = try mood(2)
+		first.note = "zeta"; second.note = "alpha"
+		let grouper = SplitByListElementSampleGrouper(attributes: [MoodImpl.note])
+		let generator = SingleSampleTypeXYGraphDataGenerator(seriesGrouper: nil, pointGrouper: grouper,
+			xAxis: nil, yAxis: [], usePointGroupValueForXAxis: true)
+		let series: [(Any, [Sample])] = (0..<256).map { ($0, [first, second]) }
+		let values = try XCTUnwrap(generator.getAllSortedXGroupValuesIfPointGrouped(seriesGroups: series))
+		XCTAssertEqual(values.compactMap { $0 as? String }, ["zeta", "alpha"])
+		XCTAssertTrue(try XCTUnwrap(generator.getAllSortedXGroupValuesIfPointGrouped(seriesGroups: [])).isEmpty)
+	}
+
+	func testGraphPointGroupsPreserveNumericOrderingAndMissingGrouperBehavior() throws {
+		let first = try mood(1), second = try mood(2)
+		first.note = "10"; second.note = "2"
+		let grouper = SplitByListElementSampleGrouper(attributes: [MoodImpl.note])
+		let generator = SingleSampleTypeXYGraphDataGenerator(seriesGrouper: nil, pointGrouper: grouper,
+			xAxis: nil, yAxis: [], usePointGroupValueForXAxis: true)
+		let values = try XCTUnwrap(generator.getAllSortedXGroupValuesIfPointGrouped(seriesGroups: [("a", [first, second]), ("b", [second])]))
+		XCTAssertEqual(values.compactMap { $0 as? String }, ["2", "10"])
+		let ungrouped = SingleSampleTypeXYGraphDataGenerator(seriesGrouper: nil, pointGrouper: nil,
+			xAxis: nil, yAxis: [], usePointGroupValueForXAxis: false)
+		XCTAssertNil(try ungrouped.getAllSortedXGroupValuesIfPointGrouped(seriesGroups: [("a", [first])]))
+	}
+
+	func testGraphPointGroupsPropagateGroupingErrors() throws {
+		let sample = try mood(1)
+		let grouper = SplitByListElementSampleGrouper(attributes: [])
+		let generator = SingleSampleTypeXYGraphDataGenerator(seriesGrouper: nil, pointGrouper: grouper,
+			xAxis: nil, yAxis: [], usePointGroupValueForXAxis: true)
+		XCTAssertThrowsError(try generator.getAllSortedXGroupValuesIfPointGrouped(seriesGroups: [("a", [sample])]))
+	}
+
+	func testTagGroupingPreservesFirstSeenOrderCaseAndDuplicateMembership() throws {
+		let context = container.viewContext
+		func tag(_ name: String) -> Tag {
+			let tag = Tag(context: context)
+			tag.name = name
+			return tag
+		}
+		func activity(_ tag: Tag, inherited: Bool = false) -> Activity {
+			let definition = ActivityDefinition(context: context)
+			definition.name = "Fixture"
+			definition.tags = inherited ? NSSet(object: tag) : NSSet()
+			let activity = Activity(context: context)
+			activity.definition = definition
+			activity.tags = NSSet(object: tag)
+			return activity
+		}
+		let focus = tag("Focus")
+		let other = tag("other")
+		let lower = tag("focus")
+		let first = activity(focus, inherited: true)
+		let second = activity(other)
+		let third = activity(lower)
+		let fourth = activity(focus)
+		let grouper = PerTagSampleGrouper(attributes: [Activity.tagsAttribute])
+		let groups = try grouper.group(samples: [first, second, third, fourth])
+		XCTAssertEqual(groups.compactMap { $0.0 as? String }, ["Focus", "other", "focus"])
+		// Direct and inherited occurrences both contributed before this optimization.
+		XCTAssertEqual(groups[0].1.map { ($0 as! Activity).objectID },
+			[first.objectID, first.objectID, fourth.objectID])
+		XCTAssertEqual(groups[1].1.map { ($0 as! Activity).objectID }, [second.objectID])
+		XCTAssertEqual(groups[2].1.map { ($0 as! Activity).objectID }, [third.objectID])
+	}
+
+	func testTagGroupingHandlesManyDistinctAndRepeatedNames() throws {
+		let context = container.viewContext
+		let definition = ActivityDefinition(context: context)
+		definition.name = "Fixture"
+		definition.tags = NSSet()
+		var samples = [Sample]()
+		for index in 0..<512 {
+			let tag = Tag(context: context)
+			tag.name = "tag-\(index)"
+			let activity = Activity(context: context)
+			activity.definition = definition
+			activity.tags = NSSet(object: tag)
+			samples.append(activity)
+		}
+		let grouper = PerTagSampleGrouper(attributes: [Activity.tagsAttribute])
+		let groups = try grouper.group(samples: samples + samples)
+		XCTAssertEqual(groups.compactMap { $0.0 as? String }, (0..<512).map { "tag-\($0)" })
+		XCTAssertTrue(groups.allSatisfy { $0.1.count == 2 })
+		XCTAssertTrue(try grouper.group(samples: []).isEmpty)
+	}
+
+	@MainActor private func loadChart(_ controller: BasicXYChartViewControllerImpl) {
+		controller.chartType = .line
+		controller.pleaseBePatientLabel = UILabel()
+		controller.activityIndicator = UIActivityIndicatorView()
+		controller.activityIndicator.startAnimating() // Match the storyboard loading state.
+		controller.chartViewOutline = UIView(frame: CGRect(x: 10, y: 20, width: 300, height: 200))
+		controller.loadViewIfNeeded()
+	}
+
+	@MainActor
+	func testChartDataCanArriveBeforeTheViewLoads() {
+		let controller = BasicXYChartViewControllerImpl()
+		controller.dataSeries = []
+		XCTAssertFalse(controller.isViewLoaded)
+		loadChart(controller)
+		XCTAssertTrue(controller.activityIndicator.isHidden)
+		XCTAssertTrue(controller.pleaseBePatientLabel.isHidden)
+		XCTAssertEqual(controller.view.subviews.filter { $0 is AAChartView }.count, 1)
+	}
+
+	@MainActor
+	func testChartDataArrivingDuringSetupWaitsUntilSetupFinishes() {
+		let controller = BasicXYChartViewControllerImpl()
+		controller.chartType = .line
+		controller.pleaseBePatientLabel = UILabel()
+		controller.activityIndicator = UIActivityIndicatorView()
+		controller.activityIndicator.startAnimating() // Match the storyboard loading state.
+		controller.chartViewOutline = UIView(frame: CGRect(x: 10, y: 20, width: 300, height: 200))
+		let root = ChartInsertionProbeView()
+		var insertions = 0
+		root.onChartInsertion = { [weak controller] in
+			guard let controller = controller else { XCTFail("Controller released during setup"); return }
+			insertions += 1
+			controller.dataSeries = []
+			// The chart exists, but frame/outlet configuration is still in progress.
+			XCTAssertFalse(controller.activityIndicator.isHidden)
+			XCTAssertFalse(controller.pleaseBePatientLabel.isHidden)
+		}
+		controller.view = root
+		if insertions == 0 { controller.viewDidLoad() }
+		XCTAssertEqual(insertions, 1)
+		XCTAssertTrue(controller.activityIndicator.isHidden)
+		XCTAssertTrue(controller.pleaseBePatientLabel.isHidden)
+	}
+
+	@MainActor
+	func testChartRepeatedLayoutsReuseOneWebView() throws {
+		let controller = BasicXYChartViewControllerImpl()
+		loadChart(controller)
+		let original = try XCTUnwrap(controller.view.subviews.first { $0 is AAChartView })
+		for _ in 0..<50 { controller.viewDidLayoutSubviews() }
+		let charts = controller.view.subviews.filter { $0 is AAChartView }
+		XCTAssertEqual(charts.count, 1)
+		XCTAssertTrue(charts.first === original)
+		XCTAssertFalse(controller.activityIndicator.isHidden)
+	}
+
+	@MainActor
+	func testChartResizeUpdatesExistingViewAndControllerCanBeReleased() throws {
+		weak var released: BasicXYChartViewControllerImpl?
+		try autoreleasepool {
+			let controller = BasicXYChartViewControllerImpl()
+			released = controller
+			loadChart(controller)
+			let chart = try XCTUnwrap(controller.view.subviews.compactMap { $0 as? AAChartView }.first)
+			let frame = CGRect(x: 30, y: 40, width: 500, height: 350)
+			controller.chartViewOutline.frame = frame
+			controller.viewDidLayoutSubviews()
+			XCTAssertEqual(chart.frame, frame)
+			XCTAssertEqual(chart.contentHeight, 350)
+		}
+		XCTAssertNil(released)
+	}
+
+	func testExportBufferPreservesOrderAcrossPauseAndResume() throws {
+		let exporter = BaseExporter(dataTypePluralName: "Probes", url: directory.appendingPathComponent("export.csv"))
+		let stream = OutputStream.toMemory()
+		let csv = try CSVWriter(stream: stream, delimiter: ",", newline: .lf)
+		var written = [Int]()
+		var objects: [Exportable] = (0..<6).map { ExportBufferProbe($0, write: { written.append($0) }) }
+		var headerWritten = false
+		exporter.pauseOnRecord = 2
+		try exporter.export(objects: &objects, using: csv, headerWritten: &headerWritten)
+		XCTAssertEqual(written, [0, 1])
+		XCTAssertEqual(objects.map { ($0 as! ExportBufferProbe).value }, [2, 3, 4, 5])
+		XCTAssertEqual(exporter.recordsCompleted, 2)
+		XCTAssertTrue(exporter.isPaused)
+		exporter.isPaused = false
+		try exporter.export(objects: &objects, using: csv, headerWritten: &headerWritten)
+		XCTAssertEqual(written, Array(0..<6))
+		XCTAssertTrue(objects.isEmpty)
+		XCTAssertEqual(exporter.recordsCompleted, 6)
+		let bytes = try XCTUnwrap(stream.property(forKey: .dataWrittenToMemoryStreamKey) as? Data)
+		XCTAssertEqual(String(data: bytes, encoding: .utf8), "value\n0\n1\n2\n3\n4\n5")
+	}
+
+	func testExportBufferRestoresRemainingOrderAfterFailure() throws {
+		let exporter = BaseExporter(dataTypePluralName: "Probes", url: directory.appendingPathComponent("export.csv"))
+		let csv = try CSVWriter(stream: OutputStream.toMemory())
+		var written = [Int]()
+		var objects: [Exportable] = (0..<5).map { ExportBufferProbe($0, write: { value in
+			if value == 2 { throw NSError(domain: "ExportBufferProbe", code: 1) }
+			written.append(value)
+		}) }
+		var headerWritten = false
+		XCTAssertThrowsError(try exporter.export(objects: &objects, using: csv, headerWritten: &headerWritten))
+		XCTAssertEqual(written, [0, 1])
+		// Match the previous behavior: the failed object was already removed.
+		XCTAssertEqual(objects.map { ($0 as! ExportBufferProbe).value }, [3, 4])
+		XCTAssertEqual(exporter.recordsCompleted, 2)
+		try exporter.export(objects: &objects, using: csv, headerWritten: &headerWritten)
+		XCTAssertEqual(written, [0, 1, 3, 4])
+		XCTAssertTrue(objects.isEmpty)
+	}
+
+	func testExportBufferReleasesProcessedRowsAndStopsOnCancellation() throws {
+		let exporter = BaseExporter(dataTypePluralName: "Probes", url: directory.appendingPathComponent("export.csv"))
+		let csv = try CSVWriter(stream: OutputStream.toMemory())
+		var released = 0
+		var written = [Int]()
+		var objects: [Exportable] = (0..<256).map { ExportBufferProbe($0, write: { value in
+			// Every earlier row should have been released before this row starts.
+			XCTAssertEqual(released, value)
+			written.append(value)
+			if value == 127 { exporter.isCancelled = true }
+		}, released: { released += 1 }) }
+		var headerWritten = false
+		try exporter.export(objects: &objects, using: csv, headerWritten: &headerWritten)
+		XCTAssertEqual(written, Array(0..<128))
+		XCTAssertEqual(released, 128)
+		XCTAssertEqual(objects.map { ($0 as! ExportBufferProbe).value }, Array(128..<256))
+		XCTAssertEqual(exporter.recordsCompleted, 128)
+	}
+
+	func testSampleDateFilteringPreservesStrictBoundsAndInputOrder() throws {
+		let first = try mood(1), second = try mood(2), third = try mood(3)
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		first.date = base; second.date = base.addingTimeInterval(60); third.date = base.addingTimeInterval(120)
+		let samples = [third, first, second]
+		let util = SampleUtilImpl()
+		XCTAssertEqual(util.getOnly(samples: samples, from: nil, to: nil).map { $0.objectID }, samples.map { $0.objectID })
+		XCTAssertEqual(util.getOnly(samples: samples, from: first.date, to: third.date).map { $0.objectID }, [second.objectID])
+		XCTAssertEqual(util.getOnly(samples: samples, from: first.date, to: nil).map { $0.objectID }, [third.objectID, second.objectID])
+		XCTAssertEqual(util.getOnly(samples: samples, from: nil, to: third.date).map { $0.objectID }, [first.objectID, second.objectID])
+		XCTAssertTrue(util.getOnly(samples: samples, from: third.date, to: first.date).isEmpty)
+		XCTAssertTrue(util.getOnly(samples: [MoodImpl](), from: base, to: base).isEmpty)
+	}
+
+	func testSampleDateFilteringUsesActivityEndWhenPresent() throws {
+		let context = container.viewContext
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		let ended = Activity(context: context)
+		ended.start = base.addingTimeInterval(10)
+		ended.end = base.addingTimeInterval(90)
+		let ongoing = Activity(context: context)
+		ongoing.start = base.addingTimeInterval(20)
+		let boundary = Activity(context: context)
+		boundary.start = base.addingTimeInterval(30)
+		boundary.end = base.addingTimeInterval(60)
+		let samples = [ended, ongoing, boundary]
+		let util = SampleUtilImpl()
+		XCTAssertEqual(util.getOnly(samples: samples, from: base, to: base.addingTimeInterval(60)).map { $0.objectID }, [ongoing.objectID])
+		XCTAssertEqual(util.getOnly(samples: samples, from: nil, to: base.addingTimeInterval(61)).map { $0.objectID }, [ongoing.objectID, boundary.objectID])
 	}
 
 	func testNestedQueryAndBooleanGroupsSurviveDiskReopen() throws {
@@ -732,4 +1187,142 @@ final class SavedQueryTests: XCTestCase {
 		for store in migrated.persistentStoreCoordinator.persistentStores { try migrated.persistentStoreCoordinator.remove(store) }
 	}
 
+}
+
+private final class TransferProgressProbe: NSObject, Importer, Exporter {
+	let dataTypePluralName = "test records"
+	let sourceName = "test source"
+	let customImportMessage: String? = nil
+	let lastImport: Date? = nil
+	let isPaused = false
+	let isCancelled = false
+	var importOnlyNewData = true
+	let url = URL(fileURLWithPath: "/unused-test-export")
+	var progress = 0.25
+	var progressReads = 0
+	func percentComplete() -> Double { progressReads += 1; return progress }
+	func importData(from url: URL) throws {}
+	func exportData() throws {}
+	func resetLastImportDate() throws {}
+	func cancel() {}
+	func pause() {}
+	func resume() throws {}
+}
+
+final class TransferCellLifecycleTests: XCTestCase {
+	@MainActor private func importCell() -> ActiveImportTableViewCell {
+		let cell = ActiveImportTableViewCell()
+		cell.cancelButton = UIButton()
+		cell.descriptionLabel = UILabel()
+		cell.progressView = UIProgressView()
+		cell.percentLabel = UILabel()
+		return cell
+	}
+
+	@MainActor private func exportCell() -> ActiveExportTableViewCell {
+		let cell = ActiveExportTableViewCell()
+		cell.cancelButton = UIButton()
+		cell.descriptionLabel = UILabel()
+		cell.progressView = UIProgressView()
+		cell.percentLabel = UILabel()
+		cell.toolbar = UIToolbar()
+		return cell
+	}
+
+	@MainActor
+	func testActiveTransferTimersDoNotRetainCells() {
+		DependencyInjector.register([CommonInjectionProvider()])
+		weak var weakImport: ActiveImportTableViewCell?
+		weak var weakExport: ActiveExportTableViewCell?
+		autoreleasepool {
+			let importing = importCell()
+			let exporting = exportCell()
+			importing.importer = TransferProgressProbe()
+			exporting.exporter = TransferProgressProbe()
+			weakImport = importing
+			weakExport = exporting
+		}
+		XCTAssertNil(weakImport)
+		XCTAssertNil(weakExport)
+	}
+
+	@MainActor
+	func testReuseReleasesTransferObjectsAndStopsPolling() {
+		DependencyInjector.register([CommonInjectionProvider()])
+		let importing = importCell()
+		let exporting = exportCell()
+		weak var weakImporter: TransferProgressProbe?
+		weak var weakExporter: TransferProgressProbe?
+		autoreleasepool {
+			let importer = TransferProgressProbe()
+			let exporter = TransferProgressProbe()
+			weakImporter = importer
+			weakExporter = exporter
+			importing.importer = importer
+			exporting.exporter = exporter
+			importing.prepareForReuse()
+			exporting.prepareForReuse()
+		}
+		XCTAssertNil(weakImporter)
+		XCTAssertNil(weakExporter)
+		XCTAssertNil(importing.importer)
+		XCTAssertNil(exporting.exporter)
+		// A stale timer must not poll a nil or recycled transfer.
+		RunLoop.main.run(until: Date().addingTimeInterval(1.2))
+	}
+
+	@MainActor
+	func testRebindingExportIgnoresPreviousCompletionNotification() {
+		DependencyInjector.register([CommonInjectionProvider()])
+		let cell = exportCell()
+		let previous = TransferProgressProbe()
+		let current = TransferProgressProbe()
+		cell.toolbar.isHidden = true
+		cell.exporter = previous
+		cell.exporter = current
+		NotificationCenter.default.post(name: NotificationName.backgroundExportFinished.toName(), object: previous)
+		XCTAssertTrue(cell.toolbar.isHidden)
+		NotificationCenter.default.post(name: NotificationName.backgroundExportFinished.toName(), object: current)
+		XCTAssertFalse(cell.toolbar.isHidden)
+		XCTAssertFalse(cell.cancelButton.isEnabled)
+	}
+
+	@MainActor
+	func testCompletedTransfersDoNotStartPollingTimers() {
+		DependencyInjector.register([CommonInjectionProvider()])
+		let importing = importCell()
+		let exporting = exportCell()
+		let importer = TransferProgressProbe()
+		let exporter = TransferProgressProbe()
+		importer.progress = 1
+		exporter.progress = 1
+		importing.importer = importer
+		exporting.exporter = exporter
+		RunLoop.main.run(until: Date().addingTimeInterval(1.2))
+		XCTAssertEqual(importer.progressReads, 1)
+		XCTAssertEqual(exporter.progressReads, 1)
+	}
+}
+
+final class ClosestItemSearchTests: XCTestCase {
+	func testClosestItemEvaluatesEachDistanceOnceWithoutSorting() {
+		let items = Array((0..<10_000).reversed())
+		var calls = 0
+		let closest = SearchUtilImpl().closestItem(to: 4_321, in: items) { item, target in
+			calls += 1
+			return abs(item - target)
+		}
+		XCTAssertEqual(closest, 4_321)
+		XCTAssertEqual(calls, items.count)
+		XCTAssertEqual(items.first, 9_999)
+	}
+
+	func testClosestItemPreservesFirstTieAndCallerDistanceOrdering() {
+		let util = SearchUtilImpl()
+		XCTAssertEqual(util.closestItem(to: 5, in: [10, 0, 20]) { abs($0 - $1) }, 10)
+		XCTAssertEqual(util.closestItem(to: 5, in: [0, 10, 20]) { abs($0 - $1) }, 0)
+		// The caller supplies the ordering score; do not reinterpret its sign.
+		XCTAssertEqual(util.closestItem(to: 0, in: [4, -7, 2]) { item, _ in item }, -7)
+		XCTAssertEqual(util.closestItem(to: 20, in: [7]) { abs($0 - $1) }, 7)
+	}
 }

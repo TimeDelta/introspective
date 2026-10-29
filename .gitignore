@@ -11,3 +11,5 @@ instruments/*
 **/build/
 .swiftpm/
 Mockfile
+# Python CI tooling
+__pycache__/
