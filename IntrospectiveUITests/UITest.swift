@@ -20,7 +20,9 @@ class UITest: XCTestCase {
 		continueAfterFailure = false
 		app = XCUIApplication()
 		app.launchArguments.append("--ui-testing")
+		let launchStarted = ProcessInfo.processInfo.systemUptime
 		app.launch()
+		print("CI_UI_LAUNCH_SECONDS \(ProcessInfo.processInfo.systemUptime - launchStarted)")
 	}
 
 	// MARK: - Instructions Helpers
@@ -35,8 +37,13 @@ class UITest: XCTestCase {
 
 	final func skipInstructionsIfPresent(_ screen: InstructionScreen) {
 		let skipInstructionsButton = app.buttons["skip instructions"]
-		if skipInstructionsButton.exists ||
-			(!UITest.dismissedInstructionScreens.contains(screen) && skipInstructionsButton.waitForExistence(timeout: 1)) {
+		var present = skipInstructionsButton.exists
+		if !present && !UITest.dismissedInstructionScreens.contains(screen) {
+			let waitStarted = ProcessInfo.processInfo.systemUptime
+			present = skipInstructionsButton.waitForExistence(timeout: 1)
+			print("CI_UI_INSTRUCTION_WAIT_SECONDS \(ProcessInfo.processInfo.systemUptime - waitStarted)")
+		}
+		if present {
 			skipInstructionsButton.tap()
 			UITest.dismissedInstructionScreens.insert(screen)
 		}
