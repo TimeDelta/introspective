@@ -32,7 +32,12 @@ final class GeneratedMockConcurrencyTests: Test {
 		Given(provider, .types(getter: [String.self]))
 		Given(provider, .get(.any, willReturn: "value"))
 		DispatchQueue.concurrentPerform(iterations: 1000) { _ in
-			XCTAssertEqual(try provider.get(String.self), "value")
+			do {
+				let value = try provider.get(String.self)
+				XCTAssertEqual(value, "value")
+			} catch {
+				XCTFail("Concurrent dependency resolution threw: \(error)")
+			}
 			XCTAssertEqual(provider.types.count, 1)
 		}
 		Verify(provider, .exactly(1000), .get(.value(String.self)))

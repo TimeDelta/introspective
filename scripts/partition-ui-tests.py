@@ -36,6 +36,9 @@ PREFLIGHT_TESTS = {
     'QueryScreenUITests': [
         'testMovingSampleTypeAboveAttributeRestriction_correctlyChangesAttributeRestriction',
     ],
+    'MoodResultsUITests': [
+        'testEditingMood_correctlyDisplaysMoodData',
+    ],
 }
 METHOD = re.compile(r'^\s*(?:(?:public|internal|private|final|override)\s+)*func\s+(test\w+)\s*\(\s*\)', re.MULTILINE)
 CLASS = re.compile(r'\bclass\s+(\w+)\s*:\s*(?:UITest|XCTestCase)\b')
