@@ -22,7 +22,8 @@ final class ImportDataTableViewControllerUnitTests: UnitTest {
 	private final let url = URL(fileURLWithPath: "/")
 	private final var importer: ATrackerActivityImporterMock!
 
-	private final let importSleepTime: UInt32 = 2
+	private var backgroundWork: DispatchGroup!
+	private var importGate: DispatchSemaphore!
 	private final let importerDataType = "this is the name of the data type for the importer"
 	private final let importerSourceName = "this is the name of the source for the importer"
 
@@ -31,6 +32,15 @@ final class ImportDataTableViewControllerUnitTests: UnitTest {
 
 	final override func setUp() {
 		super.setUp()
+
+		backgroundWork = DispatchGroup()
+		importGate = DispatchSemaphore(value: 0)
+		let work = backgroundWork!
+		let queue = DispatchQueue(label: "ImportDataControllerTests.workers")
+		Perform(mockAsyncUtil, .run(qos: .any, code: .any, perform: { _, code in
+			work.enter()
+			queue.async { defer { work.leave() }; code() }
+		}))
 
 		importer = ATrackerActivityImporterMock()
 		Given(importer, .percentComplete(willReturn: 0.5))
@@ -43,6 +53,25 @@ final class ImportDataTableViewControllerUnitTests: UnitTest {
 
 		let storyboard = UIStoryboard(name: "Main", bundle: nil)
 		controller = (storyboard.instantiateViewController(withIdentifier: "importData") as! ImportDataTableViewController)
+	}
+
+	final override func tearDown() {
+		// Finish every worker while its dependency mocks still belong to this test.
+		importGate.signal()
+		waitForBackgroundWork()
+		NotificationCenter.default.removeObserver(controller!)
+		// Invocation logs hold closures and presented alerts, which retain their
+		// controller even after the background work has completed.
+		mockAsyncUtil.resetMock()
+		mockUiUtil.resetMock()
+		controller = nil; importer = nil
+		super.tearDown()
+	}
+
+	private func waitForBackgroundWork() {
+		let finished = expectation(description: "Import workers and queued UI updates finished")
+		backgroundWork.notify(queue: .main) { finished.fulfill() }
+		wait(for: [finished], timeout: 5)
 	}
 
 	// MARK: - numberOfSections
@@ -58,7 +87,6 @@ final class ImportDataTableViewControllerUnitTests: UnitTest {
 	func testGivenActiveImports_numberOfSections_returnsNormalSectionsCountPlusOne() throws {
 		// given
 		try setUpActiveImport()
-		sleep(1)
 
 		// when
 		let numberOfSections = controller.numberOfSections(in: tableView)
@@ -80,7 +108,6 @@ final class ImportDataTableViewControllerUnitTests: UnitTest {
 	func testGivenActiveImportsSectionWithOneActiveImport_tableViewNumberOfRowsInSection_returns1() throws {
 		// given
 		try setUpActiveImport()
-		sleep(1)
 
 		// when
 		let rows = controller.tableView(tableView, numberOfRowsInSection: activeImportsSection)
@@ -104,7 +131,6 @@ final class ImportDataTableViewControllerUnitTests: UnitTest {
 	func testGivenActiveImportSection_tableViewCellForRowAt_stopsObservingPresentViewNotificationsForAssociatedImporter() throws {
 		// given
 		try setUpActiveImport()
-		sleep(1)
 
 		// when
 		let _ = controller.tableView(tableView, cellForRowAt: IndexPath(row: 0, section: activeImportsSection))
@@ -181,7 +207,6 @@ final class ImportDataTableViewControllerUnitTests: UnitTest {
 	func testGivenImportNotStarted_runImportInBackground_startsImport() throws {
 		// when
 		try setUpActiveImport()
-		sleep(1)
 
 		// then
 		Verify(importer, .importData(from: .value(url)))
@@ -192,7 +217,8 @@ final class ImportDataTableViewControllerUnitTests: UnitTest {
 		try setUpActiveImport()
 
 		// when
-		sleep(importSleepTime + 1)
+		importGate.signal()
+		waitForBackgroundWork()
 
 		// then
 		let expectedId = "FinishedImport"
@@ -222,8 +248,8 @@ final class ImportDataTableViewControllerUnitTests: UnitTest {
 		Given(importer, .importData(from: .any, willThrow: error))
 
 		// when
-		try setUpActiveImport(sleepOnImport: false)
-		sleep(1)
+		try setUpActiveImport(holdImportOpen: false)
+		waitForBackgroundWork()
 
 		// then
 		let expectedId = "ImportErrorOccurred"
@@ -259,9 +285,10 @@ final class ImportDataTableViewControllerUnitTests: UnitTest {
 		// when
 		let extendTime = NotificationName.extendBackgroundTaskTime.toName()
 		NotificationCenter.default.post(name: extendTime, object: nil, userInfo: nil)
+		importGate.signal()
+		waitForBackgroundWork()
 
 		// then
-		sleep(1)
 		Verify(importer, .once, .resume())
 	}
 
@@ -282,10 +309,13 @@ final class ImportDataTableViewControllerUnitTests: UnitTest {
 
 	// MARK: - Helper Functions
 
-	private final func setUpActiveImport(forSection section: Int = 0, row: Int = 0, sleepOnImport: Bool = true) throws {
-		if sleepOnImport {
-			Perform(importer, .importData(from: .value(url), perform: { _ in sleep(self.importSleepTime) }))
-		}
+	private final func setUpActiveImport(forSection section: Int = 0, row: Int = 0, holdImportOpen: Bool = true) throws {
+		let started = expectation(description: "Import entered its worker")
+		let gate = importGate!
+		Perform(importer, .importData(from: .value(url), perform: { _ in
+			started.fulfill()
+			if holdImportOpen { gate.wait() }
+		}))
 		Given(importer, .lastImport(getter: Date()))
 		Given(mockCalendarUtil, .string(for: .any, dateStyle: .any, timeStyle: .any, willReturn: ""))
 		Given(mockUiUtil, .documentPicker(docTypes: .any, in: .any, willReturn: UIDocumentPickerViewController(documentTypes: [], in: .import)))
@@ -302,8 +332,7 @@ final class ImportDataTableViewControllerUnitTests: UnitTest {
 
 		// wait for the next alert controller to be presented
 		Verify(mockUiUtil, .present(.any, .capturing(argumentCaptor), animated: .any, completion: .any))
-		while argumentCaptor.value == actionSheet {}
-		guard let alert = argumentCaptor.value as? UIAlertController else {
+		guard let alert = argumentCaptor.value as? UIAlertController, alert !== actionSheet else {
 			XCTFail("Unable to get alert controller")
 			return
 		}
@@ -311,17 +340,19 @@ final class ImportDataTableViewControllerUnitTests: UnitTest {
 
 		// wait for the document picker to be presented
 		Verify(mockUiUtil, .present(.any, .capturing(argumentCaptor), animated: .any, completion: .any))
-		while argumentCaptor.value == alert {}
 		guard let documentPicker = argumentCaptor.value as? UIDocumentPickerViewController else {
 			XCTFail("Unable to get document picker")
 			return
 		}
 		documentPicker.delegate?.documentPicker?(documentPicker, didPickDocumentsAt: [url])
+		wait(for: [started], timeout: 5)
 	}
 
 	private final func setUpBackgroundTaskIdForNotification() {
-		while controller.backgroundImports({ $0.count }) == 0 {}
-		let backgroundTaskId = controller.backgroundImports({ $0.first!.key })
+		guard let backgroundTaskId = controller.backgroundImports({ $0.first?.key }) else {
+			XCTFail("Import worker did not register a background task")
+			return
+		}
 		let taskIdString = String(backgroundTaskId.rawValue)
 		Given(mockUiUtil, .value(for: .value(.backgroundTaskId), from: .any, keyIsOptional: .any, willReturn: taskIdString))
 	}

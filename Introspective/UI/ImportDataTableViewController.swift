@@ -267,7 +267,7 @@ public final class ImportDataTableViewController: UITableViewController {
 		let dataType = importer.dataTypePluralName
 		let source = importer.sourceName
 		let taskDescription = "Import " + dataType + " from " + source
-		DispatchQueue.global(qos: .utility).async {
+		injected(AsyncUtil.self).run(qos: .utility) {
 			let uuid = UUID()
 			let backgroundTask = UIApplication.shared.beginBackgroundTask(withName: taskDescription) { [weak self] in
 				Me.log.info("Background task to import %@ from %@ expired", dataType, source)
