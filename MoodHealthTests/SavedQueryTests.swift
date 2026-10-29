@@ -315,6 +315,62 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertEqual(database.returnedCounts, [1, 2])
 	}
 
+	func testTimeWindowMatchesEveryReferenceRegardlessOfInputOrder() {
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		let old = Steps(1, base, base)
+		let new = Steps(2, base.addingTimeInterval(100), base.addingTimeInterval(100))
+		let queries = [Steps(3, base.addingTimeInterval(1), base.addingTimeInterval(1)),
+			Steps(4, base.addingTimeInterval(101), base.addingTimeInterval(101))]
+		let matcher = WithinXCalendarUnitsSubQueryMatcher(numberOfTimeUnits: 2, timeUnit: .second)
+		for references: [Sample] in [[old, new], [new, old]] {
+			XCTAssertEqual(matcher.getSamples(from: queries, matching: references).map { $0.steps }, [3, 4])
+		}
+	}
+
+	func testTimeWindowChecksStartAndEndOfBothIntervalsIndependently() {
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		func sample(_ id: Double, _ start: Double, _ end: Double) -> Steps {
+			Steps(id, base.addingTimeInterval(start), base.addingTimeInterval(end))
+		}
+		let references = [sample(1, 100, 300), sample(2, 1_000, 1_200)]
+		let queries = [sample(1, 99, 10_000), sample(2, 0, 301), sample(3, 500, 998),
+			sample(4, 1_201, 5_000), sample(5, 110, 290), sample(6, 500, 900)]
+		let matcher = WithinXCalendarUnitsSubQueryMatcher(numberOfTimeUnits: 2, timeUnit: .second)
+		XCTAssertEqual(matcher.getSamples(from: queries, matching: references).map { $0.steps }, [1, 2, 3, 4])
+	}
+
+	func testTimeWindowIndexMatchesBruteForceEndpointDistances() {
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		let references = (0..<8).map { index -> Steps in
+			let start = base.addingTimeInterval(Double((index * 17) % 23) * 90)
+			return Steps(Double(index), start, start.addingTimeInterval(Double((index * 13) % 12) * 30))
+		}
+		let queries = (0..<21).map { index -> Steps in
+			let start = base.addingTimeInterval(Double((index * 7) % 29) * 80 - 300)
+			return Steps(Double(index), start, start.addingTimeInterval(Double((index * 11) % 17) * 50))
+		}
+		let calendar = CalendarUtilImpl()
+		for mostRecentOnly in [false, true] {
+			let active = mostRecentOnly ? [references.max { $0.start < $1.start }!] : references
+			for unit: Calendar.Component in [.second, .minute, .hour] {
+				for window in [0, 2, 10] {
+					let matcher = WithinXCalendarUnitsSubQueryMatcher(numberOfTimeUnits: window, timeUnit: unit, mostRecentOnly: mostRecentOnly)
+					let expected = queries.filter { query in
+						active.contains { reference in query.dates().values.contains { from in
+							reference.dates().values.contains { to in
+								abs(try! calendar.distance(from: from, to: to, in: unit)) <= window
+							}
+						} }
+					}.map { $0.steps }
+					for order in [references, Array(references.reversed())] {
+						XCTAssertEqual(matcher.getSamples(from: queries, matching: order).map { $0.steps }, expected,
+							"\(unit) / \(window) / latest=\(mostRecentOnly)")
+					}
+				}
+			}
+		}
+	}
+
 	func testGraphNumericSortResolvesKeysOnceAndPreservesRoundingTies() {
 		let generator = XYGraphDataGenerator(log: Log())
 		let values = Array((0..<512).reversed())
