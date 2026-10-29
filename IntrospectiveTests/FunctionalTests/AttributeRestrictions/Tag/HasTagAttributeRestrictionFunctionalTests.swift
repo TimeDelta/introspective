@@ -292,7 +292,7 @@ final class HasTagAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	func testGivenRestrictedAttributeMismatch_equalToOperator_returnsFalse() {
 		// given
-		let other = HasTagAttributeRestriction(restrictedAttribute: TagAttribute(name: "note the same"))
+		let other = HasTagAttributeRestriction(restrictedAttribute: TagAttribute(id: 0, name: "note the same"))
 
 		// when
 		let areEqual = restriction == other
@@ -348,7 +348,7 @@ final class HasTagAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	func testGivenRestrictedAttributeMismatch_equalToAttributed_returnsFalse() {
 		// given
-		let other = HasTagAttributeRestriction(restrictedAttribute: TagAttribute(name: "note the same"))
+		let other = HasTagAttributeRestriction(restrictedAttribute: TagAttribute(id: 0, name: "note the same"))
 
 		// when
 		let areEqual = restriction.equalTo(other as Attributed)
@@ -404,7 +404,7 @@ final class HasTagAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	func testGivenRestrictedAttributeMismatch_equalToRestriction_returnsFalse() {
 		// given
-		let other = HasTagAttributeRestriction(restrictedAttribute: TagAttribute(name: "note the same"))
+		let other = HasTagAttributeRestriction(restrictedAttribute: TagAttribute(id: 0, name: "note the same"))
 
 		// when
 		let areEqual = restriction.equalTo(other as AttributeRestriction)
@@ -449,7 +449,7 @@ final class HasTagAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	func testGivenRestrictedAttributeMismatch_equalTo_returnsFalse() {
 		// given
-		let other = HasTagAttributeRestriction(restrictedAttribute: TagAttribute(name: "note the same"))
+		let other = HasTagAttributeRestriction(restrictedAttribute: TagAttribute(id: 0, name: "note the same"))
 
 		// when
 		let areEqual = restriction.equalTo(other)
@@ -485,13 +485,13 @@ final class HasTagAttributeRestrictionFunctionalTests: FunctionalTest {
 	// MARK: - Helper Functions
 
 	private final func useTagAttribute(optional: Bool = false) -> Attribute {
-		let attribute = TagAttribute(optional: optional)
+		let attribute = TagAttribute(id: 0, optional: optional)
 		restriction = HasTagAttributeRestriction(restrictedAttribute: attribute)
 		return attribute
 	}
 
 	private final func useTagsAttribute(optional: Bool = false) -> Attribute {
-		let attribute = TagsAttribute(optional: optional)
+		let attribute = TagsAttribute(id: 0, optional: optional)
 		restriction = HasTagAttributeRestriction(restrictedAttribute: attribute)
 		return attribute
 	}

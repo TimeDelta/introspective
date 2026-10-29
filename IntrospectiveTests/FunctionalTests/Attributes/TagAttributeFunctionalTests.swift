@@ -377,7 +377,7 @@ final class TagAttributeFunctionalTests: FunctionalTest {
 		// given
 		useRequiredAttribute()
 		let other = TagAttribute(
-			name: attribute.name + "other stuff",
+			id: 0, name: attribute.name + "other stuff",
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
@@ -394,7 +394,7 @@ final class TagAttributeFunctionalTests: FunctionalTest {
 		// given
 		useRequiredAttribute()
 		let other = TagAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: (attribute.extendedDescription ?? "") + "other stuff",
 			variableName: attribute.variableName,
@@ -411,7 +411,7 @@ final class TagAttributeFunctionalTests: FunctionalTest {
 		// given
 		useRequiredAttribute()
 		let other = TagAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: (attribute.variableName ?? "") + "other stuff",
@@ -428,7 +428,7 @@ final class TagAttributeFunctionalTests: FunctionalTest {
 		// given
 		useRequiredAttribute()
 		let other = TagAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
@@ -445,7 +445,7 @@ final class TagAttributeFunctionalTests: FunctionalTest {
 		// given
 		useRequiredAttribute()
 		let other = TagAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
@@ -462,7 +462,7 @@ final class TagAttributeFunctionalTests: FunctionalTest {
 
 	private final func useOptionalAttribute() {
 		attribute = TagAttribute(
-			name: "name",
+			id: 0, name: "name",
 			description: "description",
 			variableName: "variable name",
 			optional: true)
@@ -470,7 +470,7 @@ final class TagAttributeFunctionalTests: FunctionalTest {
 
 	private final func useRequiredAttribute() {
 		attribute = TagAttribute(
-			name: "name",
+			id: 0, name: "name",
 			description: "description",
 			variableName: "variable name",
 			optional: false)

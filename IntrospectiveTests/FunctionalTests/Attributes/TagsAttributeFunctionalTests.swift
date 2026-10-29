@@ -360,7 +360,7 @@ final class TagsAttributeFunctionalTests: FunctionalTest {
 		// given
 		useRequiredAttribute()
 		let other = TagsAttribute(
-			name: attribute.name + "other stuff",
+			id: 0, name: attribute.name + "other stuff",
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
@@ -377,7 +377,7 @@ final class TagsAttributeFunctionalTests: FunctionalTest {
 		// given
 		useRequiredAttribute()
 		let other = TagsAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: (attribute.extendedDescription ?? "") + "other stuff",
 			variableName: attribute.variableName,
@@ -394,7 +394,7 @@ final class TagsAttributeFunctionalTests: FunctionalTest {
 		// given
 		useRequiredAttribute()
 		let other = TagsAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: (attribute.variableName ?? "") + "other stuff",
@@ -411,7 +411,7 @@ final class TagsAttributeFunctionalTests: FunctionalTest {
 		// given
 		useRequiredAttribute()
 		let other = TagsAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
@@ -428,7 +428,7 @@ final class TagsAttributeFunctionalTests: FunctionalTest {
 		// given
 		useRequiredAttribute()
 		let other = TagsAttribute(
-			name: attribute.name,
+			id: 0, name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
@@ -444,10 +444,10 @@ final class TagsAttributeFunctionalTests: FunctionalTest {
 	// MARK: - Helper Functions
 
 	private final func useRequiredAttribute() {
-		attribute = TagsAttribute(name: "name", description: "description", variableName: "variableName", optional: false)
+		attribute = TagsAttribute(id: 0, name: "name", description: "description", variableName: "variableName", optional: false)
 	}
 
 	private final func useOptionalAttribute() {
-		attribute = TagsAttribute(name: "name", description: "description", variableName: "variableName", optional: true)
+		attribute = TagsAttribute(id: 0, name: "name", description: "description", variableName: "variableName", optional: true)
 	}
 }

@@ -16,7 +16,7 @@ import Hamcrest
 
 final class PerTagSampleGrouperUnitTests: UnitTest {
 
-	private final let tagAttribute = TagAttribute(name: "fdjkl")
+	private final let tagAttribute = TagAttribute(id: 0, name: "fdjkl")
 
 	private final var grouper: PerTagSampleGrouper!
 
@@ -31,7 +31,7 @@ final class PerTagSampleGrouperUnitTests: UnitTest {
 		// given
 		let attributes = [
 			tagAttribute,
-			TagAttribute(name: tagAttribute.name + "other stuff"),
+			TagAttribute(id: 0, name: tagAttribute.name + "other stuff"),
 		]
 
 		// when
@@ -45,10 +45,10 @@ final class PerTagSampleGrouperUnitTests: UnitTest {
 
 	func testGivenTagsAttributes_init_includesThemAsPossibleValuesForAttributeSelectAttribute() {
 		// given
-		let tagsAttribute = TagsAttribute(name: "fjdskl")
+		let tagsAttribute = TagsAttribute(id: 0, name: "fjdskl")
 		let attributes = [
 			tagsAttribute,
-			TagsAttribute(name: tagsAttribute.name + "other stuff"),
+			TagsAttribute(id: 0, name: tagsAttribute.name + "other stuff"),
 		]
 
 		// when
@@ -64,7 +64,7 @@ final class PerTagSampleGrouperUnitTests: UnitTest {
 		// given
 		let attributes = [
 			tagAttribute,
-			TagsAttribute(name: tagAttribute.name + "other stuff"),
+			TagsAttribute(id: 0, name: tagAttribute.name + "other stuff"),
 		]
 
 		// when
@@ -179,7 +179,7 @@ final class PerTagSampleGrouperUnitTests: UnitTest {
 
 	func testGivenGroupByTagsAttributeWithStringValue_groupNameForValue_returnsAttributeNameHasValue() throws {
 		// given
-		let tagsAttribute = TagsAttribute(name: "fdjkjwiofjeiow")
+		let tagsAttribute = TagsAttribute(id: 0, name: "fdjkjwiofjeiow")
 		grouper.groupByAttribute = tagsAttribute
 		let value = "value string"
 
@@ -261,7 +261,7 @@ final class PerTagSampleGrouperUnitTests: UnitTest {
 		}
 
 		// when
-		copy.groupByAttribute = TagsAttribute(name: "fjeoqugnjk")
+		copy.groupByAttribute = TagsAttribute(id: 0, name: "fjeoqugnjk")
 
 		// then
 		assertThat(grouper.groupByAttribute, equals(tagAttribute))
@@ -301,7 +301,7 @@ final class PerTagSampleGrouperUnitTests: UnitTest {
 
 	func testGivenAttributeSelectAttributeWithValidValue_set_setsGroupByAttribute() throws {
 		// given
-		grouper.groupByAttribute = TagsAttribute(name: "ghjreiouq")
+		grouper.groupByAttribute = TagsAttribute(id: 0, name: "ghjreiouq")
 		let expectedValue = tagAttribute
 
 		// when
@@ -382,7 +382,7 @@ final class PerTagSampleGrouperUnitTests: UnitTest {
 		// given
 		let other = PerTagSampleGrouper(attributes: [tagAttribute])
 		grouper.groupByAttribute = tagAttribute
-		other.groupByAttribute = TagsAttribute(name: "grejnqio")
+		other.groupByAttribute = TagsAttribute(id: 0, name: "grejnqio")
 
 		// when
 		let areEqual = grouper.equalTo(other)
