@@ -14,6 +14,7 @@ import SwiftyMocky
 @testable import Attributes
 @testable import BooleanAlgebra
 @testable import Common
+@testable import Persistence
 @testable import Samples
 
 // sourcery: mock = "AttributeRestriction"
