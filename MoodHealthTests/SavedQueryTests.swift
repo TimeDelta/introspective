@@ -898,6 +898,21 @@ final class SavedQueryTests: XCTestCase {
 		context.rollback()
 	}
 
+	func testSingleWeekdayChecksAgreeWithDayListsForEveryWeekday() throws {
+		var calendar = Calendar(identifier: .gregorian)
+		calendar.timeZone = .current
+		let sunday = try XCTUnwrap(calendar.date(from: DateComponents(year: 2024, month: 6, day: 2, hour: 12)))
+		let utility = CalendarUtilImpl()
+		for (offset, expected) in DayOfWeek.allDays.enumerated() {
+			let date = try XCTUnwrap(calendar.date(byAdding: .day, value: offset, to: sunday))
+			XCTAssertEqual(utility.dayOfWeek(forDate: date), expected)
+			for candidate in DayOfWeek.allDays {
+				XCTAssertEqual(utility.date(date, isOnA: candidate), candidate == expected)
+				XCTAssertEqual(utility.date(date, isOnA: candidate), utility.date(date, isOnOneOf: [candidate]))
+			}
+		}
+	}
+
 	func testDateTimeDurationAndDosageConditionsSurviveDiskReopen() throws {
 		let time = TimeOfDay()
 		time.hour = 12; time.minute = 34; time.second = 56
