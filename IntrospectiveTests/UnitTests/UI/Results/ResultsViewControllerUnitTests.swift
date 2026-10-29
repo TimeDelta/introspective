@@ -420,12 +420,14 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		Given(mockSampleUtil, .getOnly(samples: .any([Sample].self), from: .any, to: .any, willReturn: samples))
 		controller.samples = copyArray(samples)
 		controller.viewDidLoad()
+		let loadedOrder = controller.samples!.map { ObjectIdentifier($0 as AnyObject) }
+		XCTAssertEqual(Set(loadedOrder), Set(samples.map { ObjectIdentifier($0) }))
 
 		// when
 		controller.tableView(tableView, moveRowAt: IndexPath(row: 0, section: 1), to: IndexPath(row: 1, section: 1))
 
 		// then
-		assertThat(controller.samples, contains(equals(samples[0]), equals(samples[1])))
+		XCTAssertEqual(controller.samples!.map { ObjectIdentifier($0 as AnyObject) }, loadedOrder)
 	}
 
 	func testGivenMoveFromSection0ToSection1_tableViewMoveRowAt_doesNotChangeSamples() {
@@ -434,12 +436,14 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		Given(mockSampleUtil, .getOnly(samples: .any([Sample].self), from: .any, to: .any, willReturn: samples))
 		controller.samples = copyArray(samples)
 		controller.viewDidLoad()
+		let loadedOrder = controller.samples!.map { ObjectIdentifier($0 as AnyObject) }
+		XCTAssertEqual(Set(loadedOrder), Set(samples.map { ObjectIdentifier($0) }))
 
 		// when
 		controller.tableView(tableView, moveRowAt: IndexPath(row: 0, section: 0), to: IndexPath(row: 1, section: 1))
 
 		// then
-		assertThat(controller.samples, contains(equals(samples[0]), equals(samples[1])))
+		XCTAssertEqual(controller.samples!.map { ObjectIdentifier($0 as AnyObject) }, loadedOrder)
 	}
 
 	func testGivenMoveFromSection1ToSection0_tableViewMoveRowAt_doesNotChangeSamples() {
@@ -448,12 +452,14 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		Given(mockSampleUtil, .getOnly(samples: .any([Sample].self), from: .any, to: .any, willReturn: samples))
 		controller.samples = copyArray(samples)
 		controller.viewDidLoad()
+		let loadedOrder = controller.samples!.map { ObjectIdentifier($0 as AnyObject) }
+		XCTAssertEqual(Set(loadedOrder), Set(samples.map { ObjectIdentifier($0) }))
 
 		// when
 		controller.tableView(tableView, moveRowAt: IndexPath(row: 0, section: 1), to: IndexPath(row: 1, section: 0))
 
 		// then
-		assertThat(controller.samples, contains(equals(samples[0]), equals(samples[1])))
+		XCTAssertEqual(controller.samples!.map { ObjectIdentifier($0 as AnyObject) }, loadedOrder)
 	}
 
 	func testGivenMoveFromSection0ToSection0_tableViewMoveRowAt_swapsCorrectInformation() {
@@ -883,9 +889,12 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 	private final func coreDataSampleMock() -> CoreDataSampleMock {
 		let mock = CoreDataSampleMock()
+		Given(mock, .equalTo(.matching { [weak mock] in ($0 as AnyObject) === mock }, willReturn: true))
+		Given(mock, .equalTo(.matching { [weak mock] in ($0 as AnyObject) !== mock }, willReturn: false))
 		Given(mock, .attributedName(getter: ""))
 		Given(mock, .debugDescription(getter: "mock " + UUID().uuidString))
-		Given(mock, .dates(willReturn: [.start: Date()]))
+		// Equal timestamps preserve fixture order; sorting is covered separately.
+		Given(mock, .dates(willReturn: [.start: Date(timeIntervalSince1970: 1_700_000_000)]))
 		Given(mock, .attributes(getter: [TextAttribute(id: 0, name: "")]))
 		return mock
 	}
