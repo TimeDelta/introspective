@@ -70,6 +70,7 @@
 		A2DEB93C23439F4800551E0B /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2DEB93B23439F4800551E0B /* Persistence.framework */; };
 		A2E30FCD2736DB27004D0A60 /* Steps.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E30FCC2736DB27004D0A60 /* Steps.swift */; };
 		D965E6C4E68635A121CEC18D /* Pods_Samples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FD9205055C3D47CACA310F2 /* Pods_Samples.framework */; };
+		F8CA19F263511E013C34E520 /* MetricContextEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4AE572F858591FB5513F5B /* MetricContextEntry.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -141,6 +142,7 @@
 		A2DEB93123439D5200551E0B /* Attributes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Attributes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2DEB93B23439F4800551E0B /* Persistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Persistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2E30FCC2736DB27004D0A60 /* Steps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Steps.swift; sourceTree = "<group>"; };
+		3A4AE572F858591FB5513F5B /* MetricContextEntry.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MetricContextEntry.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -228,6 +230,7 @@
 				CAAC731F89AB66BE8320CF9C /* LostItemEvent.swift */,
 				A224F6652679BB0A007C3577 /* Pain.swift */,
 				A2AF1FF02343C63900E04517 /* Tag.swift */,
+				3A4AE572F858591FB5513F5B /* MetricContextEntry.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -471,6 +474,7 @@
 				A22D6267234398AF0023470F /* SexualActivity.swift in Sources */,
 				A2A8AFFA2343E59100E883CE /* HealthKitUtil.swift in Sources */,
 				A22D626D234398AF0023470F /* HealthKitCorrelationSample.swift in Sources */,
+				F8CA19F263511E013C34E520 /* MetricContextEntry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

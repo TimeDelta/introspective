@@ -51,7 +51,7 @@ final class LostItemsViewController: UITableViewController {
 		} catch { showError(title: "Could not load lost items", error: error) }
 	}
 	override func numberOfSections(in tableView: UITableView) -> Int { 2 }
-	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { section == 0 ? 1 : events.count }
+	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { section == 0 ? 2 : events.count }
 	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? { section == 0 ? "Summary" : "Recent events" }
 	override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
 		section == 0 ? "Net recorded losses include all time and may be negative if earlier losses were not logged. Tap an event to add a note; swipe to remove an accidental entry." : "Showing up to 200 recent events. Summary counts include all matching events."
@@ -59,10 +59,15 @@ final class LostItemsViewController: UITableViewController {
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let identifier = "LostItemEventCell"
 		let cell = tableView.dequeueReusableCell(withIdentifier: identifier) ?? UITableViewCell(style: .subtitle, reuseIdentifier: identifier)
-		cell.selectionStyle = indexPath.section == 0 ? .none : .default
+		cell.selectionStyle = indexPath.section == 0 && indexPath.row == 0 ? .none : .default
+		cell.accessoryType = .none
 		cell.textLabel?.numberOfLines = 0
 		cell.detailTextLabel?.numberOfLines = 0
-		if indexPath.section == 0 {
+		if indexPath.section == 0 && indexPath.row == 1 {
+			cell.textLabel?.text = "Context and limitations"
+			cell.detailTextLabel?.text = ContextMetric.lostItems.limitations
+			cell.accessoryType = .disclosureIndicator
+		} else if indexPath.section == 0 {
 			cell.textLabel?.text = "Lost: \(lost) · Found: \(found)"
 			cell.detailTextLabel?.text = "Net recorded losses (all time): \(balance)"
 		} else {
@@ -74,6 +79,11 @@ final class LostItemsViewController: UITableViewController {
 	}
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: false)
+		if indexPath.section == 0 && indexPath.row == 1 {
+			let start = period.selectedSegmentIndex == 2 ? nil : MoodReviewSummary.dateInterval(forLastDays: [7, 30][period.selectedSegmentIndex]).start
+			navigationController?.pushViewController(MetricContextViewController(metric: .lostItems, interval: start.map { DateInterval(start: $0, end: Date()) }), animated: true)
+			return
+		}
 		guard indexPath.section == 1 else { return }
 		let event = events[indexPath.row]
 		let alert = UIAlertController(title: "Event note", message: nil, preferredStyle: .alert)

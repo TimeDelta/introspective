@@ -175,6 +175,7 @@ public final class QueryFactoryImpl: QueryFactory {
 		case is FatigueImpl.Type: return fatigueQuery()
 		case is ActiveEnergy.Type: return ActiveEnergyQueryImpl()
 		case is LostItemEvent.Type: return CoreDataQuery<LostItemEvent>()
+		case is MetricContextEntry.Type: return CoreDataQuery<MetricContextEntry>()
 		case is Workout.Type: return WorkoutQueryImpl()
 		case is Steps.Type: return stepsQuery()
 		case is Activity.Type: return activityQuery()
@@ -200,6 +201,7 @@ public final class QueryFactoryImpl: QueryFactory {
 		case is FatigueQuery: return FatigueImpl.self
 		case is ActiveEnergyQueryImpl: return ActiveEnergy.self
 		case is CoreDataQuery<LostItemEvent>: return LostItemEvent.self
+		case is CoreDataQuery<MetricContextEntry>: return MetricContextEntry.self
 		case is WorkoutQueryImpl: return Workout.self
 		case is StepsQuery: return Steps.self
 		case is ActivityQuery: return Activity.self
