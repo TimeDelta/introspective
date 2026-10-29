@@ -169,6 +169,7 @@ public class ActivityDAOImpl: ActivityDAO {
 		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "endDate != nil")
 		fetchRequest.sortDescriptors = [NSSortDescriptor(key: "endDate", ascending: false)]
+		fetchRequest.fetchLimit = 1
 		let activities = try injected(Database.self).query(fetchRequest)
 		if !activities.isEmpty {
 			return activities[0].end
@@ -184,6 +185,7 @@ public class ActivityDAOImpl: ActivityDAO {
 		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "definition.name ==[cd] %@", activityDefinition.name)
 		fetchRequest.sortDescriptors = [NSSortDescriptor(key: keyName, ascending: false)]
+		fetchRequest.fetchLimit = 1
 		let activities = try injected(Database.self).query(fetchRequest)
 
 		Me.signpost.end(
@@ -208,18 +210,17 @@ public class ActivityDAOImpl: ActivityDAO {
 			NSPredicate(format: "definition ==[cd] %@", activityDefinition),
 			NSPredicate(format: "%K == nil", endDateVariableName),
 		])
+		fetchRequest.sortDescriptors = [NSSortDescriptor(key: "startDate", ascending: false)]
+		fetchRequest.fetchLimit = 1
 		let incompleteActivities = try injected(Database.self).query(fetchRequest)
 
-		if !incompleteActivities.isEmpty {
-			let sortedIncompleteActivities = incompleteActivities.sorted(by: { $0.start > $1.start })
-			return sortedIncompleteActivities[0]
-		}
-		return nil
+		return incompleteActivities.first
 	}
 
 	public final func activityDefinitionWithNameExists(_ name: String) throws -> Bool {
 		let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
+		fetchRequest.fetchLimit = 1
 		let results = try injected(Database.self).query(fetchRequest)
 		return !results.isEmpty
 	}
@@ -253,6 +254,7 @@ public class ActivityDAOImpl: ActivityDAO {
 			fetchRequest.predicate!,
 			NSPredicate(format: "endDate == nil"),
 		])
+		fetchRequest.fetchLimit = 1
 		let unfinishedActivities = try injected(Database.self).query(fetchRequest)
 		Me.signpost.end(name: signpostName, idObject: activityDefinition)
 		return !unfinishedActivities.isEmpty

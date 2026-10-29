@@ -195,25 +195,19 @@ public final class SingleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator {
 	}
 
 	/// - Returns: If a `pointGrouper` is set, then produce the point groups  and return all sorted group values for the x-axis (de-duplicated). Otherwise return `nil`.
-	private final func getAllSortedXGroupValuesIfPointGrouped(seriesGroups: [(Any, [Sample])]) throws -> [Any]? {
-		if let pointGrouper = pointGrouper {
-			var xGroupValues = [Any]()
-			for (_, samples) in seriesGroups {
-				let groups = try pointGrouper.group(samples: samples)
-				xGroupValues.append(contentsOf: groups.map { $0.0 })
-			}
-			return sort(unique(xGroupValues), by: { gentlyResolveAsString($0) })
-		}
-		return nil
-	}
-
-	private final func unique(_ values: [Any]) -> [Any] {
+	final func getAllSortedXGroupValuesIfPointGrouped(seriesGroups: [(Any, [Sample])]) throws -> [Any]? {
+		guard let pointGrouper = pointGrouper else { return nil }
+		var xGroupValues = [Any]()
 		var valuesSeen = Set<String>()
-		return values.filter {
-			let stringValue = String(describing: $0)
-			let previouslySeen = valuesSeen.contains(stringValue)
-			valuesSeen.insert(stringValue)
-			return !previouslySeen
+		for (_, samples) in seriesGroups {
+			let groups = try pointGrouper.group(samples: samples)
+			for (groupValue, _) in groups {
+				// Preserve the existing string-based identity and first-seen order.
+				if valuesSeen.insert(String(describing: groupValue)).inserted {
+					xGroupValues.append(groupValue)
+				}
+			}
 		}
+		return sort(xGroupValues, by: { gentlyResolveAsString($0) })
 	}
 }
