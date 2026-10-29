@@ -28,6 +28,8 @@ public final class MedicationDoseEditorViewControllerImpl: UIViewController, Med
 
 	private static let log = Log()
 
+	public static let preferredHeight: CGFloat = 450
+
 	// MARK: - IBOutlets
 
 	@IBOutlet final var dosageLabel: UILabel!
@@ -74,6 +76,7 @@ public final class MedicationDoseEditorViewControllerImpl: UIViewController, Med
 
 		validate()
 
+		layoutEditor()
 		dosageTextField.becomeFirstResponder()
 		let fixedSpace = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
 		fixedSpace.width = CGFloat(10)
@@ -115,6 +118,34 @@ public final class MedicationDoseEditorViewControllerImpl: UIViewController, Med
 			UIBarButtonItem(title: "Now", style: .plain, target: self, action: #selector(nowButtonPressed)),
 		])
 		dateToolbar.setItems(dateBarButtons, animated: false)
+	}
+
+	private func layoutEditor() {
+		guard let parent = datePicker.superview,
+			dosageLabel.superview === parent, dosageTextField.superview === parent,
+			dosageToolbar.superview === parent, dateToolbar.superview === parent,
+			saveButton.superview === parent else { return }
+		preferredContentSize = CGSize(width: 350, height: Me.preferredHeight)
+		let controls: [UIView] = [dosageLabel, dosageTextField, dosageToolbar, dateToolbar, datePicker, saveButton]
+		NSLayoutConstraint.deactivate(parent.constraints.filter { constraint in
+			controls.contains { $0 === (constraint.firstItem as? UIView) || $0 === (constraint.secondItem as? UIView) }
+		})
+		let dosageRow = UIStackView(arrangedSubviews: [dosageLabel, dosageTextField])
+		dosageRow.spacing = 8; dosageRow.alignment = .center
+		let stack = UIStackView(arrangedSubviews: [dosageToolbar, dosageRow, dateToolbar, datePicker, saveButton])
+		stack.axis = .vertical; stack.spacing = 4
+		stack.translatesAutoresizingMaskIntoConstraints = false; parent.addSubview(stack)
+		NSLayoutConstraint.activate([
+			stack.topAnchor.constraint(equalTo: parent.safeAreaLayoutGuide.topAnchor, constant: 8),
+			stack.leadingAnchor.constraint(equalTo: parent.leadingAnchor, constant: 8),
+			stack.trailingAnchor.constraint(equalTo: parent.trailingAnchor, constant: -8),
+			stack.bottomAnchor.constraint(lessThanOrEqualTo: parent.safeAreaLayoutGuide.bottomAnchor, constant: -8),
+			dosageToolbar.heightAnchor.constraint(equalToConstant: 44),
+			dosageRow.heightAnchor.constraint(equalToConstant: 44),
+			dateToolbar.heightAnchor.constraint(equalToConstant: 44),
+			datePicker.heightAnchor.constraint(equalToConstant: 216),
+			saveButton.heightAnchor.constraint(equalToConstant: 45),
+		])
 	}
 
 	// MARK: - Actions

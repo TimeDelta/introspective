@@ -33,13 +33,13 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	// MARK: Presenters
 
 	private static let setDosePresenter: Presentr = injected(UiUtil.self).customPresenter(
-		width: .custom(size: 300),
-		height: .custom(size: 250),
+		width: .custom(size: 350),
+		height: .custom(size: Float(MedicationDoseEditorViewControllerImpl.preferredHeight)),
 		center: .topCenter
 	)
 	private static let presenter = injected(UiUtil.self).customPresenter(
 		width: .full,
-		height: .custom(size: 300),
+		height: .custom(size: 350),
 		center: .topCenter
 	)
 

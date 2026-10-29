@@ -204,6 +204,12 @@ class UITest: XCTestCase {
 		if let text = text, !text.isEmpty {
 			field.tap()
 			field.typeText(text)
+			let complete = NSPredicate(format: "value == %@", text)
+			if !complete.evaluate(with: field) {
+				let expectation = XCTNSPredicateExpectation(predicate: complete, object: field)
+				XCTAssertEqual(XCTWaiter.wait(for: [expectation], timeout: 5), .completed,
+					"Text input did not finish before saving: \(field.value ?? "nil")")
+			}
 		}
 	}
 

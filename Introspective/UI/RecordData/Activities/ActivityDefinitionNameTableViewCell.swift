@@ -56,21 +56,17 @@ public final class ActivityDefinitionNameTableViewCell: UITableViewCell {
 	// MARK: - Helper Functions
 
 	private final func sendNameChangeNotification() {
-		DispatchQueue.main.async {
-			NotificationCenter.default.post(
-				name: self.notificationToSendOnNameChange,
-				object: self,
-				userInfo: self.info([
-					.text: self.nameTextField.text ?? "",
-				])
-			)
-		}
+		// Editing events and Save run on main. Publish the current value immediately
+		// so Save cannot observe a name from an earlier keystroke.
+		NotificationCenter.default.post(
+			name: notificationToSendOnNameChange,
+			object: self,
+			userInfo: info([.text: nameTextField.text ?? ""])
+		)
 	}
 
 	private final func sendInvalidNameNotification() {
-		DispatchQueue.main.async {
-			NotificationCenter.default.post(name: self.notificationToSendOnInvalidName, object: self)
-		}
+		NotificationCenter.default.post(name: notificationToSendOnInvalidName, object: self)
 	}
 
 	private final func isDuplicate() -> Bool {
