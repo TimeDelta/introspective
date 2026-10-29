@@ -1,7 +1,7 @@
 import XCTest
 import UIKit
 import WSTagsField
-import DataImport
+@testable import DataImport
 import HealthKit
 import CoreData
 import UIKit
@@ -30,6 +30,34 @@ private final class SavedQueryTestProvider: InjectionProvider {
 		if type == Database.self { return database as! Type }
 		if type == Settings.self { return settings as! Type }
 		throw NSError(domain: "SavedQueryTests", code: 1)
+	}
+}
+
+private struct RegistryLevel1 { let value: Int }
+private struct RegistryLevel2 { let value: Int }
+private struct RegistryLevel3 { let value: Int }
+private struct RegistryLevel4 { let value: Int }
+private struct RegistryLevel5 { let value: Int }
+private struct RegistryLeaf { let value: Int }
+
+private final class RegistryLeafProvider: InjectionProvider {
+	let types: [Any.Type] = [RegistryLeaf.self]
+	let value: Int
+	init(_ value: Int) { self.value = value }
+	func get<T>(_ type: T.Type) throws -> T { RegistryLeaf(value: value) as! T }
+}
+
+private final class RegistryChainProvider: InjectionProvider {
+	let types: [Any.Type] = [RegistryLevel1.self, RegistryLevel2.self, RegistryLevel3.self, RegistryLevel4.self, RegistryLevel5.self]
+	func get<T>(_ type: T.Type) throws -> T {
+		if type == RegistryLevel1.self { return RegistryLevel1(value: injected(RegistryLevel2.self).value + 1) as! T }
+		if type == RegistryLevel2.self {
+			DependencyInjector.register([RegistryLeafProvider(7)])
+			return RegistryLevel2(value: injected(RegistryLevel3.self).value + 1) as! T
+		}
+		if type == RegistryLevel3.self { return RegistryLevel3(value: injected(RegistryLevel4.self).value + 1) as! T }
+		if type == RegistryLevel4.self { return RegistryLevel4(value: injected(RegistryLevel5.self).value + 1) as! T }
+		return RegistryLevel5(value: 1) as! T
 	}
 }
 
@@ -139,6 +167,103 @@ final class SavedQueryTests: XCTestCase {
 		if let error = failure { throw error }
 		value.viewContext.automaticallyMergesChangesFromParent = true
 		return value
+	}
+
+	func testDependencyProvidersCanResolveDeepChainsAndRegisterDuringResolution() {
+		DependencyInjector.register([RegistryChainProvider()])
+		let resolved = expectation(description: "Nested resolution completes")
+		DispatchQueue.global().async {
+			XCTAssertEqual(injected(RegistryLevel1.self).value, 5)
+			XCTAssertEqual(injected(RegistryLeaf.self).value, 7)
+			resolved.fulfill()
+		}
+		wait(for: [resolved], timeout: 5)
+	}
+
+	func testDependencyRegistrySupportsConcurrentReplacementAndLookup() {
+		DependencyInjector.register([RegistryLeafProvider(0)])
+		DispatchQueue.concurrentPerform(iterations: 1000) { index in
+			if index.isMultiple(of: 2) { DependencyInjector.register([RegistryLeafProvider(index)]) }
+			XCTAssertGreaterThanOrEqual(injected(RegistryLeaf.self).value, 0)
+		}
+	}
+
+	func testImporterCancellationWaitsForTheActiveRowBeforeRollback() {
+		let execution = ImporterExecution()
+		let started = expectation(description: "Active row")
+		let finished = expectation(description: "Worker exited")
+		let release = DispatchSemaphore(value: 0)
+		let group = DispatchGroup()
+		var rowFinished = false
+		var rollbacks = 0
+		DispatchQueue.global().async(group: group) {
+			do {
+				try execution.execute(newImport: true, rollback: {
+					XCTAssertTrue(rowFinished)
+					rollbacks += 1
+				}) {
+					started.fulfill()
+					release.wait()
+					XCTAssertTrue(execution.isCancelled)
+					rowFinished = true
+				}
+			} catch { XCTFail("Unexpected import error: \(error)") }
+		}
+		group.notify(queue: .main) { finished.fulfill() }
+		wait(for: [started], timeout: 5)
+		execution.cancel { XCTFail("Must not reset a transaction while its row is active") }
+		release.signal()
+		wait(for: [finished], timeout: 5)
+		XCTAssertEqual(rollbacks, 1)
+	}
+
+	func testImporterFinalCommitCannotBeResetByALateCancellationAndCanRestart() throws {
+		let execution = ImporterExecution()
+		var rollbacks = 0
+		try execution.execute(newImport: true, rollback: { rollbacks += 1 }) {
+			try execution.commit {
+				execution.cancel { XCTFail("An atomic final save must finish") }
+				XCTAssertFalse(execution.isCancelled)
+			}
+		}
+		XCTAssertEqual(rollbacks, 0)
+		execution.cancel { rollbacks += 1 }
+		XCTAssertTrue(execution.isCancelled)
+		try execution.execute(newImport: true, rollback: { rollbacks += 1 }) {
+			XCTAssertFalse(execution.isCancelled)
+			// importData() delegates to resume() on the same worker.
+			try execution.execute(rollback: { rollbacks += 1 }) {}
+		}
+		XCTAssertEqual(rollbacks, 1)
+	}
+
+	func testImporterRejectsAConcurrentRestartAndDrainsFailedWorkBeforeRetry() throws {
+		let execution = ImporterExecution()
+		let started = expectation(description: "Active import")
+		let finished = expectation(description: "Failed worker exited")
+		let release = DispatchSemaphore(value: 0)
+		let group = DispatchGroup()
+		var rollbacks = 0
+		DispatchQueue.global().async(group: group) {
+			do {
+				try execution.execute(newImport: true, rollback: { rollbacks += 1 }) {
+					started.fulfill()
+					release.wait()
+					throw NSError(domain: "Importer test", code: 1)
+				}
+				XCTFail("Expected the import failure")
+			} catch {}
+		}
+		group.notify(queue: .main) { finished.fulfill() }
+		wait(for: [started], timeout: 5)
+		XCTAssertThrowsError(try execution.execute(newImport: true, rollback: {}) {
+			XCTFail("A second worker must not mutate an active import")
+		})
+		release.signal()
+		wait(for: [finished], timeout: 5)
+		XCTAssertEqual(rollbacks, 1)
+		try execution.execute(newImport: true, rollback: { rollbacks += 1 }) {}
+		XCTAssertEqual(rollbacks, 1)
 	}
 
 	func testUIFixturesSurviveSQLiteReopenWithRelationshipsOrderAndPreciseDates() throws {

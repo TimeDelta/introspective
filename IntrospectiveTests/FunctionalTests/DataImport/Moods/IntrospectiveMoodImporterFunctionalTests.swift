@@ -198,11 +198,7 @@ class IntrospectiveMoodImporterFunctionalTests: ImporterTest {
 	func testGivenImportCancelled_importData_startsNewImport() throws {
 		// given
 		useInput(Me.validInput)
-		DispatchQueue.global(qos: .background).async {
-			try! self.importer.importData(from: self.url)
-		}
-		while importer.percentComplete() == 0 {}
-		importer.cancel()
+		cancelActiveImport(importer, execution: importer.execution)
 		let originalPercentComplete = importer.percentComplete()
 
 		// when
@@ -271,13 +267,9 @@ class IntrospectiveMoodImporterFunctionalTests: ImporterTest {
 	func testGivenCurrentlyImporting_cancel_stopsImportAndSetsIsCancelledToTrue() {
 		// given
 		useInput(Me.validInput)
-		DispatchQueue.global(qos: .background).async {
-			try! self.importer.importData(from: self.url)
-		}
+		cancelActiveImport(importer, execution: importer.execution)
 
 		// when
-		while importer.percentComplete() == 0 {}
-		importer.cancel()
 
 		// then
 		XCTAssertLessThanOrEqual(importer.percentComplete(), 1)
@@ -289,15 +281,7 @@ class IntrospectiveMoodImporterFunctionalTests: ImporterTest {
 	func testGivenImportCancelled_resume_doesNotContinue() throws {
 		// given
 		useInput(Me.validInput)
-		DispatchQueue.global(qos: .background).async {
-			do {
-				try self.importer.importData(from: self.url)
-			} catch {
-				XCTFail("Error thrown: " + errorInfo(error))
-			}
-		}
-		while importer.percentComplete() == 0 {}
-		importer.cancel()
+		cancelActiveImport(importer, execution: importer.execution)
 		let expectedPerentComplete = importer.percentComplete()
 
 		// when

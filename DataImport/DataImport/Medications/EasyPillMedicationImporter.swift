@@ -38,14 +38,27 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 		"This will not import any medications with the name of one that you have already saved."
 
 	public final var importOnlyNewData: Bool = true
-	public final var isPaused: Bool = false
-	public final var isCancelled: Bool = false
+	public final var isPaused: Bool {
+		get { execution.isPaused }
+		set { execution.isPaused = newValue }
+	}
+	public final var isCancelled: Bool {
+		get { execution.isCancelled }
+		set { execution.isCancelled = newValue }
+	}
 
 	/// for testing purposes only
 	public final var pauseOnRecord: Int?
 
-	private final var recordNumber = -1
-	private final var totalLines = -1
+	internal let execution = ImporterExecution()
+	private final var recordNumber: Int {
+		get { execution.recordNumber }
+		set { execution.recordNumber = newValue }
+	}
+	private final var totalLines: Int {
+		get { execution.totalLines }
+		set { execution.totalLines = newValue }
+	}
 	private final let mainTransaction = injected(Database.self).transaction()
 	private final var latestDate: Date!
 	private final var lines = [String]()
@@ -53,18 +66,16 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 	// MARK: - Functions
 
 	public final func importData(from url: URL) throws {
-		let contents = try injected(IOUtil.self).contentsOf(url)
-		lines = contents.components(separatedBy: "\n")
-		lines.removeFirst()
-		recordNumber = 1
-		totalLines = lines.count
+		try execution.execute(newImport: true, rollback: { self.lines.removeAll(); self.mainTransaction.reset() }) {
+			mainTransaction.reset()
+			let contents = try injected(IOUtil.self).contentsOf(url)
+			lines = contents.components(separatedBy: "\n")
+			lines.removeFirst()
+			recordNumber = 1
+			totalLines = lines.count
 
-		isPaused = false
-		isCancelled = false
-
-		lastImport = Date()
-
-		try resume()
+			try resume()
+		}
 	}
 
 	public final func resetLastImportDate() throws {
@@ -83,9 +94,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 	}
 
 	public final func cancel() {
-		isCancelled = true
-		lines = []
-		mainTransaction.reset()
+		execution.cancel { self.lines.removeAll(); self.mainTransaction.reset() }
 	}
 
 	public final func pause() {
@@ -93,32 +102,37 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 	}
 
 	public final func resume() throws {
-		guard !isCancelled else {
-			Me.log.error("Tried to resume a cancelled medicaiton import from EasyPill")
-			return
-		}
-
-		isPaused = false
-		do {
-			// note: EasyPill does not allow multi-line notes
-			while !lines.isEmpty {
-				if pauseOnRecord == recordNumber {
-					pause()
-					pauseOnRecord = nil
-					return
-				}
-				guard !isPaused && !isCancelled else { return }
-				let line = lines.removeFirst()
-				try processLine(line, mainTransaction)
-				recordNumber += 1
+		try execution.execute(rollback: { self.lines.removeAll(); self.mainTransaction.reset() }) {
+			execution.beforeResume?()
+			guard !isCancelled else {
+				Me.log.error("Tried to resume a cancelled medicaiton import from EasyPill")
+				return
 			}
 
-			try correctRecordScreenIndices()
+			isPaused = false
+			do {
+				// note: EasyPill does not allow multi-line notes
+				while !lines.isEmpty {
+					if pauseOnRecord == recordNumber {
+						pause()
+						pauseOnRecord = nil
+						return
+					}
+					guard !isPaused && !isCancelled else { return }
+					let line = lines.removeFirst()
+					try processLine(line, mainTransaction)
+					recordNumber += 1
+				}
 
-			try retryOnFail({ try mainTransaction.commit() }, maxRetries: 2)
-		} catch {
-			Me.log.error("Failed to import medications from EasyPill: %@", errorInfo(error))
-			throw error
+				try execution.commit {
+					try correctRecordScreenIndices()
+					lastImport = Date()
+					try retryOnFail({ try mainTransaction.commit() }, maxRetries: 2)
+				}
+			} catch {
+				Me.log.error("Failed to import medications from EasyPill: %@", errorInfo(error))
+				throw error
+			}
 		}
 	}
 
