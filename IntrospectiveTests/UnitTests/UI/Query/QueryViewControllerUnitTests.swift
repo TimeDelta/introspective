@@ -1859,7 +1859,8 @@ final class QueryViewControllerUnitTests: UnitTest {
 		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
 
-		let subQuerySampleInfo = SampleTypeInfo(MoodImpl.self, mockSubQueryMatcher())
+		let expectedMatcher = mockSubQueryMatcher()
+		let subQuerySampleInfo = SampleTypeInfo(MoodImpl.self, expectedMatcher)
 		controller.queries[0] = (sampleTypeInfo: SampleTypeInfo(HeartRate.self), parts: [])
 		controller.queries.append((sampleTypeInfo: subQuerySampleInfo, parts: []))
 
@@ -1871,7 +1872,7 @@ final class QueryViewControllerUnitTests: UnitTest {
 		// then
 		XCTAssertNotNil(sampleQuery.subQuery)
 		if let actualSubQuery = sampleQuery.subQuery {
-			XCTAssert(actualSubQuery.matcher === subQuerySampleInfo.matcher!)
+			XCTAssert((actualSubQuery.matcher as? SubQueryMatcherMock) === expectedMatcher)
 			XCTAssert(actualSubQuery.query === subQuery)
 		}
 		Verify(mockQueryFactory, .heartRateQuery(.value([])))
@@ -1890,7 +1891,8 @@ final class QueryViewControllerUnitTests: UnitTest {
 		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
 
-		let subQuerySampleInfo = SampleTypeInfo(MoodImpl.self, mockSubQueryMatcher())
+		let expectedMatcher = mockSubQueryMatcher()
+		let subQuerySampleInfo = SampleTypeInfo(MoodImpl.self, expectedMatcher)
 		let attributeRestriction1 = EqualToDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating)
 		let attributeRestriction2 = NotEqualToDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating)
 		controller.queries[0] = (sampleTypeInfo: SampleTypeInfo(HeartRate.self), parts: [])
@@ -1909,7 +1911,7 @@ final class QueryViewControllerUnitTests: UnitTest {
 		// then
 		XCTAssertNotNil(sampleQuery.subQuery)
 		if let actualSubQuery = sampleQuery.subQuery {
-			XCTAssert(actualSubQuery.matcher === subQuerySampleInfo.matcher!)
+			XCTAssert((actualSubQuery.matcher as? SubQueryMatcherMock) === expectedMatcher)
 			XCTAssert(actualSubQuery.query === subQuery)
 		}
 		Verify(mockQueryFactory, .heartRateQuery(.value([])))
@@ -1937,7 +1939,8 @@ final class QueryViewControllerUnitTests: UnitTest {
 		]
 		controller.queries[0] = (sampleTypeInfo: SampleTypeInfo(HeartRate.self), parts: queryParts)
 
-		let subQuerySampleInfo = SampleTypeInfo(MoodImpl.self, mockSubQueryMatcher())
+		let expectedMatcher = mockSubQueryMatcher()
+		let subQuerySampleInfo = SampleTypeInfo(MoodImpl.self, expectedMatcher)
 
 		let moodAttributeRestriction1 = EqualToDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating)
 		let moodAttributeRestriction2 = NotEqualToDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating)
@@ -1956,7 +1959,7 @@ final class QueryViewControllerUnitTests: UnitTest {
 		// then
 		XCTAssertNotNil(sampleQuery.subQuery)
 		if let actualSubQuery = sampleQuery.subQuery {
-			XCTAssert(actualSubQuery.matcher === subQuerySampleInfo.matcher!)
+			XCTAssert((actualSubQuery.matcher as? SubQueryMatcherMock) === expectedMatcher)
 			XCTAssert(actualSubQuery.query === subQuery)
 		}
 		Verify(mockQueryFactory, .heartRateQuery(.value(queryParts)))
