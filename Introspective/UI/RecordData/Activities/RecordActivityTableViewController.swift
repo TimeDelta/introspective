@@ -772,6 +772,8 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	// MARK: FetchedResultsController Helpers
 
+	// These fetches change with the search text and sort order. Core Data caches
+	// require an identical fetch; sharing one between filtered and full lists crashes.
 	private final func resetFetchedResultsControllers() {
 		resetActiveActivitiesFetchedResultsController()
 		resetInactiveActivitiesFetchedResultsController()
@@ -783,7 +785,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 			activeActivitiesFetchedResultsController = injected(Database.self).fetchedResultsController(
 				type: ActivityDefinition.self,
 				sortDescriptors: [currentSort ?? defaultSort],
-				cacheName: "activeDefinitions"
+				cacheName: nil
 			)
 			let fetchRequest = activeActivitiesFetchedResultsController.fetchRequest
 
@@ -818,7 +820,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 			inactiveActivitiesFetchedResultsController = injected(Database.self).fetchedResultsController(
 				type: ActivityDefinition.self,
 				sortDescriptors: [currentSort ?? defaultSort],
-				cacheName: "definitions"
+				cacheName: nil
 			)
 			let fetchRequest = inactiveActivitiesFetchedResultsController.fetchRequest
 
@@ -852,7 +854,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		let controller = injected(Database.self).fetchedResultsController(
 			type: ActivityDefinition.self,
 			sortDescriptors: [currentSort ?? defaultSort],
-			cacheName: "definitions"
+			cacheName: nil
 		)
 		try controller.performFetch()
 		Me.signpost.end(name: "getting all fetched results controller")
