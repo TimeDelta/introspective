@@ -147,12 +147,7 @@ final class RecordActivitiesUITests: UITest {
 		let total = app.tables.cells.staticTexts["total duration for today"].value as? String
 		let recent = app.tables.cells.staticTexts["most recent duration"].value as? String
 		XCTAssertEqual(total, recent)
-		let minimumSeconds = Int(earliestEnd.timeIntervalSince(latestStart))
-		let maximumSeconds = Int(latestEnd.timeIntervalSince(earliestStart))
-		let possibleDurations = (minimumSeconds...maximumSeconds).map {
-			String(format: "%d:%02d:%02d", $0 / 3600, ($0 / 60) % 60, $0 % 60)
-		}
-		XCTAssertTrue(possibleDurations.contains(total ?? ""), "Duration must match the measured start/stop interval")
+		assertRecordedDuration(in: earliestEnd.timeIntervalSince(latestStart)...latestEnd.timeIntervalSince(earliestStart))
 	}
 
 	func testChangingActivityDefinitionWhileEditingLastActivity_updatesUI() {
@@ -377,7 +372,7 @@ final class RecordActivitiesUITests: UITest {
 	func testAutoIgnoreEnabledAndActivityStoppedBeforeMinimumTime_doesNotSaveActivity() {
 		// given
 		let definition = ActivityDefinition(name: "grehuiq")
-		let minTime = 2
+		let minTime = 60
 		createActivityDefinition(definition)
 		app.tabBars.buttons["Settings"].tap()
 		app.tables.cells.staticTexts["Activity"].tap()
@@ -386,11 +381,13 @@ final class RecordActivitiesUITests: UITest {
 		app.tabBars.buttons["Record"].tap()
 
 		// when
+		let began = Date()
 		app.tables.cells.staticTexts[definition.name].tap()
-		sleep(UInt32(minTime) - 1)
+		sleep(1)
 		app.tables.cells.staticTexts[definition.name].tap()
 
 		// then
+		XCTAssertLessThan(Date().timeIntervalSince(began), Double(minTime), "Automation must stop the activity before the configured threshold")
 		XCTAssertEqual(app.tables.cells.staticTexts["total duration for today"].value as? String, "")
 	}
 
@@ -406,16 +403,16 @@ final class RecordActivitiesUITests: UITest {
 		app.tabBars.buttons["Record"].tap()
 
 		// when
+		let earliestStart = Date()
 		app.tables.cells.staticTexts[definition.name].tap()
+		let latestStart = Date()
 		sleep(UInt32(minTime) + 1)
+		let earliestEnd = Date()
 		app.tables.cells.staticTexts[definition.name].tap()
+		let latestEnd = Date()
 
 		// then
-		var seconds = String(minTime + 1)
-		if seconds.count == 1 {
-			seconds = "0" + seconds
-		}
-		XCTAssertEqual(app.tables.cells.staticTexts["total duration for today"].value as? String, "0:00:" + seconds)
+		assertRecordedDuration(in: earliestEnd.timeIntervalSince(latestStart)...latestEnd.timeIntervalSince(earliestStart))
 	}
 
 	func testFinishingActivityWithAutoNoteEnabled_showsEditActivityScreen() {
@@ -710,6 +707,14 @@ final class RecordActivitiesUITests: UITest {
 	}
 
 	// MARK: - Helper Functions
+
+	private final func assertRecordedDuration(in interval: ClosedRange<TimeInterval>, file: StaticString = #file, line: UInt = #line) {
+		let possible = (Int(interval.lowerBound)...Int(interval.upperBound)).map {
+			String(format: "%d:%02d:%02d", $0 / 3600, ($0 / 60) % 60, $0 % 60)
+		}
+		let actual = app.tables.cells.staticTexts["total duration for today"].value as? String
+		XCTAssertTrue(possible.contains(actual ?? ""), "Duration \(actual ?? "missing") must match the measured tap interval \(interval)", file: file, line: line)
+	}
 
 	private final func wholeSecondDates(from start: Date, to end: Date) -> [Date] {
 		return (Int(floor(start.timeIntervalSince1970))...Int(floor(end.timeIntervalSince1970))).map {

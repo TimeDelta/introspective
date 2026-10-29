@@ -176,6 +176,39 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertNil(weakCell)
 	}
 
+	func testAutoIgnoreStrictThresholdIncludesFractionalSeconds() throws {
+		let settings = injected(Settings.self)
+		settings.setAutoIgnoreEnabled(true)
+		settings.setAutoIgnoreSeconds(2)
+		let definition = try lookupDefinition("Auto-ignore threshold")
+		let start = Date(timeIntervalSince1970: 1_700_000_000)
+		let dao = ActivityDAOImpl()
+		for seconds in [1.999999, 2.0, 2.000001] {
+			let activity = try lookupActivity(definition, start: start)
+			try container.viewContext.save()
+			let id = activity.objectID
+			XCTAssertEqual(dao.autoIgnoreIfAppropriate(activity, end: start.addingTimeInterval(seconds)), seconds < 2)
+			let persisted = try container.viewContext.fetch(Activity.fetchRequest()).contains { $0.objectID == id }
+			XCTAssertEqual(persisted, seconds >= 2)
+		}
+	}
+
+	func testDisabledAutoIgnoreAndZeroThresholdPreserveShortActivities() throws {
+		let settings = injected(Settings.self)
+		settings.setAutoIgnoreEnabled(false)
+		settings.setAutoIgnoreSeconds(60)
+		let definition = try lookupDefinition("Auto-ignore disabled")
+		let start = Date(timeIntervalSince1970: 1_700_000_000)
+		let activity = try lookupActivity(definition, start: start)
+		try container.viewContext.save()
+		let dao = ActivityDAOImpl()
+		XCTAssertFalse(dao.autoIgnoreIfAppropriate(activity, end: start.addingTimeInterval(0.5)))
+		settings.setAutoIgnoreEnabled(true)
+		settings.setAutoIgnoreSeconds(0)
+		XCTAssertFalse(dao.autoIgnoreIfAppropriate(activity, end: start.addingTimeInterval(0.5)))
+		XCTAssertEqual(try container.viewContext.count(for: Activity.fetchRequest()), 1)
+	}
+
 	private func reopen() throws {
 		let url = try XCTUnwrap(container.persistentStoreDescriptions.first?.url)
 		container.viewContext.reset()
