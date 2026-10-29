@@ -55,7 +55,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 		autoreleasepool {
 			let tutorial = QueryViewControllerCoachMarksDataSourceAndDelegate(owner)
 			// Initialize both the metadata callbacks and the cleanup delegate.
-			XCTAssertEqual(tutorial.numberOfCoachMarks(for: CoachMarksController()), 6)
+			XCTAssertEqual(tutorial.numberOfCoachMarks(for: CoachMarksController()), 5)
 			released = tutorial
 		}
 		XCTAssertNil(released)

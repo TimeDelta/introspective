@@ -935,6 +935,21 @@ final class SavedQueryTests: XCTestCase {
 		context.rollback()
 	}
 
+	func testNextAndPreviousDatesResolveEveryRequestedWeekday() throws {
+		let calendar = Calendar(identifier: .gregorian)
+		let base = try XCTUnwrap(calendar.date(from: DateComponents(year: 2024, month: 6, day: 2, hour: 12)))
+		let utility = CalendarUtilImpl()
+		for weekday in DayOfWeek.allDays {
+			let next = base.next(weekday), previous = base.previous(weekday)
+			XCTAssertEqual(utility.dayOfWeek(forDate: next), weekday)
+			XCTAssertEqual(utility.dayOfWeek(forDate: previous), weekday)
+			XCTAssertGreaterThan(next, base)
+			XCTAssertLessThan(previous, base)
+			XCTAssertLessThan(next.timeIntervalSince(base), 8 * 24 * 3600)
+			XCTAssertLessThan(base.timeIntervalSince(previous), 8 * 24 * 3600)
+		}
+	}
+
 	func testSingleWeekdayChecksAgreeWithDayListsForEveryWeekday() throws {
 		var calendar = Calendar(identifier: .gregorian)
 		calendar.timeZone = .current

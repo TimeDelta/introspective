@@ -31,7 +31,7 @@ public extension Date {
 	}
 
 	private func get(_ direction: Calendar.SearchDirection, _ dayOfWeek: DayOfWeek) -> Date {
-		let dayIndex = dayOfWeek.intValue
+		let dayIndex = dayOfWeek.intValue + 1 // Calendar weekdays are one-based.
 		let calendar = Calendar(identifier: .gregorian)
 		var nextDateComponent = DateComponents()
 		nextDateComponent.weekday = dayIndex

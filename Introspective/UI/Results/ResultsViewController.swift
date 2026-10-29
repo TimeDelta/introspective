@@ -102,6 +102,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				injected(AsyncUtil.self).run(qos: .userInteractive) {
 					let dateAttributes = self.samples[0].attributes.filter { $0 is DateAttribute }
 					guard !dateAttributes.isEmpty else {
+						self.filterSamples()
 						self.viewIsReady()
 						return
 					}
@@ -1039,6 +1040,10 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	// leave non-private for testing
 	final func recomputeInformation() {
+		guard let filteredSamples = filteredSamples else {
+			informationValues = Array(repeating: nil, count: information.count)
+			return
+		}
 		var newInformationValues = [String]()
 		for index in 0 ..< information.count {
 			do {
