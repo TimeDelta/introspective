@@ -68,11 +68,12 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			if !initialSampleSortDone {
 				guard !samples.isEmpty else {
 					viewIsReady()
-					DispatchQueue.main.async {
+					DispatchQueue.main.async { [weak self] in
+						guard let self = self else { return }
 						self.showError(
 							title: "No results",
 							message: nil,
-							onDismiss: { _ in self.popFromNavigationController() }
+							onDismiss: { [weak self] _ in self?.popFromNavigationController() }
 						)
 					}
 					return
@@ -87,8 +88,8 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 					navigationItem.hidesSearchBarWhenScrolling = false
 					definesPresentationContext = true
 				} else {
-					DispatchQueue.main.async {
-						self.searchController.searchBar.isHidden = true
+					DispatchQueue.main.async { [weak self] in
+						self?.searchController.searchBar.isHidden = true
 					}
 				}
 
@@ -99,7 +100,8 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				}
 
 				initialSampleSortDone = true
-				injected(AsyncUtil.self).run(qos: .userInteractive) {
+				injected(AsyncUtil.self).run(qos: .userInteractive) { [weak self] in
+					guard let self = self else { return }
 					let dateAttributes = self.samples[0].attributes.filter { $0 is DateAttribute }
 					guard !dateAttributes.isEmpty else {
 						self.filterSamples()
@@ -115,8 +117,8 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 					self.viewIsReady()
 				}
 			} else {
-				injected(AsyncUtil.self).run(qos: .userInteractive) {
-					self.filterSamples()
+				injected(AsyncUtil.self).run(qos: .userInteractive) { [weak self] in
+					self?.filterSamples()
 				}
 			}
 		}
@@ -148,7 +150,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	private final var filteredSamples: [Sample]! {
 		didSet {
 			recomputeInformation()
-			DispatchQueue.main.async { self.tableView.reloadData() }
+			DispatchQueue.main.async { [weak self] in self?.tableView.reloadData() }
 		}
 	}
 
@@ -212,11 +214,11 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		var onDismiss: ((UIAlertAction) -> Void)? = originalOnDismiss
 		if filteredSamples == nil {
 			failed = true
-			onDismiss = { action in
+			onDismiss = { [weak self] action in
 				if let originalOnDismiss = originalOnDismiss {
 					originalOnDismiss(action)
 				}
-				self.navigationController?.popViewController(animated: false)
+				self?.navigationController?.popViewController(animated: false)
 			}
 		}
 		super.showError(
@@ -561,12 +563,13 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				information[editIndex] = selectedInformation!
 				informationValues[editIndex] = nil
 				tableView.reloadRows(at: [IndexPath(row: editIndex, section: 0)], with: .automatic)
-				injected(AsyncUtil.self).run(qos: .userInteractive) {
+				injected(AsyncUtil.self).run(qos: .userInteractive) { [weak self] in
+					guard let self = self else { return }
 					do {
 						self.informationValues[editIndex] =
 							try self.information[editIndex].compute(forSamples: self.filteredSamples)
-						DispatchQueue.main.async {
-							self.tableView.reloadRows(at: [IndexPath(row: editIndex, section: 0)], with: .automatic)
+						DispatchQueue.main.async { [weak self] in
+							self?.tableView.reloadRows(at: [IndexPath(row: editIndex, section: 0)], with: .automatic)
 						}
 					} catch {
 						Me.log.error(
@@ -574,8 +577,8 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 							selectedInformation!.name,
 							errorInfo(error)
 						)
-						DispatchQueue.main.async {
-							self.showError(
+						DispatchQueue.main.async { [weak self] in
+							self?.showError(
 								title: "Failed to compute \(selectedInformation!.name) information",
 								error: error
 							)
@@ -596,20 +599,20 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				return
 			}
 			samples[lastSelectedUnfilteredRowIndex] = sample!
-			DispatchQueue.main.async {
-				self.tableView.reloadRows(at: [IndexPath(row: editIndex, section: 1)], with: .automatic)
+			DispatchQueue.main.async { [weak self] in
+				self?.tableView.reloadRows(at: [IndexPath(row: editIndex, section: 1)], with: .automatic)
 			}
 			for i in 0 ..< informationValues.count {
 				informationValues[i] = nil
 			}
-			DispatchQueue.main.async {
+			DispatchQueue.main.async { [weak self] in
 				// replace with waiting cell until all information is recomputed
-				self.tableView.reloadSections(IndexSet(arrayLiteral: 0), with: .automatic)
+				self?.tableView.reloadSections(IndexSet(arrayLiteral: 0), with: .automatic)
 			}
-			injected(AsyncUtil.self).run(qos: .userInteractive) {
-				self.recomputeInformation()
-				DispatchQueue.main.async {
-					self.tableView.reloadSections(IndexSet(arrayLiteral: 0), with: .automatic)
+			injected(AsyncUtil.self).run(qos: .userInteractive) { [weak self] in
+				self?.recomputeInformation()
+				DispatchQueue.main.async { [weak self] in
+					self?.tableView.reloadSections(IndexSet(arrayLiteral: 0), with: .automatic)
 				}
 			}
 		}
@@ -1029,8 +1032,8 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	// MARK: - Helper functions
 
 	private final func viewIsReady() {
-		DispatchQueue.main.async {
-			self.enableActionsButton()
+		DispatchQueue.main.async { [weak self] in
+			self?.enableActionsButton()
 		}
 	}
 
