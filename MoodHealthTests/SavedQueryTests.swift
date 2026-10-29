@@ -195,6 +195,44 @@ final class SavedQueryTests: XCTestCase {
 		return mood
 	}
 
+	func testMostRecentTimeWindowUsesNewestSampleRegardlessOfInputOrder() throws {
+		let older = try mood(1), newer = try mood(2)
+		let nearOlder = try mood(3), nearNewer = try mood(4)
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		older.date = base
+		newer.date = base.addingTimeInterval(3_600)
+		nearOlder.date = older.date.addingTimeInterval(1)
+		nearNewer.date = newer.date.addingTimeInterval(1)
+		let matcher = WithinXCalendarUnitsSubQueryMatcher(numberOfTimeUnits: 2, timeUnit: .second, mostRecentOnly: true)
+		for references in [[older, newer], [newer, older]] {
+			let result = matcher.getSamples(from: [nearOlder, nearNewer], matching: references)
+			XCTAssertEqual(result.map { $0.objectID }, [nearNewer.objectID])
+		}
+		matcher.mostRecentOnly = false
+		XCTAssertEqual(matcher.getSamples(from: [nearOlder, nearNewer], matching: [newer, older]).map { $0.objectID },
+			[nearOlder.objectID, nearNewer.objectID])
+	}
+
+	func testMostRecentTimeWindowKeepsBothBoundariesOfOneActivity() throws {
+		let context = container.viewContext
+		let definition = ActivityDefinition(context: context)
+		definition.name = "Temporal query"
+		definition.recordScreenIndex = 0
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		let older = Activity(context: context)
+		older.definition = definition; older.start = base; older.end = base.addingTimeInterval(5_000)
+		let newer = Activity(context: context)
+		newer.definition = definition
+		newer.start = base.addingTimeInterval(4_000); newer.end = base.addingTimeInterval(4_100)
+		let nearStart = try mood(1), nearEnd = try mood(2), nearOlderEnd = try mood(3)
+		nearStart.date = newer.start.addingTimeInterval(-1)
+		nearEnd.date = newer.end!.addingTimeInterval(1)
+		nearOlderEnd.date = older.end!.addingTimeInterval(1)
+		let matcher = WithinXCalendarUnitsSubQueryMatcher(numberOfTimeUnits: 2, timeUnit: .second, mostRecentOnly: true)
+		let result = matcher.getSamples(from: [nearStart, nearEnd, nearOlderEnd], matching: [older, newer])
+		XCTAssertEqual(result.map { $0.objectID }, [nearStart.objectID, nearEnd.objectID])
+	}
+
 	private func lookupDefinition(_ name: String, index: Int = 0) throws -> ActivityDefinition {
 		let entity = try XCTUnwrap(NSEntityDescription.entity(forEntityName: ActivityDefinition.entityName, in: container.viewContext))
 		let definition = ActivityDefinition(entity: entity, insertInto: container.viewContext)
@@ -276,6 +314,62 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertEqual(database.returnedCounts, [1])
 		XCTAssertThrowsError(try dao.getDefinitionWith(name: "resume"))
 		XCTAssertEqual(database.returnedCounts, [1, 2])
+	}
+
+	func testTimeWindowMatchesEveryReferenceRegardlessOfInputOrder() {
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		let old = Steps(1, base, base)
+		let new = Steps(2, base.addingTimeInterval(100), base.addingTimeInterval(100))
+		let queries = [Steps(3, base.addingTimeInterval(1), base.addingTimeInterval(1)),
+			Steps(4, base.addingTimeInterval(101), base.addingTimeInterval(101))]
+		let matcher = WithinXCalendarUnitsSubQueryMatcher(numberOfTimeUnits: 2, timeUnit: .second)
+		for references: [Sample] in [[old, new], [new, old]] {
+			XCTAssertEqual(matcher.getSamples(from: queries, matching: references).map { $0.steps }, [3, 4])
+		}
+	}
+
+	func testTimeWindowChecksStartAndEndOfBothIntervalsIndependently() {
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		func sample(_ id: Double, _ start: Double, _ end: Double) -> Steps {
+			Steps(id, base.addingTimeInterval(start), base.addingTimeInterval(end))
+		}
+		let references = [sample(1, 100, 300), sample(2, 1_000, 1_200)]
+		let queries = [sample(1, 99, 10_000), sample(2, 0, 301), sample(3, 500, 998),
+			sample(4, 1_201, 5_000), sample(5, 110, 290), sample(6, 500, 900)]
+		let matcher = WithinXCalendarUnitsSubQueryMatcher(numberOfTimeUnits: 2, timeUnit: .second)
+		XCTAssertEqual(matcher.getSamples(from: queries, matching: references).map { $0.steps }, [1, 2, 3, 4])
+	}
+
+	func testTimeWindowIndexMatchesBruteForceEndpointDistances() {
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		let references = (0..<8).map { index -> Steps in
+			let start = base.addingTimeInterval(Double((index * 17) % 23) * 90)
+			return Steps(Double(index), start, start.addingTimeInterval(Double((index * 13) % 12) * 30))
+		}
+		let queries = (0..<21).map { index -> Steps in
+			let start = base.addingTimeInterval(Double((index * 7) % 29) * 80 - 300)
+			return Steps(Double(index), start, start.addingTimeInterval(Double((index * 11) % 17) * 50))
+		}
+		let calendar = CalendarUtilImpl()
+		for mostRecentOnly in [false, true] {
+			let active = mostRecentOnly ? [references.max { $0.start < $1.start }!] : references
+			for unit: Calendar.Component in [.second, .minute, .hour] {
+				for window in [0, 2, 10] {
+					let matcher = WithinXCalendarUnitsSubQueryMatcher(numberOfTimeUnits: window, timeUnit: unit, mostRecentOnly: mostRecentOnly)
+					let expected = queries.filter { query in
+						active.contains { reference in query.dates().values.contains { from in
+							reference.dates().values.contains { to in
+								abs(try! calendar.distance(from: from, to: to, in: unit)) <= window
+							}
+						} }
+					}.map { $0.steps }
+					for order in [references, Array(references.reversed())] {
+						XCTAssertEqual(matcher.getSamples(from: queries, matching: order).map { $0.steps }, expected,
+							"\(unit) / \(window) / latest=\(mostRecentOnly)")
+					}
+				}
+			}
+		}
 	}
 
 	@MainActor
