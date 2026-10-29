@@ -32,7 +32,11 @@ def report(log, summary, workers):
     wall = None
     if isinstance(summary.get('startTime'), (int, float)) and isinstance(summary.get('finishTime'), (int, float)):
         wall = max(0, summary['finishTime'] - summary['startTime'])
-    return {'workers': workers, 'observedWorkers': sorted(set(re.findall(r"(?:passed|failed) on '([^']+)'", log))), 'wallSeconds': wall,
+    launches = [float(value) for value in re.findall(r'CI_UI_LAUNCH_SECONDS (\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)\b', log)]
+    instructions = [float(value) for value in re.findall(r'CI_UI_INSTRUCTION_WAIT_SECONDS (\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)\b', log)]
+    return {'launchAttempts': len(launches), 'launchSeconds': sum(launches) if launches else None,
+            'instructionWaitAttempts': len(instructions), 'instructionWaitSeconds': sum(instructions) if instructions else None,
+            'workers': workers, 'observedWorkers': sorted(set(re.findall(r"(?:passed|failed) on '([^']+)'", log))), 'wallSeconds': wall,
             'recordedCases': len({(c['class'], c['test']) for c in cases}), 'attempts': len(cases),
             'reportedTotal': summary.get('totalTestCount'), 'result': summary.get('result'),
             'cumulativeSeconds': sum(c['seconds'] for c in cases),
@@ -49,6 +53,10 @@ def markdown(data):
              f"Worker destinations observed in the log: {len(data['observedWorkers']) if data['observedWorkers'] else 'not reported'}.", '', 'Cumulative times below add work across workers; they are not wall time.', '',
              '| Test class | Attempts | Failed | Cumulative minutes |', '| --- | ---: | ---: | ---: |']
     lines += [f"| {r['class']} | {r['attempts']} | {r['failed']} | {r['seconds'] / 60:.1f} |" for r in data['classes']]
+    if data['launchSeconds'] is not None:
+        lines += ['', f"App launch calls: {data['launchSeconds']:.1f}s across {data['launchAttempts']} attempts."]
+    if data['instructionWaitSeconds'] is not None:
+        lines += [f"Optional tutorial waits: {data['instructionWaitSeconds']:.1f}s across {data['instructionWaitAttempts']} attempts."]
     lines += ['', 'Slowest individual attempts:', '']
     lines += [f"- `{r['class']}/{r['test']}`: {r['seconds']:.1f}s ({r['result']})" for r in data['slowest']]
     return '\n'.join(lines) + '\n'
