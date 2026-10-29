@@ -1062,6 +1062,54 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertEqual(stub.stopCount, 1)
 	}
 
+	func testEstimatedDatesPercentageIgnoresNonzeroSecondsAndFractions() throws {
+		let exactMinute = try mood(3)
+		exactMinute.date = Date(timeIntervalSince1970: 1_700_000_040)
+		let seconds = try mood(4)
+		seconds.date = exactMinute.date.addingTimeInterval(23)
+		let fractions = try mood(5)
+		fractions.date = exactMinute.date.addingTimeInterval(0.5)
+		let info = EstimatedDatesInformation(CommonSampleAttributes.timestamp)
+		XCTAssertEqual(try XCTUnwrap(Double(info.computeGraphable(forSamples: [exactMinute, seconds, fractions]))), 100.0 / 3.0, accuracy: 0.00001)
+		XCTAssertThrowsError(try info.computeGraphable(forSamples: []))
+	}
+
+	func testEstimatedDateStatisticIsAvailableForResultsAndGraphs() throws {
+		let factory = SampleGroupInformationFactoryImpl()
+		let attribute = CommonSampleAttributes.timestamp
+		XCTAssertTrue(factory.getApplicableInformationTypes(forAttribute: attribute).contains { $0 == EstimatedDatesInformation.self })
+		XCTAssertTrue(factory.getApplicableNumericInformationTypes(forAttribute: attribute).contains { $0 == EstimatedDatesInformation.self })
+	}
+
+	func testTimeCoverageMergesNestedAdjacentAndOverlappingIntervals() throws {
+		let start = Date(timeIntervalSince1970: 0)
+		func interval(_ a: Double, _ b: Double) -> DateInterval {
+			DateInterval(start: start.addingTimeInterval(a), end: start.addingTimeInterval(b))
+		}
+		let result = TimeCoverageSummary(interval: interval(0, 100), recordedIntervals: [interval(50, 90), interval(-10, 20), interval(10, 15), interval(20, 30), interval(80, 120)])
+		XCTAssertEqual(result.covered, 80)
+		XCTAssertEqual(result.unaccounted, 20)
+		XCTAssertEqual(result.gaps, [interval(30, 50)])
+	}
+
+	func testTimeCoverageEmptyAndFullyCoveredPeriods() throws {
+		let window = DateInterval(start: Date(timeIntervalSince1970: 100), duration: 3600)
+		let empty = TimeCoverageSummary(interval: window, recordedIntervals: [])
+		XCTAssertEqual(empty.unaccounted, 3600)
+		XCTAssertEqual(empty.gaps, [window])
+		let full = TimeCoverageSummary(interval: window, recordedIntervals: [window, window])
+		XCTAssertEqual(full.covered, 3600)
+		XCTAssertTrue(full.gaps.isEmpty)
+	}
+
+	func testTimeCoveragePreservesRealDaylightSavingDayLength() throws {
+		var calendar = Calendar(identifier: .gregorian)
+		calendar.timeZone = try XCTUnwrap(TimeZone(identifier: "America/New_York"))
+		let date = try XCTUnwrap(calendar.date(from: DateComponents(year: 2024, month: 3, day: 10)))
+		let window = MoodReviewSummary.dateInterval(forLastDays: 1, endingOn: date, calendar: calendar)
+		XCTAssertEqual(TimeCoverageSummary(interval: window, recordedIntervals: []).unaccounted, 23 * 3600)
+	}
+
 }
 
 private final class TransferProgressProbe: NSObject, Importer, Exporter {

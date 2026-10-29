@@ -27,7 +27,12 @@ final class ExploreCollectionViewController: UICollectionViewController {
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
+		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Time Coverage", style: .plain, target: self, action: #selector(showTimeCoverage))
 		observe(selector: #selector(showResultsScreen), name: .showResultsScreen)
+	}
+
+	@objc private func showTimeCoverage() {
+		pushToNavigationController(TimeCoverageViewController(style: .grouped))
 	}
 
 	deinit {
