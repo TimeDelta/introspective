@@ -16,7 +16,7 @@ import Hamcrest
 
 final class PerTagSampleGrouperFunctionalTests: FunctionalTest {
 
-	private final let tagAttribute = TagAttribute(name: "fdjkl")
+	private final let tagAttribute = TagAttribute(id: 0, name: "fdjkl")
 
 	private final var grouper: PerTagSampleGrouper!
 
@@ -52,7 +52,7 @@ final class PerTagSampleGrouperFunctionalTests: FunctionalTest {
 		let tag1 = TagDataTestUtil.createTag(name: "1")
 		let tag2 = TagDataTestUtil.createTag(name: "2")
 		let tag3 = TagDataTestUtil.createTag(name: "3")
-		let tagsAttribute = TagsAttribute(name: "fd")
+		let tagsAttribute = TagsAttribute(id: 0, name: "fd")
 		grouper = PerTagSampleGrouper(attributes: [tagsAttribute])
 		let samples = SampleCreatorTestUtil.createSamples(
 			withValues: [
@@ -85,7 +85,7 @@ final class PerTagSampleGrouperFunctionalTests: FunctionalTest {
 
 	func testGivenTagsAttributeWithNonTagValueForSample_group_throwsTypeMismatchError() throws {
 		// given
-		let tagsAttribute = TagsAttribute(name: "fg")
+		let tagsAttribute = TagsAttribute(id: 0, name: "fg")
 		grouper = PerTagSampleGrouper(attributes: [tagsAttribute])
 		grouper.groupByAttribute = tagsAttribute
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [0], for: tagsAttribute)
@@ -113,7 +113,7 @@ final class PerTagSampleGrouperFunctionalTests: FunctionalTest {
 
 	func testGivenGroupByTagsAttributeWithTagValue_groupNameForValue_returnsAttributeNameHasValue() throws {
 		// given
-		let tagsAttribute = TagsAttribute(name: "fsd")
+		let tagsAttribute = TagsAttribute(id: 0, name: "fsd")
 		grouper = PerTagSampleGrouper(attributes: [tagsAttribute])
 		grouper.groupByAttribute = tagsAttribute
 		let tag = TagDataTestUtil.createTag(name: "fnerwo")

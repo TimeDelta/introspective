@@ -297,7 +297,7 @@ final class DoesNotHaveTagAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	func testGivenRestrictedAttributeMismatch_equalToOperator_returnsFalse() {
 		// given
-		let other = DoesNotHaveTagAttributeRestriction(restrictedAttribute: TagAttribute(name: "note the same"))
+		let other = DoesNotHaveTagAttributeRestriction(restrictedAttribute: TagAttribute(id: 0, name: "note the same"))
 
 		// when
 		let areEqual = restriction == other
@@ -353,7 +353,7 @@ final class DoesNotHaveTagAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	func testGivenRestrictedAttributeMismatch_equalToAttributed_returnsFalse() {
 		// given
-		let other = DoesNotHaveTagAttributeRestriction(restrictedAttribute: TagAttribute(name: "note the same"))
+		let other = DoesNotHaveTagAttributeRestriction(restrictedAttribute: TagAttribute(id: 0, name: "note the same"))
 
 		// when
 		let areEqual = restriction.equalTo(other as Attributed)
@@ -409,7 +409,7 @@ final class DoesNotHaveTagAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	func testGivenRestrictedAttributeMismatch_equalToRestriction_returnsFalse() {
 		// given
-		let other = DoesNotHaveTagAttributeRestriction(restrictedAttribute: TagAttribute(name: "note the same"))
+		let other = DoesNotHaveTagAttributeRestriction(restrictedAttribute: TagAttribute(id: 0, name: "note the same"))
 
 		// when
 		let areEqual = restriction.equalTo(other as AttributeRestriction)
@@ -454,7 +454,7 @@ final class DoesNotHaveTagAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	func testGivenRestrictedAttributeMismatch_equalTo_returnsFalse() {
 		// given
-		let other = DoesNotHaveTagAttributeRestriction(restrictedAttribute: TagAttribute(name: "note the same"))
+		let other = DoesNotHaveTagAttributeRestriction(restrictedAttribute: TagAttribute(id: 0, name: "note the same"))
 
 		// when
 		let areEqual = restriction.equalTo(other)
@@ -490,13 +490,13 @@ final class DoesNotHaveTagAttributeRestrictionFunctionalTests: FunctionalTest {
 	// MARK: - Helper Functions
 
 	private final func useTagAttribute(optional: Bool = false) -> Attribute {
-		let attribute = TagAttribute(optional: optional)
+		let attribute = TagAttribute(id: 0, optional: optional)
 		restriction = DoesNotHaveTagAttributeRestriction(restrictedAttribute: attribute)
 		return attribute
 	}
 
 	private final func useTagsAttribute(optional: Bool = false) -> Attribute {
-		let attribute = TagsAttribute(optional: optional)
+		let attribute = TagsAttribute(id: 0, optional: optional)
 		restriction = DoesNotHaveTagAttributeRestriction(restrictedAttribute: attribute)
 		return attribute
 	}
