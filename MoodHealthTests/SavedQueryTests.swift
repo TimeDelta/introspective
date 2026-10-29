@@ -1252,7 +1252,7 @@ private final class ReorderTableProbe: UITableViewController {
 }
 
 final class ReorderGestureTests: XCTestCase {
-	private func table() -> ReorderTableProbe {
+	@MainActor private func table() -> ReorderTableProbe {
 		let controller = ReorderTableProbe(style: .plain)
 		controller.loadViewIfNeeded()
 		controller.tableView.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
@@ -1261,11 +1261,12 @@ final class ReorderGestureTests: XCTestCase {
 		return controller
 	}
 
-	private func point(_ row: Int, in controller: ReorderTableProbe) -> CGPoint {
+	@MainActor private func point(_ row: Int, in controller: ReorderTableProbe) -> CGPoint {
 		let rect = controller.tableView.rectForRow(at: IndexPath(row: row, section: 0))
 		return CGPoint(x: rect.midX, y: rect.midY)
 	}
 
+	@MainActor
 	func testLongPressOutsideRowsDoesNotStartMoveOrCrashOnLaterEvents() {
 		let controller = table()
 		let gesture = LongPressReorderGestureRecognizer(controller)
@@ -1276,6 +1277,7 @@ final class ReorderGestureTests: XCTestCase {
 		XCTAssertTrue(controller.moves.isEmpty)
 	}
 
+	@MainActor
 	func testRejectedStartRemainsSafeThroughChangeAndEnd() {
 		let controller = table()
 		let gesture = LongPressReorderGestureRecognizer(controller, allowReorder: { _, _ in false })
@@ -1286,6 +1288,7 @@ final class ReorderGestureTests: XCTestCase {
 		XCTAssertFalse(controller.tableView.cellForRow(at: IndexPath(row: 0, section: 0))!.isHidden)
 	}
 
+	@MainActor
 	func testCancelRestoresCellAndRemovesSnapshotWithoutMoving() {
 		let controller = table()
 		let gesture = LongPressReorderGestureRecognizer(controller)
@@ -1300,6 +1303,7 @@ final class ReorderGestureTests: XCTestCase {
 		XCTAssertTrue(controller.moves.isEmpty)
 	}
 
+	@MainActor
 	func testEndOutsideRowsAndRejectedDestinationRestoreCellWithoutMoving() {
 		let controller = table()
 		let gesture = LongPressReorderGestureRecognizer(controller, allowReorder: { _, destination in destination?.row != 2 })
@@ -1313,6 +1317,7 @@ final class ReorderGestureTests: XCTestCase {
 		XCTAssertTrue(controller.moves.isEmpty)
 	}
 
+	@MainActor
 	func testSuccessfulMoveRestoresCellBeforeCallingDelegate() {
 		let controller = table()
 		let gesture = LongPressReorderGestureRecognizer(controller)
