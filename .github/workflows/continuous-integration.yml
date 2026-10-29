@@ -160,7 +160,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          ./scripts/run-ci-command.sh ci-output/mock-generation.log python3 scripts/generate-legacy-mocks.py
+          ./scripts/run-ci-command.sh ci-output/mock-generation.log python3 scripts/generate-legacy-mocks.py --cache-path "$CI_DERIVED_DATA/sourcery-cache"
 
       - name: Preserve timestamps for unchanged cached build inputs
         if: matrix.kind != 'mocks'
