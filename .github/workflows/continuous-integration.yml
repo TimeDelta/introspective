@@ -13,6 +13,11 @@ on:
         type: choice
         options: [macos-15-intel, macos-15]
         default: macos-15-intel
+      ui_workers:
+        description: Parallel UI workers (one keeps a serial comparison available)
+        type: choice
+        options: ['2', '1']
+        default: '2'
   push:
     branches: [master]
   pull_request:
@@ -39,6 +44,7 @@ jobs:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
       COCOAPODS_DISABLE_STATS: 'true'
       CI_BUILD_KIND: ${{ matrix.kind }}
+      CI_UI_WORKERS: ${{ inputs.ui_workers || '2' }}
       CI_TEST_SCHEME: ${{ matrix.kind == 'legacy' && 'CI-CD' || matrix.kind == 'ui' && 'UIRegressionTests' || 'MoodHealthTests' }}
     steps:
       - name: Checkout
@@ -154,13 +160,18 @@ jobs:
         run: |
           set -euo pipefail
           xcrun simctl bootstatus "$CI_SIMULATOR_ID" -b > ci-output/simulator-boot.log 2>&1
-          ./scripts/run-ci-command.sh ci-output/mood-tests.log xcodebuild test-without-building \
-            -workspace Introspective.xcworkspace \
-            -scheme "$CI_TEST_SCHEME" \
-            -configuration Debug \
-            -destination "platform=iOS Simulator,id=$CI_SIMULATOR_ID" \
-            -derivedDataPath "$CI_DERIVED_DATA" \
-            -resultBundlePath "$GITHUB_WORKSPACE/ci-output/MoodTests.xcresult"
+          test_command=(xcodebuild test-without-building
+            -workspace Introspective.xcworkspace
+            -scheme "$CI_TEST_SCHEME"
+            -configuration Debug
+            -destination "platform=iOS Simulator,id=$CI_SIMULATOR_ID"
+            -derivedDataPath "$CI_DERIVED_DATA"
+            -resultBundlePath "$GITHUB_WORKSPACE/ci-output/MoodTests.xcresult")
+          if [ "$CI_BUILD_KIND" = ui ]; then
+            # Xcode gives each worker an isolated simulator clone; compile once.
+            test_command+=(-parallel-testing-enabled YES -parallel-testing-worker-count "$CI_UI_WORKERS")
+          fi
+          ./scripts/run-ci-command.sh ci-output/mood-tests.log "${test_command[@]}"
           xcrun xcresulttool get test-results summary --path ci-output/MoodTests.xcresult > ci-output/mood-tests-summary.json
           if [ "$CI_BUILD_KIND" = tests ]; then
             python3 scripts/verify-native-test-results.py ci-output/mood-tests-summary.json
@@ -180,6 +191,13 @@ jobs:
               xcrun xcresulttool export attachments --path ci-output/MoodTests.xcresult --output-path ci-output/ui-attachments --only-failures > ci-output/attachment-export.log 2>&1 || true
             fi
           fi
+
+      - name: Report UI execution timings
+        if: always() && matrix.kind == 'ui'
+        shell: bash
+        run: |
+          python3 scripts/report-ui-test-timings.py --log ci-output/mood-tests.log --summary ci-output/test-summary.json --json ci-output/ui-timings.json > ci-output/ui-timings.md
+          cat ci-output/ui-timings.md >> "$GITHUB_STEP_SUMMARY"
 
       - name: Build without signing
         if: matrix.kind == 'release'

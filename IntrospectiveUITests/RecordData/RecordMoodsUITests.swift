@@ -38,9 +38,7 @@ final class RecordMoodsUITests: UITest {
 	func testSetMoodUsingRatingButton_correctlyUpdatesButtonTitleAndSlider() {
 		// when
 		moodRatingButton().tap()
-		moodRatingTextField().tap()
-		moodRatingTextField().tap()
-		moodRatingTextField().typeText("7.75")
+		setTextFor(field: moodRatingTextField(), to: "7.75")
 		app.toolbars.buttons["Save"].tap()
 
 		// then
@@ -59,11 +57,9 @@ final class RecordMoodsUITests: UITest {
 	func testChangingRatingToValueGreaterThanMaxMood_setsRatingToMaxMood() {
 		// given
 		moodRatingButton().tap()
-		moodRatingTextField().tap()
-		moodRatingTextField().tap()
 
 		// when
-		moodRatingTextField().typeText("99")
+		setTextFor(field: moodRatingTextField(), to: "99")
 
 		// then
 		XCTAssertEqual(moodRatingTextField().value as? String, "10")
@@ -72,11 +68,9 @@ final class RecordMoodsUITests: UITest {
 	func testChangingRatingToValueLessThanMinMood_setsRatingToMinMood() {
 		// given
 		moodRatingButton().tap()
-		moodRatingTextField().tap()
-		moodRatingTextField().tap()
 
 		// when
-		moodRatingTextField().typeText("-1")
+		setTextFor(field: moodRatingTextField(), to: "-1")
 
 		// then
 		XCTAssertEqual(moodRatingTextField().value as? String, "1")

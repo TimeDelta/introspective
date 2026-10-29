@@ -20,7 +20,9 @@ unless File.file?(embed_script) && File.read(embed_script).include?('SwiftDate.f
   raise 'Missing SwiftDate embedding in UI runner'
 end
 scheme = Xcodeproj::XCScheme.new('Introspective.xcodeproj/xcshareddata/xcschemes/CI-CD.xcscheme')
-scheme.test_action.testables = [Xcodeproj::XCScheme::TestAction::TestableReference.new(target)]
+testable = Xcodeproj::XCScheme::TestAction::TestableReference.new(target)
+testable.parallelizable = true
+scheme.test_action.testables = [testable]
 scheme.add_build_target(target, false)
 scheme.save_as('Introspective.xcodeproj', 'UIRegressionTests', true)
 puts 'Prepared UIRegressionTests scheme for the original UI suite'
