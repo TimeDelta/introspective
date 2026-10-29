@@ -25,7 +25,7 @@ import SwiftyMocky
 @testable import Settings
 @testable import UIExtensions
 
-final class GeneratedMockConcurrencyTests: Test {
+final class GeneratedMockConcurrencyTests: UnitTest {
 	func testConcurrentDependencyCallsAndPropertyReadsKeepEveryInvocation() {
 		Matcher.default.register(String.Type.self) { $0 == $1 }
 		let provider = InjectionProviderMock()
@@ -41,6 +41,36 @@ final class GeneratedMockConcurrencyTests: Test {
 			XCTAssertEqual(provider.types.count, 1)
 		}
 		Verify(provider, .exactly(1000), .get(.value(String.self)))
+	}
+
+	func testProviderReplacementConfiguresMocksBeforeRetiredObjectsResolveDependencies() {
+		var resolvedDuringRetirement: Database?
+		var retiring: RetiringDatabaseProvider? = RetiringDatabaseProvider(database: mockDatabase) {
+			resolvedDuringRetirement = injected(Database.self)
+		}
+		DependencyInjector.register([retiring!])
+		retiring = nil // The registry now owns the retiring provider's lifetime.
+
+		registerTypesWithDependencyInjection()
+
+		XCTAssertTrue((resolvedDuringRetirement as? DatabaseMock) === mockDatabase)
+	}
+
+	private final class RetiringDatabaseProvider: InjectionProvider {
+		let types: [Any.Type] = [Database.self]
+		private let database: Database
+		private let onRetirement: () -> Void
+
+		init(database: Database, onRetirement: @escaping () -> Void) {
+			self.database = database
+			self.onRetirement = onRetirement
+		}
+
+		func get<Type>(_: Type.Type) throws -> Type {
+			database as! Type
+		}
+
+		deinit { onRetirement() }
 	}
 }
 
@@ -71,8 +101,13 @@ class Test: XCTestCase {
 		types.append(contentsOf: SettingsInjectionProvider().types)
 
 		Given(injectionProvider, .types(getter: types))
+		// Replacing a provider can release managed objects that resolve Database
+		// during cleanup. Publish the new provider only after its mocks are ready.
+		configureInjectionProvider()
 		DependencyInjector.register([injectionProvider])
 	}
+
+	func configureInjectionProvider() {}
 
 	final func registerMatchers() {
 		Matcher.default.register(ActivityDAO.Protocol.self) { _,_ in true }

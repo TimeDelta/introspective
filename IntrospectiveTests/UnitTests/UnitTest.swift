@@ -58,8 +58,7 @@ class UnitTest: Test {
 	var mockMoodDAO: MoodDAOMock!
 	var mockTagDAO: TagDAOMock!
 
-	override func setUp() {
-		super.setUp()
+	override func configureInjectionProvider() {
 		setMocks()
 	}
 
