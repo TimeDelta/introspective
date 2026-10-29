@@ -517,11 +517,11 @@ final class ActivityExporterFunctionalTests: ExporterFunctionalTest {
 		fieldValues.append(contentsOf: [
 			startText,
 			activity.startSetAt.map { injected(CalendarUtil.self).string(for: $0, dateStyle: .full, timeStyle: .full) } ?? "",
-			activity.startDateTimeZoneId ?? "",
+			activity.startDateTimeZone ?? "",
 			activity.durationBetweenStartAndSet?.description ?? "",
 			endText,
 			activity.endSetAt.map { injected(CalendarUtil.self).string(for: $0, dateStyle: .full, timeStyle: .full) } ?? "",
-			activity.endDateTimeZoneId ?? "",
+			activity.endDateTimeZone ?? "",
 			activity.durationBetweenEndAndSet?.description ?? "",
 			activity.totalDurationOffset?.description ?? "",
 			activity.note ?? "",
