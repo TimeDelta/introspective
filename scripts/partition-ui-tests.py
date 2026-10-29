@@ -28,6 +28,7 @@ PREFLIGHT_TESTS = {
         'testChangingStartDateOnEditActivityScreen_updatesUI',
         'testReorderToHigherSpotWhileFiltering_correcltyReordersDefinitions',
         'testCreatingActivityDefinition_showsNameAndDescriptionInActivityListAfterSave',
+        'testReorderToLowerSpotWhileNotFiltering_persistsAfterGoingBackAndThenViewingRecordActivitiesScreenAgain',
     ],
     'RecordMedicationsUITests': [
         'testClearingStartedOnDateOnNewMedicationScreen_updatesStartedOnButtonTitle',

@@ -69,7 +69,9 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 	}
 
 	override func tearDown() {
-		NotificationCenter.default.removeObserver(controller as Any)
+		if let controller = controller {
+			NotificationCenter.default.removeObserver(controller)
+		}
 		controller = nil
 		super.tearDown()
 	}
@@ -1070,6 +1072,8 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 	private final func mockSampleGrouper(debugDescription: String = "sample grouper") -> SampleGrouperMock {
 		let grouper = SampleGrouperMock(attributes: [])
 		Given(grouper, .debugDescription(getter: debugDescription))
+		Given(grouper, .equalTo(.any(SampleGrouper.self), willReturn: false))
+		Given(grouper, .equalTo(Parameter<SampleGrouper>.matching { [weak grouper] in ($0 as AnyObject) === grouper }, willReturn: true))
 		return grouper
 	}
 

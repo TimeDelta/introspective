@@ -604,7 +604,7 @@ final class RecordActivitiesUITests: UITest {
 		filterActivities(by: filterString)
 
 		// when
-		definitionCell(definition1).press(forDuration: 0.5, thenDragTo: definitionCell(definition4))
+		definitionCell(definition1).press(forDuration: 1, thenDragTo: definitionCell(definition4))
 		app.buttons["Cancel"].tap()
 
 		// then
@@ -624,7 +624,7 @@ final class RecordActivitiesUITests: UITest {
 		filterActivities(by: filterString)
 
 		// when
-		definitionCell(definition3).press(forDuration: 0.5, thenDragTo: definitionCell(definition1))
+		definitionCell(definition3).press(forDuration: 1, thenDragTo: definitionCell(definition1))
 		app.buttons["Cancel"].tap()
 
 		// then
@@ -641,7 +641,9 @@ final class RecordActivitiesUITests: UITest {
 		seed(activityDefinitions: [definition1, definition2, definition3])
 
 		// when - re-order
-		definitionCell(definition1).press(forDuration: 0.5, thenDragTo: definitionCell(definition2))
+		// Hold beyond UILongPressGestureRecognizer's default 0.5-second threshold
+		// before moving, so event scheduling cannot turn the drag into a scroll.
+		definitionCell(definition1).press(forDuration: 1, thenDragTo: definitionCell(definition2))
 
 		// then - correct order before
 		XCTAssertLessThanOrEqual(definitionCell(definition2).frame.maxY, definitionCell(definition1).frame.minY)
@@ -664,7 +666,7 @@ final class RecordActivitiesUITests: UITest {
 		seed(activityDefinitions: [definition1, definition2, definition3])
 
 		// when - re-order
-		definitionCell(definition3).press(forDuration: 0.5, thenDragTo: definitionCell(definition2))
+		definitionCell(definition3).press(forDuration: 1, thenDragTo: definitionCell(definition2))
 
 		// then - correct order before
 		XCTAssertLessThanOrEqual(definitionCell(definition1).frame.maxY, definitionCell(definition3).frame.minY)
