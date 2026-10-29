@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D3E3193D29FFF5E262EDB92E /* AdditionalHealthQueries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73853E503281753BCB44B76B /* AdditionalHealthQueries.swift */; };
 		A20675912625CB5A00AA86C0 /* WithinXCalendarUnitsBeforeSubQueryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20675902625CB5A00AA86C0 /* WithinXCalendarUnitsBeforeSubQueryMatcher.swift */; };
 		A20675982630A5C500AA86C0 /* WithinXCalendarUnitsAfterSubQueryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20675972630A5C500AA86C0 /* WithinXCalendarUnitsAfterSubQueryMatcher.swift */; };
 		A224F66A267A3B11007C3577 /* PainQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A224F669267A3B11007C3577 /* PainQuery.swift */; };
@@ -50,6 +51,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		73853E503281753BCB44B76B /* AdditionalHealthQueries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdditionalHealthQueries.swift; sourceTree = "<group>"; };
 		627A4CECE02EEC6128B44450 /* Pods_Queries.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Queries.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DDA82AE26229DC5EBB7AB9B /* Pods-Queries.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Queries.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-Queries/Pods-Queries.debug.xcconfig"; sourceTree = "<group>"; };
 		A20675902625CB5A00AA86C0 /* WithinXCalendarUnitsBeforeSubQueryMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithinXCalendarUnitsBeforeSubQueryMatcher.swift; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 				A24E2EAE23451D4A00A7707D /* SexualActivityQuery.swift */,
 				A24E2EAB23451D4A00A7707D /* SleepQuery.swift */,
 				A2E30FCE2736DED0004D0A60 /* StepsQuery.swift */,
+				73853E503281753BCB44B76B /* AdditionalHealthQueries.swift */,
 				A24E2EB023451D4A00A7707D /* WeightQuery.swift */,
 			);
 			path = HealthKit;
@@ -339,6 +342,7 @@
 				A2D138D82691212400762A3D /* StoredQueriesDAO.swift in Sources */,
 				A24E2EBE23451D4B00A7707D /* InSameCalendarUnitSubQueryMatcher.swift in Sources */,
 				A2E30FCF2736DED0004D0A60 /* StepsQuery.swift in Sources */,
+				D3E3193D29FFF5E262EDB92E /* AdditionalHealthQueries.swift in Sources */,
 				A24E2ECF23451D4B00A7707D /* QueryError.swift in Sources */,
 				A24E2EC823451D4B00A7707D /* SexualActivityQuery.swift in Sources */,
 				A24E2ED223451D4B00A7707D /* MoodQuery.swift in Sources */,

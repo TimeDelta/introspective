@@ -320,6 +320,11 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				) as! StepsTableViewCell)
 				cell.steps = (sample as! Steps)
 				return cell
+			case let workout as Workout:
+				let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
+				cell.textLabel?.text = workout.typeName + " · " + TimeDuration(workout.workout.duration).description
+				cell.detailTextLabel?.text = injected(CalendarUtil.self).string(for: workout.workout.startDate, dateStyle: .medium, timeStyle: .short)
+				return cell
 			case is HealthKitQuantitySample:
 				let cell = (tableView.dequeueReusableCell(
 					withIdentifier: "healthKitQuantitySampleCell",

@@ -1,5 +1,6 @@
 import XCTest
 import UIKit
+import WSTagsField
 import DataImport
 import HealthKit
 import CoreData
@@ -228,6 +229,44 @@ final class SavedQueryTests: XCTestCase {
 		return mood
 	}
 
+	func testMostRecentTimeWindowUsesNewestSampleRegardlessOfInputOrder() throws {
+		let older = try mood(1), newer = try mood(2)
+		let nearOlder = try mood(3), nearNewer = try mood(4)
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		older.date = base
+		newer.date = base.addingTimeInterval(3_600)
+		nearOlder.date = older.date.addingTimeInterval(1)
+		nearNewer.date = newer.date.addingTimeInterval(1)
+		let matcher = WithinXCalendarUnitsSubQueryMatcher(numberOfTimeUnits: 2, timeUnit: .second, mostRecentOnly: true)
+		for references in [[older, newer], [newer, older]] {
+			let result = matcher.getSamples(from: [nearOlder, nearNewer], matching: references)
+			XCTAssertEqual(result.map { $0.objectID }, [nearNewer.objectID])
+		}
+		matcher.mostRecentOnly = false
+		XCTAssertEqual(matcher.getSamples(from: [nearOlder, nearNewer], matching: [newer, older]).map { $0.objectID },
+			[nearOlder.objectID, nearNewer.objectID])
+	}
+
+	func testMostRecentTimeWindowKeepsBothBoundariesOfOneActivity() throws {
+		let context = container.viewContext
+		let definition = ActivityDefinition(context: context)
+		definition.name = "Temporal query"
+		definition.recordScreenIndex = 0
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		let older = Activity(context: context)
+		older.definition = definition; older.start = base; older.end = base.addingTimeInterval(5_000)
+		let newer = Activity(context: context)
+		newer.definition = definition
+		newer.start = base.addingTimeInterval(4_000); newer.end = base.addingTimeInterval(4_100)
+		let nearStart = try mood(1), nearEnd = try mood(2), nearOlderEnd = try mood(3)
+		nearStart.date = newer.start.addingTimeInterval(-1)
+		nearEnd.date = newer.end!.addingTimeInterval(1)
+		nearOlderEnd.date = older.end!.addingTimeInterval(1)
+		let matcher = WithinXCalendarUnitsSubQueryMatcher(numberOfTimeUnits: 2, timeUnit: .second, mostRecentOnly: true)
+		let result = matcher.getSamples(from: [nearStart, nearEnd, nearOlderEnd], matching: [older, newer])
+		XCTAssertEqual(result.map { $0.objectID }, [nearStart.objectID, nearEnd.objectID])
+	}
+
 	private func lookupDefinition(_ name: String, index: Int = 0) throws -> ActivityDefinition {
 		let entity = try XCTUnwrap(NSEntityDescription.entity(forEntityName: ActivityDefinition.entityName, in: container.viewContext))
 		let definition = ActivityDefinition(entity: entity, insertInto: container.viewContext)
@@ -309,6 +348,120 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertEqual(database.returnedCounts, [1])
 		XCTAssertThrowsError(try dao.getDefinitionWith(name: "resume"))
 		XCTAssertEqual(database.returnedCounts, [1, 2])
+	}
+
+	func testTimeWindowMatchesEveryReferenceRegardlessOfInputOrder() {
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		let old = Steps(1, base, base)
+		let new = Steps(2, base.addingTimeInterval(100), base.addingTimeInterval(100))
+		let queries = [Steps(3, base.addingTimeInterval(1), base.addingTimeInterval(1)),
+			Steps(4, base.addingTimeInterval(101), base.addingTimeInterval(101))]
+		let matcher = WithinXCalendarUnitsSubQueryMatcher(numberOfTimeUnits: 2, timeUnit: .second)
+		for references: [Sample] in [[old, new], [new, old]] {
+			XCTAssertEqual(matcher.getSamples(from: queries, matching: references).map { $0.steps }, [3, 4])
+		}
+	}
+
+	func testTimeWindowChecksStartAndEndOfBothIntervalsIndependently() {
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		func sample(_ id: Double, _ start: Double, _ end: Double) -> Steps {
+			Steps(id, base.addingTimeInterval(start), base.addingTimeInterval(end))
+		}
+		let references = [sample(1, 100, 300), sample(2, 1_000, 1_200)]
+		let queries = [sample(1, 99, 10_000), sample(2, 0, 301), sample(3, 500, 998),
+			sample(4, 1_201, 5_000), sample(5, 110, 290), sample(6, 500, 900)]
+		let matcher = WithinXCalendarUnitsSubQueryMatcher(numberOfTimeUnits: 2, timeUnit: .second)
+		XCTAssertEqual(matcher.getSamples(from: queries, matching: references).map { $0.steps }, [1, 2, 3, 4])
+	}
+
+	func testTimeWindowIndexMatchesBruteForceEndpointDistances() {
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		let references = (0..<8).map { index -> Steps in
+			let start = base.addingTimeInterval(Double((index * 17) % 23) * 90)
+			return Steps(Double(index), start, start.addingTimeInterval(Double((index * 13) % 12) * 30))
+		}
+		let queries = (0..<21).map { index -> Steps in
+			let start = base.addingTimeInterval(Double((index * 7) % 29) * 80 - 300)
+			return Steps(Double(index), start, start.addingTimeInterval(Double((index * 11) % 17) * 50))
+		}
+		let calendar = CalendarUtilImpl()
+		for mostRecentOnly in [false, true] {
+			let active = mostRecentOnly ? [references.max { $0.start < $1.start }!] : references
+			for unit: Calendar.Component in [.second, .minute, .hour] {
+				for window in [0, 2, 10] {
+					let matcher = WithinXCalendarUnitsSubQueryMatcher(numberOfTimeUnits: window, timeUnit: unit, mostRecentOnly: mostRecentOnly)
+					let expected = queries.filter { query in
+						active.contains { reference in query.dates().values.contains { from in
+							reference.dates().values.contains { to in
+								abs(try! calendar.distance(from: from, to: to, in: unit)) <= window
+							}
+						} }
+					}.map { $0.steps }
+					for order in [references, Array(references.reversed())] {
+						XCTAssertEqual(matcher.getSamples(from: queries, matching: order).map { $0.steps }, expected,
+							"\(unit) / \(window) / latest=\(mostRecentOnly)")
+					}
+				}
+			}
+		}
+	}
+
+	@MainActor
+	func testTagCallbacksDoNotRetainEitherEditorCell() {
+		let field = WSTagsField(frame: CGRect(x: 0, y: 0, width: 300, height: 100))
+		let definitionField = WSTagsField(frame: CGRect(x: 0, y: 0, width: 300, height: 100))
+		weak var weakCell: ActivityTagsTableViewCellImpl?
+		weak var weakDefinitionCell: ActivityDefinitionTagsTableViewCell?
+		autoreleasepool {
+			let cell = ActivityTagsTableViewCellImpl()
+			let definitionCell = ActivityDefinitionTagsTableViewCell()
+			cell.tagsField = field
+			definitionCell.tagsField = definitionField
+			weakCell = cell; weakDefinitionCell = definitionCell
+		}
+		XCTAssertNil(weakCell)
+		XCTAssertNil(weakDefinitionCell)
+		XCTAssertNil(field.textDelegate)
+		XCTAssertNil(definitionField.textDelegate)
+		// Externally retained fields can safely deliver a late callback.
+		field.onDidAddTag?(field, WSTag("late"))
+		definitionField.onDidRemoveTag?(definitionField, WSTag("late"))
+	}
+
+	@MainActor
+	func testWeakTagCallbacksStillApplyAdditionsAndRemovals() {
+		let cell = ActivityTagsTableViewCellImpl()
+		let definitionCell = ActivityDefinitionTagsTableViewCell()
+		let field = WSTagsField(frame: CGRect(x: 0, y: 0, width: 300, height: 100))
+		let definitionField = WSTagsField(frame: CGRect(x: 0, y: 0, width: 300, height: 100))
+		cell.notificationToSendOnChange = Notification.Name("TagEditorTest")
+		definitionCell.notificationToSendOnChange = Notification.Name("DefinitionTagEditorTest")
+		cell.tagsField = field; definitionCell.tagsField = definitionField
+		cell.tagNames = ["work"]; definitionCell.tagNames = ["work"]
+		field.addTag("rest"); definitionField.addTag("rest")
+		XCTAssertEqual(cell.tagNames, ["work", "rest"])
+		XCTAssertEqual(definitionCell.tagNames, ["work", "rest"])
+		field.removeTag(WSTag("work")); definitionField.removeTag(WSTag("work"))
+		XCTAssertEqual(cell.tagNames, ["rest"])
+		XCTAssertEqual(definitionCell.tagNames, ["rest"])
+		XCTAssertEqual(field.textField.accessibilityValue, "rest")
+		XCTAssertEqual(definitionField.textField.accessibilityValue, "rest")
+	}
+
+	@MainActor
+	func testRetiredTagFieldsCannotUpdateReboundCells() {
+		let cell = ActivityTagsTableViewCellImpl()
+		let oldField = WSTagsField(frame: CGRect(x: 0, y: 0, width: 300, height: 100))
+		let newField = WSTagsField(frame: CGRect(x: 0, y: 0, width: 300, height: 100))
+		cell.notificationToSendOnChange = Notification.Name("ReboundTagEditorTest")
+		cell.tagsField = oldField
+		cell.tagNames = []
+		cell.tagsField = newField
+		oldField.addTag("retired")
+		XCTAssertTrue(cell.tagNames.isEmpty)
+		XCTAssertNil(oldField.textDelegate)
+		newField.addTag("current")
+		XCTAssertEqual(cell.tagNames, ["current"])
 	}
 
 	func testGraphNumericSortResolvesKeysOnceAndPreservesRoundingTies() {
@@ -1126,6 +1279,90 @@ final class SavedQueryTests: XCTestCase {
 		query = nil
 		XCTAssertNil(weakQuery)
 		XCTAssertEqual(stub.stopCount, 1)
+	}
+
+	func testEstimatedDatesPercentageIgnoresNonzeroSecondsAndFractions() throws {
+		let exactMinute = try mood(3)
+		exactMinute.date = Date(timeIntervalSince1970: 1_700_000_040)
+		let seconds = try mood(4)
+		seconds.date = exactMinute.date.addingTimeInterval(23)
+		let fractions = try mood(5)
+		fractions.date = exactMinute.date.addingTimeInterval(0.5)
+		let info = EstimatedDatesInformation(CommonSampleAttributes.timestamp)
+		XCTAssertEqual(try XCTUnwrap(Double(info.computeGraphable(forSamples: [exactMinute, seconds, fractions]))), 100.0 / 3.0, accuracy: 0.00001)
+		XCTAssertThrowsError(try info.computeGraphable(forSamples: []))
+	}
+
+	func testEstimatedDateStatisticIsAvailableForResultsAndGraphs() throws {
+		let factory = SampleGroupInformationFactoryImpl()
+		let attribute = CommonSampleAttributes.timestamp
+		XCTAssertTrue(factory.getApplicableInformationTypes(forAttribute: attribute).contains { $0 == EstimatedDatesInformation.self })
+		XCTAssertTrue(factory.getApplicableNumericInformationTypes(forAttribute: attribute).contains { $0 == EstimatedDatesInformation.self })
+	}
+
+	func testTimeCoverageMergesNestedAdjacentAndOverlappingIntervals() throws {
+		let start = Date(timeIntervalSince1970: 0)
+		func interval(_ a: Double, _ b: Double) -> DateInterval {
+			DateInterval(start: start.addingTimeInterval(a), end: start.addingTimeInterval(b))
+		}
+		let result = TimeCoverageSummary(interval: interval(0, 100), recordedIntervals: [interval(50, 90), interval(-10, 20), interval(10, 15), interval(20, 30), interval(80, 120)])
+		XCTAssertEqual(result.covered, 80)
+		XCTAssertEqual(result.unaccounted, 20)
+		XCTAssertEqual(result.gaps, [interval(30, 50)])
+	}
+
+	func testTimeCoverageEmptyAndFullyCoveredPeriods() throws {
+		let window = DateInterval(start: Date(timeIntervalSince1970: 100), duration: 3600)
+		let empty = TimeCoverageSummary(interval: window, recordedIntervals: [])
+		XCTAssertEqual(empty.unaccounted, 3600)
+		XCTAssertEqual(empty.gaps, [window])
+		let full = TimeCoverageSummary(interval: window, recordedIntervals: [window, window])
+		XCTAssertEqual(full.covered, 3600)
+		XCTAssertTrue(full.gaps.isEmpty)
+	}
+
+	func testTimeCoveragePreservesRealDaylightSavingDayLength() throws {
+		var calendar = Calendar(identifier: .gregorian)
+		calendar.timeZone = try XCTUnwrap(TimeZone(identifier: "America/New_York"))
+		let date = try XCTUnwrap(calendar.date(from: DateComponents(year: 2024, month: 3, day: 10)))
+		let window = MoodReviewSummary.dateInterval(forLastDays: 1, endingOn: date, calendar: calendar)
+		XCTAssertEqual(TimeCoverageSummary(interval: window, recordedIntervals: []).unaccounted, 23 * 3600)
+	}
+
+	func testActiveEnergyConvertsJoulesAndExposesDuration() throws {
+		let start = Date(timeIntervalSince1970: 1_700_000_000)
+		let sample = HKQuantitySample(type: ActiveEnergy.quantityType, quantity: HKQuantity(unit: .joule(), doubleValue: 4184), start: start, end: start.addingTimeInterval(60))
+		let energy = ActiveEnergy(sample)
+		XCTAssertEqual(energy.quantityValue(), 1, accuracy: 0.00001)
+		XCTAssertEqual((try energy.value(of: ActiveEnergy.durationAttribute) as? TimeDuration)?.inUnit(.second), 60)
+		XCTAssertTrue(ActiveEnergy.writePermissions.isEmpty)
+	}
+
+	func testWorkoutPreservesIdentityMetricsAndSearchableType() throws {
+		let start = Date(timeIntervalSince1970: 1_700_000_000)
+		let raw = HKWorkout(activityType: .running, start: start, end: start.addingTimeInterval(120), duration: 90,
+			totalEnergyBurned: HKQuantity(unit: .kilocalorie(), doubleValue: 20), totalDistance: HKQuantity(unit: .meter(), doubleValue: 400), metadata: nil)
+		let workout = Workout(raw)
+		XCTAssertEqual(workout.hkSample().uuid, raw.uuid)
+		XCTAssertEqual((try workout.value(of: Workout.durationAttribute) as? TimeDuration)?.inUnit(.second), 90)
+		XCTAssertEqual(try workout.value(of: Workout.energy) as? Double, 20)
+		XCTAssertEqual(try workout.value(of: Workout.distance) as? Double, 400)
+		XCTAssertTrue(workout.matchesSearchString("RUNNING"))
+		XCTAssertThrowsError(try workout.set(attribute: Workout.kind, to: "Walking"))
+	}
+
+	func testAdditionalHealthQueriesPreserveStableIDsAndSavedRestrictions() throws {
+		let factory = injected(SampleFactory.self)
+		XCTAssertEqual(factory.sampleTypeId(for: Steps.self), 14)
+		XCTAssertEqual(factory.sampleTypeId(for: ActiveEnergy.self), 15)
+		XCTAssertEqual(factory.sampleTypeId(for: Workout.self), 16)
+		for type: Sample.Type in [ActiveEnergy.self, Workout.self] {
+			let query = try injected(QueryFactory.self).queryFor(type)
+			try dao.save(query, name: type.name)
+		}
+		try reopen()
+		XCTAssertTrue(try XCTUnwrap(dao.getQueryWith(name: "Active Energy")).convert() is ActiveEnergyQueryImpl)
+		XCTAssertTrue(try XCTUnwrap(dao.getQueryWith(name: "Workout")).convert() is WorkoutQueryImpl)
 	}
 
 }
