@@ -7,17 +7,18 @@ from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-# Completed serial run 40785354352. New classes use their case count as a weight.
+# Measured fixture-based execution in run 40906929091 (all 108 cases ran).
+# New classes use their case count as a weight.
 CLASS_SECONDS = {
-    'RecordActivitiesUITests': 1662,
-    'RecordMedicationsUITests': 840,
-    'GraphSetupScreenUITests': 480,
-    'QueryScreenUITests': 288,
-    'MoodSettingsUITests': 264,
-    'MoodResultsUITests': 138,
-    'ActivityResultsUITests': 114,
-    'RecordMoodsUITests': 102,
-    'ActivitySettingsUITests': 60,
+    'RecordActivitiesUITests': 699,
+    'RecordMedicationsUITests': 490,
+    'GraphSetupScreenUITests': 525,
+    'QueryScreenUITests': 215,
+    'MoodSettingsUITests': 307,
+    'MoodResultsUITests': 77,
+    'ActivityResultsUITests': 55,
+    'RecordMoodsUITests': 149,
+    'ActivitySettingsUITests': 63,
     'GeneralResultsUITests': 18,
 }
 # Check fixture bootstrap, actual UI creation, date editing, and reordering before

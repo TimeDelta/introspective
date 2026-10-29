@@ -228,11 +228,13 @@ final class RecordActivitiesUITests: UITest {
 	func testEditingLastActivity_correctlyUpdatesCorrespondingActivityDefinitionCell() {
 		// given
 		let definition = ActivityDefinition(name: "gteq")
-		seed(activityDefinitions: [definition], activities: [.init(definition)])
+		let startDate = (Date() - 1.minutes).dateBySet(hour: nil, min: nil, secs: 0)!
+		// A real minute change must occur. Selecting the already displayed minute
+		// is an unchanged edit and correctly preserves the original seconds.
+		seed(activityDefinitions: [definition], activities: [.init(definition, start: startDate - 10.minutes)])
 		app.tables.cells.staticTexts[definition.name].swipeLeft()
 		app.tables.cells.buttons["✎ Last"].tap()
 
-		let startDate = (Date() - 1.minutes).dateBySet(hour: nil, min: nil, secs: 0)!
 		setActivityStartDate(to: startDate)
 
 		let endDate = startDate + 1.hours + 2.minutes

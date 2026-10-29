@@ -41,27 +41,40 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 	public final let customImportMessage: String? = nil
 
 	public final var importOnlyNewData: Bool = true
-	public final var isPaused: Bool = false
-	public final var isCancelled: Bool = false
+	public final var isPaused: Bool {
+		get { execution.isPaused }
+		set { execution.isPaused = newValue }
+	}
+	public final var isCancelled: Bool {
+		get { execution.isCancelled }
+		set { execution.isCancelled = newValue }
+	}
 
-	private final var recordNumber: Int = -1
-	private final var totalLines: Int = -1
+	internal let execution = ImporterExecution()
+	private final var recordNumber: Int {
+		get { execution.recordNumber }
+		set { execution.recordNumber = newValue }
+	}
+	private final var totalLines: Int {
+		get { execution.totalLines }
+		set { execution.totalLines = newValue }
+	}
 	private final let mainTransaction = injected(Database.self).transaction()
 	private final var csv: CSVReader!
 	private final var latestDate: Date!
 
 	public final func importData(from url: URL) throws {
-		csv = try injected(IOUtil.self).csvReader(url: url, hasHeaderRow: true)
-		recordNumber = 1
-		// a rough approximation
-		totalLines = try injected(IOUtil.self).contentsOf(url).split(separator: "\n").count
+		try execution.execute(newImport: true, rollback: { self.mainTransaction.reset() }) {
+			mainTransaction.reset()
+			csv = try injected(IOUtil.self).csvReader(url: url, hasHeaderRow: true)
+			recordNumber = 1
+			// a rough approximation
+			totalLines = try injected(IOUtil.self).contentsOf(url).split(separator: "\n").count
 
-		isPaused = false
-		isCancelled = false
+			latestDate = lastImport // use temp var to avoid bug where initial import doesn't import anything
 
-		latestDate = lastImport // use temp var to avoid bug where initial import doesn't import anything
-
-		try resume()
+			try resume()
+		}
 	}
 
 	public final func resetLastImportDate() throws {
@@ -80,8 +93,7 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 	}
 
 	public final func cancel() {
-		isCancelled = true
-		mainTransaction.reset()
+		execution.cancel { self.mainTransaction.reset() }
 	}
 
 	public final func pause() {
@@ -89,27 +101,32 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 	}
 
 	public final func resume() throws {
-		guard !isCancelled else {
-			Me.log.error("Tried to resume a cancelled mood import from Wellness")
-			return
-		}
-
-		// without this, pausing and returning skips a line
-		var currentRow: [String]? = []
-		if !isPaused { currentRow = csv.next() }
-		isPaused = false
-		do {
-			while currentRow != nil {
-				guard !isPaused && !isCancelled else { return }
-				try processLine(latestDate: &latestDate, using: mainTransaction)
-				recordNumber += 1
-				currentRow = csv.next()
+		try execution.execute(rollback: { self.mainTransaction.reset() }) {
+			execution.beforeResume?()
+			guard !isCancelled else {
+				Me.log.error("Tried to resume a cancelled mood import from Wellness")
+				return
 			}
-			lastImport = latestDate
-			try retryOnFail({ try mainTransaction.commit() }, maxRetries: 2)
-		} catch {
-			Me.log.error("Failed to import moods from Wellness: %@", errorInfo(error))
-			throw error
+
+			// without this, pausing and returning skips a line
+			var currentRow: [String]? = []
+			if !isPaused { currentRow = csv.next() }
+			isPaused = false
+			do {
+				while currentRow != nil {
+					guard !isPaused && !isCancelled else { return }
+					try processLine(latestDate: &latestDate, using: mainTransaction)
+					recordNumber += 1
+					currentRow = csv.next()
+				}
+				try execution.commit {
+					lastImport = latestDate
+					try retryOnFail({ try mainTransaction.commit() }, maxRetries: 2)
+				}
+			} catch {
+				Me.log.error("Failed to import moods from Wellness: %@", errorInfo(error))
+				throw error
+			}
 		}
 	}
 

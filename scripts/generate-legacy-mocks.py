@@ -16,7 +16,42 @@ TESTABLE = ["Introspective", "AttributeRestrictions", "Attributes", "BooleanAlge
             "Common", "DataExport", "DataImport", "DependencyInjection", "Notifications",
             "Persistence", "Queries", "SampleGroupers", "SampleGroupInformation", "Samples",
             "Settings", "UIExtensions"]
-IMPORTS = ["HealthKit", "CoreData", "Presentr", "CSV", "SwiftDate", "UserNotifications", "Instructions", "UIKit"]
+IMPORTS = ["Foundation", "HealthKit", "CoreData", "Presentr", "CSV", "SwiftDate", "UserNotifications", "Instructions", "UIKit"]
+
+
+def synchronized_template(source):
+    # Core Data can release objects on its own queue while a test resolves a
+    # dependency on the main queue. SwiftyMocky 4's unprotected invocation arrays
+    # otherwise corrupt their storage in InjectionProviderMock.addInvocation.
+    for declaration in ('    private var invocations: [MethodType] = []',
+                        '    static private var invocations: [StaticMethodType] = []'):
+        if source.count(declaration) != 1:
+            raise RuntimeError('Unexpected mock invocation storage; review synchronization adapter')
+        prefix = '    static private let' if 'static private' in declaration else '    private let'
+        source = source.replace(declaration, prefix + ' mockStateLock = NSRecursiveLock()\n' + declaration)
+    if source.count('invocations.append(.\\(propertyCase') != 2:
+        raise RuntimeError('Unexpected mock property invocation recording')
+    source = source.replace('invocations.append(.\\(propertyCase', 'addInvocation(.\\(propertyCase')
+    pattern = re.compile(r'^(    (?:public|private|static public|static private|public static) func '
+                         r'(setupMock|resetMock|given|perform|verify|addInvocation|methodReturnValue|'
+                         r'methodPerformValue|matchingCalls|givenGetterValue|optionalGivenGetterValue)'
+                         r'(?:<T>)?\([^\n]+ \{)$', re.MULTILINE)
+
+    def locked(match):
+        body = '\n        mockStateLock.lock()'
+        if match[2] == 'resetMock':
+            # Release retained objects after unlocking: their destructors can
+            # resolve another mocked dependency or run on a Core Data queue.
+            body += ('\n        let releasedState = (invocations, methodReturnValues, methodPerformValues)'
+                     '\n        defer { mockStateLock.unlock(); withExtendedLifetime(releasedState) {} }')
+        else:
+            body += '\n        defer { mockStateLock.unlock() }'
+        return match[1] + body
+
+    source, count = pattern.subn(locked, source)
+    if count != 23:
+        raise RuntimeError(f'Unexpected mock state entry points: {count}; review synchronization adapter')
+    return source
 
 
 def compatible_template(source):
@@ -37,13 +72,14 @@ def compatible_template(source):
     static_methods = 'aProtocol.allMethods.filter({ $0.isStatic })'
     if source.count(instance_methods) != 2 or source.count(static_methods) != 2:
         raise RuntimeError("Unexpected SwiftyMocky method selection; review initializer adapter")
-    return (source.replace(instance_methods, 'aProtocol.allMethods.filter({ !$0.isStatic || $0.isInitializer })')
+    source = (source.replace(instance_methods, 'aProtocol.allMethods.filter({ !$0.isStatic || $0.isInitializer })')
             .replace(static_methods, 'aProtocol.allMethods.filter({ $0.isStatic && !$0.isInitializer })')
             .replace(".characters.split(", ".split(")
             .replace(old_signature, "[String: [SourceryRuntime.Attribute]]")
             .replace(old_mapping, "return attributes.values.flatMap { $0 }.map { $0.description }")
             .replace(selection, selection + '\n    if autoMockable, let selected = argument["mockTypes"] as? [String], !selected.contains(type.name) { continue }')
             .replace(variables, 'let manual = (argument["manualProperties"] as? [String: [String]])?[type.name] ?? []\n    let allVariables = uniques(variables: aProtocol.allVariables.filter({ !$0.isStatic && (autoMockable || !manual.contains($0.name)) }))'))
+    return synchronized_template(source)
 
 
 def manual_properties():

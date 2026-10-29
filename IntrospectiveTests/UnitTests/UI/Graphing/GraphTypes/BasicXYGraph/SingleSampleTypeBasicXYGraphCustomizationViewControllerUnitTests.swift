@@ -1018,7 +1018,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 	private final func setXAxis(usePointGroupValue: Bool) {
 		Given(
 			mockUiUtil,
-			.value(for: .value(.information), from: .any, keyIsOptional: .any, willReturn: nil as SampleGroupInformation?))
+			.value(for: .value(.information), from: .any, keyIsOptional: .any, willReturn: nil as SampleGroupInformation??))
 		Given(mockUiUtil, .value(for: .value(.attribute), from: .any, keyIsOptional: .any, willReturn: nil as Attribute??))
 		Given(
 			mockUiUtil,

@@ -7,6 +7,36 @@ GENERATOR = runpy.run_path(str(Path(__file__).resolve().parents[1] / 'generate-l
 
 
 class LegacyMockInputs(unittest.TestCase):
+    def mock_state_template(self):
+        text = "    private var invocations: [MethodType] = []\n    static private var invocations: [StaticMethodType] = []\n"
+        text += r"get { invocations.append(.\(propertyCaseGetName)) }; set { invocations.append(.\(propertyCaseSetName)) }" + "\n"
+        for static in (False, True):
+            prefix = 'static private' if static else 'private'
+            headers = ['resetMock(_ scopes: MockScope...)', 'given(_ method: Given)', 'perform(_ method: Perform)',
+                       'verify(_ method: Verify)', 'addInvocation(_ call: MethodType)',
+                       'methodReturnValue(_ method: MethodType)', 'methodPerformValue(_ method: MethodType)',
+                       'matchingCalls(_ method: MethodType)', 'matchingCalls(_ method: Verify)',
+                       'givenGetterValue<T>(_ method: MethodType)', 'optionalGivenGetterValue<T>(_ method: MethodType)']
+            if not static:
+                headers.append('setupMock(file: StaticString)')
+            for header in headers:
+                text += f'    {prefix} func {header} {{\n        invocations.append(call)\n    }}\n'
+        return text
+
+    def test_mock_state_adapter_serializes_instance_static_and_property_access(self):
+        adapted = GENERATOR['synchronized_template'](self.mock_state_template())
+        self.assertEqual(adapted.count('mockStateLock.lock()'), 23)
+        self.assertEqual(adapted.count('mockStateLock = NSRecursiveLock()'), 2)
+        self.assertNotIn('invocations.append(.', adapted)
+        self.assertEqual(adapted.count('mockStateLock.unlock(); withExtendedLifetime(releasedState)'), 2)
+
+    def test_mock_state_adapter_rejects_unreviewed_storage_and_entry_points(self):
+        source = self.mock_state_template()
+        for broken in [source.replace('static private var invocations', 'static private var calls'),
+                       source.replace('func addInvocation(', 'func recordCall(')]:
+            with self.assertRaises(RuntimeError):
+                GENERATOR['synchronized_template'](broken)
+
     def test_all_modules_resolve_sample_parent_protocols(self):
         configs = dict(GENERATOR['configurations']())
         inputs = {tuple(config['sources']['include']) for config in configs.values()}

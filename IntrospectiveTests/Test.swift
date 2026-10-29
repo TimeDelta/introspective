@@ -25,6 +25,20 @@ import SwiftyMocky
 @testable import Settings
 @testable import UIExtensions
 
+final class GeneratedMockConcurrencyTests: Test {
+	func testConcurrentDependencyCallsAndPropertyReadsKeepEveryInvocation() {
+		Matcher.default.register(String.Type.self) { $0 == $1 }
+		let provider = InjectionProviderMock()
+		Given(provider, .types(getter: [String.self]))
+		Given(provider, .get(.any, willReturn: "value"))
+		DispatchQueue.concurrentPerform(iterations: 1000) { _ in
+			XCTAssertEqual(try provider.get(String.self), "value")
+			XCTAssertEqual(provider.types.count, 1)
+		}
+		Verify(provider, .exactly(1000), .get(.value(String.self)))
+	}
+}
+
 class Test: XCTestCase {
 
 	public final var injectionProvider: InjectionProviderMock!
