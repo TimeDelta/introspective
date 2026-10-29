@@ -70,6 +70,9 @@ jobs:
         shell: bash
         run: |
           echo "fingerprint=${{ hashFiles('Podfile', 'Podfile.lock', '**/project.pbxproj', '!Pods/**', 'scripts/prepare-*.rb') }}" >> "$GITHUB_OUTPUT"
+          # Refresh the compiled baseline weekly instead of retaining a copy of
+          # the same dependencies for every source commit.
+          echo "epoch=$(date -u +%G-W%V)" >> "$GITHUB_OUTPUT"
 
       - name: Verify build tools
         shell: bash
@@ -106,8 +109,9 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ${{ env.CI_DERIVED_DATA }}
-          key: xcode-v2-${{ runner.os }}-${{ runner.arch }}-26.3-${{ matrix.kind }}-${{ steps.build-inputs.outputs.fingerprint }}-${{ github.sha }}
+          key: xcode-v3-${{ runner.os }}-${{ runner.arch }}-26.3-${{ matrix.kind }}-${{ steps.build-inputs.outputs.fingerprint }}-${{ steps.build-inputs.outputs.epoch }}
           restore-keys: |
+            xcode-v3-${{ runner.os }}-${{ runner.arch }}-26.3-${{ matrix.kind }}-${{ steps.build-inputs.outputs.fingerprint }}-
             xcode-v2-${{ runner.os }}-${{ runner.arch }}-26.3-${{ matrix.kind }}-${{ steps.build-inputs.outputs.fingerprint }}-
 
       - name: Generate build version
@@ -332,7 +336,7 @@ jobs:
         run: python3 scripts/ci-source-mtimes.py save --manifest "$CI_DERIVED_DATA/ci-source-mtimes.json"
 
       - name: Save successful compilation for subsequent runs
-        if: ${{ !cancelled() && (steps.test-build.outcome == 'success' || steps.release-build.outcome == 'success') && steps.build-cache.outputs.cache-hit != 'true' }}
+        if: ${{ !cancelled() && (steps.test-build.outcome == 'success' || steps.release-build.outcome == 'success') && steps.build-cache.outputs.cache-hit != 'true' && (matrix.kind != 'ui' || matrix.shard == 1) }}
         uses: actions/cache/save@v4
         with:
           path: ${{ env.CI_DERIVED_DATA }}
