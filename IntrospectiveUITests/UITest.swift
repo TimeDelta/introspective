@@ -296,28 +296,30 @@ class UITest: XCTestCase {
 		if currentText.isEmpty || currentText == textField.placeholderValue {
 			return true
 		}
-		let clearButton = textField.buttons["Clear text"].firstMatch
-		if clearButton.exists && clearButton.isHittable {
-			clearButton.tap()
-			return true
-		}
-		textField.press(forDuration: 1)
-		// UIKit's newer edit menu exposes actions as buttons instead of menu items.
-		let menuItem = app.menuItems["Select All"]
-		let button = app.buttons["Select All"]
-		if menuItem.exists {
-			menuItem.tap()
-		} else if button.exists {
-			button.tap()
-		} else if waitForElement(menuItem, timeout: 1) {
-			menuItem.tap()
-		} else if waitForElement(button, timeout: 1) {
-			button.tap()
+		// Public iOS keyboard-event APIs select the entire value regardless of
+		// caret position, selection state, or the edit menu's visible actions.
+		if #available(iOS 15.0, *) {
+			textField.typeKey("a", modifierFlags: .command)
+			textField.typeKey(XCUIKeyboardKey.delete, modifierFlags: [])
 		} else {
-			XCTFail("Select All did not appear for \(textField)")
+			textField.press(forDuration: 1)
+			let selectAll = app.menuItems["Select All"]
+			guard waitForElement(selectAll, timeout: 2) else {
+				XCTFail("Select All did not appear for \(textField)")
+				return false
+			}
+			selectAll.tap()
+			textField.typeText(XCUIKeyboardKey.delete.rawValue)
+		}
+		let empty = NSPredicate { _, _ in
+			let value = textField.value as? String ?? ""
+			return value.isEmpty || value == textField.placeholderValue
+		}
+		let cleared = XCTNSPredicateExpectation(predicate: empty, object: textField)
+		guard XCTWaiter.wait(for: [cleared], timeout: 5) == .completed else {
+			XCTFail("Text input was not cleared: \(textField.value ?? "nil")")
 			return false
 		}
-		textField.typeText(XCUIKeyboardKey.delete.rawValue)
 		return true
 	}
 

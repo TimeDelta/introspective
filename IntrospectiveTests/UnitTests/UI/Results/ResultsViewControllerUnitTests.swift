@@ -50,6 +50,37 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		Given(mockSampleGroupInformationFactory, .initInformation(.any, .any, willReturn: mockInformation))
 	}
 
+	final override func tearDown() {
+		if let controller = controller {
+			NotificationCenter.default.removeObserver(controller)
+			if let table = controller.viewIfLoaded as? UITableView {
+				table.dataSource = nil
+				table.delegate = nil
+			}
+		}
+		// Invocation records retain callbacks and controller arguments. Release
+		// them before replacing the dependencies used by this test's UI.
+		mockAsyncUtil.resetMock()
+		mockUiUtil.resetMock()
+		controller = nil
+		super.tearDown()
+	}
+
+	func testQueuedResultRefreshesDoNotRetainTheController() {
+		weak var releasedController: ResultsViewControllerImpl?
+		autoreleasepool {
+			let subject = ResultsViewControllerImpl(style: .plain)
+			subject.actionsButton = UIBarButtonItem()
+			subject.samples = SampleCreatorTestUtil.createSamplesWithoutDateAttribute(
+				withValues: [1], for: IntegerAttribute(id: 0, name: "value"))
+			releasedController = subject
+			mockAsyncUtil.resetMock()
+			mockUiUtil.resetMock()
+		}
+
+		XCTAssertNil(releasedController)
+	}
+
 	func testRecomputingInformationBeforeSamplesArriveKeepsTheLoadingState() {
 		let information = SampleGroupInformationMock()
 		controller.information = [information]
