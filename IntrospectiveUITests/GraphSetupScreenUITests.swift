@@ -399,7 +399,24 @@ final class GraphSetupScreenUITests: UITest {
 		app.buttons["set time unit button"].tap()
 		setPicker(to: timeUnit)
 		app.buttons["save button"].tap()
-		app.buttons["save grouper button"].tap()
+		waitForValue(timeUnit.localizedCapitalized, of: app.buttons["set time unit button"])
+		let save = app.buttons["save grouper button"]
+		guard waitForElement(save) else { XCTFail("Grouper Save did not appear"); return }
+		let scroll = app.scrollViews.containing(.button, identifier: "save grouper button").firstMatch
+		for _ in 0..<3 {
+			if save.isHittable || !scroll.exists { break }
+			scroll.swipeUp()
+		}
+		let ready = NSPredicate { _, _ in save.exists && save.isHittable }
+		if !ready.evaluate(with: save) {
+			let expectation = XCTNSPredicateExpectation(predicate: ready, object: save)
+			guard XCTWaiter.wait(for: [expectation], timeout: 5) == .completed || ready.evaluate(with: save) else {
+				XCTFail("Grouper Save did not become tappable")
+				return
+			}
+		}
+		save.tap()
+		guard waitForElement(app.buttons["Done"]) else { XCTFail("Grouper editor did not close after Save"); return }
 		app.buttons["Done"].tap()
 	}
 

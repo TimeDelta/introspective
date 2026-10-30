@@ -375,6 +375,41 @@ final class TextAttributeEditorFocusTests: UnitTest {
 	}
 }
 
+final class GrouperEditorContainmentTests: UnitTest {
+	func testGrouperEditorOwnsItsChooserAndLaysOutTheSaveControl() {
+		Matcher.default.register(AttributedChooserViewController.Type.self) { $0 == $1 }
+		Matcher.default.register(AttributeViewController.Type.self) { $0 == $1 }
+		let storyboard = UIStoryboard(name: "AttributeList", bundle: nil)
+		let chooser = storyboard.instantiateViewController(withIdentifier: "attributedChooserViewController") as! AttributedChooserViewController
+		let first = storyboard.instantiateViewController(withIdentifier: "attributeView") as! AttributeViewController
+		let second = storyboard.instantiateViewController(withIdentifier: "attributeView") as! AttributeViewController
+		Given(mockUiUtil, .controller(named: .value("attributedChooserViewController"),
+			from: .value("AttributeList"), as: .value(AttributedChooserViewController.self), willReturn: chooser))
+		Given(mockUiUtil, .controller(named: .value("attributeView"),
+			from: .value("AttributeList"), as: .value(AttributeViewController.self), willReturn: first, second))
+		let editor = EditGrouperViewControllerImpl()
+		let grouper = SameTimeUnitSampleGrouper(attributes: [CommonSampleAttributes.startDate], .week)
+		editor.currentGrouper = grouper
+		editor.availableGroupers = [grouper]
+		editor.notificationToSendWhenAccepted = .backgroundExportFinished
+		editor.loadViewIfNeeded()
+		editor.view.frame = CGRect(x: 0, y: 0, width: 390, height: 844)
+		editor.view.layoutIfNeeded()
+		XCTAssertEqual(editor.children.count, 1)
+		XCTAssertTrue(chooser.parent === editor)
+		XCTAssertTrue(chooser.view.superview === editor.view)
+		XCTAssertEqual(chooser.view.frame, editor.view.bounds)
+		let save = chooser.scrollContentView.subviews.first { $0.accessibilityIdentifier == "save grouper button" }
+		XCTAssertNotNil(save)
+		if let save = save {
+			XCTAssertGreaterThan(save.frame.height, 0)
+			XCTAssertTrue(chooser.view.bounds.contains(save.convert(save.bounds, to: chooser.view)))
+		}
+		NotificationCenter.default.removeObserver(editor)
+		NotificationCenter.default.removeObserver(chooser)
+	}
+}
+
 class Test: XCTestCase {
 
 	public final var injectionProvider: InjectionProviderMock!

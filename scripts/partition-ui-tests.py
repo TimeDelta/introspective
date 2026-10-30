@@ -43,6 +43,7 @@ PREFLIGHT_TESTS = {
     ],
     'GraphSetupScreenUITests': [
         'testEditingAlreadyChosenXAxisQuery_correctlyPopulatesEditQueryScreen',
+        'testDeletingYAxisInformationOnSingleDataTypeScreen_removesThatAttributeFromTableView',
     ],
     'ActivityResultsUITests': [
         'testDeletingOnlyActivityInResults_goesBackToQueryScreen',
