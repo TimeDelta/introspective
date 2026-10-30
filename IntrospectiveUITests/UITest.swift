@@ -214,14 +214,48 @@ class UITest: XCTestCase {
 			datePickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: dateStrings[.month]!)
 			datePickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: dateStrings[.day]!)
 		} else { // date and time
-			let monthAndDayText = String(dateStrings[.month]!.prefix(3)) + " " + dateStrings[.day]!
+			let formatter = DateFormatter()
+			formatter.dateFormat = "MMM d"
+			let monthAndDayText = formatter.string(from: date)
+			formatter.dateFormat = "MMM"
+			let monthText = formatter.string(from: date)
 			var hourText = dateStrings[.hour]!
 			let hour = Int(hourText)!
 			hourText = String(hour % 12 == 0 ? 12 : hour % 12)
-			datePickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: monthAndDayText)
+			let dayWheel = datePickerWheels.element(boundBy: 0)
+			dayWheel.adjust(toPickerWheelValue: monthAndDayText)
 			datePickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: hourText)
 			datePickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: dateStrings[.minute]!)
 			datePickerWheels.element(boundBy: 3).adjust(toPickerWheelValue: dateStrings[.timeZone]!)
+			// Wheel scrolling can carry the date across midnight while changing
+			// the hour or AM/PM. Finish on the requested calendar day, after time
+			// changes, and check every selected component before allowing Save.
+			let numbers: (String) -> [Int] = { value in
+				value.components(separatedBy: CharacterSet.decimalDigits.inverted).compactMap { Int($0) }
+			}
+			let matchesDay: (String) -> Bool = { value in
+				let calendar = Calendar.autoupdatingCurrent
+				switch value.lowercased() {
+				case "today": return calendar.isDateInToday(date)
+				case "yesterday": return calendar.isDateInYesterday(date)
+				case "tomorrow": return calendar.isDateInTomorrow(date)
+				default:
+					return value.localizedCaseInsensitiveContains(monthText) && numbers(value).contains(Int(dateStrings[.day]!)!)
+				}
+			}
+			if !matchesDay(dayWheel.value as? String ?? "") {
+				dayWheel.adjust(toPickerWheelValue: monthAndDayText)
+			}
+			let selected = datePickerWheels.allElementsBoundByIndex.map { $0.value as? String ?? "" }
+			print("CI_UI_DATE_SELECTION expected=\(date) wheels=\(selected)")
+			guard selected.count == 4 else {
+				XCTFail("Date picker changed its wheel count during editing: \(selected)")
+				return
+			}
+			XCTAssertTrue(matchesDay(selected[0]) && numbers(selected[1]).first == Int(hourText) &&
+				numbers(selected[2]).first == Int(dateStrings[.minute]!) &&
+				selected[3].localizedCaseInsensitiveContains(dateStrings[.timeZone]!),
+				"Date picker did not select \(date): \(selected)")
 		}
 	}
 
@@ -256,10 +290,7 @@ class UITest: XCTestCase {
 	}
 
 	final func isToday(_ date: Date) -> Bool {
-		let calendar = Calendar.autoupdatingCurrent
-		let dateInRegion = DateInRegion(date, region: Region(calendar: calendar, zone: calendar.timeZone))
-		let startOfDay = dateInRegion.dateAtStartOf(.day).date
-		return date.isAfterDate(startOfDay, orEqual: true, granularity: .nanosecond)
+		Calendar.autoupdatingCurrent.isDateInToday(date)
 	}
 
 	// MARK: - Text Field Helpers
