@@ -1,4 +1,6 @@
 import importlib.util
+import contextlib
+import io
 import json
 import os
 from pathlib import Path
@@ -100,7 +102,7 @@ sys.exit(2 if os.environ.get('LEGACY_DIAG_FAIL') == '1' else 0)
         self.assertIn('xcodebuild', (diagnostics / 'processes.txt').read_text())
         self.assertEqual((diagnostics / 'xcodebuild.sample.txt').read_text(), 'captured process sample')
         self.assertIn('simctl list', (diagnostics / 'simulators.json').read_text())
-        self.assertIn('system/com.apple.testmanagerd', (diagnostics / 'testmanagerd.txt').read_text())
+        self.assertIn('user/foreground/com.apple.testmanagerd', (diagnostics / 'testmanagerd.txt').read_text())
         self.assertEqual(len((self.root / 'calls.jsonl').read_text().splitlines()), 1)
         self.assert_child_stopped()
 
@@ -160,3 +162,88 @@ sys.exit(2 if os.environ.get('LEGACY_DIAG_FAIL') == '1' else 0)
                 result = self.run_legacy(timeout=value)
                 self.assertEqual(result.returncode, 2)
         self.assertFalse((self.root / 'calls.jsonl').exists())
+
+    def test_ready_handshake_gets_a_separate_budget_for_first_test_activity(self):
+        process = Mock(pid=12345)
+        process.poll.return_value = None
+        process.wait.return_value = 0
+        readiness = Mock()
+        readiness.ready.return_value = True
+        clock = [0.0]
+        def advance(_duration):
+            clock[0] += 6
+        with patch.object(MODULE.subprocess, 'Popen', return_value=process), \
+                patch.object(MODULE.TestActivityReader, 'started', side_effect=[False, False, True]), \
+                patch.object(MODULE, 'RunnerReadinessReader', return_value=readiness), \
+                patch.object(MODULE.time, 'monotonic', side_effect=lambda: clock[0]), \
+                patch.object(MODULE.time, 'sleep', side_effect=advance), patch.object(MODULE, 'stop') as stop, \
+                contextlib.redirect_stdout(io.StringIO()) as output:
+            self.assertEqual(MODULE.run(self.log, ['xcodebuild'], 'sim', 5), 0)
+            self.assertIn('completed the XCTest handshake', output.getvalue())
+            readiness.ready.assert_called_once_with()
+            stop.assert_not_called()
+
+    def test_repeated_ready_notifications_cannot_extend_the_second_budget(self):
+        process = Mock(pid=12345)
+        process.poll.return_value = None
+        readiness = Mock()
+        readiness.ready.return_value = True
+        clock = [0.0]
+        def advance(_duration):
+            clock[0] += 121
+        with patch.object(MODULE.subprocess, 'Popen', return_value=process), \
+                patch.object(MODULE.TestActivityReader, 'started', return_value=False), \
+                patch.object(MODULE, 'RunnerReadinessReader', return_value=readiness), \
+                patch.object(MODULE.time, 'monotonic', side_effect=lambda: clock[0]), \
+                patch.object(MODULE.time, 'sleep', side_effect=advance), patch.object(MODULE, 'stop') as stop, \
+                patch.object(MODULE, 'startup_diagnostics'), contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(MODULE.run(self.log, ['xcodebuild'], 'sim', 5), 124)
+            readiness.ready.assert_called_once_with()
+            stop.assert_called_once_with(process)
+
+    def test_readiness_uses_only_new_incremental_session_handshakes(self):
+        bundle = self.root / 'Tests.xcresult'
+        session = bundle / 'Staging/1_Test/Diagnostics/Session-tests.log'
+        session.parent.mkdir(parents=True)
+        session.write_text('Telling test runner to start executing tests.\n')
+        readiness = MODULE.RunnerReadinessReader(bundle)
+        self.assertFalse(readiness.ready(), 'Old startup progress must not grant extra time')
+        with session.open('a') as stream:
+            stream.write('Telling test runner to start exec')
+        self.assertFalse(readiness.ready())
+        with session.open('a') as stream:
+            stream.write('uting tests.\n')
+        self.assertTrue(readiness.ready())
+
+    def test_new_session_log_reports_ready_after_monitoring_started(self):
+        bundle = self.root / 'Tests.xcresult'
+        readiness = MODULE.RunnerReadinessReader(bundle)
+        self.assertFalse(readiness.ready())
+        session = bundle / 'Staging/1_Test/Diagnostics/Session-tests.log'
+        session.parent.mkdir(parents=True)
+        session.write_text('_IDE_startExecutingTestPlanWithProtocolVersion:36\n')
+        self.assertTrue(readiness.ready())
+
+    def test_macos_permission_error_during_final_group_cleanup_preserves_timeout(self):
+        process = Mock(pid=12345)
+        process.poll.return_value = None
+        process.wait.return_value = 0
+        readiness = Mock()
+        readiness.ready.return_value = False
+        with patch.object(MODULE.subprocess, 'Popen', return_value=process), \
+                patch.object(MODULE.TestActivityReader, 'started', return_value=False), \
+                patch.object(MODULE, 'RunnerReadinessReader', return_value=readiness), \
+                patch.object(MODULE.time, 'monotonic', side_effect=[0, 10]), \
+                patch.object(MODULE, 'startup_diagnostics'), \
+                patch.object(MODULE.os, 'killpg', side_effect=[None, PermissionError('Operation not permitted')]), \
+                contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()) as errors:
+            self.assertEqual(MODULE.run(self.log, ['xcodebuild'], 'sim', 5), 124)
+            self.assertIn('Cannot signal test process group', errors.getvalue())
+
+    def test_denied_group_signal_falls_back_to_the_owned_wrapper(self):
+        process = Mock(pid=12345)
+        process.poll.side_effect = [None, 0]
+        with patch.object(MODULE.os, 'killpg', side_effect=PermissionError('Operation not permitted')), \
+                contextlib.redirect_stderr(io.StringIO()):
+            MODULE.stop(process)
+            process.send_signal.assert_called_once_with(signal.SIGINT)
