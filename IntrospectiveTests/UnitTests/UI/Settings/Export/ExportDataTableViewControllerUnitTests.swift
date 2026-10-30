@@ -54,6 +54,84 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 		super.tearDown()
 	}
 
+	func testCompletedExportsKeepDistinctShareKeysWithoutRunningExecutions() {
+		Given(exporter, .isPaused(getter: false))
+		setUpActiveExport()
+		let first = ExportDataTableViewController.backgroundExports { Set($0.keys) }
+		XCTAssertEqual(first.count, 1)
+		XCTAssertEqual(ExportDataTableViewController.runningExportCount, 0)
+		setUpActiveExport()
+		let all = ExportDataTableViewController.backgroundExports { Set($0.keys) }
+		XCTAssertEqual(all.count, 2)
+		XCTAssertTrue(first.isSubset(of: all))
+		XCTAssertEqual(ExportDataTableViewController.runningExportCount, 0)
+	}
+
+	func testCancellingQueuedExportPreventsWorkFromStarting() {
+		Perform(mockAsyncUtil, .run(qos: .any, code: .any, perform: { _, _ in }))
+		setUpActiveExport()
+		let worker = ArgumentCaptor<() -> Void>()
+		Verify(mockAsyncUtil, .run(qos: .any, code: .capturing(worker)))
+		setUpBackgroundTaskIdForNotification()
+		NotificationCenter.default.post(name: NotificationName.cancelBackgroundTask.toName(), object: nil)
+		guard let work = worker.value else { XCTFail("Missing queued export worker"); return }
+		work()
+		Verify(exporter, .never, .exportData())
+		XCTAssertEqual(ExportDataTableViewController.backgroundExports { $0.count }, 0)
+		XCTAssertEqual(ExportDataTableViewController.runningExportCount, 0)
+	}
+
+	func testBackgroundExecutionEndsExactlyOnceAfterCompletionOrExpiration() {
+		var ended = [UIBackgroundTaskIdentifier]()
+		let execution = ExportBackgroundExecution { ended.append($0) }
+		let id = UIBackgroundTaskIdentifier(rawValue: 42)
+		execution.register(id)
+		XCTAssertTrue(execution.finish())
+		XCTAssertFalse(execution.finish())
+		XCTAssertEqual(ended, [id])
+	}
+
+	func testExpirationBeforeRegistrationStillEndsTheReturnedAssertion() {
+		var ended = [UIBackgroundTaskIdentifier]()
+		let execution = ExportBackgroundExecution { ended.append($0) }
+		XCTAssertTrue(execution.finish())
+		XCTAssertTrue(execution.isFinished)
+		XCTAssertTrue(ended.isEmpty)
+		let id = UIBackgroundTaskIdentifier(rawValue: 42)
+		execution.register(id)
+		XCTAssertFalse(execution.finish())
+		XCTAssertEqual(ended, [id])
+	}
+
+	func testInvalidBackgroundAssertionIsNeverEnded() {
+		let execution = ExportBackgroundExecution { _ in XCTFail("Invalid assertion must not be ended") }
+		execution.register(.invalid)
+		XCTAssertTrue(execution.finish())
+	}
+
+	func testLateFinishDoesNotEndAReusedUIKitIdentifier() {
+		var ended = [UIBackgroundTaskIdentifier]()
+		let id = UIBackgroundTaskIdentifier(rawValue: 42)
+		let previous = ExportBackgroundExecution { ended.append($0) }
+		previous.register(id)
+		previous.finish()
+		let next = ExportBackgroundExecution { ended.append($0) }
+		next.register(id)
+		XCTAssertFalse(previous.finish())
+		XCTAssertEqual(ended, [id])
+		next.finish()
+		XCTAssertEqual(ended, [id, id])
+	}
+
+	func testConcurrentFinishConsumesOnlyOneAssertion() {
+		var ended = [UIBackgroundTaskIdentifier]()
+		let execution = ExportBackgroundExecution { ended.append($0) }
+		let id = UIBackgroundTaskIdentifier(rawValue: 42)
+		execution.register(id)
+		DispatchQueue.concurrentPerform(iterations: 1000) { _ in _ = execution.finish() }
+		XCTAssertEqual(ended, [id])
+	}
+
 	// MARK: - numberOfSections
 
 	func testQueuedRefreshesDoNotRetainTheExportController() {
@@ -204,6 +282,8 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 		setUpActiveExport()
 
 		// then
+		XCTAssertEqual(ExportDataTableViewController.backgroundExports { $0.count }, 0)
+		XCTAssertEqual(ExportDataTableViewController.runningExportCount, 0)
 		let expectedId = "ExportErrorOccurred"
 		let contentCaptor = ArgumentCaptor<UNMutableNotificationContent>()
 		Verify(

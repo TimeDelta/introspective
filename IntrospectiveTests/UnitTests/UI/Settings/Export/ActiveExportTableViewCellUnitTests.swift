@@ -42,6 +42,13 @@ final class ActiveExportTableViewCellUnitTests: UnitTest {
 		cell.backgroundTaskId = backgroundTaskId
 	}
 
+	func testReopeningCompletedExportShowsShareToolbarWithoutAnotherNotification() {
+		toolbar.isHidden = true
+		cell.exporter = setUpMockExporter(percentComplete: 1)
+		XCTAssertFalse(toolbar.isHidden)
+		Verify(mockUiUtil, .setButton(.value(cancelButton), enabled: .value(false), hidden: .value(false)))
+	}
+
 	// MARK: - didSetExporter
 
 	func testGivenNil_didSetExporter_doesNotThrowError() {

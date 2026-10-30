@@ -111,6 +111,9 @@ public final class ActiveExportTableViewCell: UITableViewCell {
 		}
 		if progressView.progress == 1 {
 			timer?.invalidate()
+			timer = nil
+			toolbar.isHidden = false
+			injected(UiUtil.self).setButton(cancelButton, enabled: false, hidden: false)
 		}
 	}
 
