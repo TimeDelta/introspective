@@ -25,9 +25,14 @@ public final class TextAttributeValueViewController: AttributeValueTypeViewContr
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
 		textView.delegate = self
+		textView.accessibilityIdentifier = "attribute value text"
 		if let text = currentValue as? String {
 			textView.text = text
 		}
+	}
+
+	public final override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
 		textView.becomeFirstResponder()
 	}
 

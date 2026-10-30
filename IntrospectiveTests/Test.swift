@@ -348,6 +348,33 @@ final class MoodEditorCellBehaviorTests: UnitTest {
 	}
 }
 
+final class TextAttributeEditorFocusTests: UnitTest {
+	func testTextEditorRequestsFocusAfterAppearanceInsteadOfDuringLoading() {
+		let controller = TextAttributeValueViewController()
+		let text = FocusProbeTextView()
+		controller.textView = text
+		controller.validationLabel = UILabel()
+		controller.textAttribute = Activity.nameAttribute
+		controller.currentValue = "Existing text"
+		controller.view = UIView()
+		controller.viewDidLoad()
+		XCTAssertEqual(text.focusRequests, 0)
+		XCTAssertEqual(text.text, "Existing text")
+		XCTAssertTrue(text.delegate === controller)
+		XCTAssertEqual(text.accessibilityIdentifier, "attribute value text")
+		controller.viewDidAppear(false)
+		XCTAssertEqual(text.focusRequests, 1)
+	}
+
+	private final class FocusProbeTextView: UITextView {
+		var focusRequests = 0
+		override func becomeFirstResponder() -> Bool {
+			focusRequests += 1
+			return true
+		}
+	}
+}
+
 class Test: XCTestCase {
 
 	public final var injectionProvider: InjectionProviderMock!

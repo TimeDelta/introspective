@@ -45,19 +45,19 @@ class FunctionalTest: Test {
 	final var uiUtil: UiUtilMock!
 	final var exporterUtil: ExporterUtilMock!
 
-	override func setUp() {
-		super.setUp()
+	override func configureInjectionProvider() {
+		super.configureInjectionProvider()
 		Globals.testing = true
 
 		database = FunctionalTestDatabase(ObjectModelContainer.objectModel)
 		Given(injectionProvider, .get(.value(Database.self), willReturn: database))
 
-		let transaction = injected(Database.self).transaction()
+		let transaction = database.transaction()
 		settings = try! transaction.new(SettingsImpl.self)
 		try! transaction.commit()
 		// must pull from main database context or context will go out of scope and get deleted,
 		// causing CoreData to be unable to fulfill a fault
-		settings = try! injected(Database.self).pull(savedObject: settings)
+		settings = try! database.pull(savedObject: settings)
 		Given(injectionProvider, .get(.value(Settings.self), willReturn: settings))
 
 		attributeRestrictionFactory = AttributeRestrictionFactoryImpl()

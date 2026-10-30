@@ -22,6 +22,32 @@ import CSV
 
 final class ActivityFunctionalTests: FunctionalTest {
 
+	func testFunctionalProviderIsConfiguredBeforeRetiredObjectsResolveDependencies() {
+		var resolvedSettings: Settings?
+		var retiring: RetiringDatabaseProvider? = RetiringDatabaseProvider(database: database) {
+			resolvedSettings = injected(Settings.self)
+		}
+		DependencyInjector.register([retiring!])
+		retiring = nil
+
+		registerTypesWithDependencyInjection()
+
+		XCTAssertTrue((resolvedSettings as? SettingsImpl) === settings)
+		XCTAssertTrue((injected(Database.self) as? FunctionalTestDatabase) === database)
+	}
+
+	private final class RetiringDatabaseProvider: InjectionProvider {
+		let types: [Any.Type] = [Database.self]
+		private let database: Database
+		private let onRetirement: () -> Void
+		init(database: Database, onRetirement: @escaping () -> Void) {
+			self.database = database
+			self.onRetirement = onRetirement
+		}
+		func get<Type>(_: Type.Type) throws -> Type { database as! Type }
+		deinit { onRetirement() }
+	}
+
 	// MARK: - duration
 
 	func testGivenDifferentTimeZonesForStartAndEnd_duration_returnsCorrectDuration() throws {

@@ -477,7 +477,7 @@ final class GraphSetupScreenUITests: UITest {
 		app.tables.cells.element(boundBy: 1).tap()
 		setPicker("restricted attribute", to: "Name")
 		app.buttons["set value button"].tap()
-		setTextFor(field: app.textViews.element(boundBy: 0), to: "fhjewio")
+		setTextFor(field: app.textViews["attribute value text"], to: "fhjewio")
 		app.buttons["save button"].tap()
 		app.buttons["save attribute restriction button"].tap()
 		addDataTypeToQuery("Blood Pressure")

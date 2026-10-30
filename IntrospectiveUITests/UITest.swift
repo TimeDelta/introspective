@@ -334,17 +334,13 @@ class UITest: XCTestCase {
 		}
 		if let text = text, !text.isEmpty {
 			field.tap()
-			// A field can exist and accept a tap while its keyboard is still
-			// appearing. Wait for an interactive software key before sending the
-			// complete string; otherwise simulator input can deliver only a prefix.
-			let key = app.keyboards.firstMatch.keys.firstMatch
-			let ready = NSPredicate { _, _ in key.exists && key.isHittable }
-			if !ready.evaluate(with: key) {
-				let expectation = XCTNSPredicateExpectation(predicate: ready, object: key)
-				guard XCTWaiter.wait(for: [expectation], timeout: 5) == .completed || ready.evaluate(with: key) else {
-					XCTFail("Software keyboard was not ready for text input")
-					return
-				}
+			// Keyboard keys may be exposed but not individually hittable during
+			// presentation. Keyboard existence is the supported readiness signal;
+			// typing still targets the selected text input and checks its full value.
+			guard waitForElement(app.keyboards.firstMatch) else {
+				attachInputDiagnostics()
+				XCTFail("Software keyboard did not appear for text input")
+				return
 			}
 			field.typeText(text)
 			// Validation can intentionally normalize the typed text (for example,
@@ -359,11 +355,23 @@ class UITest: XCTestCase {
 				// Require the exact final value even when that last snapshot was late.
 				if result != .completed {
 					let actual = field.value as? String
+					if actual != expected { attachInputDiagnostics() }
 					XCTAssertEqual(actual, expected,
 						"Text input did not finish before saving: expected \(String(reflecting: expected)), got \(String(reflecting: actual))")
 				}
 			}
 		}
+	}
+
+	private func attachInputDiagnostics() {
+		let hierarchy = XCTAttachment(string: app.debugDescription)
+		hierarchy.name = "Text input accessibility hierarchy"
+		hierarchy.lifetime = .keepAlways
+		add(hierarchy)
+		let screenshot = XCTAttachment(screenshot: app.screenshot())
+		screenshot.name = "Text input screen"
+		screenshot.lifetime = .keepAlways
+		add(screenshot)
 	}
 
 	@discardableResult
