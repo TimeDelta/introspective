@@ -101,8 +101,8 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 				initialSampleSortDone = true
 				injected(AsyncUtil.self).run(qos: .userInteractive) { [weak self] in
-					guard let self = self else { return }
-					let dateAttributes = self.samples[0].attributes.filter { $0 is DateAttribute }
+					guard let self = self, let samples = self.samples, let first = samples.first else { return }
+					let dateAttributes = first.attributes.filter { $0 is DateAttribute }
 					guard !dateAttributes.isEmpty else {
 						self.filterSamples()
 						self.viewIsReady()
@@ -388,25 +388,23 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			showEditInformationView(indexPath)
 		} else {
 			let sample = filteredSamples[indexPath.row]
-			guard let allSamplesIndex = samples.firstIndex(where: { s in s.equalTo(sample) }) else {
+			// Distinct recorded objects can have equal values. Preserve the exact
+			// selected instance before falling back to equality for value samples.
+			let identicalIndex = samples.firstIndex { ($0 as AnyObject) === (sample as AnyObject) }
+			guard let allSamplesIndex = identicalIndex ?? samples.firstIndex(where: { $0.equalTo(sample) }) else {
 				Me.log.error("Unable to find filtered sample in original samples")
 				return
 			}
 			lastSelectedUnfilteredRowIndex = allSamplesIndex
 			if filteredSamples[indexPath.row] is Activity {
-				lastSelectedUnfilteredRowIndex = indexPath.row
 				showEditActivityView(indexPath)
 			} else if filteredSamples[indexPath.row] is Mood {
-				lastSelectedUnfilteredRowIndex = indexPath.row
 				showEditMoodView(indexPath)
 			} else if filteredSamples[indexPath.row] is MedicationDose {
-				lastSelectedUnfilteredRowIndex = indexPath.row
 				showEditDoseView(indexPath)
 			} else if filteredSamples[indexPath.row] is Fatigue {
-				lastSelectedUnfilteredRowIndex = indexPath.row
 				showEditFatigueView(indexPath)
 			} else if filteredSamples[indexPath.row] is Pain {
-				lastSelectedUnfilteredRowIndex = indexPath.row
 				showEditPainView(indexPath)
 			}
 		}
@@ -470,7 +468,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	}
 
 	private final func getSearchNearbyAction(at indexPath: IndexPath) -> UIContextualAction? {
-		selectedSearchNearbySampleDates = samples[indexPath.row].dates()
+		selectedSearchNearbySampleDates = filteredSamples[indexPath.row].dates()
 		guard selectedSearchNearbySampleDates.count > 0 else { return nil }
 
 		let action = injected(UiUtil.self).contextualAction(
@@ -822,6 +820,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	@objc private final func done() {
 		query?.stop()
+		sortTask?.cancel()
 		samples = nil
 		navigationController?.popViewController(animated: false)
 	}
