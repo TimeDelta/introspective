@@ -8,6 +8,8 @@
 
 import UIKit
 
+import Common
+
 public final class MoodNoteTableViewCell: UITableViewCell {
 	// MARK: - IBOutlets
 
@@ -20,7 +22,6 @@ public final class MoodNoteTableViewCell: UITableViewCell {
 		didSet {
 			noteView.text = note ?? ""
 			noteView.delegate = self
-			noteView.becomeFirstResponder()
 		}
 	}
 }
@@ -29,14 +30,12 @@ public final class MoodNoteTableViewCell: UITableViewCell {
 
 extension MoodNoteTableViewCell: UITextViewDelegate {
 	public final func textViewDidChange(_ textView: UITextView) {
-		DispatchQueue.main.async {
-			NotificationCenter.default.post(
-				name: self.notificationToSendOnChange,
-				object: self,
-				userInfo: self.info([
-					.text: textView.text,
-				])
-			)
-		}
+		// Editing events and Save run on main. Publish this event's value before
+		// another control can save or a table reload can replace the note view.
+		NotificationCenter.default.post(
+			name: notificationToSendOnChange,
+			object: self,
+			userInfo: [UserInfoKey.text: textView.text ?? ""]
+		)
 	}
 }
