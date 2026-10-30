@@ -237,8 +237,8 @@ public final class ExportDataTableViewController: UITableViewController {
 				}
 				Me.backgroundExportsAccessQueue.sync(flags: .barrier) {
 					Me._backgroundExports[backgroundTask] = exporter
+					Me.taskIds[uuid] = backgroundTask
 				}
-				Me.taskIds[uuid] = backgroundTask
 				if exporter.isPaused {
 					Me.log.info("Continuing background export of %@", dataType)
 					try exporter.resume()
