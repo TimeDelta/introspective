@@ -100,7 +100,7 @@ public final class MoodUiUtilImpl: MoodUiUtil {
 		var minAlpha: CGFloat = 0
 		minColor.getRed(&minRed, green: &minGreen, blue: &minBlue, alpha: &minAlpha)
 
-		let valueRatio = CGFloat(rating / (max - min))
+		let valueRatio = CGFloat(normalizedRating(rating, min: min, max: max))
 
 		return UIColor(
 			red: (maxRed - minRed) * valueRatio + minRed,
@@ -109,4 +109,12 @@ public final class MoodUiUtilImpl: MoodUiUtil {
 			alpha: (maxAlpha - minAlpha) * valueRatio + minAlpha
 		)
 	}
+}
+
+// Shared by mood, fatigue, and pain colors so historical/custom scales use the
+// same endpoints. Invalid or constant scales safely use their minimum color.
+func normalizedRating(_ rating: Double, min: Double, max: Double) -> Double {
+	let range = max - min
+	guard rating.isFinite, range.isFinite, range > 0 else { return 0 }
+	return Swift.min(1, Swift.max(0, (rating - min) / range))
 }

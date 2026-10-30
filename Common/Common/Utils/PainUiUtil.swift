@@ -95,7 +95,7 @@ public final class PainUiUtilImpl: PainUiUtil {
 		var minAlpha: CGFloat = 0
 		minColor.getRed(&minRed, green: &minGreen, blue: &minBlue, alpha: &minAlpha)
 
-		let valueRatio = CGFloat(rating / (max - min))
+		let valueRatio = CGFloat(normalizedRating(rating, min: min, max: max))
 
 		return UIColor(
 			red: (maxRed - minRed) * valueRatio + minRed,

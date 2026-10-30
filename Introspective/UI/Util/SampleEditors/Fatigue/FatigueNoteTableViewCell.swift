@@ -8,6 +8,8 @@
 
 import UIKit
 
+import Common
+
 public final class FatigueNoteTableViewCell: UITableViewCell {
 	// MARK: - IBOutlets
 
@@ -20,7 +22,6 @@ public final class FatigueNoteTableViewCell: UITableViewCell {
 		didSet {
 			noteView.text = note ?? ""
 			noteView.delegate = self
-			noteView.becomeFirstResponder()
 		}
 	}
 }
@@ -29,11 +30,10 @@ public final class FatigueNoteTableViewCell: UITableViewCell {
 
 extension FatigueNoteTableViewCell: UITextViewDelegate {
 	public final func textViewDidChange(_ textView: UITextView) {
-		post(
-			notificationToSendOnChange,
-			userInfo: [
-				.text: textView.text as Any,
-			]
+		NotificationCenter.default.post(
+			name: notificationToSendOnChange,
+			object: self,
+			userInfo: [UserInfoKey.text: textView.text ?? ""]
 		)
 	}
 }
