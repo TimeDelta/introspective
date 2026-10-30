@@ -267,6 +267,8 @@ jobs:
             python3 scripts/verify-native-test-results.py ci-output/mood-tests-summary.json
           elif [ "$CI_BUILD_KIND" = ui ]; then
             python3 scripts/verify-ui-test-results.py ci-output/mood-tests-summary.json --shard "$CI_UI_SHARD" --count "$CI_UI_SHARD_COUNT"
+          elif [ "$CI_BUILD_KIND" = legacy ]; then
+            python3 scripts/verify-legacy-test-results.py ci-output/mood-tests-summary.json
           else
             cat ci-output/mood-tests-summary.json
           fi
@@ -285,6 +287,24 @@ jobs:
               xcrun xcresulttool export attachments --path ci-output/MoodTests.xcresult --output-path ci-output/ui-attachments --only-failures > ci-output/attachment-export.log 2>&1 || true
             fi
           fi
+
+      - name: Report measured coverage and test-writing priorities
+        if: always() && matrix.kind != 'release' && matrix.kind != 'mocks'
+        shell: bash
+        run: |
+          if [ -d ci-output/MoodTests.xcresult ]; then
+            xcrun xccov view --report --json ci-output/MoodTests.xcresult > ci-output/coverage-raw.json 2> ci-output/coverage-export.log || true
+          fi
+          label="$CI_TEST_SCHEME"
+          if [ "$CI_BUILD_KIND" = ui ]; then label="$label (shard $CI_UI_SHARD/$CI_UI_SHARD_COUNT)"; fi
+          python3 scripts/report-test-coverage.py \
+            --coverage ci-output/coverage-raw.json \
+            --summary ci-output/test-summary.json \
+            --scheme "Introspective.xcodeproj/xcshareddata/xcschemes/$CI_TEST_SCHEME.xcscheme" \
+            --kind "$CI_BUILD_KIND" --shard "$CI_UI_SHARD" --shard-count "$CI_UI_SHARD_COUNT" \
+            --label "$label" \
+            --json ci-output/coverage-priorities.json > ci-output/coverage.md
+          cat ci-output/coverage.md >> "$GITHUB_STEP_SUMMARY"
 
       - name: Report UI execution timings
         if: always() && matrix.kind == 'ui'
