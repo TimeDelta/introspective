@@ -23,11 +23,11 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 	private final var tableView: UITableView { return controller.tableView }
 	private final var exporter: ActivityExporterMock!
 
-	private final let exportSleepTime: UInt32 = 2
 	private final let dataType = "this is the name of the data type for the exporter"
 
 	final override func setUp() {
 		super.setUp()
+		Perform(mockAsyncUtil, .run(qos: .any, code: .any, perform: { _, code in code() }))
 
 		exporter = ActivityExporterMock()
 		Given(exporter, .percentComplete(willReturn: 0.5))
@@ -40,11 +40,35 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 	}
 
 	final override func tearDown() {
+		if let controller = controller {
+			NotificationCenter.default.removeObserver(controller)
+			if let table = controller.viewIfLoaded as? UITableView {
+				table.dataSource = nil
+				table.delegate = nil
+			}
+		}
 		ExportDataTableViewController.resetExports()
+		mockAsyncUtil.resetMock()
+		mockUiUtil.resetMock()
+		controller = nil
 		super.tearDown()
 	}
 
 	// MARK: - numberOfSections
+
+	func testQueuedRefreshesDoNotRetainTheExportController() {
+		Given(exporter, .isPaused(getter: false))
+		weak var releasedController: ExportDataTableViewController?
+		autoreleasepool {
+			let subject = ExportDataTableViewController(style: .grouped)
+			releasedController = subject
+			subject.tableView(subject.tableView, didSelectRowAt: IndexPath(row: 0, section: 0))
+			// Mock invocation records own the worker and presentation arguments.
+			mockAsyncUtil.resetMock()
+			mockUiUtil.resetMock()
+		}
+		XCTAssertNil(releasedController, "Queued table refreshes must not keep a closed export screen alive")
+	}
 
 	func testGivenNoActiveExports_numberOfSections_returns1() {
 		// when
@@ -58,7 +82,6 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 		// given
 		Given(exporter, .isPaused(getter: false))
 		setUpActiveExport()
-		sleep(1)
 
 		// when
 		let numberOfSections = controller.numberOfSections(in: tableView)
@@ -89,7 +112,6 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 		// given
 		Given(exporter, .isPaused(getter: false))
 		setUpActiveExport()
-		sleep(1)
 
 		// when
 		let rows = controller.tableView(tableView, numberOfRowsInSection: 1)
@@ -104,7 +126,6 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 		// given
 		Given(exporter, .isPaused(getter: false))
 		setUpActiveExport()
-		sleep(1)
 
 		// when
 		let _ = controller.tableView(tableView, cellForRowAt: IndexPath(row: 0, section: 1))
@@ -142,7 +163,6 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 		// when
 		Given(exporter, .isPaused(getter: false))
 		setUpActiveExport()
-		sleep(1)
 
 		// then
 		Verify(exporter, .exportData())
@@ -152,9 +172,6 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 		// when
 		Given(exporter, .isPaused(getter: false))
 		setUpActiveExport()
-
-		// when
-		sleep(exportSleepTime + 1)
 
 		// then
 		let expectedId = "FinishedExport"
@@ -184,8 +201,7 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 		Given(exporter, .isPaused(getter: false))
 
 		// when
-		setUpActiveExport(sleepOnExport: false)
-		sleep(1)
+		setUpActiveExport()
 
 		// then
 		let expectedId = "ExportErrorOccurred"
@@ -223,7 +239,6 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 		NotificationCenter.default.post(name: extendTime, object: nil, userInfo: nil)
 
 		// then
-		sleep(1)
 		Verify(exporter, .once, .resume())
 	}
 
@@ -245,16 +260,15 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 
 	// MARK: - Helper Functions
 
-	private final func setUpActiveExport(forRow row: Int = 0, sleepOnExport: Bool = true) {
-		if sleepOnExport {
-			Perform(exporter, .exportData{ sleep(self.exportSleepTime) })
-		}
+	private final func setUpActiveExport(forRow row: Int = 0) {
 		controller.tableView(tableView, didSelectRowAt: IndexPath(row: row, section: 0))
 	}
 
 	private final func setUpBackgroundTaskIdForNotification() {
-		while ExportDataTableViewController.backgroundExports({ $0.count }) == 0 {}
-		let backgroundTaskId = ExportDataTableViewController.backgroundExports({ $0.first!.key })
+		guard let backgroundTaskId = ExportDataTableViewController.backgroundExports({ $0.first?.key }) else {
+			XCTFail("Export must be registered before sending its notification")
+			return
+		}
 		let taskIdString = String(backgroundTaskId.rawValue)
 		Given(mockUiUtil, .value(for: .value(.backgroundTaskId), from: .any, keyIsOptional: .any, willReturn: taskIdString))
 	}
