@@ -41,6 +41,13 @@ PREFLIGHT_TESTS = {
     'MoodResultsUITests': [
         'testEditingMood_correctlyDisplaysMoodData',
     ],
+    'GraphSetupScreenUITests': [
+        'testEditingAlreadyChosenXAxisQuery_correctlyPopulatesEditQueryScreen',
+        'testDeletingYAxisInformationOnSingleDataTypeScreen_removesThatAttributeFromTableView',
+    ],
+    'ActivityResultsUITests': [
+        'testDeletingOnlyActivityInResults_goesBackToQueryScreen',
+    ],
 }
 METHOD = re.compile(r'^\s*(?:(?:public|internal|private|final|override)\s+)*func\s+(test\w+)\s*\(\s*\)', re.MULTILINE)
 CLASS = re.compile(r'\bclass\s+(\w+)\s*:\s*(?:UITest|XCTestCase)\b')

@@ -42,14 +42,15 @@ public final class EditGrouperViewControllerImpl: UIViewController, EditGrouperV
 		controller.pickerAccessibilityIdentifier = "grouper picker"
 		controller.saveButtonAccessibilityIdentifier = "save grouper button"
 
+		addChild(controller)
 		view.addSubview(controller.view)
-		controller.didMove(toParent: self)
 		NSLayoutConstraint.activate([
 			controller.view.topAnchor.constraint(equalTo: view.topAnchor),
 			controller.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 			controller.view.leftAnchor.constraint(equalTo: view.leftAnchor),
 			controller.view.rightAnchor.constraint(equalTo: view.rightAnchor),
 		])
+		controller.didMove(toParent: self)
 	}
 
 	/// Send the notification with the user info key that would be expected

@@ -348,6 +348,68 @@ final class MoodEditorCellBehaviorTests: UnitTest {
 	}
 }
 
+final class TextAttributeEditorFocusTests: UnitTest {
+	func testTextEditorRequestsFocusAfterAppearanceInsteadOfDuringLoading() {
+		let controller = TextAttributeValueViewController()
+		let text = FocusProbeTextView()
+		controller.textView = text
+		controller.validationLabel = UILabel()
+		controller.textAttribute = Activity.nameAttribute
+		controller.currentValue = "Existing text"
+		controller.view = UIView()
+		controller.viewDidLoad()
+		XCTAssertEqual(text.focusRequests, 0)
+		XCTAssertEqual(text.text, "Existing text")
+		XCTAssertTrue(text.delegate === controller)
+		XCTAssertEqual(text.accessibilityIdentifier, "attribute value text")
+		controller.viewDidAppear(false)
+		XCTAssertEqual(text.focusRequests, 1)
+	}
+
+	private final class FocusProbeTextView: UITextView {
+		var focusRequests = 0
+		override func becomeFirstResponder() -> Bool {
+			focusRequests += 1
+			return true
+		}
+	}
+}
+
+final class GrouperEditorContainmentTests: UnitTest {
+	func testGrouperEditorOwnsItsChooserAndLaysOutTheSaveControl() {
+		Matcher.default.register(AttributedChooserViewController.Type.self) { $0 == $1 }
+		Matcher.default.register(AttributeViewController.Type.self) { $0 == $1 }
+		let storyboard = UIStoryboard(name: "AttributeList", bundle: nil)
+		let chooser = storyboard.instantiateViewController(withIdentifier: "attributedChooserViewController") as! AttributedChooserViewController
+		let first = storyboard.instantiateViewController(withIdentifier: "attributeView") as! AttributeViewController
+		let second = storyboard.instantiateViewController(withIdentifier: "attributeView") as! AttributeViewController
+		Given(mockUiUtil, .controller(named: .value("attributedChooserViewController"),
+			from: .value("AttributeList"), as: .value(AttributedChooserViewController.self), willReturn: chooser))
+		Given(mockUiUtil, .controller(named: .value("attributeView"),
+			from: .value("AttributeList"), as: .value(AttributeViewController.self), willReturn: first, second))
+		let editor = EditGrouperViewControllerImpl()
+		let grouper = SameTimeUnitSampleGrouper(attributes: [CommonSampleAttributes.startDate], .weekOfYear)
+		editor.currentGrouper = grouper
+		editor.availableGroupers = [grouper]
+		editor.notificationToSendWhenAccepted = .backgroundExportFinished
+		editor.loadViewIfNeeded()
+		editor.view.frame = CGRect(x: 0, y: 0, width: 390, height: 844)
+		editor.view.layoutIfNeeded()
+		XCTAssertEqual(editor.children.count, 1)
+		XCTAssertTrue(chooser.parent === editor)
+		XCTAssertTrue(chooser.view.superview === editor.view)
+		XCTAssertEqual(chooser.view.frame, editor.view.bounds)
+		let save = chooser.scrollContentView.subviews.first { $0.accessibilityIdentifier == "save grouper button" }
+		XCTAssertNotNil(save)
+		if let save = save {
+			XCTAssertGreaterThan(save.frame.height, 0)
+			XCTAssertTrue(chooser.view.bounds.contains(save.convert(save.bounds, to: chooser.view)))
+		}
+		NotificationCenter.default.removeObserver(editor)
+		NotificationCenter.default.removeObserver(chooser)
+	}
+}
+
 class Test: XCTestCase {
 
 	public final var injectionProvider: InjectionProviderMock!

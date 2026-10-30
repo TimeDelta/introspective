@@ -22,7 +22,9 @@ final class ActivityResultsUITests: UITest {
 		app.buttons["Yes"].tap()
 
 		// then
-		XCTAssert(app.navigationBars.buttons["Explore"].exists)
+		XCTAssert(waitForElement(app.navigationBars.buttons["Explore"]),
+			"Deleting the last activity should return to the query screen")
+		XCTAssert(app.tables["queryBuilder"].exists)
 	}
 
 	func testDeleteAllActivityResults_goesBackToQueryScreen() {
