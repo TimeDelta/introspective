@@ -128,7 +128,7 @@ class UITest: XCTestCase {
 	final func openActivitiesScreen() {
 		goToTabIfNotSelected("Record")
 		if !app.tables["recordActivities"].exists {
-			app.tables.cells.staticTexts["Activities"].tap()
+			guard tapRecordRow("Activities") else { return }
 		}
 		skipInstructionsIfPresent(.activities)
 		XCTAssertTrue(waitForElement(app.tables["recordActivities"]), "Activity list did not appear")
@@ -137,10 +137,30 @@ class UITest: XCTestCase {
 	final func openMedicationsScreen() {
 		goToTabIfNotSelected("Record")
 		if !app.tables["recordMedications"].exists {
-			app.tables.cells.staticTexts["Medications"].tap()
+			guard tapRecordRow("Medications") else { return }
 		}
 		skipInstructionsIfPresent(.medications)
 		XCTAssertTrue(waitForElement(app.tables["recordMedications"]), "Medication list did not appear")
+	}
+
+	private func tapRecordRow(_ title: String) -> Bool {
+		let row = app.tables.cells.containing(.staticText, identifier: title).firstMatch
+		guard waitForElement(row) else {
+			XCTFail("Record row did not appear: \(title)")
+			return false
+		}
+		// The Activities row can sit below the mood/pain/fatigue controls.
+		// Tapping its off-screen label produced a (-1, -1) hit point in CI.
+		for _ in 0..<3 {
+			if row.isHittable { break }
+			app.tables.firstMatch.swipeUp()
+		}
+		guard row.isHittable else {
+			XCTFail("Record row could not be scrolled into view: \(title)")
+			return false
+		}
+		row.tap()
+		return true
 	}
 
 	final func goToQueryScreen() {
@@ -314,6 +334,18 @@ class UITest: XCTestCase {
 		}
 		if let text = text, !text.isEmpty {
 			field.tap()
+			// A field can exist and accept a tap while its keyboard is still
+			// appearing. Wait for an interactive software key before sending the
+			// complete string; otherwise simulator input can deliver only a prefix.
+			let key = app.keyboards.firstMatch.keys.firstMatch
+			let ready = NSPredicate { _, _ in key.exists && key.isHittable }
+			if !ready.evaluate(with: key) {
+				let expectation = XCTNSPredicateExpectation(predicate: ready, object: key)
+				guard XCTWaiter.wait(for: [expectation], timeout: 5) == .completed || ready.evaluate(with: key) else {
+					XCTFail("Software keyboard was not ready for text input")
+					return
+				}
+			}
 			field.typeText(text)
 			// Validation can intentionally normalize the typed text (for example,
 			// clamping a mood to its allowed range). Ordinary entry still waits for
