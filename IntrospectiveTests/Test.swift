@@ -388,7 +388,7 @@ final class GrouperEditorContainmentTests: UnitTest {
 		Given(mockUiUtil, .controller(named: .value("attributeView"),
 			from: .value("AttributeList"), as: .value(AttributeViewController.self), willReturn: first, second))
 		let editor = EditGrouperViewControllerImpl()
-		let grouper = SameTimeUnitSampleGrouper(attributes: [CommonSampleAttributes.startDate], .week)
+		let grouper = SameTimeUnitSampleGrouper(attributes: [CommonSampleAttributes.startDate], .weekOfYear)
 		editor.currentGrouper = grouper
 		editor.availableGroupers = [grouper]
 		editor.notificationToSendWhenAccepted = .backgroundExportFinished
