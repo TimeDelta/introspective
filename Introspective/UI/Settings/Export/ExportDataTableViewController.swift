@@ -52,10 +52,12 @@ public final class ExportDataTableViewController: UITableViewController {
 		return result!
 	}
 
-	/// This is necessary because can't reference the local variable with
-	/// the returned id from its expiration handler otherwise compiler will
-	/// complain about referencing a variable in its definition.
-	private static var taskIds = [UUID: UIBackgroundTaskIdentifier]()
+	// Export IDs are stable UI/notification keys, independent of reusable UIKit IDs.
+	private static var nextExportID = 1
+	private static var executions = [UIBackgroundTaskIdentifier: ExportBackgroundExecution]()
+	internal static var runningExportCount: Int {
+		backgroundExportsAccessQueue.sync { executions.count }
+	}
 
 	// MARK: Logging
 
@@ -111,8 +113,13 @@ public final class ExportDataTableViewController: UITableViewController {
 			withIdentifier: "activeExport",
 			for: indexPath
 		) as! ActiveExportTableViewCell
-		cell.backgroundTaskId = Me.backgroundExportOrder[indexPath.row]
-		cell.exporter = Me.backgroundExports { $0[cell.backgroundTaskId] }
+		let entry = Me.backgroundExportsAccessQueue.sync { () -> (UIBackgroundTaskIdentifier, Exporter?)? in
+			guard Me.backgroundExportOrder.indices.contains(indexPath.row) else { return nil }
+			let id = Me.backgroundExportOrder[indexPath.row]
+			return (id, Me._backgroundExports[id])
+		}
+		cell.backgroundTaskId = entry?.0
+		cell.exporter = entry?.1
 		// need to do this or will double subscribe and receive event twice, causing app to crash
 		injected(UiUtil.self).stopObserving(self, name: .presentView, object: cell.exporter)
 		observe(selector: #selector(presentViewFrom), name: .presentView, object: cell.exporter)
@@ -162,11 +169,7 @@ public final class ExportDataTableViewController: UITableViewController {
 			}
 			let backgroundTaskId = UIBackgroundTaskIdentifier(rawValue: taskIdRawValue)
 			if let exporter = Me.backgroundExports({ $0[backgroundTaskId] }) {
-				runExportInBackground(exporter)
-				Me.backgroundExportsAccessQueue.sync(flags: .barrier) {
-					Me._backgroundExports[backgroundTaskId] = nil
-				}
-				Me.backgroundExportOrder.removeAll(where: { $0 == backgroundTaskId })
+				runExportInBackground(exporter, resuming: backgroundTaskId)
 			} else {
 				Me.log.error("Unable to retrieve exporter for background task: %d", backgroundTaskId.rawValue)
 			}
@@ -183,11 +186,7 @@ public final class ExportDataTableViewController: UITableViewController {
 			if let exporter = Me.backgroundExports({ $0[backgroundTaskId] }) {
 				exporter.cancel()
 			}
-			Me.backgroundExportsAccessQueue.sync(flags: .barrier) {
-				Me._backgroundExports[backgroundTaskId] = nil
-			}
-			Me.backgroundExportOrder.removeAll(where: { $0 == backgroundTaskId })
-			tableView.reloadData()
+			removeExporterFor(backgroundTaskId)
 		}
 	}
 
@@ -212,62 +211,67 @@ public final class ExportDataTableViewController: UITableViewController {
 
 	// MARK: - Helper Functions
 
-	private final func runExportInBackground(_ exporter: Exporter) {
-		let dataType = exporter.dataTypePluralName
-		let taskDescription = "Export " + dataType
-		DispatchQueue.global(qos: .utility).async {
-			let uuid = UUID()
-			let backgroundTask = UIApplication.shared.beginBackgroundTask(withName: taskDescription) { [weak self] in
-				Me.log.info("Background task to export %@ expired", dataType)
-				exporter.pause()
-				guard let taskId = Me.taskIds[uuid] else {
-					Me.log.error(
-						"Missing background task id. App might be killed by iOS due to inability to end background task."
-					)
-					return
-				}
-				self?.sendExtendTimeNotification(for: taskId)
-				self?.endBackgroundTask(id: taskId)
+	private final func runExportInBackground(_ exporter: Exporter, resuming existingID: UIBackgroundTaskIdentifier? = nil) {
+		let execution = ExportBackgroundExecution { UIApplication.shared.endBackgroundTask($0) }
+		let exportID: UIBackgroundTaskIdentifier? = Me.backgroundExportsAccessQueue.sync(flags: .barrier) {
+			let id: UIBackgroundTaskIdentifier
+			if let existingID = existingID {
+				guard Me._backgroundExports[existingID] != nil, Me.executions[existingID] == nil else { return nil }
+				id = existingID
+			} else {
+				id = UIBackgroundTaskIdentifier(rawValue: Me.nextExportID)
+				Me.nextExportID += 1
+				Me._backgroundExports[id] = exporter
+				Me.backgroundExportOrder.append(id)
 			}
-
+			Me.executions[id] = execution
+			return id
+		}
+		guard let id = exportID else { return }
+		DispatchQueue.main.async { [weak self] in self?.tableView.reloadData() }
+		injected(AsyncUtil.self).run(qos: .utility) {
+			defer {
+				execution.finish()
+				Me.backgroundExportsAccessQueue.sync(flags: .barrier) { Me.executions[id] = nil }
+			}
+			// Cancellation can remove a queued export before its worker begins.
+			guard Me.backgroundExports({ $0[id] != nil }) else { return }
+			let task = UIApplication.shared.beginBackgroundTask(withName: "Export " + exporter.dataTypePluralName) {
+				guard execution.finish() else { return }
+				exporter.pause()
+				self.sendExtendTimeNotification(for: id)
+			}
+			execution.register(task)
+			guard !execution.isFinished else { return }
 			do {
-				if !Me.backgroundExportOrder.contains(backgroundTask) {
-					Me.backgroundExportOrder.append(backgroundTask)
-					DispatchQueue.main.async { self.tableView.reloadData() }
-				}
-				Me.backgroundExportsAccessQueue.sync(flags: .barrier) {
-					Me._backgroundExports[backgroundTask] = exporter
-				}
-				Me.taskIds[uuid] = backgroundTask
-				if exporter.isPaused {
-					Me.log.info("Continuing background export of %@", dataType)
+				if existingID != nil {
+					// Ignore stale Continue notifications after normal completion.
+					guard exporter.isPaused else { return }
 					try exporter.resume()
 				} else {
-					Me.log.info("Starting background export of %@", dataType)
 					try exporter.exportData()
 				}
-				if !exporter.isPaused && !exporter.isCancelled {
+				if exporter.isCancelled {
+					self.removeExporterFor(id)
+				} else if !exporter.isPaused && Me.backgroundExports({ $0[id] != nil }) {
 					self.sendSuccessfulExportNotification(for: exporter)
 					self.post(.backgroundExportFinished, object: exporter)
 				}
 			} catch {
-				Me.log.error("Failed to export %@: %@", dataType, errorInfo(error))
+				Me.log.error("Failed to export %@: %@", exporter.dataTypePluralName, errorInfo(error))
 				self.sendBackgroundErrorNotification(for: exporter, error: error)
-			}
-			if exporter.isCancelled {
-				Me.log.info("Finished background export of %@", dataType)
-				self.removeExporterFor(backgroundTask)
+				self.removeExporterFor(id)
 			}
 		}
 	}
 
-	private final func removeExporterFor(_ backgroundTask: UIBackgroundTaskIdentifier) {
+	private final func removeExporterFor(_ exportID: UIBackgroundTaskIdentifier) {
 		Me.backgroundExportsAccessQueue.sync(flags: .barrier) {
-			Me._backgroundExports[backgroundTask] = nil
+			Me._backgroundExports[exportID] = nil
+			Me.backgroundExportOrder.removeAll { $0 == exportID }
 		}
-		Me.backgroundExportOrder.removeAll(where: { $0 == backgroundTask })
-		endBackgroundTask(id: backgroundTask)
-		DispatchQueue.main.async { self.tableView.reloadData() }
+		// The worker owns its UIKit assertion until it exits (or expires).
+		DispatchQueue.main.async { [weak self] in self?.tableView.reloadData() }
 	}
 
 	private final func getExporterFor(_ indexPath: IndexPath) throws -> Exporter {
@@ -285,10 +289,6 @@ public final class ExportDataTableViewController: UITableViewController {
 		throw GenericError("Unknown index path")
 	}
 
-	private final func endBackgroundTask(id: UIBackgroundTaskIdentifier) {
-		guard id != .invalid else { return }
-		UIApplication.shared.endBackgroundTask(id)
-	}
 
 	// MARK: Send User Notification Functions
 
@@ -363,10 +363,51 @@ public final class ExportDataTableViewController: UITableViewController {
 
 	// MARK: - Testing
 
-	/// This is for testing purposes only
+	/// This is for testing purposes only. All export workers must finish first.
 	public static func resetExports() {
-		backgroundExportOrder = []
-		_backgroundExports = [:]
-		taskIds = [:]
+		let pending = backgroundExportsAccessQueue.sync(flags: .barrier) { () -> [ExportBackgroundExecution] in
+			let pending = Array(executions.values)
+			backgroundExportOrder = []
+			_backgroundExports = [:]
+			executions = [:]
+			return pending
+		}
+		for execution in pending { execution.finish() }
+	}
+}
+
+/// One execution owns one UIKit assertion. Expiration may race registration or
+/// normal completion; all paths consume the assertion exactly once.
+internal final class ExportBackgroundExecution {
+	private let lock = NSLock()
+	private let end: (UIBackgroundTaskIdentifier) -> Void
+	private var task: UIBackgroundTaskIdentifier = .invalid
+	private var finished = false
+
+	init(end: @escaping (UIBackgroundTaskIdentifier) -> Void) { self.end = end }
+
+	var isFinished: Bool {
+		lock.lock()
+		defer { lock.unlock() }
+		return finished
+	}
+
+	func register(_ id: UIBackgroundTaskIdentifier) {
+		lock.lock()
+		let alreadyFinished = finished
+		if !alreadyFinished { task = id }
+		lock.unlock()
+		if alreadyFinished && id != .invalid { end(id) }
+	}
+
+	@discardableResult func finish() -> Bool {
+		lock.lock()
+		guard !finished else { lock.unlock(); return false }
+		finished = true
+		let id = task
+		task = .invalid
+		lock.unlock()
+		if id != .invalid { end(id) }
+		return true
 	}
 }
