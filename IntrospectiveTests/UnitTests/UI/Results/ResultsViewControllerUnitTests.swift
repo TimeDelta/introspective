@@ -81,6 +81,36 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		XCTAssertNil(releasedController)
 	}
 
+	func testQueuedInitialLoadingAfterBackDoesNotReadClearedSamples() {
+		Perform(mockAsyncUtil, .run(qos: .any, code: .any, perform: { _, _ in }))
+		controller.samples = SampleCreatorTestUtil.createSamples(withDates: [Date()])
+		let loadCaptor = ArgumentCaptor<() -> Void>()
+		Verify(mockAsyncUtil, .run(qos: .any, code: .capturing(loadCaptor)))
+		guard let load = loadCaptor.value else { XCTFail("No initial loading callback"); return }
+		controller.viewDidLoad()
+		let backActionCaptor = ArgumentCaptor<Selector>()
+		Verify(mockUiUtil, .setBackButton(for: .any, title: .any, action: .capturing(backActionCaptor)))
+		guard let backAction = backActionCaptor.value else { XCTFail("No back-button action"); return }
+
+		controller.perform(backAction)
+		load()
+
+		XCTAssertNil(controller.samples)
+	}
+
+	func testQueuedInitialLoadingIgnoresAnEmptyReplacement() {
+		Perform(mockAsyncUtil, .run(qos: .any, code: .any, perform: { _, _ in }))
+		controller.samples = SampleCreatorTestUtil.createSamples(withDates: [Date()])
+		let loadCaptor = ArgumentCaptor<() -> Void>()
+		Verify(mockAsyncUtil, .run(qos: .any, code: .capturing(loadCaptor)))
+		guard let load = loadCaptor.value else { XCTFail("No initial loading callback"); return }
+
+		controller.samples = []
+		load()
+
+		XCTAssertTrue(controller.samples.isEmpty)
+	}
+
 	func testRecomputingInformationBeforeSamplesArriveKeepsTheLoadingState() {
 		let information = SampleGroupInformationMock()
 		controller.information = [information]
@@ -772,6 +802,49 @@ final class ResultsViewControllerUnitTests: UnitTest {
 	}
 
 	// MARK: - editedSample()
+
+	func testEditingFilteredMoodWithEqualValuesUpdatesItsOriginalSampleSlot() {
+		let hidden = moodMock()
+		let visible = moodMock()
+		let replacement = moodMock()
+		for mood in [hidden, visible, replacement] {
+			Given(mood, .equalTo(.any(Sample.self), willReturn: true))
+			Given(mood, .matchesSearchString(.any, willReturn: mood !== hidden))
+		}
+		controller.setSearchText("visible")
+		controller.samples = [hidden, visible]
+		controller.viewDidLoad()
+		mockMoodTableViewCell()
+		mockEditMoodViewController()
+		controller.tableView(tableView, didSelectRowAt: IndexPath(row: 0, section: 1))
+		Given(mockUiUtil, .value(for: .value(.sample), from: .any, keyIsOptional: .any, willReturn: replacement))
+
+		NotificationCenter.default.post(name: ResultsViewControllerImpl.editedSample,
+			object: controller, userInfo: [UserInfoKey.sample: replacement])
+
+		XCTAssertEqual(controller.samples.count, 2)
+		XCTAssertTrue((controller.samples[0] as AnyObject) === hidden)
+		XCTAssertTrue((controller.samples[1] as AnyObject) === replacement)
+	}
+
+	func testNearbyActionUsesTheVisibleFilteredSamplesDates() {
+		let hidden = searchableCoreDataSampleMock(matches: false)
+		let visible = searchableCoreDataSampleMock(matches: true)
+		Given(hidden, .dates(willReturn: [:]))
+		Given(visible, .dates(willReturn: [.start: Date(timeIntervalSince1970: 1_700_000_000)]))
+		controller.setSearchText("visible")
+		controller.samples = [hidden, visible]
+		controller.viewDidLoad()
+		Given(mockUiUtil, .contextualAction(style: .any, title: .any, handler: .any, willReturn: UIContextualAction()))
+
+		let configuration = controller.tableView(tableView,
+			trailingSwipeActionsConfigurationForRowAt: IndexPath(row: 0, section: 1))
+
+		XCTAssertEqual(configuration?.actions.count, 2)
+		Verify(mockUiUtil, .contextualAction(style: .value(.normal), title: .value("🔍 Nearby"), handler: .any))
+		Verify(hidden, .never, .dates())
+		Verify(visible, .once, .dates())
+	}
 
 	func testGivenSampleEditedNotification_editedSample_editsCorrectSample() {
 		// given
