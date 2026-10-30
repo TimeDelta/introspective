@@ -9,6 +9,8 @@
 import UIExtensions
 import UIKit
 
+import Common
+
 public final class ActivityDefinitionDescriptionTableViewCell: UITableViewCell {
 	// MARK: - IBOutlets
 
@@ -27,15 +29,11 @@ public final class ActivityDefinitionDescriptionTableViewCell: UITableViewCell {
 	// MARK: - Helper Functions
 
 	private final func sendDescriptionChangeNotification() {
-		DispatchQueue.main.async {
-			NotificationCenter.default.post(
-				name: self.notificationToSendOnChange,
-				object: self,
-				userInfo: self.info([
-					.text: self.descriptionView.text,
-				])
-			)
-		}
+		NotificationCenter.default.post(
+			name: notificationToSendOnChange,
+			object: self,
+			userInfo: [UserInfoKey.text: descriptionView.text ?? ""]
+		)
 	}
 }
 

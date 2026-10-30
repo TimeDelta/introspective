@@ -214,14 +214,57 @@ class UITest: XCTestCase {
 			datePickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: dateStrings[.month]!)
 			datePickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: dateStrings[.day]!)
 		} else { // date and time
-			let monthAndDayText = String(dateStrings[.month]!.prefix(3)) + " " + dateStrings[.day]!
+			let formatter = DateFormatter()
+			formatter.dateFormat = "MMM d"
+			let monthAndDayText = formatter.string(from: date)
+			formatter.dateFormat = "MMM"
+			let monthText = formatter.string(from: date)
 			var hourText = dateStrings[.hour]!
 			let hour = Int(hourText)!
 			hourText = String(hour % 12 == 0 ? 12 : hour % 12)
-			datePickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: monthAndDayText)
+			let dayWheel = datePickerWheels.element(boundBy: 0)
+			dayWheel.adjust(toPickerWheelValue: monthAndDayText)
+			// Choose AM/PM before the hour. A valid morning target can otherwise
+			// be clamped as a future evening time by a maximum-date constraint.
+			datePickerWheels.element(boundBy: 3).adjust(toPickerWheelValue: dateStrings[.timeZone]!)
 			datePickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: hourText)
 			datePickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: dateStrings[.minute]!)
-			datePickerWheels.element(boundBy: 3).adjust(toPickerWheelValue: dateStrings[.timeZone]!)
+			// The hour wheel carries AM/PM when scrolling across 12 (for example,
+			// 1 AM -> 12 selects noon). Keep the initial period selection above
+			// for constrained dates, then correct any carry after setting the time.
+			let periodWheel = datePickerWheels.element(boundBy: 3)
+			if !(periodWheel.value as? String ?? "").localizedCaseInsensitiveContains(dateStrings[.timeZone]!) {
+				periodWheel.adjust(toPickerWheelValue: dateStrings[.timeZone]!)
+			}
+			// Wheel scrolling can carry the date across midnight while changing
+			// the hour or AM/PM. Finish on the requested calendar day, after time
+			// changes, and check every selected component before allowing Save.
+			let numbers: (String) -> [Int] = { value in
+				value.components(separatedBy: CharacterSet.decimalDigits.inverted).compactMap { Int($0) }
+			}
+			let matchesDay: (String) -> Bool = { value in
+				let calendar = Calendar.autoupdatingCurrent
+				switch value.lowercased() {
+				case "today": return calendar.isDateInToday(date)
+				case "yesterday": return calendar.isDateInYesterday(date)
+				case "tomorrow": return calendar.isDateInTomorrow(date)
+				default:
+					return value.localizedCaseInsensitiveContains(monthText) && numbers(value).contains(Int(dateStrings[.day]!)!)
+				}
+			}
+			if !matchesDay(dayWheel.value as? String ?? "") {
+				dayWheel.adjust(toPickerWheelValue: monthAndDayText)
+			}
+			let selected = datePickerWheels.allElementsBoundByIndex.map { $0.value as? String ?? "" }
+			print("CI_UI_DATE_SELECTION expected=\(date) wheels=\(selected)")
+			guard selected.count == 4 else {
+				XCTFail("Date picker changed its wheel count during editing: \(selected)")
+				return
+			}
+			XCTAssertTrue(matchesDay(selected[0]) && numbers(selected[1]).first == Int(hourText) &&
+				numbers(selected[2]).first == Int(dateStrings[.minute]!) &&
+				selected[3].localizedCaseInsensitiveContains(dateStrings[.timeZone]!),
+				"Date picker did not select \(date): \(selected)")
 		}
 	}
 
@@ -256,10 +299,7 @@ class UITest: XCTestCase {
 	}
 
 	final func isToday(_ date: Date) -> Bool {
-		let calendar = Calendar.autoupdatingCurrent
-		let dateInRegion = DateInRegion(date, region: Region(calendar: calendar, zone: calendar.timeZone))
-		let startOfDay = dateInRegion.dateAtStartOf(.day).date
-		return date.isAfterDate(startOfDay, orEqual: true, granularity: .nanosecond)
+		Calendar.autoupdatingCurrent.isDateInToday(date)
 	}
 
 	// MARK: - Text Field Helpers
@@ -278,11 +318,18 @@ class UITest: XCTestCase {
 			// Validation can intentionally normalize the typed text (for example,
 			// clamping a mood to its allowed range). Ordinary entry still waits for
 			// every character so a save cannot race partially delivered keyboard input.
-			let complete = NSPredicate(format: "value == %@", expectedValue ?? text)
+			let expected = expectedValue ?? text
+			let complete = NSPredicate { _, _ in (field.value as? String) == expected }
 			if !complete.evaluate(with: field) {
 				let expectation = XCTNSPredicateExpectation(predicate: complete, object: field)
-				XCTAssertEqual(XCTWaiter.wait(for: [expectation], timeout: 5), .completed,
-					"Text input did not finish before saving: \(field.value ?? "nil")")
+				let result = XCTWaiter.wait(for: [expectation], timeout: 5)
+				// A single accessibility snapshot can consume the wait's deadline.
+				// Require the exact final value even when that last snapshot was late.
+				if result != .completed {
+					let actual = field.value as? String
+					XCTAssertEqual(actual, expected,
+						"Text input did not finish before saving: expected \(String(reflecting: expected)), got \(String(reflecting: actual))")
+				}
 			}
 		}
 	}
@@ -290,28 +337,38 @@ class UITest: XCTestCase {
 	@discardableResult
 	final func deleteContentOf(textField: XCUIElement) -> Bool {
 		textField.tap()
-		let clearButton = textField.buttons["Clear text"].firstMatch
-		if clearButton.exists && clearButton.isHittable {
-			clearButton.tap()
+		// Some storyboard fields clear on focus. Check again after tapping: an
+		// empty field has neither a clear button nor a Select All menu action.
+		let currentText = textField.value as? String ?? ""
+		if currentText.isEmpty || currentText == textField.placeholderValue {
 			return true
 		}
-		textField.press(forDuration: 1)
-		// UIKit's newer edit menu exposes actions as buttons instead of menu items.
-		let menuItem = app.menuItems["Select All"]
-		let button = app.buttons["Select All"]
-		if menuItem.exists {
-			menuItem.tap()
-		} else if button.exists {
-			button.tap()
-		} else if waitForElement(menuItem, timeout: 1) {
-			menuItem.tap()
-		} else if waitForElement(button, timeout: 1) {
-			button.tap()
-		} else {
-			XCTFail("Select All did not appear for \(textField)")
-			return false
+		// Tap the trailing lower edge to put the caret after the displayed text,
+		// then use the software keyboard's Delete events. No edit-menu selection
+		// or attached hardware keyboard is required. The final empty check below
+		// prevents a partial deletion from being mistaken for success.
+		let frame = textField.frame
+		var visibleBottom = frame.maxY - 5
+		let keyboard = app.keyboards.firstMatch
+		if keyboard.exists { visibleBottom = min(visibleBottom, keyboard.frame.minY - 5) }
+		let trailingY = max(0.05, min(0.95, (visibleBottom - frame.minY) / max(frame.height, 1)))
+		textField.coordinate(withNormalizedOffset: CGVector(dx: 0.95, dy: trailingY)).tap()
+		let textToDelete = textField.value as? String ?? ""
+		if !textToDelete.isEmpty && textToDelete != textField.placeholderValue {
+			textField.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: textToDelete.utf16.count))
 		}
-		textField.typeText(XCUIKeyboardKey.delete.rawValue)
+		let empty = NSPredicate { _, _ in
+			let value = textField.value as? String ?? ""
+			return value.isEmpty || value == textField.placeholderValue
+		}
+		if !empty.evaluate(with: textField) {
+			let cleared = XCTNSPredicateExpectation(predicate: empty, object: textField)
+			let result = XCTWaiter.wait(for: [cleared], timeout: 5)
+			if result != .completed && !empty.evaluate(with: textField) {
+				XCTFail("Text input was not cleared: \(textField.value ?? "nil")")
+				return false
+			}
+		}
 		return true
 	}
 

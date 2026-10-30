@@ -28,6 +28,8 @@ PREFLIGHT_TESTS = {
         'testChangingStartDateOnEditActivityScreen_updatesUI',
         'testReorderToHigherSpotWhileFiltering_correcltyReordersDefinitions',
         'testCreatingActivityDefinition_showsNameAndDescriptionInActivityListAfterSave',
+        'testReorderToLowerSpotWhileNotFiltering_persistsAfterGoingBackAndThenViewingRecordActivitiesScreenAgain',
+        'testDeletingDescriptionAndTagsFromActivityDefinition_correctlySaves',
     ],
     'RecordMedicationsUITests': [
         'testClearingStartedOnDateOnNewMedicationScreen_updatesStartedOnButtonTitle',
@@ -35,6 +37,9 @@ PREFLIGHT_TESTS = {
     ],
     'QueryScreenUITests': [
         'testMovingSampleTypeAboveAttributeRestriction_correctlyChangesAttributeRestriction',
+    ],
+    'MoodResultsUITests': [
+        'testEditingMood_correctlyDisplaysMoodData',
     ],
 }
 METHOD = re.compile(r'^\s*(?:(?:public|internal|private|final|override)\s+)*func\s+(test\w+)\s*\(\s*\)', re.MULTILINE)

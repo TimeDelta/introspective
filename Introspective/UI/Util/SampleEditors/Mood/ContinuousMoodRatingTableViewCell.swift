@@ -42,7 +42,8 @@ public final class ContinuousMoodRatingTableViewCell: UITableViewCell {
 	// MARK: - Actions
 
 	@IBAction final func sliderValueChanged(_: Any) {
-		rating = Double(ratingSlider.value) * maxRating
+		let range = maxRating - minRating
+		rating = range.isFinite && range > 0 ? minRating + Double(ratingSlider.value) * range : minRating
 		sendRatingChangedNotification()
 	}
 
@@ -66,9 +67,16 @@ public final class ContinuousMoodRatingTableViewCell: UITableViewCell {
 	// MARK: - Helper Functions
 
 	private final func updateUI() {
-		ratingSlider.setValue(Float(rating / maxRating), animated: false)
-		ratingSlider.thumbTintColor = injected(MoodUiUtil.self)
-			.colorForMood(rating: rating, minRating: minRating, maxRating: maxRating)
+		let range = maxRating - minRating
+		let hasRange = range.isFinite && range > 0
+		ratingSlider.isEnabled = hasRange
+		ratingSlider.setValue(hasRange ? Float((rating - minRating) / range) : 0, animated: false)
+		if hasRange {
+			ratingSlider.thumbTintColor = injected(MoodUiUtil.self)
+				.colorForMood(rating: rating, minRating: minRating, maxRating: maxRating)
+		} else {
+			ratingSlider.thumbTintColor = .gray
+		}
 		ratingTextField.text = injected(MoodUiUtil.self).valueToString(rating)
 		let minText = injected(MoodUiUtil.self).valueToString(minRating)
 		let maxText = injected(MoodUiUtil.self).valueToString(maxRating)

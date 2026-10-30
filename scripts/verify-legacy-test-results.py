@@ -9,7 +9,9 @@ import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
 METHOD = re.compile(r'^\s*(?:(?:public|internal|private|final|override)\s+)*func\s+(test\w+)\s*\(\s*\)', re.MULTILINE)
-CLASS = re.compile(r'\bclass\s+(\w+)\s*:')
+# Test classes are top-level declarations. A file can contain several classes,
+# alongside nested helpers; never attribute every method to the filename.
+CLASS = re.compile(r'^(?:(?:public|internal|private|final|open)\s+)*class\s+(\w+)\s*:', re.MULTILINE)
 
 
 def inventory(directory, scheme, minimum=4297):
@@ -19,11 +21,20 @@ def inventory(directory, scheme, minimum=4297):
         methods = METHOD.findall(source)
         if not methods:
             continue
-        names = CLASS.findall(source)
-        name = path.stem if path.stem in names else names[0] if len(names) == 1 else None
-        if not name or name in classes or len(methods) != len(set(methods)):
-            raise ValueError(f'Ambiguous or duplicate legacy test declarations: {path}')
-        classes[name] = methods
+        declarations = list(CLASS.finditer(source))
+        assigned = 0
+        for index, declaration in enumerate(declarations):
+            end = declarations[index + 1].start() if index + 1 < len(declarations) else len(source)
+            class_methods = METHOD.findall(source[declaration.end():end])
+            if not class_methods:
+                continue
+            name = declaration.group(1)
+            if name in classes or len(class_methods) != len(set(class_methods)):
+                raise ValueError(f'Ambiguous or duplicate legacy test declarations: {path}')
+            classes[name] = class_methods
+            assigned += len(class_methods)
+        if assigned != len(methods):
+            raise ValueError(f'Ambiguous legacy test declarations: {path}')
     targets = [target for target in ET.parse(scheme).findall('.//TestableReference')
                if target.find('BuildableReference') is not None and
                target.find('BuildableReference').get('BlueprintName') == 'IntrospectiveTests']

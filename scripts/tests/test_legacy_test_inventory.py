@@ -48,3 +48,22 @@ class LegacyTestInventory(unittest.TestCase):
         data = INVENTORY(root / 'IntrospectiveTests', root / 'Introspective.xcodeproj/xcshareddata/xcschemes/CI-CD.xcscheme')
         self.assertGreaterEqual(len(data['selected']), 4297)
         self.assertEqual(len(data['excluded']), 41)
+        self.assertIn('MoodEditorCellBehaviorTests/testConstantMoodScaleDisablesTheSliderAndKeepsItsOnlyRatingFinite', data['selected'])
+        self.assertFalse(any(test.startswith('Test/') for test in data['selected']))
+
+    def test_multiple_test_classes_and_nested_helpers_keep_their_actual_identifiers(self):
+        (self.root / 'Shared.swift').write_text('''final class FirstTests: UnitTest {
+func testSameName() {}
+private final class Helper: NSObject {}
+}
+final class SecondTests: UnitTest {
+func testSameName() {}
+}
+class Shared: XCTestCase {}
+''')
+        source = self.scheme.read_text().replace('<SkippedTests>', '<SkippedTests><Test Identifier="FirstTests"/>')
+        self.scheme.write_text(source)
+        data = INVENTORY(self.root, self.scheme, minimum=1)
+        self.assertIn('SecondTests/testSameName', data['selected'])
+        self.assertIn('FirstTests/testSameName', data['excluded'])
+        self.assertNotIn('Shared/testSameName', data['selected'])

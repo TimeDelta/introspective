@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import UIKit
 import SwiftyMocky
 @testable import Introspective
 @testable import AttributeRestrictions
@@ -25,17 +26,325 @@ import SwiftyMocky
 @testable import Settings
 @testable import UIExtensions
 
-final class GeneratedMockConcurrencyTests: Test {
+final class GeneratedMockConcurrencyTests: UnitTest {
 	func testConcurrentDependencyCallsAndPropertyReadsKeepEveryInvocation() {
 		Matcher.default.register(String.Type.self) { $0 == $1 }
 		let provider = InjectionProviderMock()
 		Given(provider, .types(getter: [String.self]))
 		Given(provider, .get(.any, willReturn: "value"))
 		DispatchQueue.concurrentPerform(iterations: 1000) { _ in
-			XCTAssertEqual(try provider.get(String.self), "value")
+			do {
+				let value = try provider.get(String.self)
+				XCTAssertEqual(value, "value")
+			} catch {
+				XCTFail("Concurrent dependency resolution threw: \(error)")
+			}
 			XCTAssertEqual(provider.types.count, 1)
 		}
 		Verify(provider, .exactly(1000), .get(.value(String.self)))
+	}
+
+	func testProviderReplacementConfiguresMocksBeforeRetiredObjectsResolveDependencies() {
+		var resolvedDuringRetirement: Database?
+		var retiring: RetiringDatabaseProvider? = RetiringDatabaseProvider(database: mockDatabase) {
+			resolvedDuringRetirement = injected(Database.self)
+		}
+		DependencyInjector.register([retiring!])
+		retiring = nil // The registry now owns the retiring provider's lifetime.
+
+		registerTypesWithDependencyInjection()
+
+		XCTAssertTrue((resolvedDuringRetirement as? DatabaseMock) === mockDatabase)
+	}
+
+	private final class RetiringDatabaseProvider: InjectionProvider {
+		let types: [Any.Type] = [Database.self]
+		private let database: Database
+		private let onRetirement: () -> Void
+
+		init(database: Database, onRetirement: @escaping () -> Void) {
+			self.database = database
+			self.onRetirement = onRetirement
+		}
+
+		func get<Type>(_: Type.Type) throws -> Type {
+			database as! Type
+		}
+
+		deinit { onRetirement() }
+	}
+}
+
+final class MoodEditorCellBehaviorTests: UnitTest {
+	override func setUp() {
+		super.setUp()
+		Given(mockSettings, .minMood(getter: 1))
+		Given(mockSettings, .maxMood(getter: 10))
+		Given(mockMoodUiUtil, .valueToString(.any, willReturn: "value"))
+		Given(mockMoodUiUtil, .colorForMood(rating: .any, minRating: .any, maxRating: .any, willReturn: .white))
+		Given(mockSettings, .minFatigue(getter: 1))
+		Given(mockSettings, .maxFatigue(getter: 10))
+		Given(mockSettings, .minPain(getter: 1))
+		Given(mockSettings, .maxPain(getter: 10))
+		Matcher.default.register(FatigueUiUtil.Protocol.self) { _, _ in true }
+		Matcher.default.register(PainUiUtil.Protocol.self) { _, _ in true }
+		Given(injectionProvider, .get(.value(FatigueUiUtil.self), willReturn: FatigueUiUtilImpl()))
+		Given(injectionProvider, .get(.value(PainUiUtil.self), willReturn: PainUiUtilImpl()))
+	}
+
+	func testMoodSliderMapsTheEntireNonzeroMinimumScaleInBothDirections() {
+		let cell = ratingCell(min: 2, max: 10)
+		for (rating, fraction) in [(2.0, Float(0)), (6.0, Float(0.5)), (10.0, Float(1))] {
+			cell.rating = rating
+			XCTAssertEqual(cell.ratingSlider.value, fraction, accuracy: 0.000001)
+			cell.ratingSlider.value = fraction
+			cell.sliderValueChanged(self)
+			XCTAssertEqual(cell.rating, rating, accuracy: 0.000001)
+		}
+	}
+
+	func testMoodSliderMapsNegativeRatingsAndZeroWithoutLosingItsScale() {
+		let cell = ratingCell(min: -5, max: 5)
+		for (rating, fraction) in [(-5.0, Float(0)), (0.0, Float(0.5)), (5.0, Float(1))] {
+			cell.rating = rating
+			XCTAssertEqual(cell.ratingSlider.value, fraction, accuracy: 0.000001)
+			cell.ratingSlider.value = fraction
+			cell.sliderValueChanged(self)
+			XCTAssertEqual(cell.rating, rating, accuracy: 0.000001)
+		}
+	}
+
+	func testConstantMoodScaleDisablesTheSliderAndKeepsItsOnlyRatingFinite() {
+		let cell = ratingCell(min: 4, max: 4)
+		XCTAssertFalse(cell.ratingSlider.isEnabled)
+		XCTAssertEqual(cell.ratingSlider.value, 0)
+		XCTAssertTrue(cell.ratingSlider.value.isFinite)
+		cell.ratingSlider.value = 1
+		cell.sliderValueChanged(self)
+		XCTAssertEqual(cell.rating, 4)
+		XCTAssertTrue(cell.rating.isFinite)
+		XCTAssertEqual(cell.ratingSlider.value, 0)
+	}
+
+	func testBindingAndReloadingNoteCellsDoesNotRequestKeyboardFocus() {
+		let moodView = FocusProbeTextView()
+		let mood = MoodNoteTableViewCell()
+		mood.noteView = moodView
+		mood.note = "original"
+		mood.note = "updated"
+		let fatigueView = FocusProbeTextView()
+		let fatigue = FatigueNoteTableViewCell()
+		fatigue.noteView = fatigueView
+		fatigue.note = "original"
+		fatigue.note = "updated"
+		let painView = FocusProbeTextView()
+		let pain = PainNoteTableViewCell()
+		pain.noteView = painView
+		pain.note = "original"
+		pain.note = "updated"
+		for view in [moodView, fatigueView, painView] {
+			XCTAssertEqual(view.focusRequests, 0)
+			XCTAssertEqual(view.text, "updated")
+		}
+	}
+
+	func testNoteCellsPublishEachEditBeforeTheDelegateReturns() {
+		let mood = MoodNoteTableViewCell()
+		let moodView = UITextView()
+		mood.noteView = moodView
+		mood.note = "original"
+		mood.notificationToSendOnChange = Notification.Name("MoodNoteSnapshot-" + UUID().uuidString)
+		assertNoteSnapshots(cell: mood, view: moodView, name: mood.notificationToSendOnChange) {
+			mood.textViewDidChange(moodView)
+		}
+		let fatigue = FatigueNoteTableViewCell()
+		let fatigueView = UITextView()
+		fatigue.noteView = fatigueView
+		fatigue.note = "original"
+		fatigue.notificationToSendOnChange = Notification.Name("FatigueNoteSnapshot-" + UUID().uuidString)
+		assertNoteSnapshots(cell: fatigue, view: fatigueView, name: fatigue.notificationToSendOnChange) {
+			fatigue.textViewDidChange(fatigueView)
+		}
+		let pain = PainNoteTableViewCell()
+		let painView = UITextView()
+		pain.noteView = painView
+		pain.note = "original"
+		pain.notificationToSendOnChange = Notification.Name("PainNoteSnapshot-" + UUID().uuidString)
+		assertNoteSnapshots(cell: pain, view: painView, name: pain.notificationToSendOnChange) {
+			pain.textViewDidChange(painView)
+		}
+	}
+
+	func testFatigueAndPainSlidersMapPositiveAndNegativeScaleEndpointsAndMidpoints() {
+		for (min, max) in [(2.0, 10.0), (-5.0, 5.0)] {
+			for probe in otherRatingCells(min: min, max: max) {
+				for fraction: Float in [0, 0.5, 1] {
+					let expected = min + Double(fraction) * (max - min)
+					probe.setRating(expected)
+					XCTAssertEqual(probe.slider.value, fraction, accuracy: 0.000001, probe.name)
+					probe.slider.value = fraction
+					probe.sliderChanged()
+					XCTAssertEqual(probe.rating(), expected, accuracy: 0.000001, probe.name)
+				}
+			}
+		}
+	}
+
+	func testConstantFatigueAndPainScalesDisableSlidersAndKeepTheirOnlyRatingFinite() {
+		for probe in otherRatingCells(min: 4, max: 4) {
+			XCTAssertFalse(probe.slider.isEnabled, probe.name)
+			XCTAssertEqual(probe.slider.value, 0, probe.name)
+			probe.slider.value = 1
+			probe.sliderChanged()
+			XCTAssertEqual(probe.rating(), 4, probe.name)
+			XCTAssertTrue(probe.rating().isFinite, probe.name)
+			XCTAssertEqual(probe.slider.value, 0, probe.name)
+			XCTAssertTrue(probe.slider.value.isFinite, probe.name)
+		}
+	}
+
+	func testRatingColorsUseTheirEndpointsForPositiveAndNegativeScales() {
+		for (name, color, minimum, maximum) in ratingColors() {
+			for (min, max) in [(2.0, 10.0), (-5.0, 5.0)] {
+				assertColor(color(min, min, max), matches: minimum, name)
+				assertColor(color(max, min, max), matches: maximum, name)
+			}
+		}
+	}
+
+	func testRatingColorsClampValuesOutsideTheirScale() {
+		for (name, color, minimum, maximum) in ratingColors() {
+			assertColor(color(-500, 2, 10), matches: minimum, name)
+			assertColor(color(500, 2, 10), matches: maximum, name)
+		}
+	}
+
+	func testConstantReversedAndNonfiniteRatingScalesProduceFiniteMinimumColors() {
+		for (name, color, minimum, _) in ratingColors() {
+			for (rating, min, max) in [(4.0, 4.0, 4.0), (3.0, 5.0, 1.0),
+				(Double.nan, 0.0, 10.0), (Double.infinity, 0.0, 10.0),
+				(2.0, -Double.infinity, Double.infinity)] {
+				assertColor(color(rating, min, max), matches: minimum, name)
+			}
+		}
+	}
+
+	func testActivityDescriptionPublishesCurrentTextBeforeEveryDelegateReturns() {
+		let cell = ActivityDefinitionDescriptionTableViewCell()
+		let view = UITextView()
+		cell.descriptionView = view
+		cell.activityDescription = "original"
+		let name = Notification.Name("ActivityDescriptionSnapshot-" + UUID().uuidString)
+		cell.notificationToSendOnChange = name
+		var snapshots = [String]()
+		let observer = NotificationCenter.default.addObserver(forName: name, object: cell, queue: nil) { notification in
+			if let value = notification.userInfo?[UserInfoKey.text] as? String { snapshots.append(value) }
+		}
+		defer { NotificationCenter.default.removeObserver(observer) }
+		cell.textViewDidBeginEditing(view)
+		XCTAssertEqual(snapshots, ["original"])
+		let multiline = "Updated activity 🌱\nSecond line"
+		view.text = multiline
+		cell.textViewDidChange(view)
+		XCTAssertEqual(snapshots, ["original", multiline])
+		view.text = ""
+		cell.textViewDidEndEditing(view)
+		XCTAssertEqual(snapshots, ["original", multiline, ""])
+	}
+
+	private func ratingCell(min: Double, max: Double) -> ContinuousMoodRatingTableViewCell {
+		let cell = ContinuousMoodRatingTableViewCell()
+		cell.ratingSlider = UISlider()
+		cell.ratingTextField = UITextField()
+		cell.ratingRangeLabel = UILabel()
+		cell.minRating = min
+		cell.maxRating = max
+		cell.rating = min
+		return cell
+	}
+
+	private func assertNoteSnapshots(cell: UITableViewCell, view: UITextView, name: Notification.Name,
+		didChange: () -> Void, file: StaticString = #file, line: UInt = #line) {
+		var snapshots = [String]()
+		let observer = NotificationCenter.default.addObserver(forName: name, object: cell, queue: nil) { notification in
+			if let value = notification.userInfo?[UserInfoKey.text] as? String { snapshots.append(value) }
+		}
+		defer { NotificationCenter.default.removeObserver(observer) }
+		let multiline = "Updated note 🙂\nSecond line"
+		view.text = multiline
+		didChange()
+		XCTAssertEqual(snapshots, [multiline], file: file, line: line)
+		view.text = ""
+		didChange()
+		XCTAssertEqual(snapshots, [multiline, ""], file: file, line: line)
+	}
+
+	private struct RatingCellProbe {
+		let name: String
+		let slider: UISlider
+		let setRating: (Double) -> Void
+		let rating: () -> Double
+		let sliderChanged: () -> Void
+	}
+
+	private func otherRatingCells(min: Double, max: Double) -> [RatingCellProbe] {
+		let fatigue = ContinuousFatigueRatingTableViewCell()
+		fatigue.ratingSlider = UISlider()
+		fatigue.ratingTextField = UITextField()
+		fatigue.ratingRangeLabel = UILabel()
+		fatigue.minRating = min
+		fatigue.maxRating = max
+		fatigue.rating = min
+		let pain = ContinuousPainRatingTableViewCell()
+		pain.ratingSlider = UISlider()
+		pain.ratingTextField = UITextField()
+		pain.ratingRangeLabel = UILabel()
+		pain.minRating = min
+		pain.maxRating = max
+		pain.rating = min
+		return [
+			RatingCellProbe(name: "Fatigue", slider: fatigue.ratingSlider,
+				setRating: { fatigue.rating = $0 }, rating: { fatigue.rating },
+				sliderChanged: { fatigue.sliderValueChanged(fatigue) }),
+			RatingCellProbe(name: "Pain", slider: pain.ratingSlider,
+				setRating: { pain.rating = $0 }, rating: { pain.rating },
+				sliderChanged: { pain.sliderValueChanged(pain) }),
+		]
+	}
+
+	private func ratingColors() -> [(String, (Double, Double, Double) -> UIColor, UIColor, UIColor)] {
+		let mood = MoodUiUtilImpl()
+		let fatigue = FatigueUiUtilImpl()
+		let pain = PainUiUtilImpl()
+		return [
+			("Mood", { mood.colorForMood(rating: $0, minRating: $1, maxRating: $2) },
+				MoodUiUtilImpl.minRatingColor, MoodUiUtilImpl.maxRatingColor),
+			("Fatigue", { fatigue.colorForFatigue(rating: $0, minRating: $1, maxRating: $2) },
+				FatigueUiUtilImpl.minRatingColor, FatigueUiUtilImpl.maxRatingColor),
+			("Pain", { pain.colorForPain(rating: $0, minRating: $1, maxRating: $2) },
+				PainUiUtilImpl.minRatingColor, PainUiUtilImpl.maxRatingColor),
+		]
+	}
+
+	private func assertColor(_ color: UIColor, matches expected: UIColor, _ name: String,
+		file: StaticString = #file, line: UInt = #line) {
+		var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
+		var expectedRed: CGFloat = 0, expectedGreen: CGFloat = 0, expectedBlue: CGFloat = 0, expectedAlpha: CGFloat = 0
+		XCTAssertTrue(color.getRed(&red, green: &green, blue: &blue, alpha: &alpha), name, file: file, line: line)
+		XCTAssertTrue(expected.getRed(&expectedRed, green: &expectedGreen, blue: &expectedBlue, alpha: &expectedAlpha),
+			name, file: file, line: line)
+		for (actual, wanted) in [(red, expectedRed), (green, expectedGreen), (blue, expectedBlue), (alpha, expectedAlpha)] {
+			XCTAssertTrue(actual.isFinite, name, file: file, line: line)
+			XCTAssertEqual(actual, wanted, accuracy: 0.000001, name, file: file, line: line)
+		}
+	}
+
+	private final class FocusProbeTextView: UITextView {
+		var focusRequests = 0
+		override func becomeFirstResponder() -> Bool {
+			focusRequests += 1
+			return false
+		}
 	}
 }
 
@@ -66,8 +375,13 @@ class Test: XCTestCase {
 		types.append(contentsOf: SettingsInjectionProvider().types)
 
 		Given(injectionProvider, .types(getter: types))
+		// Replacing a provider can release managed objects that resolve Database
+		// during cleanup. Publish the new provider only after its mocks are ready.
+		configureInjectionProvider()
 		DependencyInjector.register([injectionProvider])
 	}
+
+	func configureInjectionProvider() {}
 
 	final func registerMatchers() {
 		Matcher.default.register(ActivityDAO.Protocol.self) { _,_ in true }
