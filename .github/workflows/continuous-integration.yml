@@ -214,7 +214,9 @@ jobs:
           else
             test_command+=(-parallel-testing-enabled YES -parallel-testing-worker-count "$CI_UI_WORKERS")
           fi
-          CI_TEST_PROGRESS=1 ./scripts/run-ci-command.sh ci-output/ui-preflight.log "${test_command[@]}"
+          CI_TEST_PROGRESS=1 python3 scripts/run-ui-tests.py \
+            --log ci-output/ui-preflight.log --simulator "$CI_SIMULATOR_ID" --workers "$CI_UI_WORKERS" \
+            -- "${test_command[@]}"
           xcrun xcresulttool get test-results summary --path ci-output/UIPreflight.xcresult > ci-output/ui-preflight-summary.json
           python3 scripts/verify-ui-test-results.py ci-output/ui-preflight-summary.json --shard "$CI_UI_SHARD" --count "$CI_UI_SHARD_COUNT" --preflight
 
@@ -261,7 +263,13 @@ jobs:
               test_command+=(-parallel-testing-enabled YES -parallel-testing-worker-count "$CI_UI_WORKERS")
             fi
           fi
-          CI_TEST_PROGRESS=1 ./scripts/run-ci-command.sh ci-output/mood-tests.log "${test_command[@]}"
+          if [ "$CI_BUILD_KIND" = ui ]; then
+            CI_TEST_PROGRESS=1 python3 scripts/run-ui-tests.py \
+              --log ci-output/mood-tests.log --simulator "$CI_SIMULATOR_ID" --workers "$CI_UI_WORKERS" \
+              -- "${test_command[@]}"
+          else
+            CI_TEST_PROGRESS=1 ./scripts/run-ci-command.sh ci-output/mood-tests.log "${test_command[@]}"
+          fi
           xcrun xcresulttool get test-results summary --path ci-output/MoodTests.xcresult > ci-output/mood-tests-summary.json
           if [ "$CI_BUILD_KIND" = tests ]; then
             python3 scripts/verify-native-test-results.py ci-output/mood-tests-summary.json
