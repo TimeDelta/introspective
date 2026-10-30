@@ -229,6 +229,13 @@ class UITest: XCTestCase {
 			datePickerWheels.element(boundBy: 3).adjust(toPickerWheelValue: dateStrings[.timeZone]!)
 			datePickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: hourText)
 			datePickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: dateStrings[.minute]!)
+			// The hour wheel carries AM/PM when scrolling across 12 (for example,
+			// 1 AM -> 12 selects noon). Keep the initial period selection above
+			// for constrained dates, then correct any carry after setting the time.
+			let periodWheel = datePickerWheels.element(boundBy: 3)
+			if !(periodWheel.value as? String ?? "").localizedCaseInsensitiveContains(dateStrings[.timeZone]!) {
+				periodWheel.adjust(toPickerWheelValue: dateStrings[.timeZone]!)
+			}
 			// Wheel scrolling can carry the date across midnight while changing
 			// the hour or AM/PM. Finish on the requested calendar day, after time
 			// changes, and check every selected component before allowing Save.
