@@ -192,8 +192,12 @@ final class RecordActivitiesUITests: UITest {
 	func testChangingStartDateOnEditActivityScreen_updatesUI() {
 		// given
 		let definition = ActivityDefinition(name: "gteq")
-		seed(activityDefinitions: [definition], activities: [.init(definition)])
-		let expectedStartDate = (Date() - 1.days - 1.hours).dateBySet(hour: nil, min: nil, secs: 0)!
+		let calendar = Calendar.autoupdatingCurrent
+		let day = calendar.date(byAdding: .day, value: -3, to: calendar.startOfDay(for: Date()))!
+		let initialStartDate = calendar.date(bySettingHour: 1, minute: 30, second: 42, of: day)!
+		let expectedStartDate = calendar.date(bySettingHour: 0, minute: 30, second: 0, of: day)!
+		// Always exercise the 1 -> 12 hour-wheel carry, regardless of CI time.
+		seed(activityDefinitions: [definition], activities: [.init(definition, start: initialStartDate)])
 		app.tables.cells.staticTexts[definition.name].swipeLeft()
 		app.tables.cells.buttons["✎ Last"].tap()
 
@@ -210,13 +214,18 @@ final class RecordActivitiesUITests: UITest {
 	func testChangingEndDateOnEditActivityScreen_updatesUI() {
 		// given
 		let definition = ActivityDefinition(name: "gteq")
-		seed(activityDefinitions: [definition], activities: [.init(definition)])
+		let calendar = Calendar.autoupdatingCurrent
+		let day = calendar.date(byAdding: .day, value: -3, to: calendar.startOfDay(for: Date()))!
+		let startDate = calendar.date(bySettingHour: 0, minute: 30, second: 0, of: day)!
+		let initialEndDate = calendar.date(bySettingHour: 11, minute: 30, second: 42, of: day)!
+		let expectedEndDate = calendar.date(bySettingHour: 12, minute: 30, second: 0, of: day)!
+		// Exercise the opposite carry into noon, with a valid earlier start.
+		seed(activityDefinitions: [definition], activities: [.init(definition, start: startDate, end: initialEndDate)])
 		app.tables.cells.staticTexts[definition.name].swipeLeft()
 		app.tables.cells.buttons["✎ Last"].tap()
 
 		// when
 		app.tables.cells.staticTexts["End"].tap()
-		let expectedEndDate = (Date() - 1.days - 1.hours).dateBySet(hour: nil, min: nil, secs: 0)!
 		setDatePicker(to: expectedEndDate)
 		app.buttons["save button"].tap()
 
