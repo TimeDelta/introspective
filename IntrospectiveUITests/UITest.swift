@@ -224,9 +224,11 @@ class UITest: XCTestCase {
 			hourText = String(hour % 12 == 0 ? 12 : hour % 12)
 			let dayWheel = datePickerWheels.element(boundBy: 0)
 			dayWheel.adjust(toPickerWheelValue: monthAndDayText)
+			// Choose AM/PM before the hour. A valid morning target can otherwise
+			// be clamped as a future evening time by a maximum-date constraint.
+			datePickerWheels.element(boundBy: 3).adjust(toPickerWheelValue: dateStrings[.timeZone]!)
 			datePickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: hourText)
 			datePickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: dateStrings[.minute]!)
-			datePickerWheels.element(boundBy: 3).adjust(toPickerWheelValue: dateStrings[.timeZone]!)
 			// Wheel scrolling can carry the date across midnight while changing
 			// the hour or AM/PM. Finish on the requested calendar day, after time
 			// changes, and check every selected component before allowing Save.
