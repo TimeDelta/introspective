@@ -29,6 +29,21 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		controller = (storyboard.instantiateViewController(withIdentifier: "activitiesTable") as! RecordActivityTableViewController)
 	}
 
+	final override func tearDown() {
+		if let controller = controller {
+			NotificationCenter.default.removeObserver(controller)
+			if controller.isViewLoaded {
+				for cell in controller.tableView.visibleCells { cell.prepareForReuse() }
+				controller.tableView.dataSource = nil
+				controller.tableView.delegate = nil
+			}
+		}
+		// Mock invocation history also owns the controller passed to setBackButton.
+		uiUtil.resetMock()
+		controller = nil
+		super.tearDown()
+	}
+
 	// MARK: - stopAllButtonPressed()
 
 	func testGivenMultipleActivitiesRuning_stopAllButtonPressed_stopsAllRunningActivities() {

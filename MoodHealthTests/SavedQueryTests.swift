@@ -400,19 +400,104 @@ final class SavedQueryTests: XCTestCase {
 		definition.name = "Timer lifecycle"
 		definition.recordScreenIndex = 0
 		try container.viewContext.save()
+		let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 700))
+		window.rootViewController = UIViewController()
+		window.isHidden = false
+		defer { window.isHidden = true; window.rootViewController = nil }
 		weak var weakCell: RecordActivityDefinitionTableViewCell?
 		autoreleasepool {
-			let cell = RecordActivityDefinitionTableViewCell()
-			cell.nameLabel = UILabel()
-			cell.mostRecentTimeLabel = UILabel()
-			cell.totalDurationTodayLabel = UILabel()
-			cell.currentInstanceDurationLabel = UILabel()
-			cell.progressIndicator = UIActivityIndicatorView()
+			let cell = activityCell()
 			cell.activityDefinition = definition
 			XCTAssertEqual(cell.nameLabel.text, definition.name)
+			window.rootViewController!.view.addSubview(cell)
+			XCTAssertEqual(cell.durationRefreshTimer?.isValid, true)
+			cell.removeFromSuperview()
 			weakCell = cell
 		}
 		XCTAssertNil(weakCell)
+	}
+
+	@MainActor
+	func testOffscreenActivityCellRendersWithoutStartingDurationPolling() throws {
+		let definition = try lookupDefinition("Offscreen activity")
+		try container.viewContext.save()
+		let cell = activityCell()
+		cell.activityDefinition = definition
+		XCTAssertEqual(cell.nameLabel.text, definition.name)
+		XCTAssertNil(cell.durationRefreshTimer)
+	}
+
+	@MainActor
+	func testActivityDurationPollingStopsOnDetachAndRefreshesOnReattach() throws {
+		let definition = try lookupDefinition("Duration lifecycle")
+		let start = Date(timeIntervalSince1970: 1_700_000_000)
+		let activity = try lookupActivity(definition, start: start, end: start.addingTimeInterval(3600))
+		try container.viewContext.save()
+		let cell = activityCell()
+		cell.activityDefinition = definition
+		XCTAssertEqual(cell.currentInstanceDurationLabel.text, "1:00:00")
+		let window = activityWindow(containing: cell)
+		defer { window.isHidden = true; window.rootViewController = nil }
+		let timer = try XCTUnwrap(cell.durationRefreshTimer)
+		XCTAssertTrue(timer.isValid)
+		activity.end = start.addingTimeInterval(7200)
+		try container.viewContext.save()
+		timer.fire()
+		XCTAssertEqual(cell.currentInstanceDurationLabel.text, "2:00:00")
+		cell.removeFromSuperview()
+		XCTAssertFalse(timer.isValid)
+		XCTAssertNil(cell.durationRefreshTimer)
+		activity.end = start.addingTimeInterval(10800)
+		try container.viewContext.save()
+		timer.fire()
+		XCTAssertEqual(cell.currentInstanceDurationLabel.text, "2:00:00")
+		window.rootViewController!.view.addSubview(cell)
+		XCTAssertEqual(cell.currentInstanceDurationLabel.text, "3:00:00")
+		XCTAssertEqual(cell.durationRefreshTimer?.isValid, true)
+		XCTAssertFalse(cell.durationRefreshTimer === timer)
+	}
+
+	@MainActor
+	func testActivityCellReuseClearsItsOldDefinitionAndRestartsForTheNewOne() throws {
+		let first = try lookupDefinition("First activity")
+		let second = try lookupDefinition("Second activity")
+		try container.viewContext.save()
+		let cell = activityCell()
+		cell.activityDefinition = first
+		let window = activityWindow(containing: cell)
+		defer { window.isHidden = true; window.rootViewController = nil }
+		let oldTimer = try XCTUnwrap(cell.durationRefreshTimer)
+		cell.prepareForReuse()
+		XCTAssertFalse(oldTimer.isValid)
+		XCTAssertNil(cell.durationRefreshTimer)
+		XCTAssertNil(cell.activityDefinition)
+		XCTAssertNil(cell.nameLabel.text)
+		XCTAssertNil(cell.currentInstanceDurationLabel.text)
+		XCTAssertNil(cell.currentInstanceDurationLabel.accessibilityValue)
+		XCTAssertFalse(cell.running)
+		XCTAssertTrue(cell.progressIndicator.isHidden)
+		cell.activityDefinition = second
+		XCTAssertEqual(cell.nameLabel.text, second.name)
+		XCTAssertEqual(cell.durationRefreshTimer?.isValid, true)
+		XCTAssertFalse(cell.durationRefreshTimer === oldTimer)
+	}
+
+	@MainActor private func activityCell() -> RecordActivityDefinitionTableViewCell {
+		let cell = RecordActivityDefinitionTableViewCell()
+		cell.nameLabel = UILabel()
+		cell.mostRecentTimeLabel = UILabel()
+		cell.totalDurationTodayLabel = UILabel()
+		cell.currentInstanceDurationLabel = UILabel()
+		cell.progressIndicator = UIActivityIndicatorView()
+		return cell
+	}
+
+	@MainActor private func activityWindow(containing cell: RecordActivityDefinitionTableViewCell) -> UIWindow {
+		let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 700))
+		window.rootViewController = UIViewController()
+		window.isHidden = false
+		window.rootViewController!.view.addSubview(cell)
+		return window
 	}
 
 	func testAutoIgnoreStrictThresholdIncludesFractionalSeconds() throws {

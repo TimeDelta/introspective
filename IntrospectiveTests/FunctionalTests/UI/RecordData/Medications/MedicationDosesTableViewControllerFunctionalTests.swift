@@ -43,6 +43,16 @@ final class MedicationDosesTableViewControllerFunctionalTests: FunctionalTest {
 		controller.nextDateRangeButton = nextDateRangeButton
 	}
 
+	final override func tearDown() {
+		detachTableController(controller)
+		uiUtil.resetMock()
+		controller = nil
+		previousDateRangeButton = nil
+		dateRangeButton = nil
+		nextDateRangeButton = nil
+		super.tearDown()
+	}
+
 	func testRealDoseEditorStoryboardHasVisibleDateWheelDosageAndSaveButton() {
 		let storyboard = UIStoryboard(name: "RecordData", bundle: nil)
 		let editor = storyboard.instantiateViewController(withIdentifier: "medicationDoseEditor") as! MedicationDoseEditorViewControllerImpl

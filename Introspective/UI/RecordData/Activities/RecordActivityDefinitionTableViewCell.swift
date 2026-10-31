@@ -33,32 +33,63 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 
 	public weak final var activityDefinition: ActivityDefinition! {
 		didSet {
-			timer?.invalidate()
-			timer = nil
-			guard activityDefinition != nil else { return }
-			updateUiElements()
-			timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
-				guard let self = self else { timer.invalidate(); return }
-				self.updateDurationLabels()
+			stopDurationTimer()
+			guard activityDefinition != nil else {
+				nameLabel?.text = nil
+				mostRecentTimeLabel?.text = nil
+				mostRecentTimeLabel?.accessibilityValue = nil
+				totalDurationTodayLabel?.text = nil
+				totalDurationTodayLabel?.accessibilityValue = nil
+				currentInstanceDurationLabel?.text = nil
+				currentInstanceDurationLabel?.accessibilityValue = nil
+				progressIndicator?.stopAnimating()
+				progressIndicator?.isHidden = true
+				return
 			}
+			updateUiElements()
+			startDurationTimerIfVisible()
 		}
 	}
 
 	public final var running: Bool {
-		hasUnfinishedActivity()
+		activityDefinition != nil && hasUnfinishedActivity()
 	}
 
-	private final var timer: Timer?
+	// Internal so lifecycle tests can fire the real callback without sleeping.
+	internal private(set) var durationRefreshTimer: Timer?
 
-	deinit { timer?.invalidate() }
+	deinit { durationRefreshTimer?.invalidate() }
+
+	public override func didMoveToWindow() {
+		super.didMoveToWindow()
+		stopDurationTimer()
+		guard window != nil, activityDefinition != nil else { return }
+		updateDurationLabels()
+		startDurationTimerIfVisible()
+	}
 
 	public override func prepareForReuse() {
 		super.prepareForReuse()
-		timer?.invalidate()
-		timer = nil
+		activityDefinition = nil
 	}
 
 	// MARK: - Helper Functions
+
+	private func stopDurationTimer() {
+		durationRefreshTimer?.invalidate()
+		durationRefreshTimer = nil
+	}
+
+	private func startDurationTimerIfVisible() {
+		guard window != nil, activityDefinition != nil else { return }
+		durationRefreshTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
+			guard let self = self, self.window != nil, self.activityDefinition != nil else {
+				timer.invalidate()
+				return
+			}
+			self.updateDurationLabels()
+		}
+	}
 
 	public final func updateUiElements() {
 		nameLabel.text = activityDefinition?.name
@@ -73,7 +104,7 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 
 	@objc private final func updateDurationLabels() {
 		guard activityDefinition != nil else {
-			timer?.invalidate()
+			stopDurationTimer()
 			return
 		}
 		updateTotalDurationTodayLabel()

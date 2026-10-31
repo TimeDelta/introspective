@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import UIKit
 import SwiftyMocky
 import Hamcrest
 import CoreData
@@ -103,6 +104,17 @@ class FunctionalTest: Test {
 		Given(injectionProvider, .get(.value(MedicationDAO.self), willReturn: MedicationDAOImpl()))
 
 		HamcrestReportFunction = {message, file, line in XCTFail(message, file: file, line: line)}
+	}
+
+	/// Detach a table before this fixture replaces the dependencies used by its
+	/// data source. UIKit can otherwise lay out an old table in a later test.
+	final func detachTableController(_ controller: UITableViewController?) {
+		guard let controller = controller else { return }
+		NotificationCenter.default.removeObserver(controller)
+		if let table = controller.viewIfLoaded as? UITableView {
+			table.dataSource = nil
+			table.delegate = nil
+		}
 	}
 
 	override func tearDown() {

@@ -8,6 +8,7 @@
 
 import XCTest
 import UIKit
+import CoreData
 import SwiftyMocky
 @testable import Introspective
 @testable import AttributeRestrictions
@@ -72,6 +73,137 @@ final class GeneratedMockConcurrencyTests: UnitTest {
 		}
 
 		deinit { onRetirement() }
+	}
+}
+
+final class ImporterHydrationTests: UnitTest {
+	private let entityNames = [ATrackerActivityImporterImpl.entityName, IntrospectiveActivityImporterImpl.entityName,
+		EasyPillMedicationImporterImpl.entityName, EasyPillMedicationDoseImporterImpl.entityName,
+		IntrospectiveMedicationImporterImpl.entityName, IntrospectiveMoodImporterImpl.entityName,
+		WellnessMoodImporterImpl.entityName]
+
+	func testInsertingAndFetchingAllImporterTypesDoesNotOpenTransactions() throws {
+		let store = try makeStore()
+		let context = store.viewContext
+		for name in entityNames { _ = NSEntityDescription.insertNewObject(forEntityName: name, into: context) }
+		try context.save()
+		context.reset()
+		for name in entityNames {
+			let objects = try context.fetch(NSFetchRequest<NSManagedObject>(entityName: name))
+			XCTAssertEqual(objects.count, 1)
+			let importer = try XCTUnwrap(objects.first as? Importer)
+			XCTAssertFalse(importer.isCancelled)
+			XCTAssertFalse(importer.isPaused)
+		}
+		Verify(mockDatabase, .never, .transaction())
+		Verify(injectionProvider, .never, .get(.value(Database.self)))
+	}
+
+	func testQueuedImporterMergeDoesNotResolveAReplacementDatabase() throws {
+		let store = try makeStore()
+		let context = store.viewContext
+		context.automaticallyMergesChangesFromParent = true
+		// Allow construction on the writing side; the replacement deliberately
+		// has no transaction stub, reproducing the delayed-merge failure.
+		Given(mockDatabase, .transaction(willReturn: TransactionMock()))
+		let merged = expectation(description: "All importer records merged on the main context")
+		let names = Set(entityNames)
+		var observed = false
+		let observer = NotificationCenter.default.addObserver(forName: .NSManagedObjectContextObjectsDidChange,
+			object: context, queue: nil) { notification in
+			let inserted = notification.userInfo?[NSInsertedObjectsKey] as? Set<NSManagedObject> ?? []
+			if !observed && names.isSubset(of: Set(inserted.compactMap { $0.entity.name })) {
+				observed = true
+				merged.fulfill()
+			}
+		}
+		defer { NotificationCenter.default.removeObserver(observer) }
+		let writer = store.newBackgroundContext()
+		var saveError: Error?
+		writer.performAndWait {
+			for name in entityNames { _ = NSEntityDescription.insertNewObject(forEntityName: name, into: writer) }
+			do { try writer.save() } catch { saveError = error }
+		}
+		if let error = saveError { throw error }
+		registerTypesWithDependencyInjection()
+		wait(for: [merged], timeout: 5)
+		Verify(mockDatabase, .never, .transaction())
+		Verify(injectionProvider, .never, .get(.value(Database.self)))
+	}
+
+	private func makeStore() throws -> NSPersistentContainer {
+		let store = NSPersistentContainer(name: "Importer hydration", managedObjectModel: ObjectModelContainer.objectModel)
+		let description = NSPersistentStoreDescription()
+		description.type = NSInMemoryStoreType
+		description.shouldAddStoreAsynchronously = false
+		store.persistentStoreDescriptions = [description]
+		var loadError: Error?
+		store.loadPersistentStores { _, error in loadError = error }
+		if let error = loadError { throw error }
+		return store
+	}
+}
+
+final class ManagedObjectLifecycleTests: UnitTest {
+	func testMainContextObjectsDeallocateWithoutResolvingDatabase() throws {
+		try assertObjectsDeallocate(on: .mainQueueConcurrencyType)
+	}
+
+	func testPrivateContextObjectsDeallocateWithoutResolvingDatabase() throws {
+		try assertObjectsDeallocate(on: .privateQueueConcurrencyType)
+	}
+
+	private func assertObjectsDeallocate(on queue: NSManagedObjectContextConcurrencyType,
+		file: StaticString = #file, line: UInt = #line) throws {
+		let model = ObjectModelContainer.objectModel
+		let entityNames = [Activity.entityName, ActivityDefinition.entityName, Medication.entityName, MedicationDose.entityName]
+		let coordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
+		try coordinator.addPersistentStore(ofType: NSInMemoryStoreType, configurationName: nil, at: nil, options: nil)
+		let context = NSManagedObjectContext(concurrencyType: queue)
+		context.persistentStoreCoordinator = coordinator
+		var references = [WeakManagedObject]()
+		injectionProvider.resetMock(.invocation)
+		context.performAndWait {
+			autoreleasepool {
+				for name in entityNames {
+					let object = NSEntityDescription.insertNewObject(forEntityName: name, into: context)
+					references.append(WeakManagedObject(object))
+				}
+				context.reset()
+			}
+		}
+		XCTAssertEqual(references.count, 4, file: file, line: line)
+		XCTAssertTrue(references.allSatisfy { $0.value == nil }, "Reset objects should be released", file: file, line: line)
+		Verify(injectionProvider, .never, .get(.value(Database.self)))
+	}
+
+	private final class WeakManagedObject {
+		weak var value: NSManagedObject?
+		init(_ value: NSManagedObject) { self.value = value }
+	}
+}
+
+final class ManagedObjectCleanupFunctionalTests: FunctionalTest {
+	func testCleanupRefaultsPrivateContextObjectWithoutRefaultingMainRecord() throws {
+		let original = MoodDataTestUtil.createMood(rating: 4)
+		XCTAssertEqual(original.rating, 4) // Realize the main-context record.
+		let identifier = original.objectID
+		let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+		context.persistentStoreCoordinator = try XCTUnwrap(original.managedObjectContext?.persistentStoreCoordinator)
+		var operationError: Error?
+		context.performAndWait {
+			do {
+				let object = try XCTUnwrap(context.existingObject(with: identifier) as? MoodImpl)
+				XCTAssertEqual(object.rating, 4)
+				XCTAssertFalse(object.isFault)
+				database.cleanUpManagedObjectWithStrongReferenceCycle(object)
+				XCTAssertTrue(object.isFault)
+				XCTAssertEqual(object.rating, 4)
+			} catch { operationError = error }
+		}
+		if let error = operationError { throw error }
+		XCTAssertFalse(original.isFault)
+		XCTAssertEqual(original.rating, 4)
 	}
 }
 
@@ -413,6 +545,13 @@ final class GrouperEditorContainmentTests: UnitTest {
 class Test: XCTestCase {
 
 	public final var injectionProvider: InjectionProviderMock!
+
+	override func record(_ issue: XCTIssue) {
+		// Preserve the original failure and include the caller of a missing mock,
+		// rather than only the generated mock's declaration in the result bundle.
+		print("XCTest issue in \(name): \(issue.compactDescription)\n" + Thread.callStackSymbols.joined(separator: "\n"))
+		super.record(issue)
+	}
 
 	override func setUp() {
 		super.setUp()

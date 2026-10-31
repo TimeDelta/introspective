@@ -111,7 +111,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 
 	private var eventBuckets: [(day: Date, events: [Event])]? {
 		didSet {
-			DispatchQueue.main.async { self.tableView.reloadData() }
+			DispatchQueue.main.async { [weak self] in self?.tableView.reloadData() }
 		}
 	}
 
@@ -436,7 +436,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			eventsByDay.append((day: currentDay, events: eventsForCurrentDay))
 		}
 		Me.signpost.end(name: signpostName2, "Processed %d events", events.count)
-		eventBuckets = eventsByDay
+		DispatchQueue.main.async { [weak self] in self?.eventBuckets = eventsByDay }
 	}
 
 	private func event(at indexPath: IndexPath) -> Event? {
@@ -456,20 +456,26 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	private func fetchSamples() {
 		let signpostName1: StaticString = "Fetching samples"
 		Me.signpost.begin(name: signpostName1)
-		eventBuckets = nil // let ARC start cleaning up
+		DispatchQueue.main.async { [weak self] in self?.eventBuckets = nil } // release the previous rows on main
 		let fetchSync = DispatchGroup()
+		let samplesLock = NSLock()
 		var samples = [Sample]()
 		for (type, fetcher) in fetchers {
 			guard enabledSampleTypes[Me.enabledString(for: type)] == true else { continue }
 			fetchSync.enter()
 			injected(AsyncUtil.self).run(qos: .userInitiated) { [weak self] in
+				defer { fetchSync.leave() }
+				guard let self = self else { return }
 				do {
-					let newSamples = try fetcher.getSamples(from: self?.minDate, to: self?.maxDate)
+					let newSamples = try fetcher.getSamples(from: self.minDate, to: self.maxDate)
+					samplesLock.lock()
 					samples.append(contentsOf: newSamples)
-					fetchSync.leave()
+					samplesLock.unlock()
 				} catch {
 					if !(error is Sample) {
-						self?.showError(title: "Unable to retrieve \(fetcher.sampleTypePluralName)", error: error)
+						DispatchQueue.main.async { [weak self] in
+							self?.showError(title: "Unable to retrieve \(fetcher.sampleTypePluralName)", error: error)
+						}
 					}
 				}
 			}

@@ -55,7 +55,7 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 		get { execution.totalLines }
 		set { execution.totalLines = newValue }
 	}
-	private final let mainTransaction = injected(Database.self).transaction()
+	private final lazy var mainTransaction = injected(Database.self).transaction()
 	private final var latestDate: Date!
 	private final var lines = [String]()
 

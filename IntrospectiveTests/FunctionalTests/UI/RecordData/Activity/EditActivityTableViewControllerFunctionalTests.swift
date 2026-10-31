@@ -39,9 +39,9 @@ class EditActivityTableViewControllerFunctionalTests: FunctionalTest {
 	}
 
 	final override func tearDown() {
-		if let controller = controller { NotificationCenter.default.removeObserver(controller) }
-		controller = nil
+		detachTableController(controller)
 		uiUtil.resetMock()
+		controller = nil
 		super.tearDown()
 	}
 

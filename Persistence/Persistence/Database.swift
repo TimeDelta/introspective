@@ -259,7 +259,11 @@ internal class DatabaseImpl: Database {
 	}
 
 	public final func cleanUpManagedObjectWithStrongReferenceCycle<Type: NSManagedObject>(_ object: Type) {
-		persistentContainer.viewContext.refresh(object, mergeChanges: false)
+		guard let context = object.managedObjectContext else { return }
+		context.performAndWait {
+			guard !object.isInserted, !object.isDeleted else { return }
+			context.refresh(object, mergeChanges: false)
+		}
 	}
 
 	// MARK: - Helper Functions

@@ -60,7 +60,7 @@ public final class IntrospectiveMoodImporterImpl: NSManagedObject, Introspective
 		get { execution.totalLines }
 		set { execution.totalLines = newValue }
 	}
-	private final let mainTransaction = injected(Database.self).transaction()
+	private final lazy var mainTransaction = injected(Database.self).transaction()
 	private final var csv: CSVReader!
 	private final var latestDate: Date!
 

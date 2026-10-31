@@ -8,8 +8,6 @@
 
 import Foundation
 
-import Foundation
-
 import Attributes
 import Common
 import DependencyInjection
@@ -70,107 +68,8 @@ public final class WithinXCalendarUnitsAfterSubQueryMatcher: SubQueryMatcher, Eq
 		from querySamples: [QuerySampleType],
 		matching subQuerySamples: [Sample]
 	) -> [QuerySampleType] {
-		if subQuerySamples.isEmpty {
-			return []
-		}
-
-		var matchingSamples = [QuerySampleType]()
-		var applicableSubQuerySamples: [Sample]
-		if type(of: subQuerySamples[0]).dateAttributes.count > 1 {
-			applicableSubQuerySamples = injected(SampleUtil.self)
-				.sort(samples: subQuerySamples, by: .end, in: .orderedAscending)
-		} else {
-			applicableSubQuerySamples = injected(SampleUtil.self)
-				.sort(samples: subQuerySamples, by: .start, in: .orderedAscending)
-		}
-
-		if mostRecentOnly {
-			applicableSubQuerySamples = [applicableSubQuerySamples[applicableSubQuerySamples.count - 1]]
-		}
-
-		for sample in querySamples {
-			// do binary search for the minimum distance since they are ordered by end date
-			// and we only care about the after case
-			// we do this by looking for the gradient change in distance to target sample
-			var closestSubQuerySampleIndex = binarySearchForClosestSample(to: sample, in: applicableSubQuerySamples)
-			var closestDistance = distance(
-				querySample: sample,
-				subQuerySample: subQuerySamples[closestSubQuerySampleIndex]
-			)
-
-			if closestDistance < 0 && closestSubQuerySampleIndex < subQuerySamples.count - 1 {
-				closestSubQuerySampleIndex += 1 // next index will be positive distance, meaning AFTER
-				closestDistance = distance(
-					querySample: sample,
-					subQuerySample: subQuerySamples[closestSubQuerySampleIndex]
-				)
-			}
-
-			if closestDistance > 0 && abs(closestDistance) <= numberOfTimeUnits {
-				matchingSamples.append(sample)
-			}
-		}
-		return matchingSamples
-	}
-
-	private func binarySearchForClosestSample(to targetSample: Sample, in items: [Sample]) -> Int {
-		var lowerIndex = 0
-		var upperIndex = items.count - 1
-
-		var closestDistance = Int.max
-		var closestDistanceIndex = 0
-
-		// use iterative version instead of recursive to avoid stack overflow
-		while true {
-			let currentIndex = (lowerIndex + upperIndex) / 2
-			let distanceToTargetSample = distance(querySample: targetSample, subQuerySample: items[currentIndex])
-
-			if distanceToTargetSample == 0 {
-				return currentIndex
-			}
-
-			if abs(distanceToTargetSample) < abs(closestDistance) {
-				closestDistance = distanceToTargetSample
-				closestDistanceIndex = currentIndex
-			}
-
-			if lowerIndex > upperIndex {
-				return closestDistanceIndex
-			}
-
-			if distanceToTargetSample > 0 {
-				upperIndex = currentIndex - 1
-			} else {
-				lowerIndex = currentIndex + 1
-			}
-		}
-	}
-
-	private final func distance(querySample: Sample, subQuerySample: Sample) -> Int {
-		let querySampleStart = querySample.dates()[.start]!
-		let subQuerySampleStart = subQuerySample.dates()[.start]!
-
-		guard let startDistance = try? injected(CalendarUtil.self).distance(
-			from: querySampleStart,
-			to: subQuerySampleStart,
-			in: timeUnit
-		) else {
-			return Int.max
-		}
-
-		if let subQuerySampleEnd = subQuerySample.dates()[.end] {
-			guard let endDistance = try? injected(CalendarUtil.self).distance(
-				from: subQuerySampleEnd,
-				to: querySampleStart,
-				in: timeUnit
-			) else {
-				return startDistance
-			}
-			if abs(endDistance) < abs(startDistance) {
-				return endDistance
-			}
-		}
-		return startDistance
+		directionalCalendarMatches(querySamples, subQuerySamples, numberOfTimeUnits: numberOfTimeUnits,
+			timeUnit: timeUnit, mostRecentOnly: mostRecentOnly, after: true)
 	}
 
 	// MARK: - Attribute Functions
@@ -236,4 +135,45 @@ public final class WithinXCalendarUnitsAfterSubQueryMatcher: SubQueryMatcher, Eq
 		numberOfTimeUnits == other.numberOfTimeUnits && timeUnit == other.timeUnit && mostRecentOnly == other
 			.mostRecentOnly
 	}
+}
+
+/// Direction is determined by actual instants; proximity uses the existing whole
+/// calendar-unit distance contract. Search only the nearest endpoint on that side.
+internal func directionalCalendarMatches<T: Sample>(_ querySamples: [T], _ references: [Sample],
+    numberOfTimeUnits: Int, timeUnit: Calendar.Component, mostRecentOnly: Bool, after: Bool) -> [T] {
+    guard numberOfTimeUnits > 0, !querySamples.isEmpty, !references.isEmpty else { return [] }
+    var endpoints = [(start: Date, anchor: Date)]()
+    for sample in references {
+        let dates = sample.dates()
+        guard let start = dates[.start] else { continue }
+        endpoints.append((start, after ? (dates[.end] ?? start) : start))
+    }
+    if mostRecentOnly, let latest = endpoints.max(by: { $0.start < $1.start }) {
+        endpoints = [latest]
+    }
+    let anchors = endpoints.map { $0.anchor }.sorted()
+    guard !anchors.isEmpty else { return [] }
+    let calendar = injected(CalendarUtil.self)
+    return querySamples.filter { sample in
+        let dates = sample.dates()
+        guard let start = dates[.start] else { return false }
+        let date = after ? start : (dates[.end] ?? start)
+        var lower = 0
+        var upper = anchors.count
+        while lower < upper {
+            let middle = lower + (upper - lower) / 2
+            // For before, skip equal instants; equality has no direction.
+            if after ? anchors[middle] < date : anchors[middle] <= date {
+                lower = middle + 1
+            } else {
+                upper = middle
+            }
+        }
+        let index = after ? lower - 1 : lower
+        guard anchors.indices.contains(index) else { return false }
+        let earlier = after ? anchors[index] : date
+        let later = after ? date : anchors[index]
+        guard let gap = try? calendar.distance(from: earlier, to: later, in: timeUnit) else { return false }
+        return gap >= 0 && gap <= numberOfTimeUnits
+    }
 }
