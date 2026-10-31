@@ -31,6 +31,13 @@ refreshing objects while Core Data removes them from its registry. Lifecycle
 regressions cover main/private context deallocation and refaulting an object
 through its owning context.
 
+Three additional native tests cover activity-row timers: offscreen binding does
+not start polling, detaching stops polling and reattaching refreshes current
+data, and reuse clears the old definition before binding another. They fire the
+actual timer callback directly without sleeps. The existing cell-release test
+also exercises a timer started while attached to a window. The native inventory
+increases from 109 to 112 cases; this measurement remains separate from legacy.
+
 ## Evaluating the next report
 
 The full legacy run must pass all **4,378** selected cases without skips; the
