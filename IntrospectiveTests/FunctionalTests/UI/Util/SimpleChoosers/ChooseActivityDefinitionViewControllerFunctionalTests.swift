@@ -28,6 +28,16 @@ final class ChooseActivityDefinitionViewControllerFunctionalTests: FunctionalTes
 		controller.picker = picker
 	}
 
+	final override func tearDown() {
+		if let controller = controller { NotificationCenter.default.removeObserver(controller) }
+		picker.dataSource = nil
+		picker.delegate = nil
+		uiUtil.resetMock()
+		controller = nil
+		picker = nil
+		super.tearDown()
+	}
+
 	// MARK: - viewDidLoad()
 
 	func testGivenNoAvailableDefinitions_viewDidLoad_pullsFromDatabaseInAscendingRecordScreenIndexOrder() {

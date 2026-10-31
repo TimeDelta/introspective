@@ -478,6 +478,13 @@ class Test: XCTestCase {
 
 	public final var injectionProvider: InjectionProviderMock!
 
+	override func record(_ issue: XCTIssue) {
+		// Preserve the original failure and include the caller of a missing mock,
+		// rather than only the generated mock's declaration in the result bundle.
+		print("XCTest issue in \(name): \(issue.compactDescription)\n" + Thread.callStackSymbols.joined(separator: "\n"))
+		super.record(issue)
+	}
+
 	override func setUp() {
 		super.setUp()
 		registerMatchers()

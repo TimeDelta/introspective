@@ -24,6 +24,13 @@ final class RecordMedicationTableViewControllerFunctionalTests: FunctionalTest {
 		controller = (storyboard.instantiateViewController(withIdentifier: "medicationsTable") as! RecordMedicationTableViewController)
 	}
 
+	final override func tearDown() {
+		detachTableController(controller)
+		uiUtil.resetMock()
+		controller = nil
+		super.tearDown()
+	}
+
 	// MARK: - Reordering
 
 	func testGivenMoveToLowerSpotWhileNotFiltering_tableViewMoveRowAtTo_correctlyReordersMedications() throws {
