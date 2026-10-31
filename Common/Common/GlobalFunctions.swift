@@ -48,7 +48,7 @@ public func retryOnFail(_ code: () throws -> Void, maxRetries: Int? = nil, _ fir
 		try code()
 	} catch {
 		if let retries = maxRetries {
-			try retryOnFail(code, maxRetries: retries - 1, firstError ?? error)
+			return try retryOnFail(code, maxRetries: retries - 1, firstError ?? error)
 		}
 		try retryOnFail(code, firstError ?? error)
 	}
