@@ -76,6 +76,74 @@ final class GeneratedMockConcurrencyTests: UnitTest {
 	}
 }
 
+final class ImporterHydrationTests: UnitTest {
+	private let entityNames = [ATrackerActivityImporterImpl.entityName, IntrospectiveActivityImporterImpl.entityName,
+		EasyPillMedicationImporterImpl.entityName, EasyPillMedicationDoseImporterImpl.entityName,
+		IntrospectiveMedicationImporterImpl.entityName, IntrospectiveMoodImporterImpl.entityName,
+		WellnessMoodImporterImpl.entityName]
+
+	func testInsertingAndFetchingAllImporterTypesDoesNotOpenTransactions() throws {
+		let store = try makeStore()
+		let context = store.viewContext
+		for name in entityNames { _ = NSEntityDescription.insertNewObject(forEntityName: name, into: context) }
+		try context.save()
+		context.reset()
+		for name in entityNames {
+			let objects = try context.fetch(NSFetchRequest<NSManagedObject>(entityName: name))
+			XCTAssertEqual(objects.count, 1)
+			let importer = try XCTUnwrap(objects.first as? Importer)
+			XCTAssertFalse(importer.isCancelled)
+			XCTAssertFalse(importer.isPaused)
+		}
+		Verify(mockDatabase, .never, .transaction())
+		Verify(injectionProvider, .never, .get(.value(Database.self)))
+	}
+
+	func testQueuedImporterMergeDoesNotResolveAReplacementDatabase() throws {
+		let store = try makeStore()
+		let context = store.viewContext
+		context.automaticallyMergesChangesFromParent = true
+		// Allow construction on the writing side; the replacement deliberately
+		// has no transaction stub, reproducing the delayed-merge failure.
+		Given(mockDatabase, .transaction(willReturn: TransactionMock()))
+		let merged = expectation(description: "All importer records merged on the main context")
+		let names = Set(entityNames)
+		var observed = false
+		let observer = NotificationCenter.default.addObserver(forName: .NSManagedObjectContextObjectsDidChange,
+			object: context, queue: nil) { notification in
+			let inserted = notification.userInfo?[NSInsertedObjectsKey] as? Set<NSManagedObject> ?? []
+			if !observed && names.isSubset(of: Set(inserted.compactMap { $0.entity.name })) {
+				observed = true
+				merged.fulfill()
+			}
+		}
+		defer { NotificationCenter.default.removeObserver(observer) }
+		let writer = store.newBackgroundContext()
+		var saveError: Error?
+		writer.performAndWait {
+			for name in entityNames { _ = NSEntityDescription.insertNewObject(forEntityName: name, into: writer) }
+			do { try writer.save() } catch { saveError = error }
+		}
+		if let error = saveError { throw error }
+		registerTypesWithDependencyInjection()
+		wait(for: [merged], timeout: 5)
+		Verify(mockDatabase, .never, .transaction())
+		Verify(injectionProvider, .never, .get(.value(Database.self)))
+	}
+
+	private func makeStore() throws -> NSPersistentContainer {
+		let store = NSPersistentContainer(name: "Importer hydration", managedObjectModel: ObjectModelContainer.objectModel)
+		let description = NSPersistentStoreDescription()
+		description.type = NSInMemoryStoreType
+		description.shouldAddStoreAsynchronously = false
+		store.persistentStoreDescriptions = [description]
+		var loadError: Error?
+		store.loadPersistentStores { _, error in loadError = error }
+		if let error = loadError { throw error }
+		return store
+	}
+}
+
 final class ManagedObjectLifecycleTests: UnitTest {
 	func testMainContextObjectsDeallocateWithoutResolvingDatabase() throws {
 		try assertObjectsDeallocate(on: .mainQueueConcurrencyType)

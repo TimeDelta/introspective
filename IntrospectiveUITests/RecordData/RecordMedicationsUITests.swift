@@ -559,6 +559,12 @@ final class RecordMedicationsUITests: UITest {
 	}
 
 	private final func medicationCell(_ medication: Medication) -> XCUIElement {
-		return app.tables.cells.staticTexts[medication.name]
+		let rows = app.tables["recordMedications"].cells.containing(.staticText, identifier: medication.name)
+		// Navigation and row animations can temporarily expose a departing cell.
+		// Require one settled row instead of choosing an arbitrary matching label.
+		let uniqueRow = XCTNSPredicateExpectation(predicate: NSPredicate(format: "count == 1"), object: rows)
+		XCTAssertEqual(XCTWaiter.wait(for: [uniqueRow], timeout: 5), .completed,
+			"Expected one medication row named \(medication.name)")
+		return rows.element.staticTexts[medication.name]
 	}
 }

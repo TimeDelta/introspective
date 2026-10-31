@@ -68,7 +68,8 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 		get { execution.totalLines }
 		set { execution.totalLines = newValue }
 	}
-	private final let mainTransaction = injected(Database.self).transaction()
+	// Core Data can materialize an importer during a merge without running it.
+	private final lazy var mainTransaction = injected(Database.self).transaction()
 	private final var csv: CSVReader!
 	private final var latestDate: Date!
 

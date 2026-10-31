@@ -18,6 +18,10 @@ also contains Health exchange code covered by the separate native tests.
 
 The 43 coverage-guided cases live in `IntrospectiveTests/Coverage`, with three
 additional Core Data lifecycle regressions in `IntrospectiveTests/Test.swift`.
+Two importer-hydration regressions in that file also verify that constructing,
+fetching, or merging any of the seven importer types never opens a transaction
+through the current dependency provider. Transactions are created when import
+work needs them instead of while Core Data materializes an object.
 All run in the existing `IntrospectiveTests` target. Functional cases use the real in-memory Core Data
 store, calendar utilities and matchers. Timeline cases load the real storyboard
 and table cells, with controlled sample sources and completion expectations
@@ -40,7 +44,7 @@ increases from 109 to 112 cases; this measurement remains separate from legacy.
 
 ## Evaluating the next report
 
-The full legacy run must pass all **4,378** selected cases without skips; the
+The full legacy run must pass all **4,380** selected cases without skips; the
 existing 41 explicit exclusions remain unchanged. Read the new legacy artifact's
 file and function measurements alongside this baseline. The matcher implementation
 is shorter, so compare the exercised behaviors and functions as well as line
