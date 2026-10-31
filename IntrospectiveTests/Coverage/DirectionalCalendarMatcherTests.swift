@@ -12,11 +12,13 @@ final class DirectionalCalendarMatcherUnitTests: UnitTest {
 
     func testAfterDefaultsAndAttributeRoundTrip() throws {
         let matcher = WithinXCalendarUnitsAfterSubQueryMatcher()
+        let amount: Int = 9
+        let mostRecent: Bool = true
         XCTAssertEqual(try matcher.value(of: type(of: matcher).amountOfTime) as? Int, 5)
         XCTAssertEqual(try matcher.value(of: type(of: matcher).timeUnit) as? Calendar.Component, .minute)
-        try matcher.set(attribute: type(of: matcher).amountOfTime, to: 9)
+        try matcher.set(attribute: type(of: matcher).amountOfTime, to: amount)
         try matcher.set(attribute: type(of: matcher).timeUnit, to: Calendar.Component.hour)
-        try matcher.set(attribute: CommonSubQueryMatcherAttributes.mostRecentOnly, to: true)
+        try matcher.set(attribute: CommonSubQueryMatcherAttributes.mostRecentOnly, to: mostRecent)
         XCTAssertEqual(matcher.numberOfTimeUnits, 9)
         XCTAssertEqual(matcher.timeUnit, .hour)
         XCTAssertTrue(matcher.mostRecentOnly)
@@ -25,10 +27,12 @@ final class DirectionalCalendarMatcherUnitTests: UnitTest {
 
     func testBeforeDefaultsAndAttributeRoundTrip() throws {
         let matcher = WithinXCalendarUnitsBeforeSubQueryMatcher()
+        let amount: Int = 2
+        let mostRecent: Bool = true
         XCTAssertEqual(try matcher.value(of: type(of: matcher).amountOfTime) as? Int, 5)
-        try matcher.set(attribute: type(of: matcher).amountOfTime, to: 2)
+        try matcher.set(attribute: type(of: matcher).amountOfTime, to: amount)
         try matcher.set(attribute: type(of: matcher).timeUnit, to: Calendar.Component.day)
-        try matcher.set(attribute: CommonSubQueryMatcherAttributes.mostRecentOnly, to: true)
+        try matcher.set(attribute: CommonSubQueryMatcherAttributes.mostRecentOnly, to: mostRecent)
         XCTAssertEqual(try matcher.value(of: type(of: matcher).timeUnit) as? Calendar.Component, .day)
         XCTAssertEqual(try matcher.value(of: CommonSubQueryMatcherAttributes.mostRecentOnly) as? Bool, true)
         XCTAssertTrue(matcher.description.contains("before most recent"))
@@ -37,10 +41,15 @@ final class DirectionalCalendarMatcherUnitTests: UnitTest {
     func testWrongAttributeTypesAndUnknownAttributesAreRejected() {
         let after = WithinXCalendarUnitsAfterSubQueryMatcher()
         let before = WithinXCalendarUnitsBeforeSubQueryMatcher()
+        // SwiftyMocky's Optional literal conformances cannot infer Any? from a
+        // bare literal. Keep concrete types even when intentionally invalid.
+        let invalidAmount: String = "5"
+        let invalidUnit: String = "day"
+        let invalidFlag: Int = 1
         for matcher in [after as SubQueryMatcher, before as SubQueryMatcher] {
-            XCTAssertThrowsError(try matcher.set(attribute: WithinXCalendarUnitsAfterSubQueryMatcher.amountOfTime, to: "5"))
-            XCTAssertThrowsError(try matcher.set(attribute: WithinXCalendarUnitsAfterSubQueryMatcher.timeUnit, to: "day"))
-            XCTAssertThrowsError(try matcher.set(attribute: CommonSubQueryMatcherAttributes.mostRecentOnly, to: 1))
+            XCTAssertThrowsError(try matcher.set(attribute: WithinXCalendarUnitsAfterSubQueryMatcher.amountOfTime, to: invalidAmount))
+            XCTAssertThrowsError(try matcher.set(attribute: WithinXCalendarUnitsAfterSubQueryMatcher.timeUnit, to: invalidUnit))
+            XCTAssertThrowsError(try matcher.set(attribute: CommonSubQueryMatcherAttributes.mostRecentOnly, to: invalidFlag))
             XCTAssertThrowsError(try matcher.value(of: CommonSampleAttributes.startDate))
             XCTAssertThrowsError(try matcher.set(attribute: CommonSampleAttributes.startDate, to: instant))
         }
