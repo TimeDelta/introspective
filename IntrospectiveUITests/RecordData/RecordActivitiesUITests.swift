@@ -237,7 +237,11 @@ final class RecordActivitiesUITests: UITest {
 	func testEditingLastActivity_correctlyUpdatesCorrespondingActivityDefinitionCell() {
 		// given
 		let definition = ActivityDefinition(name: "gteq")
-		let startDate = (Date() - 1.minutes).dateBySet(hour: nil, min: nil, secs: 0)!
+		let calendar = Calendar.autoupdatingCurrent
+		let today = calendar.startOfDay(for: Date())
+		// Keep the entire 62-minute activity within today. Relative-to-now
+		// dates made this same-day total assertion invalid near midnight.
+		let startDate = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: today)!
 		// A real minute change must occur. Selecting the already displayed minute
 		// is an unchanged edit and correctly preserves the original seconds.
 		seed(activityDefinitions: [definition], activities: [.init(definition, start: startDate - 10.minutes)])
