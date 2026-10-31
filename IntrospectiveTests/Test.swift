@@ -8,6 +8,7 @@
 
 import XCTest
 import UIKit
+import CoreData
 import SwiftyMocky
 @testable import Introspective
 @testable import AttributeRestrictions
@@ -72,6 +73,69 @@ final class GeneratedMockConcurrencyTests: UnitTest {
 		}
 
 		deinit { onRetirement() }
+	}
+}
+
+final class ManagedObjectLifecycleTests: UnitTest {
+	func testMainContextObjectsDeallocateWithoutResolvingDatabase() throws {
+		try assertObjectsDeallocate(on: .mainQueueConcurrencyType)
+	}
+
+	func testPrivateContextObjectsDeallocateWithoutResolvingDatabase() throws {
+		try assertObjectsDeallocate(on: .privateQueueConcurrencyType)
+	}
+
+	private func assertObjectsDeallocate(on queue: NSManagedObjectContextConcurrencyType,
+		file: StaticString = #file, line: UInt = #line) throws {
+		let model = ObjectModelContainer.objectModel
+		let entityNames = [Activity.entityName, ActivityDefinition.entityName, Medication.entityName, MedicationDose.entityName]
+		let coordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
+		try coordinator.addPersistentStore(ofType: NSInMemoryStoreType, configurationName: nil, at: nil, options: nil)
+		let context = NSManagedObjectContext(concurrencyType: queue)
+		context.persistentStoreCoordinator = coordinator
+		var references = [WeakManagedObject]()
+		injectionProvider.resetMock(.invocation)
+		context.performAndWait {
+			autoreleasepool {
+				for name in entityNames {
+					let object = NSEntityDescription.insertNewObject(forEntityName: name, into: context)
+					references.append(WeakManagedObject(object))
+				}
+				context.reset()
+			}
+		}
+		XCTAssertEqual(references.count, 4, file: file, line: line)
+		XCTAssertTrue(references.allSatisfy { $0.value == nil }, "Reset objects should be released", file: file, line: line)
+		Verify(injectionProvider, .never, .get(.value(Database.self)))
+	}
+
+	private final class WeakManagedObject {
+		weak var value: NSManagedObject?
+		init(_ value: NSManagedObject) { self.value = value }
+	}
+}
+
+final class ManagedObjectCleanupFunctionalTests: FunctionalTest {
+	func testCleanupRefaultsPrivateContextObjectWithoutRefaultingMainRecord() throws {
+		let original = MoodDataTestUtil.createMood(rating: 4)
+		XCTAssertEqual(original.rating, 4) // Realize the main-context record.
+		let identifier = original.objectID
+		let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+		context.persistentStoreCoordinator = try XCTUnwrap(original.managedObjectContext?.persistentStoreCoordinator)
+		var operationError: Error?
+		context.performAndWait {
+			do {
+				let object = try XCTUnwrap(context.existingObject(with: identifier) as? MoodImpl)
+				XCTAssertEqual(object.rating, 4)
+				XCTAssertFalse(object.isFault)
+				database.cleanUpManagedObjectWithStrongReferenceCycle(object)
+				XCTAssertTrue(object.isFault)
+				XCTAssertEqual(object.rating, 4)
+			} catch { operationError = error }
+		}
+		if let error = operationError { throw error }
+		XCTAssertFalse(original.isFault)
+		XCTAssertEqual(original.rating, 4)
 	}
 }
 

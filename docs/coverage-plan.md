@@ -16,8 +16,9 @@ also contains Health exchange code covered by the separate native tests.
 | `WithinXCalendarUnitsBeforeSubQueryMatcher.swift` | 0 / 163 | Corresponding before-direction cases, including a query activity's end and fractional-second ordering |
 | `MoodUtil.swift` | 24 / 245 | Negative/fractional scales, persisted endpoints, transaction isolation, identity and metadata preservation, fetch/commit errors and successful retry |
 
-The 43 new tests live in `IntrospectiveTests/Coverage`, in the existing
-`IntrospectiveTests` target. Functional cases use the real in-memory Core Data
+The 43 coverage-guided cases live in `IntrospectiveTests/Coverage`, with three
+additional Core Data lifecycle regressions in `IntrospectiveTests/Test.swift`.
+All run in the existing `IntrospectiveTests` target. Functional cases use the real in-memory Core Data
 store, calendar utilities and matchers. Timeline cases load the real storyboard
 and table cells, with controlled sample sources and completion expectations
 instead of sleeps, Health authorization, or additional app launches.
@@ -25,11 +26,14 @@ instead of sleeps, Health authorization, or additional app launches.
 These cases also guard fixes for a timeline wait group that was never released
 after a fetch error, concurrent unsynchronized result appends, queued refreshes
 retaining controllers, directional searches using the wrong reference/direction,
-and an extra commit after a successful bounded retry.
+an extra commit after a successful bounded retry, and managed-object destructors
+refreshing objects while Core Data removes them from its registry. Lifecycle
+regressions cover main/private context deallocation and refaulting an object
+through its owning context.
 
 ## Evaluating the next report
 
-The full legacy run must pass all **4,375** selected cases without skips; the
+The full legacy run must pass all **4,378** selected cases without skips; the
 existing 41 explicit exclusions remain unchanged. Read the new legacy artifact's
 file and function measurements alongside this baseline. The matcher implementation
 is shorter, so compare the exercised behaviors and functions as well as line

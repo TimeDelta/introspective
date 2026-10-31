@@ -23,6 +23,7 @@ final class TimelineBehaviorTests: UnitTest {
         Given(injectionProvider, .get(.value(FatigueUiUtil.self), willReturn: FatigueUiUtilImpl()))
         Given(mockUserDefaultsUtil, .bool(forKey: .any, willReturn: false))
         Given(mockUserDefaultsUtil, .bool(forKey: .value(.moodEnabledOnTimeline), willReturn: true))
+        Given(mockUiUtil, .setBackButton(for: .any, title: .any, action: .any, willReturn: UIBarButtonItem()))
         DependencyInjector.register([TimelineFetcherProvider(factory)])
         let workers = work!
         let queue = DispatchQueue(label: "timeline coverage workers", attributes: .concurrent,

@@ -116,12 +116,18 @@ final class MoodRescalingFunctionalTests: FunctionalTest {
     func testScalingOneMoodDoesNotSaveUntilItsTransactionCommits() throws {
         let original = MoodDataTestUtil.createMood(rating: 4, min: 0, max: 8)
         try setScale(min: 0, max: 10)
-        let transaction = database.transaction()
-        var editing: Mood = try transaction.pull(savedObject: original)
+        let storedContext = try XCTUnwrap(original.managedObjectContext)
+        let editingContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        editingContext.parent = storedContext
+        var editing: Mood = try XCTUnwrap(editingContext.existingObject(with: original.objectID) as? MoodImpl)
         util.scaleMood(&editing)
         XCTAssertEqual(editing.rating, 5)
-        XCTAssertEqual(try persisted(original).rating, 4)
-        try transaction.commit()
+        // Both contexts belong to this queue. Observe the original without
+        // refreshing another context while its child still has unsaved edits.
+        XCTAssertEqual(original.rating, 4)
+        XCTAssertEqual(original.maxRating, 8)
+        try editingContext.save()
+        try storedContext.save()
         let saved = try persisted(original)
         XCTAssertEqual(saved.rating, 5)
         XCTAssertEqual(saved.minRating, 0)

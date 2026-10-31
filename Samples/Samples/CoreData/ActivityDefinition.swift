@@ -18,12 +18,6 @@ import Persistence
 public class ActivityDefinition: NSManagedObject, CoreDataObject, Exportable {
 	private typealias Me = ActivityDefinition
 
-	// MARK: - Destructor
-
-	deinit {
-		cleanUp()
-	}
-
 	// MARK: - CoreData Stuff
 
 	public static let entityName = "ActivityDefinition"
