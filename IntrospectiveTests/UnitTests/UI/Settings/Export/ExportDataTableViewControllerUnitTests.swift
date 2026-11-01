@@ -10,6 +10,8 @@ import XCTest
 import SwiftyMocky
 import Hamcrest
 import CSV
+import CoreData
+import DependencyInjection
 import UserNotifications
 @testable import Introspective
 @testable import Common
@@ -170,12 +172,12 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 
 	// MARK: - tableViewNumberOfRowsInSection
 
-	func testGivenNormalSection_tableViewNumberOfRowsInSection_returns3() {
+	func testGivenNormalSection_tableViewNumberOfRowsInSection_returns5() {
 		// when
 		let rows = controller.tableView(tableView, numberOfRowsInSection: 0)
 
 		// then
-		XCTAssertEqual(rows, 3)
+		XCTAssertEqual(rows, 5)
 	}
 
 	func testGivenActiveExportsSectionAndNoActiveExports_tableViewNumberOfRowsInSection_returns0() {
@@ -210,6 +212,20 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 
 		// then
 		Verify(mockUiUtil, .stopObserving(.value(controller), name: .value(.presentView), object: .value(exporter)))
+	}
+
+	func testNewExportRowsIdentifyMetricContextAndLostItems() {
+		XCTAssertEqual(controller.tableView(tableView, cellForRowAt: IndexPath(row: 3, section: 0)).textLabel?.text, "Metric Context")
+		XCTAssertEqual(controller.tableView(tableView, cellForRowAt: IndexPath(row: 4, section: 0)).textLabel?.text, "Lost Item Events")
+	}
+
+	func testContextAndLostItemSelectionsResolveTheMatchingExporters() throws {
+		let provider = RecordExporterTestProvider()
+		DependencyInjector.register([provider])
+		let context = try controller.getExporterFor(IndexPath(row: 3, section: 0))
+		let lost = try controller.getExporterFor(IndexPath(row: 4, section: 0))
+		XCTAssertTrue((context as? MetricContextExporter) === provider.context)
+		XCTAssertTrue((lost as? LostItemExporter) === provider.lost)
 	}
 
 	// MARK: - sectionTitle
@@ -351,5 +367,17 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 		}
 		let taskIdString = String(backgroundTaskId.rawValue)
 		Given(mockUiUtil, .value(for: .value(.backgroundTaskId), from: .any, keyIsOptional: .any, willReturn: taskIdString))
+	}
+}
+
+private final class RecordExporterTestProvider: InjectionProvider {
+	let types: [Any.Type] = [MetricContextExporter.self, LostItemExporter.self]
+	private let coordinator = NSPersistentStoreCoordinator(managedObjectModel: NSManagedObjectModel())
+	lazy var context = MetricContextExporter(coordinator: coordinator, url: URL(fileURLWithPath: "/unused/context.csv"))
+	lazy var lost = LostItemExporter(coordinator: coordinator, url: URL(fileURLWithPath: "/unused/lost.csv"))
+	func get<Type>(_ type: Type.Type) throws -> Type {
+		if type == MetricContextExporter.self { return context as! Type }
+		if type == LostItemExporter.self { return lost as! Type }
+		throw GenericError("Unexpected exporter type")
 	}
 }
