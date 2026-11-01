@@ -44,13 +44,39 @@ increases from 109 to 112 cases; this measurement remains separate from legacy.
 
 ## Evaluating the next report
 
-The full legacy run must pass all **4,380** selected cases without skips; the
+The full legacy run must pass all **4,395** selected cases without skips; the
 existing 41 explicit exclusions remain unchanged. Read the new legacy artifact's
 file and function measurements alongside this baseline. The matcher implementation
 is shorter, so compare the exercised behaviors and functions as well as line
 percentages. Do not average percentages from separate jobs or infer branch
 coverage from line counts.
 
-The next useful gaps are the timeline's remaining event types and edit actions,
-and the uncovered result sorting/search-nearby paths. Check the native and UI
-reports before adding tests for shared code that they may already cover.
+The next useful gaps are the timeline's remaining event types and edit actions.
+Check the native and UI reports before adding tests for shared code that they
+may already cover.
+
+## Results correctness and performance
+
+The passing legacy report from [run 41244623164](https://github.com/TimeDelta/introspective/actions/runs/41244623164)
+showed zero exercised lines in the results controller's `sortSamplesBy` (44
+executable lines) and `searchNearby` (51 executable lines). These paths now have
+15 additional controller regressions and 16 native tests for the extracted
+production processing code. The native inventory increases from 112 to 128;
+both full UI shards still contain 58 and 50 cases.
+
+The native cases exercise all nine sort types in both directions, stable ties
+and missing values, NaN, integers beyond floating-point precision, copied mutable
+values, cancellation, and projection errors. A 1,024-entry probe verifies that
+projection reads each attribute exactly once and that sorting never reads live
+samples again. Nearby-query tests evaluate real restrictions across timestamp
+and interval combinations, strict boundaries, unfinished intervals, invalid
+dates and durations. Query-snapshot cases verify independent nested query,
+expression and matcher configuration and reject recursive query graphs.
+
+Controller cases drive captured completions in reverse order, cancel queued
+work, replace data mid-sort, change search text during a sort, close before a
+callback, and deliver refreshes from a background queue. Nearby UI cases verify
+that preparing another row's actions does not change the selected source and
+that only the active duration chooser can trigger a search, once. These are
+source inventories and behavioral assertions; measured coverage must come from
+the next complete passing Mac runs.

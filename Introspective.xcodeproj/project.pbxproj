@@ -204,6 +204,7 @@
 		5B869E4825C3616ED3C250C311D4EC1A /* PickerMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD71FA3FAB9E75505AA5F1F382EBF59 /* PickerMatchers.swift */; };
 		5BE2D38612042D7874C22A05A3221ABD /* RestingHeartRateQueryFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC35BA576759FA61B15F904C42335C0 /* RestingHeartRateQueryFunctionalTests.swift */; };
 		5C48C4E4A84505C30B33ABC93876936A /* PainNoteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C363176BF177E7B5BB8AD86B379803E8 /* PainNoteTableViewCell.swift */; };
+		5C7FDD912B7223A26CBEAA74 /* ResultsProcessing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF944D91C2659637B5363A1 /* ResultsProcessing.swift */; };
 		5C98E0B7A29297921CA9E5E8A1C5D3BD /* SexualActivityUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB78CB6A69BA21B3A5B7DD707CD88EA /* SexualActivityUnitTests.swift */; };
 		5D910ABBDE3929E728E8669A9E5E2F4B /* SampleGrouperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488FBBEAC0EF9616AF94F766921C210B /* SampleGrouperMock.swift */; };
 		5D9111AF67D78FB88A5DC0DEE852A6A1 /* MedicationDoseFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36D7B96C629BC275FD91AFB33B62F02 /* MedicationDoseFunctionalTests.swift */; };
@@ -696,6 +697,7 @@
 		1AFFFDDC96C3013AA0A966930B4BCDA8 /* ContinuousPainRatingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinuousPainRatingTableViewCell.swift; sourceTree = "<group>"; };
 		1BBA5C806D2CB850992E9E1E60A8E687 /* RecordActivityTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordActivityTableViewController.swift; sourceTree = "<group>"; };
 		1BE45F44E63A95907474965403C38F72 /* DateOnlyAttributeUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateOnlyAttributeUnitTests.swift; sourceTree = "<group>"; };
+		1BF944D91C2659637B5363A1 /* ResultsProcessing.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ResultsProcessing.swift; sourceTree = "<group>"; };
 		1C8B5AE7A83209B865D6BC8170C1A09A /* EditActivityTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditActivityTableViewController.swift; sourceTree = "<group>"; };
 		1D063C2E0D27A1D0716B69A501909AAE /* ObjectModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectModelContainer.swift; sourceTree = "<group>"; };
 		1D716C50FB9FD876AAAB8924DED80016 /* WeightTableViewCellUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightTableViewCellUnitTests.swift; sourceTree = "<group>"; };
@@ -1927,6 +1929,7 @@
 				F2410974EED9054C1C38F79B00B85110 /* ActivityTableViewCell.swift */,
 				25A0D3C25211D4B33ACF172D7855D39A /* FatigueTableViewCell.swift */,
 				DC0A6ACC65601E3613FF27F754F63039 /* PainTableViewCell.swift */,
+				1BF944D91C2659637B5363A1 /* ResultsProcessing.swift */,
 			);
 			path = Results;
 			sourceTree = "<group>";
@@ -4103,6 +4106,7 @@
 				76004C394DB2A877922952E0629F6246 /* EditViewController.swift in Sources */,
 				229D2710ECBF664F1F80F75E /* UITestFixtures.swift in Sources */,
 				509C4960D63C05762C12CA8A /* UITestFixtureLoader.swift in Sources */,
+				5C7FDD912B7223A26CBEAA74 /* ResultsProcessing.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
