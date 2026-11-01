@@ -1056,7 +1056,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		Given(mockSampleFactory, .allTypes(willReturn: [MoodImpl.self]))
 		Given(mockQueryFactory, .queryFor(.any, willReturn: query))
 		Given(mockUiUtil, .controller(named: .value("durationChooser"), from: .value("Util"), as: .value(UIViewController.self), willReturn: chooser))
-		Given(mockUiUtil, .controller(named: .value("results"), from: .any, as: .value(UIViewController.self), willReturn: destination))
+		Given(mockUiUtil, .controller(named: .value("results"), from: .any(UIStoryboard.self), as: .value(UIViewController.self), willReturn: destination))
 		Given(mockUiUtil, .customPresenter(width: .any, height: .any, center: .any, willReturn: Presentr(presentationType: .alert)))
 		Given(mockUiUtil, .alert(title: .any, message: .any, preferredStyle: .any, willReturn: UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)))
 		Given(mockUiUtil, .alertAction(title: .any, style: .any, handler: .any, willReturn: UIAlertAction(title: "Mood", style: .default), UIAlertAction(title: "Cancel", style: .cancel)))
