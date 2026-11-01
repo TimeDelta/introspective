@@ -15,6 +15,6 @@ public final class MedicationDoseSampleFetcher: SampleFetcher {
 	public let sampleTypePluralName = "Medication Doses"
 
 	public func getSamples(from minDate: Date?, to maxDate: Date?) throws -> [Sample] {
-		try injected(MedicationDAO.self).getMedicationDoses(from: minDate, to: maxDate)
+		try fetchOnMainQueue { try injected(MedicationDAO.self).getMedicationDoses(from: minDate, to: maxDate) }
 	}
 }

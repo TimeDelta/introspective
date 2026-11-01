@@ -218,6 +218,119 @@ final class TimelineBehaviorTests: UnitTest {
         XCTAssertEqual(controller.dateRangeButton.title, "Filter Dates")
     }
 
+    func testSupersededQueuedFetchIsSkippedAndNewRequestKeepsItsDateSnapshot() {
+        var jobs = [() -> Void]()
+        Perform(mockAsyncUtil, .run(qos: .any, code: .any, perform: { _, code in jobs.append(code) }))
+        let subject = open(from: base, to: base.addingTimeInterval(600))
+        subject.nextDateRangeButtonPressed(self)
+        let requestedMin = subject.minDate, requestedMax = subject.maxDate
+        // Changing properties after scheduling must not change the request's bounds.
+        subject.minDate = nil; subject.maxDate = nil
+        XCTAssertEqual(jobs.count, 2)
+        jobs.forEach { $0() }
+        finishFetch()
+        XCTAssertEqual(factory.moods.calls.count, 1)
+        XCTAssertEqual(factory.moods.calls.first?.0, requestedMin)
+        XCTAssertEqual(factory.moods.calls.first?.1, requestedMax)
+    }
+
+    func testSlowPreviousRequestCannotReplaceNewerRows() {
+        let oldStarted = expectation(description: "Old fetch entered")
+        let releaseOld = DispatchSemaphore(value: 0)
+        let oldDate = base, newDate = base.addingTimeInterval(86_400)
+        let oldMood = mood(oldDate), newMood = mood(newDate)
+        factory.moods.handler = { min, _ in
+            if min == oldDate {
+                oldStarted.fulfill()
+                XCTAssertEqual(releaseOld.wait(timeout: .now() + 5), .success)
+                return [oldMood]
+            }
+            return [newMood]
+        }
+        let subject = open(from: oldDate, to: oldDate.addingTimeInterval(600))
+        wait(for: [oldStarted], timeout: 5)
+        // Run the replacement synchronously while the previous source remains blocked.
+        Perform(mockAsyncUtil, .run(qos: .any, code: .any, perform: { _, code in code() }))
+        subject.nextDateRangeButtonPressed(self)
+        let published = expectation(description: "Replacement published")
+        DispatchQueue.main.async { published.fulfill() }
+        wait(for: [published], timeout: 5)
+        XCTAssertEqual(cell().date, newDate)
+        releaseOld.signal()
+        finishFetch()
+        XCTAssertEqual(cell().date, newDate)
+    }
+
+    func testPersistenceRefreshDiscardsQueuedSamplesBeforeObjectsAreInvalidated() {
+        var jobs = [() -> Void]()
+        Perform(mockAsyncUtil, .run(qos: .any, code: .any, perform: { _, code in jobs.append(code) }))
+        let subject = open()
+        NotificationCenter.default.post(name: NotificationName.persistenceLayerWillRefresh.toName(), object: nil)
+        jobs.forEach { $0() }
+        finishFetch()
+        XCTAssertEqual(factory.moods.calls.count, 0)
+        XCTAssertEqual(subject.numberOfSections(in: subject.tableView), 1, "Remain loading until the new store is ready")
+    }
+
+    func testAbandoningControllerCancelsWorkersBeforeTheyReadSources() {
+        var jobs = [() -> Void]()
+        Perform(mockAsyncUtil, .run(qos: .any, code: .any, perform: { _, code in jobs.append(code) }))
+        weak var released: TimelineTableViewControllerImpl?
+        autoreleasepool {
+            let subject = TimelineTableViewControllerImpl(style: .plain)
+            subject.previousDateRangeButton = UIBarButtonItem()
+            subject.dateRangeButton = UIBarButtonItem()
+            subject.nextDateRangeButton = UIBarButtonItem()
+            released = subject
+            subject.loadViewIfNeeded()
+            mockUiUtil.resetMock()
+        }
+        XCTAssertNil(released)
+        jobs.forEach { $0() }
+        finishFetch()
+        XCTAssertEqual(factory.moods.calls.count, 0)
+    }
+
+    func testRealCoreDataFetcherRunsOnMainWhileTimelineRemainsResponsive() {
+        factory.moodFetcherOverride = MoodSampleFetcher()
+        let sample = mood(base)
+        Given(mockMoodDAO, .getMoods(from: .any, to: .any, willReturn: [sample]))
+        Perform(mockMoodDAO, .getMoods(from: .any, to: .any, perform: { _, _ in
+            XCTAssertTrue(Thread.isMainThread, "The database's main context must only be fetched on its owner queue")
+        }))
+        _ = open()
+        finishFetch()
+        XCTAssertEqual(cell().date, base)
+        Verify(mockMoodDAO, .once, .getMoods(from: .any, to: .any))
+    }
+
+    func testPoppedTimelineIgnoresFurtherRefreshNotifications() {
+        var jobs = [() -> Void]()
+        Perform(mockAsyncUtil, .run(qos: .any, code: .any, perform: { _, code in jobs.append(code) }))
+        let subject = open()
+        subject.goBack()
+        NotificationCenter.default.post(name: NotificationName.persistenceLayerDidRefresh.toName(), object: nil)
+        jobs.forEach { $0() }
+        finishFetch()
+        XCTAssertEqual(jobs.count, 1)
+        XCTAssertEqual(factory.moods.calls.count, 0)
+    }
+
+    func testStaleTableIndexPathsAreIgnoredWhenRefreshRemovesAllSections() {
+        let sample = mood(base)
+        factory.moods.handler = { _, _ in [sample] }
+        let subject = open()
+        finishFetch()
+        XCTAssertEqual(subject.numberOfSections(in: subject.tableView), 1)
+        factory.moods.handler = { _, _ in [] }
+        NotificationCenter.default.post(name: TimelineTableViewControllerImpl.sampleChanged, object: nil)
+        finishFetch()
+        XCTAssertEqual(subject.numberOfSections(in: subject.tableView), 0)
+        XCTAssertEqual(subject.tableView(subject.tableView, numberOfRowsInSection: 0), 0)
+        XCTAssertNil(subject.tableView(subject.tableView, titleForHeaderInSection: 0))
+        subject.tableView(subject.tableView, didSelectRowAt: IndexPath(row: 0, section: 0))
+    }
+
     func testQueuedTimelineRefreshesDoNotRetainAnAbandonedController() {
         Perform(mockAsyncUtil, .run(qos: .any, code: .any, perform: { _, code in code() }))
         weak var released: TimelineTableViewControllerImpl?
@@ -253,10 +366,11 @@ private final class TimelineClosureFetcher: SampleFetcher {
 }
 
 private final class TimelineTestFetchers: SampleFetcherFactory {
+    var moodFetcherOverride: SampleFetcher?
     let moods = TimelineClosureFetcher("Moods")
     let fatigue = TimelineClosureFetcher("Fatigue")
     let disabled = TimelineClosureFetcher("Disabled")
-    func moodSampleFetcher() -> SampleFetcher { moods }
+    func moodSampleFetcher() -> SampleFetcher { moodFetcherOverride ?? moods }
     func fatigueSampleFetcher() -> SampleFetcher { fatigue }
     func activitySampleFetcher() -> SampleFetcher { disabled }
     func bloodPressureSampleFetcher() -> SampleFetcher { disabled }

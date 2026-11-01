@@ -15,6 +15,6 @@ public final class MoodSampleFetcher: SampleFetcher {
 	public let sampleTypePluralName = "Moods"
 
 	public func getSamples(from minDate: Date?, to maxDate: Date?) throws -> [Sample] {
-		try injected(MoodDAO.self).getMoods(from: minDate, to: maxDate)
+		try fetchOnMainQueue { try injected(MoodDAO.self).getMoods(from: minDate, to: maxDate) }
 	}
 }
