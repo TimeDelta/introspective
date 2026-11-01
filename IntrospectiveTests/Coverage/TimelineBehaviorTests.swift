@@ -291,8 +291,9 @@ final class TimelineBehaviorTests: UnitTest {
         XCTAssertEqual(factory.moods.calls.count, 0)
     }
 
-    func testRealCoreDataFetcherRunsOnMainWhileTimelineRemainsResponsive() {
-        factory.moodFetcherOverride = MoodSampleFetcher()
+    func testRealCoreDataFetcherRunsOnMainWhileTimelineRemainsResponsive() throws {
+        let productionFactory: SampleFetcherFactory = try SampleFetchersInjectionProvider().get(SampleFetcherFactory.self)
+        factory.moodFetcherOverride = productionFactory.moodSampleFetcher()
         let sample = mood(base)
         Given(mockMoodDAO, .getMoods(from: .any, to: .any, willReturn: [sample]))
         Perform(mockMoodDAO, .getMoods(from: .any, to: .any, perform: { _, _ in

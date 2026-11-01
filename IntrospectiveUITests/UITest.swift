@@ -326,6 +326,7 @@ class UITest: XCTestCase {
 
 	final func setTextFor(field: XCUIElement, to text: String? = nil, expectedValue: String? = nil) {
 		guard waitForElement(field) else {
+			attachInputDiagnostics()
 			XCTFail("Text input did not appear: \(field)")
 			return
 		}
@@ -515,7 +516,19 @@ class UITest: XCTestCase {
 	final func createMedication(_ medication: Medication, save: Bool = true) {
 		openMedicationsScreen()
 
-		app.buttons["+"].tap()
+		let addButton = app.navigationBars.buttons["+"]
+		let ready = NSPredicate(format: "exists == true AND hittable == true")
+		if !ready.evaluate(with: addButton) {
+			let expectation = XCTNSPredicateExpectation(predicate: ready, object: addButton)
+			_ = XCTWaiter.wait(for: [expectation], timeout: 5)
+		}
+		guard addButton.exists && addButton.isHittable else {
+			attachInputDiagnostics()
+			XCTFail("Medication creation button did not become hittable")
+			return
+		}
+		// The same button also has a long-press shortcut. Exercise its quick press.
+		addButton.press(forDuration: 0.05)
 
 		let nameField = app.textFields["medication name"]
 		setTextFor(field: nameField, to: medication.name)

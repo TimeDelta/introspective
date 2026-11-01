@@ -568,6 +568,7 @@ final class RecordActivitiesUITests: UITest {
 		app.alerts.buttons["Yes"].tap()
 
 		// then
+		waitForCount(2, in: app.tables["recordActivities"].cells)
 		XCTAssertEqual(app.tables.cells.allElementsBoundByIndex.count, 2)
 		XCTAssert(app.tables.cells.staticTexts[definition1.name].exists)
 		XCTAssert(!app.tables.cells.staticTexts[definition2.name].exists)
@@ -591,6 +592,7 @@ final class RecordActivitiesUITests: UITest {
 		app.buttons["Cancel"].tap() // clear search text
 
 		// then
+		waitForCount(3, in: app.tables["recordActivities"].cells)
 		XCTAssertEqual(app.tables.cells.allElementsBoundByIndex.count, 3)
 		XCTAssert(app.tables.cells.staticTexts[definition1.name].exists)
 		XCTAssert(app.tables.cells.staticTexts[definition2.name].exists)
