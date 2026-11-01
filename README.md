@@ -39,6 +39,13 @@ Of course, this ordering ignores what conditions you have and how they matter bu
 ### Custom queries
 Explore your data in a unique way by querying for exactly the records in which you're interested. Specify complex conditions on any attribute for any supported data type by combining them using "and", "or", and condition groups (full boolean algebra support with grouping). Even better, you can limit your query further by looking at other data types within the query. For example, you can find all moods that were recorded within a half hour of socializing.
 
+### Metric context
+Record dated context such as illness, travel, unusual exercise, or a device not
+being worn, and read the specific limitations beside Activity Levels and Lost
+Items. Entries can apply to one metric or all metrics, include an optional time
+range and note, and be used in saved queries. See [Metric context](docs/metric-context.md)
+for recording, editing and reviewing instructions.
+
 ### Custom graphs
 Use custom queries to specify exactly which data points you want to graph. The following graphs are available:
   - Line Chart

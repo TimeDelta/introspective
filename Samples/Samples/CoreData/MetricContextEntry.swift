@@ -7,6 +7,7 @@ import DependencyInjection
 import Persistence
 
 public enum ContextMetric: String, CaseIterable {
+	// Append cases: saved selection restrictions persist their positions.
 	case all, activeEnergy, steps, workouts, lostItems
 	public var title: String {
 		switch self {
@@ -29,6 +30,7 @@ public enum ContextMetric: String, CaseIterable {
 }
 
 public enum ContextCategory: String, CaseIterable {
+	// Append cases: saved selection restrictions persist their positions.
 	case illness = "Illness", travel = "Travel", exercise = "Unusual exercise", device = "Device not worn"
 	case routine = "Routine change", medication = "Medication change", other = "Other"
 }
@@ -83,7 +85,10 @@ public final class MetricContextEntry: NSManagedObject, CoreDataSample, Searchab
 		var predicates: [NSPredicate] = []
 		if metric != .all { predicates.append(NSPredicate(format: "metricKey IN %@", [ContextMetric.all.rawValue, metric.rawValue])) }
 		if let interval = interval {
-			guard interval.duration > 0 else { request.predicate = NSPredicate(value: false); return request }
+			guard interval.duration > 0, interval.start.timeIntervalSinceReferenceDate.isFinite,
+				interval.end.timeIntervalSinceReferenceDate.isFinite else {
+				request.predicate = NSPredicate(value: false); return request
+			}
 			predicates.append(NSPredicate(format: "timestamp < %@ AND ((endDate != nil AND endDate > %@) OR (endDate == nil AND timestamp >= %@))", interval.end as NSDate, interval.start as NSDate, interval.start as NSDate))
 		}
 		request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
@@ -91,16 +96,39 @@ public final class MetricContextEntry: NSManagedObject, CoreDataSample, Searchab
 		return request
 	}
 	@discardableResult public static func record(category: ContextCategory, metric: ContextMetric, at date: Date, until end: Date? = nil, note: String? = nil) throws -> MetricContextEntry {
+		try validate(start: date, end: end)
+		let transaction = try injected(Database.self).viewContextTransaction(for: Self.self, sortedBy: "timestamp")
+		do {
+			let event = try transaction.new(Self.self)
+			event.populate(category: category, metric: metric, at: date, until: end, note: note)
+			try transaction.commit()
+			return try injected(Database.self).pull(savedObject: event)
+		} catch { transaction.reset(); throw error }
+	}
+	@discardableResult public func update(category: ContextCategory, metric: ContextMetric, at date: Date, until end: Date? = nil, note: String? = nil) throws -> MetricContextEntry {
+		try Self.validate(start: date, end: end)
+		let transaction = try injected(Database.self).viewContextTransaction(for: Self.self, sortedBy: "timestamp")
+		do {
+			let event = try transaction.pull(savedObject: self)
+			event.populate(category: category, metric: metric, at: date, until: end, note: note)
+			try transaction.commit()
+			return try injected(Database.self).pull(savedObject: event)
+		} catch { transaction.reset(); throw error }
+	}
+	public func delete() throws {
+		let transaction = try injected(Database.self).viewContextTransaction(for: Self.self, sortedBy: "timestamp")
+		do { try transaction.delete(self); try transaction.commit() }
+		catch { transaction.reset(); throw error }
+	}
+	private static func validate(start date: Date, end: Date?) throws {
 		guard date.timeIntervalSinceReferenceDate.isFinite else { throw GenericDisplayableError(title: "Choose a valid start time.") }
 		if let end = end {
 			guard end.timeIntervalSinceReferenceDate.isFinite && end >= date else { throw GenericDisplayableError(title: "The end must be after the start.") }
 		}
-		let transaction = try injected(Database.self).viewContextTransaction(for: Self.self, sortedBy: "timestamp")
-		let event = try transaction.new(Self.self)
-		event.timestamp = date; event.endDate = end == date ? nil : end
-		event.category = category.rawValue; event.metricKey = metric.rawValue; event.note = note
-		try transaction.commit()
-		return try injected(Database.self).pull(savedObject: event)
+	}
+	private func populate(category: ContextCategory, metric: ContextMetric, at date: Date, until end: Date?, note: String?) {
+		timestamp = date; endDate = end == date ? nil : end
+		self.category = category.rawValue; metricKey = metric.rawValue; self.note = note
 	}
 	public static let exportFileDescription = "Metric context"
 	public static func exportHeaderRow(to csv: CSVWriter) throws { try csv.write(row: ["Timestamp", "End", "Context", "Metric", "Note"], quotedAtIndex: { _ in true }) }
