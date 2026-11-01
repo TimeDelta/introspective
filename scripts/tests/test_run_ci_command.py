@@ -76,3 +76,26 @@ sys.exit(23)
                                      'import sys; print(sys.argv[1])', literal], capture_output=True, text=True)
             self.assertEqual(result.returncode, 0)
             self.assertEqual(log.read_text().strip(), literal)
+
+    def test_assertions_and_failed_cases_remain_visible_after_framework_errors(self):
+        with tempfile.TemporaryDirectory() as directory:
+            log = Path(directory) / 'tests.log'
+            messages = [
+                'XCTest issue in -[QueryTests testRestore]: XCTAssertEqual failed: 2 != 1',
+                'QueryTests.swift:42: error: -[QueryTests testRestore] : XCTAssertEqual failed',
+                "Test Case '-[QueryTests testRestore]' failed (0.010 seconds).",
+            ]
+            program = '''import sys
+for i in range(80): print('CoreData: error: startup diagnostic', i)
+for message in sys.argv[1:]: print(message)
+for i in range(500): print('timing', i)
+sys.exit(65)
+'''
+            result = subprocess.run([str(RUNNER), str(log), sys.executable, '-c', program, *messages],
+                                    capture_output=True, text=True)
+            self.assertEqual(result.returncode, 65)
+            for message in messages:
+                self.assertIn(message, result.stderr)
+            self.assertNotIn('CoreData: error:', result.stderr)
+            self.assertEqual(log.read_text().count('CoreData: error:'), 80)
+            self.assertLessEqual(len(result.stderr.splitlines()), 120)

@@ -30,7 +30,7 @@ final class MetricContextViewController: UITableViewController {
 		header.addSubview(scope); tableView.tableHeaderView = header
 	}
 	override func viewWillAppear(_ animated: Bool) { super.viewWillAppear(animated); reload() }
-	@objc private func reload() {
+	@objc func reload() {
 		do {
 			let selected = scope.selectedSegmentIndex == 0 ? interval.map {
 				tracksPresent ? DateInterval(start: $0.start, end: max($0.start, Date())) : $0

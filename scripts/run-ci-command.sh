@@ -23,8 +23,13 @@ if run_logged_command "$@"; then
   tail -n 40 "$ci_command_log"
 else
   ci_command_status=$?
-  # Timing summaries and warnings can push the actual compiler error out of the tail.
-  awk '/error:|fatal error:|TEST.*FAILED/ { print; count++; if (count == 30) exit }' "$ci_command_log" >&2
+  # Keep actual assertions and failed case names visible even when startup
+  # Core Data diagnostics consume the first error lines and artifact upload fails.
+  # The complete log still retains those framework diagnostics.
+  awk '/CoreData: error:/ && !/XCTAssert|XCTest issue/ { next }
+    /error:|fatal error:|XCTest issue|Test [Cc]ase.*failed|TEST.*FAILED/ {
+      print; count++; if (count == 30) exit
+    }' "$ci_command_log" >&2
   tail -n 90 "$ci_command_log" >&2
   exit "$ci_command_status"
 fi
