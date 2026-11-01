@@ -10,11 +10,13 @@ import XCTest
 import SwiftyMocky
 import Hamcrest
 import SwiftDate
+import Presentr
 
 @testable import Introspective
 @testable import Attributes
 @testable import Common
 @testable import Persistence
+@testable import Queries
 @testable import SampleGroupInformation
 @testable import Samples
 
@@ -52,6 +54,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 	final override func tearDown() {
 		if let controller = controller {
+			controller.closeResults()
 			NotificationCenter.default.removeObserver(controller)
 			if let table = controller.viewIfLoaded as? UITableView {
 				table.dataSource = nil
@@ -169,6 +172,186 @@ final class ResultsViewControllerUnitTests: UnitTest {
 	}
 
 	// MARK: - viewDidLoad()
+
+	func testSortChooserNotificationSortsTheDisplayedSamples() throws {
+		let attribute: Attribute = IntegerAttribute(id: 0, name: "value")
+		let order = ComparisonResult.orderedAscending
+		controller.samples = SampleCreatorTestUtil.createSamplesWithoutDateAttribute(withValues: [3, 1, 2], for: attribute)
+		controller.viewDidLoad()
+		Given(mockUiUtil, .value(for: .value(.attribute), from: .any, keyIsOptional: .any, willReturn: attribute))
+		Given(mockUiUtil, .value(for: .value(.comparisonResult), from: .any, keyIsOptional: .any, willReturn: order))
+		NotificationCenter.default.post(name: Notification.Name("sortSamplesBy"), object: controller)
+		XCTAssertEqual(try controller.samples.map { try $0.value(of: attribute) as? Int }, [1, 2, 3])
+		XCTAssertEqual(controller.tableView(tableView, numberOfRowsInSection: 1), 3)
+	}
+
+	func testSupersededSortCannotPublishAfterTheLatestSort() throws {
+		let attribute = IntegerAttribute(id: 0, name: "value")
+		let samples = SampleCreatorTestUtil.createSamplesWithoutDateAttribute(withValues: [3, 1, 2], for: attribute)
+		controller.samples = samples
+		var jobs = [() -> Void]()
+		Perform(mockAsyncUtil, .run(qos: .any, code: .any, perform: { _, code in jobs.append(code) }))
+		controller.sortResults(by: attribute, order: .orderedAscending)
+		controller.sortResults(by: attribute, order: .orderedDescending)
+		XCTAssertEqual(jobs.count, 2)
+		guard jobs.count == 2 else { return }
+		jobs[1]()
+		jobs[0]()
+		XCTAssertEqual(try controller.samples.map { try $0.value(of: attribute) as? Int }, [3, 2, 1])
+		XCTAssertEqual(controller.tableView(tableView, numberOfRowsInSection: 1), 3)
+	}
+
+	func testCancellingSortKeepsPreviouslyPublishedRows() throws {
+		let attribute = IntegerAttribute(id: 0, name: "value")
+		controller.samples = SampleCreatorTestUtil.createSamplesWithoutDateAttribute(withValues: [3, 1, 2], for: attribute)
+		var job: (() -> Void)?
+		Perform(mockAsyncUtil, .run(qos: .any, code: .any, perform: { _, code in job = code }))
+		controller.sortResults(by: attribute, order: .orderedAscending)
+		controller.cancelSorting()
+		try XCTUnwrap(job)()
+		XCTAssertEqual(try controller.samples.map { try $0.value(of: attribute) as? Int }, [3, 1, 2])
+		XCTAssertEqual(controller.tableView(tableView, numberOfRowsInSection: 1), 3)
+	}
+
+	func testNewSamplesInvalidateAQueuedSortOfThePreviousSamples() throws {
+		let attribute = IntegerAttribute(id: 0, name: "value")
+		controller.samples = SampleCreatorTestUtil.createSamplesWithoutDateAttribute(withValues: [3, 1, 2], for: attribute)
+		var jobs = [() -> Void]()
+		Perform(mockAsyncUtil, .run(qos: .any, code: .any, perform: { _, code in jobs.append(code) }))
+		controller.sortResults(by: attribute, order: .orderedAscending)
+		controller.samples = SampleCreatorTestUtil.createSamplesWithoutDateAttribute(withValues: [8, 7], for: attribute)
+		XCTAssertEqual(jobs.count, 2)
+		guard jobs.count == 2 else { return }
+		jobs[1](); jobs[0]()
+		XCTAssertEqual(try controller.samples.map { try $0.value(of: attribute) as? Int }, [7, 8])
+		XCTAssertEqual(controller.tableView(tableView, numberOfRowsInSection: 1), 2)
+	}
+
+	func testSearchTextChangedDuringSortIsAppliedToPublishedResults() throws {
+		let hidden = searchableCoreDataSampleMock(matches: false)
+		let visible = searchableCoreDataSampleMock(matches: true)
+		let attribute = IntegerAttribute(id: 0, name: "value")
+		let hiddenValue: Int = 1, visibleValue: Int = 2
+		Given(hidden, .value(of: .any, willReturn: hiddenValue))
+		Given(visible, .value(of: .any, willReturn: visibleValue))
+		controller.samples = [hidden, visible]
+		var job: (() -> Void)?
+		Perform(mockAsyncUtil, .run(qos: .any, code: .any, perform: { _, code in job = code }))
+		controller.sortResults(by: attribute, order: .orderedDescending)
+		controller.setSearchText("visible")
+		controller.updateSearchResults(for: UISearchController())
+		try XCTUnwrap(job)()
+		XCTAssertEqual(controller.samples.count, 2)
+		XCTAssertEqual(controller.tableView(tableView, numberOfRowsInSection: 1), 1)
+		Verify(visible, .matchesSearchString(.value("visible")))
+	}
+
+	func testClosingResultsInvalidatesQueuedSortAndLateSampleAssignment() throws {
+		let attribute = IntegerAttribute(id: 0, name: "value")
+		let samples = SampleCreatorTestUtil.createSamplesWithoutDateAttribute(withValues: [3, 1, 2], for: attribute)
+		controller.samples = samples
+		var job: (() -> Void)?
+		Perform(mockAsyncUtil, .run(qos: .any, code: .any, perform: { _, code in job = code }))
+		controller.sortResults(by: attribute, order: .orderedAscending)
+		controller.closeResults()
+		try XCTUnwrap(job)()
+		controller.samples = samples
+		XCTAssertNil(controller.samples)
+	}
+
+	private func configureRefreshes(_ queries: [QueryMock]) {
+		controller.query = MoodQueryImpl()
+		Given(mockQueryFactory, .sampleTypeFor(.any, willReturn: MoodImpl.self))
+		Given(mockQueryFactory, .queryFor(.any, willProduce: { stub in
+			for query in queries { stub.return(query) }
+		}))
+	}
+
+	func testOutOfOrderRefreshesPublishOnlyTheLatestQueryResults() throws {
+		let first = QueryMock(), second = QueryMock()
+		configureRefreshes([first, second])
+		var callbacks = [(QueryResult?, Error?) -> Void]()
+		for query in [first, second] {
+			Perform(query, .runQuery(callback: .any, perform: { callbacks.append($0) }))
+		}
+		controller.refreshQuery(); controller.refreshQuery()
+		XCTAssertEqual(callbacks.count, 2)
+		guard callbacks.count == 2 else { return }
+		let attribute = IntegerAttribute(id: 0, name: "value")
+		let old = SampleCreatorTestUtil.createSamplesWithoutDateAttribute(withValues: [1], for: attribute)
+		let latest = SampleCreatorTestUtil.createSamplesWithoutDateAttribute(withValues: [2], for: attribute)
+		callbacks[1](SampleQueryResult(latest), nil)
+		callbacks[0](SampleQueryResult(old), nil)
+		callbacks[0](nil, GenericError("Superseded refresh failed"))
+		XCTAssertTrue((controller.samples.first as AnyObject?) === latest.first)
+		Verify(first, .once, .stop())
+		Verify(second, .once, .runQuery(callback: .any))
+	}
+
+	func testClosingResultsStopsRefreshAndIgnoresItsLateCallback() throws {
+		let query = QueryMock()
+		configureRefreshes([query])
+		var callback: ((QueryResult?, Error?) -> Void)?
+		Perform(query, .runQuery(callback: .any, perform: { callback = $0 }))
+		controller.refreshQuery()
+		controller.closeResults()
+		let samples = SampleCreatorTestUtil.createSamplesWithoutDateAttribute(withValues: [1], for: IntegerAttribute(id: 0, name: "value"))
+		try XCTUnwrap(callback)(SampleQueryResult(samples), nil)
+		XCTAssertNil(controller.samples)
+		Verify(query, .once, .stop())
+	}
+
+	func testExternalSampleReplacementInvalidatesPendingRefresh() throws {
+		let query = QueryMock()
+		configureRefreshes([query])
+		var callback: ((QueryResult?, Error?) -> Void)?
+		Perform(query, .runQuery(callback: .any, perform: { callback = $0 }))
+		controller.refreshQuery()
+		let attribute = IntegerAttribute(id: 0, name: "value")
+		let old = SampleCreatorTestUtil.createSamplesWithoutDateAttribute(withValues: [1], for: attribute)
+		let latest = SampleCreatorTestUtil.createSamplesWithoutDateAttribute(withValues: [2], for: attribute)
+		controller.samples = latest
+		try XCTUnwrap(callback)(SampleQueryResult(old), nil)
+		XCTAssertTrue((controller.samples.first as AnyObject?) === latest.first)
+		Verify(query, .once, .stop())
+	}
+
+	func testBackgroundRefreshPublishesInformationOnMain() throws {
+		let query = QueryMock()
+		configureRefreshes([query])
+		var callback: ((QueryResult?, Error?) -> Void)?
+		Perform(query, .runQuery(callback: .any, perform: { callback = $0 }))
+		controller.refreshQuery()
+		let completion = try XCTUnwrap(callback)
+		let information = mockInformation(count: 1)[0]
+		Given(information, .name(getter: "Main queue probe"))
+		Perform(information, .compute(forSamples: .any, perform: { _ in XCTAssertTrue(Thread.isMainThread) }))
+		controller.information = [information]
+		let samples = SampleCreatorTestUtil.createSamplesWithoutDateAttribute(withValues: [1], for: IntegerAttribute(id: 0, name: "value"))
+		let published = expectation(description: "Main queue published background completion")
+		DispatchQueue.global().async {
+			completion(SampleQueryResult(samples), nil)
+			DispatchQueue.main.async { published.fulfill() }
+		}
+		wait(for: [published], timeout: 2)
+		XCTAssertTrue((controller.samples.first as AnyObject?) === samples.first)
+		Verify(information, .compute(forSamples: .any))
+	}
+
+	func testQueuedRefreshDoesNotRetainClosedResultsController() throws {
+		let query = QueryMock()
+		configureRefreshes([query])
+		controller.refreshQuery()
+		let captured = ArgumentCaptor<(QueryResult?, Error?) -> Void>()
+		Verify(query, .runQuery(callback: .capturing(captured)))
+		let callback = try XCTUnwrap(captured.value)
+		weak var released = controller
+		controller.closeResults()
+		mockUiUtil.resetMock(); mockAsyncUtil.resetMock()
+		controller = nil
+		XCTAssertNil(released)
+		callback(nil, GenericError("Late error"))
+	}
 
 	func testGivenNoBackButtonTitle_viewDidLoad_setsBackButtonTitleToQuery() {
 		// given
@@ -844,6 +1027,56 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		Verify(mockUiUtil, .contextualAction(style: .value(.normal), title: .value("🔍 Nearby"), handler: .any))
 		Verify(hidden, .never, .dates())
 		Verify(visible, .once, .dates())
+	}
+
+	private func openNearbyChooser() throws -> (SelectDurationViewControllerImpl, QueryMock, Date, Date) {
+		let earlier = Date(timeIntervalSince1970: 1_700_000_000)
+		let later = earlier.addingTimeInterval(10_000)
+		controller.samples = SampleCreatorTestUtil.createSamples(withDates: [earlier, later])
+		let chooser = SelectDurationViewControllerImpl()
+		let query = QueryMock()
+		let destination = ResultsViewControllerMock()
+		Given(mockSampleFactory, .allTypes(willReturn: [MoodImpl.self]))
+		Given(mockQueryFactory, .queryFor(.any, willReturn: query))
+		Given(mockUiUtil, .controller(named: .value("durationChooser"), from: .value("Util"), as: .value(UIViewController.self), willReturn: chooser))
+		Given(mockUiUtil, .controller(named: .value("results"), from: .any, as: .value(UIViewController.self), willReturn: destination))
+		Given(mockUiUtil, .customPresenter(width: .any, height: .any, center: .any, willReturn: Presentr(presentationType: .alert)))
+		Given(mockUiUtil, .alert(title: .any, message: .any, preferredStyle: .any, willReturn: UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)))
+		Given(mockUiUtil, .alertAction(title: .any, style: .any, handler: .any, willReturn: UIAlertAction(title: "Mood", style: .default), UIAlertAction(title: "Cancel", style: .cancel)))
+		Given(mockUiUtil, .contextualAction(style: .any, title: .any, handler: .any, willReturn: UIContextualAction()))
+		Given(mockUiUtil, .value(for: .value(.duration), from: .any, keyIsOptional: .any, willReturn: TimeDuration(60)))
+		var handlers = [UIContextualAction.Handler]()
+		var chooseType: ((UIAlertAction) -> Void)?
+		Perform(mockUiUtil, .contextualAction(style: .any, title: .any, handler: .any, perform: { _, _, handler in handlers.append(handler) }))
+		Perform(mockUiUtil, .alertAction(title: .value(MoodImpl.name), style: .value(.default), handler: .any, perform: { _, _, handler in chooseType = handler }))
+		// Building another row's actions must not change the first action's source.
+		for row in 0..<2 {
+			_ = controller.tableView(tableView, trailingSwipeActionsConfigurationForRowAt: IndexPath(row: row, section: 1))
+		}
+		try XCTUnwrap(handlers.first)(UIContextualAction(), UIView(), { _ in })
+		try XCTUnwrap(chooseType)(UIAlertAction())
+		return (chooser, query, later, earlier)
+	}
+
+	func testNearbyDurationNotificationIsScopedToTheOpenedChooserAndConsumedOnce() throws {
+		let (chooser, query, _, _) = try openNearbyChooser()
+		let name = ResultsViewControllerImpl.choseSearchNearbyDuration
+		NotificationCenter.default.post(name: name, object: SelectDurationViewControllerImpl())
+		Verify(query, .never, .runQuery(callback: .any))
+		NotificationCenter.default.post(name: name, object: chooser)
+		NotificationCenter.default.post(name: name, object: chooser)
+		Verify(query, .once, .runQuery(callback: .any))
+	}
+
+	func testNearbyActionRetainsItsOwnDatesWhenOtherRowActionsAreBuilt() throws {
+		let (chooser, query, selected, other) = try openNearbyChooser()
+		NotificationCenter.default.post(name: ResultsViewControllerImpl.choseSearchNearbyDuration, object: chooser)
+		let expression = try XCTUnwrap(query.expression)
+		let sample = AnySample(attributes: [CommonSampleAttributes.timestamp])
+		sample.set(dates: [.start: selected])
+		XCTAssertTrue(try expression.evaluate([.sample: sample]))
+		sample.set(dates: [.start: other])
+		XCTAssertFalse(try expression.evaluate([.sample: sample]))
 	}
 
 	func testGivenSampleEditedNotification_editedSample_editsCorrectSample() {

@@ -60,68 +60,10 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	public final var backButtonTitle: String?
 
 	public final var query: Query?
+	private var storedSamples: [Sample]?
 	public final var samples: [Sample]! {
-		didSet {
-			guard !failed else { return }
-			guard samples != nil else { return }
-
-			if !initialSampleSortDone {
-				guard !samples.isEmpty else {
-					viewIsReady()
-					DispatchQueue.main.async { [weak self] in
-						guard let self = self else { return }
-						self.showError(
-							title: "No results",
-							message: nil,
-							onDismiss: { [weak self] _ in self?.popFromNavigationController() }
-						)
-					}
-					return
-				}
-
-				if let _ = samples as? [SearchableSample] {
-					searchController.searchResultsUpdater = self
-					searchController.obscuresBackgroundDuringPresentation = false
-					searchController.searchBar.placeholder = "Search \(type(of: samples[0]).name) entries"
-					searchController.hidesNavigationBarDuringPresentation = false
-					navigationItem.searchController = searchController
-					navigationItem.hidesSearchBarWhenScrolling = false
-					definesPresentationContext = true
-				} else {
-					DispatchQueue.main.async { [weak self] in
-						self?.searchController.searchBar.isHidden = true
-					}
-				}
-
-				let factory = injected(SampleGroupInformationFactory.self)
-				let countInformation = factory.initInformation(CountInformation.self, samples[0].attributes[0])
-				if !information.contains(where: { $0.name == countInformation.name }) {
-					information.append(countInformation)
-				}
-
-				initialSampleSortDone = true
-				injected(AsyncUtil.self).run(qos: .userInteractive) { [weak self] in
-					guard let self = self, let samples = self.samples, let first = samples.first else { return }
-					let dateAttributes = first.attributes.filter { $0 is DateAttribute }
-					guard !dateAttributes.isEmpty else {
-						self.filterSamples()
-						self.viewIsReady()
-						return
-					}
-					self.sortAttribute = dateAttributes[0]
-					self.sortOrder = .orderedDescending
-					self.sortTask = DispatchWorkItem(block: {})
-					self.sort(by: Date.self)
-					self.sortTask = nil
-					self.filterSamples()
-					self.viewIsReady()
-				}
-			} else {
-				injected(AsyncUtil.self).run(qos: .userInteractive) { [weak self] in
-					self?.filterSamples()
-				}
-			}
-		}
+		get { storedSamples }
+		set { resultsOnMain { [weak self] in self?.acceptSamples(newValue) } }
 	}
 
 	// public for testing purposes
@@ -130,15 +72,18 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	// MARK: Editing
 
-	private final var lastSelectedRowIndex: Int!
-	private final var lastSelectedUnfilteredRowIndex: Int!
+	private var selectedEditingSample: Sample?
 	private final var informationEditIndex: Int!
 
 	// MARK: Sorting
 
 	private final var sortAttribute: Attribute?
 	private final var sortOrder: ComparisonResult?
-	private final var sortTask: DispatchWorkItem?
+	private var sortWork: ResultsWork?
+	private var queryWork: ResultsWork?
+	private var activeRefreshQuery: Query?
+	private var isClosed = false
+	private var publishedSort: (Attribute?, ComparisonResult?) = (nil, nil)
 	private final var sortActionSheet: UIAlertController?
 	private final var sortController: SortResultsViewController?
 	private final var initialSampleSortDone = false
@@ -150,7 +95,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	private final var filteredSamples: [Sample]! {
 		didSet {
 			recomputeInformation()
-			DispatchQueue.main.async { [weak self] in self?.tableView.reloadData() }
+			if isViewLoaded { tableView.reloadData() }
 		}
 	}
 
@@ -158,6 +103,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	private final var selectedSearchNearbySampleDates = [DateType: Date]()
 	private final var selectedSearchNearbySampleType: Sample.Type!
+	private weak var nearbyDurationChooser: UIViewController?
 
 	// MARK: Other
 
@@ -183,7 +129,6 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		observe(selector: #selector(saveEditedInformation), name: .editedInformation, object: self)
 		observe(selector: #selector(sortSamplesBy), name: Me.sortSamples)
 		observe(selector: #selector(editedSample), name: Me.editedSample)
-		observe(selector: #selector(searchNearby), name: Me.choseSearchNearbyDuration)
 
 		navigationItem.setRightBarButton(actionsButton, animated: false)
 
@@ -193,14 +138,21 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		extendedLayoutIncludesOpaqueBars = true
 
 		tableView.flashScrollIndicators()
-		finishedLoading = true
+		finishedLoading = !waiting()
 
 		tableView.rowHeight = UITableView.automaticDimension
 		tableView.estimatedRowHeight = 44
 	}
 
 	deinit {
+		sortWork?.cancel()
+		queryWork?.cancel()
 		NotificationCenter.default.removeObserver(self)
+	}
+
+	public override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		if isMovingFromParent || isBeingDismissed { closeResults() }
 	}
 
 	public final override func showError(
@@ -278,7 +230,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		let row = indexPath.row
 		let section = indexPath.section
 
-		if waiting() || sortTask != nil {
+		if waiting() {
 			return tableView.dequeueReusableCell(withIdentifier: "waitingCell", for: indexPath)
 		}
 
@@ -388,14 +340,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			showEditInformationView(indexPath)
 		} else {
 			let sample = filteredSamples[indexPath.row]
-			// Distinct recorded objects can have equal values. Preserve the exact
-			// selected instance before falling back to equality for value samples.
-			let identicalIndex = samples.firstIndex { ($0 as AnyObject) === (sample as AnyObject) }
-			guard let allSamplesIndex = identicalIndex ?? samples.firstIndex(where: { $0.equalTo(sample) }) else {
-				Me.log.error("Unable to find filtered sample in original samples")
-				return
-			}
-			lastSelectedUnfilteredRowIndex = allSamplesIndex
+			selectedEditingSample = sample
 			if filteredSamples[indexPath.row] is Activity {
 				showEditActivityView(indexPath)
 			} else if filteredSamples[indexPath.row] is Mood {
@@ -468,13 +413,14 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	}
 
 	private final func getSearchNearbyAction(at indexPath: IndexPath) -> UIContextualAction? {
-		selectedSearchNearbySampleDates = filteredSamples[indexPath.row].dates()
-		guard selectedSearchNearbySampleDates.count > 0 else { return nil }
+		let dates = filteredSamples[indexPath.row].dates()
+		guard dates[.start] != nil else { return nil }
 
 		let action = injected(UiUtil.self).contextualAction(
 			style: .normal,
 			title: "🔍 Nearby"
-		) { action, view, completion in
+		) { [weak self] action, view, completion in
+			guard let self = self, !self.isClosed else { completion(false); return }
 			let actionSheet = injected(UiUtil.self).alert(
 				title: "Which data type?",
 				message: "Choose a type of data for which to search.",
@@ -486,14 +432,19 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				actionSheet.addAction(injected(UiUtil.self).alertAction(
 					title: sampleType.name,
 					style: .default
-				) { _ in
+				) { [weak self] _ in
+					guard let self = self, !self.isClosed else { return }
 					let controller = self.viewController(
 						named: "durationChooser",
 						fromStoryboard: "Util"
 					) as! SelectDurationViewController
 					controller.initialDuration = TimeDuration(30.minutes)
 					controller.notificationToSendOnAccept = Me.choseSearchNearbyDuration
+					NotificationCenter.default.removeObserver(self, name: Me.choseSearchNearbyDuration, object: nil)
+					self.selectedSearchNearbySampleDates = dates
 					self.selectedSearchNearbySampleType = sampleType
+					self.nearbyDurationChooser = controller
+					self.observe(selector: #selector(self.searchNearby), name: Me.choseSearchNearbyDuration, object: controller)
 					self.present(controller, using: SelectDurationViewControllerImpl.presenter)
 				})
 			}
@@ -527,15 +478,9 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 					let transaction = injected(Database.self).transaction()
 					try retryOnFail({ try transaction.delete(managedSample) }, maxRetries: 2)
 					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-					if goBackAfterDelete {
-						self.navigationController?.popViewController(animated: false)
-					} else {
-						let toRemove = self.filteredSamples.remove(at: indexPath.row)
-						self.samples.removeAll(where: { $0.equalTo(toRemove) })
-						self.tableView.deleteRows(at: [indexPath], with: .fade)
-						self.recomputeInformation()
-						self.tableView.reloadData()
-					}
+					let updated = (self.storedSamples ?? []).filter { ($0 as AnyObject) !== (managedSample as AnyObject) }
+					if goBackAfterDelete { self.done() }
+					else { self.acceptSamples(updated) }
 				} catch {
 					Me.log.error("Failed to delete sample: %@", errorInfo(error))
 					self.showError(
@@ -555,220 +500,66 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	// MARK: - Received Notifications
 
 	@objc private final func saveEditedInformation(notification: Notification) {
-		if let selectedInformation: SampleGroupInformation? = value(for: .information, from: notification) {
-			if let editIndex = informationEditIndex {
-				// selectedInformation can no longer be nil even though it's type is Optional
-				information[editIndex] = selectedInformation!
-				informationValues[editIndex] = nil
-				tableView.reloadRows(at: [IndexPath(row: editIndex, section: 0)], with: .automatic)
-				injected(AsyncUtil.self).run(qos: .userInteractive) { [weak self] in
-					guard let self = self else { return }
-					do {
-						self.informationValues[editIndex] =
-							try self.information[editIndex].compute(forSamples: self.filteredSamples)
-						DispatchQueue.main.async { [weak self] in
-							self?.tableView.reloadRows(at: [IndexPath(row: editIndex, section: 0)], with: .automatic)
-						}
-					} catch {
-						Me.log.error(
-							"Failed to compute %@ information: %@",
-							selectedInformation!.name,
-							errorInfo(error)
-						)
-						DispatchQueue.main.async { [weak self] in
-							self?.showError(
-								title: "Failed to compute \(selectedInformation!.name) information",
-								error: error
-							)
-						}
-					}
-				}
-			} else {
-				Me.log.error("Extra Information edit index was nil")
-				showError(title: "Failed to edit selected information")
-			}
-		}
+		guard !isClosed, let selected: SampleGroupInformation? = value(for: .information, from: notification),
+			let replacement = selected, let index = informationEditIndex, information.indices.contains(index) else { return }
+		information[index] = replacement
+		recomputeInformation()
+		if isViewLoaded { tableView.reloadData() }
 	}
 
 	@objc private final func editedSample(notification: Notification) {
-		if let sample: Sample? = value(for: .sample, from: notification) {
-			guard let editIndex = lastSelectedRowIndex else {
-				Me.log.error("edit index nil")
-				return
-			}
-			samples[lastSelectedUnfilteredRowIndex] = sample!
-			DispatchQueue.main.async { [weak self] in
-				self?.tableView.reloadRows(at: [IndexPath(row: editIndex, section: 1)], with: .automatic)
-			}
-			for i in 0 ..< informationValues.count {
-				informationValues[i] = nil
-			}
-			DispatchQueue.main.async { [weak self] in
-				// replace with waiting cell until all information is recomputed
-				self?.tableView.reloadSections(IndexSet(arrayLiteral: 0), with: .automatic)
-			}
-			injected(AsyncUtil.self).run(qos: .userInteractive) { [weak self] in
-				self?.recomputeInformation()
-				DispatchQueue.main.async { [weak self] in
-					self?.tableView.reloadSections(IndexSet(arrayLiteral: 0), with: .automatic)
-				}
-			}
+		guard !isClosed, let value: Sample? = value(for: .sample, from: notification), let replacement = value,
+			let selected = selectedEditingSample, var current = storedSamples else { return }
+		let index = current.firstIndex {
+			if ($0 as AnyObject) === (selected as AnyObject) { return true }
+			guard let candidate = $0 as? NSManagedObject, let record = selected as? NSManagedObject,
+				!record.objectID.isTemporaryID else { return false }
+			return candidate.objectID == record.objectID
 		}
+		guard let matchingIndex = index else { return } // The edited record may have left a refreshed result set.
+		current[matchingIndex] = replacement
+		selectedEditingSample = replacement
+		acceptSamples(current)
 	}
 
 	@objc private final func sortSamplesBy(notification: Notification) {
-		guard let attribute: Attribute? = value(for: .attribute, from: notification) else { return }
-		guard let order: ComparisonResult? = value(for: .comparisonResult, from: notification) else { return }
-		sortOrder = order
-		sortAttribute = attribute
-
-		sortActionSheet = UIAlertController(
-			title: "Sorting by \(sortAttribute!.name)",
-			message: nil,
-			preferredStyle: .actionSheet
-		)
-		sortActionSheet?.addAction(UIAlertAction(title: "Cancel", style: .cancel) { [weak self] _ in
-			guard let self = self else { return }
-			self.sortTask?.cancel()
-			self.sortTask = nil
-			self.tableView.reloadData()
-		})
-		sortController?.dismiss(animated: false, completion: {
-			self.present(self.sortActionSheet!, animated: false, completion: nil)
-
-			self.sortTask = DispatchWorkItem {
-				switch self.sortAttribute {
-				case is DoubleAttribute: self.sort(by: Double.self); break
-				case is IntegerAttribute: self.sort(by: Int.self); break
-				case is TextAttribute: self.sort(by: String.self); break
-				case is DateAttribute: self.sort(by: Date.self); break
-				case is DayOfWeekAttribute: self.sort(by: DayOfWeek.self); break
-				case is TimeOfDayAttribute: self.sort(by: TimeOfDay.self); break
-				case is DurationAttribute: self.sort(by: TimeDuration.self); break
-				case is FrequencyAttribute: self.sort(by: Frequency.self); break
-				case is DosageAttribute: self.sort(by: Dosage.self); break
-				default:
-					Me.log.error("Unknown sort attribute type: %@", String(describing: type(of: self.sortAttribute)))
-				}
-				self.sortTask = nil
-				DispatchQueue.main.async {
-					self.sortActionSheet?.dismiss(animated: false, completion: nil)
-					self.sortActionSheet = nil
-					self.tableView.reloadData()
-				}
-			}
-			DispatchQueue.global(qos: .userInteractive).async(execute: self.sortTask!)
-		})
+		guard let attribute: Attribute? = value(for: .attribute, from: notification),
+			let order: ComparisonResult? = value(for: .comparisonResult, from: notification),
+			let chosenAttribute = attribute, let chosenOrder = order else { return }
+		let start: () -> Void = { [weak self] in self?.sortResults(by: chosenAttribute, order: chosenOrder) }
+		if let picker = sortController {
+			sortController = nil
+			picker.dismiss(animated: false) { start() }
+		} else { start() }
 	}
 
 	@objc private final func searchNearby(notification: Notification) {
-		guard let duration: TimeDuration = value(for: .duration, from: notification) else {
-			Me.log.error("Missing duration for searchNearby notification")
-			return
-		}
+		guard !isClosed, let chooser = nearbyDurationChooser,
+			(notification.object as? UIViewController) === chooser,
+			let duration: TimeDuration = value(for: .duration, from: notification),
+			let sampleType = selectedSearchNearbySampleType else { return }
+		NotificationCenter.default.removeObserver(self, name: Me.choseSearchNearbyDuration, object: chooser)
+		nearbyDurationChooser = nil
 		do {
-			var query = try injected(QueryFactory.self).queryFor(selectedSearchNearbySampleType)
-			let start = selectedSearchNearbySampleDates[.start]
-			let end = selectedSearchNearbySampleDates[.end]
-			if let startDate = start, let endDate = end {
-				try buildNearbyQuery(
-					&query,
-					sampleType: selectedSearchNearbySampleType,
-					startDate: startDate,
-					endDate: endDate,
-					duration: duration
-				)
-			} else if let timestamp = start {
-				try buildNearbyQuery(
-					&query,
-					sampleType: selectedSearchNearbySampleType,
-					timestamp: timestamp,
-					duration: duration
-				)
-			} else {
-				Me.log.error("Sample type has no dates: %@", selectedSearchNearbySampleType.name)
-			}
-			let controller = viewController(named: "results") as! ResultsViewController
-			query.runQuery { (result: QueryResult?, error: Error?) in
-				if let error = error {
-					DispatchQueue.main.async {
-						controller.showError(title: "Failed to run query", error: error)
-					}
-					return
+			let query = try injected(QueryFactory.self).queryFor(sampleType)
+			try NearbyResultsQuery.configure(query, type: sampleType, dates: selectedSearchNearbySampleDates, duration: duration)
+			let destination = viewController(named: "results") as! ResultsViewController
+			destination.query = query
+			destination.backButtonTitle = "\(samples?.first?.attributedName ?? "Entry") Results"
+			query.runQuery { [weak destination] (result: QueryResult?, error: Error?) in
+				resultsOnMain { [weak destination] in
+					guard let destination = destination else { return }
+					if let controller = destination as? ResultsViewControllerImpl, controller.isClosed { return }
+					if let error = error, !(error is NoSamplesFoundQueryError) {
+						destination.showError(title: "Failed to run query", error: error)
+					} else { destination.samples = result?.samples ?? [] }
 				}
-				controller.samples = result?.samples
 			}
-			controller.query = query
-			controller.backButtonTitle = "\(samples[0].attributedName) Results"
-			pushToNavigationController(controller)
+			pushToNavigationController(destination)
 		} catch {
-			if let displayableError = error as? DisplayableError {
-				showError(
-					title: displayableError.displayableTitle,
-					message: displayableError.displayableDescription
-				)
-			} else {
-				showError(title: "Failed to generate query")
-			}
-		}
-	}
-
-	/// Build a query to search nearby a sample that has two dates.
-	private final func buildNearbyQuery(
-		_ query: inout Query,
-		sampleType: Sample.Type,
-		startDate: Date,
-		endDate: Date,
-		duration: TimeDuration
-	) throws {
-		let minDate = startDate - duration
-		let maxDate = endDate + duration
-		guard let startAttribute = sampleType.dateAttributes[.start] else {
-			Me.log.error("Missing start attribute for %@", sampleType.name)
-			throw GenericDisplayableError(
-				title: "Unable to search nearby",
-				description: "You found a bug: please report RVCbnq1"
-			)
-		}
-		if let endAttribute = sampleType.dateAttributes[.end] {
-			query.expression = AndExpression(
-				AfterDateAndTimeAttributeRestriction(restrictedAttribute: startAttribute, date: minDate),
-				BeforeDateAndTimeAttributeRestriction(restrictedAttribute: endAttribute, date: maxDate)
-			)
-		} else { // only one attribute on target sample type
-			query.expression = AndExpression(
-				AfterDateAndTimeAttributeRestriction(restrictedAttribute: startAttribute, date: minDate),
-				BeforeDateAndTimeAttributeRestriction(restrictedAttribute: startAttribute, date: maxDate)
-			)
-		}
-	}
-
-	/// Build a query to search nearby a sample that has only one date.
-	private final func buildNearbyQuery(
-		_ query: inout Query,
-		sampleType: Sample.Type,
-		timestamp: Date,
-		duration: TimeDuration
-	) throws {
-		let minDate = timestamp - duration
-		let maxDate = timestamp + duration
-		guard let startAttribute = sampleType.dateAttributes[.start] else {
-			Me.log.error("Missing start attribute for %@", sampleType.name)
-			throw GenericDisplayableError(
-				title: "Unable to search nearby",
-				description: "You found a bug: please report RVCbnq3"
-			)
-		}
-		if let endAttribute = sampleType.dateAttributes[.end] {
-			query.expression = AndExpression(
-				AfterDateAndTimeAttributeRestriction(restrictedAttribute: startAttribute, date: minDate),
-				BeforeDateAndTimeAttributeRestriction(restrictedAttribute: endAttribute, date: maxDate)
-			)
-		} else { // only one attribute on target sample type
-			query.expression = AndExpression(
-				AfterDateAndTimeAttributeRestriction(restrictedAttribute: startAttribute, date: minDate),
-				BeforeDateAndTimeAttributeRestriction(restrictedAttribute: startAttribute, date: maxDate)
-			)
+			if let displayable = error as? DisplayableError {
+				showError(title: displayable.displayableTitle, message: displayable.displayableDescription)
+			} else { showError(title: "Failed to generate query", error: error) }
 		}
 	}
 
@@ -791,11 +582,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		actionsController?.addAction(injected(UiUtil.self).alertAction(
 			title: "Add Information",
 			style: .default,
-			handler: { [weak self] _ in
-				injected(AsyncUtil.self).run(qos: .userInteractive) { [weak self] in
-					self?.addInformation()
-				}
-			}
+			handler: { [weak self] _ in self?.addInformation() }
 		))
 		if let _ = query {
 			actionsController?.addAction(injected(UiUtil.self).alertAction(
@@ -819,10 +606,24 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	}
 
 	@objc private final func done() {
-		query?.stop()
-		sortTask?.cancel()
-		samples = nil
+		closeResults()
 		navigationController?.popViewController(animated: false)
+	}
+
+	final func closeResults() {
+		guard !isClosed else { return }
+		query?.stop()
+		activeRefreshQuery?.stop(); activeRefreshQuery = nil
+		isClosed = true
+		sortWork?.cancel(); sortWork = nil
+		queryWork?.cancel(); queryWork = nil
+		dismissSortProgress()
+		storedSamples = nil
+		filteredSamples = nil
+		selectedEditingSample = nil
+		nearbyDurationChooser = nil
+		finishedLoading = false
+		NotificationCenter.default.removeObserver(self)
 	}
 
 	@objc private final func graph() {
@@ -845,23 +646,17 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	@objc private final func addInformation() {
 		do {
-			let attribute = type(of: samples[0]).defaultDependentAttribute
+			guard let first = storedSamples?.first else { return }
+			let attribute = type(of: first).defaultDependentAttribute
 			let applicableTypes = injected(SampleGroupInformationFactory.self)
 				.getApplicableInformationTypes(forAttribute: attribute)
+			guard let informationType = applicableTypes.first else { return }
 			let newInformation = injected(SampleGroupInformationFactory.self)
-				.initInformation(applicableTypes[0], attribute)
+				.initInformation(informationType, attribute)
 			information.append(newInformation)
 			informationValues.append(nil)
-			DispatchQueue.main.async {
-				self.tableView.reloadSections(IndexSet(arrayLiteral: 0), with: .automatic)
-			}
 			informationValues[information.count - 1] = try information.last!.compute(forSamples: filteredSamples)
-			DispatchQueue.main.async {
-				self.tableView.reloadRows(
-					at: [IndexPath(row: self.information.count - 1, section: 0)],
-					with: .automatic
-				)
-			}
+			if isViewLoaded { tableView.reloadData() }
 		} catch {
 			Me.log.error("Failed to compute information: %@", errorInfo(error))
 			showError(title: "You found a bug.", error: error)
@@ -896,14 +691,29 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		present(alert, animated: false, completion: nil)
 	}
 
-	private final func refreshQuery() {
-		query?.runQuery { result, error in
-			if let error = error {
-				Me.log.error("Refresh query failed: %@", errorInfo(error))
+	final func refreshQuery() {
+		guard !isClosed, let original = query else { return }
+		queryWork?.cancel(); queryWork = nil
+		activeRefreshQuery?.stop(); activeRefreshQuery = nil
+		original.stop()
+		let fresh: Query
+		do { fresh = try ResultsQuerySnapshot.copy(original, using: injected(QueryFactory.self)) }
+		catch { showError(title: "Unable to refresh query", error: error); return }
+		let work = ResultsWork()
+		queryWork = work
+		activeRefreshQuery = fresh
+		fresh.runQuery { [weak self, weak original] result, error in
+			resultsOnMain { [weak self, weak original] in
+				guard let self = self, let original = original, !self.isClosed, self.query === original,
+					self.queryWork === work, !work.isCancelled else { return }
+				self.queryWork = nil
+				self.activeRefreshQuery = nil
+				if let error = error, !(error is NoSamplesFoundQueryError) {
+					self.showError(title: "Refresh query failed", error: error)
+					return
+				}
+				self.acceptSamples(result?.samples ?? [])
 			}
-			self.initialSampleSortDone = false
-			self.samples = result?.samples
-			self.tableView.reloadData()
 		}
 	}
 
@@ -930,8 +740,6 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	}
 
 	private final func showEditActivityView(_ indexPath: IndexPath) {
-		lastSelectedRowIndex = indexPath.row
-
 		let controller = viewController(
 			named: "editActivity",
 			fromStoryboard: "RecordData"
@@ -951,8 +759,6 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	}
 
 	private final func showEditMoodView(_ indexPath: IndexPath) {
-		lastSelectedRowIndex = indexPath.row
-
 		let controller = viewController(named: "editMood", fromStoryboard: "Util") as! EditMoodTableViewController
 		guard let mood = filteredSamples[indexPath.row] as? Mood else {
 			Me.log.error("Failed to cast result sample as Mood")
@@ -969,8 +775,6 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	}
 
 	private final func showEditDoseView(_ indexPath: IndexPath) {
-		lastSelectedRowIndex = indexPath.row
-
 		let controller = viewController(
 			named: "medicationDoseEditor",
 			fromStoryboard: "RecordData"
@@ -987,8 +791,6 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	}
 
 	private final func showEditFatigueView(_ indexPath: IndexPath) {
-		lastSelectedRowIndex = indexPath.row
-
 		let controller = viewController(
 			named: "editFatigue",
 			fromStoryboard: "Util"
@@ -1008,8 +810,6 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	}
 
 	private final func showEditPainView(_ indexPath: IndexPath) {
-		lastSelectedRowIndex = indexPath.row
-
 		let controller = viewController(
 			named: "editPain",
 			fromStoryboard: "Util"
@@ -1030,10 +830,125 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	// MARK: - Helper functions
 
-	private final func viewIsReady() {
-		DispatchQueue.main.async { [weak self] in
-			self?.enableActionsButton()
+	private func acceptSamples(_ incoming: [Sample]?) {
+		guard !isClosed else { return }
+		queryWork?.cancel(); queryWork = nil
+		activeRefreshQuery?.stop(); activeRefreshQuery = nil
+		sortWork?.cancel()
+		sortWork = nil
+		dismissSortProgress()
+		storedSamples = incoming
+		guard !failed else { return }
+		guard let incoming = incoming else {
+			filteredSamples = nil
+			return
 		}
+		if !initialSampleSortDone, let first = incoming.first {
+			if let _ = incoming as? [SearchableSample] {
+				searchController.searchResultsUpdater = self
+				searchController.obscuresBackgroundDuringPresentation = false
+				searchController.searchBar.placeholder = "Search \(type(of: first).name) entries"
+				searchController.hidesNavigationBarDuringPresentation = false
+				navigationItem.searchController = searchController
+				navigationItem.hidesSearchBarWhenScrolling = false
+				definesPresentationContext = true
+			} else { searchController.searchBar.isHidden = true }
+			if let attribute = first.attributes.first {
+				let count = injected(SampleGroupInformationFactory.self).initInformation(CountInformation.self, attribute)
+				if !information.contains(where: { $0.name == count.name }) { information.append(count) }
+			}
+			sortAttribute = first.attributes.first { $0 is DateAttribute }
+			sortOrder = .orderedDescending
+			initialSampleSortDone = true
+		}
+		startSorting(incoming, showProgress: false)
+	}
+
+	/// Entry point shared by the sort chooser and controlled regression tests.
+	final func sortResults(by attribute: Attribute, order: ComparisonResult) {
+		guard !isClosed, let current = storedSamples else { return }
+		sortAttribute = attribute
+		sortOrder = order
+		startSorting(current, showProgress: true)
+	}
+
+	final func cancelSorting() {
+		guard sortWork != nil else { return }
+		sortWork?.cancel()
+		sortWork = nil
+		(sortAttribute, sortOrder) = publishedSort
+		dismissSortProgress()
+		if filteredSamples != nil { viewIsReady() }
+	}
+
+	private func startSorting(_ input: [Sample], showProgress: Bool) {
+		sortWork?.cancel()
+		dismissSortProgress()
+		let work = ResultsWork()
+		sortWork = work
+		finishedLoading = false
+		if isViewLoaded { disableActionsButton() }
+		let snapshot: ResultsSortSnapshot
+		do { snapshot = try ResultsSortSnapshot(samples: input, attribute: sortAttribute, order: sortOrder ?? .orderedDescending) }
+		catch {
+			(sortAttribute, sortOrder) = publishedSort
+			publishResults(input, for: work)
+			tellUserSortFailed()
+			return
+		}
+		if showProgress, viewIfLoaded?.window != nil {
+			let progress = UIAlertController(title: "Sorting by \(sortAttribute?.name ?? "date")", message: nil, preferredStyle: .actionSheet)
+			progress.addAction(UIAlertAction(title: "Cancel", style: .cancel) { [weak self] _ in
+				guard self?.sortWork === work else { return }
+				self?.cancelSorting()
+			})
+			progress.popoverPresentationController?.barButtonItem = actionsButton
+			sortActionSheet = progress
+			present(progress, animated: false)
+		}
+		injected(AsyncUtil.self).run(qos: .userInteractive) { [weak self] in
+			guard !work.isCancelled else { return }
+			do {
+				guard let indices = try snapshot.sort(using: work) else { return }
+				resultsOnMain { [weak self] in
+					guard let self = self, !self.isClosed, self.sortWork === work, !work.isCancelled else { return }
+					self.publishResults(indices.map { input[$0] }, for: work)
+				}
+			} catch {
+				resultsOnMain { [weak self] in
+					guard let self = self, self.sortWork === work, !work.isCancelled else { return }
+					(self.sortAttribute, self.sortOrder) = self.publishedSort
+					self.publishResults(input, for: work)
+					self.tellUserSortFailed()
+				}
+			}
+		}
+	}
+
+	private func publishResults(_ result: [Sample], for work: ResultsWork) {
+		guard !isClosed, sortWork === work, !work.isCancelled else { return }
+		sortWork = nil
+		storedSamples = result
+		publishedSort = (sortAttribute, sortOrder)
+		filterSamples()
+		viewIsReady()
+		dismissSortProgress()
+		if result.isEmpty {
+			DispatchQueue.main.async { [weak self] in
+				guard let self = self, !self.isClosed, self.sortWork == nil, self.storedSamples?.isEmpty == true else { return }
+				self.showError(title: "No results", message: nil, onDismiss: { [weak self] _ in self?.popFromNavigationController() })
+			}
+		}
+	}
+
+	private func dismissSortProgress() {
+		sortActionSheet?.dismiss(animated: false)
+		sortActionSheet = nil
+	}
+
+	private final func viewIsReady() {
+		finishedLoading = true
+		if isViewLoaded { enableActionsButton() }
 	}
 
 	private final func waiting() -> Bool {
@@ -1078,7 +993,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	}
 
 	private final func sortableAttributes() -> [Attribute] {
-		samples[0].attributes.filter {
+		(samples?.first?.attributes ?? []).filter {
 			self.isSortableAttribute($0)
 		}
 	}
@@ -1087,25 +1002,6 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		attribute is ComparableAttribute
 	}
 
-	private final func sort<Type: Comparable>(by type: Type.Type) {
-		do {
-			samples = try samples.sorted {
-				if self.sortTask == nil || self.sortTask!.isCancelled { return true }
-				let value1 = try $0.value(of: self.sortAttribute!) as? Type
-				let value2 = try $1.value(of: self.sortAttribute!) as? Type
-				if value1 == nil && value2 == nil { return true }
-				if value1 == nil { return true }
-				if value2 == nil { return false }
-				if self.sortOrder == .orderedAscending {
-					return value1! <= value2!
-				}
-				return value1! >= value2!
-			}
-		} catch {
-			Me.log.error("Failed to sort by %@: %@", String(describing: type), errorInfo(error))
-			tellUserSortFailed()
-		}
-	}
 
 	private final func tellUserSortFailed() {
 		showError(title: "Failed to sort")
@@ -1124,6 +1020,7 @@ extension ResultsViewControllerImpl: UISearchResultsUpdating {
 	}
 
 	public func updateSearchResults(for _: UISearchController) {
+		guard !isClosed, sortWork == nil else { return }
 		filterSamples()
 	}
 

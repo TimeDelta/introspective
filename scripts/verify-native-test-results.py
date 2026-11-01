@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""Check every declared test in the two native suites ran successfully, including cache hits."""
+"""Check every declared native test ran successfully, including cache hits."""
 import json
 from pathlib import Path
 import re
 import sys
 
 ROOT = Path(__file__).resolve().parent.parent
-SOURCES = [ROOT / 'MoodHealthTests/MoodHealthExchangeTests.swift', ROOT / 'MoodHealthTests/SavedQueryTests.swift']
+SOURCES = [ROOT / 'MoodHealthTests' / name for name in
+           ('MoodHealthExchangeTests.swift', 'SavedQueryTests.swift', 'ResultsProcessingTests.swift')]
 
 
 def expected_test_count():

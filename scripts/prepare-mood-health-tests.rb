@@ -16,10 +16,11 @@ unless target
   target.add_dependency(app)
 end
 
-saved_tests = 'SavedQueryTests.swift'
-if File.exist?(File.join(name, saved_tests)) && !target.source_build_phase.files_references.any? { |ref| ref.path == saved_tests }
+%w[SavedQueryTests.swift ResultsProcessingTests.swift].each do |test_file|
+  next if target.source_build_phase.files_references.any? { |ref| ref.path == test_file }
+  raise "Missing native test source #{test_file}" unless File.exist?(File.join(name, test_file))
   group = project.main_group.groups.find { |item| item.name == name }
-  target.add_file_references([group.new_file(saved_tests)])
+  target.add_file_references([group.new_file(test_file)])
 end
 
 # Compile the production transfer cells into the hostless lifecycle tests.
@@ -29,6 +30,7 @@ end
   Introspective/UI/RecordData/Activities/ActivityDefinitionTagsTableViewCell.swift
   Introspective/UI/ActiveImportTableViewCell.swift
   Introspective/UI/Settings/Export/ActiveExportTableViewCell.swift
+  Introspective/UI/Results/ResultsProcessing.swift
   TestSupport/UITestFixtures.swift
   TestSupport/UITestFixtureLoader.swift
 ].each do |path|
