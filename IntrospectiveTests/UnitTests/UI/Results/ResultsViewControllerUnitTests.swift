@@ -276,8 +276,9 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		XCTAssertNil(controller.samples)
 	}
 
-	private func configureRefreshes(_ queries: [QueryMock]) {
-		controller.query = MoodQueryImpl()
+	private func configureRefreshes(_ queries: [QueryMock], for subject: ResultsViewControllerImpl? = nil) {
+		let owner: ResultsViewControllerImpl = subject ?? controller
+		owner.query = MoodQueryImpl()
 		Given(mockQueryFactory, .sampleTypeFor(.any, willReturn: MoodImpl.self))
 		Given(mockQueryFactory, .queryFor(.any, willProduce: { stub in
 			for query in queries { stub.return(query) }
@@ -357,17 +358,28 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 	func testQueuedRefreshDoesNotRetainClosedResultsController() throws {
 		let query = QueryMock()
-		configureRefreshes([query])
-		controller.refreshQuery()
-		let captured = ArgumentCaptor<(QueryResult?, Error?) -> Void>()
-		Verify(query, .runQuery(callback: .capturing(captured)))
-		let callback = try XCTUnwrap(captured.value)
-		weak var released = controller
-		controller.closeResults()
-		mockUiUtil.resetMock(); mockAsyncUtil.resetMock()
-		controller = nil
+		var callback: ((QueryResult?, Error?) -> Void)?
+		weak var released: ResultsViewControllerImpl?
+		// Storyboard/UIKit temporaries must be created and released within the
+		// same pool. The setUp controller belongs to XCTest's outer pool.
+		try autoreleasepool {
+			let storyboard = UIStoryboard(name: "Results", bundle: nil)
+			let subject = try XCTUnwrap(storyboard.instantiateViewController(withIdentifier: "results") as? ResultsViewControllerImpl)
+			released = subject
+			configureRefreshes([query], for: subject)
+			subject.refreshQuery()
+			let captured = ArgumentCaptor<(QueryResult?, Error?) -> Void>()
+			Verify(query, .runQuery(callback: .capturing(captured)))
+			callback = try XCTUnwrap(captured.value)
+			subject.closeResults()
+			Verify(query, .once, .stop())
+			mockUiUtil.resetMock(); mockAsyncUtil.resetMock()
+		}
 		XCTAssertNil(released)
-		callback(nil, GenericError("Late error"))
+		// Keep the query and its captured callback alive across the assertion:
+		// a strong controller capture would still fail after draining the pool.
+		try XCTUnwrap(callback)(nil, GenericError("Late error"))
+		XCTAssertNil(released)
 	}
 
 	func testGivenNoBackButtonTitle_viewDidLoad_setsBackButtonTitleToQuery() {

@@ -51,18 +51,41 @@ final class ActivitySettingsUITests: UITest {
 	// MARK: - Helper Functions
 
 	private final func setAutoIgnore(enabled: Bool, seconds: String) {
-		var currentlyEnabled = autoIgnoreEnabledSwitch().value as? String == "1"
-		if currentlyEnabled {
-			setTextFor(field: autoIgnoreSecondsTextField(), to: seconds)
-		} else {
-			autoIgnoreEnabledSwitch().tap()
-			setTextFor(field: autoIgnoreSecondsTextField(), to: seconds)
-		}
+		guard setAutoIgnoreEnabled(true) else { return }
+		setTextFor(field: autoIgnoreSecondsTextField(), to: seconds)
+		setAutoIgnoreEnabled(enabled)
+	}
 
-		currentlyEnabled = autoIgnoreEnabledSwitch().value as? String == "1"
-		if currentlyEnabled != enabled {
-			autoIgnoreEnabledSwitch().tap()
+	@discardableResult
+	private func setAutoIgnoreEnabled(_ enabled: Bool) -> Bool {
+		let toggle = autoIgnoreEnabledSwitch()
+		let field = autoIgnoreSecondsTextField()
+		let expected = enabled ? "1" : "0"
+		guard waitForElement(toggle) else {
+			XCTFail("Auto-ignore switch did not appear")
+			return false
 		}
+		if toggle.value as? String != expected {
+			// Set a direction rather than toggling an assumed state. A completed
+			// tap alone did not guarantee a changed switch in simulator runs.
+			let off = toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.2, dy: 0.5))
+			let on = toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.8, dy: 0.5))
+			let start = enabled ? off : on
+			let end = enabled ? on : off
+			start.press(forDuration: 0.1, thenDragTo: end)
+		}
+		let ready = NSPredicate { _, _ in
+			(toggle.value as? String) == expected && field.exists && field.isEnabled == enabled
+		}
+		if !ready.evaluate(with: nil) {
+			let expectation = XCTNSPredicateExpectation(predicate: ready, object: nil)
+			let result = XCTWaiter.wait(for: [expectation], timeout: 5)
+			guard result == .completed || ready.evaluate(with: nil) else {
+				XCTFail("Auto-ignore did not reach enabled=\(enabled): switch=\(toggle.value ?? "missing"), field enabled=\(field.isEnabled)")
+				return false
+			}
+		}
+		return true
 	}
 
 	// MARK: - Element Functions
