@@ -1954,8 +1954,8 @@ final class SavedQueryTests: XCTestCase {
 		editor.loadViewIfNeeded()
 		let start = Date(timeIntervalSince1970: 1_700_000_023.5)
 		editor.startPicker.date = start; editor.startChanged()
-		editor.endPicker.date = start.addingTimeInterval(600); editor.includeEnd.isOn = true
-		editor.toggleEnd(); editor.endChanged(); editor.save()
+		editor.includeEnd.isOn = true; editor.toggleEnd()
+		editor.endPicker.date = start.addingTimeInterval(600); editor.endChanged(); editor.save()
 		let stored = try XCTUnwrap(injected(Database.self).query(MetricContextEntry.fetchRequest()).first)
 		XCTAssertEqual(stored.timestamp.timeIntervalSince1970, floor(start.timeIntervalSince1970 / 60) * 60)
 		XCTAssertEqual(stored.endDate?.timeIntervalSince1970, floor(start.addingTimeInterval(600).timeIntervalSince1970 / 60) * 60)
@@ -1999,6 +1999,206 @@ final class SavedQueryTests: XCTestCase {
 		let stored = try XCTUnwrap(injected(Database.self).query(MetricContextEntry.fetchRequest()).first)
 		XCTAssertGreaterThanOrEqual(stored.timestamp, before)
 		XCTAssertLessThanOrEqual(stored.timestamp, after)
+	}
+
+	func testMetricContextEditsAndDeletionPersistWithoutChangingOtherRecords() throws {
+		let existingMood = try mood(4)
+		let start = Date(timeIntervalSince1970: 1_700_000_023.125)
+		let entry = try MetricContextEntry.record(category: .device, metric: .steps, at: start, note: "Charging")
+		let identifier = entry.objectID
+		let end = start.addingTimeInterval(600.75)
+		let updated = try entry.update(category: .illness, metric: .all, at: start, until: end, note: "Resting, at home")
+		XCTAssertEqual(updated.objectID, identifier)
+		try reopen()
+		let stored = try XCTUnwrap(injected(Database.self).query(MetricContextEntry.fetchRequest()).first)
+		XCTAssertEqual(stored.timestamp, start); XCTAssertEqual(stored.endDate, end)
+		XCTAssertEqual(stored.category, ContextCategory.illness.rawValue)
+		XCTAssertEqual(stored.metric, .all); XCTAssertEqual(stored.note, "Resting, at home")
+		try stored.delete()
+		try reopen()
+		XCTAssertEqual(try injected(Database.self).count(MetricContextEntry.self), 0)
+		XCTAssertEqual(try container.viewContext.fetch(MoodImpl.fetchRequest()).first?.rating, 4)
+		_ = existingMood // Keep an unrelated pre-reopen record alive as well.
+	}
+
+	func testMetricContextRejectsInvalidDatesWithoutCreatingOrChangingRecords() throws {
+		let start = Date(timeIntervalSince1970: 1_700_000_000)
+		let entry = try MetricContextEntry.record(category: .travel, metric: .workouts, at: start, note: "Original")
+		for value in [Double.nan, Double.infinity, -Double.infinity] {
+			let invalid = Date(timeIntervalSinceReferenceDate: value)
+			XCTAssertThrowsError(try MetricContextEntry.record(category: .other, metric: .all, at: invalid))
+			XCTAssertThrowsError(try entry.update(category: .other, metric: .all, at: start, until: invalid))
+		}
+		XCTAssertThrowsError(try entry.update(category: .other, metric: .all, at: start, until: start.addingTimeInterval(-1)))
+		XCTAssertEqual(entry.timestamp, start); XCTAssertNil(entry.endDate)
+		XCTAssertEqual(entry.category, ContextCategory.travel.rawValue)
+		XCTAssertEqual(entry.metric, .workouts); XCTAssertEqual(entry.note, "Original")
+		XCTAssertEqual(try injected(Database.self).count(MetricContextEntry.self), 1)
+	}
+
+	func testMetricContextEqualBoundariesRemainPointsAndClearedNotesStayOptional() throws {
+		let start = Date(timeIntervalSince1970: 1_700_000_023.5)
+		let entry = try MetricContextEntry.record(category: .routine, metric: .lostItems, at: start, until: start)
+		XCTAssertNil(entry.endDate)
+		XCTAssertEqual(entry.dates(), [.start: start])
+		try entry.set(attribute: MetricContextEntry.noteAttribute, to: "Café routine")
+		XCTAssertTrue(entry.matchesSearchString("CAFE"))
+		XCTAssertTrue(entry.matchesSearchString("lost items"))
+		try entry.set(attribute: MetricContextEntry.noteAttribute, to: nil)
+		XCTAssertNil(try entry.value(of: MetricContextEntry.noteAttribute))
+		XCTAssertTrue(entry.attributeValuesAreValid())
+	}
+
+	func testMetricContextNonfiniteFilterIntervalsMatchNothing() throws {
+		let start = Date(timeIntervalSince1970: 1_700_000_000)
+		try MetricContextEntry.record(category: .other, metric: .all, at: start)
+		let request = MetricContextEntry.request(interval: DateInterval(start: start, duration: .infinity))
+		XCTAssertEqual(try injected(Database.self).count(request), 0)
+	}
+
+	func testMetricContextCategoryAndMetricRestrictionsSurviveSavedQueryReopen() throws {
+		let start = Date(timeIntervalSince1970: 1_700_000_000)
+		try MetricContextEntry.record(category: .device, metric: .steps, at: start, note: "Charging")
+		try MetricContextEntry.record(category: .device, metric: .workouts, at: start)
+		try MetricContextEntry.record(category: .travel, metric: .steps, at: start)
+		let query = try injected(QueryFactory.self).queryFor(MetricContextEntry.self)
+		query.expression = AndExpression(
+			EqualToSelectOneAttributeRestriction(restrictedAttribute: MetricContextEntry.categoryAttribute,
+				value: ContextCategory.device.rawValue, valueAttribute: MetricContextEntry.categoryAttribute),
+			EqualToSelectOneAttributeRestriction(restrictedAttribute: MetricContextEntry.metricAttribute,
+				value: ContextMetric.steps.rawValue, valueAttribute: MetricContextEntry.metricAttribute))
+		try dao.save(query, name: "Steps device context")
+		try reopen()
+		let restored = try XCTUnwrap(dao.getQueryWith(name: "Steps device context")).convert()
+		var completed = false
+		restored.runQuery { (result: QueryResult?, error: Error?) in
+			XCTAssertNil(error)
+			XCTAssertEqual(result?.samples.count, 1)
+			XCTAssertEqual((result?.samples.first as? MetricContextEntry)?.note, "Charging")
+			completed = true
+		}
+		XCTAssertTrue(completed)
+	}
+
+	@MainActor
+	func testMetricContextListKeepsHistoricalPeriodBoundaries() throws {
+		let start = Date(timeIntervalSince1970: 1_700_000_000)
+		try MetricContextEntry.record(category: .illness, metric: .all, at: start.addingTimeInterval(1), note: "Inside")
+		try MetricContextEntry.record(category: .travel, metric: .all, at: start.addingTimeInterval(101), note: "Outside")
+		let list = MetricContextViewController(metric: .steps, interval: DateInterval(start: start, duration: 100))
+		list.loadViewIfNeeded(); list.viewWillAppear(false)
+		XCTAssertEqual(list.tableView(list.tableView, numberOfRowsInSection: 0), 1)
+		let cell = list.tableView(list.tableView, cellForRowAt: IndexPath(row: 0, section: 0))
+		XCTAssertTrue(cell.textLabel?.text?.contains("Inside") == true)
+		XCTAssertTrue(list.tableView(list.tableView, titleForHeaderInSection: 0)?.contains("1 entries") == true)
+	}
+
+	@MainActor
+	func testMetricContextAllTimeScopeRetainsTheMetricFilter() throws {
+		let start = Date(timeIntervalSince1970: 1_700_000_000)
+		try MetricContextEntry.record(category: .illness, metric: .all, at: start)
+		try MetricContextEntry.record(category: .travel, metric: .steps, at: start.addingTimeInterval(-1))
+		try MetricContextEntry.record(category: .device, metric: .steps, at: start.addingTimeInterval(100))
+		try MetricContextEntry.record(category: .exercise, metric: .workouts, at: start)
+		let list = MetricContextViewController(metric: .steps, interval: DateInterval(start: start, duration: 100))
+		list.loadViewIfNeeded(); list.viewWillAppear(false)
+		XCTAssertEqual(list.tableView(list.tableView, numberOfRowsInSection: 0), 1)
+		let scope = try XCTUnwrap(list.tableView.tableHeaderView?.subviews.compactMap { $0 as? UISegmentedControl }.first)
+		scope.selectedSegmentIndex = 1; scope.sendActions(for: .valueChanged)
+		XCTAssertEqual(list.tableView(list.tableView, numberOfRowsInSection: 0), 3)
+		scope.selectedSegmentIndex = 0; scope.sendActions(for: .valueChanged)
+		XCTAssertEqual(list.tableView(list.tableView, numberOfRowsInSection: 0), 1)
+	}
+
+	@MainActor
+	func testMetricContextLivePeriodIncludesAnEntryAddedAfterOpening() throws {
+		let start = Date(timeIntervalSince1970: 1_700_000_000)
+		let list = MetricContextViewController(metric: .steps, interval: DateInterval(start: start, duration: 100), tracksPresent: true)
+		list.loadViewIfNeeded(); list.viewWillAppear(false)
+		XCTAssertEqual(list.tableView(list.tableView, numberOfRowsInSection: 0), 0)
+		try MetricContextEntry.record(category: .device, metric: .steps, at: Date())
+		list.viewWillAppear(false)
+		XCTAssertEqual(list.tableView(list.tableView, numberOfRowsInSection: 0), 1)
+	}
+
+	@MainActor
+	func testMetricContextListBoundsLoadedRowsWhileCountingEveryEntry() throws {
+		let start = Date(timeIntervalSince1970: 1_700_000_000)
+		for index in 0..<201 {
+			let entry = MetricContextEntry(context: container.viewContext)
+			entry.timestamp = start.addingTimeInterval(Double(index))
+			entry.category = ContextCategory.other.rawValue; entry.metricKey = ContextMetric.all.rawValue
+			entry.note = "Entry \(index)"
+		}
+		try container.viewContext.save()
+		let list = MetricContextViewController()
+		list.loadViewIfNeeded(); list.viewWillAppear(false)
+		XCTAssertEqual(list.tableView(list.tableView, numberOfRowsInSection: 0), 200)
+		XCTAssertTrue(list.tableView(list.tableView, titleForHeaderInSection: 0)?.contains("201 entries") == true)
+		XCTAssertTrue(list.tableView(list.tableView, cellForRowAt: IndexPath(row: 0, section: 0)).textLabel?.text?.contains("Entry 200") == true)
+	}
+
+	@MainActor
+	func testMetricContextEditorSavesSelectedCategoryMetricAndNoteToTheSameRecord() throws {
+		let start = Date(timeIntervalSince1970: 1_700_000_023.5)
+		let entry = try MetricContextEntry.record(category: .device, metric: .steps, at: start, note: "Original")
+		let editor = MetricContextEditor(entry: entry, metric: .steps)
+		editor.loadViewIfNeeded()
+		let categoryRow = try XCTUnwrap(ContextCategory.allCases.firstIndex(of: .illness))
+		let metricRow = try XCTUnwrap(ContextMetric.allCases.firstIndex(of: .lostItems))
+		editor.tableView(editor.tableView, didSelectRowAt: IndexPath(row: categoryRow, section: 0))
+		editor.tableView(editor.tableView, didSelectRowAt: IndexPath(row: metricRow, section: 1))
+		let cell = editor.tableView(editor.tableView, cellForRowAt: IndexPath(row: 0, section: 3))
+		let note = try XCTUnwrap(cell.contentView.subviews.compactMap { $0 as? UITextView }.first)
+		note.text = "Travelling, tired\nExtra context"
+		var savedID: NSManagedObjectID?
+		editor.onSave = { savedID = $0.objectID }
+		editor.save()
+		XCTAssertEqual(savedID, entry.objectID)
+		XCTAssertEqual(entry.timestamp, start, "Unedited timestamps keep their precision")
+		try reopen()
+		let stored = try XCTUnwrap(injected(Database.self).query(MetricContextEntry.fetchRequest()).first)
+		XCTAssertEqual(stored.category, ContextCategory.illness.rawValue)
+		XCTAssertEqual(stored.metric, .lostItems)
+		XCTAssertEqual(stored.note, "Travelling, tired\nExtra context")
+	}
+
+	@MainActor
+	func testAbandoningMetricContextEditsDoesNotMutateTheStoredEntry() throws {
+		let start = Date(timeIntervalSince1970: 1_700_000_023.5)
+		let entry = try MetricContextEntry.record(category: .device, metric: .steps, at: start, note: "Original")
+		let editor = MetricContextEditor(entry: entry, metric: .steps)
+		editor.loadViewIfNeeded()
+		editor.startPicker.date = start.addingTimeInterval(3600); editor.startChanged()
+		editor.includeEnd.isOn = true; editor.toggleEnd()
+		let cell = editor.tableView(editor.tableView, cellForRowAt: IndexPath(row: 0, section: 3))
+		try XCTUnwrap(cell.contentView.subviews.compactMap { $0 as? UITextView }.first).text = "Not saved"
+		XCTAssertEqual(entry.timestamp, start); XCTAssertNil(entry.endDate)
+		XCTAssertEqual(entry.note, "Original")
+		XCTAssertEqual(try injected(Database.self).count(MetricContextEntry.self), 1)
+	}
+
+	@MainActor
+	func testActivityLevelsExplainSpecificLimitationsBesideEachMetric() {
+		let controller = ActivityLevelsViewController()
+		XCTAssertEqual(controller.numberOfSections(in: controller.tableView), 3)
+		let footers = (0..<3).map { controller.tableView(controller.tableView, titleForFooterInSection: $0) ?? "" }
+		XCTAssertTrue(footers[0].contains("time worn"))
+		XCTAssertTrue(footers[1].contains("false steps"))
+		XCTAssertTrue(footers[2].contains("duplicate imports"))
+		XCTAssertTrue(footers[2].contains("Phone motion is not collected"))
+		XCTAssertTrue(footers[2].contains("not an ADHD or restfulness score"))
+	}
+
+	@MainActor
+	func testLostItemsExposeContextAndLimitationsAlongsideTheSummary() {
+		let controller = LostItemsViewController()
+		controller.loadViewIfNeeded()
+		XCTAssertEqual(controller.tableView(controller.tableView, numberOfRowsInSection: 0), 2)
+		let cell = controller.tableView(controller.tableView, cellForRowAt: IndexPath(row: 1, section: 0))
+		XCTAssertEqual(cell.textLabel?.text, "Context and limitations")
+		XCTAssertTrue(cell.detailTextLabel?.text?.contains("opportunities to lose or find") == true)
+		XCTAssertEqual(cell.accessoryType, .disclosureIndicator)
 	}
 
 

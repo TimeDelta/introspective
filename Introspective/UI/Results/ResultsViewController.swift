@@ -279,8 +279,12 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				return cell
 			case let context as MetricContextEntry:
 				let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
-				cell.textLabel?.text = context.category + " · " + context.metric.title + " · " + (context.note ?? "")
-				cell.detailTextLabel?.text = injected(CalendarUtil.self).string(for: context.timestamp, dateStyle: .medium, timeStyle: .short)
+				cell.textLabel?.text = context.category + " · " + context.metric.title + (context.note.flatMap { $0.isEmpty ? nil : " · " + $0 } ?? "")
+				var date = injected(CalendarUtil.self).string(for: context.timestamp, dateStyle: .medium, timeStyle: .short)
+				if let end = context.endDate { date += " – " + injected(CalendarUtil.self).string(for: end, dateStyle: .medium, timeStyle: .short) }
+				cell.detailTextLabel?.text = date
+				cell.textLabel?.numberOfLines = 0; cell.detailTextLabel?.numberOfLines = 0
+				cell.accessoryType = .disclosureIndicator
 				return cell
 			case let event as LostItemEvent:
 				let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
@@ -348,7 +352,15 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		} else {
 			let sample = filteredSamples[indexPath.row]
 			selectedEditingSample = sample
-			if filteredSamples[indexPath.row] is Activity {
+			if let entry = sample as? MetricContextEntry {
+				let editor = MetricContextEditor(entry: entry, metric: entry.metric)
+				editor.onSave = { [weak self] _ in
+					guard let self = self, !self.isClosed else { return }
+					if self.query != nil { self.refreshQuery() }
+					else { self.acceptSamples(self.storedSamples) }
+				}
+				pushToNavigationController(editor)
+			} else if filteredSamples[indexPath.row] is Activity {
 				showEditActivityView(indexPath)
 			} else if filteredSamples[indexPath.row] is Mood {
 				showEditMoodView(indexPath)

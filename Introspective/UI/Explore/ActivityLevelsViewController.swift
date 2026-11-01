@@ -48,7 +48,7 @@ final class ActivityLevelsViewController: UITableViewController {
 	}
 	@objc private func showAllContext() { showContext(.all) }
 	private func showContext(_ metric: ContextMetric) {
-		navigationController?.pushViewController(MetricContextViewController(metric: metric, interval: selectedInterval()), animated: true)
+		navigationController?.pushViewController(MetricContextViewController(metric: metric, interval: selectedInterval(), tracksPresent: true), animated: true)
 	}
 	@objc private func load() {
 		cancelQueries()
@@ -63,9 +63,7 @@ final class ActivityLevelsViewController: UITableViewController {
 			DispatchQueue.main.async {
 				guard let self = self, self.generation == token else { return }
 				if let error = error { self.values = ["Unavailable", "Unavailable", "Unavailable"]; self.status = error.localizedDescription; self.tableView.reloadData(); return }
-				let start = MoodReviewSummary.dateInterval(forLastDays: [1, 7, 30][self.period.selectedSegmentIndex]).start
-				let end = Date()
-				let predicate = HKQuery.predicateForSamples(withStart: start, end: end, options: [.strictStartDate])
+				let predicate = HKQuery.predicateForSamples(withStart: contextInterval.start, end: contextInterval.end, options: [.strictStartDate])
 				self.sum(ActiveEnergy.quantityType, unit: .kilocalorie(), suffix: " kcal", row: 0, predicate: predicate, token: token)
 				self.sum(Steps.quantityType, unit: .count(), suffix: " steps", row: 1, predicate: predicate, token: token)
 				let query = HKSampleQuery(sampleType: Workout.sampleType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { [weak self] _, samples, error in
@@ -96,7 +94,7 @@ final class ActivityLevelsViewController: UITableViewController {
 	override func numberOfSections(in tableView: UITableView) -> Int { metrics.count }
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 1 }
 	override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-		metrics[section].limitations + " Missing Health data may mean no records or denied access. Tap to review or add dated context." + (status.isEmpty ? "" : " " + status)
+		metrics[section].limitations + " Missing Health data may mean no records or denied access. Tap to review or add dated context." + (section == metrics.count - 1 ? " Phone motion is not collected. These measurements are not an ADHD or restfulness score." : "") + (status.isEmpty ? "" : " " + status)
 	}
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "activity-level") ?? UITableViewCell(style: .subtitle, reuseIdentifier: "activity-level")

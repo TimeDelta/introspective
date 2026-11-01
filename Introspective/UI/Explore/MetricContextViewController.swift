@@ -8,11 +8,12 @@ import UIExtensions
 final class MetricContextViewController: UITableViewController {
 	private let metric: ContextMetric
 	private let interval: DateInterval?
+	private let tracksPresent: Bool
 	private let scope = UISegmentedControl(items: ["Selected period", "All time"])
 	private var entries: [MetricContextEntry] = []
 	private var total = 0
-	init(metric: ContextMetric = .all, interval: DateInterval? = nil) {
-		self.metric = metric; self.interval = interval
+	init(metric: ContextMetric = .all, interval: DateInterval? = nil, tracksPresent: Bool = false) {
+		self.metric = metric; self.interval = interval; self.tracksPresent = tracksPresent
 		super.init(style: .grouped)
 	}
 	required init?(coder: NSCoder) { fatalError("Use init(metric:interval:)") }
@@ -21,6 +22,7 @@ final class MetricContextViewController: UITableViewController {
 		title = metric == .all ? "Metric Context" : "\(metric.title) Context"
 		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addEntry))
 		scope.selectedSegmentIndex = interval == nil ? 1 : 0
+		scope.accessibilityIdentifier = "context period"
 		scope.isEnabled = interval != nil
 		scope.addTarget(self, action: #selector(reload), for: .valueChanged)
 		scope.frame = CGRect(x: 16, y: 8, width: view.bounds.width - 32, height: 36)
@@ -30,7 +32,9 @@ final class MetricContextViewController: UITableViewController {
 	override func viewWillAppear(_ animated: Bool) { super.viewWillAppear(animated); reload() }
 	@objc private func reload() {
 		do {
-			let selected = scope.selectedSegmentIndex == 0 ? interval.map { DateInterval(start: $0.start, end: max($0.end, Date())) } : nil
+			let selected = scope.selectedSegmentIndex == 0 ? interval.map {
+				tracksPresent ? DateInterval(start: $0.start, end: max($0.start, Date())) : $0
+			} : nil
 			let request = MetricContextEntry.request(metric: metric, interval: selected)
 			total = try injected(Database.self).count(request)
 			request.fetchLimit = 200
@@ -68,8 +72,7 @@ final class MetricContextViewController: UITableViewController {
 			alert?.dismiss(animated: false) { [weak self] in
 				guard let self = self else { return }
 				do {
-					let transaction = try injected(Database.self).viewContextTransaction(for: MetricContextEntry.self, sortedBy: "timestamp")
-					try transaction.delete(entry); try transaction.commit(); self.reload()
+					try entry.delete(); self.reload()
 				} catch { self.showError(title: "Could not delete context", error: error) }
 			}
 		})
@@ -78,6 +81,7 @@ final class MetricContextViewController: UITableViewController {
 }
 
 final class MetricContextEditor: UITableViewController {
+	var onSave: ((MetricContextEntry) -> Void)?
 	private let entry: MetricContextEntry?
 	private var category: ContextCategory
 	private var metric: ContextMetric
@@ -112,7 +116,11 @@ final class MetricContextEditor: UITableViewController {
 		includeEnd.isOn = end != nil
 		includeEnd.addTarget(self, action: #selector(toggleEnd), for: .valueChanged)
 		note.text = entry?.note; note.font = .preferredFont(forTextStyle: .body)
+		note.accessibilityIdentifier = "context note"
 		note.accessibilityLabel = "Context note"
+		startPicker.accessibilityIdentifier = "context start"
+		endPicker.accessibilityIdentifier = "context end"
+		includeEnd.accessibilityIdentifier = "context includes end"
 		tableView.keyboardDismissMode = .onDrag
 		hideKeyboardOnTapNonTextInput()
 	}
@@ -139,13 +147,11 @@ final class MetricContextEditor: UITableViewController {
 	@objc func save() {
 		guard end == nil || end! >= start else { showError(title: "The end must be after the start."); return }
 		do {
+			let saved: MetricContextEntry
 			if let entry = entry {
-				let transaction = try injected(Database.self).viewContextTransaction(for: MetricContextEntry.self, sortedBy: "timestamp")
-				let updated = try transaction.pull(savedObject: entry)
-				updated.timestamp = start; updated.endDate = end == start ? nil : end
-				updated.category = category.rawValue; updated.metricKey = metric.rawValue; updated.note = note.text
-				try transaction.commit()
-			} else { try MetricContextEntry.record(category: category, metric: metric, at: start, until: end, note: note.text) }
+				saved = try entry.update(category: category, metric: metric, at: start, until: end, note: note.text)
+			} else { saved = try MetricContextEntry.record(category: category, metric: metric, at: start, until: end, note: note.text) }
+			onSave?(saved)
 			navigationController?.popViewController(animated: true)
 		} catch { showError(title: "Could not save context", error: error) }
 	}
@@ -154,7 +160,11 @@ final class MetricContextEditor: UITableViewController {
 		switch section { case 0: return ContextCategory.allCases.count; case 1: return ContextMetric.allCases.count; case 2: return includeEnd.isOn ? 4 : 3; default: return 1 }
 	}
 	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? { ["Context", "Applies to", "Time", "Note"][section] }
-	override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? { section == 1 ? metric.limitations : nil }
+	override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+		if section == 1 { return metric.limitations }
+		if section == 2 { return "Leave the end off to mark a single moment. Add an end to record a period." }
+		return nil
+	}
 	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		if indexPath.section == 3 { return 150 }
 		if indexPath.section == 2 && [1, 3].contains(indexPath.row) { return 180 }

@@ -44,7 +44,7 @@ increases from 109 to 112 cases; this measurement remains separate from legacy.
 
 ## Evaluating the next report
 
-The full legacy run must pass all **4,395** selected cases without skips; the
+The full legacy run must pass all **4,399** selected cases without skips; the
 existing 41 explicit exclusions remain unchanged. Read the new legacy artifact's
 file and function measurements alongside this baseline. The matcher implementation
 is shorter, so compare the exercised behaviors and functions as well as line
@@ -80,3 +80,14 @@ that preparing another row's actions does not change the selected source and
 that only the active duration chooser can trigger a search, once. These are
 source inventories and behavioral assertions; measured coverage must come from
 the next complete passing Mac runs.
+
+## Metric context
+
+Issue #29 adds four legacy query-builder regressions for restoring registered
+energy, workout, counter and context types. Twenty-three native regressions cover
+context persistence, migration from the previous model, saved query restrictions,
+manual query construction, interval boundaries, editing/deletion, CSV encoding,
+actual editor date callbacks, fixed versus live periods, bounded list loading,
+and the specific explanations beside activity measurements and lost-item counts.
+The native suite now contains 151 cases. Both full UI shards retain all 58 and
+50 cases, and the existing 41 legacy exclusions are unchanged.

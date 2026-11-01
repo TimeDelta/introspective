@@ -34,6 +34,8 @@ end
   TestSupport/UITestFixtures.swift
   TestSupport/UITestFixtureLoader.swift
   Introspective/UI/Explore/MetricContextViewController.swift
+  Introspective/UI/Explore/ActivityLevelsViewController.swift
+  Introspective/UI/RecordData/LostItemsViewController.swift
 ].each do |path|
   reference = project.files.find { |file| file.real_path.to_s == File.expand_path(path) }
   raise "Missing production source #{path}" unless reference

@@ -81,7 +81,7 @@ final class LostItemsViewController: UITableViewController {
 		tableView.deselectRow(at: indexPath, animated: false)
 		if indexPath.section == 0 && indexPath.row == 1 {
 			let start = period.selectedSegmentIndex == 2 ? nil : MoodReviewSummary.dateInterval(forLastDays: [7, 30][period.selectedSegmentIndex]).start
-			navigationController?.pushViewController(MetricContextViewController(metric: .lostItems, interval: start.map { DateInterval(start: $0, end: Date()) }), animated: true)
+			navigationController?.pushViewController(MetricContextViewController(metric: .lostItems, interval: start.map { DateInterval(start: $0, end: Date()) }, tracksPresent: true), animated: true)
 			return
 		}
 		guard indexPath.section == 1 else { return }
