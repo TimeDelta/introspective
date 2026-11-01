@@ -91,3 +91,10 @@ actual editor date callbacks, fixed versus live periods, bounded list loading,
 and the specific explanations beside activity measurements and lost-item counts.
 The native suite now contains 151 cases. Both full UI shards retain all 58 and
 50 cases, and the existing 41 legacy exclusions are unchanged.
+
+Diagnostic uploads allow up to three upload attempts without rerunning builds or
+tests. Artifact names include the workflow attempt; recovered uploads append
+`-retry-2` or `-retry-3` to avoid conflicts after an ambiguous server response.
+All attempts preserve the complete `ci-output` directory for 14 days. A missing
+output directory or failure of all three uploads still fails CI. Native, legacy,
+both full UI shards, Release, and the aggregate check remain required.
