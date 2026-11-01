@@ -173,6 +173,23 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 	// MARK: - viewDidLoad()
 
+	func testViewOpenedAfterResultsFinishEnablesActions() {
+		actionsButton.isEnabled = false // The storyboard's initial state.
+		controller.samples = SampleCreatorTestUtil.createSamplesWithoutDateAttribute(withValues: [1], for: IntegerAttribute(id: 0, name: "value"))
+		controller.viewDidLoad()
+		XCTAssertTrue(actionsButton.isEnabled)
+	}
+
+	func testViewOpenedBeforeResultsFinishKeepsActionsDisabledUntilPublication() throws {
+		var job: (() -> Void)?
+		Perform(mockAsyncUtil, .run(qos: .any, code: .any, perform: { _, code in job = code }))
+		controller.samples = SampleCreatorTestUtil.createSamplesWithoutDateAttribute(withValues: [1], for: IntegerAttribute(id: 0, name: "value"))
+		controller.viewDidLoad()
+		XCTAssertFalse(actionsButton.isEnabled)
+		try XCTUnwrap(job)()
+		XCTAssertTrue(actionsButton.isEnabled)
+	}
+
 	func testSortChooserNotificationSortsTheDisplayedSamples() throws {
 		let attribute: Attribute = IntegerAttribute(id: 0, name: "value")
 		let order = ComparisonResult.orderedAscending

@@ -138,7 +138,9 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		extendedLayoutIncludesOpaqueBars = true
 
 		tableView.flashScrollIndicators()
-		finishedLoading = !waiting()
+		finishedLoading = !waiting() && sortWork == nil
+		if finishedLoading { enableActionsButton() }
+		else { disableActionsButton() }
 
 		tableView.rowHeight = UITableView.automaticDimension
 		tableView.estimatedRowHeight = 44

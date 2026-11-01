@@ -44,7 +44,7 @@ increases from 109 to 112 cases; this measurement remains separate from legacy.
 
 ## Evaluating the next report
 
-The full legacy run must pass all **4,393** selected cases without skips; the
+The full legacy run must pass all **4,395** selected cases without skips; the
 existing 41 explicit exclusions remain unchanged. Read the new legacy artifact's
 file and function measurements alongside this baseline. The matcher implementation
 is shorter, so compare the exercised behaviors and functions as well as line
@@ -60,7 +60,7 @@ may already cover.
 The passing legacy report from [run 41244623164](https://github.com/TimeDelta/introspective/actions/runs/41244623164)
 showed zero exercised lines in the results controller's `sortSamplesBy` (44
 executable lines) and `searchNearby` (51 executable lines). These paths now have
-13 additional controller regressions and 16 native tests for the extracted
+15 additional controller regressions and 16 native tests for the extracted
 production processing code. The native inventory increases from 112 to 128;
 both full UI shards still contain 58 and 50 cases.
 
