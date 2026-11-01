@@ -2086,7 +2086,7 @@ final class SavedQueryTests: XCTestCase {
 		try MetricContextEntry.record(category: .illness, metric: .all, at: start.addingTimeInterval(1), note: "Inside")
 		try MetricContextEntry.record(category: .travel, metric: .all, at: start.addingTimeInterval(101), note: "Outside")
 		let list = MetricContextViewController(metric: .steps, interval: DateInterval(start: start, duration: 100))
-		list.loadViewIfNeeded(); list.viewWillAppear(false)
+		list.loadViewIfNeeded(); list.reload()
 		XCTAssertEqual(list.tableView(list.tableView, numberOfRowsInSection: 0), 1)
 		let cell = list.tableView(list.tableView, cellForRowAt: IndexPath(row: 0, section: 0))
 		XCTAssertTrue(cell.textLabel?.text?.contains("Inside") == true)
@@ -2101,12 +2101,12 @@ final class SavedQueryTests: XCTestCase {
 		try MetricContextEntry.record(category: .device, metric: .steps, at: start.addingTimeInterval(100))
 		try MetricContextEntry.record(category: .exercise, metric: .workouts, at: start)
 		let list = MetricContextViewController(metric: .steps, interval: DateInterval(start: start, duration: 100))
-		list.loadViewIfNeeded(); list.viewWillAppear(false)
+		list.loadViewIfNeeded(); list.reload()
 		XCTAssertEqual(list.tableView(list.tableView, numberOfRowsInSection: 0), 1)
 		let scope = try XCTUnwrap(list.tableView.tableHeaderView?.subviews.compactMap { $0 as? UISegmentedControl }.first)
-		scope.selectedSegmentIndex = 1; scope.sendActions(for: .valueChanged)
+		scope.selectedSegmentIndex = 1; list.reload()
 		XCTAssertEqual(list.tableView(list.tableView, numberOfRowsInSection: 0), 3)
-		scope.selectedSegmentIndex = 0; scope.sendActions(for: .valueChanged)
+		scope.selectedSegmentIndex = 0; list.reload()
 		XCTAssertEqual(list.tableView(list.tableView, numberOfRowsInSection: 0), 1)
 	}
 
@@ -2114,10 +2114,10 @@ final class SavedQueryTests: XCTestCase {
 	func testMetricContextLivePeriodIncludesAnEntryAddedAfterOpening() throws {
 		let start = Date(timeIntervalSince1970: 1_700_000_000)
 		let list = MetricContextViewController(metric: .steps, interval: DateInterval(start: start, duration: 100), tracksPresent: true)
-		list.loadViewIfNeeded(); list.viewWillAppear(false)
+		list.loadViewIfNeeded(); list.reload()
 		XCTAssertEqual(list.tableView(list.tableView, numberOfRowsInSection: 0), 0)
 		try MetricContextEntry.record(category: .device, metric: .steps, at: Date())
-		list.viewWillAppear(false)
+		list.reload()
 		XCTAssertEqual(list.tableView(list.tableView, numberOfRowsInSection: 0), 1)
 	}
 
@@ -2132,7 +2132,7 @@ final class SavedQueryTests: XCTestCase {
 		}
 		try container.viewContext.save()
 		let list = MetricContextViewController()
-		list.loadViewIfNeeded(); list.viewWillAppear(false)
+		list.loadViewIfNeeded(); list.reload()
 		XCTAssertEqual(list.tableView(list.tableView, numberOfRowsInSection: 0), 200)
 		XCTAssertTrue(list.tableView(list.tableView, titleForHeaderInSection: 0)?.contains("201 entries") == true)
 		XCTAssertTrue(list.tableView(list.tableView, cellForRowAt: IndexPath(row: 0, section: 0)).textLabel?.text?.contains("Entry 200") == true)

@@ -83,7 +83,9 @@ final class QueryViewControllerUnitTests: UnitTest {
 		let query = try factory.queryFor(sampleType)
 		query.mostRecentEntryOnly = true
 		controller.initialQuery = query
-		controller.viewDidLoad()
+		// Loading the view invokes viewDidLoad once. Calling it directly also
+		// loads tableView and recursively restores this query a second time.
+		controller.loadViewIfNeeded()
 		XCTAssertEqual(controller.queries.count, 1)
 		let restored = try XCTUnwrap(controller.queries.first?.sampleTypeInfo)
 		XCTAssertTrue(restored.sampleType == sampleType)
