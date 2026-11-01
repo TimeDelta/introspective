@@ -41,8 +41,7 @@ final class RecordActivitiesUITests: UITest {
 		XCTAssert(app.tables.cells.staticTexts[definition.name].exists)
 		XCTAssert(app.tables.cells.staticTexts[definition.description!].exists)
 		// Preserve creation coverage for optional fields now that other cases seed setup.
-		app.tables.staticTexts[definition.name].gentleSwipe(.right)
-		app.tables.buttons["edit \(definition.name)"].tap()
+		tapDefinitionAction("edit \(definition.name)", for: definition)
 		XCTAssertEqual(activityDefinitionNameField().value as? String, definition.name)
 		XCTAssertEqual(app.textViews["activity description"].value as? String, definition.description)
 		XCTAssertEqual(definitionTagsFieldAccessibilityValueAsSet(), Set(definition.tags!))
@@ -59,9 +58,7 @@ final class RecordActivitiesUITests: UITest {
 		seed(activityDefinitions: [definition])
 
 		// when
-		// this is triggering the navigate back gesture all of the sudden
-		app.tables.staticTexts[definition.name].gentleSwipe(.right)
-		app.tables.buttons["edit \(definition.name)"].tap()
+		tapDefinitionAction("edit \(definition.name)", for: definition)
 
 		// then
 		XCTAssertEqual(activityDefinitionNameField().value as? String, definition.name)
@@ -79,8 +76,7 @@ final class RecordActivitiesUITests: UITest {
 		seed(activityDefinitions: [definition])
 
 		// when
-		app.tables.staticTexts[definition.name].gentleSwipe(.right)
-		app.tables.buttons["edit \(definition.name)"].tap()
+		tapDefinitionAction("edit \(definition.name)", for: definition)
 		deleteContentOf(textField: app.textViews["activity description"])
 		delete(numberOfTags: definition.tags!.count, fromTagsField: activityDefinitionTagsField())
 
@@ -566,8 +562,7 @@ final class RecordActivitiesUITests: UITest {
 		seed(activityDefinitions: [definition1, definition2, definition3])
 
 		// when
-		app.tables.cells.staticTexts[definition2.name].gentleSwipe(.right)
-		app.tables.buttons["🗑️ All"].tap()
+		tapDefinitionAction("🗑️ All", for: definition2)
 		app.buttons["Yes"].tap()
 		XCTAssertTrue(app.alerts.buttons["Cancel"].waitForExistence(timeout: 3))
 		app.alerts.buttons["Yes"].tap()
@@ -589,8 +584,7 @@ final class RecordActivitiesUITests: UITest {
 		filterActivities(by: "z")
 
 		// when
-		app.tables.cells.staticTexts[definition3.name].gentleSwipe(.right)
-		app.tables.buttons["🗑️ All"].tap()
+		tapDefinitionAction("🗑️ All", for: definition3)
 		app.buttons["Yes"].tap()
 		XCTAssertTrue(app.alerts.buttons["Cancel"].waitForExistence(timeout: 3))
 		app.alerts.buttons["Yes"].tap()
@@ -803,6 +797,34 @@ final class RecordActivitiesUITests: UITest {
 	}
 
 	// MARK: - Element Functions
+
+	private func tapDefinitionAction(_ title: String, for definition: ActivityDefinition,
+		file: StaticString = #file, line: UInt = #line) {
+		let table = app.tables["recordActivities"]
+		let rows = table.cells.containing(.staticText, identifier: definition.name)
+		waitForCount(1, in: rows, file: file, line: line)
+		let row = rows.element
+		// Use the row's width for a partial swipe, away from the navigation edge.
+		// A quarter of the name label's width sometimes leaves the actions closed.
+		let start = row.coordinate(withNormalizedOffset: CGVector(dx: 0.30, dy: 0.5))
+		let end = row.coordinate(withNormalizedOffset: CGVector(dx: 0.75, dy: 0.5))
+		start.press(forDuration: 0.05, thenDragTo: end)
+		let button = table.buttons[title]
+		let ready = NSPredicate { _, _ in button.exists && button.isHittable }
+		if !ready.evaluate(with: nil) {
+			let expectation = XCTNSPredicateExpectation(predicate: ready, object: nil)
+			let result = XCTWaiter.wait(for: [expectation], timeout: 5)
+			guard result == .completed || ready.evaluate(with: nil) else {
+				let hierarchy = XCTAttachment(string: app.debugDescription)
+				hierarchy.name = "Activity swipe actions"
+				hierarchy.lifetime = .keepAlways
+				add(hierarchy)
+				XCTFail("Activity action '\(title)' did not appear for '\(definition.name)'", file: file, line: line)
+				return
+			}
+		}
+		button.tap()
+	}
 
 	private final func activityTagsField() -> XCUIElement {
 		return app.tables.children(matching: .cell).children(matching: .textField).element(boundBy: 0)
