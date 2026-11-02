@@ -2328,7 +2328,16 @@ final class SavedQueryTests: XCTestCase {
 		DependencyInjector.register([ObservedExportIO { [weak exporter] in
 			guard let exporter = exporter, !attemptedResume, exporter.percentComplete() > 0 else { return }
 			attemptedResume = true
-			XCTAssertThrowsError(try exporter.resume(), "A concurrent execution must fail immediately")
+			do {
+				try exporter.resume()
+				XCTFail("A concurrent execution must fail immediately")
+			} catch {
+				guard let rejection = error as? GenericError else {
+					XCTFail("Unexpected concurrent-resume error: \(error)")
+					return
+				}
+				XCTAssertTrue(rejection.description.hasPrefix("This export is already running."))
+			}
 		}])
 		try exporter.exportData()
 		XCTAssertTrue(attemptedResume); XCTAssertEqual(try Data(contentsOf: url), expected)
