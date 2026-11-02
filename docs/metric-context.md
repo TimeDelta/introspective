@@ -58,3 +58,7 @@ snapshot taken when export starts, so edits during export do not change its rows
 Large exports read at most 200 managed records at a time. The existing Active
 Exports controls support pausing, continuing, cancelling, and sharing the file.
 Cancelling or encountering a write error removes the incomplete file.
+
+The later `ActivityTags` model retains `MetricContext` as a historical version
+and corrects persistence of tags shared by multiple activity instances. Context
+entries and their saved-query identifiers are unchanged by that migration.

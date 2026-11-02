@@ -2097,36 +2097,41 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertTrue(lost.url.lastPathComponent.hasPrefix("Lost Item Events "))
 	}
 
+	private func exportFixtureObject<Record: NSManagedObject & CoreDataObject>(_ type: Record.Type, in context: NSManagedObjectContext) throws -> Record {
+		let entity = try XCTUnwrap(NSEntityDescription.entity(forEntityName: Record.entityName, in: context))
+		return try XCTUnwrap(NSManagedObject(entity: entity, insertInto: context) as? Record)
+	}
+
 	private func legacyExportFixtures(count: Int) throws -> (activities: [Activity], doses: [MedicationDose], moods: [MoodImpl]) {
 		let context = container.viewContext
 		let base = Date(timeIntervalSince1970: 1_700_000_000)
-		let firstTag = Tag(context: context); firstTag.name = "zebra"
-		let secondTag = Tag(context: context); secondTag.name = "calm 🧠"
-		let extraTag = Tag(context: context); extraTag.name = "extra"
+		let firstTag = try exportFixtureObject(Tag.self, in: context); firstTag.name = "zebra"
+		let secondTag = try exportFixtureObject(Tag.self, in: context); secondTag.name = "calm 🧠"
+		let extraTag = try exportFixtureObject(Tag.self, in: context); extraTag.name = "extra"
 		var activities = [Activity](), doses = [MedicationDose](), moods = [MoodImpl]()
 		for index in (0..<count).reversed() {
 			let date = base.addingTimeInterval(Double(index * 60))
-			let definition = ActivityDefinition(context: context)
+			let definition = try exportFixtureObject(ActivityDefinition.self, in: context)
 			definition.name = "Activity \(index)"; definition.activityDescription = "Description, \"quoted\"\nnext line"
 			definition.recordScreenIndex = Int16(index); definition.autoNote = index.isMultiple(of: 2)
 			definition.setSource(.aTracker); definition.tags = NSSet(array: [firstTag, secondTag])
-			let activity = Activity(context: context)
+			let activity = try exportFixtureObject(Activity.self, in: context)
 			activity.definition = definition; activity.setSource(.introspective)
 			activity.start = date; activity.startSetAt = date.addingTimeInterval(5)
 			activity.end = index.isMultiple(of: 2) ? date.addingTimeInterval(30) : nil
 			activity.endSetAt = activity.end.map { $0.addingTimeInterval(5) }
 			activity.note = "Activity note \(index), \"quoted\"\n🧠"; activity.tags = NSSet(object: extraTag)
 			activities.append(activity)
-			let medication = Medication(context: context)
+			let medication = try exportFixtureObject(Medication.self, in: context)
 			medication.name = "Medication \(index)"; medication.recordScreenIndex = Int16(index)
 			medication.setSource(.introspective); medication.startedOn = date.addingTimeInterval(-86_400)
 			medication.dosage = Dosage(10, "mg"); medication.frequency = Frequency("2 per day")
 			medication.notes = "Medication note, \"quoted\"\n🧠"
-			let dose = MedicationDose(context: context)
+			let dose = try exportFixtureObject(MedicationDose.self, in: context)
 			dose.medication = medication; dose.setSource(.easyPill); dose.date = date
 			dose.timeZone = TimeZone(secondsFromGMT: 0); dose.dosage = Dosage(5, "mg")
 			doses.append(dose)
-			let mood = MoodImpl(context: context)
+			let mood = try exportFixtureObject(MoodImpl.self, in: context)
 			mood.setSource(.wellness); mood.date = date; mood.timeZone = TimeZone(secondsFromGMT: 0)
 			mood.rating = Double(index % 10) - 2.5; mood.minRating = -3; mood.maxRating = 7
 			mood.note = "Mood note \(index), \"quoted\"\n🧠"; moods.append(mood)
@@ -2175,7 +2180,7 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertEqual(try Data(contentsOf: url), expected)
 		let rows = try exportRows(at: url)
 		XCTAssertEqual(rows.count, 406); XCTAssertTrue(rows.allSatisfy { $0.count == 12 })
-		XCTAssertEqual(rows[0], ["Name", "Dosage", "Frequency", "Started On", "Started On Time Zone", "Notes", "Definition Source", "Record Screen Index", "Dosage", "Timestamp", "Time Zone", "Instance Source"])
+		XCTAssertEqual(rows[0], ["Name", "Normal Dosage", "Frequency", "Started On", "Started On Time Zone", "Notes", "Definition Source", "Record Screen Index", "Dosage", "Timestamp", "Time Zone", "Instance Source"])
 		for index in 0..<405 {
 			XCTAssertEqual(rows[index + 1][0], "Medication \(index)")
 			XCTAssertEqual(rows[index + 1][7], String(index))
@@ -2219,6 +2224,71 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertEqual(try Data(contentsOf: url), expected); XCTAssertNil(exporter.context)
 		try exporter.resume()
 		XCTAssertEqual(try Data(contentsOf: url), expected)
+	}
+
+	func testSharedActivityTagsSurviveSQLiteReopenAndExportForEveryActivity() throws {
+		let fixtures = try legacyExportFixtures(count: 405)
+		let expected = try encodedExport(fixtures.activities)
+		try reopen()
+		let request = Activity.fetchRequest()
+		request.sortDescriptors = [NSSortDescriptor(key: "startDate", ascending: true)]
+		let activities = try container.viewContext.fetch(request)
+		XCTAssertEqual(activities.count, 405)
+		XCTAssertTrue(activities.allSatisfy { $0.tagsArray().map { $0.name } == ["extra"] })
+		let tag = try XCTUnwrap(container.viewContext.fetch(Tag.fetchRequest()).first { $0.name == "extra" })
+		XCTAssertEqual(tag.activities.count, 405)
+		let url = directory.appendingPathComponent("reopened-shared-tags.csv")
+		let exporter = ActivityExporterImpl(coordinator: container.persistentStoreCoordinator, url: url)
+		exportOnBackground(exporter)
+		XCTAssertEqual(try Data(contentsOf: url), expected)
+		XCTAssertTrue(try exportRows(at: url).dropFirst().allSatisfy { $0[16] == "extra" })
+	}
+
+	func testActivityTagInverseMigrationPreservesExistingDataAndAllowsSharedTags() throws {
+		let modelURL = try XCTUnwrap(Self.bundle.url(forResource: "Introspective", withExtension: "momd"))
+		let oldModel = try XCTUnwrap(NSManagedObjectModel(contentsOf: modelURL.appendingPathComponent("MetricContext.mom")))
+		let url = directory.appendingPathComponent("activity-tags-migration.sqlite")
+		let old = try open(oldModel, at: url)
+		let date = Date(timeIntervalSince1970: 1_700_000_023.5)
+		for index in 0..<2 {
+			let definition = NSEntityDescription.insertNewObject(forEntityName: "ActivityDefinition", into: old.viewContext)
+			definition.setValue("Existing \(index)", forKey: "name")
+			let activity = NSEntityDescription.insertNewObject(forEntityName: "Activity", into: old.viewContext)
+			activity.setValue(definition, forKey: "definition"); activity.setValue(date.addingTimeInterval(Double(index * 60)), forKey: "startDate")
+			let tag = NSEntityDescription.insertNewObject(forEntityName: "Tag", into: old.viewContext)
+			tag.setValue("existing-\(index)", forKey: "name")
+			activity.setValue(NSSet(object: tag), forKey: "tags")
+		}
+		let mood = NSEntityDescription.insertNewObject(forEntityName: "Mood", into: old.viewContext)
+		mood.setValue(date, forKey: "timestamp"); mood.setValue(4.5, forKey: "rating"); mood.setValue("Keep mood", forKey: "note")
+		let query = NSEntityDescription.insertNewObject(forEntityName: "Query", into: old.viewContext)
+		query.setValue("Keep query", forKey: "name"); query.setValue(8, forKey: "sampleTypeId")
+		let context = NSEntityDescription.insertNewObject(forEntityName: "MetricContextEntry", into: old.viewContext)
+		context.setValue(date, forKey: "timestamp"); context.setValue("Device not worn", forKey: "category")
+		context.setValue("steps", forKey: "metricKey"); context.setValue("Keep context", forKey: "note")
+		let lost = NSEntityDescription.insertNewObject(forEntityName: "LostItemEvent", into: old.viewContext)
+		lost.setValue(date, forKey: "timestamp"); lost.setValue(1, forKey: "delta")
+		try old.viewContext.save(); old.viewContext.reset()
+		for store in old.persistentStoreCoordinator.persistentStores { try old.persistentStoreCoordinator.remove(store) }
+		let migrated = try open(Self.model, at: url)
+		let request = Activity.fetchRequest(); request.sortDescriptors = [NSSortDescriptor(key: "startDate", ascending: true)]
+		let activities = try migrated.viewContext.fetch(request)
+		XCTAssertEqual(activities.map { $0.definition.name }, ["Existing 0", "Existing 1"])
+		XCTAssertEqual(activities.map { $0.tagsArray().map { $0.name } }, [["existing-0"], ["existing-1"]])
+		XCTAssertEqual(try migrated.viewContext.fetch(MoodImpl.fetchRequest()).first?.note, "Keep mood")
+		XCTAssertEqual(try migrated.viewContext.fetch(StoredQuery.fetchRequest()).first?.name, "Keep query")
+		XCTAssertEqual(try migrated.viewContext.fetch(MetricContextEntry.fetchRequest()).first?.note, "Keep context")
+		XCTAssertEqual(try migrated.viewContext.fetch(LostItemEvent.fetchRequest()).first?.delta, 1)
+		let shared = try exportFixtureObject(Tag.self, in: migrated.viewContext); shared.name = "shared"
+		for activity in activities { activity.addToTags(shared) }
+		try migrated.viewContext.save(); migrated.viewContext.reset()
+		for store in migrated.persistentStoreCoordinator.persistentStores { try migrated.persistentStoreCoordinator.remove(store) }
+		let reopened = try open(Self.model, at: url)
+		let restored = try reopened.viewContext.fetch(request)
+		XCTAssertEqual(restored.map { $0.tagsArray().map { $0.name }.sorted() }, [["existing-0", "shared"], ["existing-1", "shared"]])
+		XCTAssertEqual(try reopened.viewContext.fetch(Tag.fetchRequest()).first { $0.name == "shared" }?.activities.count, 2)
+		reopened.viewContext.reset()
+		for store in reopened.persistentStoreCoordinator.persistentStores { try reopened.persistentStoreCoordinator.remove(store) }
 	}
 
 	func testMedicationExportPinsRelatedDefinitionsAcrossPauseAndEdits() throws {
@@ -2274,7 +2344,7 @@ final class SavedQueryTests: XCTestCase {
 			memory.viewContext.reset()
 			for store in memory.persistentStoreCoordinator.persistentStores { try? memory.persistentStoreCoordinator.remove(store) }
 		}
-		let row = MoodImpl(context: memory.viewContext)
+		let row = try exportFixtureObject(MoodImpl.self, in: memory.viewContext)
 		row.setSource(.introspective); row.date = Date(timeIntervalSince1970: 1_700_000_000)
 		row.minRating = 0; row.maxRating = 7; row.rating = 4.5; row.note = "Memory fixture"
 		try memory.viewContext.save()
