@@ -3079,6 +3079,27 @@ private final class KeyboardDismissalTap: UITapGestureRecognizer {
 
 final class KeyboardDismissalTests: XCTestCase {
 	@MainActor
+	func testDismissalRecognizerRejectsInteractiveTouchesBeforeRecognition() throws {
+		let controller = UIViewController()
+		let root = KeyboardDismissalProbeView(frame: CGRect(x: 0, y: 0, width: 320, height: 480))
+		controller.view = root
+		controller.hideKeyboardOnTapNonTextInput()
+		let recognizer = try XCTUnwrap(root.gestureRecognizers?.first as? KeyboardDismissalGestureRecognizer)
+		XCTAssertTrue(recognizer.delegate === recognizer)
+		XCTAssertFalse(recognizer.cancelsTouchesInView)
+		let controls: [UIView] = [UITextField(), UITextView(), UISwitch(), UIButton(type: .system), UISlider()]
+		for control in controls {
+			root.addSubview(control)
+			XCTAssertFalse(recognizer.acceptsTouch(on: control))
+			let renderingView = UIView(); control.addSubview(renderingView)
+			XCTAssertFalse(recognizer.acceptsTouch(on: renderingView))
+			control.removeFromSuperview()
+		}
+		XCTAssertTrue(recognizer.acceptsTouch(on: root))
+		XCTAssertTrue(recognizer.acceptsTouch(on: nil))
+	}
+
+	@MainActor
 	func testTappingInteractiveControlsAndDescendantsDoesNotDismissKeyboard() {
 		let controller = UIViewController()
 		let root = KeyboardDismissalProbeView(frame: CGRect(x: 0, y: 0, width: 320, height: 480))

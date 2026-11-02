@@ -56,26 +56,19 @@ public extension UIViewController {
 	}
 
 	final func hideKeyboardOnTapNonTextInput() {
-		let tapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(
+		let tapRecognizer = KeyboardDismissalGestureRecognizer(
 			target: self,
 			action: #selector(dismissKeyboard)
 		)
 		tapRecognizer.cancelsTouchesInView = false
+		tapRecognizer.delegate = tapRecognizer
 		view.addGestureRecognizer(tapRecognizer)
 	}
 
 	@objc final func dismissKeyboard(_ tapRecognizer: UITapGestureRecognizer) {
 		let view = tapRecognizer.view
 		let loc = tapRecognizer.location(in: view)
-		var tappedView = view?.hitTest(loc, with: nil)
-		// UIKit text controls contain rendering/selection views that do not
-		// conform to UITextInputTraits. Tapping those still means editing text.
-		while let current = tappedView {
-			// Ending editing can move a scroll view while a switch/button is still
-			// handling its touch. Let controls finish their own interaction.
-			if current is UITextInputTraits || current is UIControl { return }
-			tappedView = current.superview
-		}
+		guard !isKeyboardInteractionView(view?.hitTest(loc, with: nil)) else { return }
 		self.view.endEditing(true)
 	}
 
@@ -173,4 +166,22 @@ public extension UIViewController {
 		button.addGestureRecognizer(longPressRecognizer)
 		return UIBarButtonItem(customView: button)
 	}
+}
+
+/// Reject interactive descendants before recognition so this gesture cannot
+/// compete with a switch's own recognizers, even when its action would do nothing.
+internal final class KeyboardDismissalGestureRecognizer: UITapGestureRecognizer, UIGestureRecognizerDelegate {
+	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+		acceptsTouch(on: touch.view)
+	}
+	func acceptsTouch(on view: UIView?) -> Bool { !isKeyboardInteractionView(view) }
+}
+
+private func isKeyboardInteractionView(_ view: UIView?) -> Bool {
+	var current = view
+	while let candidate = current {
+		if candidate is UIControl || candidate is UITextInputTraits { return true }
+		current = candidate.superview
+	}
+	return false
 }
