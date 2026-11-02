@@ -12,6 +12,16 @@ VALIDATE = runpy.run_path(str(ROOT / 'verify-native-test-results.py'))['validate
 
 
 class UITestPartitions(unittest.TestCase):
+    def test_measured_lane_costs_balance_full_suite_and_preflight(self):
+        classes = PARTITIONS['discover_tests']()
+        weights = PARTITIONS['CLASS_SECONDS']
+        shards = PARTITIONS['partition'](classes, 2)
+        totals = [sum(weights.get(name, len(classes[name]) * 40) for name in shard) for shard in shards]
+        self.assertLess(abs(totals[0] - totals[1]), sum(totals) * 0.05)
+        # The expensive activity class must no longer share a runner with the
+        # query class: their combined preflight/full-suite costs caused the skew.
+        self.assertFalse(any({'RecordActivitiesUITests', 'QueryScreenUITests'} <= set(shard) for shard in shards))
+
     def test_all_source_cases_run_once_across_both_shards(self):
         complete = PARTITIONS['selection']()
         shards = [PARTITIONS['selection'](index, 2) for index in (1, 2)]

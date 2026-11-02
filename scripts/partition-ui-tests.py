@@ -7,19 +7,21 @@ from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-# Measured fixture-based execution in run 40906929091 (all 108 cases ran).
-# New classes use their case count as a weight.
+# Measured in run 41484712227: all 108 cases and all 12 required preflight cases.
+# Include each class's full-suite AND preflight work when balancing the CI lanes.
+# The newly added mood-note preflight adds an estimated 40 seconds to its class.
+# New classes use their case count as a weight (40 seconds per case).
 CLASS_SECONDS = {
-    'RecordActivitiesUITests': 699,
-    'RecordMedicationsUITests': 490,
-    'GraphSetupScreenUITests': 525,
-    'QueryScreenUITests': 215,
-    'MoodSettingsUITests': 307,
-    'MoodResultsUITests': 77,
-    'ActivityResultsUITests': 55,
-    'RecordMoodsUITests': 149,
-    'ActivitySettingsUITests': 63,
-    'GeneralResultsUITests': 18,
+    'RecordActivitiesUITests': 1361,
+    'RecordMedicationsUITests': 586,
+    'GraphSetupScreenUITests': 705,
+    'QueryScreenUITests': 407,
+    'MoodSettingsUITests': 301,
+    'MoodResultsUITests': 143,
+    'ActivityResultsUITests': 127,
+    'RecordMoodsUITests': 134,
+    'ActivitySettingsUITests': 90,
+    'GeneralResultsUITests': 22,
 }
 # Check fixture bootstrap, actual UI creation, date editing, and reordering before
 # the long suite. These are additional checks; the gate still runs every case.
@@ -40,6 +42,9 @@ PREFLIGHT_TESTS = {
     ],
     'MoodResultsUITests': [
         'testEditingMood_correctlyDisplaysMoodData',
+    ],
+    'RecordMoodsUITests': [
+        'testRecordMood_resetsNoteAndMoodRating',
     ],
     'GraphSetupScreenUITests': [
         'testEditingAlreadyChosenXAxisQuery_correctlyPopulatesEditQueryScreen',

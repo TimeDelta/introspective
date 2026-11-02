@@ -95,10 +95,7 @@ public final class CalendarUtilImpl: CalendarUtil {
 	}
 
 	public final func string(for date: Date, dateStyle: DateFormatter.Style, timeStyle: DateFormatter.Style) -> String {
-		let formatter = DateFormatter()
-		formatter.dateStyle = dateStyle
-		formatter.timeStyle = timeStyle
-		formatter.timeZone = nil
+		let formatter = CalendarStyleFormatterCache.shared.formatter(dateStyle: dateStyle, timeStyle: timeStyle)
 		return formatter.string(from: date)
 	}
 
@@ -204,5 +201,86 @@ public final class CalendarUtilImpl: CalendarUtil {
 			Me.log.error("Unsupported time unit %@: ", timeUnit.description)
 			return Date()
 		}
+	}
+}
+
+/// Reuses immutable style formatters for display and CSV output. Foundation supports concurrent formatting.
+/// Parsing keeps a fresh formatter: reuse made parsing slower in the macOS benchmark.
+/// The cache holds at most the 25 style pairs for one set of system defaults.
+internal final class CalendarStyleFormatterCache {
+	static let shared = CalendarStyleFormatterCache()
+
+	private struct Key: Hashable {
+		let date: DateFormatter.Style
+		let time: DateFormatter.Style
+	}
+	private struct Defaults: Equatable {
+		let locale: Locale
+		let calendar: Calendar
+		let zone: TimeZone
+		static var current: Defaults { Defaults(locale: .current, calendar: .current, zone: NSTimeZone.default) }
+	}
+
+	private let lock = NSLock()
+	private var formatters = [Key: DateFormatter]()
+	private var defaults: Defaults?
+	private var generation: UInt = 0
+	private let center: NotificationCenter
+	private var observers = [NSObjectProtocol]()
+	private let createFormatter: (DateFormatter.Style, DateFormatter.Style) -> DateFormatter
+
+	convenience init(center: NotificationCenter = .default) {
+		self.init(center: center, createFormatter: { dateStyle, timeStyle in
+			let formatter = DateFormatter()
+			formatter.dateStyle = dateStyle
+			formatter.timeStyle = timeStyle
+			formatter.timeZone = nil
+			return formatter
+		})
+	}
+
+	init(center: NotificationCenter, createFormatter: @escaping (DateFormatter.Style, DateFormatter.Style) -> DateFormatter) {
+		self.center = center
+		self.createFormatter = createFormatter
+		for name in [NSLocale.currentLocaleDidChangeNotification, .NSSystemTimeZoneDidChange] {
+			observers.append(center.addObserver(forName: name, object: nil, queue: nil) { [weak self] _ in
+				self?.invalidate()
+			})
+		}
+	}
+
+	deinit { for observer in observers { center.removeObserver(observer) } }
+
+	func formatter(dateStyle: DateFormatter.Style, timeStyle: DateFormatter.Style) -> DateFormatter {
+		let key = Key(date: dateStyle, time: timeStyle)
+		while true {
+			let snapshot = Defaults.current
+			lock.lock()
+			if defaults != snapshot {
+				formatters.removeAll(keepingCapacity: true)
+				defaults = snapshot
+				generation &+= 1
+			}
+			let token = generation
+			if let cached = formatters[key] { lock.unlock(); return cached }
+			lock.unlock()
+
+			// Foundation work stays outside the lock; notifications may arrive while it runs.
+			let formatter = createFormatter(dateStyle, timeStyle)
+			let current = Defaults.current
+			lock.lock()
+			guard token == generation && current == snapshot else { lock.unlock(); continue }
+			if let cached = formatters[key] { lock.unlock(); return cached }
+			formatters[key] = formatter
+			lock.unlock()
+			return formatter
+		}
+	}
+
+	private func invalidate() {
+		lock.lock(); defer { lock.unlock() }
+		formatters.removeAll(keepingCapacity: true)
+		defaults = nil
+		generation &+= 1
 	}
 }
