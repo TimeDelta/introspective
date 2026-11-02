@@ -71,7 +71,6 @@ target 'Introspective' do
   end
 
   target 'MoodCheckInWidget' do
-    platform :ios, '17.0'
     inherit! :search_paths
     pod 'SwiftDate', '6.0.3'
   end

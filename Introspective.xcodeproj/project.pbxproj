@@ -1032,7 +1032,7 @@
 		98E8C6614C24D572F7EDCA625298C92F /* MedicationDoseQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDoseQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		98F55B5C4CC7D367BB647125ACBC8271 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		98FD61BDED57AC9EF540FC843013F3B2 /* UserInfoMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoMatchers.swift; sourceTree = "<group>"; };
-		997EC9FE4954C7AA761E2FCB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		997EC9FE4954C7AA761E2FCB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		99DEF55FA04C46F3921A7305BB937620 /* MiscMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiscMatchers.swift; sourceTree = "<group>"; };
 		9A139AF0363C3776B210F9D516546B7E /* CoreDataMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataMatchers.swift; sourceTree = "<group>"; };
 		9A1A4D5DAF327B9717F8592A371CAF93 /* EditMoodTableViewControllerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMoodTableViewControllerMock.swift; sourceTree = "<group>"; };
@@ -4359,6 +4359,7 @@
 				);
 				MARKETING_VERSION = 1.6.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bnova.Introspective.MoodCheckInWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -4742,6 +4743,7 @@
 				);
 				MARKETING_VERSION = 1.6.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bnova.Introspective.MoodCheckInWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
