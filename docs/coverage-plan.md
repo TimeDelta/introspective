@@ -117,3 +117,14 @@ The shared-tag cases also cover the new `ActivityTags` model: one tag on all 405
 activities after SQLite reopen/export, and migration from `MetricContext` with
 existing tag links, moods, queries, context, and lost-item records intact. The
 original exact CSV comparisons and tag-value assertions remain in place.
+
+## Style-based date output
+
+Six native regressions cover the bounded formatter cache used by result rows and
+CSV output: exact text and parse compatibility across all 25 style pairs, reuse,
+notification invalidation and observer lifetime, default time-zone changes without
+notifications, mixed concurrent calls, and discarding a formatter created during
+invalidation. Parsing itself retains its previous implementation. Native inventory
+is 176; the selected legacy and full UI inventories are unchanged. The reproducible
+[Mac benchmark](date-formatting-performance.md) measures formatting separately
+from end-to-end app performance; measured iOS coverage still comes from CI.
