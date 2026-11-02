@@ -84,7 +84,7 @@ final class MoodTrackingIntegrationTests: XCTestCase {
 		let at = Date(timeIntervalSince1970: 1_700_000_000.123456)
 		let preset = MoodCheckInPreset(name: "Travel", rating: -0.25, minimum: -1, maximum: 1, note: "At the airport", contexts: [ContextCategory.travel.rawValue, ContextCategory.routine.rawValue])
 		let created = try MoodPresetRecorder.record(preset, at: at)
-		XCTAssertEqual(created.rating, -0.25); XCTAssertEqual(created.date, at)
+		XCTAssertEqual(created.rating, -0.25); XCTAssertEqual(MoodWeeklyReview.timestamp(for: created), at)
 		container.viewContext.reset()
 		for store in container.persistentStoreCoordinator.persistentStores { try container.persistentStoreCoordinator.remove(store) }
 		container = try open(); try register()
