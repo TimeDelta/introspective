@@ -60,7 +60,7 @@ public final class RecordDecimalMoodIntentHandler: NSObject, RecordDecimalMoodIn
 				max: mood.maxRating
 			)
 			injected(Database.self).setModifiedExternally(true)
-			completion(RecordDecimalMoodIntentResponse.success(message: message))
+			MoodReminderService.refreshIfEnabled { completion(RecordDecimalMoodIntentResponse.success(message: message)) }
 		} catch {
 			if let displayableError = error as? DisplayableError {
 				let errorMessage = displayableError.displayableDescription ?? displayableError.displayableTitle

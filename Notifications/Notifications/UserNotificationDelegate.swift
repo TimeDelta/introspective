@@ -160,6 +160,9 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 		case Me.timeExpired.identifier:
 			sendNotificationForTimeExpiredAction(.extendBackgroundTaskTime, content)
 			break
+		case MoodReminderScheduler.categoryIdentifier:
+			showRecordDataScreen()
+			NotificationCenter.default.post(name: MoodReminderScheduler.openCheckInNotification, object: nil)
 		default:
 			Me.log.debug("Unhandled default action category: %@", category)
 		}

@@ -81,7 +81,7 @@ public final class RecordIntegerMoodIntentHandler: NSObject, RecordIntegerMoodIn
 				max: mood.maxRating
 			)
 			injected(Database.self).setModifiedExternally(true)
-			completion(RecordIntegerMoodIntentResponse.success(message: message))
+			MoodReminderService.refreshIfEnabled { completion(RecordIntegerMoodIntentResponse.success(message: message)) }
 		} catch {
 			if let displayableError = error as? DisplayableError {
 				let errorMessage = displayableError.displayableDescription ?? displayableError.displayableTitle
