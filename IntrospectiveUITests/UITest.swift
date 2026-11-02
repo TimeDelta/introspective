@@ -92,6 +92,14 @@ class UITest: XCTestCase {
 		return element.exists || element.waitForExistence(timeout: timeout)
 	}
 
+	final func waitForHittableElement(_ element: XCUIElement, timeout: TimeInterval = 5) -> Bool {
+		let hittable = NSPredicate { _, _ in element.exists && element.isHittable }
+		if hittable.evaluate(with: element) { return true }
+		let expectation = XCTNSPredicateExpectation(predicate: hittable, object: element)
+		_ = XCTWaiter.wait(for: [expectation], timeout: timeout)
+		return hittable.evaluate(with: element)
+	}
+
 	final func waitForValue(_ value: String, of element: XCUIElement, timeout: TimeInterval = 5,
 		file: StaticString = #file, line: UInt = #line) {
 		let predicate = NSPredicate(format: "exists == true AND value == %@", value)
@@ -335,6 +343,7 @@ class UITest: XCTestCase {
 		}
 		if let text = text, !text.isEmpty {
 			field.tap()
+			guard dismissKeyboardIntroductionIfPresent() else { return }
 			// Keyboard keys may be exposed but not individually hittable during
 			// presentation. Keyboard existence is the supported readiness signal;
 			// typing still targets the selected text input and checks its full value.
@@ -364,6 +373,29 @@ class UITest: XCTestCase {
 		}
 	}
 
+	/// Fresh simulators can show Apple's swipe-typing lesson instead of keyboard
+	/// keys and the input accessory toolbar. Never accept an unrelated Continue.
+	@discardableResult
+	final func dismissKeyboardIntroductionIfPresent(file: StaticString = #file, line: UInt = #line) -> Bool {
+		let introduction = app.otherElements["UIContinuousPathIntroductionView"]
+		guard introduction.exists else { return true }
+		let continueButton = introduction.buttons["Continue"]
+		guard waitForHittableElement(continueButton) else {
+			attachInputDiagnostics()
+			XCTFail("Keyboard introduction has no reachable Continue button", file: file, line: line)
+			return false
+		}
+		continueButton.tap()
+		let dismissed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: introduction)
+		_ = XCTWaiter.wait(for: [dismissed], timeout: 5)
+		guard !introduction.exists else {
+			attachInputDiagnostics()
+			XCTFail("Keyboard introduction did not close", file: file, line: line)
+			return false
+		}
+		return true
+	}
+
 	private func attachInputDiagnostics() {
 		let hierarchy = XCTAttachment(string: app.debugDescription)
 		hierarchy.name = "Text input accessibility hierarchy"
@@ -378,6 +410,7 @@ class UITest: XCTestCase {
 	@discardableResult
 	final func deleteContentOf(textField: XCUIElement) -> Bool {
 		textField.tap()
+		guard dismissKeyboardIntroductionIfPresent() else { return false }
 		// Some storyboard fields clear on focus. Check again after tapping: an
 		// empty field has neither a clear button nor a Select All menu action.
 		let currentText = textField.value as? String ?? ""

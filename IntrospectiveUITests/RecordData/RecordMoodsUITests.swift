@@ -21,10 +21,15 @@ final class RecordMoodsUITests: UITest {
 
 		app.tables.buttons["set mood note button"].tap()
 
-		let noteField = app.textViews.allElementsBoundByIndex[0]
-		noteField.tap()
-		noteField.typeText("This is a note.")
-		app.toolbars["Toolbar"].buttons["Save"].tap()
+		let noteField = app.textViews["mood note text view"]
+		setTextFor(field: noteField, to: "This is a note.")
+		guard dismissKeyboardIntroductionIfPresent() else { return }
+		let saveNoteButton = app.toolbars["Toolbar"].buttons["Save"]
+		XCTAssertTrue(waitForHittableElement(saveNoteButton), "Note Save toolbar must be reachable")
+		saveNoteButton.tap()
+		let editorClosed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: noteField)
+		_ = XCTWaiter.wait(for: [editorClosed], timeout: 5)
+		XCTAssertFalse(noteField.exists, "Note editor must close before recording the mood")
 		let recordedRating = moodRatingButton().value as! String
 
 		// when

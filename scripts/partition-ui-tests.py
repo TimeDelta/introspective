@@ -9,6 +9,7 @@ import re
 ROOT = Path(__file__).resolve().parents[1]
 # Measured in run 41484712227: all 108 cases and all 12 required preflight cases.
 # Include each class's full-suite AND preflight work when balancing the CI lanes.
+# The newly added mood-note preflight adds an estimated 40 seconds to its class.
 # New classes use their case count as a weight (40 seconds per case).
 CLASS_SECONDS = {
     'RecordActivitiesUITests': 1361,
@@ -18,7 +19,7 @@ CLASS_SECONDS = {
     'MoodSettingsUITests': 301,
     'MoodResultsUITests': 143,
     'ActivityResultsUITests': 127,
-    'RecordMoodsUITests': 94,
+    'RecordMoodsUITests': 134,
     'ActivitySettingsUITests': 90,
     'GeneralResultsUITests': 22,
 }
@@ -41,6 +42,9 @@ PREFLIGHT_TESTS = {
     ],
     'MoodResultsUITests': [
         'testEditingMood_correctlyDisplaysMoodData',
+    ],
+    'RecordMoodsUITests': [
+        'testRecordMood_resetsNoteAndMoodRating',
     ],
     'GraphSetupScreenUITests': [
         'testEditingAlreadyChosenXAxisQuery_correctlyPopulatesEditQueryScreen',
