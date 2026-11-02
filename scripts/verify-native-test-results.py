@@ -6,13 +6,10 @@ import re
 import sys
 
 ROOT = Path(__file__).resolve().parent.parent
-SOURCES = [ROOT / 'MoodHealthTests' / name for name in
-           ('MoodHealthExchangeTests.swift', 'SavedQueryTests.swift', 'ResultsProcessingTests.swift')]
-
-
-def expected_test_count():
-    pattern = r'^\s*(?:(?:public|internal|private|final|override)\s+)*func\s+test\w+\s*\('
-    count = sum(len(re.findall(pattern, source.read_text(), re.MULTILINE)) for source in SOURCES)
+def expected_test_count(directory=None):
+    pattern = r'^\s*(?:@\w+(?:\([^\n]*\))?\s+)*(?:(?:public|internal|private|final|override)\s+)*func\s+test\w+\s*\('
+    sources = sorted((directory or ROOT / 'MoodHealthTests').rglob('*.swift'))
+    count = sum(len(re.findall(pattern, source.read_text(), re.MULTILINE)) for source in sources)
     if count < 35:
         raise ValueError(f'Native suite unexpectedly shrank below the 35-test baseline: {count}')
     return count

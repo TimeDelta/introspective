@@ -16,7 +16,8 @@ unless target
   target.add_dependency(app)
 end
 
-%w[SavedQueryTests.swift ResultsProcessingTests.swift MoodAnalyticsTests.swift MoodTrackingIntegrationTests.swift].each do |test_file|
+Dir.glob(File.join(name, '**', '*.swift')).sort.each do |source|
+  test_file = source.delete_prefix("#{name}/")
   next if target.source_build_phase.files_references.any? { |ref| ref.path == test_file }
   raise "Missing native test source #{test_file}" unless File.exist?(File.join(name, test_file))
   group = project.main_group.groups.find { |item| item.name == name }
