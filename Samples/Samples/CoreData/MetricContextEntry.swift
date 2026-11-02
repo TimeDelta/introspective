@@ -8,7 +8,7 @@ import Persistence
 
 public enum ContextMetric: String, CaseIterable {
 	// Append cases: saved selection restrictions persist their positions.
-	case all, activeEnergy, steps, workouts, lostItems
+	case all, activeEnergy, steps, workouts, lostItems, mood
 	public var title: String {
 		switch self {
 		case .all: return "All metrics"
@@ -16,6 +16,7 @@ public enum ContextMetric: String, CaseIterable {
 		case .steps: return "Steps"
 		case .workouts: return "Workouts"
 		case .lostItems: return "Lost Items"
+		case .mood: return "Mood"
 		}
 	}
 	public var limitations: String {
@@ -25,6 +26,7 @@ public enum ContextMetric: String, CaseIterable {
 		case .steps: return "Step counts depend on carrying or wearing a device. Vehicle or hand movement can add false steps; walking aids and some activities can cause missed steps."
 		case .workouts: return "Workout counts depend on manual logging, automatic detection, and imported records. Counts do not describe duration or intensity, and duplicate imports can inflate them."
 		case .lostItems: return "Counts depend on what you log and opportunities to lose or find things. Travel, changes in routine, and finding items lost before tracking began can change the totals."
+		case .mood: return "Mood summaries describe the check-ins you record. Missing days, recording frequency and context can affect comparisons. Context does not establish a cause."
 		}
 	}
 }

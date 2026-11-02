@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4AFB4A8DF3817E1044556D2D /* MoodTrackingPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80E680A15F38FEA3DFC5227 /* MoodTrackingPreferences.swift */; };
 		783F1CE4A185E3B4FB2AB76F /* Pods_Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A825662DDC9FD7206084851 /* Pods_Common.framework */; };
+		7B68F76ECCDE871BFD4674EC /* MoodReminderScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46627E6C468F4AE051656A74 /* MoodReminderScheduler.swift */; };
 		A2034F2C24A909AA00557F69 /* GitVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2034F2B24A909A900557F69 /* GitVersion.swift */; };
 		A224F67A267A4137007C3577 /* PainUiUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A224F679267A4137007C3577 /* PainUiUtil.swift */; };
 		A22CF09B23464A11003751E1 /* MoodUiUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22CF09A23464A11003751E1 /* MoodUiUtil.swift */; };
@@ -40,10 +42,14 @@
 		A2B88B78233EA14400E37728 /* CalendarComponentExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B88B77233EA14400E37728 /* CalendarComponentExtension.swift */; };
 		A2B88B79233EA14400E37728 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B88B76233EA14400E37728 /* DateExtension.swift */; };
 		A2FF5753234524AD0018255C /* UiUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FF5752234524AC0018255C /* UiUtil.swift */; };
+		A8ED538D57EA98BC42C7E3B5 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 85EF06AC13D91EFDC102DFEC /* PrivacyInfo.xcprivacy */; };
+		BAA3C095D86D7A7B2D17E529 /* MoodReviewAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B42FBAACE1FB2E97CB4D16 /* MoodReviewAnalytics.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		46627E6C468F4AE051656A74 /* MoodReminderScheduler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MoodReminderScheduler.swift; sourceTree = "<group>"; };
 		4A825662DDC9FD7206084851 /* Pods_Common.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Common.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		85EF06AC13D91EFDC102DFEC /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = ../PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		A2034F2B24A909A900557F69 /* GitVersion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GitVersion.swift; sourceTree = "<group>"; };
 		A224F679267A4137007C3577 /* PainUiUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainUiUtil.swift; sourceTree = "<group>"; };
 		A22CF09A23464A11003751E1 /* MoodUiUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodUiUtil.swift; sourceTree = "<group>"; };
@@ -78,6 +84,8 @@
 		A2B88B76233EA14400E37728 /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		A2B88B77233EA14400E37728 /* CalendarComponentExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarComponentExtension.swift; sourceTree = "<group>"; };
 		A2FF5752234524AC0018255C /* UiUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UiUtil.swift; sourceTree = "<group>"; };
+		B6B42FBAACE1FB2E97CB4D16 /* MoodReviewAnalytics.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MoodReviewAnalytics.swift; sourceTree = "<group>"; };
+		B80E680A15F38FEA3DFC5227 /* MoodTrackingPreferences.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MoodTrackingPreferences.swift; sourceTree = "<group>"; };
 		BEE347F7517D062FCF6D9E93 /* Pods-Common.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Common.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-Common/Pods-Common.debug.xcconfig"; sourceTree = "<group>"; };
 		D73FC94853EB05B670B63689 /* Pods-Common.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Common.release.xcconfig"; path = "../Pods/Target Support Files/Pods-Common/Pods-Common.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -110,6 +118,9 @@
 				A287DEA125804F63000B8166 /* FatigueUiUtil.swift */,
 				A22CF09A23464A11003751E1 /* MoodUiUtil.swift */,
 				A224F679267A4137007C3577 /* PainUiUtil.swift */,
+				B80E680A15F38FEA3DFC5227 /* MoodTrackingPreferences.swift */,
+				46627E6C468F4AE051656A74 /* MoodReminderScheduler.swift */,
+				B6B42FBAACE1FB2E97CB4D16 /* MoodReviewAnalytics.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -133,6 +144,7 @@
 				A2B88B55233EA02A00E37728 /* Products */,
 				B31B94792EB354EDC62B9D9A /* Pods */,
 				D783DBA65D1B1DD5098918AC /* Frameworks */,
+				85EF06AC13D91EFDC102DFEC /* PrivacyInfo.xcprivacy */,
 			);
 			sourceTree = "<group>";
 		};
@@ -264,6 +276,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A8ED538D57EA98BC42C7E3B5 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -325,6 +338,9 @@
 				A29F689E233EA4B700B8DFDB /* AsyncUtil.swift in Sources */,
 				A2B88B67233EA04F00E37728 /* GlobalFunctions.swift in Sources */,
 				A2B88B66233EA04F00E37728 /* Log.swift in Sources */,
+				4AFB4A8DF3817E1044556D2D /* MoodTrackingPreferences.swift in Sources */,
+				7B68F76ECCDE871BFD4674EC /* MoodReminderScheduler.swift in Sources */,
+				BAA3C095D86D7A7B2D17E529 /* MoodReviewAnalytics.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

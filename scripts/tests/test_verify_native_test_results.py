@@ -1,6 +1,7 @@
 import importlib.util
 from pathlib import Path
 import unittest
+import tempfile
 
 spec = importlib.util.spec_from_file_location('verifier', Path(__file__).resolve().parents[1] / 'verify-native-test-results.py')
 verifier = importlib.util.module_from_spec(spec)
@@ -34,3 +35,13 @@ class TestCoverageGate(unittest.TestCase):
 
     def test_repository_discovery_preserves_baseline(self):
         self.assertGreaterEqual(verifier.expected_test_count(), 35)
+
+    def test_new_files_nested_sources_and_inline_actor_attributes_are_counted(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'Existing.swift').write_text('\n'.join(f'func testCase{i}() {{}}' for i in range(35)))
+            nested = root / 'New'; nested.mkdir()
+            (nested / 'Added.swift').write_text('@MainActor func testInlineActor() {}\n@MainActor\nfunc testSeparateActor() {}\nfunc helper() {}\n')
+            self.assertEqual(verifier.expected_test_count(root), 37)
+            with self.assertRaises(ValueError):
+                verifier.validate(self.summary(passedTests=35, totalTestCount=35), verifier.expected_test_count(root))

@@ -64,6 +64,7 @@ public class DiscreteMoodWidget: UIViewController {
 				mood.maxRating = injected(Settings.self).maxMood
 				mood.setSource(.introspective)
 				try transaction.commit()
+				MoodReminderService.refreshIfEnabled()
 				moodButtonsView.isHidden = true
 				Timer.scheduledTimer(
 					timeInterval: 5,

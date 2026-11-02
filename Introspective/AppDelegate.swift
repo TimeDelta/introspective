@@ -36,6 +36,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 	final var window: UIWindow?
 
 	private final var userNotificationDelegate: UserNotificationDelegate!
+	private let moodTracking = MoodTrackingCoordinator()
 
 	final func application(
 		_: UIApplication,
@@ -47,6 +48,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		Globals.uiTesting = CommandLine.arguments.contains("--ui-testing")
 
 		Me.registerDependencies()
+		if Globals.uiTesting {
+			try? MoodTrackingPreferences.shared.save(presets: [])
+			try? MoodTrackingPreferences.shared.save(reminders: MoodReminderSettings())
+		}
 
 		#if DEBUG
 		// Seed only the UI runner's fresh database, before storyboard controllers fetch.
@@ -70,7 +75,11 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		_: UIApplication,
 		didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]? = nil
 	) -> Bool {
+		// The storyboard window is available here, including on notification launches.
+		userNotificationDelegate = UserNotificationDelegate(window)
+		UNUserNotificationCenter.current().delegate = userNotificationDelegate
 		guard !Globals.testing && !Globals.uiTesting else { return true }
+		moodTracking.start()
 
 		let options: UNAuthorizationOptions = [.alert, .sound, .badge]
 		UNUserNotificationCenter.current().requestAuthorization(options: options) { granted, error in
@@ -82,6 +91,18 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 			}
 		}
 
+		return true
+	}
+
+	final func application(_ application: UIApplication, open url: URL,
+		options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+		guard url.scheme == "introspective", url.host == "mood-check-in",
+			let tabs = window?.rootViewController as? UITabBarController,
+			let navigation = tabs.viewControllers?.first as? UINavigationController else { return false }
+		tabs.selectedIndex = 0
+		if !(navigation.topViewController is MoodPresetsViewController) {
+			navigation.pushViewController(MoodPresetsViewController(style: .grouped), animated: false)
+		}
 		return true
 	}
 

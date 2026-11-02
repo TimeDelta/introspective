@@ -16,7 +16,8 @@ unless target
   target.add_dependency(app)
 end
 
-%w[SavedQueryTests.swift ResultsProcessingTests.swift].each do |test_file|
+Dir.glob(File.join(name, '**', '*.swift')).sort.each do |source|
+  test_file = source.delete_prefix("#{name}/")
   next if target.source_build_phase.files_references.any? { |ref| ref.path == test_file }
   raise "Missing native test source #{test_file}" unless File.exist?(File.join(name, test_file))
   group = project.main_group.groups.find { |item| item.name == name }
@@ -36,6 +37,8 @@ end
   Introspective/UI/Explore/MetricContextViewController.swift
   Introspective/UI/Explore/ActivityLevelsViewController.swift
   Introspective/UI/RecordData/LostItemsViewController.swift
+  Introspective/UI/RecordData/Mood/MoodTrackingViewController.swift
+  Introspective/UI/RecordData/Mood/MoodRemindersViewController.swift
 ].each do |path|
   reference = project.files.find { |file| file.real_path.to_s == File.expand_path(path) }
   raise "Missing production source #{path}" unless reference
