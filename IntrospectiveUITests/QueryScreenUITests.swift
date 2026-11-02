@@ -35,7 +35,7 @@ final class QueryScreenUITests: UITest {
 		addDataTypeToQuery()
 
 		// when
-		app.tables.cells.allElementsBoundByIndex[1].tap()
+		app.tables.cells.element(boundBy: 1).tap()
 		app.pickerWheels["Activity"].adjust(toPickerWheelValue: "Body Mass Index")
 		app.scrollViews.otherElements.buttons["save data type button"].tap()
 
@@ -48,7 +48,7 @@ final class QueryScreenUITests: UITest {
 		addDataTypeToQuery()
 
 		// when
-		app.tables.cells.allElementsBoundByIndex[1].tap()
+		app.tables.cells.element(boundBy: 1).tap()
 		app.pickerWheels["Start and end timestamps are the same as"].adjust(toPickerWheelValue: "Within <number> <time_unit>s of")
 		app.switches.allElementsBoundByIndex[0].tap()
 		app.scrollViews.otherElements.buttons["set time unit button"].tap()
@@ -69,8 +69,7 @@ final class QueryScreenUITests: UITest {
 		app.tables.cells.allElementsBoundByIndex[0].tap()
 		app.pickerWheels["Activity"].adjust(toPickerWheelValue: "Blood Pressure")
 		app.buttons["save button"].tap()
-		app.tables.buttons["Add"].tap()
-		app.sheets["What would you like to add?"].buttons["Attribute Restriction"].tap()
+		addAttributeRestrictionToQuery()
 
 		// when
 		app.tables.cells.element(boundBy: 1).tap()
@@ -97,9 +96,8 @@ final class QueryScreenUITests: UITest {
 		dateFormatter.dateStyle = .long
 		dateFormatter.timeStyle = .none
 		let dateText = dateFormatter.string(from: date)
-		app.tables.buttons["Add"].tap()
-		app.sheets["What would you like to add?"].buttons["Attribute Restriction"].tap()
-		app.tables.cells.allElementsBoundByIndex[1].tap()
+		addAttributeRestrictionToQuery()
+		app.tables.cells.element(boundBy: 1).tap()
 		setPicker("restricted attribute", to: "Start Date")
 		setPicker("attribute restriction", to: "Before date", changeCase: false)
 		app.buttons["set date button"].tap()
@@ -115,14 +113,13 @@ final class QueryScreenUITests: UITest {
 
 	func testChangingRestrictedAttributeToAttributeOfSameType_updatesAttributeRestrictionDescription() {
 		// given
-		app.tables.buttons["Add"].tap()
-		app.sheets["What would you like to add?"].buttons["Attribute Restriction"].tap()
-		app.tables.cells.allElementsBoundByIndex[1].tap()
+		addAttributeRestrictionToQuery()
+		app.tables.cells.element(boundBy: 1).tap()
 		setPicker("restricted attribute", to: "Note")
 		app.buttons["save attribute restriction button"].tap()
 
 		// when
-		app.tables.cells.allElementsBoundByIndex[1].tap()
+		app.tables.cells.element(boundBy: 1).tap()
 		setPicker("restricted attribute", to: "Name")
 		app.buttons["save attribute restriction button"].tap()
 
@@ -137,9 +134,8 @@ final class QueryScreenUITests: UITest {
 		dateFormatter.dateStyle = .long
 		dateFormatter.timeStyle = .none
 		let dateText = dateFormatter.string(from: date)
-		app.tables.buttons["Add"].tap()
-		app.sheets["What would you like to add?"].buttons["Attribute Restriction"].tap()
-		app.tables.cells.allElementsBoundByIndex[1].tap()
+		addAttributeRestrictionToQuery()
+		app.tables.cells.element(boundBy: 1).tap()
 		setPicker("restricted attribute", to: "Start Date")
 		setPicker("attribute restriction", to: "After date", changeCase: false)
 		app.buttons["set date button"].tap()

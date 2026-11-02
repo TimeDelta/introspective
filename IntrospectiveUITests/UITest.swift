@@ -569,9 +569,14 @@ class UITest: XCTestCase {
 		app.buttons["Run"].tap()
 	}
 
-	final func addAttributeRestrictionToQuery() {
+	@discardableResult
+	final func addAttributeRestrictionToQuery() -> XCUIElement {
+		let rows = app.tables["queryBuilder"].cells
+		let newRow = rows.element(boundBy: rows.count)
 		app.tables.buttons["Add"].tap()
 		app.sheets["What would you like to add?"].buttons["Attribute Restriction"].tap()
+		XCTAssertTrue(waitForElement(newRow), "New attribute restriction row did not appear")
+		return newRow
 	}
 
 	final func addAndToQuery() {

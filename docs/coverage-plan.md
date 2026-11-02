@@ -101,7 +101,7 @@ both full UI shards, Release, and the aggregate check remain required.
 
 ## Bounded legacy CSV exports
 
-Eleven additional native integration cases exercise the actual activity,
+Thirteen additional native integration cases exercise the actual activity,
 medication, and mood exporters with SQLite and real output streams. They compare
 405-record files with the existing model encoders, verify all column counts and
 values, pin relationship/settings snapshots through pauses and edits, fault
@@ -110,5 +110,10 @@ and remove partial output on cancellation or an injected mid-write failure.
 The in-memory functional-store path and independent DI instances are also covered.
 The existing 73 exporter functional cases remain selected in the legacy suite;
 their expected fields now include the medication index declared in the header
-and stable activity tag ordering. Native inventory is 168; legacy and UI
+and stable activity tag ordering. Native inventory is 170; legacy and UI
 inventories remain 4,408 selected / 41 explicitly excluded and 58 + 50.
+
+The shared-tag cases also cover the new `ActivityTags` model: one tag on all 405
+activities after SQLite reopen/export, and migration from `MetricContext` with
+existing tag links, moods, queries, context, and lost-item records intact. The
+original exact CSV comparisons and tag-value assertions remain in place.

@@ -39,6 +39,7 @@ public extension Tag {
 
 	@NSManaged var name: String
 	@NSManaged var activityDefinitions: NSSet
+	@NSManaged var activities: NSSet
 }
 
 // MARK: Generated accessors for activityDefinitions

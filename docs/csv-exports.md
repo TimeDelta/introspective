@@ -19,6 +19,19 @@ medications are prefetched for each batch and faulted afterwards, releasing thei
 materialized values even while an export is paused. Completed, cancelled, and
 failed exports release the reader and its store reference.
 
+## Shared activity tags
+
+The `ActivityTags` model adds the inverse of the activity-to-tag relationship.
+The previous one-way relationship allowed a tag assigned to several activities
+to survive on only one when saved to SQLite. The new many-to-many relationship
+keeps every association. Migration preserves links present in the existing store;
+it cannot reconstruct links that older versions already lost.
+
+All six earlier model versions remain bundled. Regression tests reopen a store
+with 405 activities sharing one tag and migrate a `MetricContext` store while
+preserving its activity tags, moods, saved queries, context notes, and lost-item
+records. They then add shared tags and reopen the migrated store again.
+
 ## Compatibility
 
 Existing column names, order, quoted fields, source descriptions, custom mood
