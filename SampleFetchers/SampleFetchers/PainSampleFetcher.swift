@@ -15,6 +15,6 @@ public final class PainSampleFetcher: SampleFetcher {
 	public let sampleTypePluralName = "Pains"
 
 	public func getSamples(from minDate: Date?, to maxDate: Date?) throws -> [Sample] {
-		try injected(PainDAO.self).getPainRecords(from: minDate, to: maxDate)
+		try fetchOnMainQueue { try injected(PainDAO.self).getPainRecords(from: minDate, to: maxDate) }
 	}
 }

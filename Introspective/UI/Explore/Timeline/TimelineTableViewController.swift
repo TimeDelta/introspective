@@ -109,6 +109,27 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			injected(UserDefaultsUtil.self).bool(forKey: .weightEnabledOnTimeline),
 	]
 
+	private var isClosed = false
+	private var activeFetch: TimelineFetchRequest?
+
+	deinit { activeFetch?.cancel() }
+
+	public override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		if isMovingFromParent || isBeingDismissed || navigationController?.isBeingDismissed == true {
+			isClosed = true
+			cancelFetch()
+		}
+	}
+
+	public override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		if isClosed {
+			isClosed = false
+			fetchSamples()
+		}
+	}
+
 	private var eventBuckets: [(day: Date, events: [Event])]? {
 		didSet {
 			DispatchQueue.main.async { [weak self] in self?.tableView.reloadData() }
@@ -149,9 +170,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		updatePreviousAndNextButtons()
 
 		resetDateRangeButtonTitle()
-		injected(AsyncUtil.self).run(qos: .userInitiated) { [weak self] in
-			self?.fetchSamples()
-		}
+		fetchSamples()
 	}
 
 	// MARK: - Table view data source
@@ -167,13 +186,14 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		guard let eventBuckets = eventBuckets else {
 			return 1
 		}
+		guard eventBuckets.indices.contains(section) else { return 0 }
 		return eventBuckets[section].events.count
 	}
 
 	// MARK: - Table view delegate
 
 	public override func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
-		guard let eventBuckets = eventBuckets else { return nil }
+		guard let eventBuckets = eventBuckets, eventBuckets.indices.contains(section) else { return nil }
 		return injected(CalendarUtil.self).string(for: eventBuckets[section].day, dateStyle: .long, timeStyle: .none)
 	}
 
@@ -233,7 +253,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			self.minDate = minDate - 1.days
 		}
 		resetDateRangeButtonTitle()
-		injected(AsyncUtil.self).run(qos: .userInitiated) { [weak self] in self?.fetchSamples() }
+		fetchSamples()
 	}
 
 	@IBAction final func nextDateRangeButtonPressed(_: Any) {
@@ -254,7 +274,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			self.minDate = minDate + 1.days
 		}
 		resetDateRangeButtonTitle()
-		injected(AsyncUtil.self).run(qos: .userInitiated) { [weak self] in self?.fetchSamples() }
+		fetchSamples()
 	}
 
 	@IBAction final func chooseDataTypesButtonPressed(_: Any) {
@@ -276,6 +296,8 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	}
 
 	@objc final func goBack() {
+		isClosed = true
+		cancelFetch()
 		injected(UserDefaultsUtil.self).setUserDefault(
 			enabledSampleTypes[Me.enabledString(for: Activity.self)] ?? false,
 			forKey: .activityEnabledOnTimeline
@@ -342,11 +364,12 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	// MARK: - Received Notifications
 
 	@objc private final func persistenceLayerDidRefresh(notification _: Notification) {
-		injected(AsyncUtil.self).run(qos: .userInteractive) { self.fetchSamples() }
+		fetchSamples()
 	}
 
 	@objc private final func persistenceLayerWillRefresh(notification _: Notification) {
-		// all CoreData objects will soon be faults that cause exceptions
+		// Discard in-flight results before their managed objects become invalid.
+		cancelFetch()
 		eventBuckets = nil
 	}
 
@@ -362,9 +385,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			maxDate = nil
 		}
 		updatePreviousAndNextButtons()
-		injected(AsyncUtil.self).run(qos: .userInitiated) { [weak self] in
-			self?.fetchSamples()
-		}
+		fetchSamples()
 		resetDateRangeButtonTitle()
 	}
 
@@ -374,37 +395,17 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			for type in enabledTypes {
 				enabledSampleTypes[type] = true
 			}
-			injected(AsyncUtil.self).run(qos: .userInitiated) { [weak self] in
-				self?.fetchSamples()
-			}
+			fetchSamples()
 		}
 	}
 
-	@objc private func sampleChanged(notification: Notification) {
-//		if
-//			let indexPath: IndexPath? = value(for: .indexPath, from: notification),
-//			let sample: Sample = value(for: .sample, from: notification)
-//		{
-//			if let event = event(at: indexPath!) {
-//				let originalSample = event.sample
-//				// cannot force Sample to conform to Hashable due to associated type fo Equatable
-//				var samples = Set<Sample>()
-//				if let buckets = eventBuckets {
-//					for var bucket in buckets {
-//						bucket.events.removeAll(where: { $0.sample.equalTo(originalSample) })
-//						samples.append(contentsOf: bucket.events.map{ $0.sample })
-//					}
-//				}
-//				setEvents(for: samples)
-//			}
-//		} else {
+	@objc private func sampleChanged(notification _: Notification) {
 		fetchSamples()
-//		}
 	}
 
 	// MARK: - Helper Functions
 
-	private func setEvents(for samples: [Sample]) {
+	private func setEvents(for samples: [Sample], from minDate: Date?, to maxDate: Date?) {
 		let signpostName2: StaticString = "Determining events"
 		Me.signpost.begin(name: signpostName2)
 		var events = [Event]()
@@ -436,11 +437,13 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			eventsByDay.append((day: currentDay, events: eventsForCurrentDay))
 		}
 		Me.signpost.end(name: signpostName2, "Processed %d events", events.count)
-		DispatchQueue.main.async { [weak self] in self?.eventBuckets = eventsByDay }
+		eventBuckets = eventsByDay
 	}
 
 	private func event(at indexPath: IndexPath) -> Event? {
-		eventBuckets?[indexPath.section].events[indexPath.row]
+		guard let buckets = eventBuckets, buckets.indices.contains(indexPath.section),
+			buckets[indexPath.section].events.indices.contains(indexPath.row) else { return nil }
+		return buckets[indexPath.section].events[indexPath.row]
 	}
 
 	private static func enabledString(for type: Sample.Type) -> String {
@@ -453,37 +456,45 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		nextDateRangeButton.isEnabled = enablePreviousAndNextButtons
 	}
 
+	private func cancelFetch() {
+		activeFetch?.cancel()
+		activeFetch = nil
+	}
+
 	private func fetchSamples() {
-		let signpostName1: StaticString = "Fetching samples"
-		Me.signpost.begin(name: signpostName1)
-		DispatchQueue.main.async { [weak self] in self?.eventBuckets = nil } // release the previous rows on main
-		let fetchSync = DispatchGroup()
-		let samplesLock = NSLock()
-		var samples = [Sample]()
-		for (type, fetcher) in fetchers {
-			guard enabledSampleTypes[Me.enabledString(for: type)] == true else { continue }
-			fetchSync.enter()
-			injected(AsyncUtil.self).run(qos: .userInitiated) { [weak self] in
-				defer { fetchSync.leave() }
-				guard let self = self else { return }
+		guard Thread.isMainThread else {
+			DispatchQueue.main.async { [weak self] in self?.fetchSamples() }
+			return
+		}
+		guard !isClosed else { return }
+		cancelFetch()
+		let request = TimelineFetchRequest(minDate: minDate, maxDate: maxDate)
+		activeFetch = request
+		eventBuckets = nil
+		let group = DispatchGroup()
+		// Capture the entire selection before scheduling any work. Workers never read the controller.
+		for (type, fetcher) in fetchers where enabledSampleTypes[Me.enabledString(for: type)] == true {
+			group.enter()
+			injected(AsyncUtil.self).run(qos: .userInitiated) {
+				defer { group.leave() }
+				guard !request.isCancelled else { return }
 				do {
-					let newSamples = try fetcher.getSamples(from: self.minDate, to: self.maxDate)
-					samplesLock.lock()
-					samples.append(contentsOf: newSamples)
-					samplesLock.unlock()
+					request.append(try fetcher.getSamples(from: request.minDate, to: request.maxDate))
 				} catch {
-					if !(error is Sample) {
-						DispatchQueue.main.async { [weak self] in
-							self?.showError(title: "Unable to retrieve \(fetcher.sampleTypePluralName)", error: error)
-						}
-					}
+					if !(error is Sample) { request.append(error: error, source: fetcher.sampleTypePluralName) }
 				}
 			}
 		}
-		fetchSync.wait()
-		Me.signpost.end(name: signpostName1, "Fetched %d samples", samples.count)
-
-		setEvents(for: samples)
+		group.notify(queue: .main) { [weak self] in
+			guard let self = self, self.activeFetch === request, !request.isCancelled else { return }
+			let result = request.takeResults()
+			self.activeFetch = nil
+			// UI descriptions and managed sample properties are read on the main queue.
+			self.setEvents(for: result.samples, from: request.minDate, to: request.maxDate)
+			for (source, error) in result.errors {
+				self.showError(title: "Unable to retrieve \(source)", error: error)
+			}
+		}
 	}
 
 	private func sortEventsByMostRecentFirst(_ events: [Event]) -> [Event] {
@@ -1027,5 +1038,37 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 			]
 			super.init(at: weight.timestamp, for: weight, descriptions: descriptions)
 		}
+	}
+}
+
+/// Owns only a request's data, so queued or blocked fetchers cannot retain a timeline controller.
+private final class TimelineFetchRequest {
+	let minDate: Date?
+	let maxDate: Date?
+	private let lock = NSLock()
+	private var cancelled = false
+	private var samples = [Sample]()
+	private var errors = [(String, Error)]()
+	init(minDate: Date?, maxDate: Date?) { self.minDate = minDate; self.maxDate = maxDate }
+	var isCancelled: Bool { lock.lock(); defer { lock.unlock() }; return cancelled }
+	func cancel() {
+		lock.lock(); defer { lock.unlock() }
+		cancelled = true
+		samples.removeAll()
+		errors.removeAll()
+	}
+	func append(_ values: [Sample]) {
+		lock.lock(); defer { lock.unlock() }
+		if !cancelled { samples.append(contentsOf: values) }
+	}
+	func append(error: Error, source: String) {
+		lock.lock(); defer { lock.unlock() }
+		if !cancelled { errors.append((source, error)) }
+	}
+	func takeResults() -> (samples: [Sample], errors: [(String, Error)]) {
+		lock.lock(); defer { lock.unlock() }
+		let result = (samples, errors)
+		samples = []; errors = []
+		return result
 	}
 }

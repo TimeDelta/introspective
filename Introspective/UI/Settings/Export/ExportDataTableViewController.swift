@@ -32,6 +32,8 @@ public final class ExportDataTableViewController: UITableViewController {
 		Activity.self,
 		MedicationDose.self,
 		MoodImpl.self,
+		MetricContextEntry.self,
+		LostItemEvent.self,
 	]
 
 	// MARK: Active Exports
@@ -106,7 +108,8 @@ public final class ExportDataTableViewController: UITableViewController {
 	) -> UITableViewCell {
 		if indexPath.section == Me.dataTypeSection {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "dataType", for: indexPath)
-			cell.textLabel?.text = Me.sampleTypes[indexPath.row].name.localizedCapitalized
+			let type = Me.sampleTypes[indexPath.row]
+			cell.textLabel?.text = type == LostItemEvent.self ? "Lost Item Events" : type.name.localizedCapitalized
 			return cell
 		}
 		let cell = tableView.dequeueReusableCell(
@@ -274,7 +277,7 @@ public final class ExportDataTableViewController: UITableViewController {
 		DispatchQueue.main.async { [weak self] in self?.tableView.reloadData() }
 	}
 
-	private final func getExporterFor(_ indexPath: IndexPath) throws -> Exporter {
+	internal final func getExporterFor(_ indexPath: IndexPath) throws -> Exporter {
 		let type = Me.sampleTypes[indexPath.row]
 		if type == Activity.self || type == ActivityDefinition.self {
 			return injected(ActivityExporter.self)
@@ -285,6 +288,8 @@ public final class ExportDataTableViewController: UITableViewController {
 		if type == MoodImpl.self {
 			return injected(MoodExporter.self)
 		}
+		if type == MetricContextEntry.self { return injected(MetricContextExporter.self) }
+		if type == LostItemEvent.self { return injected(LostItemExporter.self) }
 		Me.log.error("Unknown index path: (section: %d, row: %d)", indexPath.section, indexPath.row)
 		throw GenericError("Unknown index path")
 	}
@@ -310,6 +315,8 @@ public final class ExportDataTableViewController: UITableViewController {
 		case is MoodExporter:
 			content.categoryIdentifier = UserNotificationDelegate.finishedExportingMoods.identifier
 			break
+		case is MetricContextExporter, is LostItemExporter:
+			content.categoryIdentifier = UserNotificationDelegate.finishedExportingRecords.identifier
 		default:
 			Me.log.error("Forgot a type of exporter for notifications: %@", String(describing: exporter))
 		}

@@ -36,6 +36,8 @@ public class SamplesInjectionProvider: InjectionProvider {
 		MedicationExporter.self,
 		MoodDAO.self,
 		MoodExporter.self,
+		MetricContextExporter.self,
+		LostItemExporter.self,
 		MoodUtil.self,
 		PainDAO.self,
 		NumericSampleUtil.self,
@@ -47,6 +49,8 @@ public class SamplesInjectionProvider: InjectionProvider {
 	public init() {}
 
 	public final func get<Type>(_ type: Type.Type) throws -> Type {
+		if type == MetricContextExporter.self { return try MetricContextExporter() as! Type }
+		if type == LostItemExporter.self { return try LostItemExporter() as! Type }
 		switch type {
 		case is ActivityDAO.Protocol:
 			return Me.activityDAO as! Type

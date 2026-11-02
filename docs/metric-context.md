@@ -44,3 +44,17 @@ all five earlier model versions. Sample type ID 18 and the category/metric order
 are stable identifiers used by saved queries. Regression tests cover migration
 from the previous model, disk reopen, edits/deletion, filtering, saved queries,
 CSV encoding, actual editor callbacks, bounded lists and per-metric explanations.
+
+## CSV exports
+
+In **Settings → Export Data**, choose **Metric Context** or **Lost Item Events**.
+The context CSV includes the timestamp, optional end, category, metric key, and
+note. The lost-item CSV includes the timestamp, signed change (`1` lost, `-1`
+found), and note. Dates use UTC ISO 8601 with milliseconds; quoted fields preserve
+commas, quotation marks, Unicode, and line breaks.
+
+Both exports include all saved records, in chronological order. They read a
+snapshot taken when export starts, so edits during export do not change its rows.
+Large exports read at most 200 managed records at a time. The existing Active
+Exports controls support pausing, continuing, cancelling, and sharing the file.
+Cancelling or encountering a write error removes the incomplete file.

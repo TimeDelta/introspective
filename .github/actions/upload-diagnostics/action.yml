@@ -1,0 +1,52 @@
+name: Upload diagnostics with bounded retries
+description: Retry diagnostic uploads without repeating builds or tests; fail if every upload fails.
+inputs:
+  name:
+    description: Artifact name; retry attempts append a unique suffix.
+    required: true
+  path:
+    description: Files to retain.
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Upload diagnostics (attempt 1)
+      id: first
+      if: ${{ !cancelled() }}
+      continue-on-error: true
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.name }}
+        path: ${{ inputs.path }}
+        retention-days: 14
+        if-no-files-found: error
+    - name: Retry diagnostics upload (attempt 2)
+      id: second
+      if: ${{ !cancelled() && steps.first.outcome == 'failure' }}
+      continue-on-error: true
+      uses: actions/upload-artifact@v4
+      with:
+        # A lost finalize response can leave an immutable artifact on the server.
+        name: ${{ inputs.name }}-retry-2
+        path: ${{ inputs.path }}
+        retention-days: 14
+        if-no-files-found: error
+    - name: Retry diagnostics upload (attempt 3)
+      id: third
+      if: ${{ !cancelled() && steps.second.outcome == 'failure' }}
+      continue-on-error: true
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.name }}-retry-3
+        path: ${{ inputs.path }}
+        retention-days: 14
+        if-no-files-found: error
+    - name: Require a successful diagnostic upload
+      if: ${{ !cancelled() }}
+      shell: bash
+      env:
+        GITHUB_ACTION_PATH: ${{ github.action_path }}
+        UPLOAD_FIRST: ${{ steps.first.outcome }}
+        UPLOAD_SECOND: ${{ steps.second.outcome }}
+        UPLOAD_THIRD: ${{ steps.third.outcome }}
+      run: python3 "$GITHUB_ACTION_PATH/check-upload.py"

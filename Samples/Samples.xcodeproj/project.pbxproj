@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6F92655B529A4B349B64CF72 /* RecordCSVExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946D957102A3495392CE3137 /* RecordCSVExporter.swift */; };
 		E748299A3C0D1EA94FEECCB0 /* LostItemEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAAC731F89AB66BE8320CF9C /* LostItemEvent.swift */; };
 		EE5FB29047A7A83B2EE0F5DD /* Workout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C9F901387A002E28284DF2 /* Workout.swift */; };
 		6CBA46752862A487D1924575 /* ActiveEnergy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C72968A04A278D9F1AB216 /* ActiveEnergy.swift */; };
@@ -74,6 +75,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		946D957102A3495392CE3137 /* RecordCSVExporter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RecordCSVExporter.swift; sourceTree = "<group>"; };
 		CAAC731F89AB66BE8320CF9C /* LostItemEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LostItemEvent.swift; sourceTree = "<group>"; };
 		86C9F901387A002E28284DF2 /* Workout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workout.swift; sourceTree = "<group>"; };
 		F2C72968A04A278D9F1AB216 /* ActiveEnergy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveEnergy.swift; sourceTree = "<group>"; };
@@ -316,6 +318,7 @@
 				A2AF1FDE2343C27C00E04517 /* ActivityExporter.swift */,
 				A2AF1FDF2343C27C00E04517 /* MedicationExporter.swift */,
 				A2AF1FE02343C27C00E04517 /* MoodExporter.swift */,
+				946D957102A3495392CE3137 /* RecordCSVExporter.swift */,
 			);
 			path = Exporters;
 			sourceTree = "<group>";
@@ -475,6 +478,7 @@
 				A2A8AFFA2343E59100E883CE /* HealthKitUtil.swift in Sources */,
 				A22D626D234398AF0023470F /* HealthKitCorrelationSample.swift in Sources */,
 				F8CA19F263511E013C34E520 /* MetricContextEntry.swift in Sources */,
+				6F92655B529A4B349B64CF72 /* RecordCSVExporter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

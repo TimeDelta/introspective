@@ -15,6 +15,6 @@ public final class ActivitySampleFetcher: SampleFetcher {
 	public let sampleTypePluralName = "Activities"
 
 	public func getSamples(from minDate: Date?, to maxDate: Date?) throws -> [Sample] {
-		try injected(ActivityDAO.self).getActivities(from: minDate, to: maxDate)
+		try fetchOnMainQueue { try injected(ActivityDAO.self).getActivities(from: minDate, to: maxDate) }
 	}
 }

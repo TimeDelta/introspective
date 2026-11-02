@@ -15,3 +15,10 @@ public protocol SampleFetcher {
 
 	func getSamples(from minDate: Date?, to maxDate: Date?) throws -> [Sample]
 }
+
+/// These DAOs return objects owned by Database's root view context.
+/// Keep the fetch on its owner queue; callers must consume managed properties there too.
+internal func fetchOnMainQueue<Value>(_ fetch: () throws -> Value) rethrows -> Value {
+	if Thread.isMainThread { return try fetch() }
+	return try DispatchQueue.main.sync(execute: fetch)
+}

@@ -88,6 +88,38 @@ private final class ChartInsertionProbeView: UIView {
 	}
 }
 
+private final class ObservedExportStream: OutputStream {
+	private let output: OutputStream
+	private let didWrite: () -> Void
+	init(url: URL, didWrite: @escaping () -> Void) {
+		output = OutputStream(url: url, append: false)!
+		self.didWrite = didWrite
+		super.init(toMemory: Void())
+	}
+	override func open() { output.open() }
+	override func close() { output.close() }
+	override var hasSpaceAvailable: Bool { output.hasSpaceAvailable }
+	override var streamStatus: Stream.Status { output.streamStatus }
+	override var streamError: Error? { output.streamError }
+	override func write(_ buffer: UnsafePointer<UInt8>, maxLength len: Int) -> Int {
+		let result = output.write(buffer, maxLength: len)
+		didWrite()
+		return result
+	}
+}
+
+private final class ObservedExportIO: IOUtil, InjectionProvider {
+	let types: [Any.Type] = [IOUtil.self]
+	let didWrite: () -> Void
+	init(didWrite: @escaping () -> Void) { self.didWrite = didWrite }
+	func get<T>(_ type: T.Type) throws -> T { self as! T }
+	func contentsOf(_ url: URL) throws -> String { try IOUtilImpl().contentsOf(url) }
+	func csvReader(url: URL, hasHeaderRow: Bool) throws -> CSVReader { try IOUtilImpl().csvReader(url: url, hasHeaderRow: hasHeaderRow) }
+	func csvWriter(url: URL) throws -> CSVWriter {
+		try CSVWriter(stream: ObservedExportStream(url: url, didWrite: didWrite), delimiter: ",", newline: .lf)
+	}
+}
+
 private final class ExportBufferProbe: Exportable {
 	static let exportFileDescription = "Probe"
 	let value: Int
@@ -1924,6 +1956,138 @@ final class SavedQueryTests: XCTestCase {
 		try MetricContextEntry.exportHeaderRow(to: csv); csv.beginNewRow(); try entry.export(to: csv)
 		let data = try XCTUnwrap(stream.property(forKey: .dataWrittenToMemoryStreamKey) as? Data)
 		XCTAssertEqual(String(data: data, encoding: .utf8), "\"Timestamp\",\"End\",\"Context\",\"Metric\",\"Note\"\n\"2023-11-14T22:13:43.500Z\",\"2023-11-14T22:14:43.500Z\",\"Device not worn\",\"steps\",\"Watch, \"\"charging\"\"\nthen worn\"")
+	}
+
+	private func exportRows(at url: URL) throws -> [[String]] {
+		let reader = try CSVReader(stream: XCTUnwrap(InputStream(url: url)), hasHeaderRow: false)
+		var rows = [[String]]()
+		while let row = reader.next() { rows.append(row) }
+		return rows
+	}
+
+	func testLostItemFileExportStreamsAcrossBatchBoundariesInTimestampOrder() throws {
+		let start = Date(timeIntervalSince1970: 1_700_000_023.5)
+		for index in (0..<405).reversed() {
+			let event = LostItemEvent(context: container.viewContext)
+			event.timestamp = start.addingTimeInterval(Double(index))
+			event.delta = index.isMultiple(of: 2) ? 1 : -1
+			event.note = "Item \(index), \"keys\"\n🧠"
+		}
+		try container.viewContext.save()
+		let url = directory.appendingPathComponent("lost-items.csv")
+		let exporter = LostItemExporter(coordinator: container.persistentStoreCoordinator, url: url)
+		let done = expectation(description: "Background export completed")
+		DispatchQueue.global().async {
+			do { try exporter.exportData() } catch { XCTFail("Background export failed: \(error)") }
+			done.fulfill()
+		}
+		wait(for: [done], timeout: 10)
+		let rows = try exportRows(at: url)
+		XCTAssertEqual(rows.count, 406)
+		XCTAssertEqual(rows.first, ["Timestamp", "Change", "Note"])
+		for index in 0..<405 {
+			XCTAssertEqual(rows[index + 1][1], index.isMultiple(of: 2) ? "1" : "-1")
+			XCTAssertEqual(rows[index + 1][2], "Item \(index), \"keys\"\n🧠")
+		}
+		XCTAssertEqual(rows[1][0], "2023-11-14T22:13:43.500Z")
+		XCTAssertEqual(exporter.percentComplete(), 1)
+		XCTAssertFalse(exporter.isPaused)
+		XCTAssertFalse(exporter.isCancelled)
+	}
+
+	func testContextFileExportPauseResumePinsSnapshotAcrossEditsAndInsertions() throws {
+		let start = Date(timeIntervalSince1970: 1_700_000_023.5)
+		let entry = try MetricContextEntry.record(category: .device, metric: .steps,
+			at: start, until: start.addingTimeInterval(60), note: "Watch, \"charging\"\nthen worn")
+		let url = directory.appendingPathComponent("context.csv")
+		let exporter = MetricContextExporter(coordinator: container.persistentStoreCoordinator, url: url)
+		exporter.pause()
+		try exporter.exportData()
+		XCTAssertTrue(exporter.isPaused)
+		XCTAssertEqual(exporter.percentComplete(), 0)
+		entry.note = "Changed after export began"
+		try container.viewContext.save()
+		try MetricContextEntry.record(category: .travel, metric: .all, at: start.addingTimeInterval(100))
+		try exporter.resume()
+		let rows = try exportRows(at: url)
+		XCTAssertEqual(rows, [["Timestamp", "End", "Context", "Metric", "Note"],
+			["2023-11-14T22:13:43.500Z", "2023-11-14T22:14:43.500Z", "Device not worn", "steps", "Watch, \"charging\"\nthen worn"]])
+		XCTAssertEqual(exporter.percentComplete(), 1)
+		exporter.pause()
+		XCTAssertFalse(exporter.isPaused, "A late expiration cannot turn a finished file into a paused export")
+		try exporter.resume()
+		XCTAssertEqual(try exportRows(at: url), rows, "A stale Continue must not append another header or duplicate rows")
+	}
+
+	func testRecordExportResumesMidBatchWithoutDuplicatingEqualTimestampRows() throws {
+		let date = Date(timeIntervalSince1970: 1_700_000_023.5)
+		for index in 0..<405 {
+			let event = LostItemEvent(context: container.viewContext)
+			event.timestamp = date; event.delta = 1; event.note = String(index)
+		}
+		try container.viewContext.save()
+		let url = directory.appendingPathComponent("resumed.csv")
+		let exporter = LostItemExporter(coordinator: container.persistentStoreCoordinator, url: url)
+		var requestedPause = false
+		DependencyInjector.register([ObservedExportIO { [weak exporter] in
+			guard let exporter = exporter, !requestedPause, exporter.percentComplete() > 0.4 else { return }
+			requestedPause = true
+			exporter.pause()
+		}])
+		try exporter.exportData()
+		XCTAssertTrue(requestedPause)
+		XCTAssertTrue(exporter.isPaused)
+		XCTAssertGreaterThan(exporter.percentComplete(), 0)
+		XCTAssertLessThan(exporter.percentComplete(), 1)
+		// Deleting source records must not change the pinned export's remaining rows.
+		for record in try container.viewContext.fetch(LostItemEvent.fetchRequest()) { container.viewContext.delete(record) }
+		try container.viewContext.save()
+		try exporter.resume()
+		let rows = try exportRows(at: url)
+		XCTAssertEqual(rows.count, 406)
+		XCTAssertEqual(Set(rows.dropFirst().map { $0[2] }), Set((0..<405).map(String.init)))
+		XCTAssertEqual(exporter.percentComplete(), 1)
+	}
+
+	func testCancellingPausedRecordExportRemovesPartialFileAndCannotResume() throws {
+		try LostItemEvent.record(change: 1)
+		let url = directory.appendingPathComponent("cancelled.csv")
+		let exporter = LostItemExporter(coordinator: container.persistentStoreCoordinator, url: url)
+		exporter.pause()
+		try exporter.exportData()
+		XCTAssertTrue(FileManager.default.fileExists(atPath: url.path))
+		exporter.cancel()
+		XCTAssertTrue(exporter.isCancelled)
+		XCTAssertFalse(exporter.isPaused)
+		XCTAssertFalse(FileManager.default.fileExists(atPath: url.path))
+		try exporter.resume()
+		XCTAssertFalse(FileManager.default.fileExists(atPath: url.path))
+	}
+
+	func testRecordExportEmptyStoreAndWriteErrorsNeverLeaveSuccessfulFiles() throws {
+		let emptyURL = directory.appendingPathComponent("empty.csv")
+		let empty = MetricContextExporter(coordinator: container.persistentStoreCoordinator, url: emptyURL)
+		XCTAssertThrowsError(try empty.exportData())
+		XCTAssertFalse(FileManager.default.fileExists(atPath: emptyURL.path))
+		try LostItemEvent.record(change: -1)
+		let invalidURL = directory.appendingPathComponent("missing-directory/export.csv")
+		let invalid = LostItemExporter(coordinator: container.persistentStoreCoordinator, url: invalidURL)
+		XCTAssertThrowsError(try invalid.exportData())
+		XCTAssertThrowsError(try invalid.resume())
+		XCTAssertFalse(FileManager.default.fileExists(atPath: invalidURL.path))
+	}
+
+	@MainActor
+	func testRecordExporterInjectionCreatesIndependentInstancesForBothNewTypes() throws {
+		DependencyInjector.register([DataExportInjectionProvider()])
+		let contexts = injected(MetricContextExporter.self)
+		let otherContext = injected(MetricContextExporter.self)
+		let lost = injected(LostItemExporter.self)
+		XCTAssertFalse(contexts.equalTo(otherContext))
+		XCTAssertTrue(contexts.equalTo(contexts))
+		XCTAssertNotEqual(contexts.url, otherContext.url)
+		XCTAssertTrue(contexts.url.lastPathComponent.hasPrefix("Metric Context "))
+		XCTAssertTrue(lost.url.lastPathComponent.hasPrefix("Lost Item Events "))
 	}
 
 	func testMetricContextModelMigrationPreservesMoodsSavedQueriesAndLostItems() throws {

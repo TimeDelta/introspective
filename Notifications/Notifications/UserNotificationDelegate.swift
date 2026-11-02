@@ -64,6 +64,7 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 
 	public static let finishedExportingActivities = basicCategory(id: "finished exporting activities")
 	public static let finishedExportingMedications = basicCategory(id: "finished exporting medications")
+	public static let finishedExportingRecords = basicCategory(id: "finished exporting records")
 	public static let finishedExportingMoods = basicCategory(id: "finished exporting moods")
 
 	public static let categories = Set([
@@ -72,6 +73,7 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 		finishedImportingActivities,
 		finishedImportingMedications,
 		finishedImportingMoods,
+		finishedExportingRecords,
 	])
 
 	// MARK: - Instance Variables
