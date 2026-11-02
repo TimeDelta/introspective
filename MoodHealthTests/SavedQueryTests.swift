@@ -208,6 +208,132 @@ final class SavedQueryTests: XCTestCase {
 		return value
 	}
 
+	func testCachedCalendarStylesMatchFreshFormattingAndParsing() {
+		let util = CalendarUtilImpl()
+		let styles: [DateFormatter.Style] = [.none, .short, .medium, .long, .full]
+		let dates = [Date(timeIntervalSince1970: 0), Date(timeIntervalSince1970: 1_710_055_800),
+			Date(timeIntervalSince1970: 1_730_613_600)]
+		for dateStyle in styles {
+			for timeStyle in styles {
+				let reference = DateFormatter()
+				reference.dateStyle = dateStyle; reference.timeStyle = timeStyle; reference.timeZone = nil
+				for date in dates {
+					let text = util.string(for: date, dateStyle: dateStyle, timeStyle: timeStyle)
+					XCTAssertEqual(text, reference.string(from: date))
+					XCTAssertEqual(util.date(from: text, dateStyle: dateStyle, timeStyle: timeStyle), reference.date(from: text))
+				}
+			}
+		}
+		XCTAssertNil(util.date(from: "not a date", dateStyle: .full, timeStyle: .full))
+	}
+
+	func testCalendarFormatterCacheReusesAllTwentyFiveStylePairs() {
+		var creations = 0
+		let cache = CalendarStyleFormatterCache(center: NotificationCenter(), createFormatter: { date, time in
+			creations += 1
+			let formatter = DateFormatter(); formatter.dateStyle = date; formatter.timeStyle = time; formatter.timeZone = nil
+			return formatter
+		})
+		let styles: [DateFormatter.Style] = [.none, .short, .medium, .long, .full]
+		for _ in 0..<3 {
+			for date in styles {
+				for time in styles { _ = cache.formatter(dateStyle: date, timeStyle: time) }
+			}
+		}
+		XCTAssertEqual(creations, 25, "Repeated lookups must reuse the existing style formatters")
+	}
+
+	func testCalendarFormatterCacheInvalidatesNotificationsWithoutRetainingObservers() {
+		let center = NotificationCenter()
+		weak var released: CalendarStyleFormatterCache?
+		autoreleasepool {
+			let cache = CalendarStyleFormatterCache(center: center)
+			let first = cache.formatter(dateStyle: .full, timeStyle: .full)
+			XCTAssertTrue(first === cache.formatter(dateStyle: .full, timeStyle: .full))
+			center.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
+			let afterLocale = cache.formatter(dateStyle: .full, timeStyle: .full)
+			XCTAssertFalse(first === afterLocale)
+			center.post(name: .NSSystemTimeZoneDidChange, object: nil)
+			XCTAssertFalse(afterLocale === cache.formatter(dateStyle: .full, timeStyle: .full))
+			released = cache
+		}
+		XCTAssertNil(released)
+	}
+
+	func testCalendarFormatterCacheTracksDefaultTimeZoneChangesWithoutNotifications() {
+		let original = NSTimeZone.default
+		defer { NSTimeZone.default = original }
+		let cache = CalendarStyleFormatterCache(center: NotificationCenter())
+		let date = Date(timeIntervalSince1970: 1_700_000_000)
+		NSTimeZone.default = TimeZone(secondsFromGMT: 0)!
+		let utc = cache.formatter(dateStyle: .full, timeStyle: .full)
+		let utcText = utc.string(from: date)
+		NSTimeZone.default = TimeZone(identifier: "America/Los_Angeles")!
+		let pacific = cache.formatter(dateStyle: .full, timeStyle: .full)
+		let reference = DateFormatter(); reference.dateStyle = .full; reference.timeStyle = .full; reference.timeZone = nil
+		XCTAssertFalse(utc === pacific)
+		XCTAssertEqual(pacific.string(from: date), reference.string(from: date))
+		XCTAssertNotEqual(pacific.string(from: date), utcText)
+		NSTimeZone.default = TimeZone(secondsFromGMT: 0)!
+		XCTAssertEqual(cache.formatter(dateStyle: .full, timeStyle: .full).string(from: date), utcText)
+	}
+
+	func testConcurrentCalendarFormattingAndParsingDoNotMixStyles() {
+		let date = Date(timeIntervalSince1970: 1_700_000_000)
+		let styles: [DateFormatter.Style] = [.short, .medium, .long, .full]
+		let expected = styles.map { style -> (text: String, date: Date?) in
+			let formatter = DateFormatter(); formatter.dateStyle = style; formatter.timeStyle = style; formatter.timeZone = nil
+			let text = formatter.string(from: date)
+			return (text, formatter.date(from: text))
+		}
+		let lock = NSLock()
+		var mismatches = 0
+		DispatchQueue.concurrentPerform(iterations: 200) { index in
+			let position = index % styles.count, style = styles[position]
+			let util = CalendarUtilImpl()
+			let text = util.string(for: date, dateStyle: style, timeStyle: style)
+			let parsed = util.date(from: expected[position].text, dateStyle: style, timeStyle: style)
+			if text != expected[position].text || parsed != expected[position].date {
+				lock.lock(); mismatches += 1; lock.unlock()
+			}
+		}
+		XCTAssertEqual(mismatches, 0)
+	}
+
+	func testCalendarFormatterInvalidationDiscardsAnInFlightOldConfiguration() {
+		let center = NotificationCenter()
+		let started = expectation(description: "Old formatter construction started")
+		let finished = expectation(description: "Formatter lookup completed")
+		let release = DispatchSemaphore(value: 0), lock = NSLock()
+		let stale = DateFormatter(); stale.dateFormat = "'outdated'"
+		let replacement = DateFormatter(); replacement.dateFormat = "'current'"
+		var creations = 0
+		var result: DateFormatter?
+		let cache = CalendarStyleFormatterCache(center: center, createFormatter: { _, _ in
+			lock.lock(); creations += 1; let first = creations == 1; lock.unlock()
+			if first {
+				started.fulfill()
+				XCTAssertEqual(release.wait(timeout: .now() + 5), .success)
+				return stale
+			}
+			return replacement
+		})
+		DispatchQueue.global().async {
+			let formatter = cache.formatter(dateStyle: .full, timeStyle: .full)
+			lock.lock(); result = formatter; lock.unlock()
+			finished.fulfill()
+		}
+		wait(for: [started], timeout: 5)
+		center.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
+		release.signal()
+		wait(for: [finished], timeout: 5)
+		lock.lock(); let actual = result; let count = creations; lock.unlock()
+		XCTAssertTrue(actual === replacement)
+		XCTAssertEqual(actual?.string(from: Date()), "current")
+		XCTAssertTrue(cache.formatter(dateStyle: .full, timeStyle: .full) === replacement)
+		XCTAssertEqual(count, 2)
+	}
+
 	func testDependencyProvidersCanResolveDeepChainsAndRegisterDuringResolution() {
 		DependencyInjector.register([RegistryChainProvider()])
 		let resolved = expectation(description: "Nested resolution completes")
@@ -2952,6 +3078,25 @@ private final class KeyboardDismissalTap: UITapGestureRecognizer {
 }
 
 final class KeyboardDismissalTests: XCTestCase {
+	@MainActor
+	func testTappingInteractiveControlsAndDescendantsDoesNotDismissKeyboard() {
+		let controller = UIViewController()
+		let root = KeyboardDismissalProbeView(frame: CGRect(x: 0, y: 0, width: 320, height: 480))
+		controller.view = root
+		let tap = KeyboardDismissalTap(); root.addGestureRecognizer(tap)
+		let controls: [UIControl] = [UIControl(), UISwitch(), UIButton(type: .system), UISlider(), UISegmentedControl(items: ["One", "Two"])]
+		for control in controls {
+			control.frame = CGRect(x: 20, y: 20, width: 200, height: 100); root.addSubview(control)
+			control.layoutIfNeeded(); tap.point = CGPoint(x: 30, y: 30)
+			controller.dismissKeyboard(tap)
+			let renderingView = UIView(frame: CGRect(x: 5, y: 5, width: 40, height: 30))
+			control.addSubview(renderingView)
+			controller.dismissKeyboard(tap)
+			XCTAssertEqual(root.endEditingCalls, 0)
+			control.removeFromSuperview()
+		}
+	}
+
 	@MainActor
 	func testTappingTextControlDescendantsKeepsTheKeyboardOpen() {
 		let controller = UIViewController()

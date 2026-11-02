@@ -503,9 +503,21 @@ class UITest: XCTestCase {
 		app.navigationBars.buttons["+"].tap()
 		setTextFor(field: app.tables.textFields["activity name"], to: definition.name)
 		if let autoNote = definition.autoNote {
-			let currentlyEnabled = activityDefinitionAutoNoteField().value as? String == "1"
+			let control = activityDefinitionAutoNoteField()
+			let currentlyEnabled = control.value as? String == "1"
 			if currentlyEnabled != autoNote {
-				activityDefinitionAutoNoteField().tap()
+				control.tap()
+			}
+			let expected = autoNote ? "1" : "0"
+			let changed = NSPredicate { _, _ in control.value as? String == expected }
+			if !changed.evaluate(with: control) {
+				let expectation = XCTNSPredicateExpectation(predicate: changed, object: control)
+				_ = XCTWaiter.wait(for: [expectation], timeout: 5)
+			}
+			guard control.value as? String == expected else {
+				attachInputDiagnostics()
+				XCTFail("The activity auto-note switch did not accept the selected state")
+				return
 			}
 		}
 		setTextFor(field: app.tables.cells.textViews["activity description"], to: definition.description)
