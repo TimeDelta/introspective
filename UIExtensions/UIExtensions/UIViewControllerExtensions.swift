@@ -71,7 +71,9 @@ public extension UIViewController {
 		// UIKit text controls contain rendering/selection views that do not
 		// conform to UITextInputTraits. Tapping those still means editing text.
 		while let current = tappedView {
-			if current is UITextInputTraits { return }
+			// Ending editing can move a scroll view while a switch/button is still
+			// handling its touch. Let controls finish their own interaction.
+			if current is UITextInputTraits || current is UIControl { return }
 			tappedView = current.superview
 		}
 		self.view.endEditing(true)
