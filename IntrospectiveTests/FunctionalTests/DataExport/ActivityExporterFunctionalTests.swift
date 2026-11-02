@@ -491,7 +491,7 @@ final class ActivityExporterFunctionalTests: ExporterFunctionalTest {
 	// MARK: - Helper Functions
 
 	private final func expectedFields(for definition: ActivityDefinition) -> [String] {
-		let tagsText = definition.tagsArray().map{ $0.name }.joined(separator: "|")
+		let tagsText = definition.tagsArray().map{ $0.name }.sorted().joined(separator: "|")
 		return [
 			definition.name,
 			definition.activityDescription ?? "",
@@ -507,7 +507,7 @@ final class ActivityExporterFunctionalTests: ExporterFunctionalTest {
 	}
 
 	private final func expectedFields(for activity: Activity) -> [String] {
-		let tagsText = activity.tagsArray().map{ $0.name }.joined(separator: "|")
+		let tagsText = activity.tagsArray().map{ $0.name }.sorted().joined(separator: "|")
 		let startText = injected(CalendarUtil.self).string(for: activity.start, dateStyle: .full, timeStyle: .full)
 		var endText = ""
 		if let end = activity.end {

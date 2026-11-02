@@ -449,6 +449,7 @@ final class MedicationExporterFunctionalTests: ExporterFunctionalTest {
 			TimeZone.autoupdatingCurrent.identifier,
 			medication.notes ?? "",
 			medication.getSource().description,
+			String(medication.recordScreenIndex),
 		]
 	}
 

@@ -44,7 +44,7 @@ increases from 109 to 112 cases; this measurement remains separate from legacy.
 
 ## Evaluating the next report
 
-The full legacy run must pass all **4,399** selected cases without skips; the
+The full legacy run must pass all **4,408** selected cases without skips; the
 existing 41 explicit exclusions remain unchanged. Read the new legacy artifact's
 file and function measurements alongside this baseline. The matcher implementation
 is shorter, so compare the exercised behaviors and functions as well as line
@@ -98,3 +98,17 @@ tests. Artifact names include the workflow attempt; recovered uploads append
 All attempts preserve the complete `ci-output` directory for 14 days. A missing
 output directory or failure of all three uploads still fails CI. Native, legacy,
 both full UI shards, Release, and the aggregate check remain required.
+
+## Bounded legacy CSV exports
+
+Eleven additional native integration cases exercise the actual activity,
+medication, and mood exporters with SQLite and real output streams. They compare
+405-record files with the existing model encoders, verify all column counts and
+values, pin relationship/settings snapshots through pauses and edits, fault
+materialized relationship graphs between batches, reject concurrent execution,
+and remove partial output on cancellation or an injected mid-write failure.
+The in-memory functional-store path and independent DI instances are also covered.
+The existing 73 exporter functional cases remain selected in the legacy suite;
+their expected fields now include the medication index declared in the header
+and stable activity tag ordering. Native inventory is 168; legacy and UI
+inventories remain 4,408 selected / 41 explicitly excluded and 58 + 50.
