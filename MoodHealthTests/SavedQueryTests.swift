@@ -2253,6 +2253,7 @@ final class SavedQueryTests: XCTestCase {
 		for index in 0..<2 {
 			let definition = NSEntityDescription.insertNewObject(forEntityName: "ActivityDefinition", into: old.viewContext)
 			definition.setValue("Existing \(index)", forKey: "name")
+			definition.setValue(index, forKey: "recordScreenIndex")
 			let activity = NSEntityDescription.insertNewObject(forEntityName: "Activity", into: old.viewContext)
 			activity.setValue(definition, forKey: "definition"); activity.setValue(date.addingTimeInterval(Double(index * 60)), forKey: "startDate")
 			let tag = NSEntityDescription.insertNewObject(forEntityName: "Tag", into: old.viewContext)
@@ -2274,6 +2275,7 @@ final class SavedQueryTests: XCTestCase {
 		let request = Activity.fetchRequest(); request.sortDescriptors = [NSSortDescriptor(key: "startDate", ascending: true)]
 		let activities = try migrated.viewContext.fetch(request)
 		XCTAssertEqual(activities.map { $0.definition.name }, ["Existing 0", "Existing 1"])
+		XCTAssertEqual(activities.map { $0.definition.recordScreenIndex }, [0, 1])
 		XCTAssertEqual(activities.map { $0.tagsArray().map { $0.name } }, [["existing-0"], ["existing-1"]])
 		XCTAssertEqual(try migrated.viewContext.fetch(MoodImpl.fetchRequest()).first?.note, "Keep mood")
 		XCTAssertEqual(try migrated.viewContext.fetch(StoredQuery.fetchRequest()).first?.name, "Keep query")
