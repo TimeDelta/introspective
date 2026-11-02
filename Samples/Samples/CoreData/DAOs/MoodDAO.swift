@@ -80,6 +80,7 @@ public final class MoodDAOImpl: SingleDateSampleDAO<MoodImpl>, MoodDAO {
 	public final func getMostRecentMood() throws -> Mood? {
 		let fetchRequest: NSFetchRequest<MoodImpl> = MoodImpl.fetchRequest()
 		fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+		fetchRequest.fetchLimit = 1
 		let moods = try injected(Database.self).query(fetchRequest)
 		guard moods.count > 0 else { return nil }
 		return moods[0]
