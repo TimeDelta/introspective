@@ -249,7 +249,9 @@ private final class MoodReviewEntriesViewController: UITableViewController {
 final class MoodPresetsViewController: UITableViewController {
 	private(set) var presets: [MoodCheckInPreset] = []
 	var preferences: MoodTrackingPreferences = .shared
-	var reminderScheduler: MoodReminderScheduler = .shared
+	// Resolve the system notification center only when scheduling is needed;
+	// callers can supply a scheduler before the controller performs any work.
+	lazy var reminderScheduler: MoodReminderScheduler = .shared
 	private var feedback: String?
 	override func viewDidLoad() {
 		super.viewDidLoad(); title = "Check-in Presets"; tableView.accessibilityIdentifier = "moodPresets"
