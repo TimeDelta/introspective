@@ -25,6 +25,14 @@ private final class TrackingDisplayShift: CoreDataSampleUtil, InjectionProvider 
 	func convertTimeZoneIfApplicable(for date: Date, timeZoneId: String?) -> Date { date.addingTimeInterval(2 * 86400) }
 }
 
+private final class TrackingFailingWriteContext: NSManagedObjectContext {
+	private(set) var saveAttempts = 0
+	override func save() throws {
+		saveAttempts += 1
+		throw NSError(domain: "PresetWriteProbe", code: 1)
+	}
+}
+
 private final class ReminderDeliveryProbe: MoodReminderDelivery {
 	private let lock = NSLock()
 	private var requests: [String: UNNotificationRequest] = [:]
@@ -80,6 +88,22 @@ final class MoodTrackingIntegrationTests: XCTestCase {
 		}
 		DependencyInjector.register([CommonInjectionProvider(), SamplesInjectionProvider(), TrackingTestProvider(DatabaseImpl(container), settings)])
 	}
+	private func storedCount(_ entityName: String) throws -> Int {
+		let reader = try open()
+		defer { for store in reader.persistentStoreCoordinator.persistentStores { try? reader.persistentStoreCoordinator.remove(store) } }
+		return try reader.viewContext.count(for: NSFetchRequest<NSFetchRequestResult>(entityName: entityName))
+	}
+	private func storedTagNames() throws -> [String] {
+		let reader = try open()
+		defer { for store in reader.persistentStoreCoordinator.persistentStores { try? reader.persistentStoreCoordinator.remove(store) } }
+		return try reader.viewContext.fetch(Tag.fetchRequest()).map { $0.name }.sorted()
+	}
+	private func tag(_ name: String) throws -> Tag {
+		let root = container.viewContext
+		let entity = try XCTUnwrap(NSEntityDescription.entity(forEntityName: Tag.entityName, in: root))
+		let tag = Tag(entity: entity, insertInto: root); tag.name = name
+		return tag
+	}
 	func testPresetRecordsSavedScaleFullTimestampAndContextsAcrossSQLiteReopen() throws {
 		let at = Date(timeIntervalSince1970: 1_700_000_000.123456)
 		let preset = MoodCheckInPreset(name: "Travel", rating: -0.25, minimum: -1, maximum: 1, note: "At the airport", contexts: [ContextCategory.travel.rawValue, ContextCategory.routine.rawValue])
@@ -100,6 +124,46 @@ final class MoodTrackingIntegrationTests: XCTestCase {
 		XCTAssertThrowsError(try MoodPresetRecorder.record(preset))
 		XCTAssertEqual(try container.viewContext.count(for: MoodImpl.fetchRequest()), 0)
 		XCTAssertEqual(try container.viewContext.count(for: MetricContextEntry.fetchRequest()), 0)
+	}
+	func testFailedPresetWriterCannotPersistAfterALaterUnrelatedParentSave() throws {
+		let root = container.viewContext
+		let unrelated = try tag("Original tag"); try root.save()
+		unrelated.name = "Pending tag edit"
+		let writer = TrackingFailingWriteContext(concurrencyType: .mainQueueConcurrencyType)
+		let preset = MoodCheckInPreset(name: "Failed", rating: 0.5, minimum: 0, maximum: 1,
+			note: "Must not persist", contexts: [ContextCategory.travel.rawValue])
+		XCTAssertThrowsError(try MoodPresetRecorder.record(preset, at: Date(), contextFactory: { writer })) { error in
+			XCTAssertEqual((error as NSError).domain, "PresetWriteProbe")
+		}
+		XCTAssertEqual(writer.saveAttempts, 1); XCTAssertFalse(writer.hasChanges)
+		XCTAssertTrue(unrelated.isUpdated); XCTAssertEqual(unrelated.name, "Pending tag edit")
+		XCTAssertEqual(try storedTagNames(), ["Original tag"], "A failed preset must not save unrelated pending edits")
+		XCTAssertEqual(try storedCount(MoodImpl.entityName), 0)
+		XCTAssertEqual(try storedCount(MetricContextEntry.entityName), 0)
+		try root.save()
+		XCTAssertEqual(try storedTagNames(), ["Pending tag edit"])
+		XCTAssertEqual(try storedCount(MoodImpl.entityName), 0, "A later root save must not resurrect a failed preset")
+		XCTAssertEqual(try storedCount(MetricContextEntry.entityName), 0)
+	}
+	func testSuccessfulPresetDoesNotCommitUnrelatedPendingParentEdits() throws {
+		let root = container.viewContext
+		let unrelated = try tag("Not yet saved")
+		let at = Date(timeIntervalSince1970: 1_700_000_000.123456)
+		let preset = MoodCheckInPreset(name: "Independent", rating: -0.25, minimum: -1, maximum: 1,
+			note: "Saved separately", contexts: [ContextCategory.travel.rawValue, ContextCategory.routine.rawValue])
+		let saved = try MoodPresetRecorder.record(preset, at: at)
+		let object = try XCTUnwrap(saved as? MoodImpl)
+		XCTAssertTrue(object.managedObjectContext === root)
+		XCTAssertFalse(object.objectID.isTemporaryID)
+		XCTAssertEqual(object.originalTimestamp, at); XCTAssertEqual(object.note, preset.note)
+		XCTAssertEqual(object.rating, -0.25); XCTAssertEqual(object.minRating, -1); XCTAssertEqual(object.maxRating, 1)
+		XCTAssertTrue(unrelated.isInserted); XCTAssertTrue(root.hasChanges)
+		XCTAssertEqual(try storedTagNames(), [], "A successful preset must not commit an unrelated pending insertion")
+		XCTAssertEqual(try storedCount(MoodImpl.entityName), 1)
+		XCTAssertEqual(try storedCount(MetricContextEntry.entityName), 2)
+		try root.save()
+		XCTAssertEqual(try storedTagNames(), ["Not yet saved"])
+		XCTAssertEqual(try storedCount(MoodImpl.entityName), 1, "Saving unrelated edits must not duplicate the preset")
 	}
 	func testWeeklyAnalyticsAreAnImmutableSnapshotOfRealPersistedMoods() throws {
 		let now = Date(), date = Calendar.current.date(byAdding: .day, value: -1, to: now)!
