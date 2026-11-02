@@ -17,11 +17,16 @@ public struct MoodWeeklyReview {
 	public static func intervals(endingOn date: Date, includingToday: Bool = false, calendar: Calendar = .current) -> (current: DateInterval, previous: DateInterval) {
 		MoodWeekComparison.intervals(endingOn: date, includingToday: includingToday, calendar: calendar)
 	}
-	public init(moods: [Mood], endingOn date: Date = Date(), includingToday: Bool = false, calendar: Calendar = .current) {
-		analytics = MoodWeekComparison(observations: moods.map {
+	/// Call on the managed objects' queue; the returned value array can be processed independently.
+	public static func observations(for moods: [Mood]) -> [MoodReviewObservation] {
+		moods.map {
 			MoodReviewObservation(date: Self.timestamp(for: $0), rating: $0.rating, minimum: $0.minRating, maximum: $0.maxRating,
 				source: ($0 as? MoodImpl).flatMap { Sources.MoodSourceNum(rawValue: $0.source)?.description } ?? "Unknown")
-		}, endingOn: date, includingToday: includingToday, calendar: calendar)
+		}
+	}
+	public init(analytics: MoodWeekComparison) { self.analytics = analytics }
+	public init(moods: [Mood], endingOn date: Date = Date(), includingToday: Bool = false, calendar: Calendar = .current) {
+		analytics = MoodWeekComparison(observations: Self.observations(for: moods), endingOn: date, includingToday: includingToday, calendar: calendar)
 	}
 }
 
@@ -34,7 +39,7 @@ public enum MoodPresetRecorder {
 			guard let category = ContextCategory(rawValue: value) else { throw MoodTrackingError("Edit this preset to update its context selections.") }
 			return category
 		}
-		let transaction = injected(Database.self).transaction()
+		let transaction = try injected(Database.self).viewContextTransaction(for: MoodImpl.self, sortedBy: "timestamp")
 		do {
 			let mood = try transaction.new(MoodImpl.self)
 			mood.setSource(.introspective); mood.date = date

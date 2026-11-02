@@ -30,18 +30,26 @@ final class MoodToolsViewController: UITableViewController {
 }
 
 final class MoodWeeklyReviewViewController: UITableViewController {
+	var analyticsCalculation: ([MoodReviewObservation], Date, Bool, Calendar) -> MoodWeekComparison = {
+		MoodWeekComparison(observations: $0, endingOn: $1, includingToday: $2, calendar: $3)
+	}
 	private var moods: [Mood] = []
 	private var review = MoodWeeklyReview(moods: [])
 	private var context: [MetricContextEntry] = []
 	private var showsContext = false
+	private var pendingMoods: [Mood] = []
+	private var pendingContext: [MetricContextEntry] = []
+	private var generation = UUID()
+	private var calculation: DispatchWorkItem?
 	private let window = UISegmentedControl(items: ["7 Complete Days", "Include Today"])
 	private var observers: [NSObjectProtocol] = []
-	deinit { for observer in observers { NotificationCenter.default.removeObserver(observer) } }
+	deinit { calculation?.cancel(); for observer in observers { NotificationCenter.default.removeObserver(observer) } }
 	private let numbers: NumberFormatter = {
 		let value = NumberFormatter(); value.numberStyle = .decimal; value.maximumFractionDigits = 1; return value
 	}()
 	override func viewDidLoad() {
 		super.viewDidLoad(); title = "Weekly Mood Review"
+		tableView.rowHeight = UITableView.automaticDimension; tableView.estimatedRowHeight = 90
 		tableView.accessibilityIdentifier = "weeklyMoodReview"
 		window.selectedSegmentIndex = 0; window.accessibilityLabel = "Weekly review window"
 		window.addTarget(self, action: #selector(load), for: .valueChanged)
@@ -58,18 +66,41 @@ final class MoodWeeklyReviewViewController: UITableViewController {
 		refreshControl = UIRefreshControl(); refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
 	}
 	override func viewWillAppear(_ animated: Bool) { super.viewWillAppear(animated); load() }
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated); calculation?.cancel(); generation = UUID()
+		tableView.isUserInteractionEnabled = true; navigationItem.prompt = nil
+		pendingMoods = []; pendingContext = []
+	}
 	@objc private func load() {
-		defer { refreshControl?.endRefreshing() }
+		calculation?.cancel(); let token = UUID(); generation = token
 		do {
 			let now = Date()
+			let calendar = Calendar.current
 			let includesToday = window.selectedSegmentIndex == 1
-			let windows = MoodWeeklyReview.intervals(endingOn: now, includingToday: includesToday)
-			moods = try injected(MoodDAO.self).getMoods(from: windows.previous.start, to: windows.current.end)
-			review = MoodWeeklyReview(moods: moods, endingOn: now, includingToday: includesToday)
-			context = showsContext ? try injected(Database.self).query(MetricContextEntry.request(metric: .mood,
-				interval: DateInterval(start: review.previousInterval.start, end: min(now, review.currentInterval.end)))) : []
-			tableView.reloadData()
-		} catch { showError(title: "Could not load weekly review", error: error) }
+			let windows = MoodWeeklyReview.intervals(endingOn: now, includingToday: includesToday, calendar: calendar)
+			pendingMoods = try injected(MoodDAO.self).getMoods(from: windows.previous.start, to: windows.current.end)
+			let observations = MoodWeeklyReview.observations(for: pendingMoods)
+			pendingContext = showsContext ? try injected(Database.self).query(MetricContextEntry.request(metric: .mood,
+				interval: DateInterval(start: windows.previous.start, end: min(now, windows.current.end)))) : []
+			tableView.isUserInteractionEnabled = false; navigationItem.prompt = "Updating review…"
+			let calculate = analyticsCalculation
+			let work = DispatchWorkItem { [weak self] in
+				let analytics = calculate(observations, now, includesToday, calendar)
+				DispatchQueue.main.async { [weak self] in
+					guard let self = self, self.generation == token else { return }
+					self.review = MoodWeeklyReview(analytics: analytics)
+					self.moods = self.pendingMoods; self.context = self.pendingContext
+					self.pendingMoods = []; self.pendingContext = []; self.calculation = nil
+					self.tableView.isUserInteractionEnabled = true; self.navigationItem.prompt = nil
+					self.refreshControl?.endRefreshing(); self.tableView.reloadData()
+				}
+			}
+			calculation = work; DispatchQueue.global(qos: .userInitiated).async(execute: work)
+		} catch {
+			pendingMoods = []; pendingContext = []; tableView.isUserInteractionEnabled = true
+			navigationItem.prompt = nil; refreshControl?.endRefreshing()
+			showError(title: "Could not load weekly review", error: error)
+		}
 	}
 	override func numberOfSections(in tableView: UITableView) -> Int { 6 }
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -115,12 +146,14 @@ final class MoodWeeklyReviewViewController: UITableViewController {
 				}
 			}
 		case 1:
-			cell.textLabel?.text = "\(indexPath.row * 20)% " + (indexPath.row < 4 ? "up to " : "through ") + "\((indexPath.row + 1) * 20)%"
+			let title = "\(indexPath.row * 20)% " + (indexPath.row < 4 ? "up to " : "through ") + "\((indexPath.row + 1) * 20)%"
 			func count(_ summary: MoodPeriodAnalytics) -> String {
 				let count = summary.distribution[indexPath.row]
 				return "\(count) (\(percent(summary.ratedCheckInCount > 0 ? Double(count) / Double(summary.ratedCheckInCount) : nil)))"
 			}
-			cell.detailTextLabel?.text = "Recent: \(count(review.current)) · Previous: \(count(review.previous))"
+			return MoodDistributionCell(title: title, current: count(review.current), previous: count(review.previous),
+				currentFraction: review.current.ratedCheckInCount > 0 ? Float(review.current.distribution[indexPath.row]) / Float(review.current.ratedCheckInCount) : 0,
+				previousFraction: review.previous.ratedCheckInCount > 0 ? Float(review.previous.distribution[indexPath.row]) / Float(review.previous.ratedCheckInCount) : 0)
 		case 2:
 			let summary = indexPath.row == 0 ? review.current : review.previous
 			cell.textLabel?.text = indexPath.row == 0 ? "Recent period" : "Previous period"
@@ -171,11 +204,37 @@ final class MoodWeeklyReviewViewController: UITableViewController {
 	}
 }
 
+private final class MoodDistributionCell: UITableViewCell {
+	init(title: String, current: String, previous: String, currentFraction: Float, previousFraction: Float) {
+		super.init(style: .default, reuseIdentifier: nil)
+		selectionStyle = .none
+		let heading = UILabel(); heading.text = title; heading.font = .preferredFont(forTextStyle: .body)
+		heading.adjustsFontForContentSizeCategory = true; heading.numberOfLines = 0
+		let stack = UIStackView(arrangedSubviews: [heading]); stack.axis = .vertical; stack.spacing = 8
+		for (name, summary, fraction, color) in [("Recent", current, currentFraction, UIColor.systemBlue), ("Previous", previous, previousFraction, UIColor.systemGray)] {
+			let label = UILabel(); label.text = name + ": " + summary; label.font = .preferredFont(forTextStyle: .caption1)
+			label.adjustsFontForContentSizeCategory = true; label.numberOfLines = 0
+			let bar = UIProgressView(progressViewStyle: .default); bar.progress = fraction; bar.progressTintColor = color
+			bar.isAccessibilityElement = false
+			stack.addArrangedSubview(label); stack.addArrangedSubview(bar)
+		}
+		stack.translatesAutoresizingMaskIntoConstraints = false; contentView.addSubview(stack)
+		NSLayoutConstraint.activate([stack.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
+			stack.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
+			stack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12), stack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12)])
+		isAccessibilityElement = true; accessibilityLabel = title + ", Recent: " + current + ", Previous: " + previous
+	}
+	required init?(coder: NSCoder) { fatalError("Use init(title:current:previous:currentFraction:previousFraction:)") }
+}
+
 private final class MoodReviewEntriesViewController: UITableViewController {
 	let moods: [Mood]
 	init(moods: [Mood]) { self.moods = moods; super.init(style: .grouped) }
 	required init?(coder: NSCoder) { fatalError("Use init(moods:)") }
-	override func viewDidLoad() { super.viewDidLoad(); title = "Period Check-ins" }
+	override func viewDidLoad() {
+		super.viewDidLoad(); title = "Period Check-ins"
+		tableView.rowHeight = UITableView.automaticDimension; tableView.estimatedRowHeight = 70
+	}
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { moods.count }
 	override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? { moods.isEmpty ? "No check-ins in this period." : nil }
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -194,6 +253,7 @@ final class MoodPresetsViewController: UITableViewController {
 	private var feedback: String?
 	override func viewDidLoad() {
 		super.viewDidLoad(); title = "Check-in Presets"; tableView.accessibilityIdentifier = "moodPresets"
+		tableView.rowHeight = UITableView.automaticDimension; tableView.estimatedRowHeight = 70
 		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(add))
 		navigationItem.leftBarButtonItem = editButtonItem
 		navigationItem.leftItemsSupplementBackButton = true

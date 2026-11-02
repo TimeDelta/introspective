@@ -59,6 +59,8 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 		options: .foreground
 	)
 	public static let finishedImportingMoods = basicCategory(id: "finished importing moods", actions: [showMoodHistory])
+	public static let moodCheckInReminder = UNNotificationCategory(identifier: MoodReminderScheduler.categoryIdentifier,
+		actions: [], intentIdentifiers: [], options: [])
 
 	// MARK: Export
 
@@ -73,6 +75,7 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 		finishedImportingActivities,
 		finishedImportingMedications,
 		finishedImportingMoods,
+		moodCheckInReminder,
 		finishedExportingRecords,
 	])
 

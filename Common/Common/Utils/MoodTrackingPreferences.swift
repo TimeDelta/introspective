@@ -7,7 +7,7 @@ public struct MoodTrackingError: LocalizedError {
 }
 
 /// A rating retains its original scale even if the user's recording settings change.
-public struct MoodCheckInPreset: Codable, Equatable, Identifiable {
+public struct MoodCheckInPreset: Codable, Equatable {
 	public let id: UUID
 	public var name: String
 	public var rating: Double

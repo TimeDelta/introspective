@@ -36,6 +36,13 @@ Of course, this ordering ignores what conditions you have and how they matter bu
 
 
 ## Main Features
+### Mood check-ins and weekly review
+Compare adjacent weeks with day-balanced averages, distributions, coverage,
+matched weekdays and dated context. Record reusable check-in presets, add modern
+interactive Home/Lock Screen widgets, and choose optional local reminders.
+Everything is processed on-device. See [Mood check-ins](docs/mood-check-ins.md)
+for recording instructions, analytics definitions and reminder scheduling.
+
 ### Custom queries
 Explore your data in a unique way by querying for exactly the records in which you're interested. Specify complex conditions on any attribute for any supported data type by combining them using "and", "or", and condition groups (full boolean algebra support with grouping). Even better, you can limit your query further by looking at other data types within the query. For example, you can find all moods that were recorded within a half hour of socializing.
 

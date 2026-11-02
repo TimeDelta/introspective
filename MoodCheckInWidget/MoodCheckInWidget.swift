@@ -58,13 +58,15 @@ struct RecordMoodPresetIntent: AppIntent {
 	private static var prepared = false
 	static func prepare() throws {
 		guard !prepared else { return }
-		guard let group = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: MoodTrackingPreferences.groupIdentifier) else {
+		guard FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: MoodTrackingPreferences.groupIdentifier) != nil else {
 			throw MoodTrackingError("Open Introspective to set up check-ins.")
 		}
-		// Match SharedPersistentContainer's existing directory and default store name.
-		let store = group.appendingPathComponent("Introspective.sqlite").appendingPathComponent("Introspective.sqlite")
-		guard FileManager.default.fileExists(atPath: store.path) else { throw MoodTrackingError("Open Introspective before recording from the widget.") }
 		let model = ObjectModelContainer.objectModel
+		// Ask the actual container for its default store location, without opening or migrating it.
+		let probe = SharedPersistentContainer(name: "Introspective", managedObjectModel: model)
+		guard let store = probe.persistentStoreDescriptions.first?.url, FileManager.default.fileExists(atPath: store.path) else {
+			throw MoodTrackingError("Open Introspective before recording from the widget.")
+		}
 		let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStore(ofType: NSSQLiteStoreType, at: store, options: nil)
 		guard model.isConfiguration(withName: nil, compatibleWithStoreMetadata: metadata) else {
 			throw MoodTrackingError("Open Introspective once after updating, then try this check-in again.")
@@ -87,7 +89,7 @@ private struct MoodWidgetView: View {
 				} else {
 					VStack(alignment: .leading, spacing: 8) {
 						if family != .accessoryRectangular { Text("Mood check-in").font(.headline) }
-						ForEach(Array(entry.presets.prefix(family == .accessoryRectangular ? 1 : family == .systemSmall ? 2 : 3))) { preset in
+						ForEach(Array(entry.presets.prefix(family == .accessoryRectangular ? 1 : family == .systemSmall ? 2 : 3)), id: \.id) { preset in
 							Button(intent: RecordMoodPresetIntent(presetID: preset.id.uuidString)) {
 								Label(preset.name, systemImage: "plus.circle").lineLimit(1)
 							}.buttonStyle(.plain).accessibilityLabel("Record " + preset.name)

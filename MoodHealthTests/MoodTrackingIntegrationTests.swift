@@ -5,7 +5,7 @@ import UserNotifications
 import Common
 import DependencyInjection
 @testable import Persistence
-import Samples
+@testable import Samples
 import Settings
 
 private final class TrackingTestProvider: InjectionProvider {
@@ -17,6 +17,12 @@ private final class TrackingTestProvider: InjectionProvider {
 		if type == Database.self { return database as! T }
 		return settings as! T
 	}
+}
+
+private final class TrackingDisplayShift: CoreDataSampleUtil, InjectionProvider {
+	let types: [Any.Type] = [CoreDataSampleUtil.self]
+	func get<T>(_ type: T.Type) throws -> T { self as! T }
+	func convertTimeZoneIfApplicable(for date: Date, timeZoneId: String?) -> Date { date.addingTimeInterval(2 * 86400) }
 }
 
 private final class ReminderDeliveryProbe: MoodReminderDelivery {
@@ -102,6 +108,15 @@ final class MoodTrackingIntegrationTests: XCTestCase {
 		if let object = mood as? MoodImpl { object.rating = 10; try container.viewContext.save() }
 		XCTAssertEqual(summary.current.averagePosition, 0.5)
 		XCTAssertEqual(MoodWeeklyReview(moods: [mood], endingOn: now).current.averagePosition, 1)
+	}
+	func testWeeklyBoundariesUseStoredInstantsEvenWhenLegacyDisplayTimeIsShifted() throws {
+		let now = Date(), date = Calendar.current.startOfDay(for: now).addingTimeInterval(-1)
+		let mood = try MoodPresetRecorder.record(MoodCheckInPreset(name: "Boundary", rating: 0.8, minimum: 0, maximum: 1), at: date)
+		DependencyInjector.register([TrackingDisplayShift()])
+		XCTAssertGreaterThan(mood.date, now)
+		let result = MoodWeeklyReview(moods: [mood], endingOn: now)
+		XCTAssertEqual(result.current.checkInCount, 1); XCTAssertEqual(result.current.averagePosition, 0.8)
+		XCTAssertEqual(MoodWeeklyReview.timestamp(for: mood), date)
 	}
 	func testMoodContextOverlayIncludesSpanningAndAllMetricEntriesButExcludesOtherMetricsAndEndBoundary() throws {
 		let end = Date(), start = end.addingTimeInterval(-3600), interval = DateInterval(start: start, end: end)
@@ -189,12 +204,21 @@ final class MoodTrackingIntegrationTests: XCTestCase {
 		XCTAssertTrue(try preferences.presets().isEmpty)
 		XCTAssertEqual(try container.viewContext.count(for: MoodImpl.fetchRequest()), 1, "Deleting a preset retains recorded data")
 	}
-	@MainActor func testWeeklyReviewNotificationsDoNotRetainTheScreen() {
+	@MainActor func testWeeklyReviewNotificationsAndInFlightCalculationDoNotRetainTheScreen() {
 		weak var released: MoodWeeklyReviewViewController?
+		let started = expectation(description: "Review calculation started"), finished = expectation(description: "Detached calculation finished")
+		let release = DispatchSemaphore(value: 0)
 		autoreleasepool {
 			let controller = MoodWeeklyReviewViewController(style: .grouped)
-			controller.loadViewIfNeeded(); released = controller
+			controller.analyticsCalculation = { entries, now, includingToday, calendar in
+				started.fulfill(); XCTAssertEqual(release.wait(timeout: .now() + 5), .success)
+				defer { finished.fulfill() }
+				return MoodWeekComparison(observations: entries, endingOn: now, includingToday: includingToday, calendar: calendar)
+			}
+			controller.loadViewIfNeeded(); controller.viewWillAppear(false)
+			wait(for: [started], timeout: 5); controller.viewWillDisappear(false); released = controller
 		}
 		XCTAssertNil(released)
+		release.signal(); wait(for: [finished], timeout: 5)
 	}
 }
