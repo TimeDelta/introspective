@@ -117,7 +117,13 @@ public final class MedicationDose: NSManagedObject, CoreDataSample, SearchableSa
 	}
 
 	public func export(to csv: CSVWriter) throws {
-		try medication.export(to: csv)
+		try export(to: csv, convertingDatesWith: { date, zone in
+			injected(CoreDataSampleUtil.self).convertTimeZoneIfApplicable(for: date, timeZoneId: zone)
+		})
+	}
+
+	internal func export(to csv: CSVWriter, convertingDatesWith convert: (Date, String?) -> Date) throws {
+		try medication.export(to: csv, convertingDatesWith: convert)
 
 		let dose = dosage?.description ?? ""
 		try csv.write(field: dose, quoted: true)

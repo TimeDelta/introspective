@@ -91,17 +91,21 @@ private final class ChartInsertionProbeView: UIView {
 private final class ObservedExportStream: OutputStream {
 	private let output: OutputStream
 	private let didWrite: () -> Void
-	init(url: URL, didWrite: @escaping () -> Void) {
+	private let failWrite: () -> Bool
+	private var failed = false
+	init(url: URL, failWrite: @escaping () -> Bool, didWrite: @escaping () -> Void) {
 		output = OutputStream(url: url, append: false)!
 		self.didWrite = didWrite
+		self.failWrite = failWrite
 		super.init(toMemory: Void())
 	}
 	override func open() { output.open() }
 	override func close() { output.close() }
 	override var hasSpaceAvailable: Bool { output.hasSpaceAvailable }
 	override var streamStatus: Stream.Status { output.streamStatus }
-	override var streamError: Error? { output.streamError }
+	override var streamError: Error? { failed ? NSError(domain: "ExportWriteFailure", code: 1) : output.streamError }
 	override func write(_ buffer: UnsafePointer<UInt8>, maxLength len: Int) -> Int {
+		if failWrite() { failed = true; return -1 }
 		let result = output.write(buffer, maxLength: len)
 		didWrite()
 		return result
@@ -111,12 +115,15 @@ private final class ObservedExportStream: OutputStream {
 private final class ObservedExportIO: IOUtil, InjectionProvider {
 	let types: [Any.Type] = [IOUtil.self]
 	let didWrite: () -> Void
-	init(didWrite: @escaping () -> Void) { self.didWrite = didWrite }
+	let failWrite: () -> Bool
+	init(failWrite: @escaping () -> Bool = { false }, didWrite: @escaping () -> Void) {
+		self.didWrite = didWrite; self.failWrite = failWrite
+	}
 	func get<T>(_ type: T.Type) throws -> T { self as! T }
 	func contentsOf(_ url: URL) throws -> String { try IOUtilImpl().contentsOf(url) }
 	func csvReader(url: URL, hasHeaderRow: Bool) throws -> CSVReader { try IOUtilImpl().csvReader(url: url, hasHeaderRow: hasHeaderRow) }
 	func csvWriter(url: URL) throws -> CSVWriter {
-		try CSVWriter(stream: ObservedExportStream(url: url, didWrite: didWrite), delimiter: ",", newline: .lf)
+		try CSVWriter(stream: ObservedExportStream(url: url, failWrite: failWrite, didWrite: didWrite), delimiter: ",", newline: .lf)
 	}
 }
 
@@ -2053,7 +2060,7 @@ final class SavedQueryTests: XCTestCase {
 		try LostItemEvent.record(change: 1)
 		let url = directory.appendingPathComponent("cancelled.csv")
 		let exporter = LostItemExporter(coordinator: container.persistentStoreCoordinator, url: url)
-		exporter.pause()
+		exporter.pauseOnRecord = 0
 		try exporter.exportData()
 		XCTAssertTrue(FileManager.default.fileExists(atPath: url.path))
 		exporter.cancel()
@@ -2088,6 +2095,254 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertNotEqual(contexts.url, otherContext.url)
 		XCTAssertTrue(contexts.url.lastPathComponent.hasPrefix("Metric Context "))
 		XCTAssertTrue(lost.url.lastPathComponent.hasPrefix("Lost Item Events "))
+	}
+
+	private func legacyExportFixtures(count: Int) throws -> (activities: [Activity], doses: [MedicationDose], moods: [MoodImpl]) {
+		let context = container.viewContext
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		let firstTag = Tag(context: context); firstTag.name = "zebra"
+		let secondTag = Tag(context: context); secondTag.name = "calm 🧠"
+		let extraTag = Tag(context: context); extraTag.name = "extra"
+		var activities = [Activity](), doses = [MedicationDose](), moods = [MoodImpl]()
+		for index in (0..<count).reversed() {
+			let date = base.addingTimeInterval(Double(index * 60))
+			let definition = ActivityDefinition(context: context)
+			definition.name = "Activity \(index)"; definition.activityDescription = "Description, \"quoted\"\nnext line"
+			definition.recordScreenIndex = Int16(index); definition.autoNote = index.isMultiple(of: 2)
+			definition.setSource(.aTracker); definition.tags = NSSet(array: [firstTag, secondTag])
+			let activity = Activity(context: context)
+			activity.definition = definition; activity.setSource(.introspective)
+			activity.start = date; activity.startSetAt = date.addingTimeInterval(5)
+			activity.end = index.isMultiple(of: 2) ? date.addingTimeInterval(30) : nil
+			activity.endSetAt = activity.end.map { $0.addingTimeInterval(5) }
+			activity.note = "Activity note \(index), \"quoted\"\n🧠"; activity.tags = NSSet(object: extraTag)
+			activities.append(activity)
+			let medication = Medication(context: context)
+			medication.name = "Medication \(index)"; medication.recordScreenIndex = Int16(index)
+			medication.setSource(.introspective); medication.startedOn = date.addingTimeInterval(-86_400)
+			medication.dosage = Dosage(10, "mg"); medication.frequency = Frequency("2 per day")
+			medication.notes = "Medication note, \"quoted\"\n🧠"
+			let dose = MedicationDose(context: context)
+			dose.medication = medication; dose.setSource(.easyPill); dose.date = date
+			dose.timeZone = TimeZone(secondsFromGMT: 0); dose.dosage = Dosage(5, "mg")
+			doses.append(dose)
+			let mood = MoodImpl(context: context)
+			mood.setSource(.wellness); mood.date = date; mood.timeZone = TimeZone(secondsFromGMT: 0)
+			mood.rating = Double(index % 10) - 2.5; mood.minRating = -3; mood.maxRating = 7
+			mood.note = "Mood note \(index), \"quoted\"\n🧠"; moods.append(mood)
+		}
+		try context.save()
+		return (Array(activities.reversed()), Array(doses.reversed()), Array(moods.reversed()))
+	}
+
+	private func encodedExport<Record: Exportable>(_ records: [Record]) throws -> Data {
+		let stream = OutputStream.toMemory()
+		let csv = try CSVWriter(stream: stream, delimiter: ",", newline: .lf)
+		try Record.exportHeaderRow(to: csv); csv.beginNewRow()
+		for record in records { try record.export(to: csv); csv.beginNewRow() }
+		return try XCTUnwrap(stream.property(forKey: .dataWrittenToMemoryStreamKey) as? Data)
+	}
+
+	private func exportOnBackground(_ exporter: Exporter) {
+		let done = expectation(description: "Background legacy export completed")
+		DispatchQueue.global().async {
+			do { try exporter.exportData() } catch { XCTFail("Export failed: \(error)") }
+			done.fulfill()
+		}
+		wait(for: [done], timeout: 30)
+	}
+
+	func testLargeActivityExportPreservesExistingColumnsRelationshipsAndOrdering() throws {
+		let fixtures = try legacyExportFixtures(count: 405)
+		let expected = try encodedExport(fixtures.activities)
+		let url = directory.appendingPathComponent("activities.csv")
+		let exporter = ActivityExporterImpl(coordinator: container.persistentStoreCoordinator, url: url)
+		exportOnBackground(exporter)
+		XCTAssertEqual(try Data(contentsOf: url), expected)
+		let rows = try exportRows(at: url)
+		XCTAssertEqual(rows.count, 406); XCTAssertTrue(rows.allSatisfy { $0.count == 18 })
+		XCTAssertEqual(rows[1][0], "Activity 0"); XCTAssertEqual(rows[405][0], "Activity 404")
+		XCTAssertEqual(rows[1][2], "calm 🧠|zebra"); XCTAssertEqual(rows[1][16], "extra")
+		XCTAssertNil(exporter.context); XCTAssertEqual(exporter.percentComplete(), 1)
+	}
+
+	func testLargeMedicationExportAlignsHeaderAndDoseColumnsWithoutChangingValues() throws {
+		let fixtures = try legacyExportFixtures(count: 405)
+		let expected = try encodedExport(fixtures.doses)
+		let url = directory.appendingPathComponent("medication.csv")
+		let exporter = MedicationExporterImpl(coordinator: container.persistentStoreCoordinator, url: url)
+		exportOnBackground(exporter)
+		XCTAssertEqual(try Data(contentsOf: url), expected)
+		let rows = try exportRows(at: url)
+		XCTAssertEqual(rows.count, 406); XCTAssertTrue(rows.allSatisfy { $0.count == 12 })
+		XCTAssertEqual(rows[0], ["Name", "Dosage", "Frequency", "Started On", "Started On Time Zone", "Notes", "Definition Source", "Record Screen Index", "Dosage", "Timestamp", "Time Zone", "Instance Source"])
+		for index in 0..<405 {
+			XCTAssertEqual(rows[index + 1][0], "Medication \(index)")
+			XCTAssertEqual(rows[index + 1][7], String(index))
+			XCTAssertEqual(rows[index + 1][8], Dosage(5, "mg").description)
+			XCTAssertEqual(rows[index + 1][11], "EasyPill")
+		}
+		XCTAssertEqual(exporter.dataTypePluralName, "Medications"); XCTAssertNil(exporter.context)
+	}
+
+	func testLargeMoodExportPreservesCustomScalesSourcesQuotedNotesAndOrdering() throws {
+		let fixtures = try legacyExportFixtures(count: 405)
+		let expected = try encodedExport(fixtures.moods)
+		let url = directory.appendingPathComponent("moods.csv")
+		let exporter = MoodExporterImpl(coordinator: container.persistentStoreCoordinator, url: url)
+		exportOnBackground(exporter)
+		XCTAssertEqual(try Data(contentsOf: url), expected)
+		let rows = try exportRows(at: url)
+		XCTAssertEqual(rows.count, 406); XCTAssertTrue(rows.allSatisfy { $0.count == 7 })
+		XCTAssertEqual(Array(rows[1][2...4]), ["-2.5", "-3.0", "7.0"])
+		XCTAssertEqual(rows[1][5], "Mood note 0, \"quoted\"\n🧠"); XCTAssertEqual(rows[405][6], "Wellness")
+		XCTAssertNil(exporter.context)
+	}
+
+	func testActivityExportPauseReleasesMaterializedRelationshipGraphsAndRetainsSnapshot() throws {
+		let fixtures = try legacyExportFixtures(count: 405)
+		let expected = try encodedExport(fixtures.activities)
+		let url = directory.appendingPathComponent("paused-activities.csv")
+		let exporter = ActivityExporterImpl(coordinator: container.persistentStoreCoordinator, url: url)
+		exporter.pauseOnRecord = 201
+		try exporter.exportData()
+		XCTAssertTrue(exporter.isPaused); XCTAssertEqual(exporter.percentComplete(), 201.0 / 405)
+		let reader = try XCTUnwrap(exporter.context)
+		reader.performAndWait {
+			XCTAssertEqual(reader.concurrencyType, .privateQueueConcurrencyType)
+			XCTAssertTrue(reader.registeredObjects.allSatisfy { $0.isFault }, "Paused exports must release materialized records, definitions, and tags")
+		}
+		// Both relationship edits and deletions must leave the pinned output unchanged.
+		for activity in fixtures.activities { activity.definition.name = "Changed"; container.viewContext.delete(activity) }
+		try container.viewContext.save()
+		try exporter.resume()
+		XCTAssertEqual(try Data(contentsOf: url), expected); XCTAssertNil(exporter.context)
+		try exporter.resume()
+		XCTAssertEqual(try Data(contentsOf: url), expected)
+	}
+
+	func testMedicationExportPinsRelatedDefinitionsAcrossPauseAndEdits() throws {
+		let fixtures = try legacyExportFixtures(count: 3)
+		let expected = try encodedExport(fixtures.doses)
+		let url = directory.appendingPathComponent("paused-medication.csv")
+		let exporter = MedicationExporterImpl(coordinator: container.persistentStoreCoordinator, url: url)
+		exporter.pauseOnRecord = 1
+		try exporter.exportData()
+		for dose in fixtures.doses { dose.medication.notes = "Edited"; dose.medication.dosage = Dosage(20, "mg") }
+		try container.viewContext.save()
+		try exporter.resume()
+		XCTAssertEqual(try Data(contentsOf: url), expected)
+	}
+
+	func testActivityAndMedicationExportsCaptureTimeZoneSettingsBeforeBackgroundWork() throws {
+		let fixtures = try legacyExportFixtures(count: 1)
+		let zone = TimeZone(identifier: "America/New_York")!
+		fixtures.activities[0].setValue(zone.identifier, forKey: "startDateTimeZoneId")
+		fixtures.activities[0].setValue(zone.identifier, forKey: "endDateTimeZoneId")
+		fixtures.doses[0].medication.startedOnTimeZone = zone
+		try container.viewContext.save()
+		let settings = injected(Settings.self)
+		let previous = settings.convertTimeZones
+		defer { settings.setConvertTimeZones(previous) }
+		for enabled in [false, true] {
+			settings.setConvertTimeZones(enabled)
+			let expectedActivity = try encodedExport(fixtures.activities)
+			let expectedMedication = try encodedExport(fixtures.doses)
+			DependencyInjector.register([DataExportInjectionProvider()])
+			let activity = try ActivityExporterImpl()
+			let medication = try MedicationExporterImpl()
+			defer {
+				try? FileManager.default.removeItem(at: activity.url)
+				try? FileManager.default.removeItem(at: medication.url)
+			}
+			settings.setConvertTimeZones(!enabled)
+			exportOnBackground(activity); exportOnBackground(medication)
+			XCTAssertEqual(try Data(contentsOf: activity.url), expectedActivity)
+			XCTAssertEqual(try Data(contentsOf: medication.url), expectedMedication)
+		}
+	}
+
+	func testPrivateExportReaderAlsoSupportsExistingInMemoryFunctionalFixtures() throws {
+		let memory = NSPersistentContainer(name: "ExportMemoryTests", managedObjectModel: Self.model)
+		let description = NSPersistentStoreDescription()
+		description.type = NSInMemoryStoreType; description.shouldAddStoreAsynchronously = false
+		memory.persistentStoreDescriptions = [description]
+		var failure: Error?
+		memory.loadPersistentStores { _, error in failure = error }
+		if let error = failure { throw error }
+		defer {
+			memory.viewContext.reset()
+			for store in memory.persistentStoreCoordinator.persistentStores { try? memory.persistentStoreCoordinator.remove(store) }
+		}
+		let row = MoodImpl(context: memory.viewContext)
+		row.setSource(.introspective); row.date = Date(timeIntervalSince1970: 1_700_000_000)
+		row.minRating = 0; row.maxRating = 7; row.rating = 4.5; row.note = "Memory fixture"
+		try memory.viewContext.save()
+		let expected = try encodedExport([row])
+		let url = directory.appendingPathComponent("memory.csv")
+		let exporter = MoodExporterImpl(coordinator: memory.persistentStoreCoordinator, url: url)
+		exporter.pauseOnRecord = 0; try exporter.exportData()
+		XCTAssertTrue(exporter.isPaused)
+		try exporter.resume()
+		XCTAssertEqual(try Data(contentsOf: url), expected)
+	}
+
+	func testLegacyExportsCancelledDuringWriteRemovePartialFilesAndReleaseReaders() throws {
+		_ = try legacyExportFixtures(count: 8)
+		let store = container.persistentStoreCoordinator
+		let exporters: [Exporter] = [ActivityExporterImpl(coordinator: store, url: directory.appendingPathComponent("cancel-activity.csv")),
+			MedicationExporterImpl(coordinator: store, url: directory.appendingPathComponent("cancel-medication.csv")),
+			MoodExporterImpl(coordinator: store, url: directory.appendingPathComponent("cancel-mood.csv"))]
+		for exporter in exporters {
+			DependencyInjector.register([ObservedExportIO {
+				if exporter.percentComplete() > 0.2 { exporter.cancel() }
+			}])
+			try exporter.exportData()
+			XCTAssertTrue(exporter.isCancelled); XCTAssertFalse(FileManager.default.fileExists(atPath: exporter.url.path))
+			let reader = (exporter as? ActivityExporterImpl)?.context ?? (exporter as? MedicationExporterImpl)?.context ?? (exporter as? MoodExporterImpl)?.context
+			XCTAssertNil(reader)
+			try exporter.resume()
+			XCTAssertFalse(FileManager.default.fileExists(atPath: exporter.url.path))
+		}
+	}
+
+	func testLegacyExportsPropagateMidWriteFailuresAndDiscardPartialFiles() throws {
+		_ = try legacyExportFixtures(count: 8)
+		let store = container.persistentStoreCoordinator
+		let exporters: [Exporter] = [ActivityExporterImpl(coordinator: store, url: directory.appendingPathComponent("error-activity.csv")),
+			MedicationExporterImpl(coordinator: store, url: directory.appendingPathComponent("error-medication.csv")),
+			MoodExporterImpl(coordinator: store, url: directory.appendingPathComponent("error-mood.csv"))]
+		for exporter in exporters {
+			DependencyInjector.register([ObservedExportIO(failWrite: { exporter.percentComplete() > 0.2 }, didWrite: {})])
+			XCTAssertThrowsError(try exporter.exportData()); XCTAssertThrowsError(try exporter.resume())
+			XCTAssertFalse(FileManager.default.fileExists(atPath: exporter.url.path))
+		}
+	}
+
+	func testConcurrentResumeCannotStartASecondWriterOrDuplicateRows() throws {
+		let fixtures = try legacyExportFixtures(count: 3)
+		let expected = try encodedExport(fixtures.moods)
+		let url = directory.appendingPathComponent("serialized-moods.csv")
+		let exporter = MoodExporterImpl(coordinator: container.persistentStoreCoordinator, url: url)
+		var attemptedResume = false
+		DependencyInjector.register([ObservedExportIO { [weak exporter] in
+			guard let exporter = exporter, !attemptedResume, exporter.percentComplete() > 0 else { return }
+			attemptedResume = true
+			XCTAssertThrowsError(try exporter.resume(), "A concurrent execution must fail immediately")
+		}])
+		try exporter.exportData()
+		XCTAssertTrue(attemptedResume); XCTAssertEqual(try Data(contentsOf: url), expected)
+	}
+
+	func testLegacyExporterNamesAndDistinctInstancesRemainAvailableThroughInjection() throws {
+		DependencyInjector.register([DataExportInjectionProvider()])
+		let activity = injected(ActivityExporter.self), mood = injected(MoodExporter.self), medication = injected(MedicationExporter.self)
+		XCTAssertEqual(activity.dataTypePluralName, "Activities"); XCTAssertEqual(mood.dataTypePluralName, "Moods")
+		XCTAssertEqual(medication.dataTypePluralName, "Medications")
+		XCTAssertFalse(activity.equalTo(injected(ActivityExporter.self)))
+		XCTAssertFalse(mood.equalTo(injected(MoodExporter.self)))
+		XCTAssertFalse(medication.equalTo(injected(MedicationExporter.self)))
+		XCTAssertTrue(medication.url.lastPathComponent.hasPrefix("Medication Dosage History "))
 	}
 
 	func testMetricContextModelMigrationPreservesMoodsSavedQueriesAndLostItems() throws {

@@ -117,6 +117,12 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed, Expo
 	}
 
 	public func export(to csv: CSVWriter) throws {
+		try export(to: csv, convertingDatesWith: { date, zone in
+			injected(CoreDataSampleUtil.self).convertTimeZoneIfApplicable(for: date, timeZoneId: zone)
+		})
+	}
+
+	internal func export(to csv: CSVWriter, convertingDatesWith convert: (Date, String?) -> Date) throws {
 		try csv.write(field: name, quoted: true)
 
 		let dosageText = dosage?.description ?? ""
@@ -125,7 +131,8 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed, Expo
 		let frequencyText = frequency?.description ?? ""
 		try csv.write(field: frequencyText, quoted: true)
 
-		if let startedOn = startedOn {
+		if let rawStartedOn = storedStartedOn {
+			let startedOn = convert(rawStartedOn, startedOnTimeZoneId)
 			let timestampText = injected(CalendarUtil.self)
 				.string(for: startedOn, dateStyle: .full, timeStyle: .full)
 			try csv.write(field: timestampText, quoted: true)
@@ -140,6 +147,7 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed, Expo
 
 		let sourceText = Sources.resolveMedicationSource(source).description
 		try csv.write(field: sourceText, quoted: true)
+		try csv.write(field: String(recordScreenIndex), quoted: true)
 	}
 
 	// MARK: - Attributed Functions

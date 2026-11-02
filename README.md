@@ -79,7 +79,7 @@ Introspection integrates with a number of data types from the Apple Health app, 
   - import medication history from "EasyPill"
   - import moods from "Wellness"
   - import from Introspective export
-  - export activities, medications or moods to CSV file
+  - [export activities, medication history, moods, metric context, and lost-item events to CSV](docs/csv-exports.md)
 
 
 ### Data Types

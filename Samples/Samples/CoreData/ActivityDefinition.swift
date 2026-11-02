@@ -56,7 +56,7 @@ public class ActivityDefinition: NSManagedObject, CoreDataObject, Exportable {
 
 		try csv.write(field: activityDescription ?? "", quoted: true)
 
-		let tagsText = tagsArray().map { $0.name }.joined(separator: "|")
+		let tagsText = tagsArray().map { $0.name }.sorted().joined(separator: "|")
 		try csv.write(field: tagsText, quoted: true)
 
 		let sourceText = Sources.resolveActivitySource(source).description

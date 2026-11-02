@@ -282,13 +282,20 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 	}
 
 	public final func export(to csv: CSVWriter) throws {
+		try export(to: csv, convertingDatesWith: { date, zone in
+			injected(CoreDataSampleUtil.self).convertTimeZoneIfApplicable(for: date, timeZoneId: zone)
+		})
+	}
+
+	internal func export(to csv: CSVWriter, convertingDatesWith convert: (Date, String?) -> Date) throws {
 		try definition.export(to: csv)
 
 		let startText = injected(CalendarUtil.self)
 			.string(for: startDate, dateStyle: .full, timeStyle: .full)
 		try csv.write(field: startText, quoted: true)
 
-		if let startSetAt = startSetAt {
+		if let rawStartSetAt = startDateSetAt {
+			let startSetAt = convert(rawStartSetAt, startDateTimeZoneId)
 			let startSetAtText = injected(CalendarUtil.self)
 				.string(for: startSetAt, dateStyle: .full, timeStyle: .full)
 			try csv.write(field: startSetAtText, quoted: true)
@@ -310,7 +317,8 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 			try csv.write(field: "", quoted: true)
 		}
 
-		if let endSetAt = endSetAt {
+		if let rawEndSetAt = endDateSetAt {
+			let endSetAt = convert(rawEndSetAt, endDateTimeZoneId)
 			let endSetAtText = injected(CalendarUtil.self)
 				.string(for: endSetAt, dateStyle: .full, timeStyle: .full)
 			try csv.write(field: endSetAtText, quoted: true)
@@ -329,7 +337,7 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 
 		try csv.write(field: note ?? "", quoted: true)
 
-		let tags = tagsArray().map { $0.name }.joined(separator: "|")
+		let tags = tagsArray().map { $0.name }.sorted().joined(separator: "|")
 		try csv.write(field: tags, quoted: true)
 
 		let sourceText = Sources.resolveActivitySource(source).description
