@@ -6,7 +6,7 @@ import Persistence
 
 public struct MoodWeeklyReview {
 	/// Group actual stored instants in the review calendar's zone, without the legacy display-time shift.
-	public static func timestamp(for mood: Mood) -> Date { (mood as? MoodImpl)?.timestamp ?? mood.date }
+	public static func timestamp(for mood: Mood) -> Date { (mood as? MoodImpl)?.originalTimestamp ?? mood.date }
 	public let analytics: MoodWeekComparison
 	public var currentInterval: DateInterval { analytics.current.interval }
 	public var previousInterval: DateInterval { analytics.previous.interval }
