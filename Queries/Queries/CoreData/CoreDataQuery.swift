@@ -34,7 +34,14 @@ public class CoreDataQuery<SampleType: NSManagedObject & CoreDataSample>: Sample
 				return
 			}
 
-			let filteredSamples = try samples.filter(samplePassesFilters)
+			let filteredSamples: [SampleType]
+			if readContext != nil, fetchRequest.predicate != nil {
+				// The scoped fetch applied the complete predicate with a fixed clock
+				// and settings. Rebuilding it per row adds no further filtering.
+				filteredSamples = samples
+			} else {
+				filteredSamples = try samples.filter(samplePassesFilters)
+			}
 
 			if !stopped && readContext?.isCancelled != true {
 				let result = SampleQueryResult<SampleType>(filteredSamples)
