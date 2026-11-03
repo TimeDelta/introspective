@@ -377,7 +377,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	// MARK: - TableView Editing
 
 	final override func tableView(_: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-		indexPath.section == 0 || samplesAreDeletable()
+		indexPath.section == 0 || samplesAreDeletable() || query != nil
 	}
 
 	final override func tableView(_: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
@@ -396,7 +396,17 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		_ tableView: UITableView,
 		leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath
 	) -> UISwipeActionsConfiguration? {
-		nil
+		guard indexPath.section == 1, query != nil, finishedLoading,
+			let samples = filteredSamples, samples.indices.contains(indexPath.row) else { return nil }
+		guard let identity = try? QueryInspectionRecordID.capture(samples[indexPath.row]) else { return nil }
+		let action = UIContextualAction(style: .normal, title: "Why Matched?") { [weak self] _, _, completion in
+			completion(true)
+			self?.showQueryExplanation(recordID: identity)
+		}
+		action.backgroundColor = .systemBlue
+		let configuration = UISwipeActionsConfiguration(actions: [action])
+		configuration.performsFirstActionWithFullSwipe = false
+		return configuration
 	}
 
 	public final override func tableView(
@@ -586,11 +596,13 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	@objc private final func presentActions() {
 		actionsController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-		actionsController?.addAction(injected(UiUtil.self).alertAction(
-			title: "Graph",
-			style: .default,
-			handler: { [weak self] _ in self?.graph() }
-		))
+		if !(samples?.isEmpty ?? true) {
+			actionsController?.addAction(injected(UiUtil.self).alertAction(
+				title: "Graph",
+				style: .default,
+				handler: { [weak self] _ in self?.graph() }
+			))
+		}
 		if samplesAreSortable() {
 			actionsController?.addAction(injected(UiUtil.self).alertAction(
 				title: "Sort",
@@ -598,12 +610,19 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				handler: { [weak self] _ in self?.setSampleSort() }
 			))
 		}
-		actionsController?.addAction(injected(UiUtil.self).alertAction(
-			title: "Add Information",
-			style: .default,
-			handler: { [weak self] _ in self?.addInformation() }
-		))
+		if !(samples?.isEmpty ?? true) {
+			actionsController?.addAction(injected(UiUtil.self).alertAction(
+				title: "Add Information",
+				style: .default,
+				handler: { [weak self] _ in self?.addInformation() }
+			))
+		}
 		if let _ = query {
+			actionsController?.addAction(injected(UiUtil.self).alertAction(
+				title: "Explain Query",
+				style: .default,
+				handler: { [weak self] _ in self?.showQueryExplanation() }
+			))
 			actionsController?.addAction(injected(UiUtil.self).alertAction(
 				title: "Refresh",
 				style: .default,
@@ -622,6 +641,14 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		actionsController?
 			.addAction(injected(UiUtil.self).alertAction(title: "Cancel", style: .cancel, handler: nil))
 		present(actionsController!, animated: false, completion: nil)
+	}
+
+	private func showQueryExplanation(recordID: QueryInspectionRecordID? = nil) {
+		guard !isClosed, let query = query else { return }
+		let controller = QueryInspectionViewController(style: .grouped)
+		controller.query = query
+		if let recordID = recordID { controller.selectRecord(identity: recordID) }
+		pushToNavigationController(controller)
 	}
 
 	@objc private final func done() {
@@ -953,11 +980,22 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		viewIsReady()
 		dismissSortProgress()
 		if result.isEmpty {
+			if query != nil {
+				let label = UILabel()
+				label.text = "No matching records. Choose Actions, then Explain Query to inspect its conditions. For Health data, empty results may also mean records are not available to this app."
+				label.numberOfLines = 0; label.textAlignment = .center
+				label.font = .preferredFont(forTextStyle: .body)
+				label.adjustsFontForContentSizeCategory = true
+				label.accessibilityIdentifier = "emptyQueryResults"
+				label.isAccessibilityElement = true
+				tableView.backgroundView = label
+				return
+			}
 			DispatchQueue.main.async { [weak self] in
 				guard let self = self, !self.isClosed, self.sortWork == nil, self.storedSamples?.isEmpty == true else { return }
 				self.showError(title: "No results", message: nil, onDismiss: { [weak self] _ in self?.popFromNavigationController() })
 			}
-		}
+		} else { tableView.backgroundView = nil }
 	}
 
 	private func dismissSortProgress() {

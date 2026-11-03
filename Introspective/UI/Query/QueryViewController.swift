@@ -95,6 +95,8 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	private var loadedSavedQuery: StoredQuery?
 	private var cancelQueryDraft: (() -> Void)?
 	private var queryDraftGeneration: UUID?
+	private var describeQueryButton: UIBarButtonItem?
+	private var explainQueryButton: UIBarButtonItem?
 	private final var editedSampleTypeSectionIndex: Int!
 	private final var editedAttributeRestrictionIndex: IndexPath!
 
@@ -107,7 +109,10 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
 		tableView.accessibilityIdentifier = "queryBuilder"
-		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Describe Query", style: .plain, target: self, action: #selector(describeQuery))
+		describeQueryButton = UIBarButtonItem(title: "Describe Query", style: .plain, target: self, action: #selector(describeQuery))
+		explainQueryButton = UIBarButtonItem(title: "Explain", style: .plain, target: self, action: #selector(explainCurrentQuery))
+		explainQueryButton?.accessibilityIdentifier = "explainBuilderQuery"
+		navigationItem.rightBarButtonItems = [describeQueryButton!, explainQueryButton!]
 
 		editButton.target = self
 		editButton.action = #selector(editButtonPressed)
@@ -349,10 +354,21 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		pushToNavigationController(controller)
 		query.runQuery { [weak controller] (result: QueryResult?, error: Error?) in
 			DispatchQueue.main.async {
-				if let error = error { controller?.showError(title: "Failed to run query", error: error) }
-				else { controller?.samples = result?.samples }
+				if let error = error, !(error is NoSamplesFoundQueryError) { controller?.showError(title: "Failed to run query", error: error) }
+				else { controller?.samples = result?.samples ?? [] }
 			}
 		}
+	}
+
+	@objc private func explainCurrentQuery() {
+		guard let query = buildQuery() else { return }
+		showQueryExplanation(query)
+	}
+
+	private func showQueryExplanation(_ query: Query) {
+		let controller = QueryInspectionViewController(style: .grouped)
+		controller.query = query
+		pushToNavigationController(controller)
 	}
 
 	private func cancelOutstandingQueryDraft() {
@@ -361,7 +377,8 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		guard queryDraftGeneration != nil else { return }
 		queryDraftGeneration = nil
 		navigationItem.prompt = nil
-		navigationItem.rightBarButtonItem?.isEnabled = true
+		describeQueryButton?.isEnabled = true
+		explainQueryButton?.isEnabled = finishedButton?.isEnabled ?? false
 		if isViewLoaded { view.isUserInteractionEnabled = true }
 	}
 
@@ -372,7 +389,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 				showError(title: "On-device model unavailable", message: "This feature requires an available Apple Intelligence language model. Use the query builder on other devices. No cloud fallback is used.")
 				return
 			}
-			let alert = UIAlertController(title: "Describe a query", message: "Processed on this device. The generated draft will open for review; it will not run automatically. Supported: data type, past days, rating bounds, note text, minimum duration, active energy, and most recent only.", preferredStyle: .alert)
+			let alert = UIAlertController(title: "Describe a query", message: "Processed on this device. The generated draft will open for review; it will not run automatically. Supported: data type, past days, rating bounds, note text, minimum duration, and active energy. Most-recent-only requests are unsupported.", preferredStyle: .alert)
 			alert.addTextField { field in
 				field.placeholder = "Moods rated at least 4 in the past 7 days"
 				field.autocorrectionType = .no; field.spellCheckingType = .no
@@ -394,7 +411,8 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		cancelOutstandingQueryDraft()
 		let token = UUID()
 		queryDraftGeneration = token
-		navigationItem.rightBarButtonItem?.isEnabled = false
+		describeQueryButton?.isEnabled = false
+		explainQueryButton?.isEnabled = false
 		navigationItem.prompt = "Creating on-device draft…"
 		view.isUserInteractionEnabled = false
 		let task = Task { @MainActor [weak self] in
@@ -402,17 +420,18 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 				if let self = self, self.queryDraftGeneration == token {
 					self.queryDraftGeneration = nil
 					self.cancelQueryDraft = nil
-					self.navigationItem.rightBarButtonItem?.isEnabled = true
+					self.describeQueryButton?.isEnabled = true
+					self.explainQueryButton?.isEnabled = self.finishedButton?.isEnabled ?? false
 					self.view.isUserInteractionEnabled = true
 				}
 			}
 			do {
-				let session = LanguageModelSession(instructions: "Convert the user's request to a draft query. Supported dataType values: mood, pain, fatigue, activity, workout, activeEnergy, lostItem. Only AND conditions are supported. days means relative past days. Rating limits and minimum duration/energy are inclusive. Note text is literal. Do not approximate unsupported requests, OR, negation, comparisons, subqueries, or exact calendar ranges; set canRepresent=false. Use nil for unspecified optional conditions. No medical interpretation. Never execute anything.")
+				let session = LanguageModelSession(instructions: "Convert the user's request to a draft query. Supported dataType values: mood, pain, fatigue, activity, workout, activeEnergy, lostItem. Only AND conditions are supported. days means relative past days. Rating limits and minimum duration/energy are inclusive. Note text is literal. Most-recent-only and latest-record requests are unsupported: set canRepresent=false. Set mostRecentOnly=false for every supported draft. Do not approximate unsupported requests, OR, negation, comparisons, subqueries, or exact calendar ranges; set canRepresent=false. Use nil for unspecified optional conditions. No medical interpretation. Never execute anything.")
 				let response = try await session.respond(to: text, generating: GeneratedQueryDraft.self)
 				try Task.checkCancellation()
 				guard let self = self, self.queryDraftGeneration == token else { return }
 				let draft = response.content
-				guard draft.canRepresent else { throw GenericDisplayableError(title: "Use the builder for this query", description: "The requested conditions cannot all be represented by this experimental draft generator.") }
+				guard draft.canRepresent else { throw GenericDisplayableError(title: "Unsupported query request", description: "The requested conditions cannot all be represented by this experimental draft generator. No query was changed.") }
 				let resolved = try OnDeviceQueryPlan(dataType: draft.dataType, days: draft.days, minimumRating: draft.minimumRating,
 					maximumRating: draft.maximumRating, noteContains: draft.noteContains, minimumDurationMinutes: draft.minimumDurationMinutes,
 					minimumEnergyKcal: draft.minimumEnergyKcal, mostRecentOnly: draft.mostRecentOnly).resolve()
@@ -423,10 +442,15 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 				self.loadedSavedQuery = nil
 				self.queries = []; self.populateQuery(query); self.tableView.reloadData(); self.validate()
 				self.navigationItem.prompt = "Review every condition before running"
+				self.showQueryExplanation(query)
 			} catch {
 				guard !Task.isCancelled, self?.queryDraftGeneration == token else { return }
 				self?.navigationItem.prompt = nil
-				self?.showError(title: "Could not create draft", message: "The request was not applied. Try the query builder or a simpler description.")
+				if let displayable = error as? DisplayableError {
+					self?.showError(title: displayable.displayableTitle, message: displayable.displayableDescription)
+				} else {
+					self?.showError(title: "Could not create draft", message: "The request was not applied. Try the query builder or a simpler description.")
+				}
 			}
 		}
 		cancelQueryDraft = { task.cancel() }
@@ -627,6 +651,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	private final func validate() {
 		finishedButton.isEnabled = buildQuery() != nil
 		saveButton?.isEnabled = finishedButton.isEnabled
+		explainQueryButton?.isEnabled = finishedButton.isEnabled && queryDraftGeneration == nil
 	}
 
 	// MARK: Reordering

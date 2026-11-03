@@ -54,6 +54,8 @@ public final class Weight: HealthKitQuantitySample {
 
 	// MARK: - Instance Variables
 
+	public private(set) var sourceIdentifier: UUID? = nil
+
 	public final var attributedName: String = Me.name
 	public final var description: String = Me.description
 	public final var timestamp: Date
@@ -66,8 +68,14 @@ public final class Weight: HealthKitQuantitySample {
 		self.timestamp = timestamp
 	}
 
-	public required init(_ sample: HKQuantitySample) {
-		weight = sample.quantity.doubleValue(for: Me.unit)
+	public required convenience init(_ sample: HKQuantitySample) {
+		self.init(sample, unit: Me.unit)
+	}
+
+	/// Use a captured read unit instead of mutable global unit preferences.
+	public required init(_ sample: HKQuantitySample, unit: HKUnit) {
+		sourceIdentifier = sample.uuid
+		weight = sample.quantity.doubleValue(for: unit)
 		timestamp = sample.startDate
 		injected(HealthKitUtil.self).setTimeZoneIfApplicable(for: &timestamp, from: sample)
 	}

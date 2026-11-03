@@ -16,6 +16,14 @@ public protocol HealthKitQuantitySample: HealthKitSample {
 	var unitString: String { get }
 
 	init(_ sample: HKQuantitySample)
+	/// Map a read using its captured preferred unit, even if global preferences change.
+	init(_ sample: HKQuantitySample, unit: HKUnit)
 
 	func quantityValue() -> Double
+}
+
+public extension HealthKitQuantitySample {
+	/// Backward compatibility for custom implementations. Production wrappers
+	/// override this initializer to honor the supplied read unit.
+	init(_ sample: HKQuantitySample, unit: HKUnit) { self.init(sample) }
 }

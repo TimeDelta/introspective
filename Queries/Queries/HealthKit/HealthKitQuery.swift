@@ -18,6 +18,8 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 	private final var finishedQuery: Bool = false
 	private let cancellationLock = NSLock()
 	private var cancellationRequested = false
+	private var capturedQuantityUnit: HKUnit?
+	private var capturedPressureUnits: (systolic: HKUnit, diastolic: HKUnit)?
 
 	deinit { stopFunction?() }
 
@@ -32,6 +34,11 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 		finishedQuery = false
 		stopFunction = nil
 		cancellationLock.unlock()
+		capturedQuantityUnit = nil
+		capturedPressureUnits = nil
+		if let context = readContext, !context.beginHealthRead(for: SampleType.self, completion: { [weak self] result in
+			self?.processReadResult(result)
+		}) { return }
 		injected(HealthKitUtil.self).getAuthorization { [weak self] error in
 			guard let self = self else { return }
 			self.performRead { [weak self] in self?.beginQuery(afterAuthorization: error) }
@@ -48,10 +55,21 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 		let cancelled = cancellationRequested
 		cancellationLock.unlock()
 		guard !cancelled, readContext?.isCancelled != true else { return }
-		if let error = error { finish(nil, error); return }
+		if let error = error { completeRead(.failure(error)); return }
 		SampleType.initUnits()
-		if let error = QueryReadScope.readFailure { finish(nil, error); return }
+		if let error = QueryReadScope.readFailure { completeRead(.failure(error)); return }
 		guard readContext?.isCancelled != true else { return }
+		if readContext?.cachesHealthResults == true, let quantity = SampleType.self as? HealthKitQuantitySample.Type {
+			let unit = quantity.unit
+			capturedQuantityUnit = unit
+			readContext?.recordCapturedHealthUnit(unit.unitString, for: SampleType.self)
+		}
+		if readContext?.cachesHealthResults == true, ObjectIdentifier(SampleType.self) == ObjectIdentifier(BloodPressure.self) {
+			let units = (systolic: BloodPressure.systolicUnit, diastolic: BloodPressure.diastolicUnit)
+			capturedPressureUnits = units
+			readContext?.recordCapturedHealthUnit(units.systolic.unitString, for: SampleType.self, attributeID: BloodPressure.systolic.id)
+			readContext?.recordCapturedHealthUnit(units.diastolic.unitString, for: SampleType.self, attributeID: BloodPressure.diastolic.id)
+		}
 		let stop = injected(HealthKitUtil.self).getSamples(for: SampleType.self, predicate: nil) { [weak self] samples, error in
 			guard let self = self else { return }
 			self.performRead { [weak self] in
@@ -94,12 +112,12 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 
 	private final func processQueryResults(originalSamples: [HKSample]?, error: Error?) {
 		if readContext != nil && (stopped || readContext?.isCancelled == true) { return }
-		if error != nil {
-			finish(nil, error)
+		if let error = error {
+			completeRead(.failure(error))
 			return
 		}
 		guard let originalSamples = originalSamples else {
-			finish(nil, NoHealthKitSamplesFoundQueryError(sampleType: SampleType.self))
+			completeRead(.failure(NoHealthKitSamplesFoundQueryError(sampleType: SampleType.self)))
 			return
 		}
 
@@ -107,8 +125,48 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 		mappedSamples.reserveCapacity(originalSamples.count)
 		for sample in originalSamples {
 			guard readContext?.isCancelled != true else { return }
-			mappedSamples.append(initFromHKSample(sample))
+			if let units = capturedPressureUnits {
+				guard let correlation = sample as? HKCorrelation,
+					correlation.objects(for: BloodPressure.systolicQuantityType).first as? HKQuantitySample != nil,
+					correlation.objects(for: BloodPressure.diastolicQuantityType).first as? HKQuantitySample != nil else {
+					completeRead(.failure(GenericError("The captured blood pressure record is missing a pressure measurement."))); return
+				}
+				guard let mapped = BloodPressure(correlation, systolicUnit: units.systolic, diastolicUnit: units.diastolic) as? SampleType else {
+					completeRead(.failure(GenericError("The captured blood pressure record has an unexpected type."))); return
+				}
+				mappedSamples.append(mapped)
+			} else if let unit = capturedQuantityUnit {
+				guard let quantity = sample as? HKQuantitySample,
+					let type = SampleType.self as? HealthKitQuantitySample.Type,
+					quantity.quantityType == type.quantityType,
+					let mapped = type.init(quantity, unit: unit) as? SampleType else {
+					completeRead(.failure(GenericError("The captured Health quantity has an unexpected type."))); return
+				}
+				mappedSamples.append(mapped)
+			} else { mappedSamples.append(initFromHKSample(sample)) }
 		}
+		completeRead(.samples(mappedSamples))
+	}
+
+	private func completeRead(_ result: QueryReadContext.HealthReadResult) {
+		guard readContext?.isCancelled != true, !stopped else { return }
+		if readContext?.completeHealthRead(for: SampleType.self, with: result) == true { return }
+		processReadResult(result)
+	}
+
+	private func processReadResult(_ result: QueryReadContext.HealthReadResult) {
+		guard readContext?.isCancelled != true, !stopped else { return }
+		switch result {
+		case let .failure(error): finish(nil, error)
+		case let .samples(samples):
+			guard let typed = samples as? [SampleType] else {
+				finish(nil, GenericError("The captured Health data has an unexpected type.")); return
+			}
+			filterCapturedSamples(typed)
+		}
+	}
+
+	private func filterCapturedSamples(_ mappedSamples: [SampleType]) {
 		do {
 			let filteredSamples = try mappedSamples.filter(samplePassesFilters)
 

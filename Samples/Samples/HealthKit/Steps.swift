@@ -63,6 +63,8 @@ public final class Steps: HealthKitQuantitySample {
 
 	// MARK: - Instance Variables
 
+	public private(set) var sourceIdentifier: UUID? = nil
+
 	public final var start: Date
 	public final var end: Date
 	public final var steps: Double
@@ -75,8 +77,14 @@ public final class Steps: HealthKitQuantitySample {
 		self.end = end
 	}
 
-	public required init(_ sample: HKQuantitySample) {
-		steps = sample.quantity.doubleValue(for: Me.unit)
+	public required convenience init(_ sample: HKQuantitySample) {
+		self.init(sample, unit: Me.unit)
+	}
+
+	/// Use a captured read unit instead of mutable global unit preferences.
+	public required init(_ sample: HKQuantitySample, unit: HKUnit) {
+		sourceIdentifier = sample.uuid
+		steps = sample.quantity.doubleValue(for: unit)
 		start = sample.startDate
 		end = sample.endDate
 		injected(HealthKitUtil.self).setTimeZoneIfApplicable(for: &start, from: sample)

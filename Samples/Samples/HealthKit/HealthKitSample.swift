@@ -20,5 +20,14 @@ public protocol HealthKitSample: Sample {
 	/// preferred units under certain conditions. This is a workaround.
 	static func initUnits()
 
+	/// Identity of the original Health record; nil for a locally constructed sample.
+	/// Exporting with hkSample() may create a new record with a different UUID.
+	var sourceIdentifier: UUID? { get }
+
 	func hkSample() -> HKSample
+}
+
+public extension HealthKitSample {
+	/// Existing custom sample implementations have no guaranteed read identity.
+	var sourceIdentifier: UUID? { nil }
 }

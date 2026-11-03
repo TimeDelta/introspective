@@ -32,6 +32,9 @@ end
   Introspective/UI/ActiveImportTableViewCell.swift
   Introspective/UI/Settings/Export/ActiveExportTableViewCell.swift
   Introspective/UI/Results/ResultsProcessing.swift
+  Introspective/UI/Query/QueryInspectionDefinition.swift
+  Introspective/UI/Query/QueryInspectionService.swift
+  Introspective/UI/Query/QueryInspectionViewController.swift
   TestSupport/UITestFixtures.swift
   TestSupport/UITestFixtureLoader.swift
   Introspective/UI/Explore/MetricContextViewController.swift

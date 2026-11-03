@@ -16,7 +16,7 @@ final class MoodResultsUITests: UITest {
 		runAllMoodsQuery()
 
 		// then
-		XCTAssert(app.alerts.staticTexts["No mood entries found."].exists)
+		assertEmptyQueryCanBeExplainedAndReturnToBuilder()
 	}
 
 	func testGivenMood_correctlyDisplaysMoodData() {

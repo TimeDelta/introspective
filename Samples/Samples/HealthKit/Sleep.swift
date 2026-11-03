@@ -93,6 +93,8 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 
 	// MARK: - Instance Variables
 
+	public private(set) var sourceIdentifier: UUID? = nil
+
 	public final var attributedName: String = Me.name
 	public final var description: String = Me.description
 	public final var startDate: Date
@@ -111,6 +113,7 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 	}
 
 	public required init(_ sample: HKCategorySample) {
+		sourceIdentifier = sample.uuid
 		switch sample.value {
 		case HKCategoryValueSleepAnalysis.awake.rawValue:
 			state = .awake

@@ -18,8 +18,8 @@ final class GeneralResultsUITests: UITest {
 		app.buttons["Run"].tap()
 
 		// then
-		XCTAssert(app.alerts.staticTexts["No activity entries found."].exists)
-		app.alerts.buttons["OK"].tap()
-		XCTAssert(app.buttons["Run"].exists)
+		// Empty queries now retain Results so their actual conditions can be
+		// diagnosed, rather than dismissing the only route to an explanation.
+		assertEmptyQueryCanBeExplainedAndReturnToBuilder()
 	}
 }
