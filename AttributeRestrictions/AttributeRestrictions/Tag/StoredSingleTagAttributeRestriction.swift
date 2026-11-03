@@ -100,6 +100,38 @@ internal struct StoredTagReference: Codable {
 
 	static func resolve(_ data: Data, in context: NSManagedObjectContext?) throws -> [Tag] {
 		let references = try JSONDecoder().decode([StoredTagReference].self, from: data)
+		if let context = context {
+			guard !references.isEmpty else { return [] }
+			var owner: NSManagedObjectContext? = context
+			while owner?.persistentStoreCoordinator == nil, let parent = owner?.parent { owner = parent }
+			if let coordinator = owner?.persistentStoreCoordinator, !coordinator.persistentStores.isEmpty,
+				coordinator.persistentStores.allSatisfy({ $0.type == NSSQLiteStoreType }) {
+				// URI lookup alone can normalize a spelling or identify another entity.
+				// Match exactly what the former tag-array search accepted.
+				let ids = references.compactMap { reference -> NSManagedObjectID? in
+					guard let url = URL(string: reference.id), url.scheme == "x-coredata", url.host?.isEmpty == false,
+						url.path.split(separator: "/").count == 2, url.path.split(separator: "/").first == Substring(Tag.entityName),
+						url.user == nil, url.password == nil, url.port == nil, url.query == nil, url.fragment == nil,
+						let id = coordinator.managedObjectID(forURIRepresentation: url),
+						!id.isTemporaryID, id.entity.name == Tag.entityName,
+						id.uriRepresentation().absoluteString == reference.id else { return nil }
+					return id
+				}
+				var tagsByURI = [String: Tag]()
+				if !ids.isEmpty {
+					let request = Tag.fetchRequest()
+					request.predicate = NSPredicate(format: "SELF IN %@", Array(Set(ids)) as NSArray)
+					for tag in try context.fetch(request) { tagsByURI[tag.objectID.uriRepresentation().absoluteString] = tag }
+				}
+				// Preserve duplicates, order, and the first missing-reference error.
+				return try references.map { reference in
+					guard let tag = tagsByURI[reference.id] else {
+						throw GenericDisplayableError(title: "The saved query's tag '\(reference.name)' no longer exists.")
+					}
+					return tag
+				}
+			}
+		}
 		let tags: [Tag]
 		if let context = context { tags = try context.fetch(Tag.fetchRequest()) }
 		else { tags = try injected(Database.self).query(Tag.fetchRequest()) }
