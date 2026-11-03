@@ -105,7 +105,7 @@ final class PinnedQueryDashboardViewController: UITableViewController {
 			self?.scheduleRefresh()
 		})
 		for name in [UIApplication.significantTimeChangeNotification,
-			Notification.Name.NSCalendarDayChanged, .NSSystemTimeZoneDidChange, .NSCurrentLocaleDidChange] {
+			Notification.Name.NSCalendarDayChanged, .NSSystemTimeZoneDidChange, NSLocale.currentLocaleDidChangeNotification] {
 			observers.append(center.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
 				self?.scheduleRefresh()
 			})
