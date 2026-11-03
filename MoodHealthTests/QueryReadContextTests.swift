@@ -91,10 +91,10 @@ final class QueryReadContextTests: XCTestCase {
 		DependencyInjector.register([CommonInjectionProvider()])
 	}
 
-	func testReadScopeRestoresNestedValuesAfterSuccessAndThrowingWork() {
+	func testReadScopeRestoresNestedValuesAfterSuccessAndThrowingWork() throws {
 		enum ProbeError: Error { case expected }
 		XCTAssertNil(QueryReadScope.date); XCTAssertNil(QueryReadScope.convertTimeZones)
-		QueryReadScope.with(date: anchor, convertTimeZones: false) {
+		try QueryReadScope.with(date: anchor, convertTimeZones: false) {
 			XCTAssertEqual(QueryReadScope.date, anchor)
 			XCTAssertEqual(QueryReadScope.convertTimeZones, false)
 			let later = anchor.addingTimeInterval(60)
@@ -138,7 +138,7 @@ final class QueryReadContextTests: XCTestCase {
 		wait(for: [done], timeout: 5)
 	}
 
-	func testReadFailuresRestoreNestedErrorsAndStayIndependentOnAnotherThread() {
+	func testReadFailuresRestoreNestedErrorsAndStayIndependentOnAnotherThread() throws {
 		enum ProbeError: Error { case expected }
 		let outer = NSError(domain: "ReadScopeProbe", code: 1)
 		let inner = NSError(domain: "ReadScopeProbe", code: 2)
@@ -147,7 +147,7 @@ final class QueryReadContextTests: XCTestCase {
 		let done = expectation(description: "Independent scoped failure")
 		QueryReadScope.recordFailure(outer)
 		XCTAssertNil(QueryReadScope.readFailure, "Failures outside a read scope must not leak into later reads")
-		QueryReadScope.with(date: anchor, convertTimeZones: false) {
+		try QueryReadScope.with(date: anchor, convertTimeZones: false) {
 			QueryReadScope.recordFailure(outer)
 			QueryReadScope.recordFailure(inner)
 			XCTAssertEqual(QueryReadScope.readFailure as NSError?, outer, "Preserve the first read failure")

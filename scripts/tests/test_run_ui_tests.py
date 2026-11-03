@@ -10,16 +10,17 @@ import unittest
 SCRIPT = Path(__file__).resolve().parents[1] / 'run-ui-tests.py'
 MODULE = runpy.run_path(str(SCRIPT))
 AX_ERROR = MODULE['AX_ERROR']
+AX_ERRORS = MODULE['AX_ERRORS']
 ELIGIBLE = MODULE['startup_timeout_only']
 
 
-def startup_summary():
+def startup_summary(error=AX_ERROR):
     return {'result': 'Failed', 'passedTests': 0, 'failedTests': 1, 'skippedTests': 0,
             'totalTestCount': 1, 'expectedFailures': 0, 'testFailures': [{
                 'targetName': 'IntrospectiveUITests',
                 'testIdentifierString': 'IntrospectiveUITests-Runner (26232) encountered an error',
                 'failureText': 'The test runner failed to initialize for UI testing. '
-                               f'(Underlying Error: {AX_ERROR})'}]}
+                               f'(Underlying Error: {error})'}]}
 
 
 class UIStartupRecovery(unittest.TestCase):
@@ -49,10 +50,12 @@ if mode == 'success' or number == 2 and mode != 'repeat':
     print("Test Case '-[UITests testOne]' started.")
     print("Test Case '-[UITests testOne]' passed (0.1 seconds).")
     sys.exit(0)
-if mode == 'real':
+if mode in ['real', 'real-loading']:
     print("Test Case '-[UITests testOne]' started.")
 if mode == 'other':
     print('The simulator was not found')
+elif mode in ['loading', 'real-loading']:
+    print('The test runner failed to initialize for UI testing. Timed out while loading Accessibility.')
 else:
     print('The test runner failed to initialize for UI testing. Timed out waiting for AX loaded notification')
 sys.exit(65)
@@ -114,6 +117,26 @@ elif os.environ.get('RECOVERY_TEST_REBOOT_FAIL') == '1':
         self.assertEqual(len(self.recorded('xcodebuild')), 2)
         self.assertIn(AX_ERROR, self.log.read_text())
 
+    def test_loading_accessibility_variant_recovers_once_with_identical_selection(self):
+        error = 'Timed out while loading Accessibility'
+        self.summary.write_text(json.dumps(startup_summary(error)))
+        result = self.run_ui('loading')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        attempts = self.recorded('xcodebuild')
+        self.assertEqual(len(attempts), 2)
+        self.assertEqual(attempts[0], attempts[1])
+        self.assertIn(error, (self.root / 'tests-startup-failure.log').read_text())
+        self.assertEqual((self.root / 'Tests-startup-failure.xcresult/attempt.txt').read_text(), '1')
+        self.assertEqual(json.loads((self.root / 'tests-startup-failure.summary.json').read_text()), startup_summary(error))
+        self.assertEqual((self.bundle / 'attempt.txt').read_text(), '2')
+
+    def test_loading_accessibility_variant_never_retries_a_started_test(self):
+        self.summary.write_text(json.dumps(startup_summary('Timed out while loading Accessibility')))
+        result = self.run_ui('real-loading')
+        self.assertEqual(result.returncode, 65)
+        self.assertEqual(len(self.recorded('xcodebuild')), 1)
+        self.assertEqual(self.recorded('xcrun'), [])
+
     def test_started_test_is_never_retried_even_with_an_ax_timeout(self):
         result = self.run_ui('real')
         self.assertEqual(result.returncode, 65)
@@ -145,22 +168,29 @@ elif os.environ.get('RECOVERY_TEST_REBOOT_FAIL') == '1':
         self.assertEqual(len(self.recorded('xcodebuild')), 1)
 
     def test_summary_cannot_hide_a_failed_passed_or_skipped_real_test(self):
-        good = startup_summary()
-        self.assertTrue(ELIGIBLE(AX_ERROR, good))
-        variants = [dict(good, passedTests=1), dict(good, skippedTests=1),
-                    dict(good, expectedFailures=1), dict(good, totalTestCount=2),
-                    dict(good, failedTests=True), dict(good, testFailures=[])]
-        for field, value in [('testIdentifierString', 'Original/testOne()'),
-                             ('testIdentifierString', None), ('failureText', None),
-                             ('testIdentifierURL', 'test://UI/Original/testOne'),
-                             ('targetName', 'OtherTarget'), ('failureText', 'A real assertion failed')]:
-            variants.append(dict(good, testFailures=[dict(good['testFailures'][0], **{field: value})]))
-        for variant in variants:
-            with self.subTest(summary=variant):
-                self.assertFalse(ELIGIBLE(AX_ERROR, variant))
-        for marker in ["Test Case '-[UI testOne]' started.", "Test case 'UI.testOne()' failed on 'Phone'",
-                       "Test Suite 'UI' started."]:
-            self.assertFalse(ELIGIBLE(AX_ERROR + '\n' + marker, good))
+        for error in AX_ERRORS:
+            good = startup_summary(error)
+            self.assertTrue(ELIGIBLE(error, good))
+            variants = [dict(good, passedTests=1), dict(good, skippedTests=1),
+                        dict(good, expectedFailures=1), dict(good, totalTestCount=2),
+                        dict(good, failedTests=True), dict(good, testFailures=[])]
+            for field, value in [('testIdentifierString', 'Original/testOne()'),
+                                 ('testIdentifierString', None), ('failureText', None),
+                                 ('testIdentifierURL', 'test://UI/Original/testOne'),
+                                 ('targetName', 'OtherTarget'), ('failureText', 'A real assertion failed')]:
+                variants.append(dict(good, testFailures=[dict(good['testFailures'][0], **{field: value})]))
+            for variant in variants:
+                with self.subTest(error=error, summary=variant):
+                    self.assertFalse(ELIGIBLE(error, variant))
+            for marker in ["Test Case '-[UI testOne]' started.", "Test case 'UI.testOne()' failed on 'Phone'",
+                           "Test Suite 'UI' started."]:
+                self.assertFalse(ELIGIBLE(error + '\n' + marker, good))
+
+    def test_recovery_requires_the_same_timeout_in_log_and_summary(self):
+        for error in AX_ERRORS:
+            for other in AX_ERRORS:
+                with self.subTest(log_error=error, summary_error=other):
+                    self.assertEqual(ELIGIBLE(error, startup_summary(other)), error == other)
 
     def test_existing_diagnostics_are_never_overwritten(self):
         saved = self.root / 'tests-startup-failure.log'
