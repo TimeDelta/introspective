@@ -32,10 +32,10 @@ public final class StoredSingleTagAttributeRestriction: StoredBooleanExpression,
 		}
 		let tag: Tag
 		if let data = tagReferencesData {
-			guard let resolved = try StoredTagReference.resolve(data).first else { throw GenericError("Missing saved tag.") }
+			guard let resolved = try StoredTagReference.resolve(data, in: managedObjectContext).first else { throw GenericError("Missing saved tag.") }
 			tag = resolved
 		} else {
-			guard let resolved = try injected(TagDAO.self).getTag(named: tagName) else {
+			guard let resolved = try StoredTagReference.resolveLegacyName(tagName, in: managedObjectContext) else {
 				throw GenericDisplayableError(title: "Tag named '\(tagName)' does not exist")
 			}
 			tag = resolved
@@ -98,14 +98,23 @@ internal struct StoredTagReference: Codable {
 		return try JSONEncoder().encode(references)
 	}
 
-	static func resolve(_ data: Data) throws -> [Tag] {
+	static func resolve(_ data: Data, in context: NSManagedObjectContext?) throws -> [Tag] {
 		let references = try JSONDecoder().decode([StoredTagReference].self, from: data)
-		let tags = try injected(Database.self).query(Tag.fetchRequest())
+		let tags: [Tag]
+		if let context = context { tags = try context.fetch(Tag.fetchRequest()) }
+		else { tags = try injected(Database.self).query(Tag.fetchRequest()) }
 		return try references.map { reference in
 			guard let tag = tags.first(where: { $0.objectID.uriRepresentation().absoluteString == reference.id }) else {
 				throw GenericDisplayableError(title: "The saved query's tag '\(reference.name)' no longer exists.")
 			}
 			return tag
 		}
+	}
+
+	static func resolveLegacyName(_ name: String, in context: NSManagedObjectContext?) throws -> Tag? {
+		guard let context = context else { return try injected(TagDAO.self).getTag(named: name) }
+		let request = Tag.fetchRequest()
+		request.predicate = NSPredicate(format: "name ==[cd] %@", name)
+		return try context.fetch(request).first
 	}
 }

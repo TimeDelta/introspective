@@ -26,6 +26,7 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 	}
 
 	final override func run() {
+		guard readContext?.isCancelled != true else { return }
 		cancellationLock.lock()
 		cancellationRequested = false
 		finishedQuery = false
@@ -33,21 +34,35 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 		cancellationLock.unlock()
 		injected(HealthKitUtil.self).getAuthorization { [weak self] error in
 			guard let self = self else { return }
-			self.cancellationLock.lock()
-			let cancelled = self.cancellationRequested
-			self.cancellationLock.unlock()
-			guard !cancelled else { return }
-			if let error = error { self.finish(nil, error); return }
-			SampleType.initUnits()
-			let stop = injected(HealthKitUtil.self).getSamples(for: SampleType.self, predicate: nil) { [weak self] samples, error in
+			self.performRead { [weak self] in self?.beginQuery(afterAuthorization: error) }
+		}
+	}
+
+	private func performRead(_ action: @escaping () -> Void) {
+		if let readContext = readContext { readContext.perform(action) }
+		else { action() }
+	}
+
+	private func beginQuery(afterAuthorization error: Error?) {
+		cancellationLock.lock()
+		let cancelled = cancellationRequested
+		cancellationLock.unlock()
+		guard !cancelled, readContext?.isCancelled != true else { return }
+		if let error = error { finish(nil, error); return }
+		SampleType.initUnits()
+		if let error = QueryReadScope.readFailure { finish(nil, error); return }
+		guard readContext?.isCancelled != true else { return }
+		let stop = injected(HealthKitUtil.self).getSamples(for: SampleType.self, predicate: nil) { [weak self] samples, error in
+			guard let self = self else { return }
+			self.performRead { [weak self] in
 				self?.processQueryResults(originalSamples: samples, error: error)
 			}
-			self.cancellationLock.lock()
-			let shouldStop = self.cancellationRequested
-			if !shouldStop && !self.finishedQuery { self.stopFunction = stop }
-			self.cancellationLock.unlock()
-			if shouldStop { stop() }
 		}
+		cancellationLock.lock()
+		let shouldStop = cancellationRequested
+		if !shouldStop && !finishedQuery { stopFunction = stop }
+		cancellationLock.unlock()
+		if shouldStop { stop() }
 	}
 
 	public final override func stop() {
@@ -69,7 +84,7 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 	}
 
 	override func samplePassesFilters(_ sample: Sample) throws -> Bool {
-		guard !stopped else { return false }
+		guard !stopped, readContext?.isCancelled != true else { return false }
 		guard let expression = expression else {
 			return true
 		}
@@ -78,6 +93,7 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 	}
 
 	private final func processQueryResults(originalSamples: [HKSample]?, error: Error?) {
+		if readContext != nil && (stopped || readContext?.isCancelled == true) { return }
 		if error != nil {
 			finish(nil, error)
 			return
@@ -87,11 +103,16 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 			return
 		}
 
-		let mappedSamples = originalSamples.map { self.initFromHKSample($0) }
+		var mappedSamples: [SampleType] = []
+		mappedSamples.reserveCapacity(originalSamples.count)
+		for sample in originalSamples {
+			guard readContext?.isCancelled != true else { return }
+			mappedSamples.append(initFromHKSample(sample))
+		}
 		do {
 			let filteredSamples = try mappedSamples.filter(samplePassesFilters)
 
-			if !stopped {
+			if !stopped && readContext?.isCancelled != true {
 				let result = SampleQueryResult<SampleType>(filteredSamples)
 				finish(result, nil)
 			}

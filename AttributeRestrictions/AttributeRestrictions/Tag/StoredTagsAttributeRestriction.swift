@@ -25,10 +25,10 @@ public final class StoredTagsAttributeRestriction: StoredBooleanExpression, Core
         let names = tagNames.split(separator: ";").map { String($0) }.filter { !$0.isEmpty }
         var tags = [Tag]()
         if let data = tagReferencesData {
-            tags = try StoredTagReference.resolve(data)
+            tags = try StoredTagReference.resolve(data, in: managedObjectContext)
         } else {
             for name in names {
-                guard let tag = try injected(TagDAO.self).getTag(named: name) else {
+                guard let tag = try StoredTagReference.resolveLegacyName(name, in: managedObjectContext) else {
                     throw GenericDisplayableError(title: "Tag named '\(name)' does not exist")
                 }
                 tags.append(tag)

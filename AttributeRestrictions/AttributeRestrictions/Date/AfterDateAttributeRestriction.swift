@@ -104,7 +104,7 @@ public final class AfterDateAttributeRestriction: DateAttributeRestriction, Equa
 	// MARK: - Boolean Expression Functions
 
 	public override func predicate() -> NSPredicate? {
-		guard !injected(Settings.self).convertTimeZones else { return nil }
+		guard !(QueryReadScope.convertTimeZones ?? injected(Settings.self).convertTimeZones) else { return nil }
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		return NSPredicate(format: "%K > %@", variableName, date as NSDate)
 	}

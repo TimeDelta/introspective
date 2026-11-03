@@ -120,11 +120,12 @@ class SameStartDatesSubQueryMatcherFunctionalTests: FunctionalTest {
 		let querySampleDate1 = Date() - 1.days
 		let querySampleDate2 = Date()
 		let subQuerySampleDate1 = querySampleDate1
-		let subQuerySampleDate2 = Date() + 1.days
+		let subQuerySampleDate2 = querySampleDate2
 		let querySamples = SampleCreatorTestUtil.createSamples(withDates: [querySampleDate1, querySampleDate2])
 		let subQuerySamples: [Sample] = SampleCreatorTestUtil.createSamples(withDates: [subQuerySampleDate1, subQuerySampleDate2])
 		matcher.mostRecentOnly = true
 
+		// The newer matching reference is deliberately second in the input.
 		// when
 		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
 
@@ -132,8 +133,8 @@ class SameStartDatesSubQueryMatcherFunctionalTests: FunctionalTest {
 		XCTAssert(matchingSamples.count == 1, "Found \(matchingSamples.count) samples")
 		if matchingSamples.count > 0 {
 			XCTAssert(
-				matchingSamples[0].equalTo(querySamples[0]),
-				"Expected \(querySamples[0].debugDescription) but got \(matchingSamples[0].debugDescription)")
+				matchingSamples[0].equalTo(querySamples[1]),
+				"Expected \(querySamples[1].debugDescription) but got \(matchingSamples[0].debugDescription)")
 		}
 	}
 
@@ -145,7 +146,7 @@ class SameStartDatesSubQueryMatcherFunctionalTests: FunctionalTest {
 		let querySampleEndDate2 = Date() + 1.hours
 		let subQuerySampleStartDate1 = querySampleStartDate1
 		let subQuerySampleEndDate1 = querySampleEndDate1 + 3.hours
-		let subQuerySampleStartDate2 = Date() + 1.days
+		let subQuerySampleStartDate2 = querySampleStartDate2
 		let subQuerySampleEndDate2 = Date() + 2.days
 		let querySamples = SampleCreatorTestUtil.createSamples(withDates: [
 			(startDate: querySampleStartDate1, endDate: querySampleEndDate1),
@@ -157,6 +158,7 @@ class SameStartDatesSubQueryMatcherFunctionalTests: FunctionalTest {
 		])
 		matcher.mostRecentOnly = true
 
+		// The newer matching reference is deliberately second in the input.
 		// when
 		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
 
@@ -164,8 +166,8 @@ class SameStartDatesSubQueryMatcherFunctionalTests: FunctionalTest {
 		XCTAssert(matchingSamples.count == 1, "Found \(matchingSamples.count) samples")
 		if matchingSamples.count > 0 {
 			XCTAssert(
-				matchingSamples[0].equalTo(querySamples[0]),
-				"Expected \(querySamples[0].debugDescription) but got \(matchingSamples[0].debugDescription)")
+				matchingSamples[0].equalTo(querySamples[1]),
+				"Expected \(querySamples[1].debugDescription) but got \(matchingSamples[0].debugDescription)")
 		}
 	}
 }

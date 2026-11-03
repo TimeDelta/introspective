@@ -49,6 +49,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		Me.registerDependencies()
 		if Globals.uiTesting {
+			let dashboardSuite = "com.bnova.Introspective.dashboard-ui-tests"
+			UserDefaults(suiteName: dashboardSuite)?.removePersistentDomain(forName: dashboardSuite)
 			try? MoodTrackingPreferences.shared.save(presets: [])
 			try? MoodTrackingPreferences.shared.save(reminders: MoodReminderSettings())
 		}

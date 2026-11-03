@@ -22,10 +22,11 @@ public protocol SampleQuery: Query {
 	func runQuery(callback: @escaping (SampleQueryResult<SampleType>?, Error?) -> Void)
 }
 
-public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
+public class SampleQueryImpl<SampleType: Sample>: SampleQuery, ReadContextQuery {
 	public final var expression: BooleanExpression?
 	public final var mostRecentEntryOnly: Bool
 	public final var subQuery: (matcher: SubQueryMatcher, query: Query)?
+	public final var readContext: QueryReadContext?
 
 	final var stopped = false
 
@@ -51,6 +52,7 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 	}
 
 	public final func runQuery(callback: @escaping (SampleQueryResult<SampleType>?, Error?) -> Void) {
+		guard readContext?.isCancelled != true else { return }
 		self.callback = callback
 		queryCallbackParameters = nil
 		subQueryCallbackParameters = nil
@@ -106,7 +108,7 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 	}
 
 	func samplePassesFilters(_ sample: Sample) throws -> Bool {
-		guard !stopped else { return false }
+		guard !stopped, readContext?.isCancelled != true else { return false }
 		guard let expression = expression else {
 			return true
 		}

@@ -109,7 +109,7 @@ public final class InThePastXTimeUnitsDateAttributeRestriction: DateAttributeRes
 		guard let sampleDate = sampleValue as? Date else {
 			throw TypeMismatchError(attribute: restrictedAttribute, of: sample, wasA: type(of: sampleValue))
 		}
-		let now = Date()
+		let now = QueryReadScope.date ?? Date()
 		let minDate = now - getMinDateComponents()
 		return now.isAfterDate(sampleDate, orEqual: true, granularity: .nanosecond) &&
 			minDate.isBeforeDate(sampleDate, orEqual: true, granularity: .nanosecond)
@@ -126,9 +126,9 @@ public final class InThePastXTimeUnitsDateAttributeRestriction: DateAttributeRes
 	// MARK: - Boolean Expression Functions
 
 	public override func predicate() -> NSPredicate? {
-		guard !injected(Settings.self).convertTimeZones else { return nil }
+		guard !(QueryReadScope.convertTimeZones ?? injected(Settings.self).convertTimeZones) else { return nil }
 		guard let variableName = restrictedAttribute.variableName else { return nil }
-		let now = Date()
+		let now = QueryReadScope.date ?? Date()
 		let minDate = now - getMinDateComponents()
 		return NSPredicate(
 			format: "%K >= %@ && %K <= %@",

@@ -53,6 +53,17 @@ public extension HealthKitUtil {
 
 public final class HealthKitUtilImpl: HealthKitUtil {
 	private typealias Me = HealthKitUtilImpl
+	private final class PreferredUnitResult {
+		private let lock = NSLock()
+		private var unit: HKUnit?
+		private var failure: Error?
+		func complete(unit: HKUnit?, failure: Error?) {
+			lock.lock(); self.unit = unit; self.failure = failure; lock.unlock()
+		}
+		func snapshot() -> (unit: HKUnit?, failure: Error?) {
+			lock.lock(); defer { lock.unlock() }; return (unit, failure)
+		}
+	}
 	private static let readPermissions: Set<HKObjectType> = {
 		var allPermissions = Set<HKObjectType>()
 		for permissions in injected(SampleFactory.self).healthKitTypes().map({ $0.readPermissions }) {
@@ -75,7 +86,7 @@ public final class HealthKitUtilImpl: HealthKitUtil {
 	/// This will convert the given date from the time zone in the given `HKSample` to the current time zone
 	/// if the time zone was recorded and the user has convert time zones enabled.
 	public func setTimeZoneIfApplicable(for date: inout Date, from sample: HKSample) {
-		guard injected(Settings.self).convertTimeZones else { return }
+		guard QueryReadScope.convertTimeZones ?? injected(Settings.self).convertTimeZones else { return }
 		if let timeZoneId = sample.metadata?[HKMetadataKeyTimeZone] as? String {
 			if let timeZone = TimeZone(identifier: timeZoneId) {
 				date = injected(CalendarUtil.self)
@@ -143,16 +154,20 @@ public final class HealthKitUtilImpl: HealthKitUtil {
 	public func preferredUnitFor(_ typeId: HKQuantityTypeIdentifier) -> HKUnit? {
 		let group = DispatchGroup()
 		group.enter()
-		var unit: HKUnit?
+		let result = PreferredUnitResult()
+		let scopedRead = QueryReadScope.date != nil
 		// according to Apple documentation, if authorization has not been determined, calling preferredUnits() will throw an error
 		getAuthorization { error in
 			if let error = error {
 				self.log.error("Failed to check for authorization while getting preferred units: %@", errorInfo(error))
+				result.complete(unit: nil, failure: error)
 				group.leave()
 				return
 			}
 			guard let quantityType = HKQuantityType.quantityType(forIdentifier: typeId) else {
 				self.log.error("Unable to determine quantity type for type id: %s", typeId.rawValue)
+				result.complete(unit: nil, failure: GenericDisplayableError(title: "Unsupported Health data type"))
+				group.leave()
 				return
 			}
 			self.healthStore.preferredUnits(for: Set([quantityType])) { units, error in
@@ -163,12 +178,27 @@ public final class HealthKitUtilImpl: HealthKitUtil {
 						errorInfo(error)
 					)
 				}
-				unit = units[quantityType]
+				result.complete(unit: units[quantityType], failure: error)
 				group.leave()
 			}
 		}
-		group.wait()
-		return unit
+		// HealthKit can fail to call back while resolving units. A dashboard read
+		// must release its context queue so cancellation and later cards can run.
+		// Callback results remain synchronized even if a response arrives late.
+		if scopedRead {
+			guard group.wait(timeout: .now() + 5) == .success else {
+				QueryReadScope.recordFailure(GenericDisplayableError(title: "Health units unavailable",
+					description: "Health did not return preferred units in time. Refresh to try again."))
+				return nil
+			}
+		} else { group.wait() }
+		let completed = result.snapshot()
+		if scopedRead && (completed.failure != nil || completed.unit == nil) {
+			QueryReadScope.recordFailure(GenericDisplayableError(title: "Health units unavailable",
+				description: "Preferred units could not be read. Refresh after checking Health access."))
+			return nil
+		}
+		return completed.unit
 	}
 
 	public func getAuthorization(callback: @escaping (Error?) -> Void) {

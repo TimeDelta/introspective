@@ -20,6 +20,7 @@ final class ExploreCollectionViewController: UICollectionViewController {
 	private static let graphCellReuseIdentifier = "graph"
 	private static let unifiedViewCellReuseIdentifier = "unifiedView"
 	private static let timelineCellReuseIdentifier = "timeline"
+	private static let dashboardCellReuseIdentifier = "pinnedQueries"
 
 	private static let log = Log()
 
@@ -27,6 +28,7 @@ final class ExploreCollectionViewController: UICollectionViewController {
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
+		collectionView.register(PinnedQueryExploreCell.self, forCellWithReuseIdentifier: Me.dashboardCellReuseIdentifier)
 		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Time Coverage", style: .plain, target: self, action: #selector(showTimeCoverage))
 		navigationItem.rightBarButtonItems = [navigationItem.rightBarButtonItem!, UIBarButtonItem(title: "Activity Levels", style: .plain, target: self, action: #selector(showActivityLevels))]
 		observe(selector: #selector(showResultsScreen), name: .showResultsScreen)
@@ -49,7 +51,7 @@ final class ExploreCollectionViewController: UICollectionViewController {
 	}
 
 	final override func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
-		3
+		4
 	}
 
 	final override func collectionView(
@@ -68,12 +70,28 @@ final class ExploreCollectionViewController: UICollectionViewController {
 				for: indexPath
 			)
 		}
+		if indexPath.row == 3 {
+			return collectionView.dequeueReusableCell(withReuseIdentifier: Me.dashboardCellReuseIdentifier, for: indexPath)
+		}
 
 		Me.log.error("Unknown row when trying to create UICollectionViewCell: %d", indexPath.row)
 		return UICollectionViewCell()
 	}
 
 	// MARK: - UICollectionViewDelegate
+
+	final override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		guard indexPath.row == 3 else { return }
+		let dashboard = PinnedQueryDashboardViewController(style: .grouped)
+		dashboard.showRecords = { [weak self] records in
+			guard let self = self else { return }
+			let results = self.viewController(named: "results", fromStoryboard: "Results") as! ResultsViewController
+			results.backButtonTitle = "Pinned Queries"
+			results.query = records.query; results.samples = records.samples
+			self.navigationController?.pushViewController(results, animated: false)
+		}
+		pushToNavigationController(dashboard)
+	}
 
 	final override func collectionView(_: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
 		indexPath.row == 1
@@ -122,4 +140,25 @@ final class ExploreCollectionViewController: UICollectionViewController {
 			}
 		}
 	}
+}
+
+private final class PinnedQueryExploreCell: UICollectionViewCell {
+	override init(frame: CGRect) {
+		super.init(frame: frame)
+		contentView.backgroundColor = .secondarySystemBackground
+		let icon = UIImageView(image: UIImage(systemName: "pin.fill"))
+		icon.contentMode = .scaleAspectFit; icon.tintColor = .label
+		let label = UILabel(); label.text = "Pinned Queries"; label.font = .systemFont(ofSize: 11)
+		label.numberOfLines = 2; label.textAlignment = .center; label.textColor = .label
+		icon.translatesAutoresizingMaskIntoConstraints = false; label.translatesAutoresizingMaskIntoConstraints = false
+		contentView.addSubview(icon); contentView.addSubview(label)
+		NSLayoutConstraint.activate([icon.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 3),
+			icon.centerXAnchor.constraint(equalTo: contentView.centerXAnchor), icon.heightAnchor.constraint(equalToConstant: 32),
+			icon.widthAnchor.constraint(equalToConstant: 32), label.topAnchor.constraint(equalTo: icon.bottomAnchor, constant: 2),
+			label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor), label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+			label.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -1)])
+		isAccessibilityElement = true; accessibilityLabel = "Pinned Queries"; accessibilityTraits = .button
+		accessibilityIdentifier = "pinnedQueriesExplore"
+	}
+	required init?(coder: NSCoder) { fatalError("Use init(frame:)") }
 }
