@@ -52,8 +52,9 @@ changes, Health updates for its pinned query types (including subqueries),
 foreground activation, calendar-day changes, and time-zone changes. Health
 observers stop when the dashboard is hidden or the app enters the background.
 
-Cards run serially on a private managed-object queue against one pinned store
-generation. Read-only clock/time-zone values are scoped to that queue; the
+Cards run serially on a private managed-object queue. Core Data reads use one
+pinned store generation; Health reads are separate and cannot share an atomic
+snapshot with the app's database. Read-only clock/time-zone values are scoped to that queue; the
 app's injected settings and UI context are not replaced. Only copied summaries
 and permanent object identifiers cross back to the UI. Full result arrays are
 released between cards. Each card has a bounded wait for asynchronous work;
