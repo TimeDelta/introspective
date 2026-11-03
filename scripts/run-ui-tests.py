@@ -9,13 +9,14 @@ import sys
 
 ROOT = Path(__file__).resolve().parent
 AX_ERROR = 'Timed out waiting for AX loaded notification'
+AX_ERRORS = (AX_ERROR, 'Timed out while loading Accessibility')
 RUNNER_ERROR = re.compile(r'^IntrospectiveUITests-Runner \(\d+\) encountered an error$')
 TEST_ACTIVITY = re.compile(r'^\s*Test (?:Case|case|Suite|suite)\b', re.MULTILINE)
 
 
 def startup_timeout_only(log, summary):
     """Xcode counts its synthetic runner error as one failed test. Fail closed."""
-    if AX_ERROR not in log or TEST_ACTIVITY.search(log):
+    if not any(error in log for error in AX_ERRORS) or TEST_ACTIVITY.search(log):
         return False
     if not isinstance(summary, dict) or summary.get('result') != 'Failed':
         return False
@@ -39,7 +40,7 @@ def startup_timeout_only(log, summary):
             and RUNNER_ERROR.fullmatch(identifier) is not None
             and not failure.get('testIdentifierURL')
             and 'The test runner failed to initialize for UI testing.' in message
-            and AX_ERROR in message)
+            and any(error in log and error in message for error in AX_ERRORS))
 
 
 def summary_for(bundle):
@@ -97,7 +98,7 @@ def main():
     if status == 0:
         return 0
     log_text = args.log.read_text(errors='replace')
-    if AX_ERROR not in log_text or TEST_ACTIVITY.search(log_text):
+    if not any(error in log_text for error in AX_ERRORS) or TEST_ACTIVITY.search(log_text):
         return status
     summary = summary_for(bundle)
     if not startup_timeout_only(log_text, summary):
