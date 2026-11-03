@@ -186,6 +186,7 @@ private final class DashboardEvaluation {
 	private var query: Query?
 	private var attempt = UUID()
 	private var currentCard: PinnedQueryCard?
+	private var generation: NSQueryGenerationToken?
 
 	init(root: NSManagedObjectContext, context: NSManagedObjectContext, date: Date, conversion: Bool,
 		timeout: TimeInterval, pins: [PinnedQueryReference], task: PinnedQueryDashboardTask,
@@ -203,6 +204,16 @@ private final class DashboardEvaluation {
 			do {
 				// Unsupported store types must not silently claim a consistent snapshot.
 				try environment.context.setQueryGenerationFrom(.current)
+				// .current resolves lazily on the first store read. Keep that concrete
+				// token: reset() advances a context's generation as it clears objects.
+				let initialRead = StoredQuery.fetchRequest()
+				initialRead.fetchLimit = 1; initialRead.returnsObjectsAsFaults = false
+				_ = try environment.context.fetch(initialRead)
+				guard let captured = environment.context.queryGenerationToken,
+					captured !== NSQueryGenerationToken.current else {
+					throw dashboardError("Could not capture a consistent database snapshot.")
+				}
+				generation = captured
 				next()
 			} catch {
 				for pin in pins { publish(PinnedQueryCard(pin: pin, state: .unavailable("Could not take a consistent database snapshot."))) }
@@ -212,16 +223,19 @@ private final class DashboardEvaluation {
 	}
 
 	func cancel() {
-		environment.perform { [self] in query?.stop(); query = nil; environment.context.reset() }
+		environment.perform { [self] in query?.stop(); query = nil; environment.context.reset(); generation = nil }
 	}
 
 	private func next() {
 		guard task?.isCancelled == false else { return }
-		query = nil; currentCard = nil; environment.context.reset()
+		query = nil; currentCard = nil
 		guard index < pins.count else { finish(); return }
 		let pin = pins[index], token = UUID(); attempt = token
 		currentCard = PinnedQueryCard(pin: pin, state: .loading)
 		do {
+			guard let generation = generation else { throw dashboardError("The database snapshot is unavailable.") }
+			environment.context.reset()
+			try environment.context.setQueryGenerationFrom(generation)
 			let stored = try resolve(pin)
 			let definition = try DashboardDefinitionSnapshot.capture(stored)
 			let fresh = try stored.convert()
@@ -327,7 +341,7 @@ private final class DashboardEvaluation {
 		}
 	}
 	private func finish() {
-		query?.stop(); query = nil; environment.context.reset()
+		query?.stop(); query = nil; environment.context.reset(); generation = nil
 		DispatchQueue.main.async { [weak task, completion] in
 			guard let task = task, !task.isCancelled else { return }; completion(); task.finish()
 		}
