@@ -89,6 +89,7 @@ public final class PainDAOImpl: SingleDateSampleDAO<PainImpl>, PainDAO {
 	public final func getMostRecentPain() throws -> Pain? {
 		let fetchRequest: NSFetchRequest<PainImpl> = PainImpl.fetchRequest()
 		fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+		fetchRequest.fetchLimit = 1
 		let pains = try injected(Database.self).query(fetchRequest)
 		guard pains.count > 0 else { return nil }
 		return pains[0]

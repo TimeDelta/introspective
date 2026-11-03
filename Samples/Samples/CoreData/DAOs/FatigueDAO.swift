@@ -79,6 +79,7 @@ public final class FatigueDAOImpl: SingleDateSampleDAO<FatigueImpl>, FatigueDAO 
 	public final func getMostRecentFatigue() throws -> Fatigue? {
 		let fetchRequest: NSFetchRequest<FatigueImpl> = FatigueImpl.fetchRequest()
 		fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+		fetchRequest.fetchLimit = 1
 		let fatigues = try injected(Database.self).query(fetchRequest)
 		guard fatigues.count > 0 else { return nil }
 		return fatigues[0]

@@ -815,6 +815,130 @@ final class SavedQueryTests: XCTestCase {
 		return database
 	}
 
+	private func recentRatingSamples(at timestamp: Date, note: String) throws -> [NSManagedObject] {
+		let context = container.viewContext
+		let mood = try exportFixtureObject(MoodImpl.self, in: context)
+		let fatigue = try exportFixtureObject(FatigueImpl.self, in: context)
+		let pain = try exportFixtureObject(PainImpl.self, in: context)
+		mood.setSource(.introspective)
+		let records: [NSManagedObject] = [mood, fatigue, pain]
+		for record in records {
+			record.setValue(timestamp, forKey: "timestamp")
+			record.setValue(TimeZone.current.identifier, forKey: "timestampTimeZoneId")
+			record.setValue(5.0, forKey: "rating")
+			record.setValue(0.0, forKey: "minRating")
+			record.setValue(10.0, forKey: "maxRating")
+			record.setValue(note, forKey: "note")
+		}
+		return records
+	}
+
+	private func latestRatingSamples() throws -> [NSManagedObject?] {
+		[try MoodDAOImpl().getMostRecentMood() as? NSManagedObject,
+			try FatigueDAOImpl().getMostRecentFatigue() as? NSManagedObject,
+			try PainDAOImpl().getMostRecentPain() as? NSManagedObject]
+	}
+
+	private func unboundedLatestRatingIDs() throws -> [NSManagedObjectID?] {
+		try [MoodImpl.entityName, FatigueImpl.entityName, PainImpl.entityName].map { name in
+			let request = NSFetchRequest<NSManagedObject>(entityName: name)
+			request.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+			return try injected(Database.self).query(request).first?.objectID
+		}
+	}
+
+	func testLatestRatingLookupsReturnOneRowFromLargeShuffledSQLiteHistories() throws {
+		let base = Date(timeIntervalSince1970: 1_700_000_000.123456)
+		var latest: [NSManagedObject] = []
+		for index in 0..<1_024 {
+			let offset = (index * 73) % 1_024
+			let records = try recentRatingSamples(at: base.addingTimeInterval(Double(offset * 60)), note: "Entry \(offset)")
+			if offset == 1_023 { latest = records }
+		}
+		try container.viewContext.save()
+		let expected = latest.map { $0.objectID.uriRepresentation() }
+		latest.removeAll()
+		try reopen()
+		let database = recordLookupResults()
+		let found = try latestRatingSamples()
+		XCTAssertEqual(found.map { $0?.objectID.uriRepresentation() }, expected.map { Optional($0) })
+		// The forwarding database records actual SQLite result sizes, not request flags.
+		XCTAssertEqual(database.returnedCounts, [1, 1, 1])
+	}
+
+	func testLatestRatingLookupsReturnNilForEmptyStores() throws {
+		let database = recordLookupResults()
+		XCTAssertTrue(try latestRatingSamples().allSatisfy { $0 == nil })
+		XCTAssertEqual(database.returnedCounts, [0, 0, 0])
+	}
+
+	func testLatestRatingLookupsPreserveRawFractionalOrderingAndBackdatedInsertion() throws {
+		// Future entries retain their existing event-time ordering; the lookup
+		// must neither substitute insertion order nor clamp the search to now.
+		let base = Date(timeIntervalSince1970: Date().timeIntervalSince1970.rounded(.down) + 86_400)
+		let earlier = try recentRatingSamples(at: base.addingTimeInterval(0.1), note: "Earlier fraction")
+		let later = try recentRatingSamples(at: base.addingTimeInterval(0.9), note: "Later fraction")
+		for record in earlier { record.setValue("Pacific/Kiritimati", forKey: "timestampTimeZoneId") }
+		for record in later { record.setValue("Etc/GMT+12", forKey: "timestampTimeZoneId") }
+		_ = try recentRatingSamples(at: base.addingTimeInterval(-86400), note: "Inserted last but backdated")
+		try container.viewContext.save()
+		let database = recordLookupResults()
+		XCTAssertEqual(try latestRatingSamples().map { $0?.objectID }, later.map { Optional($0.objectID) })
+		for record in later { container.viewContext.delete(record) }
+		try container.viewContext.save()
+		XCTAssertEqual(try latestRatingSamples().map { $0?.objectID }, earlier.map { Optional($0.objectID) })
+		XCTAssertEqual(database.returnedCounts, [1, 1, 1, 1, 1, 1])
+	}
+
+	func testLatestRatingLookupsKeepPendingInsertionsVisible() throws {
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		_ = try recentRatingSamples(at: base, note: "Persisted")
+		try container.viewContext.save()
+		let pending = try recentRatingSamples(at: base.addingTimeInterval(60), note: "Not yet saved")
+		let found = try latestRatingSamples()
+		XCTAssertEqual(found.map { $0?.objectID }, pending.map { Optional($0.objectID) })
+		XCTAssertTrue(pending.allSatisfy { $0.isInserted })
+		// Do not require a one-row count here: Core Data's handling of unsaved
+		// objects and fetch limits differs from the fully persisted SQL fixture.
+	}
+
+	func testLatestRatingLookupsKeepPendingDeletionsVisible() throws {
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		let earlier = try recentRatingSamples(at: base, note: "Next newest")
+		let latest = try recentRatingSamples(at: base.addingTimeInterval(60), note: "Pending deletion")
+		try container.viewContext.save()
+		for record in latest { container.viewContext.delete(record) }
+		XCTAssertEqual(try latestRatingSamples().map { $0?.objectID }, earlier.map { Optional($0.objectID) })
+		XCTAssertTrue(latest.allSatisfy { $0.isDeleted })
+		XCTAssertTrue(container.viewContext.hasChanges, "A latest-record lookup must not save pending deletions")
+	}
+
+	func testLatestRatingLookupsMatchUnboundedQueriesForPendingDateChanges() throws {
+		let base = Date(timeIntervalSince1970: 1_700_000_000)
+		_ = try recentRatingSamples(at: base, note: "Persisted second-latest")
+		let changing = try recentRatingSamples(at: base.addingTimeInterval(60), note: "Timestamp being edited")
+		try container.viewContext.save()
+		for record in changing { record.setValue(base.addingTimeInterval(-60), forKey: "timestamp") }
+		let expected = try unboundedLatestRatingIDs()
+		// Restore the same pending edit before comparing the optimized requests;
+		// the database deliberately refreshes refetched objects on either path.
+		for record in changing { record.setValue(base.addingTimeInterval(-60), forKey: "timestamp") }
+		XCTAssertEqual(try latestRatingSamples().map { $0?.objectID }, expected)
+	}
+
+	func testLatestRatingLookupsDoNotIntroduceATimestampTieBreaker() throws {
+		let at = Date(timeIntervalSince1970: 1_700_000_000.123456)
+		let first = try recentRatingSamples(at: at, note: "First tied record")
+		let second = try recentRatingSamples(at: at, note: "Second tied record")
+		try container.viewContext.save()
+		let database = recordLookupResults(), found = try latestRatingSamples()
+		for index in found.indices {
+			let objectID = try XCTUnwrap(found[index]).objectID
+			XCTAssertTrue(Set([first[index].objectID, second[index].objectID]).contains(objectID))
+		}
+		XCTAssertEqual(database.returnedCounts, [1, 1, 1])
+	}
+
 	func testActivityLookupsReturnOneRowFromLargeUnsortedHistory() throws {
 		let definition = try lookupDefinition("Résumé")
 		let other = try lookupDefinition("Other", index: 1)
