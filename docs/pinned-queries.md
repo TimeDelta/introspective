@@ -54,8 +54,11 @@ observers stop when the dashboard is hidden or the app enters the background.
 
 Cards run serially on a private managed-object queue. Core Data reads use one
 pinned store generation; Health reads are separate and cannot share an atomic
-snapshot with the app's database. Read-only clock/time-zone values are scoped to that queue; the
-app's injected settings and UI context are not replaced. Only copied summaries
+snapshot with the app's database. The concrete generation is captured after an
+initial store read and restored after clearing fetched objects between cards;
+the token is released on completion or cancellation. Read-only clock/time-zone
+values are scoped to that queue; the app's injected settings and UI context are
+not replaced. Only copied summaries
 and permanent object identifiers cross back to the UI. Full result arrays are
 released between cards. Each card has a bounded wait for asynchronous work;
 navigation, editing, and newer refreshes cancel obsolete work and reject stale
