@@ -36,6 +36,34 @@ private final class ReadContextTestProvider: InjectionProvider {
 	}
 }
 
+private final class ReadContextCountingExpression: BooleanExpression {
+	let supportsSQL: Bool
+	var minimumRating: Double
+	private(set) var predicateCalls = 0
+	private(set) var evaluationCalls = 0
+	var description: String { "Rating at least \(minimumRating)" }
+	init(supportsSQL: Bool, minimumRating: Double) {
+		self.supportsSQL = supportsSQL; self.minimumRating = minimumRating
+	}
+	func predicate() -> NSPredicate? {
+		predicateCalls += 1
+		return supportsSQL ? NSPredicate(format: "rating >= %@", NSNumber(value: minimumRating)) : nil
+	}
+	func evaluate(_ parameters: [UserInfoKey: Any]?) throws -> Bool {
+		evaluationCalls += 1
+		guard let mood = parameters?[.sample] as? MoodImpl else { throw GenericError("Expected a mood") }
+		return mood.rating >= minimumRating
+	}
+	func isValid() -> Bool { true }
+	func copy() -> BooleanExpression {
+		ReadContextCountingExpression(supportsSQL: supportsSQL, minimumRating: minimumRating)
+	}
+	func equalTo(_ other: BooleanExpression) -> Bool {
+		guard let other = other as? ReadContextCountingExpression else { return false }
+		return supportsSQL == other.supportsSQL && minimumRating == other.minimumRating
+	}
+}
+
 private final class ReadContextHealthProbe: HealthKitUtil, InjectionProvider {
 	let types: [Any.Type] = [HealthKitUtil.self]
 	private let lock = NSLock()
@@ -89,6 +117,123 @@ final class QueryReadContextTests: XCTestCase {
 	override func setUp() {
 		super.setUp()
 		DependencyInjector.register([CommonInjectionProvider()])
+	}
+
+	private func withRatingHistory(_ action: (NSManagedObjectContext, [NSManagedObjectID]) throws -> Void) throws {
+		let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+		try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+		let container = NSPersistentContainer(name: "ScopedPredicateTests", managedObjectModel: Self.model)
+		let description = NSPersistentStoreDescription(url: directory.appendingPathComponent("predicates.sqlite"))
+		description.shouldAddStoreAsynchronously = false; container.persistentStoreDescriptions = [description]
+		var failure: Error?; container.loadPersistentStores { _, error in failure = error }
+		if let failure = failure { throw failure }
+		let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+		context.persistentStoreCoordinator = container.persistentStoreCoordinator; context.undoManager = nil
+		defer {
+			context.performAndWait { context.reset() }
+			container.viewContext.reset()
+			for store in container.persistentStoreCoordinator.persistentStores { try? container.persistentStoreCoordinator.remove(store) }
+			try? FileManager.default.removeItem(at: directory)
+		}
+		let root = container.viewContext
+		let entity = try XCTUnwrap(NSEntityDescription.entity(forEntityName: MoodImpl.entityName, in: root))
+		var records = [MoodImpl]()
+		for index in 0..<1_024 {
+			let mood = MoodImpl(entity: entity, insertInto: root)
+			mood.setValue(anchor.addingTimeInterval(Double(index)), forKey: "timestamp")
+			mood.setValue("UTC", forKey: "timestampTimeZoneId")
+			mood.minRating = 0; mood.maxRating = 1_023; mood.rating = Double(index)
+			mood.setSource(.introspective); records.append(mood)
+		}
+		try root.save()
+		let ids = records.map { $0.objectID }
+		records.removeAll(); root.reset()
+		try action(context, ids)
+	}
+
+	func testScopedSQLPredicateIsBuiltOncePerRunAndNeverReevaluatesFetchedRows() throws {
+		try withRatingHistory { context, ids in
+			let environment = QueryReadContext(context: context, date: anchor, convertTimeZones: false)
+			let finished = expectation(description: "Scoped SQL filtering")
+			environment.perform {
+				defer { context.reset(); finished.fulfill() }
+				let expression = ReadContextCountingExpression(supportsSQL: true, minimumRating: 512)
+				let query = MoodQueryImpl(); query.expression = expression; query.readContext = environment
+				var callbacks = 0
+				query.runQuery { (result: QueryResult?, error: Error?) in
+					callbacks += 1; XCTAssertNil(error)
+					let found = Set((result?.samples ?? []).compactMap { ($0 as? NSManagedObject)?.objectID })
+					XCTAssertEqual(found, Set(ids[512..<1_024]))
+					XCTAssertEqual(result?.samples.count, 512)
+					XCTAssertEqual(expression.predicateCalls, 1)
+					XCTAssertEqual(expression.evaluationCalls, 0)
+				}
+				XCTAssertEqual(callbacks, 1)
+				expression.minimumRating = 900
+				query.runQuery { (result: QueryResult?, error: Error?) in
+					callbacks += 1; XCTAssertNil(error)
+					let found = Set((result?.samples ?? []).compactMap { ($0 as? NSManagedObject)?.objectID })
+					XCTAssertEqual(found, Set(ids[900..<1_024]))
+					XCTAssertEqual(result?.samples.count, 124)
+					XCTAssertEqual(expression.predicateCalls, 2, "A later run must compile its current restriction afresh")
+					XCTAssertEqual(expression.evaluationCalls, 0)
+				}
+				XCTAssertEqual(callbacks, 2)
+			}
+			wait(for: [finished], timeout: 5)
+		}
+	}
+
+	func testScopedNonSQLExpressionStillEvaluatesEveryRecordAndKeepsMatchingObjects() throws {
+		try withRatingHistory { context, ids in
+			let environment = QueryReadContext(context: context, date: anchor, convertTimeZones: false)
+			let finished = expectation(description: "Scoped evaluator filtering")
+			environment.perform {
+				defer { context.reset(); finished.fulfill() }
+				let expression = ReadContextCountingExpression(supportsSQL: false, minimumRating: 900)
+				let query = MoodQueryImpl(); query.expression = expression; query.readContext = environment
+				var callbacks = 0
+				query.runQuery { (result: QueryResult?, error: Error?) in
+					callbacks += 1; XCTAssertNil(error)
+					let found = Set((result?.samples ?? []).compactMap { ($0 as? NSManagedObject)?.objectID })
+					XCTAssertEqual(found, Set(ids[900..<1_024]))
+					XCTAssertEqual(result?.samples.count, 124)
+					XCTAssertEqual(expression.evaluationCalls, 1_024)
+				}
+				XCTAssertEqual(callbacks, 1)
+			}
+			wait(for: [finished], timeout: 5)
+		}
+	}
+
+	func testScopedSQLFilteringStillAppliesTheNestedQueryMatcher() throws {
+		DependencyInjector.register([SamplesInjectionProvider()])
+		try withRatingHistory { context, ids in
+			let environment = QueryReadContext(context: context, date: anchor, convertTimeZones: false)
+			let finished = expectation(description: "Nested scoped SQL filtering")
+			environment.perform {
+				defer { context.reset(); finished.fulfill() }
+				let parentExpression = ReadContextCountingExpression(supportsSQL: true, minimumRating: 512)
+				let childExpression = ReadContextCountingExpression(supportsSQL: true, minimumRating: 900)
+				let query = MoodQueryImpl(), child = MoodQueryImpl()
+				query.expression = parentExpression; child.expression = childExpression
+				query.subQuery = (SameDatesSubQueryMatcher(), child)
+				do {
+					try configureReadContext(query, context: environment)
+					var callbacks = 0
+					query.runQuery { (result: QueryResult?, error: Error?) in
+						callbacks += 1; XCTAssertNil(error)
+						let found = Set((result?.samples ?? []).compactMap { ($0 as? NSManagedObject)?.objectID })
+						XCTAssertEqual(found, Set(ids[900..<1_024]))
+						XCTAssertEqual(result?.samples.count, 124)
+						XCTAssertEqual(parentExpression.predicateCalls, 1); XCTAssertEqual(childExpression.predicateCalls, 1)
+						XCTAssertEqual(parentExpression.evaluationCalls, 0); XCTAssertEqual(childExpression.evaluationCalls, 0)
+					}
+					XCTAssertEqual(callbacks, 1)
+				} catch { XCTFail("Nested scoped query could not be configured: \(error)") }
+			}
+			wait(for: [finished], timeout: 5)
+		}
 	}
 
 	func testReadScopeRestoresNestedValuesAfterSuccessAndThrowingWork() throws {
