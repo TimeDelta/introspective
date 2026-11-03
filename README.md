@@ -36,6 +36,13 @@ Of course, this ordering ignores what conditions you have and how they matter bu
 
 
 ## Main Features
+### Pinned query dashboard
+
+Open **Explore → Pinned Queries** to pin and reorder saved queries, review their
+current counts and summaries, and open matching records. Queries refresh
+on-device without changing their saved relative-date meaning. See
+[Pinned queries](docs/pinned-queries.md) for summary definitions and behavior.
+
 ### Mood check-ins and weekly review
 Compare adjacent weeks with day-balanced averages, distributions, coverage,
 matched weekdays and dated context. Record reusable check-in presets, add modern

@@ -36,6 +36,8 @@ end
   TestSupport/UITestFixtureLoader.swift
   Introspective/UI/Explore/MetricContextViewController.swift
   Introspective/UI/Explore/ActivityLevelsViewController.swift
+  Introspective/UI/Explore/PinnedQueryDashboardService.swift
+  Introspective/UI/Explore/PinnedQueryDashboardViewController.swift
   Introspective/UI/RecordData/LostItemsViewController.swift
   Introspective/UI/RecordData/Mood/MoodTrackingViewController.swift
   Introspective/UI/RecordData/Mood/MoodRemindersViewController.swift

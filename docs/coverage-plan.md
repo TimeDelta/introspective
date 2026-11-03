@@ -128,3 +128,29 @@ invalidation. Parsing itself retains its previous implementation. Native invento
 is 176; the selected legacy and full UI inventories are unchanged. The reproducible
 [Mac benchmark](date-formatting-performance.md) measures formatting separately
 from end-to-end app performance; measured iOS coverage still comes from CI.
+
+## Pinned query dashboard
+
+Dashboard coverage uses the actual private-context query engine, not a second
+implementation of its predicates. Preference and summary cases check stable
+identity, atomic validation, ordering, missing values, and independently computed
+mixed-scale means. Read-context cases cover nested/thread-local scope cleanup,
+fixed relative-date boundaries, Health callback queues, cancellation, unit-read
+errors, and saved tag resolution on the owning SQLite context.
+
+Integration cases exercise saved definitions, rename/delete behavior, unavailable
+queries, real result counts, pending-edit isolation, matching-record navigation,
+concurrent definition edits, Health observation, stale refresh callbacks, and
+screen lifetime. Two end-to-end UI cases exercise the actual Explore entry,
+pinning, result values, unpinning without deletion, order persistence, and newly
+recorded data. One also runs before the full suites in preflight.
+
+Three date-matchers now handle empty references and select the actual newest
+reference regardless of input order. Eight new native cases cover their start/end
+and tie semantics. Five existing legacy fixtures now assert the intended newest
+reference; all existing cases and assertions remain selected.
+
+The fast [Mac Foundation runner](../scripts/test-dashboard-foundation.py) uses the
+same production files and XCTest source as the native target. Its result supports
+only those Foundation cases; full native, legacy, both complete UI shards, and
+Release CI are still required for the feature. No existing exclusions are added.

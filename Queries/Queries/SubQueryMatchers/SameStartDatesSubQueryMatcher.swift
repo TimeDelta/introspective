@@ -47,13 +47,21 @@ public final class SameStartDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 		from querySamples: [QuerySampleType],
 		matching subQuerySamples: [Sample]
 	) -> [QuerySampleType] {
+		guard !querySamples.isEmpty, !subQuerySamples.isEmpty else { return [] }
 		var matchingSamples = [QuerySampleType]()
 
 		var applicableSubQuerySamples = subQuerySamples
 		if mostRecentOnly {
-			applicableSubQuerySamples = injected(SampleUtil.self)
-				.sort(samples: subQuerySamples, by: .start, in: .orderedDescending)
-			applicableSubQuerySamples = [subQuerySamples[0]]
+			let calendar = injected(CalendarUtil.self)
+			var newest = subQuerySamples[0]
+			var newestDate = newest.dates()[.start]
+			for candidate in subQuerySamples.dropFirst() {
+				let date = candidate.dates()[.start]
+				if calendar.compare(date, newestDate) == .orderedDescending {
+					newest = candidate; newestDate = date
+				}
+			}
+			applicableSubQuerySamples = [newest]
 		}
 
 		let subQuerySamplesSortedByStartDate = injected(SampleUtil.self)

@@ -2,25 +2,37 @@ import CoreData
 import Common
 import DependencyInjection
 import Persistence
+import Queries
 import Samples
 
 /// Populates the real isolated SQLite store before any application screens load.
 enum UITestFixtureLoader {
 	enum FixtureError: Error {
-		case duplicateOrEmptyName, unknownReference, invalidFrequency, invalidDosage, invalidDate, nonemptyDatabase
+		case duplicateOrEmptyName, unknownReference, invalidFrequency, invalidDosage, invalidDate, nonemptyDatabase, missingDashboardPreferences
 	}
 
 	@discardableResult
 	static func load(environment: [String: String], isUITesting: Bool) throws -> Bool {
 		guard isUITesting, let text = environment[UITestFixtures.environmentKey] else { return false }
-		try seed(UITestFixtures.decode(text))
+		let preferences = PinnedQueryPreferences(defaults: UserDefaults(suiteName: "com.bnova.Introspective.dashboard-ui-tests")!)
+		try seed(UITestFixtures.decode(text), dashboardPreferences: preferences)
 		return true
 	}
 
-	static func seed(_ fixtures: UITestFixtures) throws {
+	static func seed(_ fixtures: UITestFixtures, dashboardPreferences: PinnedQueryPreferences? = nil) throws {
 		// Validate every reference/value before writing any of the fixture records.
 		try validateNames(fixtures.activityDefinitions.map { $0.name })
 		try validateNames(fixtures.medications.map { $0.name })
+		if let dashboard = fixtures.dashboardQueries {
+			try validateNames(try dashboard.map { try StoredQueriesDAOImpl.validName($0.name) })
+			let pinnedCount = dashboard.filter { $0.pinned }.count
+			if pinnedCount > 0 {
+				guard let preferences = dashboardPreferences else { throw FixtureError.missingDashboardPreferences }
+				guard try preferences.pins().count + pinnedCount <= PinnedQueryPreferences.maximumPins else {
+					throw PinnedQueryPreferencesError.tooManyPins
+				}
+			}
+		}
 		let definitionNames = Set(fixtures.activityDefinitions.map { $0.name })
 		let medicationNames = Set(fixtures.medications.map { $0.name })
 		for activity in fixtures.activities {
@@ -49,6 +61,7 @@ enum UITestFixtureLoader {
 			try database.count(Medication.self) == 0,
 			try database.count(MedicationDose.self) == 0,
 			try database.count(MoodImpl.self) == 0 else { throw FixtureError.nonemptyDatabase }
+		if fixtures.dashboardQueries != nil, try database.count(StoredQuery.self) != 0 { throw FixtureError.nonemptyDatabase }
 		let activityDAO = injected(ActivityDAO.self)
 		let medicationDAO = injected(MedicationDAO.self)
 		var definitions = [String: ActivityDefinition]()
@@ -86,6 +99,16 @@ enum UITestFixtureLoader {
 		for fixture in fixtures.moods {
 			_ = try injected(MoodDAO.self).createMood(timestamp: fixture.timestamp,
 				rating: fixture.rating, note: fixture.note)
+		}
+		for fixture in fixtures.dashboardQueries ?? [] {
+			let queries = injected(StoredQueriesDAO.self)
+			try queries.save(MoodQueryImpl(), name: fixture.name)
+			if fixture.pinned {
+				guard let saved = try queries.getQueryWith(name: fixture.name), !saved.objectID.isTemporaryID,
+					let preferences = dashboardPreferences else { throw FixtureError.missingDashboardPreferences }
+				try preferences.pin(PinnedQueryReference(id: saved.objectID.uriRepresentation().absoluteString,
+					lastKnownName: String(saved.name.prefix(PinnedQueryPreferences.maximumNameLength))))
+			}
 		}
 	}
 

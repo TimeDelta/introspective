@@ -56,6 +56,7 @@
 		13F57B079A07676B52B6760AFD40256D /* OldestDateInformationFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43BF1CA2FF714B444BE2D1EEC05DB435 /* OldestDateInformationFunctionalTests.swift */; };
 		142EA63AF16C836155F95133B7B01503 /* RecordMedicationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACCDB2BD28C6ADB5A2956FFCAF74BC3B /* RecordMedicationTableViewController.swift */; };
 		14654FBB63856AA97C34468E03E4C713 /* MoodIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 95283CE739AA64CB16BBDA5FD37EDA53 /* MoodIntents.intentdefinition */; };
+		16ACD678637FCF88BE42FD6E /* PinnedQueryDashboardUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464B52E35BAB6A82644FEA87 /* PinnedQueryDashboardUITests.swift */; };
 		16EC18B8606BB88FF2D732F3158D39B3 /* Settings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E50DED083FFB132103568F46659DC53 /* Settings.framework */; };
 		1741495F829B086EB5116D3808ACCA14 /* MinimumInformationFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECCB7BC00D30097B7C115F4B53031EB /* MinimumInformationFunctionalTests.swift */; };
 		17B75FE368EBBA6548E29D9BE395012F /* ChooseRecentTimePeriodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D536FF84E1CAFC03BFE42AD8AA330C /* ChooseRecentTimePeriodViewController.swift */; };
@@ -366,11 +367,13 @@
 		998637560F26827A56A207121E42D18D /* ActivityNoteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2477DABFDEE85D98CF3DF32C5697894B /* ActivityNoteTableViewCell.swift */; };
 		99CDD794BECC45661FE09C78 /* MoodTrackingUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E458EFFAB8FDA4DBD8B73B9E /* MoodTrackingUITests.swift */; };
 		9A6ABF97C0781C22F41F31DDC5F201F7 /* EditGrouperViewControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9E2AC2B8FF49CAE89EB90D37863A79 /* EditGrouperViewControllerMock.swift */; };
+		9AEC437A03B1268D69317DC8 /* PinnedQueryDashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD6DF2FD36A97E487758A05 /* PinnedQueryDashboardViewController.swift */; };
 		9B1F01C84B1A10CAE4EEAADAC9B4C122 /* FrequencyEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAE3275E008400544CB2EB1FD59CF6C /* FrequencyEditorViewController.swift */; };
 		9B7724FFAA37C3921012756E9891D652 /* TimelineTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0A2576BB0ADBD1022CAB5A4E4B8EB6 /* TimelineTableViewController.swift */; };
 		9BC0764B82FB28528E5644A6DBD47A91 /* ButtonMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBBC36B04BB2B8A05D7B14B9DD9B727 /* ButtonMatchers.swift */; };
 		9BD24B20D7A41B9F5984914AA4530D9C /* DateOnlyAttributeUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE45F44E63A95907474965403C38F72 /* DateOnlyAttributeUnitTests.swift */; };
 		9C518BDC404A68CAB2FDC765F8EB65DB /* PainTimelineTableViewCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749BE78CC3EA2027054C15F908E27CD0 /* PainTimelineTableViewCellDelegate.swift */; };
+		9D50338AAAB05341559C4C59 /* PinnedQueryDashboardService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7C69847858018293692905 /* PinnedQueryDashboardService.swift */; };
 		9D916061E1351CAAC8A370A17C6ECE3C /* MedicationIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 45E7133D436B51B1ABA03EAF212B9C6A /* MedicationIntents.intentdefinition */; };
 		9DAE727B9626003CA91A34A32CDC7640 /* EmptyStringAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 078A8DD8CAC31A080A793D4251395E47 /* EmptyStringAttributeRestrictionUnitTests.swift */; };
 		9DAF15EFB25DA658900D2B26FD6558B0 /* MaximumInformationFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2159810D8189590206E083E9804FA562 /* MaximumInformationFunctionalTests.swift */; };
@@ -835,6 +838,7 @@
 		45023704FA7C502C319AF5A352B3389E /* GreaterThanDosageAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreaterThanDosageAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		451F116B5B58B058DC0FBB3F6E84CF81 /* GroupDefinitionTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDefinitionTableViewController.swift; sourceTree = "<group>"; };
 		45E7133D436B51B1ABA03EAF212B9C6A /* MedicationIntents.intentdefinition */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.intentdefinition; path = MedicationIntents.intentdefinition; sourceTree = "<group>"; };
+		464B52E35BAB6A82644FEA87 /* PinnedQueryDashboardUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PinnedQueryDashboardUITests.swift; sourceTree = "<group>"; };
 		46A41F9024CCC533792F779D43D5B2EF /* DataImportMocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataImportMocks.swift; sourceTree = "<group>"; };
 		47002991B9B68CC4BE3E33F94E480AE9 /* XAxisSetupViewControllerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XAxisSetupViewControllerMock.swift; sourceTree = "<group>"; };
 		47A75FCA4271226F0AFD72BDD5FB7AE1 /* Pods-Introspective-DiscreteMoodWidget.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Introspective-DiscreteMoodWidget.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Introspective-DiscreteMoodWidget/Pods-Introspective-DiscreteMoodWidget.debug.xcconfig"; sourceTree = "<group>"; };
@@ -877,6 +881,7 @@
 		59D6A26340B6C691CDE39575FE26FC28 /* SettingsFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFunctionalTests.swift; sourceTree = "<group>"; };
 		5A133E176A02EE48F676DB7C62801AAE /* MedicationDoseTableTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDoseTableTableViewCell.swift; sourceTree = "<group>"; };
 		5A419C1CD465E1A3F0C0755D262822A5 /* TableViewCellMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCellMatchers.swift; sourceTree = "<group>"; };
+		5A7C69847858018293692905 /* PinnedQueryDashboardService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PinnedQueryDashboardService.swift; sourceTree = "<group>"; };
 		5AA8F0E93AA909714E8388F0FA5A2CB8 /* NotEqualToDurationAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotEqualToDurationAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		5AF37336381A7081117ED44ED826D9FF /* GreaterThanIntegerAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GreaterThanIntegerAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		5B0232D84BF6CE1C7F6C9D4074D07106 /* Introspective.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Introspective.entitlements; sourceTree = "<group>"; };
@@ -1124,6 +1129,7 @@
 		BCD120AFB3D2858AE4607749992A55B2 /* Common.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Common.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BED216FBE6FC6C762B1F22832EF2AE50 /* SortResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortResultsViewController.swift; sourceTree = "<group>"; };
 		BF8F2708C611072AFF28428DBB7A7C7B /* TextAttributeUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAttributeUnitTests.swift; sourceTree = "<group>"; };
+		BFD6DF2FD36A97E487758A05 /* PinnedQueryDashboardViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PinnedQueryDashboardViewController.swift; sourceTree = "<group>"; };
 		BFD71FA3FAB9E75505AA5F1F382EBF59 /* PickerMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerMatchers.swift; sourceTree = "<group>"; };
 		BFE301C2F2247DBBEDE6822A654DD4F1 /* MoodMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodMock.swift; sourceTree = "<group>"; };
 		C1ADC6C6F1E17C13F640AA9741585DD0 /* StringMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringMatchers.swift; sourceTree = "<group>"; };
@@ -2686,6 +2692,8 @@
 				28FABD70E72A7B0CD487637A /* TimeCoverageViewController.swift */,
 				648D525A4938C080CB18481960154140 /* Timeline */,
 				6792693A1FE285C81BD89E2B /* MetricContextViewController.swift */,
+				5A7C69847858018293692905 /* PinnedQueryDashboardService.swift */,
+				BFD6DF2FD36A97E487758A05 /* PinnedQueryDashboardViewController.swift */,
 			);
 			path = Explore;
 			sourceTree = "<group>";
@@ -2874,6 +2882,7 @@
 				0063F8D952A263F63EF745DA7E6FEA20 /* Results */,
 				62E523879AE0C2746909D113E80C11A8 /* Settings */,
 				EF27D6C1A5802F20C4A18B2E8E74930D /* XCUIElementExtensions.swift */,
+				464B52E35BAB6A82644FEA87 /* PinnedQueryDashboardUITests.swift */,
 			);
 			path = IntrospectiveUITests;
 			sourceTree = "<group>";
@@ -4060,6 +4069,7 @@
 				A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */,
 				39CD30937CFB3D3DF17F09CB /* UITestFixtures.swift in Sources */,
 				99CDD794BECC45661FE09C78 /* MoodTrackingUITests.swift in Sources */,
+				16ACD678637FCF88BE42FD6E /* PinnedQueryDashboardUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4260,6 +4270,8 @@
 				F95F3AB32587BAD9805C9A4B /* MoodTrackingViewController.swift in Sources */,
 				C07EFCDD68BA8B271FCC0599 /* MoodRemindersViewController.swift in Sources */,
 				EF35271EB79F678C9203EC90 /* MoodTrackingCoordinator.swift in Sources */,
+				9D50338AAAB05341559C4C59 /* PinnedQueryDashboardService.swift in Sources */,
+				9AEC437A03B1268D69317DC8 /* PinnedQueryDashboardViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

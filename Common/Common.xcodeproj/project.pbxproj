@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		42A985DE7B78D2C4E214664C /* PinnedQuerySummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68B11908B0BE575E2580B082 /* PinnedQuerySummary.swift */; };
 		4AFB4A8DF3817E1044556D2D /* MoodTrackingPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80E680A15F38FEA3DFC5227 /* MoodTrackingPreferences.swift */; };
+		724339AF6FCD212F4289FB79 /* PinnedQueryPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5204E457BE5A3E3545471C85 /* PinnedQueryPreferences.swift */; };
 		783F1CE4A185E3B4FB2AB76F /* Pods_Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A825662DDC9FD7206084851 /* Pods_Common.framework */; };
 		7B68F76ECCDE871BFD4674EC /* MoodReminderScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46627E6C468F4AE051656A74 /* MoodReminderScheduler.swift */; };
 		A2034F2C24A909AA00557F69 /* GitVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2034F2B24A909A900557F69 /* GitVersion.swift */; };
@@ -44,12 +46,16 @@
 		A2FF5753234524AD0018255C /* UiUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FF5752234524AC0018255C /* UiUtil.swift */; };
 		A8ED538D57EA98BC42C7E3B5 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 85EF06AC13D91EFDC102DFEC /* PrivacyInfo.xcprivacy */; };
 		BAA3C095D86D7A7B2D17E529 /* MoodReviewAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B42FBAACE1FB2E97CB4D16 /* MoodReviewAnalytics.swift */; };
+		FD8395A3992F9AD446444791 /* QueryReadScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC376B5EEB9B48E514A771F /* QueryReadScope.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		46627E6C468F4AE051656A74 /* MoodReminderScheduler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MoodReminderScheduler.swift; sourceTree = "<group>"; };
 		4A825662DDC9FD7206084851 /* Pods_Common.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Common.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5204E457BE5A3E3545471C85 /* PinnedQueryPreferences.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PinnedQueryPreferences.swift; sourceTree = "<group>"; };
+		68B11908B0BE575E2580B082 /* PinnedQuerySummary.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PinnedQuerySummary.swift; sourceTree = "<group>"; };
 		85EF06AC13D91EFDC102DFEC /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = ../PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		8FC376B5EEB9B48E514A771F /* QueryReadScope.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = QueryReadScope.swift; sourceTree = "<group>"; };
 		A2034F2B24A909A900557F69 /* GitVersion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GitVersion.swift; sourceTree = "<group>"; };
 		A224F679267A4137007C3577 /* PainUiUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainUiUtil.swift; sourceTree = "<group>"; };
 		A22CF09A23464A11003751E1 /* MoodUiUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodUiUtil.swift; sourceTree = "<group>"; };
@@ -121,6 +127,9 @@
 				B80E680A15F38FEA3DFC5227 /* MoodTrackingPreferences.swift */,
 				46627E6C468F4AE051656A74 /* MoodReminderScheduler.swift */,
 				B6B42FBAACE1FB2E97CB4D16 /* MoodReviewAnalytics.swift */,
+				5204E457BE5A3E3545471C85 /* PinnedQueryPreferences.swift */,
+				68B11908B0BE575E2580B082 /* PinnedQuerySummary.swift */,
+				8FC376B5EEB9B48E514A771F /* QueryReadScope.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -341,6 +350,9 @@
 				4AFB4A8DF3817E1044556D2D /* MoodTrackingPreferences.swift in Sources */,
 				7B68F76ECCDE871BFD4674EC /* MoodReminderScheduler.swift in Sources */,
 				BAA3C095D86D7A7B2D17E529 /* MoodReviewAnalytics.swift in Sources */,
+				724339AF6FCD212F4289FB79 /* PinnedQueryPreferences.swift in Sources */,
+				42A985DE7B78D2C4E214664C /* PinnedQuerySummary.swift in Sources */,
+				FD8395A3992F9AD446444791 /* QueryReadScope.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

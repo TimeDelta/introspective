@@ -15,11 +15,19 @@ import Samples
 
 public class CoreDataQuery<SampleType: NSManagedObject & CoreDataSample>: SampleQueryImpl<SampleType> {
 	final override func run() {
+		guard readContext?.isCancelled != true else { return }
 		let fetchRequest: NSFetchRequest<SampleType> = NSFetchRequest<SampleType>(entityName: SampleType.entityName)
 		fetchRequest.predicate = expression?.predicate()
 
 		do {
-			let samples: [SampleType] = try injected(Database.self).query(fetchRequest)
+			let samples: [SampleType]
+			if let context = readContext?.context {
+				fetchRequest.shouldRefreshRefetchedObjects = true
+				samples = try context.fetch(fetchRequest)
+			} else {
+				samples = try injected(Database.self).query(fetchRequest)
+			}
+			guard readContext?.isCancelled != true else { return }
 
 			if samples.isEmpty {
 				queryDone(nil, NoSamplesFoundQueryError(sampleType: SampleType.self))
@@ -28,7 +36,7 @@ public class CoreDataQuery<SampleType: NSManagedObject & CoreDataSample>: Sample
 
 			let filteredSamples = try samples.filter(samplePassesFilters)
 
-			if !stopped {
+			if !stopped && readContext?.isCancelled != true {
 				let result = SampleQueryResult<SampleType>(filteredSamples)
 				queryDone(result, nil)
 			}

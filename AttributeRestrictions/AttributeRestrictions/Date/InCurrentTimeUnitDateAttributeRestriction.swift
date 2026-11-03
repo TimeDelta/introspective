@@ -89,7 +89,7 @@ public final class InCurrentTimeUnitDateAttributeRestriction: DateAttributeRestr
 		guard let sampleDate = sampleValue as? Date else {
 			throw TypeMismatchError(attribute: restrictedAttribute, of: sample, wasA: type(of: sampleValue))
 		}
-		let now = Date()
+		let now = QueryReadScope.date ?? Date()
 		let minDate = injected(CalendarUtil.self).start(of: timeUnit, in: now)
 		let maxDate = injected(CalendarUtil.self).end(of: timeUnit, in: now)
 		return minDate <= sampleDate && sampleDate <= maxDate
@@ -102,9 +102,9 @@ public final class InCurrentTimeUnitDateAttributeRestriction: DateAttributeRestr
 	// MARK: - Boolean Expression Functions
 
 	public override func predicate() -> NSPredicate? {
-		guard !injected(Settings.self).convertTimeZones else { return nil }
+		guard !(QueryReadScope.convertTimeZones ?? injected(Settings.self).convertTimeZones) else { return nil }
 		guard let variableName = restrictedAttribute.variableName else { return nil }
-		let now = Date()
+		let now = QueryReadScope.date ?? Date()
 		let minDate = injected(CalendarUtil.self).start(of: timeUnit, in: now)
 		let maxDate = injected(CalendarUtil.self).end(of: timeUnit, in: now)
 		return NSPredicate(

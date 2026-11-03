@@ -101,7 +101,7 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatab
 	// MARK: - Boolean Expression Functions
 
 	public override func predicate() -> NSPredicate? {
-		guard !injected(Settings.self).convertTimeZones else { return nil }
+		guard !(QueryReadScope.convertTimeZones ?? injected(Settings.self).convertTimeZones) else { return nil }
 		guard let variableName = restrictedAttribute.variableName else { return nil }
 		let minDate = injected(CalendarUtil.self).start(of: .day, in: date)
 		let maxDate = injected(CalendarUtil.self).end(of: .day, in: date)

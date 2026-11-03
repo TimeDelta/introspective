@@ -9,6 +9,8 @@ struct UITestFixtures: Codable {
 	var medications = [Medication]()
 	var doses = [Dose]()
 	var moods = [Mood]()
+	/// Optional so previously encoded fixtures retain their existing decoding behavior.
+	var dashboardQueries: [DashboardQuery]? = nil
 
 	func encoded() throws -> String {
 		let encoder = JSONEncoder()
@@ -31,6 +33,19 @@ struct UITestFixtures: Codable {
 			self.rating = rating
 			self.note = note
 			self.timestamp = timestamp
+		}
+	}
+
+	struct DashboardQuery: Codable {
+		var name: String
+		var pinned: Bool
+
+		init(name: String, pinned: Bool = false) { self.name = name; self.pinned = pinned }
+		private enum CodingKeys: String, CodingKey { case name, pinned }
+		init(from decoder: Decoder) throws {
+			let values = try decoder.container(keyedBy: CodingKeys.self)
+			name = try values.decode(String.self, forKey: .name)
+			pinned = try values.decodeIfPresent(Bool.self, forKey: .pinned) ?? false
 		}
 	}
 
