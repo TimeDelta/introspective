@@ -39,6 +39,15 @@ elif mode == 'fail':
     print("Test Case '-[Legacy testOne]' started.", flush=True)
     print('file.swift:1: error: expected a real assertion failure', flush=True)
     sys.exit(23)
+elif mode == 'diagnostic-progress':
+    while not (root / 'diagnostics-started').exists():
+        time.sleep(0.01)
+    print("Test Case '-[Legacy testOne]' started.", flush=True)
+    status = int(os.environ.get('LEGACY_TEST_EXIT', '0'))
+    if status:
+        print('file.swift:1: error: assertion failed during diagnostics', flush=True)
+    (root / 'test-activity-started').write_text('started')
+    sys.exit(status)
 else:
     for i in range(500):
         print(f"Test Case '-[Legacy test{i}]' passed (0.1 seconds).", flush=True)
@@ -147,6 +156,85 @@ sys.exit(2 if os.environ.get('LEGACY_DIAG_FAIL') == '1' else 0)
             process.wait.assert_called_once_with()
             stop.assert_not_called()
 
+    def test_tests_finishing_during_real_diagnostic_commands_preserve_their_result(self):
+        self.write_command('sample', '''import os, pathlib, sys, time
+root = pathlib.Path(os.environ['LEGACY_TEST_ROOT'])
+pathlib.Path(sys.argv[sys.argv.index('-file') + 1]).write_text('captured process sample')
+(root / 'diagnostics-started').write_text('started')
+deadline = time.monotonic() + 3
+while not (root / 'test-activity-started').exists():
+    if time.monotonic() >= deadline:
+        sys.exit('Tests did not start during diagnostics')
+    time.sleep(0.01)
+''')
+        for status in [0, 23]:
+            with self.subTest(status=status):
+                for name in ['diagnostics-started', 'test-activity-started', 'calls.jsonl']:
+                    (self.root / name).unlink(missing_ok=True)
+                result = self.run_legacy('diagnostic-progress', timeout='0.5', LEGACY_TEST_EXIT=str(status))
+                self.assertEqual(result.returncode, status, result.stdout + result.stderr)
+                self.assertNotIn('::error::', result.stdout)
+                self.assertIn("Test Case '-[Legacy testOne]' started.", self.log.read_text())
+                if status:
+                    self.assertIn('assertion failed during diagnostics', result.stderr)
+                self.assertEqual(len((self.root / 'calls.jsonl').read_text().splitlines()), 1)
+
+    def test_test_activity_during_diagnostics_continues_the_same_attempt(self):
+        process = Mock(pid=12345)
+        process.poll.return_value = None
+        process.wait.return_value = 0
+        readiness = Mock()
+        readiness.ready.return_value = False
+        def start_tests(*_args):
+            self.log.write_text("Test Case '-[Legacy testOne]' started.\n")
+        with patch.object(MODULE.subprocess, 'Popen', return_value=process) as launch, \
+                patch.object(MODULE, 'RunnerReadinessReader', return_value=readiness), \
+                patch.object(MODULE.time, 'monotonic', side_effect=[0, 10]), \
+                patch.object(MODULE, 'startup_diagnostics', side_effect=start_tests) as diagnostics, \
+                patch.object(MODULE, 'stop') as stop, contextlib.redirect_stdout(io.StringIO()) as output:
+            self.assertEqual(MODULE.run(self.log, ['xcodebuild'], 'sim', 5), 0)
+            self.assertIn('started during diagnostic collection', output.getvalue())
+            self.assertNotIn('::error::', output.getvalue())
+            launch.assert_called_once()
+            diagnostics.assert_called_once()
+            process.wait.assert_called_once_with()
+            stop.assert_not_called()
+
+    def test_command_completion_during_diagnostics_preserves_success_and_failure(self):
+        for status in [0, 23]:
+            with self.subTest(status=status):
+                process = Mock(pid=12345)
+                process.poll.side_effect = [None, status]
+                readiness = Mock()
+                readiness.ready.return_value = False
+                with patch.object(MODULE.subprocess, 'Popen', return_value=process), \
+                        patch.object(MODULE, 'RunnerReadinessReader', return_value=readiness), \
+                        patch.object(MODULE.time, 'monotonic', side_effect=[0, 10]), \
+                        patch.object(MODULE, 'startup_diagnostics') as diagnostics, \
+                        patch.object(MODULE, 'stop') as stop, contextlib.redirect_stdout(io.StringIO()) as output:
+                    self.assertEqual(MODULE.run(self.log, ['xcodebuild'], 'sim', 5), status)
+                    self.assertNotIn('::error::', output.getvalue())
+                    diagnostics.assert_called_once()
+                    process.wait.assert_not_called()
+                    stop.assert_not_called()
+
+    def test_diagnostic_exceptions_and_cancellation_propagate_after_cleanup(self):
+        for error in [RuntimeError('diagnostic failed'), KeyboardInterrupt(), SystemExit(143)]:
+            with self.subTest(error=type(error).__name__):
+                process = Mock(pid=12345)
+                process.poll.return_value = None
+                readiness = Mock()
+                readiness.ready.return_value = False
+                with patch.object(MODULE.subprocess, 'Popen', return_value=process), \
+                        patch.object(MODULE, 'RunnerReadinessReader', return_value=readiness), \
+                        patch.object(MODULE.time, 'monotonic', side_effect=[0, 10]), \
+                        patch.object(MODULE, 'startup_diagnostics', side_effect=error), \
+                        patch.object(MODULE, 'stop') as stop, contextlib.redirect_stdout(io.StringIO()):
+                    with self.assertRaises(type(error)) as raised:
+                        MODULE.run(self.log, ['xcodebuild'], 'sim', 5)
+                    self.assertIs(raised.exception, error)
+                    stop.assert_called_once_with(process)
+
     def test_log_reader_handles_incremental_and_split_test_activity(self):
         reader = MODULE.TestActivityReader(self.log)
         self.assertFalse(reader.started())
@@ -181,6 +269,31 @@ sys.exit(2 if os.environ.get('LEGACY_DIAG_FAIL') == '1' else 0)
             self.assertEqual(MODULE.run(self.log, ['xcodebuild'], 'sim', 5), 0)
             self.assertIn('completed the XCTest handshake', output.getvalue())
             readiness.ready.assert_called_once_with()
+            stop.assert_not_called()
+
+    def test_handshake_during_diagnostics_gets_the_existing_ready_budget(self):
+        process = Mock(pid=12345)
+        process.poll.return_value = None
+        process.wait.return_value = 0
+        readiness = Mock()
+        clock = [0.0]
+        readiness.ready.side_effect = lambda: clock[0] >= 36
+        def diagnose(*_args):
+            clock[0] += 30
+        def advance(_duration):
+            clock[0] += 6 if clock[0] == 0 else 60
+        with patch.object(MODULE.subprocess, 'Popen', return_value=process), \
+                patch.object(MODULE.TestActivityReader, 'started', side_effect=lambda: clock[0] >= 96), \
+                patch.object(MODULE, 'RunnerReadinessReader', return_value=readiness), \
+                patch.object(MODULE.time, 'monotonic', side_effect=lambda: clock[0]), \
+                patch.object(MODULE.time, 'sleep', side_effect=advance), \
+                patch.object(MODULE, 'startup_diagnostics', side_effect=diagnose) as diagnostics, \
+                patch.object(MODULE, 'stop') as stop, contextlib.redirect_stdout(io.StringIO()) as output:
+            self.assertEqual(MODULE.run(self.log, ['xcodebuild'], 'sim', 5, ready_timeout=120), 0)
+            self.assertIn('handshake during diagnostic collection; allowing 120 seconds', output.getvalue())
+            self.assertNotIn('::error::', output.getvalue())
+            self.assertEqual(readiness.ready.call_count, 3)
+            diagnostics.assert_called_once()
             stop.assert_not_called()
 
     def test_repeated_ready_notifications_cannot_extend_the_second_budget(self):
