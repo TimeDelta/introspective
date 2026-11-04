@@ -7,23 +7,24 @@ from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-# Measured in run 41484712227: all 108 cases and all 12 required preflight cases.
-# Include each class's full-suite AND preflight work when balancing the CI lanes.
-# The newly added mood-note preflight adds an estimated 40 seconds to its class.
-# Dashboard estimates include its two new full cases and one extra preflight.
+# Measured in successful PR54 run 41847390678: all 115 full-suite cases and all
+# 14 additional preflights. Each weight is the class's cumulative test duration
+# across both phases, in seconds; runner setup and XCTest overhead are excluded.
 # New classes use their case count as a weight (40 seconds per case).
 CLASS_SECONDS = {
-    'RecordActivitiesUITests': 1361,
-    'RecordMedicationsUITests': 586,
-    'GraphSetupScreenUITests': 705,
-    'QueryScreenUITests': 407,
-    'MoodSettingsUITests': 301,
-    'MoodResultsUITests': 143,
-    'ActivityResultsUITests': 127,
-    'RecordMoodsUITests': 134,
-    'ActivitySettingsUITests': 90,
-    'GeneralResultsUITests': 22,
-    'PinnedQueryDashboardUITests': 150,
+    'RecordActivitiesUITests': 1132.598,
+    'RecordMedicationsUITests': 690.315,
+    'GraphSetupScreenUITests': 803.737,
+    'QueryScreenUITests': 289.896,
+    'MoodSettingsUITests': 283.813,
+    'MoodResultsUITests': 142.785,
+    'ActivityResultsUITests': 108.460,
+    'RecordMoodsUITests': 211.901,
+    'ActivitySettingsUITests': 62.533,
+    'GeneralResultsUITests': 42.109,
+    'PinnedQueryDashboardUITests': 142.829,
+    'MoodTrackingUITests': 135.243,
+    'QueryInspectionUITests': 44.063,
 }
 # Check fixture bootstrap, actual UI creation, date editing, and reordering before
 # the long suite. These are additional checks; the gate still runs every case.
@@ -78,8 +79,8 @@ def discover_tests(directory=None):
             raise ValueError(f'Duplicate UI class or test declaration: {path}')
         classes[name] = sorted(methods)
     total = sum(map(len, classes.values()))
-    if total < 108:
-        raise ValueError(f'UI inventory shrank below its 108-case baseline: {total}')
+    if total < 115:
+        raise ValueError(f'UI inventory shrank below its 115-case baseline: {total}')
     return classes
 
 
