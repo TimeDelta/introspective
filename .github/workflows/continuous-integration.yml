@@ -235,6 +235,19 @@ jobs:
             xcrun simctl bootstatus "$CI_SIMULATOR_ID" -b >> ci-output/simulator-restart.log 2>&1
           fi
 
+      - name: Install legacy test host before starting XCTest
+        if: matrix.kind == 'legacy'
+        timeout-minutes: 5
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Cold simulator installation can consume the test-host launch budget
+          # before the app starts. Prepare this exact build separately; keep
+          # XCTest's startup watchdog and execution budgets unchanged.
+          test_host="$CI_DERIVED_DATA/Build/Products/Debug-iphonesimulator/Introspective.app"
+          test -d "$test_host"
+          xcrun simctl install "$CI_SIMULATOR_ID" "$test_host" > ci-output/legacy-test-host-install.log 2>&1
+
       - name: Run selected test suite without rebuilding
         if: matrix.kind != 'release' && matrix.kind != 'mocks'
         # Legacy execution normally takes a few minutes, separate from compilation.
