@@ -144,12 +144,27 @@ def run(log, command, simulator, startup_timeout, ready_timeout=120):
             if now >= deadline:
                 phase = 'after the XCTest handshake' if runner_ready else 'during test-host launch'
                 budget = ready_timeout if runner_ready else startup_timeout
+                print(f'Legacy test host has not started testing {phase} within {budget:g} seconds. '
+                      'Capturing diagnostics and rechecking progress.', flush=True)
+                startup_diagnostics(process, simulator, log.with_name(log.stem + '-startup-diagnostics'))
+                # Diagnostics can take long enough for a slow host to finish
+                # launching. Keep this attempt's result instead of cancelling
+                # tests that started while the diagnostic commands were running.
+                status = process.poll()
+                if status is not None:
+                    return status
+                if reader.started():
+                    print('Legacy tests started during diagnostic collection; continuing this attempt.', flush=True)
+                    return process.wait()
+                if not runner_ready and readiness.ready():
+                    runner_ready = True
+                    deadline = time.monotonic() + ready_timeout
+                    print(f'Legacy test host completed the XCTest handshake during diagnostic collection; '
+                          f'allowing {ready_timeout:g} seconds for the first test activity.', flush=True)
+                    continue
                 print(f'::error::Legacy test host did not start testing {phase} within {budget:g} seconds. '
-                      'Capturing diagnostics and stopping this attempt.', flush=True)
-                try:
-                    startup_diagnostics(process, simulator, log.with_name(log.stem + '-startup-diagnostics'))
-                finally:
-                    stop(process)
+                      'Stopping this attempt after collecting diagnostics.', flush=True)
+                stop(process)
                 return 124
             time.sleep(min(1, max(0.01, deadline - time.monotonic())))
         return process.returncode
