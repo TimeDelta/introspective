@@ -100,6 +100,13 @@ class UITest: XCTestCase {
 		return hittable.evaluate(with: element)
 	}
 
+	final func waitForDisappearance(_ element: XCUIElement, timeout: TimeInterval = 5) -> Bool {
+		guard element.exists else { return true }
+		let expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: element)
+		_ = XCTWaiter.wait(for: [expectation], timeout: timeout)
+		return !element.exists
+	}
+
 	final func waitForValue(_ value: String, of element: XCUIElement, timeout: TimeInterval = 5,
 		file: StaticString = #file, line: UInt = #line) {
 		let predicate = NSPredicate(format: "exists == true AND value == %@", value)
@@ -354,7 +361,7 @@ class UITest: XCTestCase {
 	// MARK: - Text Field Helpers
 
 	final func setTextFor(field: XCUIElement, to text: String? = nil, expectedValue: String? = nil,
-		perCharacter: Bool = false) {
+		perCharacter: Bool = false, tapAtCenter: Bool = false) {
 		guard !perCharacter || expectedValue == nil || expectedValue == text else {
 			XCTFail("Character-by-character input requires an unchanged expected value")
 			return
@@ -368,7 +375,25 @@ class UITest: XCTestCase {
 			guard deleteContentOf(textField: field) else { return }
 		}
 		if let text = text, !text.isEmpty {
-			field.tap()
+			if tapAtCenter {
+				guard waitForHittableElement(field) else {
+					attachInputDiagnostics()
+					XCTFail("Text input did not become reachable")
+					return
+				}
+				let frame = field.frame
+				let center = CGPoint(x: frame.midX, y: frame.midY)
+				let keyboard = app.keyboards.firstMatch
+				guard frame.width > 0, frame.height > 0, app.frame.contains(center),
+					!keyboard.exists || !keyboard.frame.contains(center) else {
+					attachInputDiagnostics()
+					XCTFail("Text input's centre is not visible for its focus tap")
+					return
+				}
+				// Use one explicit point within the visible field rather than an
+				// accessibility-selected interaction point after a modal closes.
+				field.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+			} else { field.tap() }
 			guard dismissKeyboardIntroductionIfPresent() else { return }
 			// Keyboard keys may be exposed but not individually hittable during
 			// presentation. Keyboard existence is the supported readiness signal;
@@ -632,17 +657,25 @@ class UITest: XCTestCase {
 			setTextFor(field: numberOfTimesField, to: frequency.times)
 			app.pickerWheels["Day"].adjust(toPickerWheelValue: frequency.unit.capitalized)
 			app.buttons["save button"].tap()
+			guard waitForDisappearance(numberOfTimesField) else {
+				XCTFail("The medication frequency picker did not close")
+				return
+			}
 		}
 
 		if let startedOn = medication.startedOn {
 			app.buttons["set started on button"].tap()
 			setDatePicker(to: startedOn)
 			app.buttons["save button"].tap()
+			guard waitForDisappearance(app.datePickers.firstMatch) else {
+				XCTFail("The medication date picker did not close")
+				return
+			}
 		}
 
 		if let dosage = medication.dosage {
 			let dosageField = app.textFields["medication dosage"]
-			setTextFor(field: dosageField, to: dosage)
+			setTextFor(field: dosageField, to: dosage, tapAtCenter: true)
 		}
 
 		if let note = medication.note {
