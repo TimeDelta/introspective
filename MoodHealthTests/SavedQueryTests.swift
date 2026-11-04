@@ -2106,9 +2106,9 @@ final class SavedQueryTests: XCTestCase {
 	func testOnDeviceQueryPlanCompilesRatingAndLiteralNotes() throws {
 		let record = try mood(5)
 		record.note = "worked on a project"
-		let plan = try OnDeviceQueryPlan(dataType: "mood", minimumRating: 4, maximumRating: 6, noteContains: "project", mostRecentOnly: true).resolve()
+		let plan = try OnDeviceQueryPlan(dataType: "mood", minimumRating: 4, maximumRating: 6, noteContains: "project").resolve()
 		XCTAssertTrue(plan.sampleType == MoodImpl.self)
-		XCTAssertTrue(plan.mostRecentOnly)
+		XCTAssertFalse(plan.mostRecentOnly)
 		XCTAssertTrue(try XCTUnwrap(plan.expression).evaluate([.sample: record]))
 		record.rating = 2
 		XCTAssertFalse(try XCTUnwrap(plan.expression).evaluate([.sample: record]))
@@ -2122,6 +2122,24 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertThrowsError(try OnDeviceQueryPlan(dataType: "mood", days: 0).resolve())
 		XCTAssertThrowsError(try OnDeviceQueryPlan(dataType: "mood", minimumRating: .nan).resolve())
 		XCTAssertThrowsError(try OnDeviceQueryPlan(dataType: "mood", minimumRating: 5, maximumRating: 1).resolve())
+		XCTAssertThrowsError(try OnDeviceQueryPlan(dataType: "mood", mostRecentOnly: true).resolve())
+	}
+
+	func testOnDeviceQueryPlanRefusesMostRecentRatherThanReturningAllMatchingRecords() throws {
+		let first = try mood(5), second = try mood(6)
+		let ids = [first.objectID, second.objectID]
+		for type in ["mood", "pain", "fatigue", "activity", "workout", "activeEnergy", "lostItem"] {
+			XCTAssertThrowsError(try OnDeviceQueryPlan(dataType: type, days: 7, mostRecentOnly: true).resolve()) { error in
+				let displayable = error as? DisplayableError
+				XCTAssertEqual(displayable?.displayableTitle, "Most-recent-only drafts are unsupported.")
+				XCTAssertTrue(displayable?.displayableDescription?.contains("No broader query was created") == true)
+			}
+		}
+		XCTAssertEqual(try injected(Database.self).count(MoodImpl.self), 2)
+		XCTAssertEqual([first.objectID, second.objectID], ids)
+		XCTAssertEqual(first.rating, 5); XCTAssertEqual(second.rating, 6)
+		XCTAssertTrue(try dao.getAllQueries().isEmpty)
+		XCTAssertFalse(container.viewContext.hasChanges)
 	}
 
 	func testOnDeviceQueryPlanSupportsDurationsAndEnergyWithoutRunning() throws {

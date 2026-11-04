@@ -53,6 +53,11 @@ for recording instructions, analytics definitions and reminder scheduling.
 ### Custom queries
 Explore your data in a unique way by querying for exactly the records in which you're interested. Specify complex conditions on any attribute for any supported data type by combining them using "and", "or", and condition groups (full boolean algebra support with grouping). Even better, you can limit your query further by looking at other data types within the query. For example, you can find all moods that were recorded within a half hour of socializing.
 
+Use **Explain** to review the actual query tree, inspect independent condition
+counts on demand, and diagnose empty results. **Why matched?** explains a selected
+record against a fresh snapshot. All inspection stays on-device. See
+[Query explanations](docs/query-explanations.md) for count and snapshot semantics.
+
 ### Metric context
 Record dated context such as illness, travel, unusual exercise, or a device not
 being worn, and read the specific limitations beside Activity Levels and Lost

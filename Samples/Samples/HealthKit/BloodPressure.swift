@@ -67,6 +67,8 @@ public final class BloodPressure: HealthKitCorrelationSample {
 
 	// MARK: - Instance Variables
 
+	public private(set) var sourceIdentifier: UUID? = nil
+
 	public final var attributedName: String = Me.name
 	public final var description: String = Me.description
 	public final var timestamp: Date
@@ -81,14 +83,20 @@ public final class BloodPressure: HealthKitCorrelationSample {
 		self.timestamp = timestamp
 	}
 
-	public required init(_ sample: HKCorrelation) {
+	public required convenience init(_ sample: HKCorrelation) {
+		self.init(sample, systolicUnit: Me.systolicUnit, diastolicUnit: Me.diastolicUnit)
+	}
+
+	/// A correlation read captures each component's preferred unit separately.
+	public init(_ sample: HKCorrelation, systolicUnit: HKUnit, diastolicUnit: HKUnit) {
+		sourceIdentifier = sample.uuid
 		let systolics = sample.objects(for: Me.systolicQuantityType)
 		let systolicSample = systolics.first! as! HKQuantitySample
-		systolic = systolicSample.quantity.doubleValue(for: Me.systolicUnit)
+		systolic = systolicSample.quantity.doubleValue(for: systolicUnit)
 
 		let diastolics = sample.objects(for: Me.diastolicQuantityType)
 		let diastolicSample = diastolics.first! as! HKQuantitySample
-		diastolic = diastolicSample.quantity.doubleValue(for: Me.diastolicUnit)
+		diastolic = diastolicSample.quantity.doubleValue(for: diastolicUnit)
 
 		let systolicStart = systolicSample.startDate
 		let diastolicStart = diastolicSample.startDate

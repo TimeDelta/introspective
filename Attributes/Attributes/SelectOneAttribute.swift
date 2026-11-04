@@ -129,6 +129,9 @@ open class TypedSelectOneAttribute<Type>: AttributeBase<Type>, SelectOneAttribut
 	// MARK: - Equality
 
 	public final func equalTo(_ otherAttribute: Attribute) -> Bool {
+		// Canonical sample metadata is reused by isolated readers. Comparing
+		// it with itself must not load a dynamic selection list on another queue.
+		if self === (otherAttribute as AnyObject) { return true }
 		guard let other = otherAttribute as? TypedSelectOneAttribute<Type> else { return false }
 		if !super.equalTo(otherAttribute) { return false }
 		return (try? possibleValues.elementsEqual(other.possibleValues, by: valuesAreEqual)) ?? false

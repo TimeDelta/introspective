@@ -26,7 +26,7 @@ final class MoodTrackingUITests: UITest {
 		setTextFor(field: app.textFields["moodPresetRating"], to: "7")
 		setTextFor(field: app.textFields["moodPresetMinimum"], to: "1")
 		setTextFor(field: app.textFields["moodPresetMaximum"], to: "10")
-		setTextFor(field: app.textFields["moodPresetNote"], to: "Quiet evening")
+		setTextFor(field: app.textFields["moodPresetNote"], to: "Quiet evening", perCharacter: true)
 		app.navigationBars.buttons["Save"].tap()
 		let preset = app.tables.staticTexts["Evening"]
 		XCTAssertTrue(preset.waitForExistence(timeout: 5)); preset.tap()

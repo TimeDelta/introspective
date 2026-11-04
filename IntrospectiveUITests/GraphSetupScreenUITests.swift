@@ -378,8 +378,14 @@ final class GraphSetupScreenUITests: UITest {
 	// MARK: - Helper Functions
 
 	private final func goToSingleDataTypeGraphSetupScreen() {
-		app.tabBars.buttons["Explore"].tap()
-		app.collectionViews.staticTexts["Graph"].tap()
+		guard goToTabIfNotSelected("Explore") else { return }
+		let graph = app.collectionViews.staticTexts["Graph"]
+		guard waitForHittableElement(graph) else {
+			XCTFail("Explore's Graph destination did not become reachable")
+			return
+		}
+		graph.tap()
+		XCTAssertTrue(waitForElement(app.buttons["select graph type button"]), "Graph setup did not appear")
 	}
 
 	private final func goToMultipleDataTypesGraphSetupScreen() {

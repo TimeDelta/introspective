@@ -20,6 +20,12 @@ public struct OnDeviceQueryPlan {
 		self.noteContains = noteContains; self.minimumDurationMinutes = minimumDurationMinutes; self.minimumEnergyKcal = minimumEnergyKcal; self.mostRecentOnly = mostRecentOnly
 	}
 	public func resolve() throws -> (sampleType: Sample.Type, expression: BooleanExpression?, mostRecentOnly: Bool) {
+		// The saved root flag is not applied by the execution engine. Accepting
+		// it here would silently execute all matches instead of the requested one.
+		guard !mostRecentOnly else {
+			throw GenericDisplayableError(title: "Most-recent-only drafts are unsupported.",
+				description: "This condition cannot currently be executed as requested. No broader query was created.")
+		}
 		let types: [String: Sample.Type] = ["mood": MoodImpl.self, "pain": PainImpl.self, "fatigue": FatigueImpl.self,
 			"activity": Activity.self, "workout": Workout.self, "activeEnergy": ActiveEnergy.self, "lostItem": LostItemEvent.self]
 		guard let type = types[dataType] else { throw GenericDisplayableError(title: "Unsupported query data type.") }

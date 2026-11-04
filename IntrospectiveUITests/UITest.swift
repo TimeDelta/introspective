@@ -172,16 +172,37 @@ class UITest: XCTestCase {
 	}
 
 	final func goToQueryScreen() {
-		app.tabBars.buttons["Explore"].tap()
-		app.collectionViews.staticTexts["Query"].tap()
+		guard goToTabIfNotSelected("Explore") else { return }
+		let query = app.collectionViews.staticTexts["Query"]
+		guard waitForHittableElement(query) else {
+			XCTFail("Explore's Query destination did not become reachable")
+			return
+		}
+		query.tap()
 		skipInstructionsIfPresent(.query)
 		XCTAssertTrue(waitForElement(app.tables["queryBuilder"]), "Query builder did not appear")
 	}
 
-	final func goToTabIfNotSelected(_ tabName: String) {
-		if !app.tabBars.buttons[tabName].isSelected {
-			app.tabBars.buttons[tabName].tap()
+	@discardableResult
+	final func goToTabIfNotSelected(_ tabName: String, file: StaticString = #file, line: UInt = #line) -> Bool {
+		let tab = app.tabBars.buttons[tabName]
+		// A launch can expose the tab's accessibility element before UIKit can
+		// hit it. Tapping then produces (-1, -1) and leaves the previous tab open.
+		guard waitForHittableElement(tab) else {
+			XCTFail("Tab did not become reachable: \(tabName)", file: file, line: line)
+			return false
 		}
+		if !tab.isSelected { tab.tap() }
+		let selected = NSPredicate { _, _ in tab.exists && tab.isSelected }
+		if !selected.evaluate(with: tab) {
+			let expectation = XCTNSPredicateExpectation(predicate: selected, object: tab)
+			_ = XCTWaiter.wait(for: [expectation], timeout: 5)
+		}
+		guard selected.evaluate(with: tab) else {
+			XCTFail("Tab was not selected after its tap: \(tabName)", file: file, line: line)
+			return false
+		}
+		return true
 	}
 
 	// MARK: - Picker Helpers
@@ -332,7 +353,12 @@ class UITest: XCTestCase {
 
 	// MARK: - Text Field Helpers
 
-	final func setTextFor(field: XCUIElement, to text: String? = nil, expectedValue: String? = nil) {
+	final func setTextFor(field: XCUIElement, to text: String? = nil, expectedValue: String? = nil,
+		perCharacter: Bool = false) {
+		guard !perCharacter || expectedValue == nil || expectedValue == text else {
+			XCTFail("Character-by-character input requires an unchanged expected value")
+			return
+		}
 		guard waitForElement(field) else {
 			attachInputDiagnostics()
 			XCTFail("Text input did not appear: \(field)")
@@ -352,7 +378,29 @@ class UITest: XCTestCase {
 				XCTFail("Software keyboard did not appear for text input")
 				return
 			}
-			field.typeText(text)
+			if perCharacter {
+				// A complete typing batch can return after delivering only a prefix.
+				// For the affected field, send each character once and observe its
+				// delivery before sending the next. Never repair or retry lost input.
+				var prefix = ""
+				for character in text {
+					prefix.append(character)
+					let expectedPrefix = prefix
+					field.typeText(String(character))
+					var actual = field.value as? String
+					if actual != expectedPrefix {
+						let delivered = NSPredicate { _, _ in (field.value as? String) == expectedPrefix }
+						let expectation = XCTNSPredicateExpectation(predicate: delivered, object: field)
+						_ = XCTWaiter.wait(for: [expectation], timeout: 5)
+						actual = field.value as? String
+					}
+					guard actual == expectedPrefix else {
+						attachInputDiagnostics()
+						XCTFail("Text input did not deliver its next character: expected \(String(reflecting: expectedPrefix)), got \(String(reflecting: actual))")
+						return
+					}
+				}
+			} else { field.typeText(text) }
 			// Validation can intentionally normalize the typed text (for example,
 			// clamping a mood to its allowed range). Ordinary entry still waits for
 			// every character so a save cannot race partially delivered keyboard input.
