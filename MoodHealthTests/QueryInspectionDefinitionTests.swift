@@ -253,6 +253,7 @@ final class QueryInspectionDefinitionTests: XCTestCase {
 		let activity = Activity(entity: activityEntity, insertInto: context)
 		let activityDefinition = ActivityDefinition(entity: definitionEntity, insertInto: context)
 		activityDefinition.setValue("Reading", forKey: "name")
+		activityDefinition.setValue(0, forKey: "recordScreenIndex")
 		activity.setValue(activityDefinition, forKey: "definition")
 		activity.setValue(NSSet(object: original), forKey: "tags")
 		let noon = try XCTUnwrap(Calendar.current.date(from: DateComponents(year: 2026, month: 1, day: 10, hour: 12)))

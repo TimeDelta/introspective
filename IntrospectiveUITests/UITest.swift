@@ -172,16 +172,37 @@ class UITest: XCTestCase {
 	}
 
 	final func goToQueryScreen() {
-		app.tabBars.buttons["Explore"].tap()
-		app.collectionViews.staticTexts["Query"].tap()
+		guard goToTabIfNotSelected("Explore") else { return }
+		let query = app.collectionViews.staticTexts["Query"]
+		guard waitForHittableElement(query) else {
+			XCTFail("Explore's Query destination did not become reachable")
+			return
+		}
+		query.tap()
 		skipInstructionsIfPresent(.query)
 		XCTAssertTrue(waitForElement(app.tables["queryBuilder"]), "Query builder did not appear")
 	}
 
-	final func goToTabIfNotSelected(_ tabName: String) {
-		if !app.tabBars.buttons[tabName].isSelected {
-			app.tabBars.buttons[tabName].tap()
+	@discardableResult
+	final func goToTabIfNotSelected(_ tabName: String, file: StaticString = #file, line: UInt = #line) -> Bool {
+		let tab = app.tabBars.buttons[tabName]
+		// A launch can expose the tab's accessibility element before UIKit can
+		// hit it. Tapping then produces (-1, -1) and leaves the previous tab open.
+		guard waitForHittableElement(tab) else {
+			XCTFail("Tab did not become reachable: \(tabName)", file: file, line: line)
+			return false
 		}
+		if !tab.isSelected { tab.tap() }
+		let selected = NSPredicate { _, _ in tab.exists && tab.isSelected }
+		if !selected.evaluate(with: tab) {
+			let expectation = XCTNSPredicateExpectation(predicate: selected, object: tab)
+			_ = XCTWaiter.wait(for: [expectation], timeout: 5)
+		}
+		guard selected.evaluate(with: tab) else {
+			XCTFail("Tab was not selected after its tap: \(tabName)", file: file, line: line)
+			return false
+		}
+		return true
 	}
 
 	// MARK: - Picker Helpers

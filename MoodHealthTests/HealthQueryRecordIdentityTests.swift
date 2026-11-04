@@ -210,8 +210,12 @@ final class HealthQueryRecordIdentityTests: XCTestCase {
 		XCTAssertEqual(captured.sourceIdentifier, sample.uuid)
 		XCTAssertEqual(captured.timestamp, start)
 		let legacy = BloodPressure(sample)
-		XCTAssertEqual(legacy.systolic, 15.9986864898, accuracy: 1e-5)
-		XCTAssertEqual(legacy.diastolic, 10665.7909932, accuracy: 1e-3)
+		// HealthKit owns the unit conversion constants. This checks which units
+		// the legacy initializer used, independently of the captured initializer.
+		XCTAssertEqual(legacy.systolic, systolic.quantity.doubleValue(for: .pascalUnit(with: .kilo)), accuracy: 1e-8)
+		XCTAssertEqual(legacy.diastolic, diastolic.quantity.doubleValue(for: .pascal()), accuracy: 1e-8)
+		XCTAssertNotEqual(legacy.systolic, captured.systolic)
+		XCTAssertNotEqual(legacy.diastolic, captured.diastolic)
 		XCTAssertEqual(legacy.sourceIdentifier, sample.uuid)
 	}
 }
