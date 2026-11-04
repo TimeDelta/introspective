@@ -22,7 +22,7 @@ final class RecordMoodsUITests: UITest {
 		app.tables.buttons["set mood note button"].tap()
 
 		let noteField = app.textViews["mood note text view"]
-		setTextFor(field: noteField, to: "This is a note.")
+		setTextFor(field: noteField, to: "This is a note.", perCharacter: true)
 		guard dismissKeyboardIntroductionIfPresent() else { return }
 		let saveNoteButton = app.toolbars["Toolbar"].buttons["Save"]
 		XCTAssertTrue(waitForHittableElement(saveNoteButton), "Note Save toolbar must be reachable")
