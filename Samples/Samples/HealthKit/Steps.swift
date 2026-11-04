@@ -174,8 +174,7 @@ extension Steps: Equatable {
 	}
 
 	public final func equalTo(_ otherSample: Sample) -> Bool {
-		if !(otherSample is HeartRate) { return false }
-		let other = otherSample as! HeartRate
+		guard let other = otherSample as? Steps else { return false }
 		return equalTo(other)
 	}
 
