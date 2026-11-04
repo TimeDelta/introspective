@@ -32,7 +32,13 @@ final class QueryInspectionUITests: UITest {
 		app.navigationBars.buttons["inspectQueryCounts"].tap()
 		assertInspectionRow("q0/all", contains: "2 matching records")
 		assertInspectionRow("q0/results", contains: "2 matching records")
-		app.navigationBars.buttons["Query"].tap()
+		// UIKit shortens this bar's back title to "Back" beside Inspect Counts.
+		let back = app.navigationBars["Query Explanation"].buttons["Back"]
+		guard waitForHittableElement(back) else {
+			XCTFail("The explanation's Back button did not become reachable")
+			return
+		}
+		back.tap()
 		XCTAssertTrue(waitForElement(app.tables["queryBuilder"]))
 		app.buttons["Run"].tap()
 		for note in [olderNote, newerNote] {
