@@ -180,14 +180,30 @@ class UITest: XCTestCase {
 
 	final func goToQueryScreen() {
 		guard goToTabIfNotSelected("Explore") else { return }
-		let query = app.collectionViews.staticTexts["Query"]
+		// Select the collection cell, which owns the storyboard navigation,
+		// rather than its noninteractive 15-point-high caption at the bottom.
+		let query = app.collectionViews.cells.containing(.staticText, identifier: "Query").firstMatch
 		guard waitForHittableElement(query) else {
+			captureQueryNavigationFailure()
 			XCTFail("Explore's Query destination did not become reachable")
 			return
 		}
 		query.tap()
 		skipInstructionsIfPresent(.query)
-		XCTAssertTrue(waitForElement(app.tables["queryBuilder"]), "Query builder did not appear")
+		let builderAppeared = waitForElement(app.tables["queryBuilder"])
+		if !builderAppeared { captureQueryNavigationFailure() }
+		XCTAssertTrue(builderAppeared, "Query builder did not appear")
+	}
+
+	private func captureQueryNavigationFailure() {
+		let hierarchy = XCTAttachment(string: app.debugDescription)
+		hierarchy.name = "Query navigation hierarchy"
+		hierarchy.lifetime = .keepAlways
+		add(hierarchy)
+		let screenshot = XCTAttachment(screenshot: app.screenshot())
+		screenshot.name = "Query navigation screen"
+		screenshot.lifetime = .keepAlways
+		add(screenshot)
 	}
 
 	@discardableResult
