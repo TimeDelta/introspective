@@ -646,7 +646,9 @@ class UITest: XCTestCase {
 				return
 			}
 		}
-		setTextFor(field: app.tables.cells.textViews["activity description"], to: definition.description)
+		// This multiline field can lose a suffix from one XCTest typing batch.
+		// Send each character once and verify delivery before continuing.
+		setTextFor(field: app.tables.cells.textViews["activity description"], to: definition.description, perCharacter: true)
 		setTags(for: activityDefinitionTagsField(), to: definition.tags)
 		app.buttons["Save"].tap()
 	}
