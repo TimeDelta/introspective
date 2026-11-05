@@ -536,7 +536,9 @@ final class MoodHistoryViewController: UITableViewController, UISearchResultsUpd
 			if let previousCalendar = selectedDayCalendar,
 				previousCalendar.identifier == calendar.identifier, previousCalendar.timeZone != calendar.timeZone {
 				// Keep the chosen civil date when travel changes local midnight's instant.
-				var components = previousCalendar.dateComponents([.era, .year, .month, .day, .isLeapMonth], from: date)
+				var components = previousCalendar.dateComponents([.era, .year, .month, .day], from: date)
+				// Calendar.Component.isLeapMonth requires iOS 17; DateComponents' flag supports older iOS.
+				components.isLeapMonth = previousCalendar.dateComponents(in: previousCalendar.timeZone, from: date).isLeapMonth
 				components.calendar = calendar; components.timeZone = calendar.timeZone
 				date = calendar.date(from: components) ?? date
 			}

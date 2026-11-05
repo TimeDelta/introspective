@@ -550,7 +550,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 		// then
 		Verify(mockCalendarUtil, .never, .start(of: .any, in: .value(initialDate)))
 		let userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .any, userInfo: .capturing(userInfoCaptor)))
+		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .matching { ($0 as? SelectDateViewControllerImpl) === self.controller }, userInfo: .capturing(userInfoCaptor)))
 		guard let userInfo = userInfoCaptor.value else {
 			XCTFail("No User Info")
 			return
@@ -571,7 +571,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 		// then
 		Verify(mockCalendarUtil, .never, .start(of: .any, in: .value(lastDate)))
 		let userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .any, userInfo: .capturing(userInfoCaptor)))
+		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .matching { ($0 as? SelectDateViewControllerImpl) === self.controller }, userInfo: .capturing(userInfoCaptor)))
 		guard let userInfo = userInfoCaptor.value else {
 			XCTFail("No User Info")
 			return
@@ -591,7 +591,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 		// then
 		Verify(mockCalendarUtil, .never, .start(of: .any, in: .any))
 		let userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .any, userInfo: .capturing(userInfoCaptor)))
+		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .matching { ($0 as? SelectDateViewControllerImpl) === self.controller }, userInfo: .capturing(userInfoCaptor)))
 		guard let userInfo = userInfoCaptor.value else {
 			XCTFail("No User Info")
 			return
@@ -613,7 +613,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 		// then
 		let userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .any, userInfo: .capturing(userInfoCaptor)))
+		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .matching { ($0 as? SelectDateViewControllerImpl) === self.controller }, userInfo: .capturing(userInfoCaptor)))
 		guard let userInfo = userInfoCaptor.value else {
 			XCTFail("No User Info")
 			return
@@ -635,7 +635,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 		// then
 		let userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .any, userInfo: .capturing(userInfoCaptor)))
+		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .matching { ($0 as? SelectDateViewControllerImpl) === self.controller }, userInfo: .capturing(userInfoCaptor)))
 		guard let userInfo = userInfoCaptor.value else {
 			XCTFail("No User Info")
 			return
@@ -658,7 +658,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 		// then
 		let userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .any, userInfo: .capturing(userInfoCaptor)))
+		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .matching { ($0 as? SelectDateViewControllerImpl) === self.controller }, userInfo: .capturing(userInfoCaptor)))
 		guard let userInfo = userInfoCaptor.value else {
 			XCTFail("No User Info")
 			return
@@ -681,7 +681,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 		// then
 		let userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .any, userInfo: .capturing(userInfoCaptor)))
+		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .matching { ($0 as? SelectDateViewControllerImpl) === self.controller }, userInfo: .capturing(userInfoCaptor)))
 		guard let userInfo = userInfoCaptor.value else {
 			XCTFail("No User Info")
 			return
@@ -704,7 +704,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 		// then
 		let userInfoCaptor = ArgumentCaptor<UserInfo?>()
-		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .any, userInfo: .capturing(userInfoCaptor)))
+		Verify(mockUiUtil, .post(name: .value(controller.notificationToSendOnAccept), object: .matching { ($0 as? SelectDateViewControllerImpl) === self.controller }, userInfo: .capturing(userInfoCaptor)))
 		guard let userInfo = userInfoCaptor.value else {
 			XCTFail("No User Info")
 			return
