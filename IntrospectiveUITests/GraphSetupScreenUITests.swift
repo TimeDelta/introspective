@@ -99,10 +99,10 @@ final class GraphSetupScreenUITests: UITest {
 		goToSingleDataTypeGraphSetupScreen()
 		setPicker(to: "Blood Pressure")
 		setSingleDataTypeXAxis(attribute: xAxisAttribute)
-		setYAxisAttributes(originalYAxisAttributes)
+		guard setYAxisAttributes(originalYAxisAttributes) else { return }
 
 		// when
-		setYAxisAttributes(yAxisAttributes)
+		guard setYAxisAttributes(yAxisAttributes) else { return }
 
 		// then
 		XCTAssertEqual(app.buttons["choose y-axis information button"].value as? String, "Y-Axis: " + getCommaSeparatedList(yAxisAttributes))
@@ -147,10 +147,10 @@ final class GraphSetupScreenUITests: UITest {
 		setGrouping(groupingType: "series", timeUnit: aggregationTimeUnit)
 		setGrouping(groupingType: "point", timeUnit: aggregationTimeUnit)
 		setSingleDataTypeXAxis(attribute: xAxisAttribute, groupResolutionMethod: xAxisAggregationMethod)
-		setYAxisInformation(originalYAxis)
+		guard setYAxisInformation(originalYAxis) else { return }
 
 		// when
-		setYAxisInformation(yAxis)
+		guard setYAxisInformation(yAxis) else { return }
 
 		// then
 		XCTAssertEqual(app.buttons["choose y-axis information button"].value as? String, "Y-Axis: " + getYAxisInformationCommaSeparatedList(yAxis))
@@ -163,7 +163,7 @@ final class GraphSetupScreenUITests: UITest {
 		goToSingleDataTypeGraphSetupScreen()
 		setPicker(to: "Blood Pressure")
 		setSingleDataTypeXAxis(attribute: xAxisAttribute)
-		setYAxisAttributes(yAxisAttributes)
+		guard setYAxisAttributes(yAxisAttributes) else { return }
 		app.buttons["choose y-axis information button"].tap()
 
 		// when
@@ -189,7 +189,7 @@ final class GraphSetupScreenUITests: UITest {
 		setGrouping(groupingType: "series", timeUnit: aggregationTimeUnit)
 		setGrouping(groupingType: "point", timeUnit: aggregationTimeUnit)
 		setSingleDataTypeXAxis(attribute: xAxisAttribute, groupResolutionMethod: xAxisAggregationMethod)
-		setYAxisInformation(yAxis)
+		guard setYAxisInformation(yAxis) else { return }
 		app.buttons["choose y-axis information button"].tap()
 
 		// when
@@ -240,7 +240,7 @@ final class GraphSetupScreenUITests: UITest {
 		setGrouping(groupingType: "series", timeUnit: "day")
 		setGrouping(groupingType: "point", timeUnit: "day")
 		setSingleDataTypeXAxis(attribute: "timestamp", groupResolutionMethod: "count")
-		setYAxisInformation([(attribute: "timestamp", information: "count")])
+		guard setYAxisInformation([(attribute: "timestamp", information: "count")]) else { return }
 
 		// when
 		setPicker("sample type picker", to: "Weight")
@@ -286,10 +286,10 @@ final class GraphSetupScreenUITests: UITest {
 		]
 		goToMultipleDataTypesGraphSetupScreen()
 		setYAxisDataType("Blood Pressure")
-		setYAxisInformation(originalYAxis)
+		guard setYAxisInformation(originalYAxis) else { return }
 
 		// when
-		setYAxisInformation(yAxis)
+		guard setYAxisInformation(yAxis) else { return }
 
 		// then
 		XCTAssertEqual(app.buttons["choose y-axis information button"].value as? String, getYAxisInformationCommaSeparatedList(yAxis))
@@ -464,29 +464,117 @@ final class GraphSetupScreenUITests: UITest {
 		}
 	}
 
-	private final func setYAxisAttributes(_ attributes: [String]) {
-		app.buttons["choose y-axis information button"].tap()
-		app.tables.buttons["Clear"].tap()
-		for attribute in attributes {
-			app.tables.buttons["Add"].tap()
-			app.tables.staticTexts.allElementsBoundByIndex.last?.tap()
-			setPicker("attribute picker", to: attribute)
-			app.buttons["save button"].tap()
-		}
-		app.tables.buttons["Done"].tap()
+	private final func setYAxisAttributes(_ attributes: [String]) -> Bool {
+		return setYAxisEntries(attributes.map { (attribute: $0, information: nil) })
 	}
 
-	private final func setYAxisInformation(_ axis: [(attribute: String, information: String)]) {
-		app.buttons["choose y-axis information button"].tap()
-		app.tables.buttons["Clear"].tap()
-		for entry in axis {
-			app.tables.buttons["Add"].tap()
-			app.tables.staticTexts.allElementsBoundByIndex.last?.tap()
-			setPicker("attribute picker", to: entry.attribute)
-			setPicker("grouping method picker", to: entry.information)
-			app.buttons["save button"].tap()
+	private final func setYAxisInformation(_ axis: [(attribute: String, information: String)]) -> Bool {
+		return setYAxisEntries(axis.map { (attribute: $0.attribute, information: $0.information) })
+	}
+
+	private final func setYAxisEntries(_ entries: [(attribute: String, information: String?)]) -> Bool {
+		let chooseYAxis = app.buttons["choose y-axis information button"]
+		guard waitForYAxisState("Y-axis chooser did not become reachable", condition: {
+			chooseYAxis.exists && chooseYAxis.isHittable
+		}) else { return false }
+		chooseYAxis.tap()
+		let chooser = app.tables.containing(.button, identifier: "Done").firstMatch
+		let clear = chooser.buttons["Clear"]
+		guard waitForYAxisState("Y-axis Clear did not become reachable", condition: {
+			clear.exists && clear.isEnabled && clear.isHittable
+		}) else { return false }
+		clear.tap()
+		guard waitForYAxisState("Y-axis Clear did not remove all rows", condition: {
+			chooser.exists && chooser.cells.count == 0
+		}) else { return false }
+		for entry in entries {
+			let rowIndex = chooser.cells.count
+			let add = chooser.buttons["Add"]
+			guard waitForYAxisState("Y-axis Add did not become reachable", condition: {
+				add.exists && add.isEnabled && add.isHittable
+			}) else { return false }
+			add.tap()
+			guard waitForYAxisState("Y-axis Add did not append exactly one row", condition: {
+				chooser.exists && chooser.cells.count == rowIndex + 1
+			}) else { return false }
+			let row = chooser.cells.element(boundBy: rowIndex)
+			guard waitForYAxisState("New Y-axis row did not become reachable", condition: {
+				row.exists && row.isHittable
+			}) else { return false }
+			row.tap()
+			let attributeWheel = app.pickers["attribute picker"].pickerWheels.firstMatch
+			guard waitForYAxisState("Y-axis attribute editor did not appear", condition: {
+				attributeWheel.exists && attributeWheel.isHittable
+			}) else { return false }
+			let attributeTitle = entry.attribute.localizedCapitalized
+			attributeWheel.adjust(toPickerWheelValue: attributeTitle)
+			guard waitForYAxisState("Y-axis attribute picker did not select \(attributeTitle)", condition: {
+				self.yAxisAttributeWheel(attributeWheel, displays: attributeTitle)
+			}) else { return false }
+			let informationWheel = app.pickers["grouping method picker"].pickerWheels.firstMatch
+			if let information = entry.information {
+				guard waitForYAxisState("Y-axis information picker did not appear", condition: {
+					informationWheel.exists && informationWheel.isHittable
+				}) else { return false }
+				informationWheel.adjust(toPickerWheelValue: information.localizedCapitalized)
+			}
+			let save = app.buttons["save button"]
+			guard waitForYAxisState("Y-axis editor did not become ready to save \(entry)", condition: {
+				self.yAxisAttributeWheel(attributeWheel, displays: attributeTitle) &&
+					(entry.information == nil || (informationWheel.exists &&
+						informationWheel.value as? String == entry.information?.localizedCapitalized)) &&
+					save.exists && save.isEnabled && save.isHittable
+			}) else { return false }
+			save.tap()
+			guard waitForYAxisState("Y-axis editor did not close after Save", condition: {
+				!attributeWheel.exists && !save.exists && chooser.exists && chooser.buttons["Done"].isHittable
+			}) else { return false }
+			let rowTitle: String
+			if let information = entry.information {
+				// CountInformation omits the attribute; Maximum/Minimum include its lowercase name.
+				let informationTitle = information.localizedCapitalized
+				rowTitle = informationTitle == "Count" ? informationTitle : informationTitle + " " + entry.attribute.localizedLowercase
+			} else {
+				rowTitle = attributeTitle
+			}
+			guard waitForYAxisState("Saved Y-axis row did not update to \(rowTitle)", condition: {
+				chooser.cells.count == rowIndex + 1 &&
+					chooser.cells.element(boundBy: rowIndex).staticTexts[rowTitle].exists
+			}) else { return false }
 		}
-		app.tables.buttons["Done"].tap()
+		let done = chooser.buttons["Done"]
+		guard waitForYAxisState("Y-axis Done did not become reachable", condition: {
+			done.exists && done.isEnabled && done.isHittable
+		}) else { return false }
+		done.tap()
+		return waitForYAxisState("Y-axis chooser did not close after Done", condition: {
+			!chooser.exists && chooseYAxis.exists && chooseYAxis.isHittable
+		})
+	}
+
+	private final func yAxisAttributeWheel(_ wheel: XCUIElement, displays title: String) -> Bool {
+		guard wheel.exists, let value = wheel.value as? String else { return false }
+		if value == title { return true }
+		// UIKit may truncate long picker titles in accessibility. The saved row must still match in full.
+		for ellipsis in ["...", "…"] where value.hasSuffix(ellipsis) {
+			let prefix = String(value.dropLast(ellipsis.count))
+			if !prefix.isEmpty && title.hasPrefix(prefix) { return true }
+		}
+		return false
+	}
+
+	private final func waitForYAxisState(_ message: String, file: StaticString = #file, line: UInt = #line,
+		condition: @escaping () -> Bool) -> Bool {
+		if condition() { return true }
+		let expectation = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in condition() }, object: nil)
+		_ = XCTWaiter.wait(for: [expectation], timeout: 5)
+		if condition() { return true }
+		let hierarchy = XCTAttachment(string: app.debugDescription)
+		hierarchy.name = "Y-axis setup failure UI hierarchy"
+		hierarchy.lifetime = .keepAlways
+		add(hierarchy)
+		XCTFail(message, file: file, line: line)
+		return false
 	}
 
 	private final func getYAxisInformationCommaSeparatedList(_ axis: [(attribute: String, information: String)]) -> String {
