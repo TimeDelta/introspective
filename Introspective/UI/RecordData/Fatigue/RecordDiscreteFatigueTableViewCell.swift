@@ -225,6 +225,8 @@ public final class RecordDiscreteFatigueTableViewCell: UITableViewCell {
 		if let lastView = lastView {
 			ratingConstraints.append(fatigueContentView.trailingAnchor.constraint(equalTo: lastView.trailingAnchor))
 		}
+		// UIKit also owns internal button constraints; identify the ones this renderer manages.
+		for constraint in ratingConstraints { constraint.identifier = "discreteRating" }
 		NSLayoutConstraint.activate(ratingConstraints)
 	}
 

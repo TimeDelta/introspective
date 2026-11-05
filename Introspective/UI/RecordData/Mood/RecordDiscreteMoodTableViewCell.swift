@@ -226,6 +226,8 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 		if let lastView = lastView {
 			ratingConstraints.append(moodContentView.trailingAnchor.constraint(equalTo: lastView.trailingAnchor))
 		}
+		// UIKit also owns internal button constraints; identify the ones this renderer manages.
+		for constraint in ratingConstraints { constraint.identifier = "discreteRating" }
 		NSLayoutConstraint.activate(ratingConstraints)
 	}
 
