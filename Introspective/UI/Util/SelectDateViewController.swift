@@ -245,7 +245,7 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 		} else if let precision = selectedPrecision {
 			date = injected(CalendarUtil.self).start(of: precision, in: date)
 		}
-		post(notificationToSendOnAccept, userInfo: [.date: date])
+		post(notificationToSendOnAccept, object: self, userInfo: [.date: date])
 		dismiss(animated: false, completion: nil)
 	}
 
