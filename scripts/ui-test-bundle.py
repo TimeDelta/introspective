@@ -105,10 +105,22 @@ def validate_plan(plan_path, original_products, staged_products):
     def location(field, host=None):
         value = target.get(field)
         require(isinstance(value, str) and value, f'xctestrun lacks {field}')
-        value = value.replace('__TESTROOT__', str(original_products))
+        bindings = {'__TESTROOT__': str(original_products)}
         if host is not None:
-            value = value.replace('__TESTHOST__', str(host))
-        require('__' not in value, f'unrecognized placeholder in xctestrun {field}')
+            bindings['__TESTHOST__'] = str(host)
+
+        def expand(match):
+            token = match.group()
+            require(token in bindings, f'unrecognized placeholder in xctestrun {field}')
+            return bindings[token]
+
+        # A literal Products prefix is filesystem text, even when its names look like tokens.
+        prefix = str(original_products)
+        if value == prefix or value.startswith(prefix + os.sep):
+            value = value[len(prefix):]
+        else:
+            prefix = ''
+        value = prefix + re.sub(r'__[A-Z][A-Z0-9_]*__', expand, value)
         require(Path(value).is_absolute(), f'xctestrun {field} must resolve to an absolute path')
         original = absolute(value)
         require(within(original, original_products), f'xctestrun {field} escapes Products')

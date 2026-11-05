@@ -20,7 +20,7 @@ REVISION = '46ccfa71' + 'a' * 32
 
 class UITestBuildBundle(unittest.TestCase):
     def setUp(self):
-        self.directory = tempfile.TemporaryDirectory()
+        self.directory = tempfile.TemporaryDirectory(prefix='ui__bundle__')
         self.addCleanup(self.directory.cleanup)
         self.root = Path(self.directory.name)
         self.workspace = self.root / 'checkout'
@@ -197,6 +197,24 @@ class UITestBuildBundle(unittest.TestCase):
         self.assertEqual(self.command('restore').returncode, 0)
         self.assertEqual(self.plan.read_bytes(), original)
 
+    def test_product_roots_containing_placeholder_names_remain_literal(self):
+        original_products = self.products
+        self.products = self.products.with_name('Products__TESTHOST__and__UNKNOWN__')
+        original_products.rename(self.products)
+        self.plan = self.products / self.plan.name
+        paths = {'TestHostPath': self.runner, 'TestBundlePath': self.bundle, 'UITargetAppPath': self.app}
+        for absolute_paths in (False, True):
+            with self.subTest(absolute_paths=absolute_paths):
+                if absolute_paths:
+                    self.target().update({field: str(self.products / path.relative_to(original_products))
+                                          for field, path in paths.items()})
+                self.save_plan()
+                original = self.plan.read_bytes()
+                self.package()
+                result = self.command('restore')
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(self.plan.read_bytes(), original)
+
     def test_partial_rerun_uses_original_producer_attempt(self):
         self.package()
         result = self.command('restore', GITHUB_RUN_ATTEMPT='2')
@@ -271,6 +289,24 @@ class UITestBuildBundle(unittest.TestCase):
         self.package()
         result = self.command('restore')
         self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_unknown_launch_path_placeholders_are_rejected_without_output(self):
+        original = copy.deepcopy(self.plan_data)
+        paths = {'TestHostPath': self.runner, 'TestBundlePath': self.bundle, 'UITargetAppPath': self.app}
+        for field, path in paths.items():
+            for absolute_path in (False, True):
+                with self.subTest(field=field, absolute_path=absolute_path):
+                    self.plan_data = copy.deepcopy(original)
+                    value = str(path) if absolute_path else self.target()[field]
+                    self.target()[field] = value + '/__UNKNOWN__'
+                    self.save_plan()
+                    result = self.command('package')
+                    self.assertNotEqual(result.returncode, 0, result.stdout)
+                    self.assertIn(f'unrecognized placeholder in xctestrun {field}', result.stderr)
+                    self.assertNotIn('Traceback', result.stderr)
+                    self.assertFalse(self.archive.exists())
+                    self.assertFalse(self.output.exists())
+                    self.assertFalse(self.env.exists())
 
     def test_v2_blueprint_name_is_optional_when_ui_launch_paths_identify_target(self):
         self.target().pop('BlueprintName')
