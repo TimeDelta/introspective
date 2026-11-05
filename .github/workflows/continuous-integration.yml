@@ -37,32 +37,26 @@ concurrency:
 
 jobs:
   validation:
-    name: ${{ matrix.kind == 'release' && 'Release compilation' || matrix.kind == 'legacy' && 'Legacy unit and functional tests' || matrix.kind == 'ui' && format('Legacy UI tests ({0}/{1})', matrix.shard, matrix.shard_count) || matrix.kind == 'mocks' && 'Legacy mocking SDK check' || 'Simulator tests' }}
+    name: ${{ matrix.kind == 'release' && 'Release compilation' || matrix.kind == 'legacy' && 'Legacy unit and functional tests' || matrix.kind == 'mocks' && 'Legacy mocking SDK check' || 'Simulator tests' }}
+    if: inputs.suite != 'ui'
     runs-on: ${{ inputs.runner || 'macos-15-intel' }}
-    # Restored suites include thousands of tests / UI flows after a cold build.
-    timeout-minutes: ${{ matrix.kind == 'ui' && 120 || matrix.kind == 'legacy' && 90 || 45 }}
+    # The restored legacy suite includes thousands of tests after a cold build.
+    timeout-minutes: ${{ matrix.kind == 'legacy' && 90 || 45 }}
     strategy:
       fail-fast: false
       matrix:
         include: >-
           ${{ inputs.suite == 'legacy' && fromJSON('[{"kind":"legacy"}]') ||
-              inputs.suite == 'ui' && (
-                inputs.ui_shards == '1' && fromJSON('[{"kind":"ui","shard":1,"shard_count":1}]') ||
-                inputs.ui_shards == '2' && fromJSON('[{"kind":"ui","shard":1,"shard_count":2},{"kind":"ui","shard":2,"shard_count":2}]') ||
-                fromJSON('[{"kind":"ui","shard":1,"shard_count":3},{"kind":"ui","shard":2,"shard_count":3},{"kind":"ui","shard":3,"shard_count":3}]')) ||
               inputs.suite == 'mocks' && fromJSON('[{"kind":"mocks"}]') ||
               inputs.suite == 'focused' && fromJSON('[{"kind":"tests"},{"kind":"release"}]') ||
-              inputs.ui_shards == '1' && fromJSON('[{"kind":"tests"},{"kind":"legacy"},{"kind":"ui","shard":1,"shard_count":1},{"kind":"release"}]') ||
-              inputs.ui_shards == '2' && fromJSON('[{"kind":"tests"},{"kind":"legacy"},{"kind":"ui","shard":1,"shard_count":2},{"kind":"ui","shard":2,"shard_count":2},{"kind":"release"}]') ||
-              fromJSON('[{"kind":"tests"},{"kind":"legacy"},{"kind":"ui","shard":1,"shard_count":3},{"kind":"ui","shard":2,"shard_count":3},{"kind":"ui","shard":3,"shard_count":3},{"kind":"release"}]') }}
+              fromJSON('[{"kind":"tests"},{"kind":"legacy"},{"kind":"release"}]') }}
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
       COCOAPODS_DISABLE_STATS: 'true'
       CI_BUILD_KIND: ${{ matrix.kind }}
-      CI_UI_WORKERS: ${{ inputs.ui_workers || '1' }}
-      CI_UI_SHARD: ${{ matrix.shard || '1' }}
-      CI_UI_SHARD_COUNT: ${{ matrix.shard_count || '1' }}
-      CI_TEST_SCHEME: ${{ matrix.kind == 'legacy' && 'CI-CD' || matrix.kind == 'ui' && 'UIRegressionTests' || 'MoodHealthTests' }}
+      CI_UI_SHARD: '1'
+      CI_UI_SHARD_COUNT: '1'
+      CI_TEST_SCHEME: ${{ matrix.kind == 'legacy' && 'CI-CD' || 'MoodHealthTests' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -142,18 +136,12 @@ jobs:
         run: |
           set -euo pipefail
           if [ "$CI_BUILD_KIND" = tests ]; then ruby scripts/prepare-mood-health-tests.rb; fi
-          if [ "$CI_BUILD_KIND" = ui ]; then
-            ruby scripts/prepare-ui-tests.rb
-            python3 scripts/partition-ui-tests.py --shard "$CI_UI_SHARD" --count "$CI_UI_SHARD_COUNT" --json ci-output/ui-test-selection.json > ci-output/ui-test-classes.txt
-            python3 scripts/partition-ui-tests.py --shard "$CI_UI_SHARD" --count "$CI_UI_SHARD_COUNT" --preflight --json ci-output/ui-preflight-selection.json > ci-output/ui-preflight-tests.txt
-          fi
           xcrun simctl list devices available --json > ci-output/simulators.json
           simulator_id=$(python3 -c 'import json; d=json.load(open("ci-output/simulators.json")); print(next(v["udid"] for k,vs in d["devices"].items() if "iOS" in k for v in vs if v["isAvailable"] and "iPhone" in v["name"]))')
           echo "CI_SIMULATOR_ID=$simulator_id" >> "$GITHUB_ENV"
-          # Legacy boots after compilation; parallel UI tests boot their own
-          # clones. Keep those simulators off while building to save resources.
+          # Legacy boots after compilation to save resources while building.
           state=$(xcrun simctl list devices available --json | python3 -c 'import json,sys; d=json.load(sys.stdin); print(next(v["state"] for vs in d["devices"].values() for v in vs if v["udid"]==sys.argv[1]))' "$simulator_id")
-          if [ "$CI_BUILD_KIND" = legacy ] || { [ "$CI_BUILD_KIND" = ui ] && [ "$CI_UI_WORKERS" != 1 ]; }; then
+          if [ "$CI_BUILD_KIND" = legacy ]; then
             if [ "$state" = Booted ]; then xcrun simctl shutdown "$simulator_id"; fi
           elif [ "$state" != Booted ]; then
             xcrun simctl boot "$simulator_id"
@@ -189,43 +177,8 @@ jobs:
             ONLY_ACTIVE_ARCH=YES COMPILER_INDEX_STORE_ENABLE=NO \
             ENABLE_USER_SCRIPT_SANDBOXING=NO
 
-      - name: Check UI regressions before running the complete shard
-        if: matrix.kind == 'ui'
-        shell: bash
-        run: |
-          set -euo pipefail
-          if [ "$CI_UI_WORKERS" = 1 ]; then
-            xcrun simctl bootstatus "$CI_SIMULATOR_ID" -b > ci-output/simulator-boot.log 2>&1
-          fi
-          # Fail known broken paths early. A passing preflight is followed by the
-          # entire shard, with its independent completeness/no-skips guard.
-          test_command=(xcodebuild test-without-building
-            -workspace Introspective.xcworkspace
-            -scheme "$CI_TEST_SCHEME"
-            -configuration Debug
-            -destination "platform=iOS Simulator,id=$CI_SIMULATOR_ID"
-            -derivedDataPath "$CI_DERIVED_DATA"
-            -resultBundlePath "$GITHUB_WORKSPACE/ci-output/UIPreflight.xcresult")
-          test_command+=(-test-timeouts-enabled YES
-            -default-test-execution-time-allowance 300
-            -maximum-test-execution-time-allowance 300)
-          test -s ci-output/ui-preflight-tests.txt
-          while IFS= read -r test_case; do
-            test_command+=("-only-testing:$test_case")
-          done < ci-output/ui-preflight-tests.txt
-          if [ "$CI_UI_WORKERS" = 1 ]; then
-            test_command+=(-parallel-testing-enabled NO)
-          else
-            test_command+=(-parallel-testing-enabled YES -parallel-testing-worker-count "$CI_UI_WORKERS")
-          fi
-          CI_TEST_PROGRESS=1 python3 scripts/run-ui-tests.py \
-            --log ci-output/ui-preflight.log --simulator "$CI_SIMULATOR_ID" --workers "$CI_UI_WORKERS" \
-            -- "${test_command[@]}"
-          xcrun xcresulttool get test-results summary --path ci-output/UIPreflight.xcresult > ci-output/ui-preflight-summary.json
-          python3 scripts/verify-ui-test-results.py ci-output/ui-preflight-summary.json --shard "$CI_UI_SHARD" --count "$CI_UI_SHARD_COUNT" --preflight
-
       - name: Restart simulator before the complete test suite
-        if: matrix.kind == 'ui' || matrix.kind == 'legacy'
+        if: matrix.kind == 'legacy'
         timeout-minutes: 5
         shell: bash
         run: |
@@ -234,10 +187,8 @@ jobs:
           # been idle through a long compilation before launching its test host.
           # A stuck accessibility/event-loop service can otherwise hang app.launch().
           xcrun simctl shutdown all > ci-output/simulator-restart.log 2>&1
-          if [ "$CI_BUILD_KIND" = legacy ] || [ "$CI_UI_WORKERS" = 1 ]; then
-            xcrun simctl boot "$CI_SIMULATOR_ID" >> ci-output/simulator-restart.log 2>&1
-            xcrun simctl bootstatus "$CI_SIMULATOR_ID" -b >> ci-output/simulator-restart.log 2>&1
-          fi
+          xcrun simctl boot "$CI_SIMULATOR_ID" >> ci-output/simulator-restart.log 2>&1
+          xcrun simctl bootstatus "$CI_SIMULATOR_ID" -b >> ci-output/simulator-restart.log 2>&1
 
       - name: Install legacy test host before starting XCTest
         if: matrix.kind == 'legacy'
@@ -259,9 +210,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [ "$CI_BUILD_KIND" != ui ] || [ "$CI_UI_WORKERS" = 1 ]; then
-            xcrun simctl bootstatus "$CI_SIMULATOR_ID" -b > ci-output/simulator-boot.log 2>&1
-          fi
+          xcrun simctl bootstatus "$CI_SIMULATOR_ID" -b > ci-output/simulator-boot.log 2>&1
           test_command=(xcodebuild test-without-building
             -workspace Introspective.xcworkspace
             -scheme "$CI_TEST_SCHEME"
@@ -269,30 +218,12 @@ jobs:
             -destination "platform=iOS Simulator,id=$CI_SIMULATOR_ID"
             -derivedDataPath "$CI_DERIVED_DATA"
             -resultBundlePath "$GITHUB_WORKSPACE/ci-output/MoodTests.xcresult")
-          if [ "$CI_BUILD_KIND" = ui ]; then
-            test_command+=(-test-timeouts-enabled YES
-              -default-test-execution-time-allowance 300
-              -maximum-test-execution-time-allowance 300)
-            test -s ci-output/ui-test-classes.txt
-            while IFS= read -r test_class; do
-              test_command+=("-only-testing:$test_class")
-            done < ci-output/ui-test-classes.txt
-            if [ "$CI_UI_WORKERS" = 1 ]; then
-              test_command+=(-parallel-testing-enabled NO)
-            else
-              # Xcode gives each worker an isolated simulator clone; compile once.
-              test_command+=(-parallel-testing-enabled YES -parallel-testing-worker-count "$CI_UI_WORKERS")
-            fi
-          elif [ "$CI_BUILD_KIND" = legacy ]; then
+          if [ "$CI_BUILD_KIND" = legacy ]; then
             test_command+=(-test-timeouts-enabled YES
               -default-test-execution-time-allowance 120
               -maximum-test-execution-time-allowance 180)
           fi
-          if [ "$CI_BUILD_KIND" = ui ]; then
-            CI_TEST_PROGRESS=1 python3 scripts/run-ui-tests.py \
-              --log ci-output/mood-tests.log --simulator "$CI_SIMULATOR_ID" --workers "$CI_UI_WORKERS" \
-              -- "${test_command[@]}"
-          elif [ "$CI_BUILD_KIND" = legacy ]; then
+          if [ "$CI_BUILD_KIND" = legacy ]; then
             python3 scripts/run-legacy-tests.py \
               --log ci-output/mood-tests.log --simulator "$CI_SIMULATOR_ID" \
               -- "${test_command[@]}"
@@ -302,27 +233,18 @@ jobs:
           xcrun xcresulttool get test-results summary --path ci-output/MoodTests.xcresult > ci-output/mood-tests-summary.json
           if [ "$CI_BUILD_KIND" = tests ]; then
             python3 scripts/verify-native-test-results.py ci-output/mood-tests-summary.json
-          elif [ "$CI_BUILD_KIND" = ui ]; then
-            python3 scripts/verify-ui-test-results.py ci-output/mood-tests-summary.json --shard "$CI_UI_SHARD" --count "$CI_UI_SHARD_COUNT"
           elif [ "$CI_BUILD_KIND" = legacy ]; then
             python3 scripts/verify-legacy-test-results.py ci-output/mood-tests-summary.json
           else
             cat ci-output/mood-tests-summary.json
           fi
 
-      - name: Collect test summaries and UI failure attachments
+      - name: Collect test summaries
         if: always() && matrix.kind != 'release' && matrix.kind != 'mocks'
         shell: bash
         run: |
-          if [ -d ci-output/UIPreflight.xcresult ]; then
-            xcrun xcresulttool get test-results summary --path ci-output/UIPreflight.xcresult > ci-output/ui-preflight-summary.json 2> ci-output/preflight-summary-errors.log || true
-            xcrun xcresulttool export attachments --path ci-output/UIPreflight.xcresult --output-path ci-output/ui-preflight-attachments --only-failures > ci-output/preflight-attachment-export.log 2>&1 || true
-          fi
           if [ -d ci-output/MoodTests.xcresult ]; then
             xcrun xcresulttool get test-results summary --path ci-output/MoodTests.xcresult > ci-output/test-summary.json 2> ci-output/summary-errors.log || true
-            if [ "$CI_BUILD_KIND" = ui ]; then
-              xcrun xcresulttool export attachments --path ci-output/MoodTests.xcresult --output-path ci-output/ui-attachments --only-failures > ci-output/attachment-export.log 2>&1 || true
-            fi
           fi
 
       - name: Report measured coverage and test-writing priorities
@@ -333,7 +255,6 @@ jobs:
             xcrun xccov view --report --json ci-output/MoodTests.xcresult > ci-output/coverage-raw.json 2> ci-output/coverage-export.log || true
           fi
           label="$CI_TEST_SCHEME"
-          if [ "$CI_BUILD_KIND" = ui ]; then label="$label (shard $CI_UI_SHARD/$CI_UI_SHARD_COUNT)"; fi
           python3 scripts/report-test-coverage.py \
             --coverage ci-output/coverage-raw.json \
             --summary ci-output/test-summary.json \
@@ -342,18 +263,6 @@ jobs:
             --label "$label" \
             --json ci-output/coverage-priorities.json > ci-output/coverage.md
           cat ci-output/coverage.md >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Report UI execution timings
-        if: always() && matrix.kind == 'ui'
-        shell: bash
-        run: |
-          python3 scripts/report-ui-test-timings.py --log ci-output/mood-tests.log --summary ci-output/test-summary.json --json ci-output/ui-timings.json > ci-output/ui-timings.md
-          cat ci-output/ui-timings.md >> "$GITHUB_STEP_SUMMARY"
-          if [ -f ci-output/ui-preflight.log ]; then
-            python3 scripts/report-ui-test-timings.py --log ci-output/ui-preflight.log --summary ci-output/ui-preflight-summary.json --json ci-output/ui-preflight-timings.json > ci-output/ui-preflight-timings.md
-            echo 'Additional UI preflight (not a replacement for full-shard coverage):' >> "$GITHUB_STEP_SUMMARY"
-            cat ci-output/ui-preflight-timings.md >> "$GITHUB_STEP_SUMMARY"
-          fi
 
       - name: Build without signing
         if: matrix.kind == 'release'
@@ -384,7 +293,7 @@ jobs:
         if: always()
         uses: ./.github/actions/upload-diagnostics
         with:
-          name: ios-26-${{ matrix.kind == 'ui' && format('ui-{0}', matrix.shard) || matrix.kind }}-diagnostics-attempt-${{ github.run_attempt }}
+          name: ios-26-${{ matrix.kind }}-diagnostics-attempt-${{ github.run_attempt }}
           path: ci-output/
 
       - name: Record content-verified timestamps for the next incremental build
@@ -393,21 +302,441 @@ jobs:
         run: python3 scripts/ci-source-mtimes.py save --manifest "$CI_DERIVED_DATA/ci-source-mtimes.json"
 
       - name: Save successful compilation for subsequent runs
-        if: ${{ !cancelled() && (steps.test-build.outcome == 'success' || steps.release-build.outcome == 'success') && steps.build-cache.outputs.cache-hit != 'true' && (matrix.kind != 'ui' || matrix.shard == 1) }}
+        if: ${{ !cancelled() && (steps.test-build.outcome == 'success' || steps.release-build.outcome == 'success') && steps.build-cache.outputs.cache-hit != 'true' }}
         uses: actions/cache/save@v4
         with:
           path: ${{ env.CI_DERIVED_DATA }}
           key: ${{ steps.build-cache.outputs.cache-primary-key }}
 
+  ui-build:
+    name: Build shared UI test bundle
+    if: inputs.suite == '' || inputs.suite == 'all' || inputs.suite == 'ui'
+    runs-on: ${{ inputs.runner || 'macos-15-intel' }}
+    timeout-minutes: 45
+    outputs:
+      bundle_name: ${{ steps.bundle.outputs.bundle_name }}
+      archive_sha256: ${{ steps.bundle.outputs.archive_sha256 }}
+      source_attempt: ${{ steps.bundle.outputs.source_attempt }}
+      simulator_runtime: ${{ steps.simulator.outputs.runtime }}
+      simulator_device_name: ${{ steps.simulator.outputs.device_name }}
+      simulator_device_type: ${{ steps.simulator.outputs.device_type }}
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      COCOAPODS_DISABLE_STATS: 'true'
+      CI_BUILD_KIND: ui
+      CI_TEST_SCHEME: UIRegressionTests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Capture build inputs before CocoaPods modifies projects
+        id: build-inputs
+        shell: bash
+        run: |
+          echo "fingerprint=${{ hashFiles('Podfile', 'Podfile.lock', '**/project.pbxproj', '!Pods/**', 'scripts/prepare-*.rb') }}" >> "$GITHUB_OUTPUT"
+          # Refresh the compiled baseline weekly instead of retaining a copy of
+          # the same dependencies for every source commit.
+          echo "epoch=$(date -u +%G-W%V)" >> "$GITHUB_OUTPUT"
+
+      - name: Verify build tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p ci-output
+          echo "CI_DERIVED_DATA=$RUNNER_TEMP/IntrospectiveDerivedData-$CI_BUILD_KIND" >> "$GITHUB_ENV"
+          xcodebuild -version | tee ci-output/xcode-version.txt
+          {
+            cat ci-output/xcode-version.txt
+            xcrun --sdk iphoneos --show-sdk-version
+            pod --version
+            swiftformat --version
+          } | tee ci-output/tool-versions.log
+
+      - name: Restore frozen CocoaPods dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            Pods
+            ~/Library/Caches/CocoaPods
+          key: pods-v1-${{ runner.os }}-${{ runner.arch }}-xcode26.3-${{ hashFiles('Podfile', 'Podfile.lock') }}
+
+      - name: Resolve CocoaPods dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Always verify the reviewed lockfile, even when dependencies are cached.
+          # This retains the modified TimeDelta/WSTagsField commit and frozen versions.
+          pod install --deployment 2>&1 | tee ci-output/pod-install.log
+          cp Podfile.lock ci-output/Podfile.lock
+
+      - name: Restore Xcode build products
+        id: build-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.CI_DERIVED_DATA }}
+          key: xcode-v3-${{ runner.os }}-${{ runner.arch }}-26.3-ui-${{ steps.build-inputs.outputs.fingerprint }}-${{ steps.build-inputs.outputs.epoch }}
+          restore-keys: |
+            xcode-v3-${{ runner.os }}-${{ runner.arch }}-26.3-ui-${{ steps.build-inputs.outputs.fingerprint }}-
+            xcode-v2-${{ runner.os }}-${{ runner.arch }}-26.3-ui-${{ steps.build-inputs.outputs.fingerprint }}-
+
+      - name: Generate build version
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./scripts/create-git-version-swift-file.sh
+          test -s Common/Common/GitVersion.swift
+
+      - name: Verify the test-completeness guard
+        run: python3 -m unittest discover -s scripts/tests -v
+
+      - name: Prepare UI test target and select build simulator
+        id: simulator
+        shell: bash
+        run: |
+          set -euo pipefail
+          ruby scripts/prepare-ui-tests.rb
+          xcrun simctl list devices available --json > ci-output/simulators.json
+          python3 - <<'PY_SIMULATOR'
+          import json
+          import os
+          from pathlib import Path
+
+          devices = json.loads(Path('ci-output/simulators.json').read_text())['devices']
+          runtime, device = next(
+              (runtime, device)
+              for runtime, available in devices.items() if 'iOS' in runtime
+              for device in available if device['isAvailable'] and 'iPhone' in device['name']
+          )
+          with open(os.environ['GITHUB_ENV'], 'a') as output:
+              output.write(f"CI_SIMULATOR_ID={device['udid']}\n")
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f"runtime={runtime}\ndevice_name={device['name']}\ndevice_type={device['deviceTypeIdentifier']}\n")
+          PY_SIMULATOR
+          # Build against this runtime without consuming memory for a booted device.
+          xcrun simctl shutdown all > ci-output/simulator-build-shutdown.log 2>&1
+
+      - name: Preserve timestamps for unchanged cached build inputs
+        shell: bash
+        run: python3 scripts/ci-source-mtimes.py restore --manifest "$CI_DERIVED_DATA/ci-source-mtimes.json"
+
+      - name: Remove stale UI test launch manifests
+        shell: bash
+        run: python3 scripts/ui-test-bundle.py prepare --products "$CI_DERIVED_DATA/Build/Products"
+
+      - name: Build simulator tests
+        id: test-build
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./scripts/run-ci-command.sh ci-output/test-build.log xcodebuild build-for-testing \
+            -workspace Introspective.xcworkspace \
+            -scheme "$CI_TEST_SCHEME" \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=$CI_SIMULATOR_ID" \
+            -derivedDataPath "$CI_DERIVED_DATA" \
+            -resultBundlePath "$GITHUB_WORKSPACE/ci-output/TestBuild.xcresult" \
+            -showBuildTimingSummary \
+            CODE_SIGNING_ALLOWED=YES CODE_SIGNING_REQUIRED=YES CODE_SIGN_IDENTITY='-' \
+            ONLY_ACTIVE_ARCH=YES COMPILER_INDEX_STORE_ENABLE=NO \
+            ENABLE_USER_SCRIPT_SANDBOXING=NO
+
+      - name: Package verified UI test products
+        id: bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Retain Apple's generated launch configuration for build diagnostics.
+          find "$CI_DERIVED_DATA/Build/Products" -maxdepth 1 -name '*.xctestrun' -exec cp {} ci-output/ \;
+          python3 scripts/ui-test-bundle.py package \
+            --products "$CI_DERIVED_DATA/Build/Products" \
+            --archive "$RUNNER_TEMP/ui-test-products.tar.gz" \
+            --scheme Introspective.xcodeproj/xcshareddata/xcschemes/UIRegressionTests.xcscheme \
+            --revision "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --attempt "$GITHUB_RUN_ATTEMPT" \
+            --architecture "$RUNNER_ARCH" --xcode-version ci-output/xcode-version.txt \
+            --workspace "$GITHUB_WORKSPACE" --github-output "$GITHUB_OUTPUT"
+          echo "bundle_name=UIproducts-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT" >> "$GITHUB_OUTPUT"
+          echo "source_attempt=$GITHUB_RUN_ATTEMPT" >> "$GITHUB_OUTPUT"
+
+      - name: Upload shared UI test products
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.bundle.outputs.bundle_name }}
+          path: ${{ runner.temp }}/ui-test-products.tar.gz
+          compression-level: 0
+          retention-days: 7
+          if-no-files-found: error
+
+      - name: Record generated changes
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p ci-output
+          git status --short > ci-output/working-tree-status.txt
+          git diff --stat > ci-output/generated-changes.txt
+
+      - name: Upload build diagnostics
+        if: always()
+        uses: ./.github/actions/upload-diagnostics
+        with:
+          name: ios-26-ui-build-diagnostics-attempt-${{ github.run_attempt }}
+          path: ci-output/
+
+      - name: Record content-verified timestamps for the next incremental build
+        if: ${{ !cancelled() && steps.test-build.outcome == 'success' }}
+        shell: bash
+        run: python3 scripts/ci-source-mtimes.py save --manifest "$CI_DERIVED_DATA/ci-source-mtimes.json"
+
+      - name: Save successful compilation for subsequent runs
+        if: ${{ !cancelled() && steps.test-build.outcome == 'success' && steps.build-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.CI_DERIVED_DATA }}
+          key: ${{ steps.build-cache.outputs.cache-primary-key }}
+
+  ui-tests:
+    name: Legacy UI tests (${{ matrix.shard }}/${{ matrix.shard_count }})
+    needs: ui-build
+    if: needs.ui-build.result == 'success'
+    runs-on: ${{ inputs.runner || 'macos-15-intel' }}
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        include: >-
+          ${{ inputs.ui_shards == '1' && fromJSON('[{"shard":1,"shard_count":1}]') ||
+              inputs.ui_shards == '2' && fromJSON('[{"shard":1,"shard_count":2},{"shard":2,"shard_count":2}]') ||
+              fromJSON('[{"shard":1,"shard_count":3},{"shard":2,"shard_count":3},{"shard":3,"shard_count":3}]') }}
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      CI_BUILD_KIND: ui
+      CI_TEST_SCHEME: UIRegressionTests
+      CI_UI_WORKERS: ${{ inputs.ui_workers || '1' }}
+      CI_UI_SHARD: ${{ matrix.shard }}
+      CI_UI_SHARD_COUNT: ${{ matrix.shard_count }}
+      CI_UI_SIMULATOR_RUNTIME: ${{ needs.ui-build.outputs.simulator_runtime }}
+      CI_UI_SIMULATOR_DEVICE_NAME: ${{ needs.ui-build.outputs.simulator_device_name }}
+      CI_UI_SIMULATOR_DEVICE_TYPE: ${{ needs.ui-build.outputs.simulator_device_type }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Verify UI execution tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p ci-output
+          echo "CI_DERIVED_DATA=$RUNNER_TEMP/IntrospectiveDerivedData-ui" >> "$GITHUB_ENV"
+          xcodebuild -version | tee ci-output/xcode-version.txt
+          python3 --version | tee ci-output/python-version.txt
+          python3 -m unittest discover -s scripts/tests -v
+
+      - name: Download shared UI test products
+        uses: actions/download-artifact@v4
+        with:
+          # On a partial rerun this remains the successful producer's original attempt.
+          name: ${{ needs.ui-build.outputs.bundle_name }}
+          path: ${{ runner.temp }}/shared-ui-build
+
+      - name: Restore and verify shared UI test products
+        shell: bash
+        env:
+          UI_BUILD_ARCHIVE_SHA: ${{ needs.ui-build.outputs.archive_sha256 }}
+          UI_BUILD_SOURCE_ATTEMPT: ${{ needs.ui-build.outputs.source_attempt }}
+        run: |
+          set -euo pipefail
+          python3 scripts/ui-test-bundle.py restore \
+            --products "$CI_DERIVED_DATA/Build/Products" \
+            --archive "$RUNNER_TEMP/shared-ui-build/ui-test-products.tar.gz" \
+            --sha256 "$UI_BUILD_ARCHIVE_SHA" \
+            --revision "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --attempt "$UI_BUILD_SOURCE_ATTEMPT" \
+            --architecture "$RUNNER_ARCH" --xcode-version ci-output/xcode-version.txt \
+            --workspace "$GITHUB_WORKSPACE" --github-env "$GITHUB_ENV"
+
+      - name: Select UI shard and create its simulator
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/partition-ui-tests.py --shard "$CI_UI_SHARD" --count "$CI_UI_SHARD_COUNT" --json ci-output/ui-test-selection.json > ci-output/ui-test-classes.txt
+          python3 scripts/partition-ui-tests.py --shard "$CI_UI_SHARD" --count "$CI_UI_SHARD_COUNT" --preflight --json ci-output/ui-preflight-selection.json > ci-output/ui-preflight-tests.txt
+          xcrun simctl list runtimes --json > ci-output/simulator-runtimes.json
+          xcrun simctl list devicetypes --json > ci-output/simulator-device-types.json
+          python3 - <<'PY_SIMULATOR'
+          import json
+          import os
+          from pathlib import Path
+
+          runtimes = json.loads(Path('ci-output/simulator-runtimes.json').read_text())['runtimes']
+          device_types = json.loads(Path('ci-output/simulator-device-types.json').read_text())['devicetypes']
+          if not any(runtime['identifier'] == os.environ['CI_UI_SIMULATOR_RUNTIME'] and runtime['isAvailable'] for runtime in runtimes):
+              raise SystemExit('The shared UI build simulator runtime is unavailable')
+          if not any(device['identifier'] == os.environ['CI_UI_SIMULATOR_DEVICE_TYPE'] and device['name'] == os.environ['CI_UI_SIMULATOR_DEVICE_NAME'] for device in device_types):
+              raise SystemExit('The shared UI build simulator device type is unavailable')
+          PY_SIMULATOR
+          simulator_id=$(xcrun simctl create "CI UI shard $CI_UI_SHARD" "$CI_UI_SIMULATOR_DEVICE_TYPE" "$CI_UI_SIMULATOR_RUNTIME")
+          echo "CI_SIMULATOR_ID=$simulator_id" >> "$GITHUB_ENV"
+          # Single-worker runs use this isolated device; parallel runs boot clones.
+          if [ "$CI_UI_WORKERS" = 1 ]; then
+            xcrun simctl boot "$simulator_id"
+          fi
+
+      - name: Check UI regressions before running the complete shard
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$CI_UI_WORKERS" = 1 ]; then
+            xcrun simctl bootstatus "$CI_SIMULATOR_ID" -b > ci-output/simulator-boot.log 2>&1
+          fi
+          # Fail known broken paths early. A passing preflight is followed by the
+          # entire shard, with its independent completeness/no-skips guard.
+          test_command=(xcodebuild test-without-building
+            -xctestrun "$CI_UI_XCTESTRUN"
+            -enableCodeCoverage YES
+            -destination "platform=iOS Simulator,id=$CI_SIMULATOR_ID"
+            -resultBundlePath "$GITHUB_WORKSPACE/ci-output/UIPreflight.xcresult")
+          test_command+=(-test-timeouts-enabled YES
+            -default-test-execution-time-allowance 300
+            -maximum-test-execution-time-allowance 300)
+          test -s ci-output/ui-preflight-tests.txt
+          while IFS= read -r test_case; do
+            test_command+=("-only-testing:$test_case")
+          done < ci-output/ui-preflight-tests.txt
+          if [ "$CI_UI_WORKERS" = 1 ]; then
+            test_command+=(-parallel-testing-enabled NO)
+          else
+            test_command+=(-parallel-testing-enabled YES -parallel-testing-worker-count "$CI_UI_WORKERS")
+          fi
+          CI_TEST_PROGRESS=1 python3 scripts/run-ui-tests.py \
+            --log ci-output/ui-preflight.log --simulator "$CI_SIMULATOR_ID" --workers "$CI_UI_WORKERS" \
+            -- "${test_command[@]}"
+          xcrun xcresulttool get test-results summary --path ci-output/UIPreflight.xcresult > ci-output/ui-preflight-summary.json
+          python3 scripts/verify-ui-test-results.py ci-output/ui-preflight-summary.json --shard "$CI_UI_SHARD" --count "$CI_UI_SHARD_COUNT" --preflight
+
+      - name: Restart simulator before the complete test suite
+        timeout-minutes: 5
+        shell: bash
+        run: |
+          set -euo pipefail
+          # End the preflight session before launching the complete shard.
+          # A stuck accessibility/event-loop service can otherwise hang app.launch().
+          xcrun simctl shutdown all > ci-output/simulator-restart.log 2>&1
+          if [ "$CI_UI_WORKERS" = 1 ]; then
+            xcrun simctl boot "$CI_SIMULATOR_ID" >> ci-output/simulator-restart.log 2>&1
+            xcrun simctl bootstatus "$CI_SIMULATOR_ID" -b >> ci-output/simulator-restart.log 2>&1
+          fi
+
+      - name: Run selected test suite without rebuilding
+        timeout-minutes: 120
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$CI_UI_WORKERS" = 1 ]; then
+            xcrun simctl bootstatus "$CI_SIMULATOR_ID" -b > ci-output/simulator-boot.log 2>&1
+          fi
+          test_command=(xcodebuild test-without-building
+            -xctestrun "$CI_UI_XCTESTRUN"
+            -enableCodeCoverage YES
+            -destination "platform=iOS Simulator,id=$CI_SIMULATOR_ID"
+            -resultBundlePath "$GITHUB_WORKSPACE/ci-output/MoodTests.xcresult")
+          test_command+=(-test-timeouts-enabled YES
+            -default-test-execution-time-allowance 300
+            -maximum-test-execution-time-allowance 300)
+          test -s ci-output/ui-test-classes.txt
+          while IFS= read -r test_class; do
+            test_command+=("-only-testing:$test_class")
+          done < ci-output/ui-test-classes.txt
+          if [ "$CI_UI_WORKERS" = 1 ]; then
+            test_command+=(-parallel-testing-enabled NO)
+          else
+            # Each worker receives its own simulator clone of the shared build.
+            test_command+=(-parallel-testing-enabled YES -parallel-testing-worker-count "$CI_UI_WORKERS")
+          fi
+          CI_TEST_PROGRESS=1 python3 scripts/run-ui-tests.py \
+            --log ci-output/mood-tests.log --simulator "$CI_SIMULATOR_ID" --workers "$CI_UI_WORKERS" \
+            -- "${test_command[@]}"
+          xcrun xcresulttool get test-results summary --path ci-output/MoodTests.xcresult > ci-output/mood-tests-summary.json
+          python3 scripts/verify-ui-test-results.py ci-output/mood-tests-summary.json --shard "$CI_UI_SHARD" --count "$CI_UI_SHARD_COUNT"
+
+      - name: Collect test summaries and UI failure attachments
+        if: always()
+        shell: bash
+        run: |
+          if [ -d ci-output/UIPreflight.xcresult ]; then
+            xcrun xcresulttool get test-results summary --path ci-output/UIPreflight.xcresult > ci-output/ui-preflight-summary.json 2> ci-output/preflight-summary-errors.log || true
+            xcrun xcresulttool export attachments --path ci-output/UIPreflight.xcresult --output-path ci-output/ui-preflight-attachments --only-failures > ci-output/preflight-attachment-export.log 2>&1 || true
+          fi
+          if [ -d ci-output/MoodTests.xcresult ]; then
+            xcrun xcresulttool get test-results summary --path ci-output/MoodTests.xcresult > ci-output/test-summary.json 2> ci-output/summary-errors.log || true
+            xcrun xcresulttool export attachments --path ci-output/MoodTests.xcresult --output-path ci-output/ui-attachments --only-failures > ci-output/attachment-export.log 2>&1 || true
+          fi
+
+      - name: Report measured coverage and test-writing priorities
+        if: always()
+        shell: bash
+        run: |
+          if [ -d ci-output/MoodTests.xcresult ]; then
+            xcrun xccov view --report --json ci-output/MoodTests.xcresult > ci-output/coverage-raw.json 2> ci-output/coverage-export.log || true
+          fi
+          label="$CI_TEST_SCHEME (shard $CI_UI_SHARD/$CI_UI_SHARD_COUNT)"
+          python3 scripts/report-test-coverage.py \
+            --coverage ci-output/coverage-raw.json \
+            --summary ci-output/test-summary.json \
+            --scheme "Introspective.xcodeproj/xcshareddata/xcschemes/$CI_TEST_SCHEME.xcscheme" \
+            --kind "$CI_BUILD_KIND" --shard "$CI_UI_SHARD" --shard-count "$CI_UI_SHARD_COUNT" \
+            --label "$label" \
+            --json ci-output/coverage-priorities.json > ci-output/coverage.md
+          cat ci-output/coverage.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Report UI execution timings
+        if: always()
+        shell: bash
+        run: |
+          python3 scripts/report-ui-test-timings.py --log ci-output/mood-tests.log --summary ci-output/test-summary.json --json ci-output/ui-timings.json > ci-output/ui-timings.md
+          cat ci-output/ui-timings.md >> "$GITHUB_STEP_SUMMARY"
+          if [ -f ci-output/ui-preflight.log ]; then
+            python3 scripts/report-ui-test-timings.py --log ci-output/ui-preflight.log --summary ci-output/ui-preflight-summary.json --json ci-output/ui-preflight-timings.json > ci-output/ui-preflight-timings.md
+            echo 'Additional UI preflight (not a replacement for full-shard coverage):' >> "$GITHUB_STEP_SUMMARY"
+            cat ci-output/ui-preflight-timings.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Record generated changes
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p ci-output
+          git status --short > ci-output/working-tree-status.txt
+          git diff --stat > ci-output/generated-changes.txt
+
+      - name: Upload build diagnostics
+        if: always()
+        uses: ./.github/actions/upload-diagnostics
+        with:
+          name: ios-26-ui-${{ matrix.shard }}-diagnostics-attempt-${{ github.run_attempt }}
+          path: ci-output/
 
   build:
-    # Preserve the existing check name and require every selected validation job.
+    # Preserve the existing required check and reject unexpected skipped suites.
     name: Unsigned iOS 26 build
-    needs: validation
+    needs: [validation, ui-build, ui-tests]
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - name: Require every selected validation job
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Require every selected validation and UI job
         env:
+          SELECTED_SUITE: ${{ inputs.suite }}
           VALIDATION_RESULT: ${{ needs.validation.result }}
-        run: test "$VALIDATION_RESULT" = success
+          UI_BUILD_RESULT: ${{ needs.ui-build.result }}
+          UI_TESTS_RESULT: ${{ needs.ui-tests.result }}
+        shell: bash
+        run: |
+          python3 scripts/verify-ci-job-results.py \
+            --suite "$SELECTED_SUITE" --validation "$VALIDATION_RESULT" \
+            --ui-build "$UI_BUILD_RESULT" --ui-tests "$UI_TESTS_RESULT"
