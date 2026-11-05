@@ -46,8 +46,15 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		Globals.testing = CommandLine.arguments.contains("--testing")
 		Globals.functionalTesting = CommandLine.arguments.contains("--functional-testing")
 		Globals.uiTesting = CommandLine.arguments.contains("--ui-testing")
+		#if DEBUG
+		UILaunchProfileRecorder.activate(environment: ProcessInfo.processInfo.environment, isUITesting: Globals.uiTesting)
+		UILaunchProfileRecorder.current?.record(.willFinishBegin)
+		#endif
 
 		Me.registerDependencies()
+		#if DEBUG
+		UILaunchProfileRecorder.current?.record(.dependenciesReady)
+		#endif
 		if Globals.uiTesting {
 			let dashboardSuite = "com.bnova.Introspective.dashboard-ui-tests"
 			UserDefaults(suiteName: dashboardSuite)?.removePersistentDomain(forName: dashboardSuite)
@@ -56,12 +63,14 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		}
 
 		#if DEBUG
+		UILaunchProfileRecorder.current?.record(.preferencesReady)
 		// Seed only the UI runner's fresh database, before storyboard controllers fetch.
 		do {
 			try UITestFixtureLoader.load(environment: ProcessInfo.processInfo.environment, isUITesting: Globals.uiTesting)
 		} catch {
 			fatalError("Failed to prepare UI test fixtures: \(error)")
 		}
+		UILaunchProfileRecorder.current?.record(.fixturesReady)
 		#endif
 
 		userNotificationDelegate = UserNotificationDelegate(window)
@@ -69,6 +78,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		let center = UNUserNotificationCenter.current()
 		center.setNotificationCategories(UserNotificationDelegate.categories)
 		center.delegate = userNotificationDelegate
+		#if DEBUG
+		UILaunchProfileRecorder.current?.record(.willFinishEnd)
+		#endif
 
 		return true
 	}
@@ -77,6 +89,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		_: UIApplication,
 		didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]? = nil
 	) -> Bool {
+		#if DEBUG
+		UILaunchProfileRecorder.current?.record(.didFinishBegin)
+		defer { UILaunchProfileRecorder.current?.record(.didFinishEnd) }
+		#endif
 		// The storyboard window is available here, including on notification launches.
 		userNotificationDelegate = UserNotificationDelegate(window)
 		UNUserNotificationCenter.current().delegate = userNotificationDelegate
@@ -124,6 +140,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	final func applicationDidBecomeActive(_: UIApplication) {
+		#if DEBUG
+		UILaunchProfileRecorder.current?.record(.appActive)
+		#endif
 		// Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 		if Me.wasInBackground {
 			// not necessary on startup because context is always pulled fresh on app start. this allows faster startup

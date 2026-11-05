@@ -300,6 +300,7 @@
 		7A90669D1B9C98D98F012CD029CDC987 /* EqualToSelectOneAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E399F0A5F95193DF1DC17989EE29EB77 /* EqualToSelectOneAttributeRestrictionUnitTests.swift */; };
 		7AA97B0BB48D2476FD8DF77B /* TimelineBehaviorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D77EA19B284BC4DA3C188FA3 /* TimelineBehaviorTests.swift */; };
 		7B49793E5FEC5D50E6FB05D3379BFC82 /* ImporterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1D0A28FCAA782F2BA7246F2454707D /* ImporterTest.swift */; };
+		7B52C96A8B6DB924CF11EE4D /* UILaunchProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11C20CF3F03BBA94F979452 /* UILaunchProfile.swift */; };
 		7B5E3A521054BB300630BE5FBEEDB96D /* NavigationItemMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0740508A6FD914BE190754E72F9087DD /* NavigationItemMatchers.swift */; };
 		7BDC54ADC99BF92F6D0D5B26F0A21305 /* MedicationDoseQueryFunctionalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E8C6614C24D572F7EDCA625298C92F /* MedicationDoseQueryFunctionalTest.swift */; };
 		7C84F6FFE7CDDB27BF5448C1771DBECD /* CommonMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976D688E8F57A4DA0C45A826B0ACDEC1 /* CommonMocks.swift */; };
@@ -569,6 +570,7 @@
 		EB964CA1E70CEF053EF79E80606CC116 /* DayOfWeekAttributeUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3439338891593EF14221EAF27ADF208 /* DayOfWeekAttributeUnitTests.swift */; };
 		EBC8C805974F8B27D959FA230C916E36 /* DoesNotHaveTagAttributeRestrictionFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC841EBB913E51427C6ECD94A208C46 /* DoesNotHaveTagAttributeRestrictionFunctionalTests.swift */; };
 		ECDBB353289565A1433B22EFA567A29C /* SampleUtilUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF4AE2AF490B95F56856306DCFDA7677 /* SampleUtilUnitTests.swift */; };
+		ECDCEF549F772CB8B39DBECF /* UILaunchProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11C20CF3F03BBA94F979452 /* UILaunchProfile.swift */; };
 		ECEC25CB9E45F7E7EDD5889FCF2A4F99 /* SampleGroupInformationMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 439009DF416FAA5E01DA7CD551D3A855 /* SampleGroupInformationMocks.swift */; };
 		ED26F649599AFFDF567B2F18769DDA17 /* ChooseInformationToGraphTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C623405165FC71014E9008AEA2DC8BC /* ChooseInformationToGraphTableViewController.swift */; };
 		ED4321C35164A534A164F2FD7FDCC1D2 /* ExportDataTableViewControllerUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EDDFA9B00EE42C6AE8D660F34851562 /* ExportDataTableViewControllerUnitTests.swift */; };
@@ -1139,6 +1141,7 @@
 		BFD6DF2FD36A97E487758A05 /* PinnedQueryDashboardViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PinnedQueryDashboardViewController.swift; sourceTree = "<group>"; };
 		BFD71FA3FAB9E75505AA5F1F382EBF59 /* PickerMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerMatchers.swift; sourceTree = "<group>"; };
 		BFE301C2F2247DBBEDE6822A654DD4F1 /* MoodMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodMock.swift; sourceTree = "<group>"; };
+		C11C20CF3F03BBA94F979452 /* UILaunchProfile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UILaunchProfile.swift; sourceTree = "<group>"; };
 		C1ADC6C6F1E17C13F640AA9741585DD0 /* StringMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringMatchers.swift; sourceTree = "<group>"; };
 		C1C4B550FFD974458EB56C21773B8359 /* MedicationFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationFunctionalTests.swift; sourceTree = "<group>"; };
 		C202E12E8BC50D2BB819B9122AE7A60A /* WeightUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightUnitTests.swift; sourceTree = "<group>"; };
@@ -1810,6 +1813,7 @@
 			children = (
 				71010573F33E3E248D2CF2AD /* UITestFixtures.swift */,
 				2BDB434BB6EA5FB6A9C7BC6F /* UITestFixtureLoader.swift */,
+				C11C20CF3F03BBA94F979452 /* UILaunchProfile.swift */,
 			);
 			name = TestSupport;
 			path = TestSupport;
@@ -4083,6 +4087,7 @@
 				99CDD794BECC45661FE09C78 /* MoodTrackingUITests.swift in Sources */,
 				16ACD678637FCF88BE42FD6E /* PinnedQueryDashboardUITests.swift in Sources */,
 				9E4B984E20A433E485BB7217 /* QueryInspectionUITests.swift in Sources */,
+				7B52C96A8B6DB924CF11EE4D /* UILaunchProfile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4288,6 +4293,7 @@
 				34AF8EA5FF2E2B3766EF52C5 /* QueryInspectionDefinition.swift in Sources */,
 				317B94124AD787A26DD04B64 /* QueryInspectionService.swift in Sources */,
 				9577437714D1A81DBF4E9DB7 /* QueryInspectionViewController.swift in Sources */,
+				ECDCEF549F772CB8B39DBECF /* UILaunchProfile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

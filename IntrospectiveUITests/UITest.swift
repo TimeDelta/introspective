@@ -41,10 +41,14 @@ class UITest: XCTestCase {
 			XCTFail("Could not encode UI fixtures: \(error)", file: file, line: line)
 			return
 		}
+		let traceID = UUID().uuidString
+		application.launchEnvironment[UILaunchProfile.traceEnvironmentKey] = traceID
 		let launchStarted = ProcessInfo.processInfo.systemUptime
 		application.launch()
+		let launchEnded = ProcessInfo.processInfo.systemUptime
 		hasLaunched = true
-		print("CI_UI_LAUNCH_SECONDS \(ProcessInfo.processInfo.systemUptime - launchStarted)")
+		print("CI_UI_LAUNCH_SECONDS \(launchEnded - launchStarted)")
+		print("CI_UI_LAUNCH_TRACE {\"schema\":1,\"traceID\":\"\(traceID)\",\"startUptime\":\(launchStarted),\"endUptime\":\(launchEnded)}")
 		openInitialScreen()
 	}
 
