@@ -222,7 +222,12 @@ class StartupProfiling(unittest.TestCase):
     def test_duplicate_profile_ids_are_excluded(self):
         identity = 'abcdef01-2345-4567-89ab-cdef01234567'
         self.profile(identity)
-        self.profile(identity.upper(), filename=f'{identity.upper()}.json')
+        # Case alone cannot distinguish files on the macOS runner's filesystem.
+        # Compact and hyphenated spellings remain distinct files but normalize
+        # to the same UUID, exercising the actual duplicate-profile guard.
+        compact = uuid.UUID(identity).hex.upper()
+        self.profile(identity.upper(), filename=f'{compact}.json')
+        self.assertEqual(len(list(self.directory.glob('*.json'))), 2)
         data = self.startup(self.trace(identity))
         self.assert_unavailable(data)
         self.assertEqual(data['duplicateProfileCount'], 1)
