@@ -364,12 +364,16 @@ final class DiscreteRatingCellRenderingTests: UnitTest {
 			let isSelected = rating == selected
 			let expectedWidth = baseWidth + (isSelected ? 5 : 0)
 			let inset: CGFloat = isSelected ? 0 : 5
-			let widths = button.constraints.filter { $0.isActive && $0.firstAttribute == .width && $0.secondItem == nil }
+			let widths = button.constraints.filter {
+				$0.isActive && $0.identifier == "discreteRating" &&
+				$0.firstAttribute == .width && $0.secondItem == nil
+			}
 			XCTAssertEqual(widths.count, 1, file: file, line: line)
 			if let width = widths.first { XCTAssertEqual(width.constant, expectedWidth, accuracy: 0.001, file: file, line: line) }
 			for (attribute, constant) in [(NSLayoutConstraint.Attribute.top, inset), (.bottom, -inset)] {
 				let edges = controls.content.constraints.filter {
-					$0.isActive && ($0.firstItem as? UIView) === button && $0.firstAttribute == attribute &&
+					$0.isActive && $0.identifier == "discreteRating" &&
+					($0.firstItem as? UIView) === button && $0.firstAttribute == attribute &&
 					($0.secondItem as? UIView) === controls.content && $0.secondAttribute == attribute
 				}
 				XCTAssertEqual(edges.count, 1, file: file, line: line)
@@ -503,7 +507,9 @@ private struct DiscreteRatingCellControls {
 
 	var buttons: [UIButton] { content.subviews.compactMap { $0 as? UIButton } }
 	var renderConstraints: [NSLayoutConstraint] {
-		(content.constraints + buttons.flatMap { $0.constraints }).filter { $0.isActive }
+		(content.constraints + buttons.flatMap { $0.constraints }).filter {
+			$0.isActive && $0.identifier == "discreteRating"
+		}
 	}
 
 	func layout(width: CGFloat? = nil) {
