@@ -615,6 +615,14 @@ jobs:
           xcrun xcresulttool get test-results summary --path ci-output/UIPreflight.xcresult > ci-output/ui-preflight-summary.json
           python3 scripts/verify-ui-test-results.py ci-output/ui-preflight-summary.json --shard "$CI_UI_SHARD" --count "$CI_UI_SHARD_COUNT" --preflight
 
+      - name: Collect preflight app launch profiles
+        if: always()
+        shell: bash
+        run: |
+          python3 scripts/collect-ui-launch-profiles.py \
+            --simulator "${CI_SIMULATOR_ID:-}" --workers "$CI_UI_WORKERS" \
+            --log ci-output/ui-preflight.log --output ci-output/ui-preflight-launch-profiles
+
       - name: Restart simulator before the complete test suite
         timeout-minutes: 5
         shell: bash
@@ -660,6 +668,14 @@ jobs:
           xcrun xcresulttool get test-results summary --path ci-output/MoodTests.xcresult > ci-output/mood-tests-summary.json
           python3 scripts/verify-ui-test-results.py ci-output/mood-tests-summary.json --shard "$CI_UI_SHARD" --count "$CI_UI_SHARD_COUNT"
 
+      - name: Collect full-suite app launch profiles
+        if: always()
+        shell: bash
+        run: |
+          python3 scripts/collect-ui-launch-profiles.py \
+            --simulator "${CI_SIMULATOR_ID:-}" --workers "$CI_UI_WORKERS" \
+            --log ci-output/mood-tests.log --output ci-output/ui-launch-profiles
+
       - name: Collect test summaries and UI failure attachments
         if: always()
         shell: bash
@@ -694,10 +710,10 @@ jobs:
         if: always()
         shell: bash
         run: |
-          python3 scripts/report-ui-test-timings.py --log ci-output/mood-tests.log --summary ci-output/test-summary.json --json ci-output/ui-timings.json > ci-output/ui-timings.md
+          python3 scripts/report-ui-test-timings.py --log ci-output/mood-tests.log --summary ci-output/test-summary.json --startup-profiles ci-output/ui-launch-profiles --json ci-output/ui-timings.json > ci-output/ui-timings.md
           cat ci-output/ui-timings.md >> "$GITHUB_STEP_SUMMARY"
           if [ -f ci-output/ui-preflight.log ]; then
-            python3 scripts/report-ui-test-timings.py --log ci-output/ui-preflight.log --summary ci-output/ui-preflight-summary.json --json ci-output/ui-preflight-timings.json > ci-output/ui-preflight-timings.md
+            python3 scripts/report-ui-test-timings.py --log ci-output/ui-preflight.log --summary ci-output/ui-preflight-summary.json --startup-profiles ci-output/ui-preflight-launch-profiles --json ci-output/ui-preflight-timings.json > ci-output/ui-preflight-timings.md
             echo 'Additional UI preflight (not a replacement for full-shard coverage):' >> "$GITHUB_STEP_SUMMARY"
             cat ci-output/ui-preflight-timings.md >> "$GITHUB_STEP_SUMMARY"
           fi

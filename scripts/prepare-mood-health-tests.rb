@@ -37,6 +37,7 @@ end
   Introspective/UI/Query/QueryInspectionViewController.swift
   TestSupport/UITestFixtures.swift
   TestSupport/UITestFixtureLoader.swift
+  TestSupport/UILaunchProfile.swift
   Introspective/UI/Explore/MetricContextViewController.swift
   Introspective/UI/Explore/ActivityLevelsViewController.swift
   Introspective/UI/Explore/PinnedQueryDashboardService.swift

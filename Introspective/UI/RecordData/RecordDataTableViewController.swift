@@ -79,6 +79,14 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		hideKeyboardOnTapNonTextInput()
 	}
 
+	#if DEBUG
+	final override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		// A lifecycle appearance endpoint, not a measurement of the first rendered frame.
+		UILaunchProfileRecorder.current?.record(.initialViewAppeared)
+	}
+	#endif
+
 	@objc private func showLostItems() { pushToNavigationController(LostItemsViewController(style: .grouped)) }
 	@objc private func showMoodTools() { pushToNavigationController(MoodToolsViewController(style: .grouped)) }
 	@objc private func showMoodPresets() {
