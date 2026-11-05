@@ -52,7 +52,6 @@ final class RecordContinuousFatigueTableViewCell: UITableViewCell {
 	public final override func awakeFromNib() {
 		super.awakeFromNib()
 		reset()
-		updateUI()
 		observe(selector: #selector(noteSaved), name: Me.noteChangedNotification)
 		observe(selector: #selector(ratingSaved), name: Me.ratingChanged)
 		observe(selector: #selector(updateUI), name: FatigueUiUtilImpl.minRatingChanged)
@@ -168,13 +167,15 @@ final class RecordContinuousFatigueTableViewCell: UITableViewCell {
 	@objc private final func updateUI() {
 		let min = injected(Settings.self).minFatigue
 		let max = injected(Settings.self).maxFatigue
+		let uiUtil = injected(FatigueUiUtil.self)
 		ratingSlider.setValue(Float((rating - min) / (max - min)), animated: false)
-		ratingSlider.thumbTintColor = injected(FatigueUiUtil.self)
+		ratingSlider.thumbTintColor = uiUtil
 			.colorForFatigue(rating: rating, minRating: min, maxRating: max)
-		ratingButton.setTitle(injected(FatigueUiUtil.self).valueToString(rating), for: .normal)
-		ratingButton.accessibilityValue = injected(FatigueUiUtil.self).valueToString(rating)
+		let ratingText = uiUtil.valueToString(rating)
+		ratingButton.setTitle(ratingText, for: .normal)
+		ratingButton.accessibilityValue = ratingText
 		ratingRangeLabel
 			.text =
-			"(\(injected(FatigueUiUtil.self).valueToString(min))-\(injected(FatigueUiUtil.self).valueToString(max)))"
+			"(\(uiUtil.valueToString(min))-\(uiUtil.valueToString(max)))"
 	}
 }

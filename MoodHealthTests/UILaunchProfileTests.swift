@@ -70,6 +70,54 @@ final class UILaunchProfileTests: XCTestCase {
 		}
 	}
 
+	func testEarlyStagesKeepStableNamesOrderAndSchemaOneRoundTrip() throws {
+		XCTAssertEqual(UILaunchProfile.Stage.processEntry.rawValue, "process_entry")
+		XCTAssertEqual(UILaunchProfile.Stage.delegateInitialized.rawValue, "delegate_initialized")
+		XCTAssertEqual(UILaunchProfile.Stage(rawValue: "process_entry"), .processEntry)
+		XCTAssertEqual(UILaunchProfile.Stage(rawValue: "delegate_initialized"), .delegateInitialized)
+		let profile = try recorder(clock: clock())
+		XCTAssertTrue(profile.record(.processEntry))
+		XCTAssertTrue(profile.record(.delegateInitialized))
+		XCTAssertTrue(profile.record(.willFinishBegin))
+		XCTAssertFalse(profile.record(.processEntry))
+		XCTAssertFalse(profile.record(.delegateInitialized))
+		XCTAssertEqual(profile.snapshot.stages,
+			["process_entry": 100, "delegate_initialized": 101, "will_finish_begin": 102])
+		XCTAssertNil(profile.snapshot.readyUptime)
+		let encoded = try JSONEncoder().encode(profile.snapshot)
+		let decoded = try JSONDecoder().decode(UILaunchProfile.self, from: encoded)
+		XCTAssertEqual(decoded.schema, 1)
+		XCTAssertEqual(decoded, profile.snapshot)
+	}
+
+	func testSchemaOneProfilesWithoutEarlyStagesStillDecodeWithTheSameReadiness() throws {
+		let oldStages: [String: TimeInterval] = [
+			"will_finish_begin": 100, "dependencies_ready": 101, "preferences_ready": 102,
+			"fixtures_ready": 103, "will_finish_end": 104, "did_finish_begin": 105,
+			"did_finish_end": 106, "app_active": 107, "initial_view_appeared": 108,
+		]
+		let payload: [String: Any] = ["schema": 1, "traceID": UUID().uuidString, "stages": oldStages]
+		let data = try JSONSerialization.data(withJSONObject: payload)
+		let profile = try JSONDecoder().decode(UILaunchProfile.self, from: data)
+		XCTAssertEqual(profile.stages, oldStages)
+		XCTAssertNil(profile.stages[UILaunchProfile.Stage.processEntry.rawValue])
+		XCTAssertNil(profile.stages[UILaunchProfile.Stage.delegateInitialized.rawValue])
+		XCTAssertEqual(profile.readyUptime, 108)
+	}
+
+	func testEarlyStagesLeaveReadinessCallbacksUnchanged() throws {
+		let profile = try recorder(clock: clock())
+		profile.record(.processEntry)
+		profile.record(.delegateInitialized)
+		XCTAssertNil(profile.snapshot.readyUptime)
+		profile.record(.didFinishEnd)
+		XCTAssertNil(profile.snapshot.readyUptime)
+		profile.record(.appActive)
+		XCTAssertNil(profile.snapshot.readyUptime)
+		profile.record(.initialViewAppeared)
+		XCTAssertEqual(profile.snapshot.readyUptime, 104)
+	}
+
 	func testReadyEndpointWaitsForAllCallbacksAndUsesTheLatestInEitherOrder() throws {
 		let orders: [[UILaunchProfile.Stage]] = [
 			[.didFinishEnd, .appActive, .initialViewAppeared],
@@ -130,7 +178,11 @@ final class UILaunchProfileTests: XCTestCase {
 		invalidStage["stages"] = ["record_note": 0]
 		var invalidTime = valid
 		invalidTime["stages"] = ["will_finish_begin": -1]
-		for invalid in [invalidSchema, invalidTrace, invalidStage, invalidTime] {
+		var invalidProcessTime = valid
+		invalidProcessTime["stages"] = ["process_entry": -1]
+		var invalidDelegateTime = valid
+		invalidDelegateTime["stages"] = ["delegate_initialized": -1]
+		for invalid in [invalidSchema, invalidTrace, invalidStage, invalidTime, invalidProcessTime, invalidDelegateTime] {
 			let data = try JSONSerialization.data(withJSONObject: invalid)
 			XCTAssertThrowsError(try JSONDecoder().decode(UILaunchProfile.self, from: data))
 		}
@@ -140,10 +192,11 @@ final class UILaunchProfileTests: XCTestCase {
 		let started = expectation(description: "Writer started")
 		let completed = expectation(description: "All snapshots written")
 		completed.expectedFulfillmentCount = 3
+		completed.assertForOverFulfill = true
 		let release = DispatchSemaphore(value: 0)
 		let snapshots = LockedSnapshots()
 		let profile = try recorder(clock: clock(), writer: { snapshot in
-			if snapshot.stages.count == 2 {
+			if snapshot.stages.count == 4 {
 				started.fulfill()
 				XCTAssertEqual(release.wait(timeout: .now() + 5), .success,
 					"Snapshot storage must not block lifecycle callbacks")
@@ -151,6 +204,8 @@ final class UILaunchProfileTests: XCTestCase {
 			snapshots.append(snapshot)
 			completed.fulfill()
 		})
+		profile.record(.processEntry)
+		profile.record(.delegateInitialized)
 		profile.record(.willFinishBegin)
 		profile.record(.didFinishEnd)
 		wait(for: [started], timeout: 2)
@@ -160,7 +215,7 @@ final class UILaunchProfileTests: XCTestCase {
 		release.signal()
 		wait(for: [completed], timeout: 2)
 		let captured = snapshots.values
-		XCTAssertEqual(captured.map { $0.stages.count }, [2, 3, 4])
+		XCTAssertEqual(captured.map { $0.stages.count }, [4, 5, 6])
 		guard captured.count == 3 else { return }
 		XCTAssertNil(captured[0].readyUptime)
 		XCTAssertNil(captured[1].readyUptime)
@@ -194,7 +249,7 @@ final class UILaunchProfileTests: XCTestCase {
 		})
 		for stage in UILaunchProfile.Stage.allCases { XCTAssertTrue(profile.record(stage)) }
 		wait(for: [attempted], timeout: 2)
-		XCTAssertEqual(profile.snapshot.readyUptime, 108)
+		XCTAssertEqual(profile.snapshot.readyUptime, 110)
 	}
 
 	private final class LockedSnapshots {

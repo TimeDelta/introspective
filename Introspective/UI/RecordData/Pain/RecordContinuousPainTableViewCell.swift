@@ -54,7 +54,6 @@ final class RecordContinuousPainTableViewCell: UITableViewCell {
 	public final override func awakeFromNib() {
 		super.awakeFromNib()
 		reset()
-		updateUI()
 		observe(selector: #selector(noteSaved), name: Me.noteChangedNotification)
 		observe(selector: #selector(ratingSaved), name: Me.ratingChangedNotification)
 		observe(selector: #selector(updateUI), name: PainUiUtilImpl.minRatingChanged)
@@ -177,13 +176,15 @@ final class RecordContinuousPainTableViewCell: UITableViewCell {
 	@objc private final func updateUI() {
 		let min = injected(Settings.self).minPain
 		let max = injected(Settings.self).maxPain
+		let uiUtil = injected(PainUiUtil.self)
 		ratingSlider.setValue(Float((rating - min) / (max - min)), animated: false)
-		ratingSlider.thumbTintColor = injected(PainUiUtil.self)
+		ratingSlider.thumbTintColor = uiUtil
 			.colorForPain(rating: rating, minRating: min, maxRating: max)
-		ratingButton.setTitle(injected(PainUiUtil.self).valueToString(rating), for: .normal)
-		ratingButton.accessibilityValue = injected(PainUiUtil.self).valueToString(rating)
+		let ratingText = uiUtil.valueToString(rating)
+		ratingButton.setTitle(ratingText, for: .normal)
+		ratingButton.accessibilityValue = ratingText
 		ratingRangeLabel
 			.text =
-			"(\(injected(PainUiUtil.self).valueToString(min))-\(injected(PainUiUtil.self).valueToString(max)))"
+			"(\(uiUtil.valueToString(min))-\(uiUtil.valueToString(max)))"
 	}
 }

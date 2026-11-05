@@ -112,6 +112,50 @@ class UILaunchProfileCollection(unittest.TestCase):
         self.assertNotIn('sensitive', json.dumps(status))
         self.assertNotIn(str(self.container), json.dumps(status))
 
+    def test_optional_early_timing_markers_are_copied_without_adding_missing_fields(self):
+        for index, early in enumerate((
+            {'process_entry': 10.1, 'delegate_initialized': 10.2},
+            {'process_entry': 10.1}, {'delegate_initialized': 10.2},
+        )):
+            with self.subTest(early=early):
+                record = self.profile()
+                record['stages'].update(early)
+                source = self.write_profile(contents=record)
+                original = source.read_bytes()
+                output = self.root / ('early-markers-' + str(index))
+                status = self.collect(output=output)
+                self.assertEqual(status['availability'], 'complete')
+                self.assertEqual(status['copied'], [FIRST])
+                copied = json.loads((output / (FIRST + '.json')).read_text())
+                self.assertEqual(copied, record)
+                self.assertEqual(copied['schema'], 1)
+                self.assertEqual(set(copied), {'schema', 'traceID', 'stages'})
+                self.assertEqual(source.read_bytes(), original)
+
+    def test_early_marker_allowlist_still_rejects_metadata_and_invalid_numbers(self):
+        valid = self.profile()
+        valid['stages'].update(process_entry=10.1, delegate_initialized=10.2)
+        cases = [
+            {**valid, 'private': 'health value'},
+            {**valid, 'process_entry': 10.1},
+            {**valid, 'stages': {**valid['stages'], 'private_health_value': 10.3}},
+        ]
+        for marker in ('process_entry', 'delegate_initialized'):
+            for value in ('health value', True, None, -1, float('nan'), float('inf'), 10 ** 1000):
+                cases.append({**valid, 'stages': {**valid['stages'], marker: value}})
+        for index, record in enumerate(cases):
+            with self.subTest(index=index):
+                source = self.write_profile(contents=record)
+                original = source.read_bytes()
+                output = self.root / ('invalid-early-markers-' + str(index))
+                status = self.collect(output=output)
+                self.assertEqual(status['availability'], 'unavailable')
+                self.assertEqual(status['copied'], [])
+                self.assertEqual(status['missing'], [FIRST])
+                self.assertEqual(set(path.name for path in output.iterdir()), {'collection-status.json'})
+                self.assertEqual(source.read_bytes(), original)
+                self.assertNotIn('health value', json.dumps(status))
+
     def test_separate_phase_does_not_copy_historical_files_and_reuse_is_refused(self):
         self.write_profile()
         self.write_profile(SECOND)

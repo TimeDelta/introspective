@@ -26,7 +26,6 @@ import SampleGroupInformation
 import Samples
 import Settings
 
-@UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
 	private typealias Me = AppDelegate
 
@@ -38,6 +37,13 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 	private final var userNotificationDelegate: UserNotificationDelegate!
 	private let moodTracking = MoodTrackingCoordinator()
 
+	override init() {
+		super.init()
+		#if DEBUG
+		UILaunchProfileRecorder.current?.record(.delegateInitialized)
+		#endif
+	}
+
 	final func application(
 		_: UIApplication,
 		willFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]? = nil
@@ -47,7 +53,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		Globals.functionalTesting = CommandLine.arguments.contains("--functional-testing")
 		Globals.uiTesting = CommandLine.arguments.contains("--ui-testing")
 		#if DEBUG
-		UILaunchProfileRecorder.activate(environment: ProcessInfo.processInfo.environment, isUITesting: Globals.uiTesting)
 		UILaunchProfileRecorder.current?.record(.willFinishBegin)
 		#endif
 

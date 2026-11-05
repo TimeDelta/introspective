@@ -8,6 +8,9 @@ struct UILaunchProfile: Codable, Equatable {
 	static let schemaVersion = 1
 
 	enum Stage: String, CaseIterable {
+		// Optional diagnostics; readiness still depends only on the existing callbacks.
+		case processEntry = "process_entry"
+		case delegateInitialized = "delegate_initialized"
 		case willFinishBegin = "will_finish_begin"
 		case dependenciesReady = "dependencies_ready"
 		case preferencesReady = "preferences_ready"

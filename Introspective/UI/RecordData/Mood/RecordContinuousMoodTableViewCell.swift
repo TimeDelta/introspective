@@ -52,7 +52,6 @@ final class RecordContinuousMoodTableViewCell: UITableViewCell {
 	public final override func awakeFromNib() {
 		super.awakeFromNib()
 		reset()
-		updateUI()
 		observe(selector: #selector(noteSaved), name: Me.noteChangedNotification)
 		observe(selector: #selector(ratingSaved), name: Me.ratingChanged)
 		observe(selector: #selector(updateUI), name: MoodUiUtilImpl.minRatingChanged)
@@ -168,13 +167,15 @@ final class RecordContinuousMoodTableViewCell: UITableViewCell {
 	@objc private final func updateUI() {
 		let min = injected(Settings.self).minMood
 		let max = injected(Settings.self).maxMood
+		let uiUtil = injected(MoodUiUtil.self)
 		ratingSlider.setValue(Float((rating - min) / (max - min)), animated: false)
-		ratingSlider.thumbTintColor = injected(MoodUiUtil.self)
+		ratingSlider.thumbTintColor = uiUtil
 			.colorForMood(rating: rating, minRating: min, maxRating: max)
-		ratingButton.setTitle(injected(MoodUiUtil.self).valueToString(rating), for: .normal)
-		ratingButton.accessibilityValue = injected(MoodUiUtil.self).valueToString(rating)
+		let ratingText = uiUtil.valueToString(rating)
+		ratingButton.setTitle(ratingText, for: .normal)
+		ratingButton.accessibilityValue = ratingText
 		ratingRangeLabel
 			.text =
-			"(\(injected(MoodUiUtil.self).valueToString(min))-\(injected(MoodUiUtil.self).valueToString(max)))"
+			"(\(uiUtil.valueToString(min))-\(uiUtil.valueToString(max)))"
 	}
 }
