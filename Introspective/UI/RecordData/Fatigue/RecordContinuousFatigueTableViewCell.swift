@@ -47,20 +47,22 @@ final class RecordContinuousFatigueTableViewCell: UITableViewCell {
 		didSet { updateUI() }
 	}
 
+	// Supply a private center before awakening to isolate observer delivery in tests.
+	final var observationCenter: NotificationCenter = .default
+
 	// MARK: - UIView Overrides
 
 	public final override func awakeFromNib() {
 		super.awakeFromNib()
 		reset()
-		updateUI()
-		observe(selector: #selector(noteSaved), name: Me.noteChangedNotification)
-		observe(selector: #selector(ratingSaved), name: Me.ratingChanged)
-		observe(selector: #selector(updateUI), name: FatigueUiUtilImpl.minRatingChanged)
-		observe(selector: #selector(updateUI), name: FatigueUiUtilImpl.maxRatingChanged)
+		observationCenter.addObserver(self, selector: #selector(noteSaved), name: Me.noteChangedNotification, object: nil)
+		observationCenter.addObserver(self, selector: #selector(ratingSaved), name: Me.ratingChanged, object: nil)
+		observationCenter.addObserver(self, selector: #selector(updateUI), name: FatigueUiUtilImpl.minRatingChanged, object: nil)
+		observationCenter.addObserver(self, selector: #selector(updateUI), name: FatigueUiUtilImpl.maxRatingChanged, object: nil)
 	}
 
 	deinit {
-		NotificationCenter.default.removeObserver(self)
+		observationCenter.removeObserver(self)
 	}
 
 	// MARK: - Actions
@@ -168,13 +170,15 @@ final class RecordContinuousFatigueTableViewCell: UITableViewCell {
 	@objc private final func updateUI() {
 		let min = injected(Settings.self).minFatigue
 		let max = injected(Settings.self).maxFatigue
+		let uiUtil = injected(FatigueUiUtil.self)
 		ratingSlider.setValue(Float((rating - min) / (max - min)), animated: false)
-		ratingSlider.thumbTintColor = injected(FatigueUiUtil.self)
+		ratingSlider.thumbTintColor = uiUtil
 			.colorForFatigue(rating: rating, minRating: min, maxRating: max)
-		ratingButton.setTitle(injected(FatigueUiUtil.self).valueToString(rating), for: .normal)
-		ratingButton.accessibilityValue = injected(FatigueUiUtil.self).valueToString(rating)
+		let ratingText = uiUtil.valueToString(rating)
+		ratingButton.setTitle(ratingText, for: .normal)
+		ratingButton.accessibilityValue = ratingText
 		ratingRangeLabel
 			.text =
-			"(\(injected(FatigueUiUtil.self).valueToString(min))-\(injected(FatigueUiUtil.self).valueToString(max)))"
+			"(\(uiUtil.valueToString(min))-\(uiUtil.valueToString(max)))"
 	}
 }

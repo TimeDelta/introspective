@@ -20,6 +20,7 @@ MARKER = 'CI_UI_LAUNCH_TRACE '
 MAX_PROFILE_BYTES = 64 * 1024
 UUID_PATTERN = re.compile(r'[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}\Z')
 STAGES = frozenset({
+    'process_entry', 'delegate_initialized',
     'will_finish_begin', 'dependencies_ready', 'preferences_ready', 'fixtures_ready',
     'will_finish_end', 'did_finish_begin', 'did_finish_end', 'app_active',
     'initial_view_appeared',

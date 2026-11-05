@@ -19,13 +19,15 @@ BOOTSTRAP_STAGES = (
     'will_finish_end', 'did_finish_begin', 'did_finish_end',
 )
 READY_STAGES = ('app_active', 'initial_view_appeared')
+EARLY_STAGES = ('process_entry', 'delegate_initialized')
+EARLY_PHASES = ('beforeProcessEntry', 'entryToDelegate', 'delegateToWillFinish', 'afterReady')
 PHASE_NAMES = (
     'dependencies', 'preferences', 'fixtureDatabase', 'willFinishOther',
     'storyboardGap', 'didFinish', 'readyAfterDidFinish',
 )
 TRACE_FIELDS = {'schema', 'traceID', 'startUptime', 'endUptime'}
 PROFILE_FIELDS = {'schema', 'traceID', 'stages'}
-STAGE_FIELDS = set(BOOTSTRAP_STAGES + READY_STAGES)
+STAGE_FIELDS = set(BOOTSTRAP_STAGES + READY_STAGES + EARLY_STAGES)
 
 
 def finite_time(value):
@@ -81,6 +83,11 @@ def startup_profiling(log, directory=None):
         'aggregationErrorCount': 0,
         'profilesDirectoryAvailable': False, 'collectionAvailability': None,
         'cumulativeSeconds': None,
+        'earlyStartup': {
+            'status': 'unavailable', 'pairedCount': 0, 'missingMarkerCount': 0,
+            'incompleteMarkerCount': 0, 'aggregationErrorCount': 0,
+            'cumulativeSeconds': None,
+        },
     }
     traces = defaultdict(list)
     for line in log.splitlines():
@@ -126,6 +133,7 @@ def startup_profiling(log, directory=None):
                     profiles[identity].append(path)
 
     pairs = []
+    early_pairs = []
     for identity, (start, end) in unique.items():
         paths = profiles[identity]
         if not paths:
@@ -149,7 +157,7 @@ def startup_profiling(log, directory=None):
             continue
         chain = [stages[stage] for stage in BOOTSTRAP_STAGES]
         active, appeared = (stages[stage] for stage in READY_STAGES)
-        if (not all(finite_time(value) for value in chain + [active, appeared])
+        if (not all(finite_time(value) for value in stages.values())
                 or any(later < earlier for earlier, later in zip(chain, chain[1:]))
                 or active < chain[0] or appeared < chain[0]):
             result['invalidProfileCount'] += 1
@@ -158,6 +166,23 @@ def startup_profiling(log, directory=None):
         if chain[0] < start or ready > end:
             result['outsideWindowCount'] += 1
             continue
+        early = [stages[stage] for stage in EARLY_STAGES if stage in stages]
+        if any(value < start or value > end for value in early):
+            result['outsideWindowCount'] += 1
+            continue
+        early_chain = early + [chain[0]]
+        if any(later < earlier for earlier, later in zip(early_chain, early_chain[1:])):
+            result['invalidProfileCount'] += 1
+            continue
+        if len(early) == len(EARLY_STAGES):
+            entry, delegate = early
+            early_pairs.append(dict(zip(EARLY_PHASES, (
+                entry - start, delegate - entry, chain[0] - delegate, end - ready,
+            ))))
+        elif early:
+            result['earlyStartup']['incompleteMarkerCount'] += 1
+        else:
+            result['earlyStartup']['missingMarkerCount'] += 1
         phases = [later - earlier for earlier, later in zip(chain, chain[1:])]
         phases.append(ready - chain[-1])
         bootstrap = ready - chain[0]
@@ -174,12 +199,26 @@ def startup_profiling(log, directory=None):
         except OverflowError:
             # Keep unavailable values rather than emitting non-finite JSON numbers.
             result['aggregationErrorCount'] = 1
-            return result
-        result['cumulativeSeconds'] = cumulative
-        result['status'] = 'complete' if (
-            result['pairedCount'] == result['traceCount']
-            and result['collectionAvailability'] in (None, 'complete')
-        ) else 'partial'
+        else:
+            result['cumulativeSeconds'] = cumulative
+            result['status'] = 'complete' if (
+                result['pairedCount'] == result['traceCount']
+                and result['collectionAvailability'] in (None, 'complete')
+            ) else 'partial'
+    early_result = result['earlyStartup']
+    early_result['pairedCount'] = len(early_pairs)
+    if early_pairs:
+        try:
+            early_result['cumulativeSeconds'] = {
+                key: math.fsum(pair[key] for pair in early_pairs) for key in EARLY_PHASES
+            }
+        except OverflowError:
+            early_result['aggregationErrorCount'] = 1
+        else:
+            early_result['status'] = 'complete' if (
+                len(early_pairs) == result['traceCount']
+                and result['collectionAvailability'] in (None, 'complete')
+            ) else 'partial'
     return result
 
 
@@ -260,6 +299,21 @@ def markdown(data):
             lines += [f"Profile collection availability: {startup['collectionAvailability']}."]
         if startup['aggregationErrorCount']:
             lines += ['Paired cumulative times are unavailable because their sum exceeds the supported numeric range.']
+        early = startup['earlyStartup']
+        lines += ['', f"Early startup profiling: {early['status']}; paired {early['pairedCount']} of {startup['traceCount']} launch traces."]
+        if early['cumulativeSeconds'] is None:
+            lines += ['Process-entry and delegate intervals are unavailable; older or missing markers do not represent zero time.']
+        else:
+            labels = ('Launch call to Swift main entry', 'Main entry to delegate initialization',
+                      'Delegate initialization to will-finish entry', 'Recorded ready to launch return')
+            lines += ['', '| Launch boundary interval | Cumulative seconds (early-marker pairs only) |', '| --- | ---: |']
+            lines += [f"| {label} | {early['cumulativeSeconds'][key]:.3f} |" for key, label in zip(EARLY_PHASES, labels)]
+        lines += [
+            'Main entry is the first explicit Swift main body marker, after runtime loading. '
+            'These boundaries locate elapsed time; they do not isolate termination, runtime loading, UIKit, XCTest automation, or scheduling costs.',
+            f"Early marker quality: absent {early['missingMarkerCount']}; incomplete {early['incompleteMarkerCount']}; "
+            f"aggregation errors {early['aggregationErrorCount']}.",
+        ]
     lines += ['', 'Slowest individual attempts:', '']
     lines += [f"- `{r['class']}/{r['test']}`: {r['seconds']:.1f}s ({r['result']})" for r in data['slowest']]
     return '\n'.join(lines) + '\n'
