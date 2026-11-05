@@ -79,7 +79,7 @@ public final class DiscreteFatigueRatingTableViewCell: UITableViewCell {
 				updateButtonWidths()
 				updateSelectedRating()
 
-				post(.fatigueRatingChanged, userInfo: [.number: Double(rating)])
+				post(.fatigueRatingChanged, object: self, userInfo: [.number: Double(rating)])
 			} else {
 				Me.log.error("Unable to get rating from button title")
 			}

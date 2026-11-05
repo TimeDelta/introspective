@@ -79,7 +79,7 @@ public final class DiscreteMoodRatingTableViewCell: UITableViewCell {
 				updateButtonWidths()
 				updateSelectedRating()
 
-				post(.moodRatingChanged, userInfo: [.number: Double(rating)])
+				post(.moodRatingChanged, object: self, userInfo: [.number: Double(rating)])
 			} else {
 				Me.log.error("Unable to get rating from button title")
 			}

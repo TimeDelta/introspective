@@ -318,7 +318,8 @@ final class DiscreteRatingEditorTests: UnitTest {
 		XCTAssertEqual(posts.count, ratings.count, file: file, line: line)
 		for (post, rating) in zip(posts, ratings) {
 			XCTAssertEqual(post.name, controls.kind.notification, file: file, line: line)
-			XCTAssertTrue((post.object as? UITableViewCell) === controls.cell, file: file, line: line)
+			XCTAssertTrue((post.object as? UITableViewCell) === controls.cell,
+				"The rating notification must identify the editing cell as its sender", file: file, line: line)
 			XCTAssertEqual(post.userInfo?.count, 1, file: file, line: line)
 			XCTAssertTrue(post.userInfo?[UserInfoKey.number] is Double, file: file, line: line)
 			XCTAssertEqual(post.userInfo?[UserInfoKey.number] as? Double, Double(rating), file: file, line: line)

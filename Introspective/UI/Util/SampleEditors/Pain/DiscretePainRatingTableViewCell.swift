@@ -79,7 +79,7 @@ public final class DiscretePainRatingTableViewCell: UITableViewCell {
 				updateButtonWidths()
 				updateSelectedRating()
 
-				post(.painRatingChanged, userInfo: [.number: Double(rating)])
+				post(.painRatingChanged, object: self, userInfo: [.number: Double(rating)])
 			} else {
 				Me.log.error("Unable to get rating from button title")
 			}
