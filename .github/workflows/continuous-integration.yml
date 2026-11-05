@@ -21,8 +21,8 @@ on:
       ui_shards:
         description: UI runners (one runs the complete suite on a single runner)
         type: choice
-        options: ['2', '1']
-        default: '2'
+        options: ['3', '2', '1']
+        default: '3'
   push:
     branches: [master]
   pull_request:
@@ -46,11 +46,15 @@ jobs:
       matrix:
         include: >-
           ${{ inputs.suite == 'legacy' && fromJSON('[{"kind":"legacy"}]') ||
-              inputs.suite == 'ui' && (inputs.ui_shards == '1' && fromJSON('[{"kind":"ui","shard":1,"shard_count":1}]') || fromJSON('[{"kind":"ui","shard":1,"shard_count":2},{"kind":"ui","shard":2,"shard_count":2}]')) ||
+              inputs.suite == 'ui' && (
+                inputs.ui_shards == '1' && fromJSON('[{"kind":"ui","shard":1,"shard_count":1}]') ||
+                inputs.ui_shards == '2' && fromJSON('[{"kind":"ui","shard":1,"shard_count":2},{"kind":"ui","shard":2,"shard_count":2}]') ||
+                fromJSON('[{"kind":"ui","shard":1,"shard_count":3},{"kind":"ui","shard":2,"shard_count":3},{"kind":"ui","shard":3,"shard_count":3}]')) ||
               inputs.suite == 'mocks' && fromJSON('[{"kind":"mocks"}]') ||
               inputs.suite == 'focused' && fromJSON('[{"kind":"tests"},{"kind":"release"}]') ||
               inputs.ui_shards == '1' && fromJSON('[{"kind":"tests"},{"kind":"legacy"},{"kind":"ui","shard":1,"shard_count":1},{"kind":"release"}]') ||
-              fromJSON('[{"kind":"tests"},{"kind":"legacy"},{"kind":"ui","shard":1,"shard_count":2},{"kind":"ui","shard":2,"shard_count":2},{"kind":"release"}]') }}
+              inputs.ui_shards == '2' && fromJSON('[{"kind":"tests"},{"kind":"legacy"},{"kind":"ui","shard":1,"shard_count":2},{"kind":"ui","shard":2,"shard_count":2},{"kind":"release"}]') ||
+              fromJSON('[{"kind":"tests"},{"kind":"legacy"},{"kind":"ui","shard":1,"shard_count":3},{"kind":"ui","shard":2,"shard_count":3},{"kind":"ui","shard":3,"shard_count":3},{"kind":"release"}]') }}
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
       COCOAPODS_DISABLE_STATS: 'true'
