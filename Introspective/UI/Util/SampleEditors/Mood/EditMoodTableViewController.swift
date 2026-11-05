@@ -18,6 +18,8 @@ import Settings
 public protocol EditMoodTableViewController: UITableViewController, EditViewController {
 	var userInfoKey: UserInfoKey { get set }
 	var mood: Mood? { get set }
+	/// Optional starting instant for a new check-in; an existing mood's stored timestamp takes precedence.
+	var initialTimestamp: Date? { get set }
 }
 
 public final class EditMoodTableViewControllerImpl: UITableViewController, EditMoodTableViewController {
@@ -56,11 +58,23 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 	public final var mood: Mood? {
 		didSet {
 			guard let mood = mood else { return }
-			timestamp = mood.date
+			timestamp = MoodWeeklyReview.timestamp(for: mood)
 			rating = mood.rating
 			minRating = mood.minRating
 			maxRating = mood.maxRating
 			note = mood.note
+		}
+	}
+	public final var initialTimestamp: Date? {
+		didSet {
+			guard mood == nil,
+				let initialTimestamp = initialTimestamp,
+				initialTimestamp.timeIntervalSinceReferenceDate.isFinite
+			else { return }
+			timestamp = initialTimestamp
+			if isViewLoaded {
+				tableView.reloadRows(at: [Me.timestampIndex], with: .none)
+			}
 		}
 	}
 

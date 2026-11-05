@@ -142,3 +142,76 @@ public struct MoodWeekComparison {
 		previous = MoodPeriodAnalytics(observations: finite, interval: windows.previous, asOf: date, calendar: calendar)
 	}
 }
+
+/// Calendar-day windows for reviewing stored instants, independent of legacy display-time shifts.
+public struct MoodHistoryWindow {
+	public enum Selection: Equatable {
+		case recentDays(Int)
+		case day(Date)
+	}
+
+	/// Day selections are normalized to their first valid local instant and clamped to today.
+	public let selection: Selection
+	/// Half-open: includes the start and excludes the end. Recent windows include all of today.
+	public let interval: DateInterval
+	public let selectedDay: Date?
+	public let canMoveForward: Bool
+	/// A past selected day starts a backfilled check-in at its first valid instant.
+	/// Nil preserves automatic, full-precision timestamps for today and recent windows.
+	public let newCheckInDate: Date?
+	private let asOf: Date
+	private let calendar: Calendar
+
+	public init?(selection: Selection, asOf: Date = Date(), calendar: Calendar = .current) {
+		guard asOf.timeIntervalSinceReferenceDate.isFinite,
+			let today = Self.dayInterval(containing: asOf, calendar: calendar) else { return nil }
+		self.asOf = asOf
+		self.calendar = calendar
+		switch selection {
+		case let .recentDays(count):
+			guard count > 0,
+				let earliest = Self.addingDays(1 - count, to: today.start, calendar: calendar),
+				let firstDay = Self.dayInterval(containing: earliest, calendar: calendar),
+				firstDay.start <= today.start else { return nil }
+			self.selection = .recentDays(count)
+			interval = DateInterval(start: firstDay.start, end: today.end)
+			selectedDay = nil
+			canMoveForward = false
+			newCheckInDate = nil
+		case let .day(date):
+			guard date.timeIntervalSinceReferenceDate.isFinite,
+				let day = Self.dayInterval(containing: min(date, asOf), calendar: calendar) else { return nil }
+			self.selection = .day(day.start)
+			interval = day
+			selectedDay = day.start
+			canMoveForward = day.start < today.start
+			newCheckInDate = canMoveForward ? day.start : nil
+		}
+	}
+
+	/// Future clock times within the selected day remain visible so mistaken entries can be corrected.
+	public func contains(_ instant: Date) -> Bool {
+		instant.timeIntervalSinceReferenceDate.isFinite && instant >= interval.start && instant < interval.end
+	}
+
+	/// Moves selected days in the captured calendar; recent windows do not have a day cursor.
+	public func movingDay(by count: Int) -> MoodHistoryWindow? {
+		guard let selectedDay = selectedDay,
+			let moved = Self.addingDays(count, to: selectedDay, calendar: calendar) else { return nil }
+		return MoodHistoryWindow(selection: .day(moved), asOf: asOf, calendar: calendar)
+	}
+
+	private static func dayInterval(containing date: Date, calendar: Calendar) -> DateInterval? {
+		guard let day = calendar.dateInterval(of: .day, for: date),
+			day.start.timeIntervalSinceReferenceDate.isFinite, day.end.timeIntervalSinceReferenceDate.isFinite,
+			day.start <= date, date < day.end else { return nil }
+		return day
+	}
+
+	private static func addingDays(_ count: Int, to date: Date, calendar: Calendar) -> Date? {
+		guard let moved = calendar.date(byAdding: .day, value: count, to: date),
+			moved.timeIntervalSinceReferenceDate.isFinite,
+			calendar.dateComponents([.day], from: date, to: moved).day == count else { return nil }
+		return moved
+	}
+}
