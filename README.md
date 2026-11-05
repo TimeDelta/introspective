@@ -151,6 +151,9 @@ The following data types are supported (with more to come, guaranteed):
   - Weight (from Apple Health app)
 
 ## Getting Started with contributing
+
+Introspective requires **iOS 17 or later**. Build the app, extensions and internal frameworks with the current Xcode release. Health State of Mind exchange requires iOS 18 or later; local recording, queries and CSV exchange are available on iOS 17.
+
 ### Code Formatting
 Code formatting is done via [SwiftFormat](https://github.com/nicklockwood/SwiftFormat). You _**must**_ [install it](https://github.com/nicklockwood/SwiftFormat#how-do-i-install-it) for the build to work because all non-test code is automatically formatted during the build process.
 #### Links
