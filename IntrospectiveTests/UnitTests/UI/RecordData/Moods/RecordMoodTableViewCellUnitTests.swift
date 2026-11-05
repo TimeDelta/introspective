@@ -148,7 +148,7 @@ final class ContinuousRatingCellRenderingTests: UnitTest {
 
 	private func assertAwake(_ kind: RatingKind, file: StaticString = #file, line: UInt = #line) {
 		let controls = makeCell(kind)
-		defer { NotificationCenter.default.removeObserver(controls.cell) }
+		defer { controls.observationCenter.removeObserver(controls.cell) }
 		clearInvocations()
 
 		controls.cell.awakeFromNib()
@@ -160,7 +160,7 @@ final class ContinuousRatingCellRenderingTests: UnitTest {
 
 	private func assertSliderChanges(_ kind: RatingKind, file: StaticString = #file, line: UInt = #line) {
 		let controls = makeCell(kind)
-		defer { NotificationCenter.default.removeObserver(controls.cell) }
+		defer { controls.observationCenter.removeObserver(controls.cell) }
 		controls.cell.awakeFromNib()
 		for (fraction, rating) in [(Float(0.25), 4.0), (Float(0.75), 8.0)] {
 			clearInvocations()
@@ -174,13 +174,13 @@ final class ContinuousRatingCellRenderingTests: UnitTest {
 
 	private func assertSettingsChanges(_ kind: RatingKind, file: StaticString = #file, line: UInt = #line) {
 		let controls = makeCell(kind)
-		defer { NotificationCenter.default.removeObserver(controls.cell) }
+		defer { controls.observationCenter.removeObserver(controls.cell) }
 		controls.cell.awakeFromNib()
 		for (notification, maximum) in [(kind.minChanged, 18.0), (kind.maxChanged, 14.0)] {
 			setRange(for: kind, min: -2, max: maximum)
 			clearInvocations()
 
-			NotificationCenter.default.post(name: notification, object: nil)
+			controls.observationCenter.post(name: notification, object: nil)
 
 			assertRendered(controls, kind: kind, rating: 6, min: -2, max: maximum, file: file, line: line)
 		}
@@ -228,6 +228,7 @@ final class ContinuousRatingCellRenderingTests: UnitTest {
 	}
 
 	private func makeCell(_ kind: RatingKind) -> RatingCellControls {
+		let observationCenter = NotificationCenter()
 		let slider = UISlider()
 		let range = UILabel()
 		let rating = UIButton()
@@ -238,6 +239,7 @@ final class ContinuousRatingCellRenderingTests: UnitTest {
 		switch kind {
 		case .mood:
 			let mood = RecordContinuousMoodTableViewCell()
+			mood.observationCenter = observationCenter
 			mood.ratingSlider = slider
 			mood.ratingRangeLabel = range
 			mood.ratingButton = rating
@@ -246,6 +248,7 @@ final class ContinuousRatingCellRenderingTests: UnitTest {
 			changeRating = { mood.ratingChanged(mood) }
 		case .fatigue:
 			let fatigue = RecordContinuousFatigueTableViewCell()
+			fatigue.observationCenter = observationCenter
 			fatigue.ratingSlider = slider
 			fatigue.ratingRangeLabel = range
 			fatigue.ratingButton = rating
@@ -254,6 +257,7 @@ final class ContinuousRatingCellRenderingTests: UnitTest {
 			changeRating = { fatigue.ratingChanged(fatigue) }
 		case .pain:
 			let pain = RecordContinuousPainTableViewCell()
+			pain.observationCenter = observationCenter
 			pain.ratingSlider = slider
 			pain.ratingRangeLabel = range
 			pain.ratingButton = rating
@@ -265,7 +269,7 @@ final class ContinuousRatingCellRenderingTests: UnitTest {
 			cell = pain
 			changeRating = { pain.ratingChanged(pain) }
 		}
-		return RatingCellControls(cell: cell, slider: slider, rangeLabel: range,
+		return RatingCellControls(observationCenter: observationCenter, cell: cell, slider: slider, rangeLabel: range,
 			ratingButton: rating, noteButton: note, location: location, changeRating: changeRating)
 	}
 }
@@ -291,6 +295,7 @@ private enum RatingKind: CaseIterable {
 }
 
 private struct RatingCellControls {
+	let observationCenter: NotificationCenter
 	let cell: UITableViewCell
 	let slider: UISlider
 	let rangeLabel: UILabel

@@ -47,19 +47,22 @@ final class RecordContinuousMoodTableViewCell: UITableViewCell {
 		didSet { updateUI() }
 	}
 
+	// Supply a private center before awakening to isolate observer delivery in tests.
+	final var observationCenter: NotificationCenter = .default
+
 	// MARK: - UIView Overrides
 
 	public final override func awakeFromNib() {
 		super.awakeFromNib()
 		reset()
-		observe(selector: #selector(noteSaved), name: Me.noteChangedNotification)
-		observe(selector: #selector(ratingSaved), name: Me.ratingChanged)
-		observe(selector: #selector(updateUI), name: MoodUiUtilImpl.minRatingChanged)
-		observe(selector: #selector(updateUI), name: MoodUiUtilImpl.maxRatingChanged)
+		observationCenter.addObserver(self, selector: #selector(noteSaved), name: Me.noteChangedNotification, object: nil)
+		observationCenter.addObserver(self, selector: #selector(ratingSaved), name: Me.ratingChanged, object: nil)
+		observationCenter.addObserver(self, selector: #selector(updateUI), name: MoodUiUtilImpl.minRatingChanged, object: nil)
+		observationCenter.addObserver(self, selector: #selector(updateUI), name: MoodUiUtilImpl.maxRatingChanged, object: nil)
 	}
 
 	deinit {
-		NotificationCenter.default.removeObserver(self)
+		observationCenter.removeObserver(self)
 	}
 
 	// MARK: - Actions

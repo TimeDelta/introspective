@@ -49,19 +49,22 @@ final class RecordContinuousPainTableViewCell: UITableViewCell {
 		didSet { updateUI() }
 	}
 
+	// Supply a private center before awakening to isolate observer delivery in tests.
+	final var observationCenter: NotificationCenter = .default
+
 	// MARK: - UIView Overrides
 
 	public final override func awakeFromNib() {
 		super.awakeFromNib()
 		reset()
-		observe(selector: #selector(noteSaved), name: Me.noteChangedNotification)
-		observe(selector: #selector(ratingSaved), name: Me.ratingChangedNotification)
-		observe(selector: #selector(updateUI), name: PainUiUtilImpl.minRatingChanged)
-		observe(selector: #selector(updateUI), name: PainUiUtilImpl.maxRatingChanged)
+		observationCenter.addObserver(self, selector: #selector(noteSaved), name: Me.noteChangedNotification, object: nil)
+		observationCenter.addObserver(self, selector: #selector(ratingSaved), name: Me.ratingChangedNotification, object: nil)
+		observationCenter.addObserver(self, selector: #selector(updateUI), name: PainUiUtilImpl.minRatingChanged, object: nil)
+		observationCenter.addObserver(self, selector: #selector(updateUI), name: PainUiUtilImpl.maxRatingChanged, object: nil)
 	}
 
 	deinit {
-		NotificationCenter.default.removeObserver(self)
+		observationCenter.removeObserver(self)
 	}
 
 	// MARK: - Actions
