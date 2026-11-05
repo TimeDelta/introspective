@@ -75,7 +75,7 @@ final class MoodSettingsUITests: UITest {
 	func testEnablingDiscreteMoods_updatesRecordScreenToUseIntegerMoods() {
 		// given
 		let minMood = minMoodField().value as! String
-		app.switches["use integers only switch"].tap()
+		guard setDiscreteMoods(enabled: true) else { return }
 
 		// when
 		app.navigationBars.buttons["Settings"].tap()
@@ -95,7 +95,7 @@ final class MoodSettingsUITests: UITest {
 		app.tables.staticTexts["Note"].firstMatch.tap() // dismiss the note keyboard before switching tabs
 		app.tabBars.buttons["Settings"].tap()
 		let minMood = minMoodField().value as! String
-		app.switches["use integers only switch"].tap()
+		guard setDiscreteMoods(enabled: true) else { return }
 
 		// when
 		app.navigationBars.buttons["Settings"].tap()
@@ -109,37 +109,39 @@ final class MoodSettingsUITests: UITest {
 
 	func testDisablingDiscreteMoods_updatesRecordScreenToUseDecimalMoods() {
 		// given
-		app.switches["use integers only switch"].tap()
+		guard setDiscreteMoods(enabled: true) else { return }
 		app.navigationBars.buttons["Settings"].tap()
 		app.staticTexts["Mood"].tap()
-		app.switches["use integers only switch"].tap()
+		guard setDiscreteMoods(enabled: false) else { return }
 
 		// when
 		app.navigationBars.buttons["Settings"].tap()
 
 		// then
 		app.tabBars.buttons["Record"].tap()
-		XCTAssert(app.sliders["mood slider"].exists)
+		XCTAssert(waitForElement(app.sliders["mood slider"]), app.debugDescription)
 	}
 
 	func testDisablingDiscreteMoods_updatesMoodResultsScreenToUseDecimalMoods() {
 		// given
-		app.switches["use integers only switch"].tap()
+		let minMood = minMoodField().value as! String
+		guard setDiscreteMoods(enabled: true) else { return }
 		app.navigationBars.buttons["Settings"].tap()
 		createMoods([Mood(5)])
 		runQueryForAll("Mood")
 		app.tables.cells.staticTexts["mood"].firstMatch.tap()
+		XCTAssert(waitForElement(app.buttons["set mood to \(minMood) button"]), app.debugDescription)
 		app.tables.staticTexts["Note"].firstMatch.tap() // dismiss the note keyboard before switching tabs
 		app.tabBars.buttons["Settings"].tap()
 		app.staticTexts["Mood"].tap()
-		app.switches["use integers only switch"].tap()
+		guard setDiscreteMoods(enabled: false) else { return }
 
 		// when
 		app.navigationBars.buttons["Settings"].tap()
 
 		// then
-		app.tabBars.buttons["Explore"].tap()
-		XCTAssert(app.sliders["rating slider"].exists)
+		guard goToTabIfNotSelected("Explore") else { return }
+		XCTAssert(waitForElement(app.sliders["rating slider"]), app.debugDescription)
 	}
 
 	// MARK: - reset
@@ -160,6 +162,35 @@ final class MoodSettingsUITests: UITest {
 		XCTAssertEqual(minMoodField().value as? String, originalMin)
 		XCTAssertEqual(maxMoodField().value as? String, originalMax)
 		XCTAssertEqual(scaleMoodsOnImportSwitch().value as? String, originalScaleMoodsOnImport)
+	}
+
+	// MARK: - Helpers
+
+	private func setDiscreteMoods(enabled: Bool) -> Bool {
+		let toggle = app.switches["use integers only switch"]
+		let expected = enabled ? "1" : "0"
+		guard waitForHittableElement(toggle) else {
+			XCTFail("Discrete moods switch did not become reachable.\n\(app.debugDescription)")
+			return false
+		}
+		if toggle.value as? String != expected {
+			// Set the desired state, then verify it before saving the settings.
+			let off = toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.2, dy: 0.5))
+			let on = toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.8, dy: 0.5))
+			let start = enabled ? off : on
+			let end = enabled ? on : off
+			start.press(forDuration: 0.1, thenDragTo: end)
+		}
+		let ready = NSPredicate(format: "exists == true AND value == %@", expected)
+		if !ready.evaluate(with: toggle) {
+			let expectation = XCTNSPredicateExpectation(predicate: ready, object: toggle)
+			_ = XCTWaiter.wait(for: [expectation], timeout: 5)
+		}
+		guard ready.evaluate(with: toggle) else {
+			XCTFail("Discrete moods did not reach enabled=\(enabled): switch=\(toggle.value ?? "missing").\n\(app.debugDescription)")
+			return false
+		}
+		return true
 	}
 
 	// MARK: - Element Functions
