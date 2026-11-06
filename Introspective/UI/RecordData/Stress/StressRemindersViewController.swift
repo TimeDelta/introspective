@@ -5,7 +5,9 @@ import Samples
 
 final class StressRemindersViewController: UITableViewController {
 	var preferences: StressReminderPreferences = .shared
-	var scheduler: StressReminderScheduler = .shared
+	// Construct notification delivery only when it is used. Callers can supply a
+	// scheduler before loading the screen without touching the system center.
+	lazy var scheduler: StressReminderScheduler = .shared
 	var requestAuthorization: (@escaping (Bool, Error?) -> Void) -> Void = { completion in
 		UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound], completionHandler: completion)
 	}
