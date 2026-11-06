@@ -16,6 +16,14 @@ class UITest: XCTestCase {
 
 	private var application: XCUIApplication!
 	private var hasLaunched = false
+	private var launchWindowFrame: CGRect?
+	private var launchRecordTabFrame: CGRect?
+	// The UI runner's UIScreen can be a 320-by-480 placeholder. Capture the
+	// simulator display's real pixels once; these portrait scenarios never rotate.
+	private static let displayPixelSize: CGSize? = {
+		guard let image = XCUIScreen.main.screenshot().image.cgImage else { return nil }
+		return CGSize(width: CGFloat(image.width), height: CGFloat(image.height))
+	}()
 	final var app: XCUIApplication {
 		if !hasLaunched { launchApp() }
 		return application
@@ -27,6 +35,8 @@ class UITest: XCTestCase {
 		application = XCUIApplication()
 		application.launchArguments.append("--ui-testing")
 		hasLaunched = false
+		launchWindowFrame = nil
+		launchRecordTabFrame = nil
 	}
 
 	/// Each case still launches once into its own clean SQLite database. A test can
@@ -72,19 +82,19 @@ class UITest: XCTestCase {
 		}
 		let window = application.windows.firstMatch
 		let record = application.tabBars.buttons["Record"]
-		// These scenarios run on a portrait iPhone. Match logical screen points,
-		// not screenshot pixels; a 32-by-16 tab is a scaled, unusable snapshot.
-		let screen = UIScreen.main.bounds
+		guard let displayPixels = UITest.displayPixelSize else {
+			attachLaunchDiagnostics()
+			XCTFail("Could not determine the simulator display's pixel dimensions", file: file, line: line)
+			return false
+		}
+		// CI uses portrait iPhones with a 2x or 3x backing scale. Match their real
+		// display pixels to window points; a 32-by-16 tab is an unusable snapshot.
 		let ready = NSPredicate { _, _ in
 			guard self.application.state == .runningForeground, window.exists, record.exists else { return false }
 			let windowFrame = window.frame, tabFrame = record.frame
-			let dimensions = [screen.minX, screen.minY, screen.width, screen.height,
-				windowFrame.minX, windowFrame.minY, windowFrame.width, windowFrame.height,
-				tabFrame.minX, tabFrame.minY, tabFrame.width, tabFrame.height]
-			guard dimensions.allSatisfy({ $0.isFinite }), screen.width > 0, screen.height > 0,
-				abs(windowFrame.minX - screen.minX) <= 1, abs(windowFrame.minY - screen.minY) <= 1,
-				abs(windowFrame.width - screen.width) <= 1, abs(windowFrame.height - screen.height) <= 1,
-				tabFrame.width >= 44, tabFrame.height >= 30, windowFrame.contains(tabFrame) else { return false }
+			self.launchWindowFrame = windowFrame
+			self.launchRecordTabFrame = tabFrame
+			guard UITestLaunchGeometry.isUsable(displayPixels: displayPixels, window: windowFrame, recordTab: tabFrame) else { return false }
 			return record.isHittable
 		}
 		if ready.evaluate(with: application) { return true }
@@ -113,7 +123,7 @@ class UITest: XCTestCase {
 
 	private func attachLaunchDiagnostics() {
 		let state = application.state
-		let summary = XCTAttachment(string: "Application state: \(state.rawValue); expected logical screen: \(UIScreen.main.bounds)")
+		let summary = XCTAttachment(string: "Application state: \(state.rawValue); display pixels: \(String(describing: UITest.displayPixelSize)); last window: \(String(describing: launchWindowFrame)); last Record tab: \(String(describing: launchRecordTabFrame))")
 		summary.name = "Application launch state"
 		summary.lifetime = .keepAlways
 		add(summary)
