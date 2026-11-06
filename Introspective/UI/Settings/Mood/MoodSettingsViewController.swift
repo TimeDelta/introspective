@@ -121,7 +121,7 @@ final class MoodSettingsViewController: UIViewController {
 			return
 		}
 		guard let maxRating = Double(maxMoodText) else {
-			showError(title: "Invalid minimum mood", message: "'\(minMoodText)' is not a number.")
+			showError(title: "Invalid maximum mood", message: "'\(maxMoodText)' is not a number.")
 			return
 		}
 		guard minRating <= maxRating else {
@@ -146,6 +146,9 @@ final class MoodSettingsViewController: UIViewController {
 				post(MoodUiUtilImpl.maxRatingChanged)
 			}
 			presentScaleMoodsAlert()
+			// The alert actions save and navigate after the user's choice. Popping
+			// its presenter here overlaps the presentation and can strand navigation.
+			return
 		}
 		saveAndGoBackToSettings()
 	}
