@@ -369,15 +369,33 @@ final class StressTrackingIntegrationTests: XCTestCase {
 		XCTAssertEqual(try storedCount(StressorResponse.entityName), 0)
 	}
 
-	func testReleasingReviewSnapshotsFaultsParentAndResponsesWithoutChangingStoredValues() throws {
+	func testReleasingReviewSnapshotsReleasesResponseGraphWithoutChangingStoredValues() throws {
 		let definition = try StressTrackingStore.createStressor(name: "Work")
-		let saved = try StressTrackingStore.save(draft: StressCheckInDraft(date: timestamp, overallRating: 2,
-			responses: [response(definition, rating: 1)]))
-		let snapshot = saved.draft, answers = Array(saved.responses)
-		XCTAssertFalse(saved.isFault); XCTAssertTrue(answers.allSatisfy { !$0.isFault })
-		StressTrackingStore.releaseSnapshots(of: [saved])
-		XCTAssertTrue(saved.isFault)
-		XCTAssertTrue(answers.allSatisfy { $0.isFault })
+		weak var releasedAnswer: StressorResponse?
+		let (saved, snapshot, answerID) = try autoreleasepool {
+			let saved = try StressTrackingStore.save(draft: StressCheckInDraft(date: timestamp, overallRating: 2,
+				responses: [response(definition, rating: 1)]))
+			let snapshot = saved.draft, answers = Array(saved.responses)
+			let answer = try XCTUnwrap(answers.first)
+			releasedAnswer = answer
+			XCTAssertFalse(saved.isFault); XCTAssertTrue(answers.allSatisfy { !$0.isFault })
+			// A context retains objects involved in pending change notifications until
+			// processing them, independently of any parent/response reference cycle.
+			container.viewContext.processPendingChanges()
+			return (saved, snapshot, answer.objectID)
+		}
+		autoreleasepool {
+			XCTAssertNotNil(releasedAnswer, "The realized parent initially owns its response graph")
+			StressTrackingStore.releaseSnapshots(of: [saved])
+			container.viewContext.processPendingChanges()
+			XCTAssertTrue(saved.isFault)
+		}
+		// A response's instantaneous isFault state does not prove graph release.
+		// Keeping a faulted parent alive must not retain its responses once the
+		// caller drops those values, or leave their realized payloads registered.
+		XCTAssertNil(releasedAnswer, "A released review must not retain a parent/response cycle")
+		XCTAssertTrue(container.viewContext.registeredObject(for: answerID)?.isFault ?? true,
+			"Releasing a review must leave no realized response payload registered")
 		XCTAssertEqual(saved.draft, snapshot, "Releasing review memory must not lose any persisted answers")
 	}
 
