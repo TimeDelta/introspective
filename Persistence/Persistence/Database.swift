@@ -219,33 +219,48 @@ internal class DatabaseImpl: Database {
 	}
 
 	public final func setModifiedExternally(_ modified: Bool) {
-		do {
-			var sync = try getOrCreateSync()
-			let myTransaction = transaction()
-			sync = try myTransaction.pull(savedObject: sync)
-			sync.externallyModified = modified
-			try retryOnFail({ try myTransaction.commit() }, maxRetries: 2)
-		} catch {
-			Me.log.error("Unable to update core data sync", errorInfo(error))
+		// The sync flag has its own writer. Updating metadata must neither access
+		// managed objects off their queue nor save unrelated pending UI edits.
+		let writer = persistentContainer.newBackgroundContext()
+		writer.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
+		writer.performAndWait {
+			defer { writer.reset() }
+			do {
+				var syncs = try writer.fetch(CoreDataSync.fetchRequest())
+				if syncs.isEmpty {
+					guard let entity = NSEntityDescription.entity(forEntityName: CoreDataSync.entityName, in: writer),
+						let sync = NSManagedObject(entity: entity, insertInto: writer) as? CoreDataSync else {
+						throw GenericError("Unable to initialize persistence synchronization.")
+					}
+					syncs = [sync]
+				}
+				for sync in syncs { sync.externallyModified = modified }
+				try retryOnFail({ try writer.save() }, maxRetries: 2)
+			} catch {
+				Me.log.error("Unable to update core data sync", errorInfo(error))
+			}
 		}
 	}
 
 	public final func refreshContext() {
-		do {
-			let sync = try getOrCreateSync()
-			persistentContainer.viewContext.refresh(sync, mergeChanges: true)
-			if !sync.externallyModified {
-				return
+		let viewContext = persistentContainer.viewContext
+		// Foreground callbacks may arrive through AsyncUtil's background queue.
+		// Keep the complete read/refresh operation on the context's owning queue.
+		viewContext.performAndWait {
+			do {
+				let sync = try getOrCreateSync()
+				viewContext.refresh(sync, mergeChanges: true)
+				if !sync.externallyModified { return }
+			} catch {
+				Me.log.error("Failed to check if context should be refreshed: %@", errorInfo(error))
+				// Refresh all objects in context on failure.
 			}
-		} catch {
-			Me.log.error("Failed to check if context should be refreshed: %@", errorInfo(error))
-			// refresh all objects in context on failure
+			injected(NotificationUtil.self).post(.persistenceLayerWillRefresh, object: nil)
+			viewContext.refreshAllObjects()
+			// Only the sync writer commits this flag; the view context stays unsaved.
+			setModifiedExternally(false)
+			injected(NotificationUtil.self).post(.persistenceLayerDidRefresh, object: nil, qos: .userInteractive)
 		}
-		injected(NotificationUtil.self).post(.persistenceLayerWillRefresh, object: nil)
-		persistentContainer.viewContext.refreshAllObjects()
-		// make sure that next call to refreshContext() only refreshes if necessary
-		setModifiedExternally(false)
-		injected(NotificationUtil.self).post(.persistenceLayerDidRefresh, object: nil, qos: .userInteractive)
 	}
 
 	public final func deleteEverything() throws {
@@ -284,14 +299,13 @@ internal class DatabaseImpl: Database {
 
 	private final func getOrCreateSync() throws -> CoreDataSync {
 		let syncRequest: NSFetchRequest<CoreDataSync> = CoreDataSync.fetchRequest()
-		let syncs = try query(syncRequest)
-		guard syncs.count > 0 else {
-			let myTransaction = transaction()
-			let sync = try myTransaction.new(CoreDataSync.self)
-			try myTransaction.commit()
-			return sync
+		if let sync = try query(syncRequest).first { return sync }
+		setModifiedExternally(false)
+		// Return the view context's own instance, never the writer's object.
+		guard let sync = try query(syncRequest).first else {
+			throw GenericError("Unable to read persistence synchronization.")
 		}
-		return syncs[0]
+		return sync
 	}
 }
 
