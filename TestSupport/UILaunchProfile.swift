@@ -1,5 +1,24 @@
 import Foundation
 
+/// Geometry only: the UI runner separately checks foreground state/hittability.
+/// Its own UIScreen can be a placeholder, so use the actual display's pixels.
+enum UITestLaunchGeometry {
+	static func isUsable(displayPixels: CGSize, window: CGRect, recordTab: CGRect) -> Bool {
+		let dimensions = [displayPixels.width, displayPixels.height,
+			window.minX, window.minY, window.width, window.height,
+			recordTab.minX, recordTab.minY, recordTab.width, recordTab.height]
+		guard dimensions.allSatisfy({ $0.isFinite }), displayPixels.width > 0, displayPixels.height > 0,
+			abs(window.minX) <= 1, abs(window.minY) <= 1,
+			recordTab.width >= 44, recordTab.height >= 30, window.contains(recordTab) else { return false }
+		// CI uses portrait iPhones with 2x or 3x backing scales. Allow one logical
+		// point of rounding, but reject a window scaled down inside SpringBoard.
+		return [CGFloat(2), CGFloat(3)].contains { scale in
+			abs(window.width * scale - displayPixels.width) <= scale &&
+				abs(window.height * scale - displayPixels.height) <= scale
+		}
+	}
+}
+
 /// Debug UI launches share this small timestamp-only payload with the UI runner.
 /// Uptime measures lifecycle callbacks; view appearance is not a rendered-frame metric.
 struct UILaunchProfile: Codable, Equatable {
