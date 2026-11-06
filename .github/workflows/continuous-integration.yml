@@ -139,11 +139,11 @@ jobs:
           xcrun simctl list devices available --json > ci-output/simulators.json
           simulator_id=$(python3 -c 'import json; d=json.load(open("ci-output/simulators.json")); print(next(v["udid"] for k,vs in d["devices"].items() if "iOS" in k for v in vs if v["isAvailable"] and "iPhone" in v["name"]))')
           echo "CI_SIMULATOR_ID=$simulator_id" >> "$GITHUB_ENV"
-          # Legacy boots after compilation to save resources while building.
+          # Start cold-boot data migration while mocks and sources compile.
+          # Legacy still restarts after the build; that bounded warm restart
+          # must not also perform the simulator's first-ever migration.
           state=$(xcrun simctl list devices available --json | python3 -c 'import json,sys; d=json.load(sys.stdin); print(next(v["state"] for vs in d["devices"].values() for v in vs if v["udid"]==sys.argv[1]))' "$simulator_id")
-          if [ "$CI_BUILD_KIND" = legacy ]; then
-            if [ "$state" = Booted ]; then xcrun simctl shutdown "$simulator_id"; fi
-          elif [ "$state" != Booted ]; then
+          if [ "$state" != Booted ]; then
             xcrun simctl boot "$simulator_id"
           fi
 
