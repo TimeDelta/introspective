@@ -4,6 +4,8 @@ import Common
 import Samples
 
 /// A heuristic: manually estimated timestamps normally have zero seconds and fractions.
+/// Picker normalization and its accuracy/forgetfulness inference limits are documented
+/// in docs/timestamp-precision.md. Preserve raw dates when computing this percentage.
 public final class EstimatedDatesInformation: AnyInformation {
 	public override var name: String { "Estimated Dates (%)" }
 	public override var description: String { "Percent of " + attribute.name.lowercased() + " with zero seconds and fractional seconds" }

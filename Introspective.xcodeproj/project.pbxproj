@@ -24,6 +24,7 @@
 		058ACA70B7EE33ADD7B2A77BF8CB45AE /* ActivityEndDateTableViewCellMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0340C83A3B74A76EBC1250E07FCA7EB2 /* ActivityEndDateTableViewCellMock.swift */; };
 		05ED54108F3654C47FD3997495FDD7E1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3304AC4E4C3B7DBD5C7AC53D48561D59 /* Assets.xcassets */; };
 		066B08DD63407F615A29931342EB626E /* MoodTableViewCellMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1842C2CAAAB1065A5596D7D4DBEB97E9 /* MoodTableViewCellMock.swift */; };
+		069795A0D81DD5DE7AB038DA /* StressCheckInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59782CF09E6C478FEA2630FA /* StressCheckInViewController.swift */; };
 		06FF10E422A2B6F2CADF8CABAC9F86DC /* DateOrTimeAttributeValueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD296DDFB2A66D7495BD32292829A68 /* DateOrTimeAttributeValueViewController.swift */; };
 		07100D2E3EC65E7672268E47B05FA4CA /* MoodRatingCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355C95BB4440C74757902EED09283542 /* MoodRatingCollectionViewCell.swift */; };
 		08230E04DF95BC640753AC76B77AFC7C /* MoodTimelineTableViewCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D78F42505C883DA6DDD253DED45FD0 /* MoodTimelineTableViewCellDelegate.swift */; };
@@ -164,6 +165,7 @@
 		45CB94BA9AFB34665A6FA02A17A6A824 /* TakeMedicationIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B862D5325AA85A9E16272886E0962 /* TakeMedicationIntentHandler.swift */; };
 		475D70D7FED4FD3E236FDFB4 /* Introspective.xcdatamodeld in Resources */ = {isa = PBXBuildFile; fileRef = A7581418039FB6FD454DA7AA8C114E56 /* Introspective.xcdatamodeld */; };
 		475E2F5BC738FD9E494532469FA9FF51 /* ChooseActivityDefinitionViewControllerFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC746684AD2C5785AF22747E8FE80A10 /* ChooseActivityDefinitionViewControllerFunctionalTests.swift */; };
+		47939F4D34D444935BB89D07 /* StressorsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71A700D4E4F417F8ECB3CDFF /* StressorsViewController.swift */; };
 		480658ECD8C614C6FD8B993E343A0BD2 /* ExpressionStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD78A4D44304EC27B7F52F9C8367326 /* ExpressionStub.swift */; };
 		4865035F8E4B42843B8B83C2F5A73B6F /* UIEventTestStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42F6610281D3D8ADE5515450045B947C /* UIEventTestStub.swift */; };
 		490C0D3FA4D6EE2E8A306EB3AC7EDF9E /* BooleanAttributeUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7101E48641C88190FE068611D5B91169 /* BooleanAttributeUnitTests.swift */; };
@@ -396,6 +398,7 @@
 		A0ACDA46E85F2ECEFBDA115171002AEF /* MoodMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE301C2F2247DBBEDE6822A654DD4F1 /* MoodMock.swift */; };
 		A108D51984F45F433488927376B4A95A /* RecordDecimalMoodIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C624D2A8E2DF0D653F2E4CF507F9BC09 /* RecordDecimalMoodIntentHandler.swift */; };
 		A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FC569196ECE6B2231D16543528A687 /* UITest.swift */; };
+		A1BFEC84F4BAEAA66ACE7FA4 /* StressGuideViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95280E181B636E16EDE4B61F /* StressGuideViewController.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A26589F32BFC0527881D20D03E4CB48C /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
@@ -434,6 +437,7 @@
 		B1340259C1888E4105785C762DB55821 /* EditPainTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C28F2CB06A12E801126CD24D80EDD0 /* EditPainTableViewController.swift */; };
 		B16636FF19A5054942F6E23ED446D678 /* FatigueSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A12B4FAE6A8C0774C4A5406D79CEF8 /* FatigueSettingsViewController.swift */; };
 		B2E3F8F0CE6013587C54BDFE33FD99FA /* UIAlertControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78812D5DB1B89F9F928BF6018E59942 /* UIAlertControllerExtension.swift */; };
+		B2E73AF04F4D5FA4031FD036 /* StressReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70604FCC9B67E006B4A421C8 /* StressReviewViewController.swift */; };
 		B3524F47C097361C4029CF5527727E77 /* GeneralResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDF01F769863A9123FEED8DBF775E9C /* GeneralResultsUITests.swift */; };
 		B3A0A41A88D6357A25947762C7498645 /* DiscreteMoodWidgetMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 296D595886B0356D6824EF7E9767873C /* DiscreteMoodWidgetMocks.swift */; };
 		B4FD2BD167EAD1F7D59297B9 /* ObjectModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D063C2E0D27A1D0716B69A501909AAE /* ObjectModelContainer.swift */; };
@@ -585,6 +589,7 @@
 		EF35271EB79F678C9203EC90 /* MoodTrackingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F440E0D00806A66F3E6FB46 /* MoodTrackingCoordinator.swift */; };
 		EF5FE078A97C6099F60F46C3CA00A27A /* SampleGrouperMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A772ED943AA7D007309A07D369A0D1A9 /* SampleGrouperMatchers.swift */; };
 		EF7E6725682111D894E907E6BC7CA755 /* GroupNameTableViewCellUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B352593233D386789DBDDC0A2ECC8A14 /* GroupNameTableViewCellUnitTests.swift */; };
+		F0419DB24F1C9A0C386A342D /* StressRemindersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C4C82E69463358A212A82E8 /* StressRemindersViewController.swift */; };
 		F063728EC72012E7961A0B0AD867B0F8 /* GroupMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564FDD7EB08AC7E75AD9E9B15E2192BE /* GroupMatchers.swift */; };
 		F0FBB552CEE264D98368C230738CA775 /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCD120AFB3D2858AE4607749992A55B2 /* Common.framework */; };
 		F17BB396F3E3FD1D65CA78E4485101D7 /* FrequencyUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4141F18385C28758F14028AB662077BB /* FrequencyUnitTests.swift */; };
@@ -889,6 +894,7 @@
 		584FE77277385E08EF37E135 /* LostItemsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LostItemsViewController.swift; sourceTree = "<group>"; };
 		58D4F7A20D65B7D8B57AD3C509F9BC16 /* ImportDataTableViewControllerUnitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportDataTableViewControllerUnitTests.swift; sourceTree = "<group>"; };
 		59244DF22C7AD4DDBBA2A64C5A21BF2C /* ExpressionPartMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpressionPartMatchers.swift; sourceTree = "<group>"; };
+		59782CF09E6C478FEA2630FA /* StressCheckInViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StressCheckInViewController.swift; sourceTree = "<group>"; };
 		59D6A26340B6C691CDE39575FE26FC28 /* SettingsFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFunctionalTests.swift; sourceTree = "<group>"; };
 		5A133E176A02EE48F676DB7C62801AAE /* MedicationDoseTableTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDoseTableTableViewCell.swift; sourceTree = "<group>"; };
 		5A419C1CD465E1A3F0C0755D262822A5 /* TableViewCellMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCellMatchers.swift; sourceTree = "<group>"; };
@@ -899,6 +905,7 @@
 		5B44169757CE0CECD9D3BDBC2C4EB7C8 /* ChooseActivityDefinitionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseActivityDefinitionViewController.swift; sourceTree = "<group>"; };
 		5C3E5C649E374AD3DB9E5DB16589DA8F /* Pods-IntrospectiveTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IntrospectiveTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-IntrospectiveTests/Pods-IntrospectiveTests.release.xcconfig"; sourceTree = "<group>"; };
 		5C49E8EABD423628282C80ED5AE814F0 /* EasyPillMedicationDoseImporterFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyPillMedicationDoseImporterFunctionalTests.swift; sourceTree = "<group>"; };
+		5C4C82E69463358A212A82E8 /* StressRemindersViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StressRemindersViewController.swift; sourceTree = "<group>"; };
 		5D3AFC24DD7F06244A4014E823775E36 /* GreaterThanOrEqualToFrequencyAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreaterThanOrEqualToFrequencyAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		5D8FD82841A7730960514DA179FD2965 /* EditFatigueTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFatigueTableViewController.swift; sourceTree = "<group>"; };
 		5E8C96BB1559619CC12D3FCBE6A9053F /* EqualToDoubleAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToDoubleAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
@@ -947,11 +954,13 @@
 		6F404EDA0FF10E5B353689A12171D9E0 /* QueryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryViewController.swift; sourceTree = "<group>"; };
 		6F519E89EDEFD973165FFAFA09954A3A /* SampleCreatorTestUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCreatorTestUtil.swift; sourceTree = "<group>"; };
 		700CAD2707013EAB216ECFD057C15BDC /* SiriIntentsMocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SiriIntentsMocks.swift; sourceTree = "<group>"; };
+		70604FCC9B67E006B4A421C8 /* StressReviewViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StressReviewViewController.swift; sourceTree = "<group>"; };
 		7066135BC062E2C8B24B7C2F24FE6819 /* ActiveImportTableViewCellUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveImportTableViewCellUnitTests.swift; sourceTree = "<group>"; };
 		70F928C27EECF2D5AFA59F692DCC506A /* NotEqualToDoubleAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotEqualToDoubleAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		71010573F33E3E248D2CF2AD /* UITestFixtures.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UITestFixtures.swift; sourceTree = "<group>"; };
 		7101E48641C88190FE068611D5B91169 /* BooleanAttributeUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooleanAttributeUnitTests.swift; sourceTree = "<group>"; };
 		7192D3DC8FE5D60FAC337CD18B1737F7 /* SetMedicationDosageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetMedicationDosageViewController.swift; sourceTree = "<group>"; };
+		71A700D4E4F417F8ECB3CDFF /* StressorsViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StressorsViewController.swift; sourceTree = "<group>"; };
 		71CB8B01CADD913D4ED9F4F9A0B8538E /* IntrospectiveMoodImporterFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntrospectiveMoodImporterFunctionalTests.swift; sourceTree = "<group>"; };
 		71D9C87848F666D8CEE3203AA702A72A /* ArrayMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayMatchers.swift; sourceTree = "<group>"; };
 		71DC79AF513C5CE57DDD096B2B4746CA /* QueryResultsBasicXYGraphCustomizationViewControllerUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryResultsBasicXYGraphCustomizationViewControllerUnitTests.swift; sourceTree = "<group>"; };
@@ -1036,6 +1045,7 @@
 		940F200750834EAEAD9E2162AEDD2317 /* PainLocationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainLocationTableViewCell.swift; sourceTree = "<group>"; };
 		945E8797DDA6505CB341D70B46229032 /* LessThanOrEqualToFrequencyAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanOrEqualToFrequencyAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		949F55BA108C7F3F9253144543B9DA85 /* EditMedicationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMedicationViewController.swift; sourceTree = "<group>"; };
+		95280E181B636E16EDE4B61F /* StressGuideViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StressGuideViewController.swift; sourceTree = "<group>"; };
 		95283CE739AA64CB16BBDA5FD37EDA53 /* MoodIntents.intentdefinition */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.intentdefinition; path = MoodIntents.intentdefinition; sourceTree = "<group>"; };
 		958F8FB544B7E47057AA85820ADA8B32 /* RecordMedicationsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordMedicationsUITests.swift; sourceTree = "<group>"; };
 		95B296BEB641FFA31D0E3A5AB97E040D /* MoodResultsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodResultsUITests.swift; sourceTree = "<group>"; };
@@ -1148,6 +1158,7 @@
 		BFD71FA3FAB9E75505AA5F1F382EBF59 /* PickerMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerMatchers.swift; sourceTree = "<group>"; };
 		BFE301C2F2247DBBEDE6822A654DD4F1 /* MoodMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodMock.swift; sourceTree = "<group>"; };
 		C11C20CF3F03BBA94F979452 /* UILaunchProfile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UILaunchProfile.swift; sourceTree = "<group>"; };
+		C1201D82D0C3A6F56A346D10 /* StressCheckIns.xcdatamodel */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.xcdatamodel; path = StressCheckIns.xcdatamodel; sourceTree = "<group>"; };
 		C1ADC6C6F1E17C13F640AA9741585DD0 /* StringMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringMatchers.swift; sourceTree = "<group>"; };
 		C1C4B550FFD974458EB56C21773B8359 /* MedicationFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationFunctionalTests.swift; sourceTree = "<group>"; };
 		C202E12E8BC50D2BB819B9122AE7A60A /* WeightUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightUnitTests.swift; sourceTree = "<group>"; };
@@ -2622,6 +2633,7 @@
 				D2CA5721E87BAFF1C6DB6D38557175FD /* Medications */,
 				1EF7A757C225AD35B7B50813EEF342FE /* Mood */,
 				83A6C6B91A02DB42D07751D823FD0C05 /* Pain */,
+				B530E0FF3F3E704EAAD5D199 /* Stress */,
 			);
 			path = RecordData;
 			sourceTree = "<group>";
@@ -2748,6 +2760,19 @@
 				E458EFFAB8FDA4DBD8B73B9E /* MoodTrackingUITests.swift */,
 			);
 			path = RecordData;
+			sourceTree = "<group>";
+		};
+		B530E0FF3F3E704EAAD5D199 /* Stress */ = {
+			isa = PBXGroup;
+			children = (
+				59782CF09E6C478FEA2630FA /* StressCheckInViewController.swift */,
+				71A700D4E4F417F8ECB3CDFF /* StressorsViewController.swift */,
+				95280E181B636E16EDE4B61F /* StressGuideViewController.swift */,
+				70604FCC9B67E006B4A421C8 /* StressReviewViewController.swift */,
+				5C4C82E69463358A212A82E8 /* StressRemindersViewController.swift */,
+			);
+			name = Stress;
+			path = Stress;
 			sourceTree = "<group>";
 		};
 		B658C9F4BF2F53697CDE2EA53BC1C079 /* SimpleChoosers */ = {
@@ -4328,6 +4353,11 @@
 				9577437714D1A81DBF4E9DB7 /* QueryInspectionViewController.swift in Sources */,
 				ECDCEF549F772CB8B39DBECF /* UILaunchProfile.swift in Sources */,
 				E80D61F6A071ED20B4913B0E /* main.swift in Sources */,
+				069795A0D81DD5DE7AB038DA /* StressCheckInViewController.swift in Sources */,
+				47939F4D34D444935BB89D07 /* StressorsViewController.swift in Sources */,
+				A1BFEC84F4BAEAA66ACE7FA4 /* StressGuideViewController.swift in Sources */,
+				B2E73AF04F4D5FA4031FD036 /* StressReviewViewController.swift in Sources */,
+				F0419DB24F1C9A0C386A342D /* StressRemindersViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4898,8 +4928,9 @@
 				6ABD42B5BE3FEFE618570A03FC26467C /* Introspective.xcdatamodel */,
 				A919C83E0139BB9E3DAF8008 /* MetricContext.xcdatamodel */,
 				A7E11E1F3E51459587F918F2 /* ActivityTags.xcdatamodel */,
+				C1201D82D0C3A6F56A346D10 /* StressCheckIns.xcdatamodel */,
 			);
-			currentVersion = A7E11E1F3E51459587F918F2 /* ActivityTags.xcdatamodel */;
+			currentVersion = C1201D82D0C3A6F56A346D10 /* StressCheckIns.xcdatamodel */;
 			path = Introspective.xcdatamodeld;
 			sourceTree = "<group>";
 		};

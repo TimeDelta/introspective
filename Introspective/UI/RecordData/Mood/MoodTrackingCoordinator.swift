@@ -15,10 +15,10 @@ final class MoodTrackingCoordinator {
 		let center = NotificationCenter.default
 		observers.append(center.addObserver(forName: .NSManagedObjectContextDidSave, object: nil, queue: nil) { [weak self] notification in
 			// Inspect the entity names on the saving context's queue; never pass managed objects to the UI queue.
-			let affectsMoods = [NSInsertedObjectsKey, NSUpdatedObjectsKey, NSDeletedObjectsKey].contains { key in
-				(notification.userInfo?[key] as? Set<NSManagedObject>)?.contains { $0.entity.name == "Mood" } == true
+			let affectsCheckIns = [NSInsertedObjectsKey, NSUpdatedObjectsKey, NSDeletedObjectsKey].contains { key in
+				(notification.userInfo?[key] as? Set<NSManagedObject>)?.contains { ["Mood", "StressCheckIn"].contains($0.entity.name ?? "") } == true
 			}
-			if affectsMoods { DispatchQueue.main.async { self?.queueRefresh() } }
+			if affectsCheckIns { DispatchQueue.main.async { self?.queueRefresh() } }
 		})
 		for name in [UIApplication.didBecomeActiveNotification, .NSCalendarDayChanged, .NSSystemTimeZoneDidChange] {
 			observers.append(center.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in self?.queueRefresh() })
@@ -30,6 +30,7 @@ final class MoodTrackingCoordinator {
 		DispatchQueue.main.async { [weak self] in
 			guard let self = self else { return }; self.refreshQueued = false
 			MoodReminderService.refresh()
+			StressReminderService.refresh()
 		}
 	}
 }

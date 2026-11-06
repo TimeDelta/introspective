@@ -277,6 +277,13 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				) as! StepsTableViewCell)
 				cell.steps = (sample as! Steps)
 				return cell
+			case let checkIn as StressCheckIn:
+				return stressResultCell(title: "Overall stress: " + (StressRating(rawValue: Int(checkIn.overallRating))?.title ?? "Invalid rating"),
+					date: checkIn.timestamp, note: checkIn.note)
+			case let response as StressorResponse:
+				let answer = response.status == .rated ? response.rating.flatMap { StressRating(rawValue: $0)?.title } ?? "Invalid rating" : response.status.title
+				return stressResultCell(title: response.nameSnapshot + ": " + answer,
+					date: response.timestamp, note: response.checkIn.note)
 			case let context as MetricContextEntry:
 				let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
 				cell.textLabel?.text = context.category + " · " + context.metric.title + (context.note.flatMap { $0.isEmpty ? nil : " · " + $0 } ?? "")
@@ -352,7 +359,30 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		} else {
 			let sample = filteredSamples[indexPath.row]
 			selectedEditingSample = sample
-			if let entry = sample as? MetricContextEntry {
+			if let checkIn = (sample as? StressCheckIn) ?? (sample as? StressorResponse)?.checkIn {
+				let parentID = checkIn.objectID
+				var responseIdentities: [NSManagedObjectID: UUID] = [:]
+				for case let response as StressorResponse in (storedSamples ?? []) where response.checkIn.id == checkIn.id {
+					responseIdentities[response.objectID] = response.stressorID
+				}
+				let editor = StressCheckInViewController(checkIn: checkIn)
+				editor.onSave = { [weak self] saved in
+					guard let self = self, !self.isClosed else { return }
+					self.selectedEditingSample = nil
+					if self.query != nil { self.refreshQuery() }
+					else {
+						let replacements = Dictionary(uniqueKeysWithValues: saved.orderedResponses.map { ($0.stressorID, $0) })
+						let updated: [Sample] = (self.storedSamples ?? []).compactMap { old in
+							guard let object = old as? NSManagedObject else { return old }
+							if object.objectID == parentID { return saved }
+							if let stressorID = responseIdentities[object.objectID] { return replacements[stressorID] }
+							return old
+						}
+						self.acceptSamples(updated)
+					}
+				}
+				pushToNavigationController(editor)
+			} else if let entry = sample as? MetricContextEntry {
 				let editor = MetricContextEditor(entry: entry, metric: entry.metric)
 				editor.onSave = { [weak self] _ in
 					guard let self = self, !self.isClosed else { return }
@@ -423,7 +453,10 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		if let searchNearbyAction = getSearchNearbyAction(at: indexPath) {
 			actions.append(searchNearbyAction)
 		}
-		if let managedSample = filteredSamples[indexPath.row] as? CoreDataSample {
+		// Individual answers belong to one atomic check-in. Edit its answers or
+		// delete the parent check-in rather than leaving a partially deleted form.
+		if let managedSample = filteredSamples[indexPath.row] as? CoreDataSample,
+			!(managedSample is StressorResponse) {
 			actions.append(getDeleteCoreDataSampleAction(for: managedSample, at: indexPath))
 		}
 		return UISwipeActionsConfiguration(actions: actions)
@@ -504,16 +537,20 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			let yesAction = injected(UiUtil.self).alertAction(title: "Yes", style: .destructive) { _ in
 				let goBackAfterDelete = self.filteredSamples.count == 1
 				do {
-					let transaction = injected(Database.self).transaction()
-					try retryOnFail({ try transaction.delete(managedSample) }, maxRetries: 2)
-					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+					if let checkIn = managedSample as? StressCheckIn {
+						try StressTrackingStore.delete(checkIn)
+					} else {
+						let transaction = injected(Database.self).transaction()
+						try retryOnFail({ try transaction.delete(managedSample) }, maxRetries: 2)
+						try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+					}
 					let updated = (self.storedSamples ?? []).filter { ($0 as AnyObject) !== (managedSample as AnyObject) }
 					if goBackAfterDelete { self.done() }
 					else { self.acceptSamples(updated) }
 				} catch {
 					Me.log.error("Failed to delete sample: %@", errorInfo(error))
 					self.showError(
-						title: "Failed to delete " + self.filteredSamples[indexPath.row].attributedName
+						title: "Failed to delete " + managedSample.attributedName
 							.localizedLowercase,
 						error: error
 					)
@@ -664,6 +701,16 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		sortWork?.cancel(); sortWork = nil
 		queryWork?.cancel(); queryWork = nil
 		dismissSortProgress()
+		var stressParents: [NSManagedObjectID: StressCheckIn] = [:]
+		for sample in storedSamples ?? [] {
+			if let parent = sample as? StressCheckIn, !parent.isDeleted { stressParents[parent.objectID] = parent }
+			else if let response = sample as? StressorResponse, !response.isDeleted,
+				!response.isFault, !response.hasFault(forRelationshipNamed: "checkIn") {
+				let parent = response.checkIn
+				if !parent.isDeleted { stressParents[parent.objectID] = parent }
+			}
+		}
+		StressTrackingStore.releaseSnapshots(of: Array(stressParents.values))
 		storedSamples = nil
 		filteredSamples = nil
 		selectedEditingSample = nil
@@ -710,17 +757,27 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	}
 
 	@objc private final func deleteAllSamples() {
-		let sampleType = samples[0].attributedName.localizedLowercase
+		guard samplesAreDeletable(), let selection = filteredSamples, !selection.isEmpty else { return }
+		// The confirmation applies to the rows visible now, even if a later
+		// search or refresh changes the backing results before confirmation.
+		let sampleType = selection[0].attributedName.localizedLowercase
 		let alert = UIAlertController(
 			title: "Are you sure you want to delete all of these \(sampleType) records?",
 			message: "This will only delete the ones displayed here.",
 			preferredStyle: .alert
 		)
-		alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
+		alert.addAction(injected(UiUtil.self).alertAction(title: "Yes", style: .destructive) { _ in
+			if let checkIns = selection as? [StressCheckIn] {
+				do {
+					try StressTrackingStore.delete(checkIns)
+					self.done()
+				} catch { self.showError(title: "Failed to delete stress check-ins", error: error) }
+				return
+			}
 			DispatchQueue.global(qos: .userInitiated).async {
 				do {
 					let transaction = injected(Database.self).transaction()
-					try transaction.deleteAll(self.samples as! [NSManagedObject])
+					try transaction.deleteAll(selection as! [NSManagedObject])
 					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 					DispatchQueue.main.async {
 						self.navigationController?.popViewController(animated: false)
@@ -1032,7 +1089,18 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	}
 
 	private final func samplesAreDeletable() -> Bool {
-		(samples != nil && !samples.isEmpty && samples[0] is CoreDataSample)
+		guard let samples = filteredSamples, !samples.isEmpty else { return false }
+		return samples.allSatisfy { $0 is CoreDataSample && !($0 is StressorResponse) }
+	}
+
+	private func stressResultCell(title: String, date: Date, note: String?) -> UITableViewCell {
+		let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
+		cell.textLabel?.text = title
+		cell.detailTextLabel?.text = injected(CalendarUtil.self).string(for: date, dateStyle: .medium, timeStyle: .short)
+			+ (note.flatMap { $0.isEmpty ? nil : " · " + $0 } ?? "")
+		cell.textLabel?.numberOfLines = 0; cell.detailTextLabel?.numberOfLines = 0
+		cell.accessoryType = .disclosureIndicator
+		return cell
 	}
 
 	private final func samplesAreSortable() -> Bool {

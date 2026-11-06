@@ -38,6 +38,8 @@ public class SamplesInjectionProvider: InjectionProvider {
 		MoodExporter.self,
 		MetricContextExporter.self,
 		LostItemExporter.self,
+		StressCheckInExporter.self,
+		StressorResponseExporter.self,
 		MoodUtil.self,
 		PainDAO.self,
 		NumericSampleUtil.self,
@@ -51,6 +53,8 @@ public class SamplesInjectionProvider: InjectionProvider {
 	public final func get<Type>(_ type: Type.Type) throws -> Type {
 		if type == MetricContextExporter.self { return try MetricContextExporter() as! Type }
 		if type == LostItemExporter.self { return try LostItemExporter() as! Type }
+		if type == StressCheckInExporter.self { return try StressCheckInExporter() as! Type }
+		if type == StressorResponseExporter.self { return try StressorResponseExporter() as! Type }
 		switch type {
 		case is ActivityDAO.Protocol:
 			return Me.activityDAO as! Type

@@ -45,6 +45,11 @@ end
   Introspective/UI/RecordData/LostItemsViewController.swift
   Introspective/UI/RecordData/Mood/MoodTrackingViewController.swift
   Introspective/UI/RecordData/Mood/MoodRemindersViewController.swift
+  Introspective/UI/RecordData/Stress/StressCheckInViewController.swift
+  Introspective/UI/RecordData/Stress/StressorsViewController.swift
+  Introspective/UI/RecordData/Stress/StressGuideViewController.swift
+  Introspective/UI/RecordData/Stress/StressReviewViewController.swift
+  Introspective/UI/RecordData/Stress/StressRemindersViewController.swift
 ].each do |path|
   reference = project.files.find { |file| file.real_path.to_s == File.expand_path(path) }
   raise "Missing production source #{path}" unless reference

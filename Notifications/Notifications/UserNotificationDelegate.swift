@@ -61,6 +61,8 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 	public static let finishedImportingMoods = basicCategory(id: "finished importing moods", actions: [showMoodHistory])
 	public static let moodCheckInReminder = UNNotificationCategory(identifier: MoodReminderScheduler.categoryIdentifier,
 		actions: [], intentIdentifiers: [], options: [])
+	public static let stressCheckInReminder = UNNotificationCategory(identifier: StressReminderScheduler.categoryIdentifier,
+		actions: [], intentIdentifiers: [], options: [])
 
 	// MARK: Export
 
@@ -76,6 +78,7 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 		finishedImportingMedications,
 		finishedImportingMoods,
 		moodCheckInReminder,
+		stressCheckInReminder,
 		finishedExportingRecords,
 	])
 
@@ -166,9 +169,22 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 		case MoodReminderScheduler.categoryIdentifier:
 			showRecordDataScreen()
 			NotificationCenter.default.post(name: MoodReminderScheduler.openCheckInNotification, object: nil)
+		case StressReminderScheduler.categoryIdentifier:
+			openStressCheckIn()
 		default:
 			Me.log.debug("Unhandled default action category: %@", category)
 		}
+	}
+
+	/// Notification responses can arrive off-main; both tab selection and the
+	/// navigation notification must reach UIKit on the main queue.
+	internal final func openStressCheckIn() {
+		guard Thread.isMainThread else {
+			DispatchQueue.main.async { [weak self] in self?.openStressCheckIn() }
+			return
+		}
+		showRecordDataScreen()
+		NotificationCenter.default.post(name: StressReminderScheduler.openCheckInNotification, object: nil)
 	}
 
 	private final func showActivityHistory() {

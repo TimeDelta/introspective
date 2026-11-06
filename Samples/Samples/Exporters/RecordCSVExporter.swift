@@ -10,6 +10,11 @@ import Settings
 
 public typealias MetricContextExporter = RecordCSVExporter<MetricContextEntry>
 public typealias LostItemExporter = RecordCSVExporter<LostItemEvent>
+public typealias StressCheckInExporter = RecordCSVExporter<StressCheckIn>
+
+public final class StressorResponseExporter: RecordCSVExporter<StressorResponse> {
+	public override class var prefetchedRelationships: [String] { ["checkIn"] }
+}
 
 /// Streams a pinned SQLite snapshot without retaining the complete set of managed records.
 public class RecordCSVExporter<Record: NSManagedObject & CoreDataSample>: Exporter {

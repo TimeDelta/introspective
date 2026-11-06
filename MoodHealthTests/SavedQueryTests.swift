@@ -1979,6 +1979,53 @@ final class SavedQueryTests: XCTestCase {
 		XCTAssertTrue(factory.getApplicableNumericInformationTypes(forAttribute: attribute).contains { $0 == EstimatedDatesInformation.self })
 	}
 
+	func testSavedEndDateSetAtQueryUsesEndMetadataInsteadOfStartMetadata() throws {
+		let calendar = Calendar.current
+		let target = calendar.startOfDay(for: Date(timeIntervalSince1970: 1_700_000_000)).addingTimeInterval(3600)
+		let other = try XCTUnwrap(calendar.date(byAdding: .day, value: -2, to: target))
+		let definition = ActivityDefinition(context: container.viewContext)
+		definition.name = "Timing provenance"; definition.recordScreenIndex = 0
+		for (name, startSet, endSet) in [("End matches", other, target), ("Start matches", target, other)] {
+			let activity = Activity(context: container.viewContext)
+			activity.definition = definition; activity.note = name
+			activity.setValue(other, forKey: "startDate")
+			activity.setValue(other.addingTimeInterval(600), forKey: "endDate")
+			activity.setValue(startSet, forKey: "startDateSetAt")
+			activity.setValue(endSet, forKey: "endDateSetAt")
+		}
+		try container.viewContext.save()
+		let query = injected(QueryFactory.self).activityQuery()
+		query.expression = OnDateAttributeRestriction(restrictedAttribute: Activity.endDateSetAttribute, date: target)
+		try dao.save(query, name: "End entry timing")
+		try reopen()
+		let restored = try XCTUnwrap(dao.getQueryWith(name: "End entry timing")).convert()
+		let request = Activity.fetchRequest()
+		request.predicate = try XCTUnwrap(restored.expression).predicate()
+		let matches = try container.viewContext.fetch(request)
+		XCTAssertEqual(matches.map { $0.note }, ["End matches"])
+		for activity in try container.viewContext.fetch(Activity.fetchRequest()) {
+			XCTAssertEqual(try XCTUnwrap(restored.expression).evaluate([.sample: activity]), activity.note == "End matches")
+		}
+	}
+
+	func testActivityEntryOffsetsKeepMissingMetadataUnknownAndPreserveSignedDelays() {
+		let activity = Activity(context: container.viewContext)
+		let start = Date(timeIntervalSince1970: 1_700_000_000)
+		let end = start.addingTimeInterval(3600)
+		activity.setValue(start, forKey: "startDate")
+		activity.setValue(end, forKey: "endDate")
+		activity.setValue(start.addingTimeInterval(120), forKey: "startDateSetAt")
+		XCTAssertNil(activity.durationBetweenEndAndSet)
+		XCTAssertEqual(activity.totalDurationOffset?.inUnit(.second), 120, "The legacy total is partial when only start provenance exists")
+		activity.setValue(end.addingTimeInterval(300), forKey: "endDateSetAt")
+		XCTAssertEqual(activity.durationBetweenEndAndSet?.inUnit(.second), 300)
+		XCTAssertEqual(activity.totalDurationOffset?.inUnit(.second), 420)
+		activity.setValue(end.addingTimeInterval(-60), forKey: "endDateSetAt")
+		XCTAssertEqual(activity.durationBetweenEndAndSet?.inUnit(.second), -60, "Do not turn future event times into positive forgetting evidence")
+		activity.setValue(nil, forKey: "endDate")
+		XCTAssertNil(activity.durationBetweenEndAndSet)
+	}
+
 	func testTimeCoverageMergesNestedAdjacentAndOverlappingIntervals() throws {
 		let start = Date(timeIntervalSince1970: 0)
 		func interval(_ a: Double, _ b: Double) -> DateInterval {

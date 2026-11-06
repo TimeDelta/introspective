@@ -9,7 +9,7 @@ import Samples
 import Settings
 
 final class MoodToolsViewController: UITableViewController {
-	private let options = ["Weekly Review", "Check-in Presets", "Reminders"]
+	private let options = ["Weekly Review", "Check-in Presets", "Reminders", "Stress Check-in", "Stress Review", "Manage Stressors", "Stress Guide", "Stress Reminders"]
 	override func viewDidLoad() { super.viewDidLoad(); title = "Mood Check-ins" }
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { options.count }
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -23,7 +23,12 @@ final class MoodToolsViewController: UITableViewController {
 		switch indexPath.row {
 		case 0: controller = MoodWeeklyReviewViewController(style: .grouped)
 		case 1: controller = MoodPresetsViewController(style: .grouped)
-		default: controller = MoodRemindersViewController(style: .grouped)
+		case 2: controller = MoodRemindersViewController(style: .grouped)
+		case 3: controller = StressCheckInViewController()
+		case 4: controller = StressReviewViewController(style: .grouped)
+		case 5: controller = StressorsViewController(style: .grouped)
+		case 6: controller = StressGuideViewController(style: .grouped)
+		default: controller = StressRemindersViewController(style: .grouped)
 		}
 		navigationController?.pushViewController(controller, animated: true)
 	}

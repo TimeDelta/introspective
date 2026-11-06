@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import CoreData
 import SwiftyMocky
 import Hamcrest
 import SwiftDate
@@ -1205,7 +1206,89 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		Verify(mockUiUtil, .never, .alertAction(title: .matching({ $0?.starts(with: "Delete") ?? false }), style: .any, handler: .any))
 	}
 
+	func testBulkDeletionUsesOnlyVisibleSearchResultsAndPreservesHiddenRecords() throws {
+		let records = try bulkDeletionMoods(notes: ["hidden first", "visible record", "hidden last"])
+		mockMoodTableViewCell()
+		let transaction = TransactionMock()
+		Given(mockDatabase, .transaction(willReturn: transaction))
+		controller.setSearchText("visible")
+		controller.samples = records
+		controller.viewDidLoad()
+		XCTAssertEqual(controller.tableView(tableView, numberOfRowsInSection: 1), 1)
+		let confirm = try bulkDeletionConfirmation()
+		let committed = expectation(description: "Visible selection deletion committed")
+		committed.assertForOverFulfill = true
+		Perform(transaction, .commit(perform: { committed.fulfill() }))
+
+		confirm(UIAlertAction())
+		wait(for: [committed], timeout: 5)
+
+		let visibleOnly: Parameter<[NSManagedObject]> = .matching { objects in
+			objects.count == 1 && objects[0] === records[1]
+		}
+		Verify(transaction, .once, .deleteAll(visibleOnly))
+		Verify(transaction, .once, .commit())
+		Verify(mockDatabase, .once, .transaction())
+	}
+
+	func testBulkDeletionKeepsConfirmedSelectionWhenSearchChangesAndDisablesEmptyResults() throws {
+		let records = try bulkDeletionMoods(notes: ["visible record", "hidden record"])
+		mockMoodTableViewCell()
+		let transaction = TransactionMock()
+		Given(mockDatabase, .transaction(willReturn: transaction))
+		controller.setSearchText("visible")
+		controller.samples = records
+		controller.viewDidLoad()
+		let confirm = try bulkDeletionConfirmation()
+
+		controller.setSearchText("hidden")
+		controller.updateSearchResults(for: UISearchController())
+		XCTAssertEqual(controller.tableView(tableView, numberOfRowsInSection: 1), 1)
+		controller.setSearchText("no matching record")
+		controller.updateSearchResults(for: UISearchController())
+		XCTAssertEqual(controller.tableView(tableView, numberOfRowsInSection: 1), 0)
+		controller.perform(controller.actionsButton.action)
+		Verify(mockUiUtil, .never, .alertAction(title: .matching { $0?.starts(with: "Delete") ?? false },
+			style: .any, handler: .any))
+		controller.perform(NSSelectorFromString("deleteAllSamples"))
+		Verify(mockUiUtil, .once, .alertAction(title: .value("Yes"), style: .any, handler: .any))
+		let committed = expectation(description: "Original confirmation selection committed")
+		committed.assertForOverFulfill = true
+		Perform(transaction, .commit(perform: { committed.fulfill() }))
+
+		confirm(UIAlertAction())
+		wait(for: [committed], timeout: 5)
+
+		let originallyVisible: Parameter<[NSManagedObject]> = .matching { objects in
+			objects.count == 1 && objects[0] === records[0]
+		}
+		Verify(transaction, .once, .deleteAll(originallyVisible))
+		Verify(transaction, .once, .commit())
+		Verify(mockDatabase, .once, .transaction())
+	}
+
 	// MARK: - Helper Functions
+
+	private func bulkDeletionMoods(notes: [String]) throws -> [MoodImpl] {
+		Given(injectionProvider, .get(.value(CoreDataSampleUtil.self), willReturn: BulkDeletionDateUtil()))
+		let entity = try XCTUnwrap(ObjectModelContainer.objectModel.entitiesByName[MoodImpl.entityName])
+		return notes.enumerated().map { index, note in
+			let mood = MoodImpl(entity: entity, insertInto: nil)
+			mood.setSource(.introspective)
+			mood.date = Date(timeIntervalSince1970: 1_700_000_000 + Double(index))
+			mood.rating = 3; mood.minRating = 0; mood.maxRating = 6; mood.note = note
+			return mood
+		}
+	}
+
+	private func bulkDeletionConfirmation() throws -> (UIAlertAction) -> Void {
+		Given(mockUiUtil, .alertAction(title: .any, style: .any, handler: .any,
+			willReturn: UIAlertAction(), UIAlertAction(), UIAlertAction(), UIAlertAction(), UIAlertAction(), UIAlertAction()))
+		controller.perform(NSSelectorFromString("deleteAllSamples"))
+		let confirmation = ArgumentCaptor<((UIAlertAction) -> Void)?>()
+		Verify(mockUiUtil, .once, .alertAction(title: .value("Yes"), style: .any, handler: .capturing(confirmation)))
+		return try XCTUnwrap(confirmation.value ?? nil)
+	}
 
 	private final func setFailedTrue() {
 		controller.samples = nil
@@ -1330,4 +1413,8 @@ final class ResultsViewControllerUnitTests: UnitTest {
 			willReturn: cell))
 		return cell
 	}
+}
+
+private struct BulkDeletionDateUtil: CoreDataSampleUtil {
+	func convertTimeZoneIfApplicable(for date: Date, timeZoneId: String?) -> Date { date }
 }

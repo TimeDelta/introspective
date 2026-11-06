@@ -71,7 +71,7 @@ the app's recording settings change. A check-in and its selected mood context
 are saved in one transaction. Automatic capture retains full timestamp precision.
 
 The first three presets are available to the **Mood Check-in** WidgetKit widget
-on iOS 17 or later. Add it from the Home or Lock Screen widget picker. Small
+on iOS 18 or later. Add it from the Home or Lock Screen widget picker. Small
 widgets show two presets, medium widgets show three, and Lock Screen accessories
 use the first. Buttons record directly without opening the app; the setup link
 opens the preset list. Preset content is marked privacy-sensitive and recording

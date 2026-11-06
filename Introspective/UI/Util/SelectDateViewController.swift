@@ -60,6 +60,9 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 	public final var lastDate: Date?
 	public final var notificationToSendOnAccept: Notification.Name!
 
+	// Manual precision is also the signal used by Estimated Dates (%) and entry-
+	// accuracy/forgetfulness exploration. Keep automatic/Now/Last precision intact.
+	// See docs/timestamp-precision.md for the contract and inference limitations.
 	private final var selectedPrecision: Calendar.Component? = .minute
 
 	private final var decrementByThirtyButton: UIBarButtonItem!
