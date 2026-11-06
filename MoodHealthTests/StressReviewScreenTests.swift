@@ -21,10 +21,17 @@ final class StressReviewScreenTests: XCTestCase {
 		open(controller); waitUntilReady(controller)
 		let period: UISegmentedControl = try control("stressReviewPeriod", in: controller.view)
 		XCTAssertEqual(period.selectedSegmentIndex, 0)
+		let actions = try XCTUnwrap(period.actions(forTarget: controller, forControlEvent: .valueChanged))
+		XCTAssertEqual(actions, [NSStringFromSelector(#selector(StressReviewViewController.reloadReview))])
+		let action = try XCTUnwrap(actions.first)
 		XCTAssertEqual(controller.tableView.accessibilityIdentifier, "stressReview")
 		for (index, start) in [(0, "2024-07-09T00:00:00Z"), (1, "2024-06-16T00:00:00Z"), (2, "2024-04-17T00:00:00Z")] {
 			period.selectedSegmentIndex = index
-			period.sendActions(for: .valueChanged)
+			let previousRequestCount = requests.count
+			// This native test bundle has no UIApplication to dispatch UIControl actions.
+			// Invoke the registered target/selector and still verify the real control wiring.
+			controller.perform(NSSelectorFromString(action))
+			XCTAssertEqual(requests.count, previousRequestCount + 1)
 			waitUntilReady(controller)
 			let request = try XCTUnwrap(requests.last)
 			XCTAssertEqual(request.interval.start, date(start))
@@ -238,8 +245,9 @@ final class StressReviewScreenTests: XCTestCase {
 		weak var released: StressReviewViewController?
 		autoreleasepool {
 			let controller = makeController(now: now, records: records)
-			controller.loadViewIfNeeded(); controller.viewWillAppear(false)
-			controller.reloadReview(); controller.viewWillDisappear(false)
+			open(controller)
+			controller.reloadReview()
+			controller.beginAppearanceTransition(false, animated: false); controller.endAppearanceTransition()
 			released = controller
 		}
 		XCTAssertNil(released)
@@ -263,7 +271,8 @@ final class StressReviewScreenTests: XCTestCase {
 		return controller
 	}
 	@MainActor private func open(_ controller: StressReviewViewController) {
-		controller.loadViewIfNeeded(); controller.viewWillAppear(false)
+		controller.loadViewIfNeeded()
+		controller.beginAppearanceTransition(true, animated: false); controller.endAppearanceTransition()
 	}
 	@MainActor private func waitUntilReady(_ controller: StressReviewViewController,
 		file: StaticString = #file, line: UInt = #line) {
