@@ -152,7 +152,7 @@ The following data types are supported (with more to come, guaranteed):
 
 ## Getting Started with contributing
 
-Introspective requires **iOS 17 or later**. Build the app, extensions and internal frameworks with the current Xcode release. Health State of Mind exchange requires iOS 18 or later; local recording, queries and CSV exchange are available on iOS 17.
+Introspective requires **iOS 18 or later**. Build the app, extensions and internal frameworks with the current Xcode release. Apple Health State of Mind exchange, local recording, queries and CSV exchange are available on supported iOS versions.
 
 ### Code Formatting
 Code formatting is done via [SwiftFormat](https://github.com/nicklockwood/SwiftFormat). You _**must**_ [install it](https://github.com/nicklockwood/SwiftFormat#how-do-i-install-it) for the build to work because all non-test code is automatically formatted during the build process.
