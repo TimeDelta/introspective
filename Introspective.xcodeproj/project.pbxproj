@@ -88,6 +88,7 @@
 		25A3E78A940B447D4469B9C43943A4B9 /* DoesNotHaveOneOfTagAttributeRestrictionFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD8BF5A5F1719BF4277004275C82ECB /* DoesNotHaveOneOfTagAttributeRestrictionFunctionalTests.swift */; };
 		25DCB7D6FC9C6D0332DAA96D0FBFA81D /* StopAllActivitiesIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4178BC066D97C3EC749CF6502E6E3E0 /* StopAllActivitiesIntentHandler.swift */; };
 		263EA09B45E3A4A0682B04A80588F288 /* DataExport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3240661B79AB4FF69D5D569E161F5C8 /* DataExport.framework */; };
+		27FE70CAD599D86E61CD4962 /* DiscreteRatingEditorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC8525117D309F5254E8098 /* DiscreteRatingEditorTests.swift */; };
 		2827405EDF38A5924ACFBBB5EC256146 /* SameStartDatesSubQueryMatcherUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE92103BE7FA3F73CAFCCEE92C88812B /* SameStartDatesSubQueryMatcherUnitTests.swift */; };
 		285D8151684BC370F1BE0A2E72F90651 /* Util.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F49FDC841BC67626719128AB437E57F9 /* Util.storyboard */; };
 		29A896A79536E54FBE7D4F016DE6F4FC /* DietarySugarTimelineTableViewCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F533DAA0DD0E635225923F9BDE06D39D /* DietarySugarTimelineTableViewCellDelegate.swift */; };
@@ -1179,6 +1180,7 @@
 		CAFE00000000000000000003 /* LegacySavedQueries.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = LegacySavedQueries.xcdatamodel; sourceTree = "<group>"; };
 		CAFE00000000000000000004 /* LostItems.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = LostItems.xcdatamodel; sourceTree = "<group>"; };
 		CCA6A681A4FDB4CBDDF8AF8D38EB74F3 /* SplitByListElementSampleGrouperUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitByListElementSampleGrouperUnitTests.swift; sourceTree = "<group>"; };
+		CCC8525117D309F5254E8098 /* DiscreteRatingEditorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DiscreteRatingEditorTests.swift; sourceTree = "<group>"; };
 		CD0A4D632FA9158F03ADD40EAE8FCCE7 /* IntrospectiveUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IntrospectiveUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD407C2211B353B0FDD369D5FE3DBBFD /* ImportDataTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportDataTableViewController.swift; sourceTree = "<group>"; };
 		CDBC3067A33C516E81A890260DF309B1 /* ActivityHasTagAttributeRestrictionFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityHasTagAttributeRestrictionFunctionalTests.swift; sourceTree = "<group>"; };
@@ -2588,6 +2590,7 @@
 				6A170BF875ED16D6D6F7289B69FEB6EC /* Util */,
 				58D4F7A20D65B7D8B57AD3C509F9BC16 /* ImportDataTableViewControllerUnitTests.swift */,
 				7066135BC062E2C8B24B7C2F24FE6819 /* ActiveImportTableViewCellUnitTests.swift */,
+				B29A913278D92D3E6AF1BB6A /* SampleEditors */,
 				79BE83F8E7FA81DD8B18088C /* MoodReview */,
 			);
 			path = UI;
@@ -2723,6 +2726,15 @@
 				BFD6DF2FD36A97E487758A05 /* PinnedQueryDashboardViewController.swift */,
 			);
 			path = Explore;
+			sourceTree = "<group>";
+		};
+		B29A913278D92D3E6AF1BB6A /* SampleEditors */ = {
+			isa = PBXGroup;
+			children = (
+				CCC8525117D309F5254E8098 /* DiscreteRatingEditorTests.swift */,
+			);
+			name = SampleEditors;
+			path = SampleEditors;
 			sourceTree = "<group>";
 		};
 		B4100FE18830875C49D312F6C843E55E /* RecordData */ = {
@@ -4079,6 +4091,7 @@
 				B0A904612971C02D74D30D95 /* DirectionalCalendarMatcherTests.swift in Sources */,
 				E8503C6928F274DC13EF4697 /* MoodRescalingTests.swift in Sources */,
 				7AA97B0BB48D2476FD8DF77B /* TimelineBehaviorTests.swift in Sources */,
+				27FE70CAD599D86E61CD4962 /* DiscreteRatingEditorTests.swift in Sources */,
 				44C37A91596801B2D9FA16DE /* MoodHistoryDayTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

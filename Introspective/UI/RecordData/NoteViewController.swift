@@ -26,6 +26,7 @@ final class NoteViewController: UIViewController {
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
+		UITestFixtureLoader.configureLiteralInputForUITesting(textView)
 		if note != nil {
 			textView.text = note
 		}

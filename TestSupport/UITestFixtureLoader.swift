@@ -1,6 +1,8 @@
 import CoreData
+import UIKit
 import Common
 import DependencyInjection
+import Globals
 import Persistence
 import Queries
 import Samples
@@ -9,6 +11,24 @@ import Samples
 enum UITestFixtureLoader {
 	enum FixtureError: Error {
 		case duplicateOrEmptyName, unknownReference, invalidFrequency, invalidDosage, invalidDate, nonemptyDatabase, missingDashboardPreferences
+	}
+
+	/// UI scenarios enter literal fixtures and assert every delivered prefix.
+	/// System correction can change that text; inline predictions can also appear
+	/// in accessibility values before they are committed. Configure before editing,
+	/// leaving the ordinary app's input traits unchanged.
+	static func configureLiteralInputForUITesting(_ input: UITextView) {
+		guard Globals.uiTesting else { return }
+		input.autocorrectionType = .no
+		input.spellCheckingType = .no
+		if #available(iOS 17.0, *) { input.inlinePredictionType = .no }
+	}
+
+	static func configureLiteralInputForUITesting(_ input: UITextField) {
+		guard Globals.uiTesting else { return }
+		input.autocorrectionType = .no
+		input.spellCheckingType = .no
+		if #available(iOS 17.0, *) { input.inlinePredictionType = .no }
 	}
 
 	@discardableResult
