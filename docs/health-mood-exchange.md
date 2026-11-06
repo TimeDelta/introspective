@@ -1,6 +1,6 @@
 # Mood exchange with Apple Health
 
-On iOS 18 or later, open **Settings → Mood → Health** and choose **Import from Health** or **Export to Health**. Health asks for State of Mind access. On iOS 17, local moods and CSV exchange remain available. The app requires iOS 17 or later.
+Introspective requires iOS 18 or later. Open **Settings → Mood → Health** and choose **Import from Health** or **Export to Health**. Health asks for State of Mind access. Local moods, queries and CSV exchange remain available independently of Health access.
 
 Import adds daily moods and momentary emotions as timestamped local ratings. With “scale moods on import” enabled, Health's −1…1 valence is mapped to your saved minimum/maximum; otherwise it stays on −1…1. Existing imported sample IDs are skipped. Health does not reveal whether read access was denied: zero imported records can mean no permitted new records, not necessarily an empty Health history.
 
@@ -20,4 +20,4 @@ Before release, on an iPhone with iOS 18+:
 2. Export known minimum, midpoint, and maximum ratings. Verify their dates and valences in Health; export again and check for duplicates.
 3. Create a daily mood and a momentary emotion in Health. Import twice and verify timestamps, scaling, and single local records.
 4. Confirm exported records are not imported back and imported records are not exported again.
-5. Update an installation containing existing moods and verify its records survive migration. On iOS 17, check local recording and CSV exchange without a Health action.
+5. Update an installation containing existing moods and verify its records survive migration. Check local recording and CSV exchange also work without granting Health access.

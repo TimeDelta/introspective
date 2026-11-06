@@ -1,5 +1,5 @@
-# The app, its extensions, tests and owned frameworks require iOS 17 or later.
-platform :ios, '17.0'
+# The app, its extensions, tests and owned frameworks require iOS 18 or later.
+platform :ios, '18.0'
 
 # Apply the app's minimum to legacy pods while preserving higher requirements.
 post_install do |installer|
@@ -14,8 +14,8 @@ post_install do |installer|
         settings.write(updated) if updated != original
       end
       minimum = config.build_settings['IPHONEOS_DEPLOYMENT_TARGET']
-      if minimum.nil? || Gem::Version.new(minimum) < Gem::Version.new('17.0')
-        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '17.0'
+      if minimum.nil? || Gem::Version.new(minimum) < Gem::Version.new('18.0')
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '18.0'
       end
     end
   end

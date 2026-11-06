@@ -20,7 +20,7 @@ def main():
     subprocess.run([
         "xcrun", "--sdk", "iphonesimulator", "swiftc", "-typecheck", "-swift-version", "5",
         "-module-name", "SwiftyMocky", "-sdk", sdk,
-        "-target", f"{architecture}-apple-ios17.0-simulator",
+        "-target", f"{architecture}-apple-ios18.0-simulator",
         "-F", str(Path(developer_platform) / "Developer/Library/Frameworks"),
         "-I", str(Path(developer_platform) / "Developer/usr/lib"),
         *map(str, sources),
