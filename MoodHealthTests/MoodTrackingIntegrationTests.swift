@@ -182,6 +182,73 @@ final class MoodTrackingIntegrationTests: XCTestCase {
 		XCTAssertEqual(result.current.checkInCount, 1); XCTAssertEqual(result.current.averagePosition, 0.8)
 		XCTAssertEqual(MoodWeeklyReview.timestamp(for: mood), date)
 	}
+	func testHistoricalDayFiltersInclusiveDAOResultsIntoDisjointDSTDays() throws {
+		var calendar = Calendar(identifier: .gregorian)
+		calendar.timeZone = try XCTUnwrap(TimeZone(identifier: "America/New_York"))
+		let day = try XCTUnwrap(calendar.date(from: DateComponents(year: 2024, month: 11, day: 3, hour: 12)))
+		let now = try XCTUnwrap(calendar.date(byAdding: .day, value: 7, to: day))
+		let window = try XCTUnwrap(MoodHistoryWindow(selection: .day(day), asOf: now, calendar: calendar))
+		let next = try XCTUnwrap(window.movingDay(by: 1))
+		XCTAssertEqual(window.interval.duration, 25 * 60 * 60)
+		let dao = injected(MoodDAO.self)
+		for (timestamp, note) in [(window.interval.start, "Day start"),
+			(window.interval.end.addingTimeInterval(-0.125), "Day end"), (window.interval.end, "Next day")] {
+			_ = try dao.createMood(timestamp: timestamp, rating: 5, min: 0, max: 10, note: note)
+		}
+		let fetched = try dao.getMoods(from: window.interval.start, to: window.interval.end)
+		XCTAssertEqual(fetched.count, 3, "The shared DAO includes both endpoints")
+		let displayed = fetched.filter { window.contains(MoodWeeklyReview.timestamp(for: $0)) }
+		let following = try dao.getMoods(from: next.interval.start, to: next.interval.end)
+			.filter { next.contains(MoodWeeklyReview.timestamp(for: $0)) }
+		XCTAssertEqual(Set(displayed.compactMap { $0.note }), Set(["Day start", "Day end"]))
+		XCTAssertEqual(following.map { $0.note }, ["Next day"])
+		XCTAssertFalse(displayed.contains { next.contains(MoodWeeklyReview.timestamp(for: $0)) })
+		XCTAssertEqual(MoodReviewSummary(moods: displayed, calendar: calendar).recordedDayCount, 1)
+	}
+	func testSelectedDayBackfillTimestampScaleAndNoteSurviveSQLiteReopen() throws {
+		var calendar = Calendar(identifier: .gregorian)
+		calendar.timeZone = try XCTUnwrap(TimeZone(identifier: "America/New_York"))
+		let day = try XCTUnwrap(calendar.date(from: DateComponents(year: 2024, month: 3, day: 10, hour: 17)))
+		let now = try XCTUnwrap(calendar.date(byAdding: .day, value: 10, to: day))
+		let window = try XCTUnwrap(MoodHistoryWindow(selection: .day(day), asOf: now, calendar: calendar))
+		let timestamp = try XCTUnwrap(window.newCheckInDate)
+		XCTAssertEqual(window.interval.duration, 23 * 60 * 60)
+		XCTAssertEqual(timestamp, window.interval.start)
+		XCTAssertEqual(calendar.component(.second, from: timestamp), 0)
+		XCTAssertEqual(timestamp.timeIntervalSince1970.truncatingRemainder(dividingBy: 1), 0)
+		_ = try injected(MoodDAO.self).createMood(timestamp: timestamp, rating: -0.25, min: -1, max: 1, note: "Missed check-in")
+		container.viewContext.reset()
+		for store in container.persistentStoreCoordinator.persistentStores { try container.persistentStoreCoordinator.remove(store) }
+		container = try open(); try register()
+		let loaded = try injected(MoodDAO.self).getMoods(from: window.interval.start, to: window.interval.end)
+		let mood = try XCTUnwrap(loaded.first)
+		XCTAssertEqual(loaded.count, 1)
+		XCTAssertEqual(MoodWeeklyReview.timestamp(for: mood), timestamp)
+		XCTAssertEqual(mood.rating, -0.25); XCTAssertEqual(mood.minRating, -1); XCTAssertEqual(mood.maxRating, 1)
+		XCTAssertEqual(mood.note, "Missed check-in")
+		XCTAssertEqual(MoodReviewSummary(moods: loaded, calendar: calendar).averagePosition, 0.375)
+	}
+	func testHistoricalDayAndSummaryUseStoredInstantsAcrossLegacyDisplayShifts() throws {
+		var calendar = Calendar(identifier: .gregorian)
+		calendar.timeZone = try XCTUnwrap(TimeZone(identifier: "America/New_York"))
+		let formatter = ISO8601DateFormatter()
+		let first = try XCTUnwrap(formatter.date(from: "2024-11-03T04:30:00Z"))
+		let last = try XCTUnwrap(formatter.date(from: "2024-11-04T04:30:00Z"))
+		let now = try XCTUnwrap(formatter.date(from: "2024-11-10T17:00:00Z"))
+		let window = try XCTUnwrap(MoodHistoryWindow(selection: .day(first), asOf: now, calendar: calendar))
+		let low = try MoodPresetRecorder.record(MoodCheckInPreset(name: "Low", rating: 2, minimum: 0, maximum: 4), at: first)
+		let high = try MoodPresetRecorder.record(MoodCheckInPreset(name: "High", rating: 75, minimum: 0, maximum: 100), at: last)
+		DependencyInjector.register([TrackingDisplayShift()])
+		XCTAssertFalse(window.contains(low.date)); XCTAssertFalse(window.contains(high.date))
+		XCTAssertNotEqual(calendar.startOfDay(for: low.date), calendar.startOfDay(for: high.date),
+			"The display shift crosses different local dates around the DST boundary")
+		let displayed = try injected(MoodDAO.self).getMoods(from: window.interval.start, to: window.interval.end)
+			.filter { window.contains(MoodWeeklyReview.timestamp(for: $0)) }
+		let summary = MoodReviewSummary(moods: displayed, calendar: calendar)
+		XCTAssertEqual(summary.checkInCount, 2); XCTAssertEqual(summary.recordedDayCount, 1)
+		XCTAssertEqual(summary.ratedCheckInCount, 2); XCTAssertEqual(summary.averagePosition, 0.625)
+		XCTAssertEqual(Set(displayed.map { MoodWeeklyReview.timestamp(for: $0) }), Set([first, last]))
+	}
 	func testMoodContextOverlayIncludesSpanningAndAllMetricEntriesButExcludesOtherMetricsAndEndBoundary() throws {
 		let end = Date(), start = end.addingTimeInterval(-3600), interval = DateInterval(start: start, end: end)
 		let spanning = try MetricContextEntry.record(category: .illness, metric: .mood, at: start.addingTimeInterval(-3600), until: start.addingTimeInterval(1))
