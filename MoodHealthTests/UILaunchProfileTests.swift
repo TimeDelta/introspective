@@ -2,6 +2,56 @@ import Foundation
 import XCTest
 
 final class UILaunchProfileTests: XCTestCase {
+	func testLaunchGeometryAcceptsTheActualThreeTimesDisplayAndRejectsRunnerPlaceholder() {
+		let pixels = CGSize(width: 1206, height: 2622)
+		let tab = CGRect(x: 2, y: 792, width: 97, height: 48)
+		XCTAssertTrue(UITestLaunchGeometry.isUsable(displayPixels: pixels,
+			window: CGRect(x: 0, y: 0, width: 402, height: 874), recordTab: tab))
+		XCTAssertFalse(UITestLaunchGeometry.isUsable(displayPixels: pixels,
+			window: CGRect(x: 0, y: 0, width: 320, height: 480), recordTab: tab))
+	}
+
+	func testLaunchGeometryAlsoAcceptsATwoTimesPortraitDisplay() {
+		XCTAssertTrue(UITestLaunchGeometry.isUsable(displayPixels: CGSize(width: 750, height: 1334),
+			window: CGRect(x: 0, y: 0, width: 375, height: 667),
+			recordTab: CGRect(x: 2, y: 585, width: 90, height: 48)))
+	}
+
+	func testLaunchGeometryRejectsTheScaledSpringBoardWindowAndTab() {
+		let pixels = CGSize(width: 1206, height: 2622)
+		let scaledTab = CGRect(x: 0.7, y: 264, width: 32.3, height: 16)
+		XCTAssertFalse(UITestLaunchGeometry.isUsable(displayPixels: pixels,
+			window: CGRect(x: 0, y: 0, width: 134, height: 291.3), recordTab: scaledTab))
+		XCTAssertFalse(UITestLaunchGeometry.isUsable(displayPixels: pixels,
+			window: CGRect(x: 0, y: 0, width: 402, height: 874), recordTab: scaledTab))
+	}
+
+	func testLaunchGeometryRejectsInvalidDisplayAndNonfullscreenWindowGeometry() {
+		let pixels = CGSize(width: 1206, height: 2622)
+		let window = CGRect(x: 0, y: 0, width: 402, height: 874)
+		let tab = CGRect(x: 2, y: 792, width: 97, height: 48)
+		for invalidPixels in [CGSize.zero, CGSize(width: CGFloat.nan, height: 2622),
+			CGSize(width: 1206, height: CGFloat.infinity), CGSize(width: 2622, height: 1206)] {
+			XCTAssertFalse(UITestLaunchGeometry.isUsable(displayPixels: invalidPixels, window: window, recordTab: tab))
+		}
+		for invalidWindow in [CGRect.zero, CGRect(x: CGFloat.nan, y: 0, width: 402, height: 874),
+			CGRect(x: 0, y: 0, width: CGFloat.infinity, height: 874), CGRect(x: 4, y: 0, width: 402, height: 874),
+			CGRect(x: 0, y: 0, width: 500, height: 874)] {
+			XCTAssertFalse(UITestLaunchGeometry.isUsable(displayPixels: pixels, window: invalidWindow, recordTab: tab))
+		}
+	}
+
+	func testLaunchGeometryRequiresAFiniteContainedTabWithUsableHitDimensions() {
+		let pixels = CGSize(width: 1206, height: 2622)
+		let window = CGRect(x: 0, y: 0, width: 402, height: 874)
+		for invalidTab in [CGRect.zero, CGRect(x: 2, y: 792, width: 43, height: 48),
+			CGRect(x: 2, y: 792, width: 97, height: 29), CGRect(x: -2, y: 792, width: 97, height: 48),
+			CGRect(x: 390, y: 792, width: 97, height: 48), CGRect(x: 2, y: 850, width: 97, height: 48),
+			CGRect(x: 2, y: CGFloat.nan, width: 97, height: 48), CGRect(x: 2, y: 792, width: CGFloat.infinity, height: 48)] {
+			XCTAssertFalse(UITestLaunchGeometry.isUsable(displayPixels: pixels, window: window, recordTab: invalidTab))
+		}
+	}
+
 	override func tearDown() {
 		UILaunchProfileRecorder.activate(environment: [:], isUITesting: false)
 		super.tearDown()
