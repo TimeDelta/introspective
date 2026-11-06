@@ -415,23 +415,24 @@ class UITest: XCTestCase {
 				field.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
 			} else { field.tap() }
 			guard dismissKeyboardIntroductionIfPresent() else { return }
-			// Keyboard keys may be exposed but not individually hittable during
-			// presentation. Keyboard existence is the supported readiness signal;
-			// typing still targets the selected text input and checks its full value.
+			// Injected text needs an existing keyboard; the per-character software
+			// key path below additionally waits for each key to become hittable.
+			// Both paths check the complete value before allowing a save.
 			guard waitForElement(app.keyboards.firstMatch) else {
 				attachInputDiagnostics()
 				XCTFail("Software keyboard did not appear for text input")
 				return
 			}
 			if perCharacter {
-				// A complete typing batch can return after delivering only a prefix.
-				// For the affected field, send each character once and observe its
-				// delivery before sending the next. Never repair or retry lost input.
+				// Even single-character injected batches can return without delivery.
+				// Use visible keys and explicit case/layout for ASCII letters/spaces,
+				// then observe each character's delivery.
+				// Never repair or retry lost input.
 				var prefix = ""
 				for character in text {
 					prefix.append(character)
 					let expectedPrefix = prefix
-					field.typeText(String(character))
+					guard enterCharacter(character, into: field) else { return }
 					var actual = field.value as? String
 					if actual != expectedPrefix {
 						let delivered = NSPredicate { _, _ in (field.value as? String) == expectedPrefix }
@@ -464,6 +465,52 @@ class UITest: XCTestCase {
 				}
 			}
 		}
+	}
+
+	/// Alphabetic software keys exercise the same case/layout transitions as a
+	/// user's taps. Punctuation and non-ASCII characters retain one injected event;
+	/// their exact prefix is checked by the caller, with no replacement or retry.
+	private func enterCharacter(_ character: Character, into field: XCUIElement) -> Bool {
+		let keyboard = app.keyboards.firstMatch
+		let text = String(character)
+		let isASCIILetter = character.asciiValue.map { (65...90).contains($0) || (97...122).contains($0) } ?? false
+		guard isASCIILetter || character == " " else {
+			field.typeText(text)
+			return true
+		}
+		let key = keyboard.keys[character == " " ? "space" : text]
+		if isASCIILetter {
+			let oppositeCase = text == text.uppercased() ? text.lowercased() : text.uppercased()
+			// Numeric fields can leave the keyboard on its numbers page. Return to
+			// letters once, only when the keyboard exposes that specific action.
+			let letters = keyboard.keys.matching(NSPredicate(format: "identifier == 'more' AND label == 'letters'")).firstMatch
+			if !key.exists && !keyboard.keys[oppositeCase].exists && letters.exists {
+				guard waitForHittableElement(letters) else {
+					attachInputDiagnostics()
+					XCTFail("Software keyboard's letters layout is not reachable")
+					return false
+				}
+				letters.tap()
+			}
+			// Select case before sending the character, instead of relying on
+			// typeText to synthesize a Shift sequence during keyboard transitions.
+			if !key.exists && keyboard.keys[oppositeCase].exists {
+				let shift = keyboard.buttons["shift"]
+				guard waitForHittableElement(shift) else {
+					attachInputDiagnostics()
+					XCTFail("Software keyboard cannot select the case for \(String(reflecting: text))")
+					return false
+				}
+				shift.tap()
+			}
+		}
+		guard waitForHittableElement(key) else {
+			attachInputDiagnostics()
+			XCTFail("Software keyboard has no reachable key for \(String(reflecting: text))")
+			return false
+		}
+		key.tap()
+		return true
 	}
 
 	/// Fresh simulators can show Apple's swipe-typing lesson instead of keyboard
