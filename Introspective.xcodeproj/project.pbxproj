@@ -623,6 +623,7 @@
 		FF7B0979EA803DB500EB326566BD18B9 /* GreaterThanOrEqualToFrequencyAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D3AFC24DD7F06244A4014E823775E36 /* GreaterThanOrEqualToFrequencyAttributeRestrictionUnitTests.swift */; };
 		FF89D114869814445AE1A9FE91402BAB /* ChooseSampleTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C0748CFAA17C63833134DA662F307D /* ChooseSampleTypeViewController.swift */; };
 		FFF10B1E718D9F9082E962362B8C3EB4 /* Pods_IntrospectiveTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2763BD3734CEB18405B1CE4963F5E012 /* Pods_IntrospectiveTests.framework */; };
+		17FC268707504C198F351F1F /* MoodSettingsNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBC0CF2AA68497C9983A1B8 /* MoodSettingsNavigationTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1305,6 +1306,7 @@
 		FF8C7CE5B285255CEE4CD6ADF783BA8B /* TextViewMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewMatchers.swift; sourceTree = "<group>"; };
 		FF95B526BDD3B050C960D09F8EDA298A /* TestDataGenerationTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDataGenerationTableViewController.swift; sourceTree = "<group>"; };
 		FFD646AFB07A1852F3B1602AB3F5619B /* SingleSampleTypeXYGraphDataGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleSampleTypeXYGraphDataGenerator.swift; sourceTree = "<group>"; };
+		7DBC0CF2AA68497C9983A1B8 /* MoodSettingsNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodSettingsNavigationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3092,6 +3094,7 @@
 		ED26BC72949B9CE023A9EA7A564F95CF /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				7DBC0CF2AA68497C9983A1B8 /* MoodSettingsNavigationTests.swift */,
 				77BD678F83C214445628373E74C387F8 /* Export */,
 			);
 			path = Settings;
@@ -3964,6 +3967,7 @@
 				8342D608B77176551392FD5BD22DDA1D /* QueryViewControllerUnitTests.swift in Sources */,
 				1B2AAD3F051969F3078719516D0330BB /* MoodUtilFunctionalTests.swift in Sources */,
 				ED4321C35164A534A164F2FD7FDCC1D2 /* ExportDataTableViewControllerUnitTests.swift in Sources */,
+				17FC268707504C198F351F1F /* MoodSettingsNavigationTests.swift in Sources */,
 				F063728EC72012E7961A0B0AD867B0F8 /* GroupMatchers.swift in Sources */,
 				2446823AE5CD4C30A027191872C096DA /* NotEqualToStringAttributeRestrictionUnitTests.swift in Sources */,
 				01EDFBE7319BFF4A71D368F547002D50 /* CSVMatchers.swift in Sources */,
