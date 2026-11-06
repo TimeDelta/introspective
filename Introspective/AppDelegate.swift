@@ -65,6 +65,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 			UserDefaults(suiteName: dashboardSuite)?.removePersistentDomain(forName: dashboardSuite)
 			try? MoodTrackingPreferences.shared.save(presets: [])
 			try? MoodTrackingPreferences.shared.save(reminders: MoodReminderSettings())
+			try? StressReminderPreferences.shared.save(reminders: StressReminderSettings())
 		}
 
 		#if DEBUG

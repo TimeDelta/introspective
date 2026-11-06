@@ -34,6 +34,8 @@ public final class ExportDataTableViewController: UITableViewController {
 		MoodImpl.self,
 		MetricContextEntry.self,
 		LostItemEvent.self,
+		StressCheckIn.self,
+		StressorResponse.self,
 	]
 
 	// MARK: Active Exports
@@ -290,6 +292,8 @@ public final class ExportDataTableViewController: UITableViewController {
 		}
 		if type == MetricContextEntry.self { return injected(MetricContextExporter.self) }
 		if type == LostItemEvent.self { return injected(LostItemExporter.self) }
+		if type == StressCheckIn.self { return injected(StressCheckInExporter.self) }
+		if type == StressorResponse.self { return injected(StressorResponseExporter.self) }
 		Me.log.error("Unknown index path: (section: %d, row: %d)", indexPath.section, indexPath.row)
 		throw GenericError("Unknown index path")
 	}
@@ -315,7 +319,7 @@ public final class ExportDataTableViewController: UITableViewController {
 		case is MoodExporter:
 			content.categoryIdentifier = UserNotificationDelegate.finishedExportingMoods.identifier
 			break
-		case is MetricContextExporter, is LostItemExporter:
+		case is MetricContextExporter, is LostItemExporter, is StressCheckInExporter, is StressorResponseExporter:
 			content.categoryIdentifier = UserNotificationDelegate.finishedExportingRecords.identifier
 		default:
 			Me.log.error("Forgot a type of exporter for notifications: %@", String(describing: exporter))

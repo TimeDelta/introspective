@@ -148,11 +148,25 @@ The following data types are supported (with more to come, guaranteed):
   - Sexual Activity (from Apple Health app)
   - Sleep (from Apple Health app)
   - Steps (from Apple Health app)
+  - Stress check-ins (overall stress and optional personal stressors)
+    - Anchored ratings, explicit skipped/not-applicable answers, and optional notes
+    - Historical review, before/after comparisons and appointment preparation
   - Weight (from Apple Health app)
+
+See [Stress check-ins](docs/stress-check-ins.md) for the workflow and
+[Timestamp precision](docs/timestamp-precision.md) for the date-picker rules
+used when interpreting estimated times and forgetfulness proxies.
 
 ## Getting Started with contributing
 
 Introspective requires **iOS 18 or later**. Build the app, extensions and internal frameworks with the current Xcode release. Apple Health State of Mind exchange, local recording, queries and CSV exchange are available on supported iOS versions.
+
+### Local analytics tests
+
+Run `python3 scripts/test-mood-analytics.py` with an installed Swift toolchain on
+Linux or macOS. It compiles the production Foundation sources and runs their
+actual mood, stress and reminder-planning XCTest files without an iOS build.
+UIKit, Core Data migrations, HealthKit and UI automation still require macOS/Xcode.
 
 ### Code Formatting
 Code formatting is done via [SwiftFormat](https://github.com/nicklockwood/SwiftFormat). You _**must**_ [install it](https://github.com/nicklockwood/SwiftFormat#how-do-i-install-it) for the build to work because all non-test code is automatically formatted during the build process.

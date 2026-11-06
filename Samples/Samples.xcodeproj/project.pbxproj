@@ -9,9 +9,12 @@
 /* Begin PBXBuildFile section */
 		3983C8BA7A75603C642372C2 /* MoodTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 908988DE7D50D931BD9B71D0 /* MoodTracking.swift */; };
 		3F51413D379EF671A459ACE6 /* MoodReminderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC2FA5E5B39E34A0D507A3B /* MoodReminderService.swift */; };
+		415ABAAC3EC9B23B14B8CA72 /* StressTrackingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA7506DC522BFD936DE4CAC /* StressTrackingStore.swift */; };
+		49D358546FF34AB227CAB947 /* StressReminderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42FC46BBF09CE5D35B40796 /* StressReminderService.swift */; };
 		5C446A57A18AD20881AE82FF /* TimeCoverageSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25137F308E23E99D8421A4EE /* TimeCoverageSummary.swift */; };
 		6CBA46752862A487D1924575 /* ActiveEnergy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C72968A04A278D9F1AB216 /* ActiveEnergy.swift */; };
 		6F92655B529A4B349B64CF72 /* RecordCSVExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946D957102A3495392CE3137 /* RecordCSVExporter.swift */; };
+		7A52E6CEA9C8DEAFE7EC64F9 /* StressCheckIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52A824DD9A19608048A5BDC /* StressCheckIn.swift */; };
 		A2034F1724A700F200557F69 /* MoodDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2034F1624A700F200557F69 /* MoodDAO.swift */; };
 		A2034F8124ADB58800557F69 /* TagDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2034F8024ADB58700557F69 /* TagDAO.swift */; };
 		A224F6662679BB0A007C3577 /* Pain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A224F6652679BB0A007C3577 /* Pain.swift */; };
@@ -81,6 +84,7 @@
 		25137F308E23E99D8421A4EE /* TimeCoverageSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCoverageSummary.swift; sourceTree = "<group>"; };
 		398DBEC9CC741AD39131D0DA /* Pods-Samples.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Samples.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-Samples/Pods-Samples.debug.xcconfig"; sourceTree = "<group>"; };
 		3A4AE572F858591FB5513F5B /* MetricContextEntry.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MetricContextEntry.swift; sourceTree = "<group>"; };
+		7DA7506DC522BFD936DE4CAC /* StressTrackingStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StressTrackingStore.swift; sourceTree = "<group>"; };
 		86C9F901387A002E28284DF2 /* Workout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workout.swift; sourceTree = "<group>"; };
 		908988DE7D50D931BD9B71D0 /* MoodTracking.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MoodTracking.swift; sourceTree = "<group>"; };
 		946D957102A3495392CE3137 /* RecordCSVExporter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RecordCSVExporter.swift; sourceTree = "<group>"; };
@@ -148,6 +152,8 @@
 		A2E30FCC2736DB27004D0A60 /* Steps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Steps.swift; sourceTree = "<group>"; };
 		CAAC731F89AB66BE8320CF9C /* LostItemEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LostItemEvent.swift; sourceTree = "<group>"; };
 		CAC2FA5E5B39E34A0D507A3B /* MoodReminderService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MoodReminderService.swift; sourceTree = "<group>"; };
+		D42FC46BBF09CE5D35B40796 /* StressReminderService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StressReminderService.swift; sourceTree = "<group>"; };
+		E52A824DD9A19608048A5BDC /* StressCheckIn.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StressCheckIn.swift; sourceTree = "<group>"; };
 		F2C72968A04A278D9F1AB216 /* ActiveEnergy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveEnergy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -237,6 +243,7 @@
 				A224F6652679BB0A007C3577 /* Pain.swift */,
 				A2AF1FF02343C63900E04517 /* Tag.swift */,
 				3A4AE572F858591FB5513F5B /* MetricContextEntry.swift */,
+				E52A824DD9A19608048A5BDC /* StressCheckIn.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -305,6 +312,8 @@
 				A2A8AFF52343E59100E883CE /* HealthKitUtil.swift */,
 				908988DE7D50D931BD9B71D0 /* MoodTracking.swift */,
 				CAC2FA5E5B39E34A0D507A3B /* MoodReminderService.swift */,
+				7DA7506DC522BFD936DE4CAC /* StressTrackingStore.swift */,
+				D42FC46BBF09CE5D35B40796 /* StressReminderService.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -487,6 +496,9 @@
 				6F92655B529A4B349B64CF72 /* RecordCSVExporter.swift in Sources */,
 				3983C8BA7A75603C642372C2 /* MoodTracking.swift in Sources */,
 				3F51413D379EF671A459ACE6 /* MoodReminderService.swift in Sources */,
+				7A52E6CEA9C8DEAFE7EC64F9 /* StressCheckIn.swift in Sources */,
+				415ABAAC3EC9B23B14B8CA72 /* StressTrackingStore.swift in Sources */,
+				49D358546FF34AB227CAB947 /* StressReminderService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

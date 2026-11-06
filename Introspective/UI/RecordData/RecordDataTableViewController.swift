@@ -68,6 +68,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		navigationItem.rightBarButtonItems = [navigationItem.rightBarButtonItem!, UIBarButtonItem(title: "Lost Items", style: .plain, target: self, action: #selector(showLostItems))]
 		navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Check-ins", style: .plain, target: self, action: #selector(showMoodTools))
 		NotificationCenter.default.addObserver(self, selector: #selector(showMoodPresets), name: MoodReminderScheduler.openCheckInNotification, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(showStressCheckIn), name: StressReminderScheduler.openCheckInNotification, object: nil)
 		observe(selector: #selector(showViewController), name: Me.showViewController)
 		observe(selector: #selector(showErrorMessage), name: Me.showErrorMessage)
 		observe(selector: #selector(showRecordActivitiesScreen), name: .showRecordActivitiesScreen)
@@ -92,6 +93,12 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 	@objc private func showMoodPresets() {
 		if !(navigationController?.topViewController is MoodPresetsViewController) {
 			pushToNavigationController(MoodPresetsViewController(style: .grouped))
+		}
+	}
+
+	@objc private func showStressCheckIn() {
+		if !(navigationController?.topViewController is StressCheckInViewController) {
+			pushToNavigationController(StressCheckInViewController())
 		}
 	}
 

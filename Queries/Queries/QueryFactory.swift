@@ -190,6 +190,8 @@ public final class QueryFactoryImpl: QueryFactory {
 		case is ActiveEnergy.Type: return ActiveEnergyQueryImpl()
 		case is LostItemEvent.Type: return CoreDataQuery<LostItemEvent>()
 		case is MetricContextEntry.Type: return CoreDataQuery<MetricContextEntry>()
+		case is StressCheckIn.Type: return CoreDataQuery<StressCheckIn>()
+		case is StressorResponse.Type: return CoreDataQuery<StressorResponse>()
 		case is Workout.Type: return WorkoutQueryImpl()
 		case is Steps.Type: return stepsQuery()
 		case is Activity.Type: return activityQuery()
@@ -216,6 +218,8 @@ public final class QueryFactoryImpl: QueryFactory {
 		case is ActiveEnergyQueryImpl: return ActiveEnergy.self
 		case is CoreDataQuery<LostItemEvent>: return LostItemEvent.self
 		case is CoreDataQuery<MetricContextEntry>: return MetricContextEntry.self
+		case is CoreDataQuery<StressCheckIn>: return StressCheckIn.self
+		case is CoreDataQuery<StressorResponse>: return StressorResponse.self
 		case is WorkoutQueryImpl: return Workout.self
 		case is StepsQuery: return Steps.self
 		case is ActivityQuery: return Activity.self

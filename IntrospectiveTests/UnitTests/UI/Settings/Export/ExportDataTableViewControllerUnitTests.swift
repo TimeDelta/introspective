@@ -172,12 +172,12 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 
 	// MARK: - tableViewNumberOfRowsInSection
 
-	func testGivenNormalSection_tableViewNumberOfRowsInSection_returns5() {
+	func testGivenNormalSection_tableViewNumberOfRowsInSection_returns7() {
 		// when
 		let rows = controller.tableView(tableView, numberOfRowsInSection: 0)
 
 		// then
-		XCTAssertEqual(rows, 5)
+		XCTAssertEqual(rows, 7)
 	}
 
 	func testGivenActiveExportsSectionAndNoActiveExports_tableViewNumberOfRowsInSection_returns0() {
@@ -217,6 +217,8 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 	func testNewExportRowsIdentifyMetricContextAndLostItems() {
 		XCTAssertEqual(controller.tableView(tableView, cellForRowAt: IndexPath(row: 3, section: 0)).textLabel?.text, "Metric Context")
 		XCTAssertEqual(controller.tableView(tableView, cellForRowAt: IndexPath(row: 4, section: 0)).textLabel?.text, "Lost Item Events")
+		XCTAssertEqual(controller.tableView(tableView, cellForRowAt: IndexPath(row: 5, section: 0)).textLabel?.text, StressCheckIn.name.localizedCapitalized)
+		XCTAssertEqual(controller.tableView(tableView, cellForRowAt: IndexPath(row: 6, section: 0)).textLabel?.text, StressorResponse.name.localizedCapitalized)
 	}
 
 	func testContextAndLostItemSelectionsResolveTheMatchingExporters() throws {
@@ -226,6 +228,10 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 		let lost = try controller.getExporterFor(IndexPath(row: 4, section: 0))
 		XCTAssertTrue((context as? MetricContextExporter) === provider.context)
 		XCTAssertTrue((lost as? LostItemExporter) === provider.lost)
+		let overall = try controller.getExporterFor(IndexPath(row: 5, section: 0))
+		let responses = try controller.getExporterFor(IndexPath(row: 6, section: 0))
+		XCTAssertTrue((overall as? StressCheckInExporter) === provider.stress)
+		XCTAssertTrue((responses as? StressorResponseExporter) === provider.responses)
 	}
 
 	// MARK: - sectionTitle
@@ -371,13 +377,17 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 }
 
 private final class RecordExporterTestProvider: InjectionProvider {
-	let types: [Any.Type] = [MetricContextExporter.self, LostItemExporter.self]
+	let types: [Any.Type] = [MetricContextExporter.self, LostItemExporter.self, StressCheckInExporter.self, StressorResponseExporter.self]
 	private let coordinator = NSPersistentStoreCoordinator(managedObjectModel: NSManagedObjectModel())
 	lazy var context = MetricContextExporter(coordinator: coordinator, url: URL(fileURLWithPath: "/unused/context.csv"))
 	lazy var lost = LostItemExporter(coordinator: coordinator, url: URL(fileURLWithPath: "/unused/lost.csv"))
+	lazy var stress = StressCheckInExporter(coordinator: coordinator, url: URL(fileURLWithPath: "/unused/stress.csv"))
+	lazy var responses = StressorResponseExporter(coordinator: coordinator, url: URL(fileURLWithPath: "/unused/responses.csv"))
 	func get<Type>(_ type: Type.Type) throws -> Type {
 		if type == MetricContextExporter.self { return context as! Type }
 		if type == LostItemExporter.self { return lost as! Type }
+		if type == StressCheckInExporter.self { return stress as! Type }
+		if type == StressorResponseExporter.self { return responses as! Type }
 		throw GenericError("Unexpected exporter type")
 	}
 }

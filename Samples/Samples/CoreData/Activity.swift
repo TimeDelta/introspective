@@ -59,7 +59,7 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 	public static let endDateSetAttribute = DateTimeAttribute(
 		id: 6,
 		name: "End Date Set At",
-		variableName: "startDateSetAt",
+		variableName: "endDateSetAt",
 		optional: true
 	)
 	public static let durationBetweenStartAndSetAttribute = DurationAttribute(
@@ -202,7 +202,9 @@ public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 	}
 
 	public final var durationBetweenEndAndSet: TimeDuration? {
-		guard let endDate = endDate else {
+		// Missing provenance is unknown; TimeDuration(end: nil) would use Now
+		// and invent a growing recording delay for imported or legacy records.
+		guard let endDate = endDate, let endDateSetAt = endDateSetAt else {
 			return nil
 		}
 		return TimeDuration(start: endDate, end: endDateSetAt)
