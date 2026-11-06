@@ -97,7 +97,11 @@ public struct MoodReviewSummary {
 
 	public init(moods: [Mood], calendar: Calendar = .current) {
 		checkInCount = moods.count
-		recordedDayCount = Set(moods.map { calendar.startOfDay(for: $0.date) }).count
+		recordedDayCount = Set(moods.compactMap { mood -> Date? in
+			let timestamp = MoodWeeklyReview.timestamp(for: mood)
+			guard timestamp.timeIntervalSinceReferenceDate.isFinite else { return nil }
+			return calendar.startOfDay(for: timestamp)
+		}).count
 		let positions: [Double] = moods.compactMap { mood in
 			let span = mood.maxRating - mood.minRating
 			guard mood.rating.isFinite, mood.minRating.isFinite, mood.maxRating.isFinite,

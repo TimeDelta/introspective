@@ -67,6 +67,13 @@ public class EditMoodTableViewControllerMock: UITableViewController, EditMoodTab
 	private var __p_mood: (Mood)?
 
 
+    public var initialTimestamp: Date? {
+		get {	invocations.append(.p_initialTimestamp_get); return __p_initialTimestamp ?? optionalGivenGetterValue(.p_initialTimestamp_get, "EditMoodTableViewControllerMock - stub value for initialTimestamp was not defined") }
+		set {	invocations.append(.p_initialTimestamp_set(.value(newValue))); __p_initialTimestamp = newValue }
+	}
+	private var __p_initialTimestamp: (Date)?
+
+
 
 
 
@@ -79,6 +86,8 @@ public class EditMoodTableViewControllerMock: UITableViewController, EditMoodTab
 		case p_userInfoKey_set(Parameter<UserInfoKey>)
         case p_mood_get
 		case p_mood_set(Parameter<Mood?>)
+        case p_initialTimestamp_get
+		case p_initialTimestamp_set(Parameter<Date?>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {            case (.p_notificationToSendOnAccept_get,.p_notificationToSendOnAccept_get): return Matcher.ComparisonResult.match
@@ -87,6 +96,8 @@ public class EditMoodTableViewControllerMock: UITableViewController, EditMoodTab
 			case (.p_userInfoKey_set(let left),.p_userInfoKey_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<UserInfoKey>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
             case (.p_mood_get,.p_mood_get): return Matcher.ComparisonResult.match
 			case (.p_mood_set(let left),.p_mood_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<Mood?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_initialTimestamp_get,.p_initialTimestamp_get): return Matcher.ComparisonResult.match
+			case (.p_initialTimestamp_set(let left),.p_initialTimestamp_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<Date?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
             default: return .none
             }
         }
@@ -99,6 +110,8 @@ public class EditMoodTableViewControllerMock: UITableViewController, EditMoodTab
 			case .p_userInfoKey_set(let newValue): return newValue.intValue
             case .p_mood_get: return 0
 			case .p_mood_set(let newValue): return newValue.intValue
+            case .p_initialTimestamp_get: return 0
+			case .p_initialTimestamp_set(let newValue): return newValue.intValue
             }
         }
         func assertionName() -> String {
@@ -109,6 +122,8 @@ public class EditMoodTableViewControllerMock: UITableViewController, EditMoodTab
 			case .p_userInfoKey_set: return "[set] .userInfoKey"
             case .p_mood_get: return "[get] .mood"
 			case .p_mood_set: return "[set] .mood"
+            case .p_initialTimestamp_get: return "[get] .initialTimestamp"
+			case .p_initialTimestamp_set: return "[set] .initialTimestamp"
             }
         }
     }
@@ -130,6 +145,9 @@ public class EditMoodTableViewControllerMock: UITableViewController, EditMoodTab
         public static func mood(getter defaultValue: Mood?...) -> PropertyStub {
             return Given(method: .p_mood_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
+        public static func initialTimestamp(getter defaultValue: Date?...) -> PropertyStub {
+            return Given(method: .p_initialTimestamp_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
 
     }
 
@@ -142,6 +160,8 @@ public class EditMoodTableViewControllerMock: UITableViewController, EditMoodTab
 		public static func userInfoKey(set newValue: Parameter<UserInfoKey>) -> Verify { return Verify(method: .p_userInfoKey_set(newValue)) }
         public static var mood: Verify { return Verify(method: .p_mood_get) }
 		public static func mood(set newValue: Parameter<Mood?>) -> Verify { return Verify(method: .p_mood_set(newValue)) }
+        public static var initialTimestamp: Verify { return Verify(method: .p_initialTimestamp_get) }
+		public static func initialTimestamp(set newValue: Parameter<Date?>) -> Verify { return Verify(method: .p_initialTimestamp_set(newValue)) }
     }
 
     public struct Perform {

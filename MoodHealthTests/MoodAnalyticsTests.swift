@@ -157,6 +157,187 @@ final class MoodAnalyticsTests: XCTestCase {
 	}
 }
 
+final class MoodHistoryWindowTests: XCTestCase {
+	private var calendar: Calendar { var value = Calendar(identifier: .gregorian); value.timeZone = TimeZone(secondsFromGMT: 0)!; return value }
+	private let now = ISO8601DateFormatter().date(from: "2024-07-15T12:34:56Z")!.addingTimeInterval(0.75)
+	private func date(_ text: String) -> Date { ISO8601DateFormatter().date(from: text)! }
+	private func window(_ selection: MoodHistoryWindow.Selection, asOf: Date? = nil, calendar: Calendar? = nil) throws -> MoodHistoryWindow {
+		try XCTUnwrap(MoodHistoryWindow(selection: selection, asOf: asOf ?? now, calendar: calendar ?? self.calendar))
+	}
+
+	func testRecentWindowsRetainOneSevenAndThirtyCalendarDaysIncludingToday() throws {
+		for (days, start) in [(1, "2024-07-15T00:00:00Z"), (7, "2024-07-09T00:00:00Z"), (30, "2024-06-16T00:00:00Z")] {
+			let value = try window(.recentDays(days))
+			XCTAssertEqual(value.selection, .recentDays(days))
+			XCTAssertEqual(value.interval.start, date(start))
+			XCTAssertEqual(value.interval.end, date("2024-07-16T00:00:00Z"))
+			XCTAssertTrue(value.contains(now))
+		}
+	}
+
+	func testRecentWindowsHaveNoDayCursorOrBackfillDefault() throws {
+		for days in [1, 7, 30] {
+			let value = try window(.recentDays(days))
+			XCTAssertNil(value.selectedDay); XCTAssertNil(value.newCheckInDate)
+			XCTAssertFalse(value.canMoveForward); XCTAssertNil(value.movingDay(by: -1))
+		}
+	}
+
+	func testSelectedDayNormalizesItsSelectionAndInterval() throws {
+		let value = try window(.day(date("2024-07-02T17:45:23Z").addingTimeInterval(0.125)))
+		let start = date("2024-07-02T00:00:00Z")
+		XCTAssertEqual(value.selection, .day(start)); XCTAssertEqual(value.selectedDay, start)
+		XCTAssertEqual(value.interval, DateInterval(start: start, end: date("2024-07-03T00:00:00Z")))
+		XCTAssertEqual(value.newCheckInDate, start); XCTAssertTrue(value.canMoveForward)
+	}
+
+	func testContainmentUsesFiniteInstantsAndHalfOpenBoundaries() throws {
+		let value = try window(.day(date("2024-07-02T12:00:00Z")))
+		XCTAssertFalse(value.contains(value.interval.start.addingTimeInterval(-0.001)))
+		XCTAssertTrue(value.contains(value.interval.start))
+		XCTAssertTrue(value.contains(value.interval.end.addingTimeInterval(-0.001)))
+		XCTAssertFalse(value.contains(value.interval.end))
+		for invalid in [Double.nan, .infinity, -.infinity] {
+			XCTAssertFalse(value.contains(Date(timeIntervalSinceReferenceDate: invalid)))
+		}
+	}
+
+	func testAdjacentDayNavigationHasNoGapOrDoubleCountedBoundary() throws {
+		let value = try window(.day(date("2024-07-02T12:00:00Z")))
+		let previous = try XCTUnwrap(value.movingDay(by: -1)), next = try XCTUnwrap(value.movingDay(by: 1))
+		XCTAssertEqual(previous.interval.end, value.interval.start)
+		XCTAssertEqual(value.interval.end, next.interval.start)
+		XCTAssertFalse(value.contains(next.interval.start)); XCTAssertTrue(next.contains(next.interval.start))
+		XCTAssertEqual(try XCTUnwrap(next.movingDay(by: -1)).selection, value.selection)
+		XCTAssertEqual(try XCTUnwrap(value.movingDay(by: 0)).selection, value.selection)
+	}
+
+	func testFutureSelectionsAndForwardNavigationClampToTheCapturedToday() throws {
+		let today = date("2024-07-15T00:00:00Z")
+		for future in [date("2024-07-15T23:59:00Z"), date("2024-07-20T12:00:00Z")] {
+			let value = try window(.day(future))
+			XCTAssertEqual(value.selection, .day(today)); XCTAssertFalse(value.canMoveForward)
+			XCTAssertNil(value.newCheckInDate)
+			XCTAssertEqual(try XCTUnwrap(value.movingDay(by: 1)).selectedDay, today)
+		}
+		let past = try window(.day(date("2024-07-14T18:00:00Z")))
+		let moved = try XCTUnwrap(past.movingDay(by: 10))
+		XCTAssertEqual(moved.selectedDay, today); XCTAssertNil(moved.newCheckInDate)
+		XCTAssertTrue(try XCTUnwrap(moved.movingDay(by: -1)).canMoveForward)
+	}
+
+	func testTodayIncludesFutureClockTimesWithoutInventingAnAddTimestamp() throws {
+		for selection in [MoodHistoryWindow.Selection.day(now), .recentDays(1)] {
+			let value = try window(selection)
+			XCTAssertTrue(value.contains(now.addingTimeInterval(1)))
+			XCTAssertTrue(value.contains(date("2024-07-15T23:59:59Z")))
+			XCTAssertNil(value.newCheckInDate, "The editor retains its automatic full-precision Date() default")
+		}
+		XCTAssertEqual(calendar.component(.second, from: now), 56)
+		XCTAssertEqual(now.timeIntervalSince1970.truncatingRemainder(dividingBy: 1), 0.75)
+	}
+
+	func testPastDayBackfillDefaultClearsTimeSecondsAndFractions() throws {
+		let value = try window(.day(date("2024-07-14T18:22:43Z").addingTimeInterval(0.875)))
+		let initial = try XCTUnwrap(value.newCheckInDate)
+		let components = calendar.dateComponents([.hour, .minute, .second, .nanosecond], from: initial)
+		XCTAssertEqual(components.hour, 0); XCTAssertEqual(components.minute, 0)
+		XCTAssertEqual(components.second, 0); XCTAssertEqual(components.nanosecond, 0)
+		XCTAssertEqual(initial, value.interval.start)
+	}
+
+	func testInvalidDatesAndNonpositiveRecentCountsFailWithoutNormalization() {
+		for invalid in [Double.nan, .infinity, -.infinity] {
+			let invalidDate = Date(timeIntervalSinceReferenceDate: invalid)
+			XCTAssertNil(MoodHistoryWindow(selection: .day(invalidDate), asOf: now, calendar: calendar))
+			XCTAssertNil(MoodHistoryWindow(selection: .day(now), asOf: invalidDate, calendar: calendar))
+			XCTAssertNil(MoodHistoryWindow(selection: .recentDays(7), asOf: invalidDate, calendar: calendar))
+		}
+		for count in [0, -1, Int.min] {
+			XCTAssertNil(MoodHistoryWindow(selection: .recentDays(count), asOf: now, calendar: calendar))
+		}
+	}
+
+	func testSelectedDaysRespectSpringAndAutumnDaylightSavingLengths() throws {
+		var local = calendar; local.timeZone = try XCTUnwrap(TimeZone(identifier: "America/Los_Angeles"))
+		for (day, hours) in [("2024-03-10T19:00:00Z", 23.0), ("2024-11-03T20:00:00Z", 25.0)] {
+			let value = try window(.day(date(day)), asOf: date("2024-12-01T12:00:00Z"), calendar: local)
+			XCTAssertEqual(value.interval.duration / 3600, hours)
+			XCTAssertEqual(local.component(.hour, from: value.interval.start), 0)
+			XCTAssertEqual(local.component(.hour, from: value.interval.end), 0)
+		}
+	}
+
+	func testDaylightSavingNavigationAndRecentWindowsUseCalendarDays() throws {
+		var local = calendar; local.timeZone = try XCTUnwrap(TimeZone(identifier: "America/Los_Angeles"))
+		for (day, expectedHours) in [("2024-03-11T19:00:00Z", 167.0), ("2024-11-04T20:00:00Z", 169.0)] {
+			let reference = date(day)
+			let value = try window(.day(reference), asOf: reference, calendar: local)
+			let previous = try XCTUnwrap(value.movingDay(by: -1))
+			XCTAssertEqual(previous.interval.end, value.interval.start)
+			XCTAssertEqual(try XCTUnwrap(previous.movingDay(by: 1)).interval, value.interval)
+			let recent = try window(.recentDays(7), asOf: reference, calendar: local)
+			XCTAssertEqual(recent.interval.duration / 3600, expectedHours)
+			XCTAssertEqual(local.dateComponents([.day], from: recent.interval.start, to: recent.interval.end).day, 7)
+		}
+	}
+
+	func testNavigationHandlesLeapDayAndYearBoundaries() throws {
+		for (initial, offset, expected) in [("2024-02-28T12:00:00Z", 1, "2024-02-29T00:00:00Z"),
+			("2024-02-28T12:00:00Z", 2, "2024-03-01T00:00:00Z"),
+			("2023-12-31T12:00:00Z", 1, "2024-01-01T00:00:00Z"),
+			("2024-01-01T12:00:00Z", -1, "2023-12-31T00:00:00Z")] {
+			let value = try window(.day(date(initial)))
+			XCTAssertEqual(try XCTUnwrap(value.movingDay(by: offset)).selectedDay, date(expected))
+		}
+	}
+
+	func testNonGregorianCalendarPreservesLocalDaySelectionAndNavigation() throws {
+		var local = Calendar(identifier: .buddhist); local.timeZone = try XCTUnwrap(TimeZone(identifier: "Asia/Bangkok"))
+		let value = try window(.day(date("2024-07-02T18:00:00Z")), calendar: local)
+		XCTAssertEqual(value.interval.start, date("2024-07-02T17:00:00Z"))
+		XCTAssertEqual(local.component(.year, from: value.interval.start), 2567)
+		XCTAssertEqual(try XCTUnwrap(value.movingDay(by: -1)).interval.end, value.interval.start)
+		XCTAssertEqual(try window(.recentDays(30), calendar: local).interval.end, date("2024-07-15T17:00:00Z"))
+	}
+
+	func testFractionalHourTimeZoneUsesItsOwnMidnight() throws {
+		var local = calendar; local.timeZone = try XCTUnwrap(TimeZone(identifier: "Asia/Kathmandu"))
+		let value = try window(.day(date("2024-07-02T12:00:00Z")), calendar: local)
+		XCTAssertEqual(value.interval.start, date("2024-07-01T18:15:00Z"))
+		XCTAssertEqual(value.interval.end, date("2024-07-02T18:15:00Z"))
+		XCTAssertEqual(local.component(.minute, from: value.interval.start), 0)
+		XCTAssertEqual(value.newCheckInDate, value.interval.start)
+	}
+
+	func testMidnightGapUsesTheFirstValidInstantAndTheFollowingDayBoundary() throws {
+		var local = calendar; local.timeZone = try XCTUnwrap(TimeZone(identifier: "America/Sao_Paulo"))
+		let value = try window(.day(date("2018-11-04T12:00:00Z")), calendar: local)
+		XCTAssertEqual(value.interval.start, date("2018-11-04T03:00:00Z"))
+		XCTAssertEqual(local.component(.hour, from: value.interval.start), 1)
+		XCTAssertEqual(value.interval.end, date("2018-11-05T02:00:00Z"))
+		XCTAssertEqual(value.interval.duration / 3600, 23)
+		XCTAssertEqual(value.newCheckInDate, value.interval.start)
+		XCTAssertEqual(local.component(.second, from: try XCTUnwrap(value.newCheckInDate)), 0)
+		XCTAssertEqual(try XCTUnwrap(value.movingDay(by: 1)).interval.start, value.interval.end)
+		XCTAssertEqual(try XCTUnwrap(value.movingDay(by: -1)).interval.end, value.interval.start)
+		let recent = try window(.recentDays(7), asOf: date("2018-11-04T12:00:00Z"), calendar: local)
+		XCTAssertEqual(recent.interval.start, date("2018-10-29T03:00:00Z"))
+		XCTAssertEqual(recent.interval.end, value.interval.end)
+		XCTAssertEqual(recent.interval.duration / 3600, 167)
+	}
+
+	func testContainmentInterpretsStoredInstantsInTheSelectedCalendarTimeZone() throws {
+		var local = calendar; local.timeZone = try XCTUnwrap(TimeZone(identifier: "America/Los_Angeles"))
+		let instant = date("2024-07-01T00:30:00Z")
+		let utcDay = try window(.day(instant)), localDay = try window(.day(instant), calendar: local)
+		XCTAssertEqual(utcDay.interval.start, date("2024-07-01T00:00:00Z"))
+		XCTAssertEqual(localDay.interval.start, date("2024-06-30T07:00:00Z"))
+		XCTAssertTrue(utcDay.contains(instant)); XCTAssertTrue(localDay.contains(instant))
+		XCTAssertFalse(try XCTUnwrap(localDay.movingDay(by: 1)).contains(instant))
+	}
+}
+
 final class MoodReminderPlanTests: XCTestCase {
 	private var calendar: Calendar { var value = Calendar(identifier: .gregorian); value.timeZone = TimeZone(secondsFromGMT: 0)!; return value }
 	private func date(_ value: String) -> Date { ISO8601DateFormatter().date(from: value)! }
