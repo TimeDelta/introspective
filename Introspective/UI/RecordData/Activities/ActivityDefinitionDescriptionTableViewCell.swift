@@ -21,6 +21,7 @@ public final class ActivityDefinitionDescriptionTableViewCell: UITableViewCell {
 	public final var notificationToSendOnChange: Notification.Name!
 	public final var activityDescription: String? {
 		didSet {
+			UITestFixtureLoader.configureLiteralInputForUITesting(descriptionView)
 			descriptionView.text = activityDescription ?? ""
 			descriptionView.delegate = self
 		}

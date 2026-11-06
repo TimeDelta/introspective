@@ -334,6 +334,7 @@ final class MoodPresetEditorViewController: UITableViewController {
 		let values = [preset.name, String(preset.rating), String(preset.minimum), String(preset.maximum), preset.note]
 		fields = zip(names, values).enumerated().map { index, pair in
 			let field = UITextField(); field.placeholder = pair.0; field.text = pair.1
+			UITestFixtureLoader.configureLiteralInputForUITesting(field)
 			field.accessibilityIdentifier = "moodPreset" + pair.0; field.accessibilityLabel = pair.0
 			field.keyboardType = (1...3).contains(index) ? .numbersAndPunctuation : .default
 			field.clearButtonMode = .whileEditing
