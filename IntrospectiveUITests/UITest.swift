@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import UIKit
 import SwiftDate
 
 class UITest: XCTestCase {
@@ -49,7 +50,85 @@ class UITest: XCTestCase {
 		hasLaunched = true
 		print("CI_UI_LAUNCH_SECONDS \(launchEnded - launchStarted)")
 		print("CI_UI_LAUNCH_TRACE {\"schema\":1,\"traceID\":\"\(traceID)\",\"startUptime\":\(launchStarted),\"endUptime\":\(launchEnded)}")
+		guard prepareLaunchedApplication(file: file, line: line) else { return }
 		openInitialScreen()
+	}
+
+	/// XCTest can report foreground state while SpringBoard is still visible and
+	/// expose tab frames at one third of their real size. Correct that startup
+	/// focus once, before navigation, without launching another process or reseeding.
+	private func prepareLaunchedApplication(file: StaticString, line: UInt) -> Bool {
+		switch application.state {
+		case .runningForeground, .runningBackground, .runningBackgroundSuspended:
+			break
+		case .notRunning, .unknown:
+			attachLaunchDiagnostics()
+			XCTFail("Application is not running after launch; refusing to activate a new process", file: file, line: line)
+			return false
+		@unknown default:
+			attachLaunchDiagnostics()
+			XCTFail("Application has an unknown state after launch", file: file, line: line)
+			return false
+		}
+		let window = application.windows.firstMatch
+		let record = application.tabBars.buttons["Record"]
+		// These scenarios run on a portrait iPhone. Match logical screen points,
+		// not screenshot pixels; a 32-by-16 tab is a scaled, unusable snapshot.
+		let screen = UIScreen.main.bounds
+		let ready = NSPredicate { _, _ in
+			guard self.application.state == .runningForeground, window.exists, record.exists else { return false }
+			let windowFrame = window.frame, tabFrame = record.frame
+			let dimensions = [screen.minX, screen.minY, screen.width, screen.height,
+				windowFrame.minX, windowFrame.minY, windowFrame.width, windowFrame.height,
+				tabFrame.minX, tabFrame.minY, tabFrame.width, tabFrame.height]
+			guard dimensions.allSatisfy({ $0.isFinite }), screen.width > 0, screen.height > 0,
+				abs(windowFrame.minX - screen.minX) <= 1, abs(windowFrame.minY - screen.minY) <= 1,
+				abs(windowFrame.width - screen.width) <= 1, abs(windowFrame.height - screen.height) <= 1,
+				tabFrame.width >= 44, tabFrame.height >= 30, windowFrame.contains(tabFrame) else { return false }
+			return record.isHittable
+		}
+		if ready.evaluate(with: application) { return true }
+		// A foreground-state report alone cannot establish focus. Leave the app
+		// once so activation is a real foreground transition, rather than a no-op.
+		// This is startup preparation; no scenario input has been sent yet.
+		XCUIDevice.shared.press(.home)
+		let state = application.state
+		guard state == .runningForeground || state == .runningBackground || state == .runningBackgroundSuspended else {
+			attachLaunchDiagnostics()
+			XCTFail("Application stopped during startup focus preparation; refusing to relaunch", file: file, line: line)
+			return false
+		}
+		application.activate()
+		let deadline = ProcessInfo.processInfo.systemUptime + 5
+		if ready.evaluate(with: application) { return true }
+		let remaining = deadline - ProcessInfo.processInfo.systemUptime
+		if remaining > 0 {
+			let expectation = XCTNSPredicateExpectation(predicate: ready, object: application)
+			if XCTWaiter.wait(for: [expectation], timeout: remaining) == .completed { return true }
+		}
+		attachLaunchDiagnostics()
+		XCTFail("Application did not expose a full-screen window and reachable Record tab after activation", file: file, line: line)
+		return false
+	}
+
+	private func attachLaunchDiagnostics() {
+		let state = application.state
+		let summary = XCTAttachment(string: "Application state: \(state.rawValue); expected logical screen: \(UIScreen.main.bounds)")
+		summary.name = "Application launch state"
+		summary.lifetime = .keepAlways
+		add(summary)
+		// Capture the actual display, including SpringBoard when the app's own
+		// accessibility hierarchy incorrectly appears ready for interaction.
+		let screenshot = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+		screenshot.name = "Display after application launch"
+		screenshot.lifetime = .keepAlways
+		add(screenshot)
+		if state == .runningForeground || state == .runningBackground || state == .runningBackgroundSuspended {
+			let hierarchy = XCTAttachment(string: application.debugDescription)
+			hierarchy.name = "Application launch accessibility hierarchy"
+			hierarchy.lifetime = .keepAlways
+			add(hierarchy)
+		}
 	}
 
 	/// Override navigation, rather than setUp(), to allow pre-launch fixture setup.
