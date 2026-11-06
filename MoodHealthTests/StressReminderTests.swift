@@ -200,7 +200,13 @@ final class StressReminderIntegrationTests: XCTestCase {
 		let isolated = StressReminderPreferences(defaults: UserDefaults(suiteName: suite + ".screen")!)
 		defer { UserDefaults(suiteName: suite + ".screen")?.removePersistentDomain(forName: suite + ".screen") }
 		controller.preferences = isolated; controller.scheduler = scheduler
+		controller.requestAuthorization = { completion in
+			XCTFail("Opening optional reminder settings must not request notification authorization")
+			completion(false, nil)
+		}
 		controller.loadViewIfNeeded()
+		XCTAssertTrue(controller.scheduler === scheduler, "The screen must retain its injected delivery scheduler")
+		XCTAssertTrue(delivery.snapshot().isEmpty, "Opening reminder settings must not schedule notifications")
 		XCTAssertEqual(controller.tableView.accessibilityIdentifier, "stressReminders")
 		XCTAssertEqual(controller.tableView(controller.tableView, numberOfRowsInSection: 1), 1)
 		let cell = controller.tableView(controller.tableView, cellForRowAt: IndexPath(row: 0, section: 0))
