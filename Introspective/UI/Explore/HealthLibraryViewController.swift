@@ -172,6 +172,13 @@ final class HealthLibraryRecordsViewController: UITableViewController {
 		if isMovingFromParent || isBeingDismissed || navigationController?.isBeingDismissed == true { cancelLoading() }
 	}
 
+	override func didMove(toParent parent: UIViewController?) {
+		super.didMove(toParent: parent)
+		// A navigation stack can remove a loaded controller before it ever
+		// appears. That removal has no disappearance callback.
+		if parent == nil { cancelLoading() }
+	}
+
 	/// Invalidate before calling cancellation: a reader may complete synchronously
 	/// from its cancellation operation.
 	func cancelLoading() {

@@ -32,13 +32,27 @@ final class HealthRecordAttachmentsViewController: UITableViewController {
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		if isMovingFromParent || isBeingDismissed || navigationController?.isBeingDismissed == true {
-			generation = UUID(); cancelRead?(); cancelRead = nil
-			clearDownload()
+			cancelLoading()
+		}
+	}
+	override func didMove(toParent parent: UIViewController?) {
+		super.didMove(toParent: parent)
+		// Offscreen navigation changes remove containment without appearance callbacks.
+		if parent == nil { cancelLoading() }
+	}
+	private func cancelLoading() {
+		generation = UUID()
+		let cancel = cancelRead; cancelRead = nil
+		reading = false
+		cancel?()
+		clearDownload()
+		if isViewLoaded {
+			navigationItem.prompt = nil; tableView.isUserInteractionEnabled = true
+			refreshControl?.endRefreshing(); tableView.reloadData()
 		}
 	}
 	@objc func reloadAttachments() {
-		cancelRead?(); let token = UUID(); generation = token
-		clearDownload(); tableView.isUserInteractionEnabled = true; navigationItem.prompt = nil
+		cancelLoading(); let token = UUID(); generation = token
 		reading = true; errorText = nil; attachments = []; tableView.reloadData()
 		let completion: (Result<[HKAttachment], Error>) -> Void = { [weak self] result in
 			DispatchQueue.main.async {
@@ -149,18 +163,29 @@ final class HealthWorkoutRoutesViewController: UITableViewController {
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		if isMovingFromParent || isBeingDismissed || navigationController?.isBeingDismissed == true {
-			generation = UUID(); cancelRead?(); cancelRead = nil
+			cancelLoading()
 		}
 	}
+	override func didMove(toParent parent: UIViewController?) {
+		super.didMove(toParent: parent)
+		if parent == nil { cancelLoading() }
+	}
+	private func cancelLoading() {
+		generation = UUID()
+		let cancel = cancelRead; cancelRead = nil
+		reading = false; cancel?()
+		if isViewLoaded { tableView.reloadData() }
+	}
 	private func reloadRoutes() {
-		cancelRead?(); let token = UUID(); generation = token
+		cancelLoading(); let token = UUID(); generation = token
 		reading = true; errorText = nil; routes = []; tableView.reloadData()
 		let permissions: Set<HKObjectType> = [HKSeriesType.workoutRoute(), HKObjectType.workoutType()]
 		HealthReadAuthorizationClient(store: store).request(types: permissions) { [weak self] error in
 			DispatchQueue.main.async {
 				guard let self = self, self.generation == token else { return }
 				if let error = error {
-					self.reading = false; self.errorText = error.localizedDescription; self.tableView.reloadData(); return
+					self.generation = UUID(); self.reading = false
+					self.errorText = error.localizedDescription; self.tableView.reloadData(); return
 				}
 				let query = HKSampleQuery(sampleType: HKSeriesType.workoutRoute(),
 					predicate: HKQuery.predicateForObjects(from: self.workout), limit: Int(HKObjectQueryNoLimit),

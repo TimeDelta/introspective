@@ -58,6 +58,7 @@ final class AttributedChooserViewController: UIViewController {
 	private final var initialSetDone = false
 
 	private final var acceptButton: UIButton!
+	private var pickerHeightConstraint: NSLayoutConstraint?
 
 	// MARK: - UIViewController Overrides
 
@@ -88,13 +89,17 @@ final class AttributedChooserViewController: UIViewController {
 	}
 
 	public final override func didMove(toParent newParent: UIViewController?) {
-		let viewForConstraint: UIView! = newParent?.view ?? view
-		let contentViewWidthConstraint = valuePicker.heightAnchor.constraint(
-			equalTo: viewForConstraint.heightAnchor,
+		super.didMove(toParent: newParent)
+		pickerHeightConstraint?.isActive = false
+		pickerHeightConstraint = nil
+		guard let newParent = newParent else { return }
+		let constraint = valuePicker.heightAnchor.constraint(
+			equalTo: newParent.view.heightAnchor,
 			multiplier: CGFloat(0.27)
 		)
-		contentViewWidthConstraint.priority = .required
-		contentViewWidthConstraint.isActive = true
+		constraint.priority = .required
+		constraint.isActive = true
+		pickerHeightConstraint = constraint
 	}
 
 	// MARK: - Received Notifications
@@ -177,9 +182,14 @@ final class AttributedChooserViewController: UIViewController {
 	}
 
 	private final func resetScrollView() {
+		for controller in attributeViewControllers {
+			NotificationCenter.default.removeObserver(self, name: controller.notificationToSendOnValueChange, object: nil)
+			controller.willMove(toParent: nil)
+			controller.view.removeFromSuperview()
+			controller.removeFromParent()
+		}
 		attributeViewControllers = [AttributeViewController]()
 		for view in scrollContentView.subviews {
-			scrollContentView.willRemoveSubview(view)
 			view.removeFromSuperview()
 		}
 	}
@@ -190,8 +200,8 @@ final class AttributedChooserViewController: UIViewController {
 		for attribute in currentValue.attributes {
 			let controller = prepareControllerForAttribute(attribute)
 			attributeViewControllers.append(controller)
+			addChild(controller)
 			scrollContentView.addSubview(controller.view)
-			controller.didMove(toParent: self)
 
 			NSLayoutConstraint.activate([
 				heightConstraintFor(controller.view, height: CGFloat(70)),
@@ -203,6 +213,7 @@ final class AttributedChooserViewController: UIViewController {
 					isFirstView: &isFirstView
 				),
 			])
+			controller.didMove(toParent: self)
 			previousView = controller.view
 		}
 		createAndAddAcceptButton(lastView: previousView)

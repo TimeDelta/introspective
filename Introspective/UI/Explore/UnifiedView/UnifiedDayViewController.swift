@@ -46,6 +46,18 @@ public final class UnifiedDayViewController: DayViewController {
 		requestSleepReadAuthorizationIfNeeded()
 	}
 
+	public override func didMove(toParent parent: UIViewController?) {
+		super.didMove(toParent: parent)
+		if parent == nil {
+			closePendingReads()
+		} else {
+			isClosed = false
+			// A loaded calendar can be removed and added again before its first
+			// appearance, so containment must also restart its pending request.
+			if isViewLoaded { requestSleepReadAuthorizationIfNeeded() }
+		}
+	}
+
 	public override func eventsForDate(_ date: Date) -> [EventDescriptor] {
 		var descriptors = [EventDescriptor]()
 		descriptors.append(contentsOf: getSleepEventDescriptorsForDate(date))
@@ -92,12 +104,17 @@ public final class UnifiedDayViewController: DayViewController {
 		super.viewWillDisappear(animated)
 		statisticsGeneration = UUID()
 		if isMovingFromParent || isBeingDismissed || navigationController?.isBeingDismissed == true {
-			isClosed = true
-			if case .pending = sleepReadAuthorization { sleepReadAuthorization = .notRequested }
+			closePendingReads()
 		}
 	}
 
 	// MARK: - Helper Functions
+
+	private func closePendingReads() {
+		statisticsGeneration = UUID()
+		isClosed = true
+		if case .pending = sleepReadAuthorization { sleepReadAuthorization = .notRequested }
+	}
 
 	private func requestSleepReadAuthorizationIfNeeded() {
 		guard !isClosed, case .notRequested = sleepReadAuthorization else { return }

@@ -351,8 +351,6 @@ final class HealthLibraryViewControllerTests: XCTestCase {
 		let probe = HealthLibraryLoaderProbe(), list = records(probe: probe)
 		let navigation = UINavigationController(rootViewController: UIViewController())
 		navigation.loadViewIfNeeded()
-		navigation.beginAppearanceTransition(true, animated: false)
-		navigation.endAppearanceTransition()
 		navigation.pushViewController(list, animated: false)
 		XCTAssertTrue(list.isLoading)
 		XCTAssertTrue(navigation.popViewController(animated: false) === list)
@@ -361,6 +359,49 @@ final class HealthLibraryViewControllerTests: XCTestCase {
 		probe.sampleRequests[0].completion(.failure(NSError(domain: "PoppedLibraryRequest", code: 8)))
 		drainMainQueue()
 		XCTAssertTrue(list.samples.isEmpty)
+		list.cancelLoading()
+		XCTAssertEqual(probe.sampleRequests[0].cancellationCount, 1)
+	}
+
+	@MainActor func testRemovingUnappearedExternalRecordsCancelsTheReadAndCanBeRetried() {
+		let probe = HealthLibraryLoaderProbe(), list = records(profile, probe: probe)
+		let root = UIViewController(), navigation = UINavigationController(rootViewController: root)
+		navigation.pushViewController(list, animated: false)
+		XCTAssertTrue(list.parent === navigation)
+		navigation.setViewControllers([root], animated: false)
+		XCTAssertNil(list.parent)
+		XCTAssertEqual(probe.externalRequests[0].cancellationCount, 1)
+		XCTAssertFalse(list.isLoading)
+		let canceledStatus = list.statusText
+		probe.externalRequests[0].completion(.success([
+			HealthExternalRecord(identifier: "removed", title: "Removed record", sections: []),
+		]))
+		drainMainQueue()
+		XCTAssertTrue(list.externalRecords.isEmpty)
+		XCTAssertEqual(list.statusText, canceledStatus)
+		list.reloadRecords()
+		XCTAssertEqual(probe.externalRequests.count, 2)
+		XCTAssertEqual(probe.externalRequests[0].cancellationCount, 1)
+		probe.externalRequests[1].completion(.success([]))
+		ready(list)
+	}
+
+	@MainActor func testCoveringRecordsKeepsTheReadActiveAndReturningDoesNotReload() {
+		let probe = HealthLibraryLoaderProbe(), list = records(probe: probe)
+		let navigation = UINavigationController(rootViewController: list)
+		navigation.loadViewIfNeeded()
+		navigation.beginAppearanceTransition(true, animated: false)
+		navigation.endAppearanceTransition()
+		navigation.pushViewController(UIViewController(), animated: false)
+		XCTAssertEqual(probe.sampleRequests[0].cancellationCount, 0)
+		XCTAssertTrue(list.isLoading)
+		let value = HealthLibrarySampleFixture(at: anchor)
+		probe.sampleRequests[0].completion(.success([value]))
+		ready(list)
+		XCTAssertEqual(list.samples.map { $0.sourceIdentifier }, [value.sourceIdentifier])
+		_ = navigation.popViewController(animated: false)
+		XCTAssertEqual(probe.sampleRequests.count, 1)
+		XCTAssertEqual(probe.sampleRequests[0].cancellationCount, 0)
 		navigation.beginAppearanceTransition(false, animated: false)
 		navigation.endAppearanceTransition()
 	}

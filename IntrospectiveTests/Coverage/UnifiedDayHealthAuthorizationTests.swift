@@ -14,6 +14,7 @@ final class UnifiedDayHealthAuthorizationTests: UnitTest {
 	private var health: UnifiedDayHealthReadProbe!
 	private var activityContext: NSManagedObjectContext!
 	private var navigation: UINavigationController?
+	private var window: UIWindow?
 	private let base = Date(timeIntervalSince1970: 1_700_000_000)
 
 	override func setUp() {
@@ -29,8 +30,9 @@ final class UnifiedDayHealthAuthorizationTests: UnitTest {
 	}
 
 	override func tearDown() {
-		navigation?.beginAppearanceTransition(false, animated: false)
-		navigation?.endAppearanceTransition()
+		window?.isHidden = true
+		window?.rootViewController = nil
+		window = nil
 		navigation = nil
 		activityContext = nil
 		health = nil
@@ -60,14 +62,26 @@ final class UnifiedDayHealthAuthorizationTests: UnitTest {
 
 	private func show(_ controller: UnifiedDayViewController) -> UINavigationController {
 		let root = UnifiedDayAppearanceProbe()
+		let appeared = expectation(description: "Navigation root finished appearing")
+		root.onDidAppear = { appeared.fulfill() }
 		let navigation = UINavigationController(rootViewController: root)
-		navigation.loadViewIfNeeded()
-		// Complete the container's initial appearance before a real push/pop.
-		// Merely unhiding a window defers this work until after the test's pop.
-		navigation.beginAppearanceTransition(true, animated: false)
-		navigation.endAppearanceTransition()
-		XCTAssertTrue(root.didAppear, "The navigation container must finish appearing before a push")
+		let window: UIWindow
+		if let scene = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).first {
+			window = UIWindow(windowScene: scene)
+		} else {
+			window = UIWindow(frame: UIScreen.main.bounds)
+		}
+		window.frame = UIScreen.main.bounds
+		window.windowLevel = UIWindow.Level(rawValue: UIWindow.Level.normal.rawValue + 1)
+		window.rootViewController = navigation
+		self.window = window
 		self.navigation = navigation
+		window.isHidden = false
+		window.layoutIfNeeded()
+		// Let UIKit finish the actual root appearance before pushing. Starting
+		// an appearance transition on an offscreen container does not forward it.
+		wait(for: [appeared], timeout: 5)
+		XCTAssertTrue(root.didAppear, "The navigation container must finish appearing before a push")
 		navigation.pushViewController(controller, animated: false)
 		return navigation
 	}
@@ -195,6 +209,44 @@ final class UnifiedDayHealthAuthorizationTests: UnitTest {
 		XCTAssertEqual(health.requests.count, 2)
 	}
 
+	func testRemovalAndReadditionBeforeAppearanceRejectTheOldRequestAndStartAFreshOne() {
+		let controller = open()
+		let navigation = UINavigationController(rootViewController: UIViewController())
+		navigation.pushViewController(controller, animated: false)
+		XCTAssertNil(controller.view.window)
+		XCTAssertTrue(navigation.popViewController(animated: false) === controller)
+		XCTAssertNil(controller.parent)
+
+		health.completeRequest(0, error: GenericError("Closed calendar request"))
+		finishMainQueueCallbacks()
+		XCTAssertTrue(health.reads.isEmpty)
+		XCTAssertEqual(health.requests.count, 1)
+
+		navigation.pushViewController(controller, animated: false)
+		XCTAssertNil(controller.view.window)
+		XCTAssertEqual(health.requests.count, 2, "Readding a loaded calendar must restart authorization before appearance")
+		health.completeRequest(0)
+		finishMainQueueCallbacks()
+		XCTAssertTrue(health.reads.isEmpty)
+		health.completeRequest(1)
+		finishMainQueueCallbacks()
+		XCTAssertFalse(health.reads.isEmpty)
+	}
+
+	func testCoveringTheCalendarDoesNotInvalidateItsPendingAuthorization() {
+		let controller = open()
+		let navigation = show(controller)
+		navigation.pushViewController(UIViewController(), animated: false)
+		XCTAssertTrue(controller.parent === navigation)
+
+		health.completeRequest(0)
+		finishMainQueueCallbacks()
+		XCTAssertFalse(health.reads.isEmpty)
+		XCTAssertEqual(health.requests.count, 1)
+		XCTAssertNotNil(navigation.popViewController(animated: false))
+		XCTAssertEqual(health.requests.count, 1)
+	}
+
 	func testPendingAuthorizationDoesNotRetainAnAbandonedController() {
 		weak var released: UnifiedDayViewController?
 		autoreleasepool {
@@ -212,10 +264,14 @@ final class UnifiedDayHealthAuthorizationTests: UnitTest {
 
 private final class UnifiedDayAppearanceProbe: UIViewController {
 	private(set) var didAppear = false
+	var onDidAppear: (() -> Void)?
 
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		didAppear = true
+		let completion = onDidAppear
+		onDidAppear = nil
+		completion?()
 	}
 }
 

@@ -449,6 +449,96 @@ final class HealthRecordDetailViewControllerTests: XCTestCase {
 		navigation.endAppearanceTransition()
 	}
 
+	@MainActor func testReplacingAttachmentsBeforeAppearanceCancelsOnceAndEndsRefreshing() {
+		let controller = HealthRecordAttachmentsViewController(record: record())
+		var cancellations = 0
+		controller.loadAttachments = { _, completion in
+			return {
+				cancellations += 1
+				completion(.failure(NSError(domain: "SynchronousAttachmentCancellation", code: 6)))
+			}
+		}
+		controller.loadViewIfNeeded()
+		controller.refreshControl?.beginRefreshing()
+		let navigation = UINavigationController(rootViewController: controller)
+		XCTAssertTrue(controller.parent === navigation)
+		XCTAssertNil(controller.view.window)
+		navigation.setViewControllers([UIViewController()], animated: false)
+		XCTAssertNil(controller.parent)
+		XCTAssertEqual(cancellations, 1)
+		drainMainQueue()
+		XCTAssertNil(status(controller).detailTextLabel?.text)
+		XCTAssertFalse(controller.refreshControl?.isRefreshing == true)
+		XCTAssertTrue(controller.tableView.isUserInteractionEnabled)
+		XCTAssertNil(controller.navigationItem.prompt)
+		XCTAssertEqual(cancellations, 1)
+	}
+
+	@MainActor func testPoppingDetailBeforeAppearanceCancelsMeasurementsAndAllowsANewRead() throws {
+		let source = record()
+		let controller = HealthRecordDetailViewController(record: source, title: "Recorded measurement")
+		var completions: [(Result<HealthSeriesSnapshot, Error>) -> Void] = []
+		var cancellations = 0
+		controller.loadSeries = { sample, completion in
+			XCTAssertTrue(sample === source)
+			completions.append(completion)
+			return {
+				cancellations += 1
+				completion(.failure(NSError(domain: "SynchronousSeriesCancellation", code: 7)))
+			}
+		}
+		let root = UIViewController(), navigation = UINavigationController(rootViewController: root)
+		navigation.pushViewController(controller, animated: false)
+		controller.loadViewIfNeeded()
+		controller.showMeasurements()
+		XCTAssertNil(controller.view.window)
+		XCTAssertNotNil(controller.navigationItem.prompt)
+		XCTAssertTrue(controller.navigationItem.rightBarButtonItems?.allSatisfy { !$0.isEnabled } == true)
+		XCTAssertTrue(navigation.popViewController(animated: false) === controller)
+		XCTAssertEqual(cancellations, 1)
+		XCTAssertNil(controller.parent)
+		XCTAssertNil(controller.navigationItem.prompt)
+		XCTAssertTrue(controller.navigationItem.rightBarButtonItems?.allSatisfy { $0.isEnabled } == true)
+		drainMainQueue()
+		XCTAssertNil(controller.presentedViewController)
+		XCTAssertTrue(navigation.topViewController === root)
+		navigation.pushViewController(controller, animated: false)
+		controller.showMeasurements()
+		XCTAssertEqual(completions.count, 2)
+		XCTAssertEqual(cancellations, 1)
+		completions[0](.success(.quantity([])))
+		drainMainQueue()
+		XCTAssertTrue(navigation.topViewController === controller)
+		XCTAssertNotNil(controller.navigationItem.prompt)
+		completions[1](.success(.quantity([])))
+		drainMainQueue()
+		let measurements = try XCTUnwrap(navigation.topViewController as? HealthSeriesViewController)
+		XCTAssertTrue(measurements.source === controller.record)
+		XCTAssertNil(controller.navigationItem.prompt)
+		XCTAssertTrue(controller.navigationItem.rightBarButtonItems?.allSatisfy { $0.isEnabled } == true)
+		XCTAssertEqual(cancellations, 1)
+	}
+
+	@MainActor func testCoveringDetailKeepsItsMeasurementReadActive() {
+		let controller = HealthRecordDetailViewController(record: record(), title: "Recorded measurement")
+		var completion: ((Result<HealthSeriesSnapshot, Error>) -> Void)?
+		var cancellations = 0
+		controller.loadSeries = { _, finish in completion = finish; return { cancellations += 1 } }
+		controller.loadViewIfNeeded()
+		let navigation = UINavigationController(rootViewController: controller)
+		controller.showMeasurements()
+		navigation.pushViewController(UIViewController(), animated: false)
+		XCTAssertTrue(controller.parent === navigation)
+		XCTAssertEqual(cancellations, 0)
+		XCTAssertNotNil(controller.navigationItem.prompt)
+		_ = navigation.popViewController(animated: false)
+		completion?(.success(.quantity([])))
+		drainMainQueue()
+		XCTAssertTrue(navigation.topViewController is HealthSeriesViewController)
+		XCTAssertNil(controller.navigationItem.prompt)
+		XCTAssertEqual(cancellations, 0)
+	}
+
 	@MainActor func testCoveringAttachmentsWithAnotherControllerKeepsItsReadActive() {
 		let probe = HealthAttachmentLoaderProbe(), controller = attachments(probe: probe)
 		let navigation = UINavigationController(rootViewController: controller)

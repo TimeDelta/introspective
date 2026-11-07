@@ -35,7 +35,9 @@ final class HealthResultSummaryCell: UITableViewCell {
 /// Inspects the immutable record returned by Health. It deliberately has no
 /// recording, edit, or delete action.
 final class HealthRecordDetailViewController: UITableViewController {
+	typealias SeriesLoader = (HKSample, @escaping (Result<HealthSeriesSnapshot, Error>) -> Void) -> () -> Void
 	let record: HKSample
+	var loadSeries: SeriesLoader?
 	private var sections: [HealthRecordSection]
 	private let seriesReader = HealthSpecializedSeriesReader()
 	private lazy var documentReader = HealthDocumentContentReader()
@@ -94,8 +96,19 @@ final class HealthRecordDetailViewController: UITableViewController {
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		if isMovingFromParent || isBeingDismissed || navigationController?.isBeingDismissed == true {
-			generation = UUID(); cancelSeries?(); cancelSeries = nil
+			cancelReading()
 		}
+	}
+	override func didMove(toParent parent: UIViewController?) {
+		super.didMove(toParent: parent)
+		if parent == nil { cancelReading() }
+	}
+	private func cancelReading() {
+		generation = UUID()
+		let cancel = cancelSeries; cancelSeries = nil
+		cancel?()
+		navigationItem.prompt = nil
+		navigationItem.rightBarButtonItems?.forEach { $0.isEnabled = true }
 	}
 
 	override func numberOfSections(in tableView: UITableView) -> Int { sections.count }
@@ -118,14 +131,15 @@ final class HealthRecordDetailViewController: UITableViewController {
 		navigationController?.pushViewController(HealthFieldTextViewController(field: field), animated: true)
 	}
 
-	@objc private func showMeasurements() {
-		cancelSeries?()
+	@objc func showMeasurements() {
+		cancelReading()
 		let token = UUID(); generation = token
 		navigationItem.rightBarButtonItems?.forEach { $0.isEnabled = false }
 		navigationItem.prompt = "Reading recorded measurements…"
-		cancelSeries = seriesReader.read(sample: record) { [weak self] result in
+		let completion: (Result<HealthSeriesSnapshot, Error>) -> Void = { [weak self] result in
 			DispatchQueue.main.async {
 				guard let self = self, self.generation == token else { return }
+				self.generation = UUID()
 				self.cancelSeries = nil
 				self.navigationItem.prompt = nil
 				self.navigationItem.rightBarButtonItems?.forEach { $0.isEnabled = true }
@@ -136,16 +150,18 @@ final class HealthRecordDetailViewController: UITableViewController {
 				}
 			}
 		}
+		cancelSeries = loadSeries?(record, completion) ?? seriesReader.read(sample: record, completion: completion)
 	}
 
 	private func readDocument() {
 		guard let document = record as? HKCDADocumentSample else { return }
-		cancelSeries?(); let token = UUID(); generation = token
+		cancelReading(); let token = UUID(); generation = token
 		navigationItem.prompt = "Reading original document…"
 		navigationItem.rightBarButtonItems?.forEach { $0.isEnabled = false }
 		cancelSeries = documentReader.read(document: document) { [weak self] result in
 			DispatchQueue.main.async {
 				guard let self = self, self.generation == token else { return }
+				self.generation = UUID()
 				self.cancelSeries = nil; self.navigationItem.prompt = nil
 				self.navigationItem.rightBarButtonItems?.forEach { $0.isEnabled = true }
 				switch result {

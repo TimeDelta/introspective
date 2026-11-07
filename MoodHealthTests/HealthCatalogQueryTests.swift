@@ -425,37 +425,63 @@ final class HealthCatalogQueryTests: XCTestCase {
 		}
 	}
 
-	@MainActor func testCatalogQueryRoundTripsThroughSQLiteWithItsPermanentTypeIDAndNumericRestriction() throws {
-		let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-		try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-		defer { try? FileManager.default.removeItem(at: directory) }
+	@MainActor private func openQueryStore(at url: URL) throws -> NSPersistentContainer {
 		let container = NSPersistentContainer(name: "HealthCatalogQueryPersistence", managedObjectModel: Self.model)
-		let description = NSPersistentStoreDescription(url: directory.appendingPathComponent("query.sqlite"))
+		let description = NSPersistentStoreDescription(url: url)
 		description.shouldAddStoreAsynchronously = false
 		container.persistentStoreDescriptions = [description]
 		var loadError: Error?
 		container.loadPersistentStores { _, error in loadError = error }
 		if let loadError = loadError { throw loadError }
-		defer {
-			container.viewContext.reset()
-			for store in container.persistentStoreCoordinator.persistentStores { try? container.persistentStoreCoordinator.remove(store) }
+		return container
+	}
+
+	@MainActor private func closeQueryStore(_ container: NSPersistentContainer) throws {
+		container.viewContext.reset()
+		for store in container.persistentStoreCoordinator.persistentStores {
+			try container.persistentStoreCoordinator.remove(store)
 		}
+	}
+
+	@MainActor func testCatalogQueryRoundTripsThroughSQLiteWithItsPermanentTypeIDAndNumericRestriction() throws {
+		let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+		try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+		defer { try? FileManager.default.removeItem(at: directory) }
+		let storeURL = directory.appendingPathComponent("query.sqlite")
+		let writer = try openQueryStore(at: storeURL)
+		defer { try? closeQueryStore(writer) }
 		DependencyInjector.register([CommonInjectionProvider(), BooleanAlgebraInjectionProvider(),
 			SamplesInjectionProvider(), QueriesInjectionProvider(), AttributeRestrictionsInjectionProvider(),
-			CatalogQueryDatabaseProvider(DatabaseImpl(container)), probe])
+			CatalogQueryDatabaseProvider(DatabaseImpl(writer)), probe])
 		let descriptor = try XCTUnwrap(HealthCatalog.availableDescriptors.first { $0.identifier == HKQuantityTypeIdentifier.height.rawValue })
 		let type = try injected(SampleFactory.self).sampleType(for: descriptor.id)
 		let query = try injected(QueryFactory.self).queryFor(type)
 		query.expression = GreaterThanDoubleAttributeRestriction(restrictedAttribute: type.defaultDependentAttribute, value: 1.23456789012345)
 		query.mostRecentEntryOnly = true
-		let stored = try query.stored(withName: "Height records above my threshold")
-		let id = stored.objectID
+		let name = "Height records above my threshold"
+		_ = try query.stored(withName: name)
+		// The saved child-context object can retain its temporary ID after the parent commits.
+		let request = StoredQuery.fetchRequest()
+		request.predicate = NSPredicate(format: "name == %@", name)
+		let storedQueries = try writer.viewContext.fetch(request)
+		XCTAssertEqual(storedQueries.count, 1)
+		let stored = try XCTUnwrap(storedQueries.first)
+		XCTAssertFalse(stored.objectID.isTemporaryID)
+		let storedURI = stored.objectID.uriRepresentation()
 		XCTAssertEqual(stored.sampleTypeId, descriptor.id)
 		XCTAssertGreaterThanOrEqual(stored.sampleTypeId, 21)
-		container.viewContext.reset()
-		let reloaded = try XCTUnwrap(try container.viewContext.existingObject(with: id) as? StoredQuery)
+		try closeQueryStore(writer)
+		let reader = try openQueryStore(at: storeURL)
+		defer { try? closeQueryStore(reader) }
+		DependencyInjector.register([CatalogQueryDatabaseProvider(DatabaseImpl(reader))])
+		let id = try XCTUnwrap(reader.persistentStoreCoordinator.managedObjectID(forURIRepresentation: storedURI))
+		let reloaded = try XCTUnwrap(try reader.viewContext.existingObject(with: id) as? StoredQuery)
+		XCTAssertEqual(reloaded.name, name)
+		XCTAssertEqual(reloaded.sampleTypeId, descriptor.id)
 		let restored = try reloaded.convert()
 		XCTAssertTrue(try injected(QueryFactory.self).sampleTypeFor(restored) == type)
+		XCTAssertEqual(try XCTUnwrap(restored.expression as? GreaterThanDoubleAttributeRestriction).typedValue, 1.23456789012345)
+		XCTAssertTrue(restored.mostRecentEntryOnly)
 		XCTAssertTrue(restored.equalTo(query), "Restoring the saved catalog query must retain its exact typed condition and flags")
 		XCTAssertTrue(probe.permissions.isEmpty, "Saving or restoring a query must not request Health access")
 		XCTAssertTrue(probe.sampleCallbacks.isEmpty)
