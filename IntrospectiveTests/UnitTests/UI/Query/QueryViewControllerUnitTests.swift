@@ -2205,19 +2205,31 @@ final class QueryEditorContainmentTests: UnitTest {
 	}
 
 	func testChangingMatcherDetachesAndReleasesItsPreviousAttributeRows() throws {
-		let editor = makeEditor(matcher: SameDatesSubQueryMatcher())
-		let chooser = try XCTUnwrap(editor.children.first as? AttributedChooserViewController)
 		weak var previousRow: UIViewController?
 		var previousView: UIView?
-		let withinIndex = try XCTUnwrap(chooser.possibleValues.firstIndex { $0 is WithinXCalendarUnitsSubQueryMatcher })
 
-		autoreleasepool {
-			previousRow = chooser.children.first
-			previousView = previousRow?.view
+		// Storyboard creation and removal must share the pool so factory
+		// autoreleases cannot keep the removed row alive beyond this scope.
+		let editor = try autoreleasepool { () throws -> EditSubSampleTypeViewController in
+			let editor = makeEditor(matcher: SameDatesSubQueryMatcher())
+			let chooser = try XCTUnwrap(editor.children.first as? AttributedChooserViewController)
+			let row = try XCTUnwrap(chooser.children.first)
+			previousRow = row
+			previousView = row.view
+			let withinIndex = try XCTUnwrap(chooser.possibleValues.firstIndex { $0 is WithinXCalendarUnitsSubQueryMatcher })
+
 			chooser.pickerView(chooser.valuePicker, didSelectRow: withinIndex, inComponent: 0)
+
+			XCTAssertNil(row.parent)
+			XCTAssertNil(row.view.superview)
+			return editor
 		}
 
-		XCTAssertNil(previousRow, "Replacing a matcher must release the removed row controller")
+		let chooser = try XCTUnwrap(editor.children.first as? AttributedChooserViewController)
+		withExtendedLifetime(editor) {
+			XCTAssertTrue(chooser.parent === editor)
+			XCTAssertNil(previousRow, "Replacing a matcher must release the removed row controller")
+		}
 		XCTAssertNotNil(previousView)
 		XCTAssertNil(previousView?.superview)
 		assertAttributeRowsBelong(to: chooser, count: 3)
