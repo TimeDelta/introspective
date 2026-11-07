@@ -105,6 +105,21 @@ final class UnifiedDayHealthAuthorizationTests: UnitTest {
 		XCTAssertEqual(health.requests.count, 1, "Repeated appearance must not duplicate an outstanding permission request")
 	}
 
+	func testAddingAnUnloadedCalendarKeepsItsViewLazyAndRequestsAuthorizationOnlyOnceWhenLoaded() {
+		let controller = UnifiedDayViewController()
+		let parent = UIViewController()
+		parent.addChild(controller)
+		XCTAssertFalse(controller.isViewLoaded)
+		XCTAssertTrue(health.requests.isEmpty, "Containment must not load the calendar just to request authorization")
+
+		controller.loadViewIfNeeded()
+		XCTAssertEqual(health.requests.count, 1)
+		controller.didMove(toParent: parent)
+		controller.beginAppearanceTransition(true, animated: false)
+		controller.endAppearanceTransition()
+		XCTAssertEqual(health.requests.count, 1, "Completing containment and appearing must reuse the pending request")
+	}
+
 	func testSuccessfulAuthorizationReloadsTheCalendarAndDoesNotPromptAgainOrAcceptDuplicateCompletions() throws {
 		let controller = open()
 		health.samples = [HKCategorySample(type: Sleep.categoryType,
@@ -225,6 +240,9 @@ final class UnifiedDayHealthAuthorizationTests: UnitTest {
 		navigation.pushViewController(controller, animated: false)
 		XCTAssertNil(controller.view.window)
 		XCTAssertEqual(health.requests.count, 2, "Readding a loaded calendar must restart authorization before appearance")
+		controller.beginAppearanceTransition(true, animated: false)
+		controller.endAppearanceTransition()
+		XCTAssertEqual(health.requests.count, 2, "Appearance must reuse the request started during reattachment")
 		health.completeRequest(0)
 		finishMainQueueCallbacks()
 		XCTAssertTrue(health.reads.isEmpty)

@@ -46,16 +46,18 @@ public final class UnifiedDayViewController: DayViewController {
 		requestSleepReadAuthorizationIfNeeded()
 	}
 
+	public override func willMove(toParent parent: UIViewController?) {
+		super.willMove(toParent: parent)
+		guard parent != nil else { return }
+		isClosed = false
+		// Containment starts before an offscreen navigation push completes.
+		// Restart a loaded calendar here without forcing its view to load.
+		if isViewLoaded { requestSleepReadAuthorizationIfNeeded() }
+	}
+
 	public override func didMove(toParent parent: UIViewController?) {
 		super.didMove(toParent: parent)
-		if parent == nil {
-			closePendingReads()
-		} else {
-			isClosed = false
-			// A loaded calendar can be removed and added again before its first
-			// appearance, so containment must also restart its pending request.
-			if isViewLoaded { requestSleepReadAuthorizationIfNeeded() }
-		}
+		if parent == nil { closePendingReads() }
 	}
 
 	public override func eventsForDate(_ date: Date) -> [EventDescriptor] {
