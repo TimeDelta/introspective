@@ -76,6 +76,7 @@ public final class SexualActivity: HealthKitCategorySample, SearchableSample {
 	// MARK: - Instance Variables
 
 	public private(set) var sourceIdentifier: UUID? = nil
+	public private(set) var originalHealthSample: HKSample? = nil
 
 	public final var attributedName: String = Me.name
 	public final var description: String = Me.description
@@ -91,6 +92,7 @@ public final class SexualActivity: HealthKitCategorySample, SearchableSample {
 
 	public required init(_ sample: HKCategorySample) {
 		sourceIdentifier = sample.uuid
+		originalHealthSample = sample
 		if let protection = sample.metadata?[HKMetadataKeySexualActivityProtectionUsed] as? Bool {
 			protectionUsed = protection ? .used : .notUsed
 		} else {

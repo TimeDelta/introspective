@@ -21,6 +21,7 @@ public final class Workout: HealthKitSample, SearchableSample {
 	public static let defaultDependentAttribute: Attribute = durationAttribute
 	public let workout: HKWorkout
 	public var sourceIdentifier: UUID? { workout.uuid }
+	public var originalHealthSample: HKSample? { workout }
 	public var attributedName: String { Self.name }
 	public var description: String { typeName + " workout" }
 	public var attributes: [Attribute] { Self.attributes }

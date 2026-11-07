@@ -26,6 +26,7 @@ end
 
 # Compile the production transfer cells into the hostless lifecycle tests.
 %w[
+  Introspective/HealthKitDataTestUtil.swift
   Introspective/UI/RecordData/Activities/RecordActivityDefinitionTableViewCell.swift
   Introspective/UI/RecordData/Activities/ActivityTagsTableViewCell.swift
   Introspective/UI/RecordData/Activities/ActivityDefinitionTagsTableViewCell.swift
@@ -45,6 +46,9 @@ end
   Introspective/UI/RecordData/LostItemsViewController.swift
   Introspective/UI/RecordData/Mood/MoodTrackingViewController.swift
   Introspective/UI/RecordData/Mood/MoodRemindersViewController.swift
+  Introspective/UI/Explore/HealthLibraryViewController.swift
+  Introspective/UI/Results/HealthRecordDetailViewController.swift
+  Introspective/UI/Results/HealthRecordAttachmentsViewController.swift
   Introspective/UI/RecordData/Stress/StressCheckInViewController.swift
   Introspective/UI/RecordData/Stress/StressorsViewController.swift
   Introspective/UI/RecordData/Stress/StressGuideViewController.swift

@@ -127,22 +127,22 @@ public final class SampleFactoryImpl: SampleFactory {
 			}
 			index += 1
 		}
+		if let descriptor = HealthCatalog.descriptor(for: sampleType) { return descriptor.id }
 		return -1
 	}
 
 	public func sampleType(for id: Int16) throws -> Sample.Type {
-		guard SampleTypeId.sampleTypes.indices.contains(Int(id)) else {
-			throw GenericError("Unsupported saved sample type.")
-		}
-		return SampleTypeId.sampleTypes[Int(id)]
+		if SampleTypeId.sampleTypes.indices.contains(Int(id)) { return SampleTypeId.sampleTypes[Int(id)] }
+		if HealthCatalog.descriptor(for: id) != nil { return try HealthCatalog.sampleType(for: id) }
+		throw GenericError("Unsupported saved sample type.")
 	}
 
 	public final func allTypes() -> [Sample.Type] {
-		Me.allTypes
+		Me.allTypes + HealthCatalog.availableEntries.filter { $0.descriptor.id >= 21 }.map { $0.sampleType }
 	}
 
 	public final func healthKitTypes() -> [HealthKitSample.Type] {
-		Me.healthKitTypes
+		Me.healthKitTypes + HealthCatalog.availableEntries.filter { $0.descriptor.id >= 21 }.compactMap { $0.sampleType as? HealthKitSample.Type }
 	}
 
 	public final func activity(using transaction: Transaction) throws -> Activity {

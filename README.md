@@ -77,7 +77,14 @@ Specify how to group data into a single value for each point (i.e. avg mood per 
 
 
 ### Apple Health integration
-Introspection integrates with a number of data types from the Apple Health app, allowing you to query against them. For a full list of supported data types, see the list below.
+Open **Explore → Health Data** to search and inspect the available Apple Health
+catalog: 221 public iOS 26.2 SDK descriptors, including 120 quantities, 69 categories
+and specialized records. Dated types support custom queries and suitable graph
+attributes; profile values and other dedicated-reader records have their own
+inspection views. Types are filtered for the device's iOS version, with selected
+type access requested when you read records. The expanded types are read-only
+and processing stays on-device. See [Apple Health data catalog](docs/health-data-catalog.md)
+for coverage, units, access limits and developer validation.
 
 ### Siri integration (Shortcuts app)
   - Record mood (decimal)
@@ -102,7 +109,9 @@ Introspection integrates with a number of data types from the Apple Health app, 
 
 
 ### Data Types
-The following data types are supported (with more to come, guaranteed):
+The following list describes local records and some long-standing Apple Health
+types. See the [Apple Health catalog](docs/health-data-catalog.md) for expanded
+Health coverage; the Timeline supports a smaller registered set.
 
 **?** = optional field
   - Activity (what you're doing and when you're doing it)

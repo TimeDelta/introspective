@@ -24,7 +24,7 @@ public class RestingHeartRate: HealthKitQuantitySample {
 	public static let writePermissions: Set<HKSampleType> = Set([sampleType])
 	public static var unit: HKUnit = HKUnit(from: "count/min")
 	public final var unitString: String {
-		Me.unit.unitString
+		valueUnit.unitString
 	}
 
 	public static func initUnits() {
@@ -56,6 +56,8 @@ public class RestingHeartRate: HealthKitQuantitySample {
 	// MARK: - Instance Variables
 
 	public private(set) var sourceIdentifier: UUID? = nil
+	public private(set) var originalHealthSample: HKSample? = nil
+	private var valueUnit: HKUnit = Me.unit
 
 	public final var attributedName: String = Me.name
 	public final var description: String = Me.description
@@ -76,6 +78,8 @@ public class RestingHeartRate: HealthKitQuantitySample {
 	/// Use a captured read unit instead of mutable global unit preferences.
 	public required init(_ sample: HKQuantitySample, unit: HKUnit) {
 		sourceIdentifier = sample.uuid
+		originalHealthSample = sample
+		valueUnit = unit
 		restingHeartRate = sample.quantity.doubleValue(for: unit)
 		timestamp = sample.startDate
 		injected(HealthKitUtil.self).setTimeZoneIfApplicable(for: &timestamp, from: sample)
@@ -84,7 +88,7 @@ public class RestingHeartRate: HealthKitQuantitySample {
 	// MARK: - HealthKitSample Functions
 
 	public func hkSample() -> HKSample {
-		let quantity = HKQuantity(unit: Me.unit, doubleValue: quantityValue())
+		let quantity = HKQuantity(unit: valueUnit, doubleValue: quantityValue())
 		return HKQuantitySample(
 			type: Me.quantityType,
 			quantity: quantity,

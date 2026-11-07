@@ -26,87 +26,75 @@ final class HealthKitQuantitySampleTableViewCell: UITableViewCell {
 	// MARK: - Instance Variables
 
 	public final var sample: HealthKitQuantitySample! {
-		didSet {
-			guard let sample = sample else { return }
-
-			let valueFormatter = NumberFormatter()
-			valueFormatter.numberStyle = .decimal
-			valueLabel.text = formatValue(sample.quantityValue()) + " " + sample.unitString
-
-			let start = sample.dates()[.start]!
-			let end = sample.dates()[.end]
-			var dateString = injected(CalendarUtil.self)
-				.string(for: start, dateStyle: .medium, timeStyle: .short)
-			if end != nil && start != end {
-				dateString += " to " + injected(CalendarUtil.self)
-					.string(for: end!, dateStyle: .medium, timeStyle: .short)
-			}
-			timestampLabel.text = dateString
-
-			setConstraints()
-		}
+		didSet { updateView() }
 	}
+	private var ownedConstraints: [NSLayoutConstraint] = []
+	private weak var constrainedValueLabel: UILabel?
+	private weak var constrainedTimestampLabel: UILabel?
 
 	// MARK: - IBOutlets
 
-	@IBOutlet final var valueLabel: UILabel!
-	@IBOutlet final var timestampLabel: UILabel!
+	@IBOutlet final var valueLabel: UILabel! { didSet { updateView() } }
+	@IBOutlet final var timestampLabel: UILabel! { didSet { updateView() } }
+
+	override func layoutSubviews() {
+		super.layoutSubviews()
+		setConstraintsIfNeeded()
+	}
+
+	override func prepareForReuse() {
+		super.prepareForReuse()
+		sample = nil
+	}
 
 	// MARK: - Helper Functions
 
 	private final func formatValue(_ value: Double) -> String {
-		Me.valueFormatter.string(from: NSNumber(value: value))!
+		Me.valueFormatter.string(from: NSNumber(value: value)) ?? String(value)
 	}
 
-	private final func setConstraints() {
-		setValueLabelConstraints()
-		setTimestampLabelConstraints()
+	private func updateView() {
+		setConstraintsIfNeeded()
+		guard let valueLabel = valueLabel, let timestampLabel = timestampLabel else { return }
+		guard let sample = sample else {
+			valueLabel.text = nil; timestampLabel.text = nil
+			return
+		}
+		valueLabel.text = formatValue(sample.quantityValue()) + " " + sample.unitString
+		let dates = sample.dates()
+		guard let start = dates[.start] else { timestampLabel.text = nil; return }
+		var dateString = injected(CalendarUtil.self).string(for: start, dateStyle: .medium, timeStyle: .short)
+		if let end = dates[.end], end != start {
+			dateString += " to " + injected(CalendarUtil.self).string(for: end, dateStyle: .medium, timeStyle: .short)
+		}
+		timestampLabel.text = dateString
 	}
 
-	private final func setValueLabelConstraints() {
+	private func setConstraintsIfNeeded() {
+		guard let valueLabel = valueLabel, let timestampLabel = timestampLabel,
+			valueLabel.isDescendant(of: self), timestampLabel.isDescendant(of: self) else {
+			NSLayoutConstraint.deactivate(ownedConstraints)
+			ownedConstraints = []; constrainedValueLabel = nil; constrainedTimestampLabel = nil
+			return
+		}
+		if constrainedValueLabel === valueLabel, constrainedTimestampLabel === timestampLabel,
+			!ownedConstraints.isEmpty, ownedConstraints.allSatisfy({ $0.isActive }) { return }
+		NSLayoutConstraint.deactivate(ownedConstraints)
 		valueLabel.translatesAutoresizingMaskIntoConstraints = false
-		valueLabel.widthAnchor.constraint(lessThanOrEqualTo: contentView.widthAnchor).isActive = true
-		let valueHeightConstraint = valueLabel.heightAnchor.constraint(equalToConstant: 30)
-		valueHeightConstraint.priority = .required
-		valueHeightConstraint.isActive = true
-		let leadingConstraint = valueLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5)
-		leadingConstraint.priority = .required
-		leadingConstraint.isActive = true
-		valueLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5).isActive = true
-
-		setSizeOf(valueLabel)
-	}
-
-	private final func setTimestampLabelConstraints() {
 		timestampLabel.translatesAutoresizingMaskIntoConstraints = false
-		timestampLabel.widthAnchor.constraint(lessThanOrEqualTo: contentView.widthAnchor).isActive = true
-		let timestampHeightConstraint = timestampLabel.heightAnchor.constraint(equalToConstant: 30)
-		timestampHeightConstraint.priority = .required
-		timestampHeightConstraint.isActive = true
-		let bufferConstraint = timestampLabel.leadingAnchor.constraint(
-			greaterThanOrEqualToSystemSpacingAfter: valueLabel.trailingAnchor,
-			multiplier: 1
-		)
-		bufferConstraint.priority = .required
-		bufferConstraint.isActive = true
-		let trailingConstraint = timestampLabel.trailingAnchor.constraint(
-			equalTo: contentView.trailingAnchor,
-			constant: -5
-		)
-		trailingConstraint.priority = .required
-		trailingConstraint.isActive = true
-		timestampLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5).isActive = true
-
-		setSizeOf(timestampLabel)
-	}
-
-	private final func setSizeOf(_ label: UILabel) {
-		// this allows the value button to dynamiclly set its width based on its content
-		let size = label.systemLayoutSizeFitting(
-			UIView.layoutFittingCompressedSize,
-			withHorizontalFittingPriority: .defaultHigh,
-			verticalFittingPriority: .init(1)
-		)
-		label.frame.size = size
+		ownedConstraints = [
+			valueLabel.widthAnchor.constraint(lessThanOrEqualTo: contentView.widthAnchor),
+			valueLabel.heightAnchor.constraint(equalToConstant: 30),
+			valueLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5),
+			valueLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
+			timestampLabel.widthAnchor.constraint(lessThanOrEqualTo: contentView.widthAnchor),
+			timestampLabel.heightAnchor.constraint(equalToConstant: 30),
+			timestampLabel.leadingAnchor.constraint(greaterThanOrEqualToSystemSpacingAfter: valueLabel.trailingAnchor, multiplier: 1),
+			timestampLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5),
+			timestampLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
+		]
+		for constraint in ownedConstraints { constraint.identifier = "healthQuantityCell" }
+		NSLayoutConstraint.activate(ownedConstraints)
+		constrainedValueLabel = valueLabel; constrainedTimestampLabel = timestampLabel
 	}
 }

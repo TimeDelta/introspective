@@ -262,6 +262,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 					for: indexPath
 				) as! BloodPressureTableViewCell)
 				cell.sample = (sample as! BloodPressure)
+				cell.accessoryType = .disclosureIndicator
 				return cell
 			case is Fatigue:
 				let cell = (tableView.dequeueReusableCell(
@@ -276,6 +277,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 					for: indexPath
 				) as! StepsTableViewCell)
 				cell.steps = (sample as! Steps)
+				cell.accessoryType = .disclosureIndicator
 				return cell
 			case let checkIn as StressCheckIn:
 				return stressResultCell(title: "Overall stress: " + (StressRating(rawValue: Int(checkIn.overallRating))?.title ?? "Invalid rating"),
@@ -302,6 +304,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
 				cell.textLabel?.text = workout.typeName + " · " + TimeDuration(workout.workout.duration).description
 				cell.detailTextLabel?.text = injected(CalendarUtil.self).string(for: workout.workout.startDate, dateStyle: .medium, timeStyle: .short)
+				cell.accessoryType = .disclosureIndicator
 				return cell
 			case is HealthKitQuantitySample:
 				let cell = (tableView.dequeueReusableCell(
@@ -309,6 +312,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 					for: indexPath
 				) as! HealthKitQuantitySampleTableViewCell)
 				cell.sample = (sample as! HealthKitQuantitySample)
+				cell.accessoryType = .disclosureIndicator
 				return cell
 			case is MedicationDose:
 				let cell = tableView.dequeueReusableCell(
@@ -334,6 +338,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 						) as! SexualActivityTableViewCell
 				)
 				cell.sample = (sample as! SexualActivity)
+				cell.accessoryType = .disclosureIndicator
 				return cell
 			case is Sleep:
 				let cell = (
@@ -341,7 +346,10 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 						.dequeueReusableCell(withIdentifier: "sleepCell", for: indexPath) as! SleepTableViewCell
 				)
 				cell.sleep = (sample as! Sleep)
+				cell.accessoryType = .disclosureIndicator
 				return cell
+			case let health as HealthKitSample:
+				return HealthResultSummaryCell.make(in: tableView, sample: health)
 			default:
 				Me.log.error("Forgot a type of Sample")
 				return UITableViewCell()
@@ -358,6 +366,11 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			showEditInformationView(indexPath)
 		} else {
 			let sample = filteredSamples[indexPath.row]
+			if let health = sample as? HealthKitSample {
+				tableView.deselectRow(at: indexPath, animated: false)
+				pushToNavigationController(HealthRecordDetailViewController(sample: health))
+				return
+			}
 			selectedEditingSample = sample
 			if let checkIn = (sample as? StressCheckIn) ?? (sample as? StressorResponse)?.checkIn {
 				let parentID = checkIn.objectID

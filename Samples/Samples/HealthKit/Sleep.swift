@@ -19,18 +19,39 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 
 	private static let log = Log()
 
-	public enum State: CustomStringConvertible {
+	public enum State: Equatable, CustomStringConvertible {
 		case awake
 		case inBed
 		case asleep
+		case asleepCore
+		case asleepDeep
+		case asleepREM
+		case unknown(Int)
 
-		public static var allValues: [State] = [awake, inBed, asleep]
+		// Keep the original positions: stored query selections use these indexes.
+		public static var allValues: [State] = [awake, inBed, asleep, asleepCore, asleepDeep, asleepREM]
+
+		public init(rawValue: Int) {
+			switch rawValue {
+			case HKCategoryValueSleepAnalysis.awake.rawValue: self = .awake
+			case HKCategoryValueSleepAnalysis.inBed.rawValue: self = .inBed
+			case HKCategoryValueSleepAnalysis.asleepUnspecified.rawValue: self = .asleep
+			case HKCategoryValueSleepAnalysis.asleepCore.rawValue: self = .asleepCore
+			case HKCategoryValueSleepAnalysis.asleepDeep.rawValue: self = .asleepDeep
+			case HKCategoryValueSleepAnalysis.asleepREM.rawValue: self = .asleepREM
+			default: self = .unknown(rawValue)
+			}
+		}
 
 		public var description: String {
 			switch self {
 			case .awake: return "Awake"
 			case .inBed: return "In bed"
-			case .asleep: return "Asleep"
+			case .asleep: return "Asleep (unspecified)"
+			case .asleepCore: return "Core sleep"
+			case .asleepDeep: return "Deep sleep"
+			case .asleepREM: return "REM sleep"
+			case let .unknown(value): return "Unknown sleep state (\(value))"
 			}
 		}
 
@@ -38,7 +59,11 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 			switch self {
 			case .awake: return HKCategoryValueSleepAnalysis.awake.rawValue
 			case .inBed: return HKCategoryValueSleepAnalysis.inBed.rawValue
-			case .asleep: return HKCategoryValueSleepAnalysis.asleep.rawValue
+			case .asleep: return HKCategoryValueSleepAnalysis.asleepUnspecified.rawValue
+			case .asleepCore: return HKCategoryValueSleepAnalysis.asleepCore.rawValue
+			case .asleepDeep: return HKCategoryValueSleepAnalysis.asleepDeep.rawValue
+			case .asleepREM: return HKCategoryValueSleepAnalysis.asleepREM.rawValue
+			case let .unknown(value): return value
 			}
 		}
 	}
@@ -71,11 +96,19 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 		areEqual: { $0 == $1 }
 	)
 	public static let durationAttribute = DurationAttribute(id: 1)
+	public static let stateCodeAttribute = IntegerAttribute(id: 2, name: "Health state code",
+		pluralName: "Health state codes", variableName: HKPredicateKeyPathCategoryValue)
+	/// Groups all recognized asleep stages without conflating future unknown codes
+	/// with either sleeping or waking. The original state choices retain their IDs.
+	public static let isAsleepAttribute = BooleanAttribute(id: 3, name: "Is asleep",
+		pluralName: "Is asleep", variableName: "isAsleep", optional: true)
 	public static let attributes: [Attribute] = [
 		durationAttribute,
 		CommonSampleAttributes.healthKitStartDate,
 		CommonSampleAttributes.healthKitEndDate,
 		stateAttribute,
+		stateCodeAttribute,
+		isAsleepAttribute,
 	]
 	public static let defaultDependentAttribute: Attribute = durationAttribute
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitStartDate
@@ -94,12 +127,20 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 	// MARK: - Instance Variables
 
 	public private(set) var sourceIdentifier: UUID? = nil
+	public private(set) var originalHealthSample: HKSample? = nil
 
 	public final var attributedName: String = Me.name
 	public final var description: String = Me.description
 	public final var startDate: Date
 	public final var endDate: Date
 	public final var state: State
+	public final var isAsleep: Bool? {
+		switch state {
+		case .asleep, .asleepCore, .asleepDeep, .asleepREM: return true
+		case .awake, .inBed: return false
+		case .unknown: return nil
+		}
+	}
 	public final var duration: TimeDuration {
 		TimeDuration(endDate - startDate)
 	}
@@ -114,21 +155,8 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 
 	public required init(_ sample: HKCategorySample) {
 		sourceIdentifier = sample.uuid
-		switch sample.value {
-		case HKCategoryValueSleepAnalysis.awake.rawValue:
-			state = .awake
-			break
-		case HKCategoryValueSleepAnalysis.inBed.rawValue:
-			state = .inBed
-			break
-		case HKCategoryValueSleepAnalysis.asleep.rawValue:
-			state = .asleep
-			break
-		default:
-			Me.log.error("Unknown state: %d", sample.value)
-			state = .awake
-			break
-		}
+		originalHealthSample = sample
+		state = State(rawValue: sample.value)
 		startDate = sample.startDate
 		injected(HealthKitUtil.self).setTimeZoneIfApplicable(for: &startDate, from: sample)
 		endDate = sample.endDate
@@ -169,6 +197,12 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 		if attribute.equalTo(Me.stateAttribute) {
 			return state
 		}
+		if attribute.equalTo(Me.stateCodeAttribute) {
+			return state.rawValue
+		}
+		if attribute.equalTo(Me.isAsleepAttribute) {
+			return isAsleep
+		}
 		if attribute.equalTo(CommonSampleAttributes.healthKitStartDate) {
 			return startDate
 		}
@@ -179,9 +213,17 @@ public final class Sleep: HealthKitCategorySample, SearchableSample {
 	}
 
 	public final func set(attribute: Attribute, to value: Any?) throws {
+		if attribute.equalTo(Me.stateCodeAttribute) || attribute.equalTo(Me.isAsleepAttribute) {
+			throw GenericDisplayableError(title: "Sleep state codes and stage summaries are read-only.",
+				description: "Choose a waking state to change this record.")
+		}
 		if attribute.equalTo(Me.stateAttribute) {
 			guard let castedValue = value as? State else {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
+			if case .unknown = castedValue {
+				throw GenericDisplayableError(title: "Unknown sleep states are read-only.",
+					description: "Choose a recognized sleep state rather than an unsupported Health code.")
 			}
 			state = castedValue
 			return
