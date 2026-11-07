@@ -2,7 +2,7 @@ import XCTest
 import Foundation
 import HealthKit
 import Attributes
-import Samples
+@testable import Samples
 
 final class HealthCatalogTests: XCTestCase {
     private let factory = SampleFactoryImpl()
@@ -174,7 +174,7 @@ final class HealthCatalogTests: XCTestCase {
         XCTAssertTrue(Height.valueAttribute === Height.valueAttribute)
         let first = Height.attributes, second = Height.attributes
         XCTAssertEqual(first.map { $0.id }, second.map { $0.id })
-        XCTAssertTrue(zip(first, second).allSatisfy { $0.0 === $0.1 })
+        XCTAssertTrue(zip(first, second).allSatisfy { ($0.0 as AnyObject) === ($0.1 as AnyObject) })
     }
 
     func testAvailabilityUsesMinorAndPatchVersionsAndRejectsMalformedCatalogVersions() {

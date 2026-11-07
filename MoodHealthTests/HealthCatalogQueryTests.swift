@@ -5,7 +5,7 @@ import AttributeRestrictions
 import BooleanAlgebra
 import Common
 import DependencyInjection
-import Samples
+@testable import Samples
 @testable import Persistence
 @testable import Queries
 

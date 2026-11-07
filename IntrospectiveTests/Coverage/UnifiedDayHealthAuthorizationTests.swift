@@ -13,7 +13,7 @@ import SwiftyMocky
 final class UnifiedDayHealthAuthorizationTests: UnitTest {
 	private var health: UnifiedDayHealthReadProbe!
 	private var activityContext: NSManagedObjectContext!
-	private var window: UIWindow?
+	private var navigation: UINavigationController?
 	private let base = Date(timeIntervalSince1970: 1_700_000_000)
 
 	override func setUp() {
@@ -29,9 +29,9 @@ final class UnifiedDayHealthAuthorizationTests: UnitTest {
 	}
 
 	override func tearDown() {
-		window?.isHidden = true
-		window?.rootViewController = nil
-		window = nil
+		navigation?.beginAppearanceTransition(false, animated: false)
+		navigation?.endAppearanceTransition()
+		navigation = nil
 		activityContext = nil
 		health = nil
 		super.tearDown()
@@ -59,11 +59,15 @@ final class UnifiedDayHealthAuthorizationTests: UnitTest {
 	}
 
 	private func show(_ controller: UnifiedDayViewController) -> UINavigationController {
-		let navigation = UINavigationController(rootViewController: UIViewController())
-		let window = UIWindow(frame: UIScreen.main.bounds)
-		window.rootViewController = navigation
-		window.isHidden = false
-		self.window = window
+		let root = UnifiedDayAppearanceProbe()
+		let navigation = UINavigationController(rootViewController: root)
+		navigation.loadViewIfNeeded()
+		// Complete the container's initial appearance before a real push/pop.
+		// Merely unhiding a window defers this work until after the test's pop.
+		navigation.beginAppearanceTransition(true, animated: false)
+		navigation.endAppearanceTransition()
+		XCTAssertTrue(root.didAppear, "The navigation container must finish appearing before a push")
+		self.navigation = navigation
 		navigation.pushViewController(controller, animated: false)
 		return navigation
 	}
@@ -82,7 +86,8 @@ final class UnifiedDayHealthAuthorizationTests: UnitTest {
 		XCTAssertEqual(events.count, 1)
 		XCTAssertTrue(events.first?.text.hasPrefix("Activity\n") == true)
 		XCTAssertEqual(events.first?.dateInterval, DateInterval(start: activity.start, end: activity.end!))
-		controller.viewWillAppear(false)
+		controller.beginAppearanceTransition(true, animated: false)
+		controller.endAppearanceTransition()
 		XCTAssertEqual(health.requests.count, 1, "Repeated appearance must not duplicate an outstanding permission request")
 	}
 
@@ -104,7 +109,8 @@ final class UnifiedDayHealthAuthorizationTests: UnitTest {
 		health.completeRequest(0)
 		finishMainQueueCallbacks()
 		XCTAssertEqual(health.reads.count, readsAfterSuccess, "A duplicate completion must not trigger another reload")
-		controller.viewWillAppear(false)
+		controller.beginAppearanceTransition(true, animated: false)
+		controller.endAppearanceTransition()
 		XCTAssertEqual(health.requests.count, 1)
 		XCTAssertEqual(health.legacyAuthorizationCount, 0)
 		XCTAssertEqual(health.calculationCount, 0)
@@ -120,7 +126,8 @@ final class UnifiedDayHealthAuthorizationTests: UnitTest {
 		XCTAssertEqual(events.count, 1)
 		XCTAssertTrue(events.first?.text.hasPrefix("Activity\n") == true)
 		XCTAssertTrue(health.reads.isEmpty)
-		controller.viewWillAppear(false)
+		controller.beginAppearanceTransition(true, animated: false)
+		controller.endAppearanceTransition()
 		XCTAssertEqual(health.requests.count, 1)
 		XCTAssertEqual(health.calculationCount, 0)
 	}
@@ -203,6 +210,15 @@ final class UnifiedDayHealthAuthorizationTests: UnitTest {
 	}
 }
 
+private final class UnifiedDayAppearanceProbe: UIViewController {
+	private(set) var didAppear = false
+
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		didAppear = true
+	}
+}
+
 private final class UnifiedDayHealthReadProbe: HealthKitUtil, HealthReadAuthorizationProviding {
 	struct Request {
 		let types: Set<HKObjectType>
@@ -223,7 +239,13 @@ private final class UnifiedDayHealthReadProbe: HealthKitUtil, HealthReadAuthoriz
 		requests.append(Request(types: types, predicate: predicate, callback: callback))
 	}
 
-	func completeRequest(_ index: Int, error: Error? = nil) { requests[index].callback(error) }
+	func completeRequest(_ index: Int, error: Error? = nil, file: StaticString = #file, line: UInt = #line) {
+		guard requests.indices.contains(index) else {
+			XCTFail("Missing authorization request at index \(index); received \(requests.count) requests", file: file, line: line)
+			return
+		}
+		requests[index].callback(error)
+	}
 
 	func getAuthorization(callback: @escaping (Error?) -> Void) {
 		legacyAuthorizationCount += 1
