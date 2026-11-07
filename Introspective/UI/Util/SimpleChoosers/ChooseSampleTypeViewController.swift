@@ -166,8 +166,12 @@ struct SampleTypeSearchModel {
 			let entry = descriptor(type)
 			// Keep the existing wheel labels for IDs 0...20. Catalog display names
 			// preserve medical capitalization such as HbA1c and VO2 Max.
-			let title = entry.map { $0.id > 20 ? $0.name : type.name.localizedCapitalized }
-				?? type.name.localizedCapitalized
+			let title: String
+			if let entry = entry, entry.id > 20 {
+				title = entry.name
+			} else {
+				title = type.name.localizedCapitalized
+			}
 			let group = entry?.group ?? ((type as? HealthKitSample.Type) == nil ? "Introspective" : "Apple Health")
 			let searchText = [title, type.name, group, entry?.name ?? "", entry?.identifier ?? ""].joined(separator: " ")
 			return Item(sampleType: type, title: title, group: group, originalIndex: index, searchText: searchText)
