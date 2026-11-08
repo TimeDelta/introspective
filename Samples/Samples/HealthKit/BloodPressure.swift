@@ -68,6 +68,11 @@ public final class BloodPressure: HealthKitCorrelationSample {
 	// MARK: - Instance Variables
 
 	public private(set) var sourceIdentifier: UUID? = nil
+	public private(set) var originalHealthSample: HKSample? = nil
+	private var capturedSystolicUnit: HKUnit = Me.systolicUnit
+	private var capturedDiastolicUnit: HKUnit = Me.diastolicUnit
+	public var systolicUnitString: String { capturedSystolicUnit.unitString }
+	public var diastolicUnitString: String { capturedDiastolicUnit.unitString }
 
 	public final var attributedName: String = Me.name
 	public final var description: String = Me.description
@@ -90,6 +95,9 @@ public final class BloodPressure: HealthKitCorrelationSample {
 	/// A correlation read captures each component's preferred unit separately.
 	public init(_ sample: HKCorrelation, systolicUnit: HKUnit, diastolicUnit: HKUnit) {
 		sourceIdentifier = sample.uuid
+		originalHealthSample = sample
+		capturedSystolicUnit = systolicUnit
+		capturedDiastolicUnit = diastolicUnit
 		let systolics = sample.objects(for: Me.systolicQuantityType)
 		let systolicSample = systolics.first! as! HKQuantitySample
 		systolic = systolicSample.quantity.doubleValue(for: systolicUnit)
@@ -112,7 +120,7 @@ public final class BloodPressure: HealthKitCorrelationSample {
 	// MARK: - HealthKitSample Functions
 
 	public func hkSample() -> HKSample {
-		let systolicPressure = HKQuantity(unit: Me.systolicUnit, doubleValue: systolic)
+		let systolicPressure = HKQuantity(unit: capturedSystolicUnit, doubleValue: systolic)
 		let systolicSample = HKQuantitySample(
 			type: Me.systolicQuantityType,
 			quantity: systolicPressure,
@@ -120,7 +128,7 @@ public final class BloodPressure: HealthKitCorrelationSample {
 			end: timestamp,
 			metadata: [HKMetadataKeyTimeZone: TimeZone.autoupdatingCurrent.identifier]
 		)
-		let diastolicPressure = HKQuantity(unit: Me.diastolicUnit, doubleValue: diastolic)
+		let diastolicPressure = HKQuantity(unit: capturedDiastolicUnit, doubleValue: diastolic)
 		let diastolicSample = HKQuantitySample(
 			type: Me.diastolicQuantityType,
 			quantity: diastolicPressure,

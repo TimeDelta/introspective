@@ -23,6 +23,10 @@ public protocol HealthKitSample: Sample {
 	/// Identity of the original Health record; nil for a locally constructed sample.
 	/// Exporting with hkSample() may create a new record with a different UUID.
 	var sourceIdentifier: UUID? { get }
+	/// The immutable record read from Health, including its raw dates, source,
+	/// device and metadata. Locally constructed samples have no original record.
+	/// Use this for provenance; hkSample() can instead describe an edited value.
+	var originalHealthSample: HKSample? { get }
 
 	func hkSample() -> HKSample
 }
@@ -30,4 +34,5 @@ public protocol HealthKitSample: Sample {
 public extension HealthKitSample {
 	/// Existing custom sample implementations have no guaranteed read identity.
 	var sourceIdentifier: UUID? { nil }
+	var originalHealthSample: HKSample? { nil }
 }

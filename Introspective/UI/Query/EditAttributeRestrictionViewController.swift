@@ -84,8 +84,8 @@ public final class EditAttributeRestrictionViewControllerImpl: UIViewController,
 		attributedChooserViewController.pickerAccessibilityIdentifier = "attribute restriction"
 		attributedChooserViewController.saveButtonAccessibilityIdentifier = "save attribute restriction button"
 
+		addChild(attributedChooserViewController)
 		attributedChooserSubView.addSubview(attributedChooserViewController.view)
-		attributedChooserViewController.didMove(toParent: self)
 		NSLayoutConstraint.activate([
 			attributedChooserViewController.view.topAnchor.constraint(equalTo: attributedChooserSubView.topAnchor),
 			attributedChooserViewController.view.bottomAnchor
@@ -93,6 +93,7 @@ public final class EditAttributeRestrictionViewControllerImpl: UIViewController,
 			attributedChooserViewController.view.leftAnchor.constraint(equalTo: attributedChooserSubView.leftAnchor),
 			attributedChooserViewController.view.rightAnchor.constraint(equalTo: attributedChooserSubView.rightAnchor),
 		])
+		attributedChooserViewController.didMove(toParent: self)
 	}
 
 	private final func updateAttributedChooserViewValues() {

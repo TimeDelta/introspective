@@ -1,0 +1,2750 @@
+{
+  "schemaVersion": 1,
+  "sdkVersion": "26.2",
+  "sources": [
+    {
+      "url": "https://raw.githubusercontent.com/xybp888/iOS-SDKs/master/iPhoneOS26.2.sdk/System/Library/Frameworks/HealthKit.framework/Headers/HKTypeIdentifiers.h",
+      "sha256": "96b6aaea3366e8eb35be8bbee9d10ea8361c8f90efbec2714cf68a629ad39290"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/xybp888/iOS-SDKs/master/iPhoneOS26.2.sdk/System/Library/Frameworks/HealthKit.framework/Headers/HKCategoryValues.h",
+      "sha256": "4b80e73b64864a20e9140202f627be7fce4616c9fdd678d13408d0ba4575aa7a"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/xybp888/iOS-SDKs/master/iPhoneOS26.2.sdk/System/Library/Frameworks/HealthKit.framework/Headers/HKClinicalType.h",
+      "sha256": "bf8b0a50afa9ca63e3cb222cde193f8187d2ae80527bb3087699880361e7cbba"
+    }
+  ],
+  "legacyIDs": {
+    "0": "Activity",
+    "1": "BloodPressure",
+    "2": "BodyMassIndex",
+    "3": "DietarySugar",
+    "4": "FatigueImpl",
+    "5": "HeartRate",
+    "6": "LeanBodyMass",
+    "7": "MedicationDose",
+    "8": "MoodImpl",
+    "9": "PainImpl",
+    "10": "RestingHeartRate",
+    "11": "SexualActivity",
+    "12": "Sleep",
+    "13": "Weight",
+    "14": "Steps",
+    "15": "ActiveEnergy",
+    "16": "Workout",
+    "17": "LostItemEvent",
+    "18": "MetricContextEntry",
+    "19": "StressCheckIn",
+    "20": "StressorResponse"
+  },
+  "aliases": {
+    "HKCategoryTypeIdentifierAudioExposureEvent": "HKCategoryTypeIdentifierEnvironmentalAudioExposureEvent"
+  },
+  "entries": [
+    {
+      "id": 21,
+      "identifier": "HKQuantityTypeIdentifierAppleSleepingWristTemperature",
+      "name": "Apple Sleeping Wrist Temperature",
+      "group": "Body Measurements",
+      "family": "quantity",
+      "minimumOS": "16.0",
+      "swiftName": "HealthQuantityAppleSleepingWristTemperatureDefinition",
+      "canonicalUnit": "degC",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 22,
+      "identifier": "HKQuantityTypeIdentifierBodyFatPercentage",
+      "name": "Body Fat Percentage",
+      "group": "Body Measurements",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityBodyFatPercentageDefinition",
+      "canonicalUnit": "%",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 13,
+      "identifier": "HKQuantityTypeIdentifierBodyMass",
+      "name": "Body Mass",
+      "group": "Body Measurements",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityBodyMassDefinition",
+      "legacyType": "Weight",
+      "canonicalUnit": "kg",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 2,
+      "identifier": "HKQuantityTypeIdentifierBodyMassIndex",
+      "name": "Body Mass Index",
+      "group": "Body Measurements",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityBodyMassIndexDefinition",
+      "legacyType": "BodyMassIndex",
+      "canonicalUnit": "count",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 23,
+      "identifier": "HKQuantityTypeIdentifierElectrodermalActivity",
+      "name": "Electrodermal Activity",
+      "group": "Body Measurements",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityElectrodermalActivityDefinition",
+      "canonicalUnit": "S",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 24,
+      "identifier": "HKQuantityTypeIdentifierHeight",
+      "name": "Height",
+      "group": "Body Measurements",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityHeightDefinition",
+      "canonicalUnit": "m",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 6,
+      "identifier": "HKQuantityTypeIdentifierLeanBodyMass",
+      "name": "Lean Body Mass",
+      "group": "Body Measurements",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityLeanBodyMassDefinition",
+      "legacyType": "LeanBodyMass",
+      "canonicalUnit": "kg",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 25,
+      "identifier": "HKQuantityTypeIdentifierWaistCircumference",
+      "name": "Waist Circumference",
+      "group": "Body Measurements",
+      "family": "quantity",
+      "minimumOS": "11.0",
+      "swiftName": "HealthQuantityWaistCircumferenceDefinition",
+      "canonicalUnit": "m",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 15,
+      "identifier": "HKQuantityTypeIdentifierActiveEnergyBurned",
+      "name": "Active Energy Burned",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityActiveEnergyBurnedDefinition",
+      "legacyType": "ActiveEnergy",
+      "canonicalUnit": "kcal",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 26,
+      "identifier": "HKQuantityTypeIdentifierAppleExerciseTime",
+      "name": "Apple Exercise Time",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "9.3",
+      "swiftName": "HealthQuantityAppleExerciseTimeDefinition",
+      "canonicalUnit": "min",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 27,
+      "identifier": "HKQuantityTypeIdentifierAppleMoveTime",
+      "name": "Apple Move Time",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "14.5",
+      "swiftName": "HealthQuantityAppleMoveTimeDefinition",
+      "canonicalUnit": "min",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 28,
+      "identifier": "HKQuantityTypeIdentifierAppleStandTime",
+      "name": "Apple Stand Time",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "13.0",
+      "swiftName": "HealthQuantityAppleStandTimeDefinition",
+      "canonicalUnit": "min",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 29,
+      "identifier": "HKQuantityTypeIdentifierBasalEnergyBurned",
+      "name": "Basal Energy Burned",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityBasalEnergyBurnedDefinition",
+      "canonicalUnit": "kcal",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 30,
+      "identifier": "HKQuantityTypeIdentifierCrossCountrySkiingSpeed",
+      "name": "Cross Country Skiing Speed",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "18.0",
+      "swiftName": "HealthQuantityCrossCountrySkiingSpeedDefinition",
+      "canonicalUnit": "m/s",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 31,
+      "identifier": "HKQuantityTypeIdentifierCyclingCadence",
+      "name": "Cycling Cadence",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "17.0",
+      "swiftName": "HealthQuantityCyclingCadenceDefinition",
+      "canonicalUnit": "count/min",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 32,
+      "identifier": "HKQuantityTypeIdentifierCyclingFunctionalThresholdPower",
+      "name": "Cycling Functional Threshold Power",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "17.0",
+      "swiftName": "HealthQuantityCyclingFunctionalThresholdPowerDefinition",
+      "canonicalUnit": "W",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 33,
+      "identifier": "HKQuantityTypeIdentifierCyclingPower",
+      "name": "Cycling Power",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "17.0",
+      "swiftName": "HealthQuantityCyclingPowerDefinition",
+      "canonicalUnit": "W",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 34,
+      "identifier": "HKQuantityTypeIdentifierCyclingSpeed",
+      "name": "Cycling Speed",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "17.0",
+      "swiftName": "HealthQuantityCyclingSpeedDefinition",
+      "canonicalUnit": "m/s",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 35,
+      "identifier": "HKQuantityTypeIdentifierDistanceCrossCountrySkiing",
+      "name": "Distance Cross Country Skiing",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "18.0",
+      "swiftName": "HealthQuantityDistanceCrossCountrySkiingDefinition",
+      "canonicalUnit": "m",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 36,
+      "identifier": "HKQuantityTypeIdentifierDistanceCycling",
+      "name": "Distance Cycling",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDistanceCyclingDefinition",
+      "canonicalUnit": "m",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 37,
+      "identifier": "HKQuantityTypeIdentifierDistanceDownhillSnowSports",
+      "name": "Distance Downhill Snow Sports",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "11.2",
+      "swiftName": "HealthQuantityDistanceDownhillSnowSportsDefinition",
+      "canonicalUnit": "m",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 38,
+      "identifier": "HKQuantityTypeIdentifierDistancePaddleSports",
+      "name": "Distance Paddle Sports",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "18.0",
+      "swiftName": "HealthQuantityDistancePaddleSportsDefinition",
+      "canonicalUnit": "m",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 39,
+      "identifier": "HKQuantityTypeIdentifierDistanceRowing",
+      "name": "Distance Rowing",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "18.0",
+      "swiftName": "HealthQuantityDistanceRowingDefinition",
+      "canonicalUnit": "m",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 40,
+      "identifier": "HKQuantityTypeIdentifierDistanceSkatingSports",
+      "name": "Distance Skating Sports",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "18.0",
+      "swiftName": "HealthQuantityDistanceSkatingSportsDefinition",
+      "canonicalUnit": "m",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 41,
+      "identifier": "HKQuantityTypeIdentifierDistanceSwimming",
+      "name": "Distance Swimming",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "10.0",
+      "swiftName": "HealthQuantityDistanceSwimmingDefinition",
+      "canonicalUnit": "m",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 42,
+      "identifier": "HKQuantityTypeIdentifierDistanceWalkingRunning",
+      "name": "Distance Walking Running",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDistanceWalkingRunningDefinition",
+      "canonicalUnit": "m",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 43,
+      "identifier": "HKQuantityTypeIdentifierDistanceWheelchair",
+      "name": "Distance Wheelchair",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "10.0",
+      "swiftName": "HealthQuantityDistanceWheelchairDefinition",
+      "canonicalUnit": "m",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 44,
+      "identifier": "HKQuantityTypeIdentifierEstimatedWorkoutEffortScore",
+      "name": "Estimated Workout Effort Score",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "18.0",
+      "swiftName": "HealthQuantityEstimatedWorkoutEffortScoreDefinition",
+      "canonicalUnit": "appleEffortScore",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 45,
+      "identifier": "HKQuantityTypeIdentifierFlightsClimbed",
+      "name": "Flights Climbed",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityFlightsClimbedDefinition",
+      "canonicalUnit": "count",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 46,
+      "identifier": "HKQuantityTypeIdentifierNikeFuel",
+      "name": "Nike Fuel",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityNikeFuelDefinition",
+      "canonicalUnit": "count",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 47,
+      "identifier": "HKQuantityTypeIdentifierPaddleSportsSpeed",
+      "name": "Paddle Sports Speed",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "18.0",
+      "swiftName": "HealthQuantityPaddleSportsSpeedDefinition",
+      "canonicalUnit": "m/s",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 48,
+      "identifier": "HKQuantityTypeIdentifierPhysicalEffort",
+      "name": "Physical Effort",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "17.0",
+      "swiftName": "HealthQuantityPhysicalEffortDefinition",
+      "canonicalUnit": "kcal/(kg*hr)",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 49,
+      "identifier": "HKQuantityTypeIdentifierPushCount",
+      "name": "Push Count",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "10.0",
+      "swiftName": "HealthQuantityPushCountDefinition",
+      "canonicalUnit": "count",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 50,
+      "identifier": "HKQuantityTypeIdentifierRowingSpeed",
+      "name": "Rowing Speed",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "18.0",
+      "swiftName": "HealthQuantityRowingSpeedDefinition",
+      "canonicalUnit": "m/s",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 51,
+      "identifier": "HKQuantityTypeIdentifierRunningPower",
+      "name": "Running Power",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "16.0",
+      "swiftName": "HealthQuantityRunningPowerDefinition",
+      "canonicalUnit": "W",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 52,
+      "identifier": "HKQuantityTypeIdentifierRunningSpeed",
+      "name": "Running Speed",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "16.0",
+      "swiftName": "HealthQuantityRunningSpeedDefinition",
+      "canonicalUnit": "m/s",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 14,
+      "identifier": "HKQuantityTypeIdentifierStepCount",
+      "name": "Step Count",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityStepCountDefinition",
+      "legacyType": "Steps",
+      "canonicalUnit": "count",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 53,
+      "identifier": "HKQuantityTypeIdentifierSwimmingStrokeCount",
+      "name": "Swimming Stroke Count",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "10.0",
+      "swiftName": "HealthQuantitySwimmingStrokeCountDefinition",
+      "canonicalUnit": "count",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 54,
+      "identifier": "HKQuantityTypeIdentifierUnderwaterDepth",
+      "name": "Underwater Depth",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "16.0",
+      "swiftName": "HealthQuantityUnderwaterDepthDefinition",
+      "canonicalUnit": "m",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 55,
+      "identifier": "HKQuantityTypeIdentifierWorkoutEffortScore",
+      "name": "Workout Effort Score",
+      "group": "Fitness",
+      "family": "quantity",
+      "minimumOS": "18.0",
+      "swiftName": "HealthQuantityWorkoutEffortScoreDefinition",
+      "canonicalUnit": "appleEffortScore",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 56,
+      "identifier": "HKQuantityTypeIdentifierEnvironmentalAudioExposure",
+      "name": "Environmental Audio Exposure",
+      "group": "Hearing Health",
+      "family": "quantity",
+      "minimumOS": "13.0",
+      "swiftName": "HealthQuantityEnvironmentalAudioExposureDefinition",
+      "canonicalUnit": "dBASPL",
+      "aggregation": "Discrete (Equivalent Continuous Level)"
+    },
+    {
+      "id": 57,
+      "identifier": "HKQuantityTypeIdentifierEnvironmentalSoundReduction",
+      "name": "Environmental Sound Reduction",
+      "group": "Hearing Health",
+      "family": "quantity",
+      "minimumOS": "16.0",
+      "swiftName": "HealthQuantityEnvironmentalSoundReductionDefinition",
+      "canonicalUnit": "dBASPL",
+      "aggregation": "Discrete (Equivalent Continuous Level)"
+    },
+    {
+      "id": 58,
+      "identifier": "HKQuantityTypeIdentifierHeadphoneAudioExposure",
+      "name": "Headphone Audio Exposure",
+      "group": "Hearing Health",
+      "family": "quantity",
+      "minimumOS": "13.0",
+      "swiftName": "HealthQuantityHeadphoneAudioExposureDefinition",
+      "canonicalUnit": "dBASPL",
+      "aggregation": "Discrete (Equivalent Continuous Level)"
+    },
+    {
+      "id": 59,
+      "identifier": "HKQuantityTypeIdentifierAtrialFibrillationBurden",
+      "name": "Atrial Fibrillation Burden",
+      "group": "Heart",
+      "family": "quantity",
+      "minimumOS": "16.0",
+      "swiftName": "HealthQuantityAtrialFibrillationBurdenDefinition",
+      "canonicalUnit": "%",
+      "aggregation": "Discrete (Temporally Weighted)"
+    },
+    {
+      "id": 5,
+      "identifier": "HKQuantityTypeIdentifierHeartRate",
+      "name": "Heart Rate",
+      "group": "Heart",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityHeartRateDefinition",
+      "legacyType": "HeartRate",
+      "canonicalUnit": "count/s",
+      "aggregation": "Discrete (Temporally Weighted)"
+    },
+    {
+      "id": 60,
+      "identifier": "HKQuantityTypeIdentifierHeartRateRecoveryOneMinute",
+      "name": "Heart Rate Recovery One Minute",
+      "group": "Heart",
+      "family": "quantity",
+      "minimumOS": "16.0",
+      "swiftName": "HealthQuantityHeartRateRecoveryOneMinuteDefinition",
+      "canonicalUnit": "count/min",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 61,
+      "identifier": "HKQuantityTypeIdentifierHeartRateVariabilitySDNN",
+      "name": "Heart Rate Variability SDNN",
+      "group": "Heart",
+      "family": "quantity",
+      "minimumOS": "11.0",
+      "swiftName": "HealthQuantityHeartRateVariabilitySDNNDefinition",
+      "canonicalUnit": "ms",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 62,
+      "identifier": "HKQuantityTypeIdentifierPeripheralPerfusionIndex",
+      "name": "Peripheral Perfusion Index",
+      "group": "Heart",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityPeripheralPerfusionIndexDefinition",
+      "canonicalUnit": "%",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 10,
+      "identifier": "HKQuantityTypeIdentifierRestingHeartRate",
+      "name": "Resting Heart Rate",
+      "group": "Heart",
+      "family": "quantity",
+      "minimumOS": "11.0",
+      "swiftName": "HealthQuantityRestingHeartRateDefinition",
+      "legacyType": "RestingHeartRate",
+      "canonicalUnit": "count/min",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 63,
+      "identifier": "HKQuantityTypeIdentifierVO2Max",
+      "name": "VO\u2082 Max",
+      "group": "Heart",
+      "family": "quantity",
+      "minimumOS": "11.0",
+      "swiftName": "HealthQuantityVO2MaxDefinition",
+      "canonicalUnit": "ml/(kg*min)",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 64,
+      "identifier": "HKQuantityTypeIdentifierWalkingHeartRateAverage",
+      "name": "Walking Heart Rate Average",
+      "group": "Heart",
+      "family": "quantity",
+      "minimumOS": "11.0",
+      "swiftName": "HealthQuantityWalkingHeartRateAverageDefinition",
+      "canonicalUnit": "count/min",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 65,
+      "identifier": "HKQuantityTypeIdentifierAppleWalkingSteadiness",
+      "name": "Apple Walking Steadiness",
+      "group": "Mobility",
+      "family": "quantity",
+      "minimumOS": "15.0",
+      "swiftName": "HealthQuantityAppleWalkingSteadinessDefinition",
+      "canonicalUnit": "%",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 66,
+      "identifier": "HKQuantityTypeIdentifierRunningGroundContactTime",
+      "name": "Running Ground Contact Time",
+      "group": "Mobility",
+      "family": "quantity",
+      "minimumOS": "16.0",
+      "swiftName": "HealthQuantityRunningGroundContactTimeDefinition",
+      "canonicalUnit": "ms",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 67,
+      "identifier": "HKQuantityTypeIdentifierRunningStrideLength",
+      "name": "Running Stride Length",
+      "group": "Mobility",
+      "family": "quantity",
+      "minimumOS": "16.0",
+      "swiftName": "HealthQuantityRunningStrideLengthDefinition",
+      "canonicalUnit": "m",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 68,
+      "identifier": "HKQuantityTypeIdentifierRunningVerticalOscillation",
+      "name": "Running Vertical Oscillation",
+      "group": "Mobility",
+      "family": "quantity",
+      "minimumOS": "16.0",
+      "swiftName": "HealthQuantityRunningVerticalOscillationDefinition",
+      "canonicalUnit": "cm",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 69,
+      "identifier": "HKQuantityTypeIdentifierSixMinuteWalkTestDistance",
+      "name": "Six Minute Walk Test Distance",
+      "group": "Mobility",
+      "family": "quantity",
+      "minimumOS": "14.0",
+      "swiftName": "HealthQuantitySixMinuteWalkTestDistanceDefinition",
+      "canonicalUnit": "m",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 70,
+      "identifier": "HKQuantityTypeIdentifierStairAscentSpeed",
+      "name": "Stair Ascent Speed",
+      "group": "Mobility",
+      "family": "quantity",
+      "minimumOS": "14.0",
+      "swiftName": "HealthQuantityStairAscentSpeedDefinition",
+      "canonicalUnit": "m/s",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 71,
+      "identifier": "HKQuantityTypeIdentifierStairDescentSpeed",
+      "name": "Stair Descent Speed",
+      "group": "Mobility",
+      "family": "quantity",
+      "minimumOS": "14.0",
+      "swiftName": "HealthQuantityStairDescentSpeedDefinition",
+      "canonicalUnit": "m/s",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 72,
+      "identifier": "HKQuantityTypeIdentifierWalkingAsymmetryPercentage",
+      "name": "Walking Asymmetry Percentage",
+      "group": "Mobility",
+      "family": "quantity",
+      "minimumOS": "14.0",
+      "swiftName": "HealthQuantityWalkingAsymmetryPercentageDefinition",
+      "canonicalUnit": "%",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 73,
+      "identifier": "HKQuantityTypeIdentifierWalkingDoubleSupportPercentage",
+      "name": "Walking Double Support Percentage",
+      "group": "Mobility",
+      "family": "quantity",
+      "minimumOS": "14.0",
+      "swiftName": "HealthQuantityWalkingDoubleSupportPercentageDefinition",
+      "canonicalUnit": "%",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 74,
+      "identifier": "HKQuantityTypeIdentifierWalkingSpeed",
+      "name": "Walking Speed",
+      "group": "Mobility",
+      "family": "quantity",
+      "minimumOS": "14.0",
+      "swiftName": "HealthQuantityWalkingSpeedDefinition",
+      "canonicalUnit": "m/s",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 75,
+      "identifier": "HKQuantityTypeIdentifierWalkingStepLength",
+      "name": "Walking Step Length",
+      "group": "Mobility",
+      "family": "quantity",
+      "minimumOS": "14.0",
+      "swiftName": "HealthQuantityWalkingStepLengthDefinition",
+      "canonicalUnit": "m",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 76,
+      "identifier": "HKQuantityTypeIdentifierDietaryBiotin",
+      "name": "Dietary Biotin",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryBiotinDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 77,
+      "identifier": "HKQuantityTypeIdentifierDietaryCaffeine",
+      "name": "Dietary Caffeine",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryCaffeineDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 78,
+      "identifier": "HKQuantityTypeIdentifierDietaryCalcium",
+      "name": "Dietary Calcium",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryCalciumDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 79,
+      "identifier": "HKQuantityTypeIdentifierDietaryCarbohydrates",
+      "name": "Dietary Carbohydrates",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryCarbohydratesDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 80,
+      "identifier": "HKQuantityTypeIdentifierDietaryChloride",
+      "name": "Dietary Chloride",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryChlorideDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 81,
+      "identifier": "HKQuantityTypeIdentifierDietaryCholesterol",
+      "name": "Dietary Cholesterol",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryCholesterolDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 82,
+      "identifier": "HKQuantityTypeIdentifierDietaryChromium",
+      "name": "Dietary Chromium",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryChromiumDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 83,
+      "identifier": "HKQuantityTypeIdentifierDietaryCopper",
+      "name": "Dietary Copper",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryCopperDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 84,
+      "identifier": "HKQuantityTypeIdentifierDietaryEnergyConsumed",
+      "name": "Dietary Energy Consumed",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryEnergyConsumedDefinition",
+      "canonicalUnit": "kcal",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 85,
+      "identifier": "HKQuantityTypeIdentifierDietaryFatMonounsaturated",
+      "name": "Dietary Fat Monounsaturated",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryFatMonounsaturatedDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 86,
+      "identifier": "HKQuantityTypeIdentifierDietaryFatPolyunsaturated",
+      "name": "Dietary Fat Polyunsaturated",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryFatPolyunsaturatedDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 87,
+      "identifier": "HKQuantityTypeIdentifierDietaryFatSaturated",
+      "name": "Dietary Fat Saturated",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryFatSaturatedDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 88,
+      "identifier": "HKQuantityTypeIdentifierDietaryFatTotal",
+      "name": "Dietary Fat Total",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryFatTotalDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 89,
+      "identifier": "HKQuantityTypeIdentifierDietaryFiber",
+      "name": "Dietary Fiber",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryFiberDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 90,
+      "identifier": "HKQuantityTypeIdentifierDietaryFolate",
+      "name": "Dietary Folate",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryFolateDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 91,
+      "identifier": "HKQuantityTypeIdentifierDietaryIodine",
+      "name": "Dietary Iodine",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryIodineDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 92,
+      "identifier": "HKQuantityTypeIdentifierDietaryIron",
+      "name": "Dietary Iron",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryIronDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 93,
+      "identifier": "HKQuantityTypeIdentifierDietaryMagnesium",
+      "name": "Dietary Magnesium",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryMagnesiumDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 94,
+      "identifier": "HKQuantityTypeIdentifierDietaryManganese",
+      "name": "Dietary Manganese",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryManganeseDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 95,
+      "identifier": "HKQuantityTypeIdentifierDietaryMolybdenum",
+      "name": "Dietary Molybdenum",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryMolybdenumDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 96,
+      "identifier": "HKQuantityTypeIdentifierDietaryNiacin",
+      "name": "Dietary Niacin",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryNiacinDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 97,
+      "identifier": "HKQuantityTypeIdentifierDietaryPantothenicAcid",
+      "name": "Dietary Pantothenic Acid",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryPantothenicAcidDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 98,
+      "identifier": "HKQuantityTypeIdentifierDietaryPhosphorus",
+      "name": "Dietary Phosphorus",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryPhosphorusDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 99,
+      "identifier": "HKQuantityTypeIdentifierDietaryPotassium",
+      "name": "Dietary Potassium",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryPotassiumDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 100,
+      "identifier": "HKQuantityTypeIdentifierDietaryProtein",
+      "name": "Dietary Protein",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryProteinDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 101,
+      "identifier": "HKQuantityTypeIdentifierDietaryRiboflavin",
+      "name": "Dietary Riboflavin",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryRiboflavinDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 102,
+      "identifier": "HKQuantityTypeIdentifierDietarySelenium",
+      "name": "Dietary Selenium",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietarySeleniumDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 103,
+      "identifier": "HKQuantityTypeIdentifierDietarySodium",
+      "name": "Dietary Sodium",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietarySodiumDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 3,
+      "identifier": "HKQuantityTypeIdentifierDietarySugar",
+      "name": "Dietary Sugar",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietarySugarDefinition",
+      "legacyType": "DietarySugar",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 104,
+      "identifier": "HKQuantityTypeIdentifierDietaryThiamin",
+      "name": "Dietary Thiamin",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryThiaminDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 105,
+      "identifier": "HKQuantityTypeIdentifierDietaryVitaminA",
+      "name": "Dietary Vitamin A",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryVitaminADefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 106,
+      "identifier": "HKQuantityTypeIdentifierDietaryVitaminB12",
+      "name": "Dietary Vitamin B12",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryVitaminB12Definition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 107,
+      "identifier": "HKQuantityTypeIdentifierDietaryVitaminB6",
+      "name": "Dietary Vitamin B6",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryVitaminB6Definition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 108,
+      "identifier": "HKQuantityTypeIdentifierDietaryVitaminC",
+      "name": "Dietary Vitamin C",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryVitaminCDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 109,
+      "identifier": "HKQuantityTypeIdentifierDietaryVitaminD",
+      "name": "Dietary Vitamin D",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryVitaminDDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 110,
+      "identifier": "HKQuantityTypeIdentifierDietaryVitaminE",
+      "name": "Dietary Vitamin E",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryVitaminEDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 111,
+      "identifier": "HKQuantityTypeIdentifierDietaryVitaminK",
+      "name": "Dietary Vitamin K",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryVitaminKDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 112,
+      "identifier": "HKQuantityTypeIdentifierDietaryWater",
+      "name": "Dietary Water",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "9.0",
+      "swiftName": "HealthQuantityDietaryWaterDefinition",
+      "canonicalUnit": "mL",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 113,
+      "identifier": "HKQuantityTypeIdentifierDietaryZinc",
+      "name": "Dietary Zinc",
+      "group": "Nutrition",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityDietaryZincDefinition",
+      "canonicalUnit": "g",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 114,
+      "identifier": "HKQuantityTypeIdentifierBloodAlcoholContent",
+      "name": "Blood Alcohol Content",
+      "group": "Other",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityBloodAlcoholContentDefinition",
+      "canonicalUnit": "%",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 115,
+      "identifier": "HKQuantityTypeIdentifierBloodPressureDiastolic",
+      "name": "Blood Pressure Diastolic",
+      "group": "Other",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityBloodPressureDiastolicDefinition",
+      "canonicalUnit": "mmHg",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 116,
+      "identifier": "HKQuantityTypeIdentifierBloodPressureSystolic",
+      "name": "Blood Pressure Systolic",
+      "group": "Other",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityBloodPressureSystolicDefinition",
+      "canonicalUnit": "mmHg",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 117,
+      "identifier": "HKQuantityTypeIdentifierInsulinDelivery",
+      "name": "Insulin Delivery",
+      "group": "Other",
+      "family": "quantity",
+      "minimumOS": "11.0",
+      "swiftName": "HealthQuantityInsulinDeliveryDefinition",
+      "canonicalUnit": "IU",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 118,
+      "identifier": "HKQuantityTypeIdentifierNumberOfAlcoholicBeverages",
+      "name": "Number Of Alcoholic Beverages",
+      "group": "Other",
+      "family": "quantity",
+      "minimumOS": "15.0",
+      "swiftName": "HealthQuantityNumberOfAlcoholicBeveragesDefinition",
+      "canonicalUnit": "count",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 119,
+      "identifier": "HKQuantityTypeIdentifierNumberOfTimesFallen",
+      "name": "Number Of Times Fallen",
+      "group": "Other",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityNumberOfTimesFallenDefinition",
+      "canonicalUnit": "count",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 120,
+      "identifier": "HKQuantityTypeIdentifierTimeInDaylight",
+      "name": "Time In Daylight",
+      "group": "Other",
+      "family": "quantity",
+      "minimumOS": "17.0",
+      "swiftName": "HealthQuantityTimeInDaylightDefinition",
+      "canonicalUnit": "min",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 121,
+      "identifier": "HKQuantityTypeIdentifierUVExposure",
+      "name": "UV Exposure",
+      "group": "Other",
+      "family": "quantity",
+      "minimumOS": "9.0",
+      "swiftName": "HealthQuantityUVExposureDefinition",
+      "canonicalUnit": "count",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 122,
+      "identifier": "HKQuantityTypeIdentifierWaterTemperature",
+      "name": "Water Temperature",
+      "group": "Other",
+      "family": "quantity",
+      "minimumOS": "16.0",
+      "swiftName": "HealthQuantityWaterTemperatureDefinition",
+      "canonicalUnit": "degC",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 123,
+      "identifier": "HKQuantityTypeIdentifierBasalBodyTemperature",
+      "name": "Basal Body Temperature",
+      "group": "Reproductive Health",
+      "family": "quantity",
+      "minimumOS": "9.0",
+      "swiftName": "HealthQuantityBasalBodyTemperatureDefinition",
+      "canonicalUnit": "degC",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 124,
+      "identifier": "HKQuantityTypeIdentifierAppleSleepingBreathingDisturbances",
+      "name": "Apple Sleeping Breathing Disturbances",
+      "group": "Respiratory",
+      "family": "quantity",
+      "minimumOS": "18.0",
+      "swiftName": "HealthQuantityAppleSleepingBreathingDisturbancesDefinition",
+      "canonicalUnit": "count",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 125,
+      "identifier": "HKQuantityTypeIdentifierForcedExpiratoryVolume1",
+      "name": "Forced Expiratory Volume1",
+      "group": "Respiratory",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityForcedExpiratoryVolume1Definition",
+      "canonicalUnit": "L",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 126,
+      "identifier": "HKQuantityTypeIdentifierForcedVitalCapacity",
+      "name": "Forced Vital Capacity",
+      "group": "Respiratory",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityForcedVitalCapacityDefinition",
+      "canonicalUnit": "L",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 127,
+      "identifier": "HKQuantityTypeIdentifierInhalerUsage",
+      "name": "Inhaler Usage",
+      "group": "Respiratory",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityInhalerUsageDefinition",
+      "canonicalUnit": "count",
+      "aggregation": "Cumulative"
+    },
+    {
+      "id": 128,
+      "identifier": "HKQuantityTypeIdentifierOxygenSaturation",
+      "name": "Oxygen Saturation",
+      "group": "Respiratory",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityOxygenSaturationDefinition",
+      "canonicalUnit": "%",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 129,
+      "identifier": "HKQuantityTypeIdentifierPeakExpiratoryFlowRate",
+      "name": "Peak Expiratory Flow Rate",
+      "group": "Respiratory",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityPeakExpiratoryFlowRateDefinition",
+      "canonicalUnit": "L/min",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 130,
+      "identifier": "HKQuantityTypeIdentifierRespiratoryRate",
+      "name": "Respiratory Rate",
+      "group": "Respiratory",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityRespiratoryRateDefinition",
+      "canonicalUnit": "count/s",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 131,
+      "identifier": "HKQuantityTypeIdentifierBloodGlucose",
+      "name": "Blood Glucose",
+      "group": "Vital Signs",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityBloodGlucoseDefinition",
+      "canonicalUnit": "mg/dL",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 132,
+      "identifier": "HKQuantityTypeIdentifierBodyTemperature",
+      "name": "Body Temperature",
+      "group": "Vital Signs",
+      "family": "quantity",
+      "minimumOS": "8.0",
+      "swiftName": "HealthQuantityBodyTemperatureDefinition",
+      "canonicalUnit": "degC",
+      "aggregation": "Discrete (Arithmetic)"
+    },
+    {
+      "id": 133,
+      "identifier": "HKCategoryTypeIdentifierAppleStandHour",
+      "name": "Apple Stand Hour",
+      "group": "Fitness",
+      "family": "category",
+      "minimumOS": "9.0",
+      "swiftName": "HealthCategoryAppleStandHourDefinition",
+      "categoryValues": {
+        "0": "Stood",
+        "1": "Idle"
+      },
+      "categoryEnum": "HKCategoryValueAppleStandHour"
+    },
+    {
+      "id": 134,
+      "identifier": "HKCategoryTypeIdentifierEnvironmentalAudioExposureEvent",
+      "name": "Environmental Audio Exposure Event",
+      "group": "Hearing Health",
+      "family": "category",
+      "minimumOS": "14.0",
+      "swiftName": "HealthCategoryEnvironmentalAudioExposureEventDefinition",
+      "categoryValues": {
+        "1": "Momentary Limit"
+      },
+      "categoryEnum": "HKCategoryValueEnvironmentalAudioExposureEvent"
+    },
+    {
+      "id": 135,
+      "identifier": "HKCategoryTypeIdentifierHeadphoneAudioExposureEvent",
+      "name": "Headphone Audio Exposure Event",
+      "group": "Hearing Health",
+      "family": "category",
+      "minimumOS": "14.2",
+      "swiftName": "HealthCategoryHeadphoneAudioExposureEventDefinition",
+      "categoryValues": {
+        "1": "Seven Day Limit"
+      },
+      "categoryEnum": "HKCategoryValueHeadphoneAudioExposureEvent"
+    },
+    {
+      "id": 136,
+      "identifier": "HKCategoryTypeIdentifierHighHeartRateEvent",
+      "name": "High Heart Rate Event",
+      "group": "Heart",
+      "family": "category",
+      "minimumOS": "12.2",
+      "swiftName": "HealthCategoryHighHeartRateEventDefinition",
+      "categoryValues": {
+        "0": "Not Applicable"
+      },
+      "categoryEnum": "HKCategoryValue"
+    },
+    {
+      "id": 137,
+      "identifier": "HKCategoryTypeIdentifierHypertensionEvent",
+      "name": "Hypertension Event",
+      "group": "Heart",
+      "family": "category",
+      "minimumOS": "26.2",
+      "swiftName": "HealthCategoryHypertensionEventDefinition",
+      "categoryValues": {
+        "0": "Not Applicable"
+      },
+      "categoryEnum": "HKCategoryValue"
+    },
+    {
+      "id": 138,
+      "identifier": "HKCategoryTypeIdentifierIrregularHeartRhythmEvent",
+      "name": "Irregular Heart Rhythm Event",
+      "group": "Heart",
+      "family": "category",
+      "minimumOS": "12.2",
+      "swiftName": "HealthCategoryIrregularHeartRhythmEventDefinition",
+      "categoryValues": {
+        "0": "Not Applicable"
+      },
+      "categoryEnum": "HKCategoryValue"
+    },
+    {
+      "id": 139,
+      "identifier": "HKCategoryTypeIdentifierLowCardioFitnessEvent",
+      "name": "Low Cardio Fitness Event",
+      "group": "Heart",
+      "family": "category",
+      "minimumOS": "14.3",
+      "swiftName": "HealthCategoryLowCardioFitnessEventDefinition",
+      "categoryValues": {
+        "1": "Low Fitness"
+      },
+      "categoryEnum": "HKCategoryValueLowCardioFitnessEvent"
+    },
+    {
+      "id": 140,
+      "identifier": "HKCategoryTypeIdentifierLowHeartRateEvent",
+      "name": "Low Heart Rate Event",
+      "group": "Heart",
+      "family": "category",
+      "minimumOS": "12.2",
+      "swiftName": "HealthCategoryLowHeartRateEventDefinition",
+      "categoryValues": {
+        "0": "Not Applicable"
+      },
+      "categoryEnum": "HKCategoryValue"
+    },
+    {
+      "id": 141,
+      "identifier": "HKCategoryTypeIdentifierMindfulSession",
+      "name": "Mindful Session",
+      "group": "Mindfulness",
+      "family": "category",
+      "minimumOS": "10.0",
+      "swiftName": "HealthCategoryMindfulSessionDefinition",
+      "categoryValues": {
+        "0": "Not Applicable"
+      },
+      "categoryEnum": "HKCategoryValue"
+    },
+    {
+      "id": 142,
+      "identifier": "HKCategoryTypeIdentifierAppleWalkingSteadinessEvent",
+      "name": "Apple Walking Steadiness Event",
+      "group": "Mobility",
+      "family": "category",
+      "minimumOS": "15.0",
+      "swiftName": "HealthCategoryAppleWalkingSteadinessEventDefinition",
+      "categoryValues": {
+        "1": "Initial Low",
+        "2": "Initial Very Low",
+        "3": "Repeat Low",
+        "4": "Repeat Very Low"
+      },
+      "categoryEnum": "HKCategoryValueAppleWalkingSteadinessEvent"
+    },
+    {
+      "id": 143,
+      "identifier": "HKCategoryTypeIdentifierHandwashingEvent",
+      "name": "Handwashing Event",
+      "group": "Other",
+      "family": "category",
+      "minimumOS": "14.0",
+      "swiftName": "HealthCategoryHandwashingEventDefinition",
+      "categoryValues": {
+        "0": "Not Applicable"
+      },
+      "categoryEnum": "HKCategoryValue"
+    },
+    {
+      "id": 144,
+      "identifier": "HKCategoryTypeIdentifierToothbrushingEvent",
+      "name": "Toothbrushing Event",
+      "group": "Other",
+      "family": "category",
+      "minimumOS": "13.0",
+      "swiftName": "HealthCategoryToothbrushingEventDefinition",
+      "categoryValues": {
+        "0": "Not Applicable"
+      },
+      "categoryEnum": "HKCategoryValue"
+    },
+    {
+      "id": 145,
+      "identifier": "HKCategoryTypeIdentifierBleedingAfterPregnancy",
+      "name": "Bleeding After Pregnancy",
+      "group": "Reproductive Health",
+      "family": "category",
+      "minimumOS": "18.0",
+      "swiftName": "HealthCategoryBleedingAfterPregnancyDefinition",
+      "categoryValues": {
+        "1": "Unspecified",
+        "2": "Light",
+        "3": "Medium",
+        "4": "Heavy",
+        "5": "None"
+      },
+      "categoryEnum": "HKCategoryValueVaginalBleeding"
+    },
+    {
+      "id": 146,
+      "identifier": "HKCategoryTypeIdentifierBleedingDuringPregnancy",
+      "name": "Bleeding During Pregnancy",
+      "group": "Reproductive Health",
+      "family": "category",
+      "minimumOS": "18.0",
+      "swiftName": "HealthCategoryBleedingDuringPregnancyDefinition",
+      "categoryValues": {
+        "1": "Unspecified",
+        "2": "Light",
+        "3": "Medium",
+        "4": "Heavy",
+        "5": "None"
+      },
+      "categoryEnum": "HKCategoryValueVaginalBleeding"
+    },
+    {
+      "id": 147,
+      "identifier": "HKCategoryTypeIdentifierCervicalMucusQuality",
+      "name": "Cervical Mucus Quality",
+      "group": "Reproductive Health",
+      "family": "category",
+      "minimumOS": "9.0",
+      "swiftName": "HealthCategoryCervicalMucusQualityDefinition",
+      "categoryValues": {
+        "1": "Dry",
+        "2": "Sticky",
+        "3": "Creamy",
+        "4": "Watery",
+        "5": "Egg White"
+      },
+      "categoryEnum": "HKCategoryValueCervicalMucusQuality"
+    },
+    {
+      "id": 148,
+      "identifier": "HKCategoryTypeIdentifierContraceptive",
+      "name": "Contraceptive",
+      "group": "Reproductive Health",
+      "family": "category",
+      "minimumOS": "14.3",
+      "swiftName": "HealthCategoryContraceptiveDefinition",
+      "categoryValues": {
+        "1": "Unspecified",
+        "2": "Implant",
+        "3": "Injection",
+        "4": "Intrauterine Device",
+        "5": "Intravaginal Ring",
+        "6": "Oral",
+        "7": "Patch"
+      },
+      "categoryEnum": "HKCategoryValueContraceptive"
+    },
+    {
+      "id": 149,
+      "identifier": "HKCategoryTypeIdentifierInfrequentMenstrualCycles",
+      "name": "Infrequent Menstrual Cycles",
+      "group": "Reproductive Health",
+      "family": "category",
+      "minimumOS": "16.0",
+      "swiftName": "HealthCategoryInfrequentMenstrualCyclesDefinition",
+      "categoryValues": {
+        "0": "Not Applicable"
+      },
+      "categoryEnum": "HKCategoryValue"
+    },
+    {
+      "id": 150,
+      "identifier": "HKCategoryTypeIdentifierIntermenstrualBleeding",
+      "name": "Intermenstrual Bleeding",
+      "group": "Reproductive Health",
+      "family": "category",
+      "minimumOS": "9.0",
+      "swiftName": "HealthCategoryIntermenstrualBleedingDefinition",
+      "categoryValues": {
+        "0": "Not Applicable"
+      },
+      "categoryEnum": "HKCategoryValue"
+    },
+    {
+      "id": 151,
+      "identifier": "HKCategoryTypeIdentifierIrregularMenstrualCycles",
+      "name": "Irregular Menstrual Cycles",
+      "group": "Reproductive Health",
+      "family": "category",
+      "minimumOS": "16.0",
+      "swiftName": "HealthCategoryIrregularMenstrualCyclesDefinition",
+      "categoryValues": {
+        "0": "Not Applicable"
+      },
+      "categoryEnum": "HKCategoryValue"
+    },
+    {
+      "id": 152,
+      "identifier": "HKCategoryTypeIdentifierLactation",
+      "name": "Lactation",
+      "group": "Reproductive Health",
+      "family": "category",
+      "minimumOS": "14.3",
+      "swiftName": "HealthCategoryLactationDefinition",
+      "categoryValues": {
+        "0": "Not Applicable"
+      },
+      "categoryEnum": "HKCategoryValue"
+    },
+    {
+      "id": 153,
+      "identifier": "HKCategoryTypeIdentifierMenstrualFlow",
+      "name": "Menstrual Flow",
+      "group": "Reproductive Health",
+      "family": "category",
+      "minimumOS": "9.0",
+      "swiftName": "HealthCategoryMenstrualFlowDefinition",
+      "categoryValues": {
+        "1": "Unspecified",
+        "2": "Light",
+        "3": "Medium",
+        "4": "Heavy",
+        "5": "None"
+      },
+      "categoryEnum": "HKCategoryValueVaginalBleeding"
+    },
+    {
+      "id": 154,
+      "identifier": "HKCategoryTypeIdentifierOvulationTestResult",
+      "name": "Ovulation Test Result",
+      "group": "Reproductive Health",
+      "family": "category",
+      "minimumOS": "9.0",
+      "swiftName": "HealthCategoryOvulationTestResultDefinition",
+      "categoryValues": {
+        "1": "Negative",
+        "2": "Luteinizing Hormone Surge",
+        "3": "Indeterminate",
+        "4": "Estrogen Surge"
+      },
+      "categoryEnum": "HKCategoryValueOvulationTestResult"
+    },
+    {
+      "id": 155,
+      "identifier": "HKCategoryTypeIdentifierPersistentIntermenstrualBleeding",
+      "name": "Persistent Intermenstrual Bleeding",
+      "group": "Reproductive Health",
+      "family": "category",
+      "minimumOS": "16.0",
+      "swiftName": "HealthCategoryPersistentIntermenstrualBleedingDefinition",
+      "categoryValues": {
+        "0": "Not Applicable"
+      },
+      "categoryEnum": "HKCategoryValue"
+    },
+    {
+      "id": 156,
+      "identifier": "HKCategoryTypeIdentifierPregnancy",
+      "name": "Pregnancy",
+      "group": "Reproductive Health",
+      "family": "category",
+      "minimumOS": "14.3",
+      "swiftName": "HealthCategoryPregnancyDefinition",
+      "categoryValues": {
+        "0": "Not Applicable"
+      },
+      "categoryEnum": "HKCategoryValue"
+    },
+    {
+      "id": 157,
+      "identifier": "HKCategoryTypeIdentifierPregnancyTestResult",
+      "name": "Pregnancy Test Result",
+      "group": "Reproductive Health",
+      "family": "category",
+      "minimumOS": "15.0",
+      "swiftName": "HealthCategoryPregnancyTestResultDefinition",
+      "categoryValues": {
+        "1": "Negative",
+        "2": "Positive",
+        "3": "Indeterminate"
+      },
+      "categoryEnum": "HKCategoryValuePregnancyTestResult"
+    },
+    {
+      "id": 158,
+      "identifier": "HKCategoryTypeIdentifierProgesteroneTestResult",
+      "name": "Progesterone Test Result",
+      "group": "Reproductive Health",
+      "family": "category",
+      "minimumOS": "15.0",
+      "swiftName": "HealthCategoryProgesteroneTestResultDefinition",
+      "categoryValues": {
+        "1": "Negative",
+        "2": "Positive",
+        "3": "Indeterminate"
+      },
+      "categoryEnum": "HKCategoryValueProgesteroneTestResult"
+    },
+    {
+      "id": 159,
+      "identifier": "HKCategoryTypeIdentifierProlongedMenstrualPeriods",
+      "name": "Prolonged Menstrual Periods",
+      "group": "Reproductive Health",
+      "family": "category",
+      "minimumOS": "16.0",
+      "swiftName": "HealthCategoryProlongedMenstrualPeriodsDefinition",
+      "categoryValues": {
+        "0": "Not Applicable"
+      },
+      "categoryEnum": "HKCategoryValue"
+    },
+    {
+      "id": 11,
+      "identifier": "HKCategoryTypeIdentifierSexualActivity",
+      "name": "Sexual Activity",
+      "group": "Reproductive Health",
+      "family": "category",
+      "minimumOS": "9.0",
+      "swiftName": "HealthCategorySexualActivityDefinition",
+      "legacyType": "SexualActivity",
+      "categoryValues": {
+        "0": "Not Applicable"
+      },
+      "categoryEnum": "HKCategoryValue"
+    },
+    {
+      "id": 160,
+      "identifier": "HKCategoryTypeIdentifierSleepApneaEvent",
+      "name": "Sleep Apnea Event",
+      "group": "Respiratory",
+      "family": "category",
+      "minimumOS": "18.0",
+      "swiftName": "HealthCategorySleepApneaEventDefinition",
+      "categoryValues": {
+        "0": "Not Applicable"
+      },
+      "categoryEnum": "HKCategoryValue"
+    },
+    {
+      "id": 12,
+      "identifier": "HKCategoryTypeIdentifierSleepAnalysis",
+      "name": "Sleep Analysis",
+      "group": "Sleep",
+      "family": "category",
+      "minimumOS": "8.0",
+      "swiftName": "HealthCategorySleepAnalysisDefinition",
+      "legacyType": "Sleep",
+      "categoryValues": {
+        "0": "In Bed",
+        "1": "Asleep Unspecified",
+        "2": "Awake",
+        "3": "Asleep Core",
+        "4": "Asleep Deep",
+        "5": "Asleep REM"
+      },
+      "categoryEnum": "HKCategoryValueSleepAnalysis"
+    },
+    {
+      "id": 161,
+      "identifier": "HKCategoryTypeIdentifierAbdominalCramps",
+      "name": "Abdominal Cramps",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryAbdominalCrampsDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 162,
+      "identifier": "HKCategoryTypeIdentifierAcne",
+      "name": "Acne",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryAcneDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 163,
+      "identifier": "HKCategoryTypeIdentifierAppetiteChanges",
+      "name": "Appetite Changes",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryAppetiteChangesDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "No Change",
+        "2": "Decreased",
+        "3": "Increased"
+      },
+      "categoryEnum": "HKCategoryValueAppetiteChanges"
+    },
+    {
+      "id": 164,
+      "identifier": "HKCategoryTypeIdentifierBladderIncontinence",
+      "name": "Bladder Incontinence",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "14.0",
+      "swiftName": "HealthCategoryBladderIncontinenceDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 165,
+      "identifier": "HKCategoryTypeIdentifierBloating",
+      "name": "Bloating",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryBloatingDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 166,
+      "identifier": "HKCategoryTypeIdentifierBreastPain",
+      "name": "Breast Pain",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryBreastPainDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 167,
+      "identifier": "HKCategoryTypeIdentifierChestTightnessOrPain",
+      "name": "Chest Tightness Or Pain",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryChestTightnessOrPainDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 168,
+      "identifier": "HKCategoryTypeIdentifierChills",
+      "name": "Chills",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryChillsDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 169,
+      "identifier": "HKCategoryTypeIdentifierConstipation",
+      "name": "Constipation",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryConstipationDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 170,
+      "identifier": "HKCategoryTypeIdentifierCoughing",
+      "name": "Coughing",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryCoughingDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 171,
+      "identifier": "HKCategoryTypeIdentifierDiarrhea",
+      "name": "Diarrhea",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryDiarrheaDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 172,
+      "identifier": "HKCategoryTypeIdentifierDizziness",
+      "name": "Dizziness",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryDizzinessDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 173,
+      "identifier": "HKCategoryTypeIdentifierDrySkin",
+      "name": "Dry Skin",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "14.0",
+      "swiftName": "HealthCategoryDrySkinDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 174,
+      "identifier": "HKCategoryTypeIdentifierFainting",
+      "name": "Fainting",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryFaintingDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 175,
+      "identifier": "HKCategoryTypeIdentifierFatigue",
+      "name": "Fatigue",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryFatigueDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 176,
+      "identifier": "HKCategoryTypeIdentifierFever",
+      "name": "Fever",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryFeverDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 177,
+      "identifier": "HKCategoryTypeIdentifierGeneralizedBodyAche",
+      "name": "Generalized Body Ache",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryGeneralizedBodyAcheDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 178,
+      "identifier": "HKCategoryTypeIdentifierHairLoss",
+      "name": "Hair Loss",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "14.0",
+      "swiftName": "HealthCategoryHairLossDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 179,
+      "identifier": "HKCategoryTypeIdentifierHeadache",
+      "name": "Headache",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryHeadacheDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 180,
+      "identifier": "HKCategoryTypeIdentifierHeartburn",
+      "name": "Heartburn",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryHeartburnDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 181,
+      "identifier": "HKCategoryTypeIdentifierHotFlashes",
+      "name": "Hot Flashes",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryHotFlashesDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 182,
+      "identifier": "HKCategoryTypeIdentifierLossOfSmell",
+      "name": "Loss Of Smell",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryLossOfSmellDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 183,
+      "identifier": "HKCategoryTypeIdentifierLossOfTaste",
+      "name": "Loss Of Taste",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryLossOfTasteDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 184,
+      "identifier": "HKCategoryTypeIdentifierLowerBackPain",
+      "name": "Lower Back Pain",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryLowerBackPainDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 185,
+      "identifier": "HKCategoryTypeIdentifierMemoryLapse",
+      "name": "Memory Lapse",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "14.0",
+      "swiftName": "HealthCategoryMemoryLapseDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 186,
+      "identifier": "HKCategoryTypeIdentifierMoodChanges",
+      "name": "Mood Changes",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryMoodChangesDefinition",
+      "categoryValues": {
+        "0": "Present",
+        "1": "Not Present"
+      },
+      "categoryEnum": "HKCategoryValuePresence"
+    },
+    {
+      "id": 187,
+      "identifier": "HKCategoryTypeIdentifierNausea",
+      "name": "Nausea",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryNauseaDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 188,
+      "identifier": "HKCategoryTypeIdentifierNightSweats",
+      "name": "Night Sweats",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "14.0",
+      "swiftName": "HealthCategoryNightSweatsDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 189,
+      "identifier": "HKCategoryTypeIdentifierPelvicPain",
+      "name": "Pelvic Pain",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryPelvicPainDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 190,
+      "identifier": "HKCategoryTypeIdentifierRapidPoundingOrFlutteringHeartbeat",
+      "name": "Rapid Pounding Or Fluttering Heartbeat",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryRapidPoundingOrFlutteringHeartbeatDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 191,
+      "identifier": "HKCategoryTypeIdentifierRunnyNose",
+      "name": "Runny Nose",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryRunnyNoseDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 192,
+      "identifier": "HKCategoryTypeIdentifierShortnessOfBreath",
+      "name": "Shortness Of Breath",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryShortnessOfBreathDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 193,
+      "identifier": "HKCategoryTypeIdentifierSinusCongestion",
+      "name": "Sinus Congestion",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategorySinusCongestionDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 194,
+      "identifier": "HKCategoryTypeIdentifierSkippedHeartbeat",
+      "name": "Skipped Heartbeat",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategorySkippedHeartbeatDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 195,
+      "identifier": "HKCategoryTypeIdentifierSleepChanges",
+      "name": "Sleep Changes",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategorySleepChangesDefinition",
+      "categoryValues": {
+        "0": "Present",
+        "1": "Not Present"
+      },
+      "categoryEnum": "HKCategoryValuePresence"
+    },
+    {
+      "id": 196,
+      "identifier": "HKCategoryTypeIdentifierSoreThroat",
+      "name": "Sore Throat",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategorySoreThroatDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 197,
+      "identifier": "HKCategoryTypeIdentifierVaginalDryness",
+      "name": "Vaginal Dryness",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "14.0",
+      "swiftName": "HealthCategoryVaginalDrynessDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 198,
+      "identifier": "HKCategoryTypeIdentifierVomiting",
+      "name": "Vomiting",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryVomitingDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 199,
+      "identifier": "HKCategoryTypeIdentifierWheezing",
+      "name": "Wheezing",
+      "group": "Symptoms",
+      "family": "category",
+      "minimumOS": "13.6",
+      "swiftName": "HealthCategoryWheezingDefinition",
+      "categoryValues": {
+        "0": "Unspecified",
+        "1": "Not Present",
+        "2": "Mild",
+        "3": "Moderate",
+        "4": "Severe"
+      },
+      "categoryEnum": "HKCategoryValueSeverity"
+    },
+    {
+      "id": 200,
+      "identifier": "HKCharacteristicTypeIdentifierActivityMoveMode",
+      "name": "Activity Move Mode",
+      "group": "Me",
+      "family": "characteristic",
+      "minimumOS": "14.0",
+      "swiftName": "HealthCharacteristicActivityMoveModeDefinition"
+    },
+    {
+      "id": 201,
+      "identifier": "HKCharacteristicTypeIdentifierBiologicalSex",
+      "name": "Biological Sex",
+      "group": "Me",
+      "family": "characteristic",
+      "minimumOS": "8.0",
+      "swiftName": "HealthCharacteristicBiologicalSexDefinition"
+    },
+    {
+      "id": 202,
+      "identifier": "HKCharacteristicTypeIdentifierBloodType",
+      "name": "Blood Type",
+      "group": "Me",
+      "family": "characteristic",
+      "minimumOS": "8.0",
+      "swiftName": "HealthCharacteristicBloodTypeDefinition"
+    },
+    {
+      "id": 203,
+      "identifier": "HKCharacteristicTypeIdentifierDateOfBirth",
+      "name": "Date Of Birth",
+      "group": "Me",
+      "family": "characteristic",
+      "minimumOS": "8.0",
+      "swiftName": "HealthCharacteristicDateOfBirthDefinition"
+    },
+    {
+      "id": 204,
+      "identifier": "HKCharacteristicTypeIdentifierFitzpatrickSkinType",
+      "name": "Fitzpatrick Skin Type",
+      "group": "Me",
+      "family": "characteristic",
+      "minimumOS": "9.0",
+      "swiftName": "HealthCharacteristicFitzpatrickSkinTypeDefinition"
+    },
+    {
+      "id": 205,
+      "identifier": "HKCharacteristicTypeIdentifierWheelchairUse",
+      "name": "Wheelchair Use",
+      "group": "Me",
+      "family": "characteristic",
+      "minimumOS": "10.0",
+      "swiftName": "HealthCharacteristicWheelchairUseDefinition"
+    },
+    {
+      "id": 1,
+      "identifier": "HKCorrelationTypeIdentifierBloodPressure",
+      "name": "Blood Pressure",
+      "group": "Heart",
+      "family": "correlation",
+      "minimumOS": "8.0",
+      "swiftName": "HealthCorrelationBloodPressureDefinition",
+      "legacyType": "BloodPressure"
+    },
+    {
+      "id": 206,
+      "identifier": "HKCorrelationTypeIdentifierFood",
+      "name": "Food",
+      "group": "Other",
+      "family": "correlation",
+      "minimumOS": "8.0",
+      "swiftName": "HealthCorrelationFoodDefinition"
+    },
+    {
+      "id": 207,
+      "identifier": "HKDocumentTypeIdentifierCDA",
+      "name": "CDA",
+      "group": "Clinical Documents",
+      "family": "document",
+      "minimumOS": "10.0",
+      "swiftName": "HealthDocumentCDADefinition"
+    },
+    {
+      "id": 208,
+      "identifier": "HKScoredAssessmentTypeIdentifierGAD7",
+      "name": "GAD-7",
+      "group": "Mindfulness",
+      "family": "scoredAssessment",
+      "minimumOS": "18.0",
+      "swiftName": "HealthScoredAssessmentGAD7Definition"
+    },
+    {
+      "id": 209,
+      "identifier": "HKScoredAssessmentTypeIdentifierPHQ9",
+      "name": "PHQ-9",
+      "group": "Mindfulness",
+      "family": "scoredAssessment",
+      "minimumOS": "18.0",
+      "swiftName": "HealthScoredAssessmentPHQ9Definition"
+    },
+    {
+      "id": 210,
+      "identifier": "HKClinicalTypeIdentifierAllergyRecord",
+      "name": "Allergy Record",
+      "group": "Clinical Records",
+      "family": "clinical",
+      "minimumOS": "12.0",
+      "swiftName": "HealthClinicalAllergyRecordDefinition"
+    },
+    {
+      "id": 211,
+      "identifier": "HKClinicalTypeIdentifierClinicalNoteRecord",
+      "name": "Clinical Note Record",
+      "group": "Clinical Records",
+      "family": "clinical",
+      "minimumOS": "16.4",
+      "swiftName": "HealthClinicalClinicalNoteRecordDefinition"
+    },
+    {
+      "id": 212,
+      "identifier": "HKClinicalTypeIdentifierConditionRecord",
+      "name": "Condition Record",
+      "group": "Clinical Records",
+      "family": "clinical",
+      "minimumOS": "12.0",
+      "swiftName": "HealthClinicalConditionRecordDefinition"
+    },
+    {
+      "id": 213,
+      "identifier": "HKClinicalTypeIdentifierImmunizationRecord",
+      "name": "Immunization Record",
+      "group": "Clinical Records",
+      "family": "clinical",
+      "minimumOS": "12.0",
+      "swiftName": "HealthClinicalImmunizationRecordDefinition"
+    },
+    {
+      "id": 214,
+      "identifier": "HKClinicalTypeIdentifierLabResultRecord",
+      "name": "Lab Result Record",
+      "group": "Clinical Records",
+      "family": "clinical",
+      "minimumOS": "12.0",
+      "swiftName": "HealthClinicalLabResultRecordDefinition"
+    },
+    {
+      "id": 215,
+      "identifier": "HKClinicalTypeIdentifierMedicationRecord",
+      "name": "Medication Record",
+      "group": "Clinical Records",
+      "family": "clinical",
+      "minimumOS": "12.0",
+      "swiftName": "HealthClinicalMedicationRecordDefinition"
+    },
+    {
+      "id": 216,
+      "identifier": "HKClinicalTypeIdentifierProcedureRecord",
+      "name": "Procedure Record",
+      "group": "Clinical Records",
+      "family": "clinical",
+      "minimumOS": "12.0",
+      "swiftName": "HealthClinicalProcedureRecordDefinition"
+    },
+    {
+      "id": 217,
+      "identifier": "HKClinicalTypeIdentifierVitalSignRecord",
+      "name": "Vital Sign Record",
+      "group": "Clinical Records",
+      "family": "clinical",
+      "minimumOS": "12.0",
+      "swiftName": "HealthClinicalVitalSignRecordDefinition"
+    },
+    {
+      "id": 218,
+      "identifier": "HKClinicalTypeIdentifierCoverageRecord",
+      "name": "Coverage Record",
+      "group": "Clinical Records",
+      "family": "clinical",
+      "minimumOS": "14.0",
+      "swiftName": "HealthClinicalCoverageRecordDefinition"
+    },
+    {
+      "id": 16,
+      "identifier": "HKWorkoutTypeIdentifier",
+      "name": "Workout",
+      "group": "Fitness",
+      "family": "workout",
+      "minimumOS": "8.0",
+      "swiftName": "HealthWorkoutDefinition",
+      "legacyType": "Workout"
+    },
+    {
+      "id": 219,
+      "identifier": "HKWorkoutRouteTypeIdentifier",
+      "name": "Workout Route",
+      "group": "Fitness",
+      "family": "workoutRoute",
+      "minimumOS": "11.0",
+      "swiftName": "HealthWorkoutRouteDefinition"
+    },
+    {
+      "id": 220,
+      "identifier": "HKDataTypeIdentifierHeartbeatSeries",
+      "name": "Heartbeat Series",
+      "group": "Heart",
+      "family": "heartbeatSeries",
+      "minimumOS": "13.0",
+      "swiftName": "HealthHeartbeatSeriesDefinition"
+    },
+    {
+      "id": 221,
+      "identifier": "HKDataTypeIdentifierElectrocardiogram",
+      "name": "Electrocardiogram",
+      "group": "Heart",
+      "family": "electrocardiogram",
+      "minimumOS": "14.0",
+      "swiftName": "HealthElectrocardiogramDefinition"
+    },
+    {
+      "id": 222,
+      "identifier": "HKDataTypeIdentifierAudiogram",
+      "name": "Audiogram",
+      "group": "Hearing Health",
+      "family": "audiogram",
+      "minimumOS": "13.0",
+      "swiftName": "HealthAudiogramDefinition"
+    },
+    {
+      "id": 223,
+      "identifier": "HKVisionPrescriptionTypeIdentifier",
+      "name": "Vision Prescription",
+      "group": "Vision",
+      "family": "visionPrescription",
+      "minimumOS": "16.0",
+      "swiftName": "HealthVisionPrescriptionDefinition"
+    },
+    {
+      "id": 224,
+      "identifier": "HKDataTypeIdentifierStateOfMind",
+      "name": "State of Mind",
+      "group": "Mindfulness",
+      "family": "stateOfMind",
+      "minimumOS": "18.0",
+      "swiftName": "HealthStateOfMindDefinition"
+    },
+    {
+      "id": 225,
+      "identifier": "HKActivitySummaryTypeIdentifier",
+      "name": "Activity Summary",
+      "group": "Fitness",
+      "family": "activitySummary",
+      "minimumOS": "9.3",
+      "swiftName": "HealthActivitySummaryDefinition"
+    },
+    {
+      "id": 226,
+      "identifier": "HKMedicationDoseEventTypeIdentifierMedicationDoseEvent",
+      "name": "Medication Dose Event",
+      "group": "Medication Tracking",
+      "family": "medicationDose",
+      "minimumOS": "26.0",
+      "swiftName": "HealthMedicationDoseDefinition"
+    },
+    {
+      "id": 227,
+      "identifier": "HKDataTypeIdentifierUserAnnotatedMedicationConcept",
+      "name": "Medication List",
+      "group": "Medication Tracking",
+      "family": "userAnnotatedMedication",
+      "minimumOS": "26.0",
+      "swiftName": "HealthUserAnnotatedMedicationDefinition"
+    },
+    {
+      "id": 228,
+      "identifier": "HKVerifiableClinicalRecord",
+      "name": "Verifiable Clinical Record",
+      "group": "Clinical Records",
+      "family": "verifiableClinical",
+      "minimumOS": "15.0",
+      "swiftName": "HealthVerifiableClinicalDefinition"
+    },
+    {
+      "id": 229,
+      "identifier": "HKAttachment",
+      "name": "Record Attachments",
+      "group": "Clinical Records",
+      "family": "attachment",
+      "minimumOS": "16.0",
+      "swiftName": "HealthAttachmentDefinition"
+    }
+  ]
+}

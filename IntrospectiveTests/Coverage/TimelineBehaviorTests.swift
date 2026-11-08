@@ -91,6 +91,56 @@ final class TimelineBehaviorTests: UnitTest {
         return controller.tableView(controller.tableView, cellForRowAt: IndexPath(row: row, section: section)) as! TimelineTableViewCellImpl
     }
 
+    private func dataTypeChooser(for controller: TimelineTableViewControllerImpl) -> MultiSelectAttributeValueViewController {
+        let chooser = MultiSelectAttributeValueViewController()
+        Given(mockUiUtil, .controller(named: .value("multiSelectAttribute"), from: .value("AttributeList"),
+                                     as: .any, willReturn: chooser))
+        controller.chooseDataTypesButtonPressed(self)
+        return chooser
+    }
+
+    func testExpandedCatalogOnlyOffersFetchableTimelineSourcesAndPreservesLegacyOrderAndSelections() {
+        let catalogType: Sample.Type = HealthQuantity<HealthQuantityBodyFatPercentageDefinition>.self
+        let expandedTypes: [Sample.Type] = [catalogType, Workout.self, Weight.self, MoodImpl.self, Steps.self]
+        Given(mockSampleFactory, .allTypes(willReturn: expandedTypes))
+        Given(mockUserDefaultsUtil, .bool(forKey: .value(.weightEnabledOnTimeline), willReturn: true))
+        let controller = open()
+        finishFetch()
+
+        let chooser = dataTypeChooser(for: controller)
+        let supported: [Sample.Type] = [Activity.self, BloodPressure.self, BodyMassIndex.self, DietarySugar.self,
+            FatigueImpl.self, HeartRate.self, LeanBodyMass.self, MedicationDose.self, MoodImpl.self, PainImpl.self,
+            RestingHeartRate.self, SexualActivity.self, Sleep.self, Steps.self, Weight.self]
+        XCTAssertEqual(chooser.multiSelectAttribute.possibleValues as? [String], supported.map { $0.name })
+        XCTAssertEqual(chooser.initialValue as? [String], [MoodImpl.name, Weight.name])
+        Verify(mockSampleFactory, .never, .allTypes())
+
+        // Restricting Timeline must leave catalog types available in the shared
+        // chooser used by queries and graph customization.
+        let shared = UIStoryboard(name: "Util", bundle: Bundle(for: ChooseSampleTypeViewControllerImpl.self))
+            .instantiateViewController(withIdentifier: "chooseSampleType") as! ChooseSampleTypeViewControllerImpl
+        shared.selectedSampleType = catalogType
+        shared.loadViewIfNeeded()
+        XCTAssertEqual(shared.pickerView(shared.sampleTypePicker, numberOfRowsInComponent: 0), expandedTypes.count)
+        XCTAssertEqual(shared.sampleTypePicker.selectedRow(inComponent: 0), 0)
+        XCTAssertTrue(shared.selectedSampleType.map { $0 == catalogType } ?? false)
+    }
+
+    func testStaleUnsupportedTimelineSelectionsAreDiscardedWhileSupportedSourcesStillFetch() {
+        let catalogType: Sample.Type = HealthQuantity<HealthQuantityBodyFatPercentageDefinition>.self
+        let enabled = [catalogType.name, MoodImpl.name, Workout.name, "Unknown data type"]
+        Given(mockUiUtil, .value(for: .value(.attributeValue), from: .any, keyIsOptional: .any, willReturn: enabled))
+        let controller = open()
+        finishFetch()
+
+        NotificationCenter.default.post(name: TimelineTableViewControllerImpl.enabledDataTypesChanged, object: nil)
+        finishFetch()
+
+        XCTAssertEqual(factory.moods.calls.count, 2)
+        XCTAssertEqual(factory.disabled.calls.count, 0)
+        XCTAssertEqual(dataTypeChooser(for: controller).initialValue as? [String], [MoodImpl.name])
+    }
+
     func testEmptyResultsFinishLoadingWithoutLeavingTheSpinnerRow() {
         let controller = open()
         finishFetch()
@@ -348,6 +398,58 @@ final class TimelineBehaviorTests: UnitTest {
         }
         XCTAssertNil(released, "Main-queue refreshes must not retain a closed timeline")
     }
+
+    func testModernSleepStagesAppearWithTheirRecordedBoundariesAndStageSpecificDescriptions() {
+        Given(mockUserDefaultsUtil, .bool(forKey: .value(.moodEnabledOnTimeline), willReturn: false))
+        Given(mockUserDefaultsUtil, .bool(forKey: .value(.sleepEnabledOnTimeline), willReturn: true))
+        let states: [Sleep.State] = [.asleepCore, .asleepDeep, .asleepREM]
+        let samples = states.enumerated().map { index, state in
+            Sleep(state, startDate: base.addingTimeInterval(Double(index * 60)),
+                  endDate: base.addingTimeInterval(Double((index + 1) * 60)))
+        }
+        factory.sleep.handler = { _, _ in samples }
+        let subject = open()
+        finishFetch()
+        XCTAssertEqual(factory.sleep.calls.count, 1)
+        let cells = (0..<subject.numberOfSections(in: subject.tableView)).flatMap { section in
+            (0..<subject.tableView(subject.tableView, numberOfRowsInSection: section)).map { cell(section, $0) }
+        }
+        XCTAssertEqual(cells.count, 6)
+        XCTAssertEqual(cells.map { $0.date! }.sorted(), samples.flatMap { [$0.startDate, $0.endDate] }.sorted())
+        let descriptions = cells.flatMap { $0.descriptions }
+        for state in states {
+            XCTAssertTrue(descriptions.contains("💤 \(state.description) started"))
+            XCTAssertTrue(descriptions.contains("💤 \(state.description) ended"))
+        }
+        XCTAssertFalse(descriptions.contains("💤 Fell asleep"), "A recorded stage change does not establish a new sleep onset")
+        XCTAssertFalse(descriptions.contains("🥱 Woke up"), "Ending a stage does not establish that the person woke up")
+    }
+
+    func testUnspecifiedSleepRetainsItsExistingOnsetAndWakeDescriptions() {
+        Given(mockUserDefaultsUtil, .bool(forKey: .value(.moodEnabledOnTimeline), willReturn: false))
+        Given(mockUserDefaultsUtil, .bool(forKey: .value(.sleepEnabledOnTimeline), willReturn: true))
+        factory.sleep.handler = { _, _ in [Sleep(.asleep, startDate: self.base, endDate: self.base.addingTimeInterval(60))] }
+        let subject = open()
+        finishFetch()
+        XCTAssertEqual(subject.numberOfSections(in: subject.tableView), 1)
+        XCTAssertEqual(subject.tableView(subject.tableView, numberOfRowsInSection: 0), 2)
+        let descriptions = cell(0, 0).descriptions + cell(0, 1).descriptions
+        XCTAssertTrue(descriptions.contains("💤 Fell asleep"))
+        XCTAssertTrue(descriptions.contains("🥱 Woke up"))
+    }
+
+    func testUnknownAndAwakeSleepIntervalsDoNotInventAsleepOrWakeEvents() {
+        Given(mockUserDefaultsUtil, .bool(forKey: .value(.moodEnabledOnTimeline), willReturn: false))
+        Given(mockUserDefaultsUtil, .bool(forKey: .value(.sleepEnabledOnTimeline), willReturn: true))
+        factory.sleep.handler = { _, _ in
+            [Sleep(.unknown(99), startDate: self.base, endDate: self.base.addingTimeInterval(60)),
+             Sleep(.awake, startDate: self.base.addingTimeInterval(60), endDate: self.base.addingTimeInterval(120))]
+        }
+        let subject = open()
+        finishFetch()
+        XCTAssertEqual(factory.sleep.calls.count, 1)
+        XCTAssertEqual(subject.numberOfSections(in: subject.tableView), 0)
+    }
 }
 
 private final class TimelineClosureFetcher: SampleFetcher {
@@ -370,6 +472,7 @@ private final class TimelineTestFetchers: SampleFetcherFactory {
     var moodFetcherOverride: SampleFetcher?
     let moods = TimelineClosureFetcher("Moods")
     let fatigue = TimelineClosureFetcher("Fatigue")
+    let sleep = TimelineClosureFetcher("Sleep")
     let disabled = TimelineClosureFetcher("Disabled")
     func moodSampleFetcher() -> SampleFetcher { moodFetcherOverride ?? moods }
     func fatigueSampleFetcher() -> SampleFetcher { fatigue }
@@ -383,7 +486,7 @@ private final class TimelineTestFetchers: SampleFetcherFactory {
     func painSampleFetcher() -> SampleFetcher { disabled }
     func restingHeartRateSampleFetcher() -> SampleFetcher { disabled }
     func sexualActivitySampleFetcher() -> SampleFetcher { disabled }
-    func sleepSampleFetcher() -> SampleFetcher { disabled }
+    func sleepSampleFetcher() -> SampleFetcher { sleep }
     func stepsSampleFetcher() -> SampleFetcher { disabled }
     func weightSampleFetcher() -> SampleFetcher { disabled }
 }

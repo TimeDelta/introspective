@@ -208,6 +208,12 @@ public final class QueryFactoryImpl: QueryFactory {
 		case is Sleep.Type: return sleepQuery()
 		case is Weight.Type: return weightQuery()
 		default:
+			if let catalogType = sampleType as? HealthCatalogSample.Type {
+				guard catalogType.catalogEntry.isAvailableOnCurrentOS else {
+					throw HealthCatalogError.unavailable(catalogType.catalogEntry.name)
+				}
+				if let query = HealthCatalogQueryRegistry.makeQuery(for: sampleType) { return query }
+			}
 			throw UnknownSampleTypeError(sampleType)
 		}
 	}
@@ -236,6 +242,10 @@ public final class QueryFactoryImpl: QueryFactory {
 		case is SleepQuery: return Sleep.self
 		case is WeightQuery: return Weight.self
 		default:
+			if let catalogQuery = query as? CatalogHealthQueryIdentifying,
+				HealthCatalog.descriptor(for: catalogQuery.catalogSampleType) != nil {
+				return catalogQuery.catalogSampleType
+			}
 			throw GenericError("Forgot type of query")
 		}
 	}

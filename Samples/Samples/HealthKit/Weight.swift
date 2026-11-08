@@ -24,7 +24,7 @@ public final class Weight: HealthKitQuantitySample {
 	public static let writePermissions: Set<HKSampleType> = Set([sampleType])
 	public static var unit: HKUnit = HKUnit(from: .pound)
 	public final var unitString: String {
-		Me.unit.unitString
+		valueUnit.unitString
 	}
 
 	public static func initUnits() {
@@ -55,6 +55,8 @@ public final class Weight: HealthKitQuantitySample {
 	// MARK: - Instance Variables
 
 	public private(set) var sourceIdentifier: UUID? = nil
+	public private(set) var originalHealthSample: HKSample? = nil
+	private var valueUnit: HKUnit = Me.unit
 
 	public final var attributedName: String = Me.name
 	public final var description: String = Me.description
@@ -75,6 +77,8 @@ public final class Weight: HealthKitQuantitySample {
 	/// Use a captured read unit instead of mutable global unit preferences.
 	public required init(_ sample: HKQuantitySample, unit: HKUnit) {
 		sourceIdentifier = sample.uuid
+		originalHealthSample = sample
+		valueUnit = unit
 		weight = sample.quantity.doubleValue(for: unit)
 		timestamp = sample.startDate
 		injected(HealthKitUtil.self).setTimeZoneIfApplicable(for: &timestamp, from: sample)
@@ -83,7 +87,7 @@ public final class Weight: HealthKitQuantitySample {
 	// MARK: - HealthKitSample Functions
 
 	public func hkSample() -> HKSample {
-		let quantity = HKQuantity(unit: Me.unit, doubleValue: quantityValue())
+		let quantity = HKQuantity(unit: valueUnit, doubleValue: quantityValue())
 		return HKQuantitySample(
 			type: Me.quantityType,
 			quantity: quantity,

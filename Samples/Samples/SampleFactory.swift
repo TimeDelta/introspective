@@ -68,6 +68,13 @@ public final class SampleFactoryImpl: SampleFactory {
 		ActiveEnergy.self,
 		Workout.self,
 	]
+	// Catalog availability is fixed for the life of this process.
+	private static let availableTypes = allTypes + HealthCatalog.availableEntries.filter {
+		$0.descriptor.id >= 21
+	}.map { $0.sampleType }
+	private static let availableHealthKitTypes = healthKitTypes + HealthCatalog.availableEntries.filter {
+		$0.descriptor.id >= 21
+	}.compactMap { $0.sampleType as? HealthKitSample.Type }
 
 	/// IMPORTANT: Only add unique values to the end of this list otherwise saved queries will be messed up.
 	private enum SampleTypeId: Int16 {
@@ -94,7 +101,7 @@ public final class SampleFactoryImpl: SampleFactory {
 		case stressorResponse = 20
 
 		/// Ordered by enum value
-		static fileprivate var sampleTypes: [Sample.Type] = [
+		static fileprivate let sampleTypes: [Sample.Type] = [
 			Activity.self,
 			BloodPressure.self,
 			BodyMassIndex.self,
@@ -127,22 +134,22 @@ public final class SampleFactoryImpl: SampleFactory {
 			}
 			index += 1
 		}
+		if let descriptor = HealthCatalog.descriptor(for: sampleType) { return descriptor.id }
 		return -1
 	}
 
 	public func sampleType(for id: Int16) throws -> Sample.Type {
-		guard SampleTypeId.sampleTypes.indices.contains(Int(id)) else {
-			throw GenericError("Unsupported saved sample type.")
-		}
-		return SampleTypeId.sampleTypes[Int(id)]
+		if SampleTypeId.sampleTypes.indices.contains(Int(id)) { return SampleTypeId.sampleTypes[Int(id)] }
+		if HealthCatalog.descriptor(for: id) != nil { return try HealthCatalog.sampleType(for: id) }
+		throw GenericError("Unsupported saved sample type.")
 	}
 
 	public final func allTypes() -> [Sample.Type] {
-		Me.allTypes
+		Me.availableTypes
 	}
 
 	public final func healthKitTypes() -> [HealthKitSample.Type] {
-		Me.healthKitTypes
+		Me.availableHealthKitTypes
 	}
 
 	public final func activity(using transaction: Transaction) throws -> Activity {

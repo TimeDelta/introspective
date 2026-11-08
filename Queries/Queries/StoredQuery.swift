@@ -13,7 +13,7 @@ public final class StoredQuery: NSManagedObject, CoreDataObject {
 	/// Matches all whitespace-separated terms against the name and data type.
 	public func matchesSearchText(_ text: String) -> Bool {
 		let factory = injected(SampleFactory.self)
-		let typeName = factory.allTypes().first(where: { factory.sampleTypeId(for: $0) == sampleTypeId })?.name ?? ""
+		let typeName = (try? factory.sampleType(for: sampleTypeId))?.name ?? ""
 		let searchable = name + " " + typeName
 		return text.split(whereSeparator: { $0.isWhitespace }).allSatisfy {
 			searchable.range(of: String($0), options: [.caseInsensitive, .diacriticInsensitive]) != nil
@@ -25,7 +25,7 @@ public final class StoredQuery: NSManagedObject, CoreDataObject {
 	private func convert(depth: Int) throws -> Query {
 		guard depth < 32 else { throw GenericError("Saved query is nested too deeply.") }
 		let factory = injected(SampleFactory.self)
-		guard let sampleType = factory.allTypes().first(where: { factory.sampleTypeId(for: $0) == sampleTypeId }) else {
+		guard let sampleType = try? factory.sampleType(for: sampleTypeId) else {
 			throw GenericError("This saved query uses an unsupported data type.")
 		}
 		let query = try injected(QueryFactory.self).queryFor(sampleType)

@@ -23,10 +23,42 @@ public final class UnifiedDayViewController: DayViewController {
 
 	private static let log = Log()
 
-
 	private final let healthKitUtil = injected(HealthKitUtil.self)
+	private var statisticsGeneration = UUID()
+	private enum SleepReadAuthorization {
+		case notRequested, pending(UUID), completed, failed
+	}
+	private var sleepReadAuthorization = SleepReadAuthorization.notRequested
+	private var isClosed = false
 
 	// MARK: - DayViewController Overrides
+
+	public override func viewDidLoad() {
+		// CalendarKit immediately asks for events here. Until authorization
+		// completes, those requests can still display the local activities.
+		super.viewDidLoad()
+		requestSleepReadAuthorizationIfNeeded()
+	}
+
+	public override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		isClosed = false
+		requestSleepReadAuthorizationIfNeeded()
+	}
+
+	public override func willMove(toParent parent: UIViewController?) {
+		super.willMove(toParent: parent)
+		guard parent != nil else { return }
+		isClosed = false
+		// Containment starts before an offscreen navigation push completes.
+		// Restart a loaded calendar here without forcing its view to load.
+		if isViewLoaded { requestSleepReadAuthorizationIfNeeded() }
+	}
+
+	public override func didMove(toParent parent: UIViewController?) {
+		super.didMove(toParent: parent)
+		if parent == nil { closePendingReads() }
+	}
 
 	public override func eventsForDate(_ date: Date) -> [EventDescriptor] {
 		var descriptors = [EventDescriptor]()
@@ -36,6 +68,7 @@ public final class UnifiedDayViewController: DayViewController {
 	}
 
 	public override func dayViewDidSelectEventView(_ eventView: EventView) {
+		statisticsGeneration = UUID()
 		let actionSheet = UIAlertController(
 			title: "What would you like to know?",
 			message: nil,
@@ -69,9 +102,46 @@ public final class UnifiedDayViewController: DayViewController {
 		present(actionSheet, animated: false, completion: nil)
 	}
 
+	public override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		statisticsGeneration = UUID()
+		if isMovingFromParent || isBeingDismissed || navigationController?.isBeingDismissed == true {
+			closePendingReads()
+		}
+	}
+
 	// MARK: - Helper Functions
 
+	private func closePendingReads() {
+		statisticsGeneration = UUID()
+		isClosed = true
+		if case .pending = sleepReadAuthorization { sleepReadAuthorization = .notRequested }
+	}
+
+	private func requestSleepReadAuthorizationIfNeeded() {
+		guard !isClosed, case .notRequested = sleepReadAuthorization else { return }
+		let generation = UUID()
+		sleepReadAuthorization = .pending(generation)
+		// The raw sample API must stay authorization-free: its callers below
+		// wait synchronously, which cannot wait for a permission sheet on main.
+		healthKitUtil.requestReadAuthorization(for: Sleep.readPermissions) { [weak self] error in
+			DispatchQueue.main.async { [weak self] in
+				guard let self = self, !self.isClosed,
+					case .pending(let activeGeneration) = self.sleepReadAuthorization,
+					activeGeneration == generation else { return }
+				if let error = error {
+					self.sleepReadAuthorization = .failed
+					Me.log.error("Could not request sleep read access: %@", errorInfo(error))
+				} else {
+					self.sleepReadAuthorization = .completed
+				}
+				self.reloadData()
+			}
+		}
+	}
+
 	private final func calculateAndDisplayForMood(_ operation: SampleGroupInformation, during eventView: EventView) {
+		statisticsGeneration = UUID()
 		let valueDescription = "\(operation.name.localizedLowercase) mood"
 		let (startDate, endDate) = getStartAndEndDatesFrom(eventView)
 		let fetchRequest: NSFetchRequest<MoodImpl> = MoodImpl.fetchRequest()
@@ -99,10 +169,15 @@ public final class UnifiedDayViewController: DayViewController {
 		during eventView: EventView
 	) {
 		let (startDate, endDate) = getStartAndEndDatesFrom(eventView)
-		healthKitUtil.calculate(operation, type, from: startDate, to: endDate) { value, error in
-			let operationName: String = self.getOperationName(for: operation)
-			let stringValue: String? = value == nil ? nil : String(value!)
-			self.display("\(operationName) \(type.name.localizedLowercase)", stringValue, error, startDate, endDate)
+		let token = UUID()
+		statisticsGeneration = token
+		let operationName = getOperationName(for: operation)
+		healthKitUtil.calculate(operation, type, from: startDate, to: endDate) { [weak self] value, error in
+			DispatchQueue.main.async { [weak self] in
+				guard let self = self, self.statisticsGeneration == token,
+					self.viewIfLoaded?.window != nil else { return }
+				self.display("\(operationName) \(type.name.localizedLowercase)", value.map { String($0) }, error, startDate, endDate)
+			}
 		}
 	}
 
@@ -179,7 +254,8 @@ public final class UnifiedDayViewController: DayViewController {
 	}
 
 	private final func getSleepSamplesForDate(_ date: Date) -> [Sleep] {
-		getHealthKitSamplesFor(date, initSample: { (s: HKCategorySample) in Sleep(s) }).filter { $0.state == .asleep }
+		guard case .completed = sleepReadAuthorization else { return [] }
+		return getHealthKitSamplesFor(date, initSample: { (s: HKCategorySample) in Sleep(s) }).filter { $0.isAsleep == true }
 	}
 
 	private final func getHeartRateSamples(from fromDate: Date, to toDate: Date) -> [HeartRate] {

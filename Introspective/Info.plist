@@ -31,6 +31,8 @@
 	<true/>
 	<key>NSHealthShareUsageDescription</key>
 	<string>Read your health data to answer your queries and import State of Mind ratings into your mood history when you choose Import from Health.</string>
+	<key>NSHealthClinicalHealthRecordsShareUsageDescription</key>
+	<string>Read the health records you choose so you can review and explore them alongside your other Health data on this device.</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>Export your mood ratings to State of Mind in Apple Health when you choose Export to Health.</string>
 	<key>NSMicrophoneUsageDescription</key>

@@ -76,6 +76,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		(type: Weight.self, fetcher: injected(SampleFetcherFactory.self).weightSampleFetcher()),
 	]
 
+	private var supportedSampleTypeNames: [String] {
+		fetchers.map { Me.enabledString(for: $0.type) }
+	}
+
 	private final var enabledSampleTypes: [String: Bool] = [
 		enabledString(for: Activity.self):
 			injected(UserDefaultsUtil.self).bool(forKey: .activityEnabledOnTimeline),
@@ -285,12 +289,12 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		controller.multiSelectAttribute = TypedMultiSelectAttribute<String>(
 			id: 0,
 			name: "Data Types",
-			possibleValues: {
-				injected(SampleFactory.self).allTypes().map { Me.enabledString(for: $0) }
-			},
+			// Only offer sources that this timeline can fetch and turn into events.
+			// The shared query chooser and Health library keep the full catalog.
+			possibleValues: supportedSampleTypeNames,
 			possibleValueToString: { $0 }
 		)
-		controller.initialValue = enabledSampleTypes.filter { $0.value }.map { $0.key }
+		controller.initialValue = supportedSampleTypeNames.filter { enabledSampleTypes[$0] == true }
 		controller.notificationToSendOnAccept = Me.enabledDataTypesChanged
 		pushToNavigationController(controller)
 	}
@@ -392,7 +396,7 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	@objc private func enabledDataTypesChanged(notification: Notification) {
 		if let enabledTypes: [String] = value(for: .attributeValue, from: notification) {
 			enabledSampleTypes = [String: Bool]()
-			for type in enabledTypes {
+			for type in supportedSampleTypeNames where enabledTypes.contains(type) {
 				enabledSampleTypes[type] = true
 			}
 			fetchSamples()
@@ -953,12 +957,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		}
 
 		init?(for sleep: Sleep) {
-			guard sleep.state == .asleep else {
+			guard sleep.isAsleep == true else {
 				return nil
 			}
-			let descriptions = [
-				"💤 Fell asleep",
-			]
+			let descriptions = [sleep.state == .asleep ? "💤 Fell asleep" : "💤 \(sleep.state.description) started"]
 			super.init(at: sleep.startDate, for: sleep, descriptions: descriptions)
 		}
 	}
@@ -969,11 +971,11 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		}
 
 		init?(for sleep: Sleep) {
-			guard sleep.state == .asleep else {
+			guard sleep.isAsleep == true else {
 				return nil
 			}
 			let descriptions = [
-				"🥱 Woke up",
+				sleep.state == .asleep ? "🥱 Woke up" : "💤 \(sleep.state.description) ended",
 				"- Slept for " + sleep.duration.description,
 			]
 			super.init(at: sleep.endDate, for: sleep, descriptions: descriptions)

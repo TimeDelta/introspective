@@ -2169,3 +2169,195 @@ final class QueryViewControllerUnitTests: UnitTest {
 		}
 	}
 }
+
+final class QueryEditorContainmentTests: UnitTest {
+
+	override func setUp() {
+		super.setUp()
+		Given(injectionProvider, .get(.value(UiUtil.self), willReturn: UiUtilImpl()))
+		Given(mockSampleFactory, .allTypes(willReturn: [Activity.self]))
+	}
+
+	func testSubDataTypeEditorOwnsTheChooserAndItsAttributeRows() throws {
+		let editor = makeEditor(matcher: WithinXCalendarUnitsSubQueryMatcher())
+		let chooser = try XCTUnwrap(editor.children.first as? AttributedChooserViewController)
+		XCTAssertEqual(editor.children.count, 1)
+		XCTAssertTrue(chooser.parent === editor)
+		XCTAssertTrue(chooser.view.superview === editor.attributedChooserSubView)
+		assertAttributeRowsBelong(to: chooser, count: 3)
+	}
+
+	func testAttributeRestrictionEditorOwnsTheChooserAndItsAttributeRows() throws {
+		Given(mockAttributeRestrictionFactory, .typesFor(.value(HeartRate.heartRate),
+			willReturn: [LessThanDoubleAttributeRestriction.self]))
+		let storyboard = UIStoryboard(name: "Query", bundle: nil)
+		let editor = storyboard.instantiateViewController(withIdentifier: "editAttributeRestriction") as! EditAttributeRestrictionViewControllerImpl
+		editor.sampleType = HeartRate.self
+		editor.attributeRestriction = LessThanDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
+
+		editor.loadViewIfNeeded()
+
+		let chooser = try XCTUnwrap(editor.children.first as? AttributedChooserViewController)
+		XCTAssertEqual(editor.children.count, 1)
+		XCTAssertTrue(chooser.parent === editor)
+		XCTAssertTrue(chooser.view.superview === editor.attributedChooserSubView)
+		assertAttributeRowsBelong(to: chooser, count: 1)
+	}
+
+	func testChangingMatcherDetachesAndReleasesItsPreviousAttributeRows() throws {
+		weak var previousRow: UIViewController?
+		var previousView: UIView?
+
+		// Storyboard creation and removal must share the pool so factory
+		// autoreleases cannot keep the removed row alive beyond this scope.
+		let editor = try autoreleasepool { () throws -> EditSubSampleTypeViewController in
+			let editor = makeEditor(matcher: SameDatesSubQueryMatcher())
+			let chooser = try XCTUnwrap(editor.children.first as? AttributedChooserViewController)
+			let row = try XCTUnwrap(chooser.children.first)
+			previousRow = row
+			previousView = row.view
+			let withinIndex = try XCTUnwrap(chooser.possibleValues.firstIndex { $0 is WithinXCalendarUnitsSubQueryMatcher })
+
+			chooser.pickerView(chooser.valuePicker, didSelectRow: withinIndex, inComponent: 0)
+
+			XCTAssertNil(row.parent)
+			XCTAssertNil(row.view.superview)
+			return editor
+		}
+
+		let chooser = try XCTUnwrap(editor.children.first as? AttributedChooserViewController)
+		withExtendedLifetime(editor) {
+			XCTAssertTrue(chooser.parent === editor)
+			XCTAssertNil(previousRow, "Replacing a matcher must release the removed row controller")
+		}
+		XCTAssertNotNil(previousView)
+		XCTAssertNil(previousView?.superview)
+		assertAttributeRowsBelong(to: chooser, count: 3)
+		let replacedRows = chooser.children
+		let sameDatesIndex = try XCTUnwrap(chooser.possibleValues.firstIndex { $0 is SameDatesSubQueryMatcher })
+		chooser.pickerView(chooser.valuePicker, didSelectRow: sameDatesIndex, inComponent: 0)
+		for row in replacedRows {
+			XCTAssertNil(row.parent)
+			XCTAssertNil(row.view.superview)
+		}
+		assertAttributeRowsBelong(to: chooser, count: 1)
+	}
+
+	func testReloadingChooserReplacesItsRowsWithoutAccumulatingChildren() throws {
+		let editor = makeEditor(matcher: WithinXCalendarUnitsSubQueryMatcher())
+		let chooser = try XCTUnwrap(editor.children.first as? AttributedChooserViewController)
+		let previousRows = chooser.children
+
+		chooser.reloadInputViews()
+
+		for row in previousRows {
+			XCTAssertNil(row.parent)
+			XCTAssertNil(row.view.superview)
+		}
+		assertAttributeRowsBelong(to: chooser, count: 3)
+		chooser.reloadInputViews()
+		assertAttributeRowsBelong(to: chooser, count: 3)
+	}
+
+	func testNumericMatcherEditorPresentsFromTheAttachedControllerHierarchy() throws {
+		let editor = makeEditor(matcher: WithinXCalendarUnitsSubQueryMatcher())
+		let chooser = try XCTUnwrap(editor.children.first as? AttributedChooserViewController)
+		let row = try XCTUnwrap(chooser.children.compactMap { $0 as? AttributeViewController }.first {
+			$0.attribute.equalTo(WithinXCalendarUnitsSubQueryMatcher.amountOfTime)
+		})
+		let navigation = AppearanceNavigationController(rootViewController: editor)
+		let window: UIWindow
+		if let scene = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).first {
+			window = UIWindow(windowScene: scene)
+		} else {
+			window = UIWindow(frame: UIScreen.main.bounds)
+		}
+		window.frame = UIScreen.main.bounds
+		window.windowLevel = UIWindow.Level(rawValue: UIWindow.Level.normal.rawValue + 1)
+		window.rootViewController = navigation
+		window.isHidden = false
+		window.layoutIfNeeded()
+		defer {
+			navigation.dismiss(animated: false)
+			window.isHidden = true
+			window.rootViewController = nil
+		}
+		let appeared = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+			navigation.hasAppeared && row.viewIfLoaded?.window === window
+		}, object: nil)
+		XCTAssertEqual(XCTWaiter.wait(for: [appeared], timeout: 5), .completed)
+		XCTAssertEqual(editor.children.count, 1, "Displaying the initialized fixture must not load another chooser")
+		XCTAssertTrue(row.navigationController === navigation)
+		XCTAssertTrue(row.view.window === window)
+		XCTAssertGreaterThan(row.view.bounds.width, 0)
+
+		row.valueButtonPressed(row.attributeValueButton!)
+
+		let presentedEditor = { () -> NumericAttributeValueViewController? in
+			(row.presentedViewController ?? chooser.presentedViewController
+				?? editor.presentedViewController ?? navigation.presentedViewController) as? NumericAttributeValueViewController
+		}
+		let visible = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+			guard let modal = presentedEditor() else { return false }
+			return !modal.isBeingPresented && modal.viewIfLoaded?.window === window
+		}, object: nil)
+		XCTAssertEqual(XCTWaiter.wait(for: [visible], timeout: 5), .completed)
+		let modal = try XCTUnwrap(presentedEditor())
+		XCTAssertNotNil(modal.presentingViewController)
+		XCTAssertTrue(modal.view.window === window)
+		XCTAssertEqual(modal.textField.text, "5")
+	}
+
+	private func makeEditor(matcher: SubQueryMatcher) -> EditSubSampleTypeViewController {
+		let editor = EditSubSampleTypeViewController()
+		let picker = UIPickerView()
+		let container = UIView()
+		editor.dataTypePicker = picker
+		editor.attributedChooserSubView = container
+		editor.sampleType = Activity.self
+		editor.matcher = matcher
+		editor.view = makeEditorView(picker: picker, container: container)
+		// A supplied view is already loaded, so loadViewIfNeeded() cannot invoke
+		// its load callback. Initialize it once here; navigation reuses this view.
+		XCTAssertTrue(editor.isViewLoaded)
+		editor.viewDidLoad()
+		return editor
+	}
+
+	private func makeEditorView(picker: UIPickerView, container: UIView) -> UIView {
+		let root = UIView(frame: CGRect(x: 0, y: 0, width: 390, height: 844))
+		for view in [picker, container] {
+			view.translatesAutoresizingMaskIntoConstraints = false
+			root.addSubview(view)
+		}
+		NSLayoutConstraint.activate([
+			picker.topAnchor.constraint(equalTo: root.topAnchor),
+			picker.leadingAnchor.constraint(equalTo: root.leadingAnchor),
+			picker.trailingAnchor.constraint(equalTo: root.trailingAnchor),
+			container.topAnchor.constraint(equalTo: picker.bottomAnchor),
+			container.leadingAnchor.constraint(equalTo: root.leadingAnchor),
+			container.trailingAnchor.constraint(equalTo: root.trailingAnchor),
+			container.bottomAnchor.constraint(equalTo: root.bottomAnchor),
+		])
+		return root
+	}
+
+	private func assertAttributeRowsBelong(to chooser: AttributedChooserViewController, count: Int,
+		file: StaticString = #file, line: UInt = #line) {
+		XCTAssertEqual(chooser.children.count, count, file: file, line: line)
+		for row in chooser.children {
+			XCTAssertTrue(row is AttributeViewController, file: file, line: line)
+			XCTAssertTrue(row.parent === chooser, file: file, line: line)
+			XCTAssertTrue(row.view.superview === chooser.scrollContentView, file: file, line: line)
+		}
+	}
+
+	private final class AppearanceNavigationController: UINavigationController {
+		var hasAppeared = false
+
+		override func viewDidAppear(_ animated: Bool) {
+			super.viewDidAppear(animated)
+			hasAppeared = true
+		}
+	}
+}

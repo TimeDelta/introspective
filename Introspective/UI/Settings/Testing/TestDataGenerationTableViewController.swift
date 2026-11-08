@@ -20,6 +20,10 @@ final class TestDataGenerationTableViewController: UITableViewController {
 	// MARK: - Static Variables
 
 	private typealias Me = TestDataGenerationTableViewController
+	// These are the Health fixture constructors implemented below. Other legacy
+	// and catalog types must not prompt for access when this screen generates data.
+	private static let generatedHealthTypes: [Sample.Type] = [BloodPressure.self, BodyMassIndex.self,
+		HeartRate.self, LeanBodyMass.self, RestingHeartRate.self, SexualActivity.self, Sleep.self, Weight.self]
 
 	// MARK: Notification Names
 
@@ -76,6 +80,9 @@ final class TestDataGenerationTableViewController: UITableViewController {
 
 	private final var sampleTypeOptions = [String: Options]()
 	private final var generateTestDataButton: UIBarButtonItem!
+	// Keep new read-only Health types out of the existing developer fixture controls.
+	private lazy var generationTypes: [Sample.Type] = injected(SampleFactory.self).allTypes()
+		.filter { !($0 is HealthCatalogSample.Type) }
 
 	// MARK: - UIViewController Overrides
 
@@ -110,7 +117,7 @@ final class TestDataGenerationTableViewController: UITableViewController {
 	}
 
 	public final override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-		injected(SampleFactory.self).allTypes().count
+		generationTypes.count
 	}
 
 	public final override func tableView(
@@ -121,7 +128,7 @@ final class TestDataGenerationTableViewController: UITableViewController {
 			withIdentifier: "sampleType",
 			for: indexPath
 		) as! TestDataCreationSampleTypeTableViewCell
-		cell.sampleType = injected(SampleFactory.self).allTypes()[indexPath.row]
+		cell.sampleType = generationTypes[indexPath.row]
 		cell.options = getOptions(for: cell.sampleType)
 		return cell
 	}
@@ -129,14 +136,14 @@ final class TestDataGenerationTableViewController: UITableViewController {
 	// MARK: - Table View Delegate
 
 	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let sampleType = injected(SampleFactory.self).allTypes()[indexPath.row]
+		let sampleType = generationTypes[indexPath.row]
 		setShouldGenerate(for: sampleType, to: !shouldGenerate(sampleType))
 		tableView.deselectRow(at: indexPath, animated: false)
 		tableView.reloadData()
 	}
 
 	public final override func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		let sampleType = injected(SampleFactory.self).allTypes()[indexPath.row]
+		let sampleType = generationTypes[indexPath.row]
 		if shouldGenerate(sampleType) {
 			return 139
 		}
@@ -173,83 +180,98 @@ final class TestDataGenerationTableViewController: UITableViewController {
 	// MARK: - Button Actions
 
 	@objc private func enableAllDataTypes(_: Any) {
-		for type in injected(SampleFactory.self).allTypes() {
+		for type in generationTypes {
 			setShouldGenerate(for: type, to: true)
 		}
 		DispatchQueue.main.async { self.tableView.reloadData() }
 	}
 
 	@objc private final func generateTestData(_: Any) {
-		generateTestDataButton.isEnabled = false
+		navigationItem.rightBarButtonItems?.forEach { $0.isEnabled = false }
+		tableView.isUserInteractionEnabled = false
 		post(SettingsTableViewController.disableGenerateTestData)
 
-		injected(HealthKitUtil.self).getAuthorization { error in
-			if error != nil {
-				fatalError("HealthKit authorization failed: " + error!.localizedDescription)
+		let selectedHealthTypes = Me.generatedHealthTypes.filter { shouldGenerate($0) }
+		HealthKitDataTestUtil.requestGenerationAuthorization(for: selectedHealthTypes) { error in
+			if let error = error {
+				self.finishedGenerating(error: error)
+				return
 			}
 			DispatchQueue.global(qos: .userInitiated).async {
-				var activityDefinitions = [ActivityDefinition]()
-				if self.shouldGenerate(Activity.self) {
-					let transaction = injected(Database.self).transaction()
-					activityDefinitions = self.createRandomActivityDefinitions(using: transaction)
-					try! transaction.commit()
-				}
-				var medications = [Medication]()
-				if self.shouldGenerate(MedicationDose.self) {
-					let transaction = injected(Database.self).transaction()
-					medications = self.createRandomMedications(using: transaction)
-					try! transaction.commit()
-				}
+				do {
+					var activityDefinitions = [ActivityDefinition]()
+					if self.shouldGenerate(Activity.self) {
+						let transaction = injected(Database.self).transaction()
+						activityDefinitions = self.createRandomActivityDefinitions(using: transaction)
+						try! transaction.commit()
+					}
+					var medications = [Medication]()
+					if self.shouldGenerate(MedicationDose.self) {
+						let transaction = injected(Database.self).transaction()
+						medications = self.createRandomMedications(using: transaction)
+						try! transaction.commit()
+					}
 
-				self.createSamples(Activity.self) { date, transaction in
-					let hoursAgo = try! abs(
-						injected(CalendarUtil.self)
-							.distance(from: date, to: Date(), in: .hour)
-					)
-					self.createRandomActivity(Date() - hoursAgo.hours, activityDefinitions, using: transaction)
-				}
-				self.createSamples(BloodPressure.self) { bloodPressures, date in
-					bloodPressures.append(self.randomBloodPressure(date))
-				}
-				self.createSamples(BodyMassIndex.self) { bmis, date in
-					bmis.append(BodyMassIndex(self.randomDouble(Me.bmiRange), date))
-				}
-				self.createSamples(HeartRate.self) { heartRates, date in
-					heartRates.append(HeartRate(self.randomDouble(Me.heartRateRange), date))
-				}
-				self.createSamples(LeanBodyMass.self) { leanBodyMasses, date in
-					leanBodyMasses.append(LeanBodyMass(self.randomDouble(Me.leanBodyMassRange), date))
-				}
-				self.createSamples(MedicationDose.self) { date, transaction in
-					self.createRandomMedicationDose(date, medications, using: transaction)
-				}
-				self.createSamples(MoodImpl.self) { date, transaction in
-					self.createRandomMood(date, using: transaction)
-				}
-				self.createSamples(RestingHeartRate.self) { restingHeartRates, date in
-					restingHeartRates.append(RestingHeartRate(self.randomDouble(Me.heartRateRange), date))
-				}
-				self.createSamples(SexualActivity.self) { sexualActivities, date in
-					sexualActivities.append(self.randomSexualActivity(date))
-				}
-				self.createSamples(Sleep.self) { sleepRecords, date in
-					let daysAgo = try! abs(
-						injected(CalendarUtil.self)
-							.distance(from: date, to: Date(), in: .day)
-					)
-					sleepRecords.append(self.randomSleepSample(daysAgo))
-				}
-				self.createSamples(Weight.self) { weights, date in
-					weights.append(Weight(self.randomDouble(Me.weightRange), date))
-				}
+					self.createSamples(Activity.self) { date, transaction in
+						let hoursAgo = try! abs(
+							injected(CalendarUtil.self)
+								.distance(from: date, to: Date(), in: .hour)
+						)
+						self.createRandomActivity(Date() - hoursAgo.hours, activityDefinitions, using: transaction)
+					}
+					try self.createSamples(BloodPressure.self) { bloodPressures, date in
+						bloodPressures.append(self.randomBloodPressure(date))
+					}
+					try self.createSamples(BodyMassIndex.self) { bmis, date in
+						bmis.append(BodyMassIndex(self.randomDouble(Me.bmiRange), date))
+					}
+					try self.createSamples(HeartRate.self) { heartRates, date in
+						heartRates.append(HeartRate(self.randomDouble(Me.heartRateRange), date))
+					}
+					try self.createSamples(LeanBodyMass.self) { leanBodyMasses, date in
+						leanBodyMasses.append(LeanBodyMass(self.randomDouble(Me.leanBodyMassRange), date))
+					}
+					self.createSamples(MedicationDose.self) { date, transaction in
+						self.createRandomMedicationDose(date, medications, using: transaction)
+					}
+					self.createSamples(MoodImpl.self) { date, transaction in
+						self.createRandomMood(date, using: transaction)
+					}
+					try self.createSamples(RestingHeartRate.self) { restingHeartRates, date in
+						restingHeartRates.append(RestingHeartRate(self.randomDouble(Me.heartRateRange), date))
+					}
+					try self.createSamples(SexualActivity.self) { sexualActivities, date in
+						sexualActivities.append(self.randomSexualActivity(date))
+					}
+					try self.createSamples(Sleep.self) { sleepRecords, date in
+						let daysAgo = try! abs(
+							injected(CalendarUtil.self)
+								.distance(from: date, to: Date(), in: .day)
+						)
+						sleepRecords.append(self.randomSleepSample(daysAgo))
+					}
+					try self.createSamples(Weight.self) { weights, date in
+						weights.append(Weight(self.randomDouble(Me.weightRange), date))
+					}
 
-				DispatchQueue.main.async {
-					NotificationBanner(title: "Finished generating test data", style: .success).show()
-					self.post(SettingsTableViewController.enableGenerateTestData)
-				}
+					self.finishedGenerating(error: nil)
+				} catch { self.finishedGenerating(error: error) }
 			}
 			DispatchQueue.main.async {
 				self.navigationController?.popViewController(animated: false)
+			}
+		}
+	}
+
+	private func finishedGenerating(error: Error?) {
+		DispatchQueue.main.async {
+			self.navigationItem.rightBarButtonItems?.forEach { $0.isEnabled = true }
+			self.tableView.isUserInteractionEnabled = true
+			self.post(SettingsTableViewController.enableGenerateTestData)
+			if let error = error {
+				NotificationBanner(title: "Could not generate test data", subtitle: error.localizedDescription, style: .danger).show()
+			} else {
+				NotificationBanner(title: "Finished generating test data", style: .success).show()
 			}
 		}
 	}
@@ -280,7 +302,7 @@ final class TestDataGenerationTableViewController: UITableViewController {
 	private final func createSamples<SampleType: HealthKitSample>(
 		_ sampleType: SampleType.Type,
 		_ createSample: (inout [SampleType], Date) -> Void
-	) {
+	) throws {
 		guard shouldGenerate(sampleType) else { return }
 
 		var samples = [SampleType]()
@@ -295,7 +317,7 @@ final class TestDataGenerationTableViewController: UITableViewController {
 			}
 		}
 
-		HealthKitDataTestUtil.save(samples)
+		try HealthKitDataTestUtil.saveGeneratedSamples(samples)
 	}
 
 	private final func createRandomActivity(
