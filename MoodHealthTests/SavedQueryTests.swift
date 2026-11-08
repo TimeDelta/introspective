@@ -1633,7 +1633,7 @@ final class SavedQueryTests: XCTestCase {
 		// The builder selects tags fetched into the view context, not DAO transaction objects.
 		let tag = try injected(Database.self).pull(savedObject: createdTag)
 		let factory = injected(AttributeRestrictionFactory.self)
-		var cases: [(name: String, query: Query, tagDescription: String?)] = []
+		var cases: [(name: String, label: String, query: Query, tagDescription: String?)] = []
 		var failures: [String] = []
 		var attempted = 0
 		for sampleType in injected(SampleFactory.self).allTypes() {
@@ -1650,9 +1650,8 @@ final class SavedQueryTests: XCTestCase {
 						let query = try injected(QueryFactory.self).queryFor(sampleType)
 						query.expression = restriction
 						let name = "Family \(attempted)"
-						try dao.save(query, name: name)
 						let usesTags = attribute is TagAttribute || attribute is TagsAttribute
-						cases.append((name, query, usesTags ? restriction.description : nil))
+						cases.append((name, label, query, usesTags ? restriction.description : nil))
 					} catch {
 						failures.append("\(label): \(error)")
 						container.viewContext.rollback()
@@ -1660,10 +1659,33 @@ final class SavedQueryTests: XCTestCase {
 				}
 			}
 		}
+		if failures.isEmpty { XCTAssertEqual(cases.count, attempted, "Every configured family must be persisted") }
+		// Exercise the same serializer and validation as DAO.save. Bounded batches
+		// amortize disk commits without retaining every inserted graph at once.
+		// Dedicated DAO tests cover individual saves, name validation, and transaction failures.
+		let batchSize = 256
+		for start in stride(from: 0, to: cases.count, by: batchSize) {
+			let transaction = try injected(Database.self).viewContextTransaction(for: StoredQuery.self, sortedBy: "name")
+			defer { transaction.reset() }
+			for item in cases[start ..< min(start + batchSize, cases.count)] {
+				do {
+					_ = try item.query.stored(withName: item.name, using: transaction)
+				} catch {
+					XCTFail("\(item.name) / \(item.label) failed saving: \(error)")
+					throw error
+				}
+			}
+			try transaction.commit()
+		}
 		try reopen()
+		// Fetch once: looking up each family by name repeatedly scans the growing fixture store.
+		let savedQueries = try dao.getAllQueries()
+		let savedQueriesByName = Dictionary(savedQueries.map { ($0.name, $0) }, uniquingKeysWith: { first, _ in first })
+		XCTAssertEqual(savedQueries.count, cases.count)
+		XCTAssertEqual(savedQueriesByName.count, cases.count, "Every family must have a distinct saved name")
 		for item in cases {
 			do {
-				let restored = try XCTUnwrap(dao.getQueryWith(name: item.name)).convert()
+				let restored = try XCTUnwrap(savedQueriesByName[item.name], item.name).convert()
 				if let text = item.tagDescription { XCTAssertEqual(restored.expression?.description, text, item.name) }
 				else { XCTAssertTrue(item.query.equalTo(restored), item.name) }
 			} catch { failures.append("\(item.name) failed after reopening: \(error)") }

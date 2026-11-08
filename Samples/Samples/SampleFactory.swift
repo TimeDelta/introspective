@@ -68,6 +68,13 @@ public final class SampleFactoryImpl: SampleFactory {
 		ActiveEnergy.self,
 		Workout.self,
 	]
+	// Catalog availability is fixed for the life of this process.
+	private static let availableTypes = allTypes + HealthCatalog.availableEntries.filter {
+		$0.descriptor.id >= 21
+	}.map { $0.sampleType }
+	private static let availableHealthKitTypes = healthKitTypes + HealthCatalog.availableEntries.filter {
+		$0.descriptor.id >= 21
+	}.compactMap { $0.sampleType as? HealthKitSample.Type }
 
 	/// IMPORTANT: Only add unique values to the end of this list otherwise saved queries will be messed up.
 	private enum SampleTypeId: Int16 {
@@ -94,7 +101,7 @@ public final class SampleFactoryImpl: SampleFactory {
 		case stressorResponse = 20
 
 		/// Ordered by enum value
-		static fileprivate var sampleTypes: [Sample.Type] = [
+		static fileprivate let sampleTypes: [Sample.Type] = [
 			Activity.self,
 			BloodPressure.self,
 			BodyMassIndex.self,
@@ -138,11 +145,11 @@ public final class SampleFactoryImpl: SampleFactory {
 	}
 
 	public final func allTypes() -> [Sample.Type] {
-		Me.allTypes + HealthCatalog.availableEntries.filter { $0.descriptor.id >= 21 }.map { $0.sampleType }
+		Me.availableTypes
 	}
 
 	public final func healthKitTypes() -> [HealthKitSample.Type] {
-		Me.healthKitTypes + HealthCatalog.availableEntries.filter { $0.descriptor.id >= 21 }.compactMap { $0.sampleType as? HealthKitSample.Type }
+		Me.availableHealthKitTypes
 	}
 
 	public final func activity(using transaction: Transaction) throws -> Activity {
