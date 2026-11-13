@@ -5,7 +5,7 @@ import WidgetKit
 
 struct ActivityControlConfigurationIntent: ControlConfigurationIntent {
 	static var title: LocalizedStringResource = "Choose activity"
-	@Parameter(title: "Activity") var activity: RecordableActivityEntity
+	@Parameter(title: "Activity") var activity: RecordableActivityEntity?
 }
 
 private struct ActivityControlValue {
@@ -16,7 +16,8 @@ private struct ActivityControlValue {
 
 private struct ActivityControlProvider: AppIntentControlValueProvider {
 	func previewValue(configuration: ActivityControlConfigurationIntent) -> ActivityControlValue {
-		ActivityControlValue(activity: configuration.activity, runningActivityID: nil)
+		ActivityControlValue(activity: configuration.activity ?? RecordableActivityEntity(id: "", name: "Choose activity"),
+			runningActivityID: nil)
 	}
 
 	func currentValue(configuration: ActivityControlConfigurationIntent) async throws -> ActivityControlValue {
@@ -24,8 +25,11 @@ private struct ActivityControlProvider: AppIntentControlValueProvider {
 	}
 
 	@MainActor private func read(configuration: ActivityControlConfigurationIntent) throws -> ActivityControlValue {
+		guard let selectedActivity = configuration.activity else {
+			throw ActivityControlError("Edit the control to choose an activity.")
+		}
 		let snapshot = try ActivityWidgetStore.snapshot()
-		guard let definition = snapshot.definitions.first(where: { $0.id == configuration.activity.id }) else {
+		guard let definition = snapshot.definitions.first(where: { $0.id == selectedActivity.id }) else {
 			throw ActivityControlError("This activity is no longer available. Edit the control to choose another activity.")
 		}
 		return ActivityControlValue(activity: RecordableActivityEntity(id: definition.id, name: definition.name),
