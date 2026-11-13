@@ -31,6 +31,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	private static let activityDefinitionCreated = Notification.Name("activityDefinitionCreated")
 	private static let activityEditedOrCreated = Notification.Name("activityEdited")
 	private static let activityDefinitionEdited = Notification.Name("activityDefinitionEdited")
+	private static let quickRecordingDateSelected = Notification.Name("activityQuickRecordingDateSelected")
 
 	// MARK: Presenters
 
@@ -63,6 +64,20 @@ public final class RecordActivityTableViewController: UITableViewController {
 	// row counts. Publish stable row snapshots and reload them together on main.
 	private var activeDefinitions: [ActivityDefinition] = []
 	private var inactiveDefinitions: [ActivityDefinition] = []
+
+	private enum QuickRecordingOperation {
+		case start(definitionID: String)
+		case stop(activityID: String)
+		case switchActivity(from: String, to: String)
+	}
+
+	private struct QuickRecordingOption {
+		let title: String
+		let perform: () -> Void
+	}
+
+	private var pendingQuickRecording: QuickRecordingOperation?
+	private weak var quickRecordingDatePicker: UIViewController?
 
 	private func updateLoadingState() {
 		searchController.searchBar.isUserInteractionEnabled = finishedLoading
@@ -113,6 +128,8 @@ public final class RecordActivityTableViewController: UITableViewController {
 		observe(selector: #selector(activityDefinitionCreated), name: Me.activityDefinitionCreated, object: nil)
 		observe(selector: #selector(activityEditedOrCreated), name: Me.activityEditedOrCreated, object: nil)
 		observe(selector: #selector(activityDefinitionEdited), name: Me.activityDefinitionEdited, object: nil)
+		observe(selector: #selector(quickRecordingDateSelected), name: Me.quickRecordingDateSelected, object: nil)
+		observe(selector: #selector(activityRecordingChanged), name: .activityRecordingChanged, object: nil)
 		observe(selector: #selector(sortByRecentCount), name: .timePeriodChosen)
 		observe(selector: #selector(persistenceLayerDidRefresh), name: .persistenceLayerDidRefresh)
 		observe(selector: #selector(persistenceLayerWillRefresh), name: .persistenceLayerWillRefresh)
@@ -203,6 +220,202 @@ public final class RecordActivityTableViewController: UITableViewController {
 		loadActivitiyDefinitions()
 	}
 
+	// Swiping adds retrospective recording and explicit switching. A row tap
+	// stays immediate, and long press keeps its existing reordering behavior.
+	private func quickRecordingOptions(definitionID: String, name: String, sourceRect: CGRect) throws -> [QuickRecordingOption] {
+		let snapshot = try ActivityQuickRecorder.snapshot()
+		let matching = snapshot.running.filter { $0.definitionID == definitionID }
+		var actions: [QuickRecordingOption] = []
+		if matching.isEmpty {
+			actions.append(QuickRecordingOption(title: "Start earlier…") { [weak self] in
+				self?.showQuickRecordingTimes(
+					.start(definitionID: definitionID), title: "Start \(name)", sourceRect: sourceRect
+				)
+			})
+			if !snapshot.running.isEmpty {
+				actions.append(QuickRecordingOption(title: "Switch from…") { [weak self] in
+					self?.chooseRunningActivity(snapshot.running, title: "Switch to \(name)", sourceRect: sourceRect) { [weak self] source in
+						self?.showQuickRecordingTimes(
+							.switchActivity(from: source.id, to: definitionID),
+							title: "\(source.name) → \(name)", sourceRect: sourceRect, earliestDate: source.start,
+							includeNow: true
+						)
+					}
+				})
+			}
+		} else {
+			actions.append(QuickRecordingOption(title: "Stop earlier…") { [weak self] in
+				self?.chooseRunningActivity(matching, title: "Stop \(name)", sourceRect: sourceRect) { [weak self] source in
+					self?.showQuickRecordingTimes(
+						.stop(activityID: source.id), title: "Stop \(name)", sourceRect: sourceRect, earliestDate: source.start
+					)
+				}
+			})
+			let runningDefinitionIDs = Set(snapshot.running.map { $0.definitionID })
+			let targets = snapshot.definitions.filter { !runningDefinitionIDs.contains($0.id) }
+			if !targets.isEmpty {
+				actions.append(QuickRecordingOption(title: "Switch to…") { [weak self] in
+					self?.chooseRunningActivity(matching, title: "Switch from \(name)", sourceRect: sourceRect) { [weak self] source in
+						self?.chooseSwitchTarget(targets, from: source, sourceRect: sourceRect)
+					}
+				})
+			}
+		}
+		return actions
+	}
+
+	private func showQuickRecordingOptions(definitionID: String, name: String, sourceRect: CGRect) {
+		do {
+			let sheet = UIAlertController(title: name, message: nil, preferredStyle: .actionSheet)
+			for action in try quickRecordingOptions(definitionID: definitionID, name: name, sourceRect: sourceRect) {
+				sheet.addAction(UIAlertAction(title: action.title, style: .default) { _ in action.perform() })
+			}
+			presentRecordingSheet(sheet, sourceRect: sourceRect)
+		} catch {
+			showError(title: "Failed to load recording options", error: error)
+		}
+	}
+
+	private func chooseRunningActivity(
+		_ activities: [ActivityRecordingItem], title: String, sourceRect: CGRect,
+		completion: @escaping (ActivityRecordingItem) -> Void
+	) {
+		if activities.count == 1, let activity = activities.first {
+			completion(activity)
+			return
+		}
+		let sheet = UIAlertController(
+			title: title, message: "Choose the running activity to end. Other activities keep running.", preferredStyle: .actionSheet
+		)
+		for activity in activities {
+			let started = injected(CalendarUtil.self).string(for: activity.start, dateStyle: .short, timeStyle: .short)
+			sheet.addAction(UIAlertAction(title: "\(activity.name) · started \(started)", style: .default) { _ in completion(activity) })
+		}
+		presentRecordingSheet(sheet, sourceRect: sourceRect)
+	}
+
+	private func chooseSwitchTarget(_ definitions: [ActivityRecordingDefinition], from source: ActivityRecordingItem, sourceRect: CGRect) {
+		let sheet = UIAlertController(title: "Switch from \(source.name)", message: "Choose the activity to start.", preferredStyle: .actionSheet)
+		for target in definitions {
+			sheet.addAction(UIAlertAction(title: target.name, style: .default) { [weak self] _ in
+				self?.showQuickRecordingTimes(
+					.switchActivity(from: source.id, to: target.id), title: "\(source.name) → \(target.name)",
+					sourceRect: sourceRect, earliestDate: source.start, includeNow: true
+				)
+			})
+		}
+		presentRecordingSheet(sheet, sourceRect: sourceRect)
+	}
+
+	private func showQuickRecordingTimes(
+		_ operation: QuickRecordingOperation, title: String, sourceRect: CGRect,
+		earliestDate: Date? = nil, includeNow: Bool = false
+	) {
+		let sheet = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
+		if includeNow {
+			sheet.addAction(UIAlertAction(title: "Now", style: .default) { [weak self] _ in
+				let now = Date()
+				self?.performQuickRecording(operation, at: now, recordedAt: now)
+			})
+		}
+		for minutes in [5, 15, 30] {
+			let action = UIAlertAction(title: "\(minutes) minutes ago", style: .default) { [weak self] _ in
+				do {
+					let now = Date()
+					let date = try ActivityBackdate.date(value: minutes, unit: .minute, now: now)
+					self?.performQuickRecording(operation, at: date, recordedAt: now)
+				} catch {
+					self?.showError(title: "Failed to set activity time", error: error)
+				}
+			}
+			if let earliestDate = earliestDate,
+				let date = try? ActivityBackdate.date(value: minutes, unit: .minute), date < earliestDate {
+				action.isEnabled = false
+			}
+			sheet.addAction(action)
+		}
+		sheet.addAction(UIAlertAction(title: "Choose time…", style: .default) { [weak self] _ in
+			self?.showQuickRecordingDatePicker(operation, earliestDate: earliestDate)
+		})
+		presentRecordingSheet(sheet, sourceRect: sourceRect)
+	}
+
+	private func showQuickRecordingDatePicker(_ operation: QuickRecordingOperation, earliestDate: Date?) {
+		let controller = viewController(named: "datePicker", fromStoryboard: "Util") as! SelectDateViewController
+		let now = Date()
+		controller.initialDate = now
+		controller.earliestPossibleDate = earliestDate
+		controller.latestPossibleDate = now
+		controller.notificationToSendOnAccept = Me.quickRecordingDateSelected
+		pendingQuickRecording = operation
+		quickRecordingDatePicker = controller
+		dismissRecordingSheet { [weak self] in
+			self?.customPresentViewController(SelectDateViewControllerImpl.presenter, viewController: controller, animated: false)
+		}
+	}
+
+	@objc private func quickRecordingDateSelected(notification: Notification) {
+		guard let operation = pendingQuickRecording, let picker = quickRecordingDatePicker,
+			notification.object as AnyObject? === picker, let date: Date = value(for: .date, from: notification) else { return }
+		pendingQuickRecording = nil
+		quickRecordingDatePicker = nil
+		DispatchQueue.main.async { [weak self] in
+			self?.performQuickRecording(operation, at: date, recordedAt: Date())
+		}
+	}
+
+	private func performQuickRecording(_ operation: QuickRecordingOperation, at date: Date, recordedAt: Date) {
+		dismissRecordingSheet { [weak self] in
+			self?.saveQuickRecording(operation, at: date, recordedAt: recordedAt)
+		}
+	}
+
+	private func saveQuickRecording(_ operation: QuickRecordingOperation, at date: Date, recordedAt: Date) {
+		do {
+			let result: ActivityRecordingResult
+			switch operation {
+			case let .start(definitionID):
+				result = try ActivityQuickRecorder.start(definitionID: definitionID, at: date, recordedAt: recordedAt)
+			case let .stop(activityID):
+				result = try ActivityQuickRecorder.stop(activityID: activityID, at: date, recordedAt: recordedAt)
+			case let .switchActivity(sourceID, targetID):
+				result = try ActivityQuickRecorder.switchActivity(from: sourceID, to: targetID, at: date, recordedAt: recordedAt)
+			}
+			loadActivitiyDefinitions()
+			guard result.didChange else { return }
+			UINotificationFeedbackGenerator().notificationOccurred(.success)
+			for id in result.autoNoteActivityIDs {
+				guard let context = activeActivitiesFetchedResultsController?.managedObjectContext,
+					let url = URL(string: id), let objectID = context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: url),
+					let activity = try context.existingObject(with: objectID) as? Activity else { continue }
+				showEditScreenForActivity(activity, autoFocusNote: true)
+			}
+		} catch {
+			showError(title: "Failed to record activity", error: error)
+		}
+	}
+
+	@objc private func activityRecordingChanged(notification _: Notification) {
+		loadActivitiyDefinitions()
+	}
+
+	private func presentRecordingSheet(_ sheet: UIAlertController, sourceRect: CGRect) {
+		sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+		if let popover = sheet.popoverPresentationController {
+			popover.sourceView = tableView
+			popover.sourceRect = sourceRect
+		}
+		dismissRecordingSheet { [weak self] in self?.present(sheet, animated: false) }
+	}
+
+	private func dismissRecordingSheet(completion: @escaping () -> Void) {
+		if let sheet = presentedViewController as? UIAlertController {
+			sheet.dismiss(animated: false, completion: completion)
+		} else {
+			completion()
+		}
+	}
+
 	// MARK: - TableView Reordering
 
 	public final override func tableView(_: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
@@ -268,15 +481,27 @@ public final class RecordActivityTableViewController: UITableViewController {
 		_: UITableView,
 		trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath
 	) -> UISwipeActionsConfiguration? {
+		guard finishedLoading else { return nil }
 		let activityDefinition = definition(at: indexPath)
+		let definitionID = activityDefinition.objectID.uriRepresentation().absoluteString
+		let name = activityDefinition.name
+		let sourceRect = tableView.rectForRow(at: indexPath)
 
-		var actions: [UIContextualAction] = [getAddNewActionFor(activityDefinition)]
+		let recordingOptions = UIContextualAction(style: .normal, title: "Time / Switch") { [weak self] _, _, completion in
+			completion(true)
+			self?.showQuickRecordingOptions(definitionID: definitionID, name: name, sourceRect: sourceRect)
+		}
+		recordingOptions.backgroundColor = .systemBlue
+		recordingOptions.accessibilityLabel = "backdate or switch \(activityDefinition.name)"
+		var actions: [UIContextualAction] = [recordingOptions, getAddNewActionFor(activityDefinition)]
 		if let activity = getMostRecentActivity(activityDefinition) {
 			actions.append(getEditLastActionFor(activity))
 			actions.append(getDeleteActivityActionFor(activity))
 		}
 
-		return UISwipeActionsConfiguration(actions: actions)
+		let configuration = UISwipeActionsConfiguration(actions: actions)
+		configuration.performsFirstActionWithFullSwipe = false
+		return configuration
 	}
 
 	private final func getViewHistoryActionFor(_ definition: ActivityDefinition) -> UIContextualAction {
@@ -682,6 +907,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		do {
 			let transaction = injected(Database.self).transaction()
 			activity.end = now
+			activity.endSetAt = now
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 			associatedCell.updateUiElements()
 			if activity.definition.autoNote {
@@ -945,7 +1171,7 @@ final class RecordActivityTableViewControllerCoachMarksDataSourceAndDelegate: Co
 			}
 		),
 		CoachMarkInfo(
-			hint: "To start or stop an activity, simply tap it.",
+			hint: "To start or stop an activity now, simply tap it. Swipe left and choose Time / Switch to record an earlier time or switch activities.",
 			useArrow: true,
 			view: { [weak self] in self?.controller?.tableView.visibleCells.first }
 		),

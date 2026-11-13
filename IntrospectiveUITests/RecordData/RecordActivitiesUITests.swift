@@ -151,6 +151,77 @@ final class RecordActivitiesUITests: UITest {
 		assertRecordedDuration(in: earliestEnd.timeIntervalSince(latestStart)...latestEnd.timeIntervalSince(earliestStart))
 	}
 
+	func testStartEarlier_recordsTheSelectedOffsetAtWholeMinutePrecision() {
+		let definition = ActivityDefinition(name: "Reading", autoNote: false)
+		seed(activityDefinitions: [definition])
+		tapActivityInstanceAction("backdate or switch \(definition.name)", for: definition)
+		app.buttons["Start earlier…"].tap()
+
+		let earliest = Date()
+		app.buttons["15 minutes ago"].tap()
+		let latest = Date()
+
+		waitForCount(1, in: app.activityIndicators)
+		tapActivityInstanceAction("✎ Last", for: definition)
+		let recorded = app.tables.cells.staticTexts["start date"].value as? String
+		XCTAssertTrue(backdatedMinuteStrings(minutes: 15, earliest: earliest, latest: latest).contains(recorded ?? ""),
+			"The saved start must be 15 minutes before the action, with zero seconds")
+	}
+
+	func testStopEarlier_preservesTheStartAndRecordsTheSelectedEnd() {
+		let definition = ActivityDefinition(name: "Reading", autoNote: false)
+		let start = Date().addingTimeInterval(-2 * 60 * 60)
+		seed(activityDefinitions: [definition], activities: [.init(definition, start: start)])
+		tapActivityInstanceAction("backdate or switch \(definition.name)", for: definition)
+		app.buttons["Stop earlier…"].tap()
+
+		let earliest = Date()
+		app.buttons["15 minutes ago"].tap()
+		let latest = Date()
+
+		waitForCount(0, in: app.activityIndicators)
+		tapActivityInstanceAction("✎ Last", for: definition)
+		XCTAssertEqual(app.tables.cells.staticTexts["start date"].value as? String, editActivityDateString(for: start))
+		let recorded = app.tables.cells.staticTexts["end date"].value as? String
+		XCTAssertTrue(backdatedMinuteStrings(minutes: 15, earliest: earliest, latest: latest).contains(recorded ?? ""),
+			"The saved end must be 15 minutes before the action, with zero seconds")
+	}
+
+	func testSwitchFromSelectedActivity_preservesConcurrentActivityAndSharesTheBoundary() {
+		let work = ActivityDefinition(name: "Work", autoNote: false)
+		let music = ActivityDefinition(name: "Music", autoNote: false)
+		let lunch = ActivityDefinition(name: "Lunch", autoNote: false)
+		let began = Date().addingTimeInterval(-2 * 60 * 60)
+		seed(activityDefinitions: [work, music, lunch], activities: [
+			.init(work, start: began), .init(music, start: began.addingTimeInterval(60))
+		])
+		tapActivityInstanceAction("backdate or switch \(lunch.name)", for: lunch)
+		app.buttons["Switch from…"].tap()
+		let workChoice = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Work · started ")).firstMatch
+		let musicChoice = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Music · started ")).firstMatch
+		XCTAssertTrue(workChoice.waitForExistence(timeout: 5))
+		XCTAssertTrue(musicChoice.exists, "Concurrent activities must be offered as separate choices")
+		workChoice.tap()
+
+		let earliest = Date()
+		app.buttons["15 minutes ago"].tap()
+		let latest = Date()
+
+		waitForCount(2, in: app.activityIndicators)
+		let table = app.tables["recordActivities"]
+		XCTAssertEqual(table.cells.containing(.staticText, identifier: music.name).element.activityIndicators.count, 1)
+		XCTAssertEqual(table.cells.containing(.staticText, identifier: lunch.name).element.activityIndicators.count, 1)
+		XCTAssertEqual(table.cells.containing(.staticText, identifier: work.name).element.activityIndicators.count, 0)
+
+		tapActivityInstanceAction("✎ Last", for: work)
+		let stoppedAt = app.tables.cells.staticTexts["end date"].value as? String
+		XCTAssertTrue(backdatedMinuteStrings(minutes: 15, earliest: earliest, latest: latest).contains(stoppedAt ?? ""))
+		app.navigationBars.buttons["Activities"].tap()
+		tapActivityInstanceAction("✎ Last", for: lunch)
+		XCTAssertEqual(app.tables.cells.staticTexts["start date"].value as? String, stoppedAt,
+			"The selected source ends exactly when the replacement starts")
+	}
+
 	func testChangingActivityDefinitionWhileEditingLastActivity_updatesUI() {
 		// given
 		let definition = ActivityDefinition(name: "fjhwi")
@@ -691,6 +762,28 @@ final class RecordActivitiesUITests: UITest {
 	}
 
 	// MARK: - Helper Functions
+
+	private func tapActivityInstanceAction(_ title: String, for definition: ActivityDefinition,
+		file: StaticString = #file, line: UInt = #line) {
+		let table = app.tables["recordActivities"]
+		let rows = table.cells.containing(.staticText, identifier: definition.name)
+		waitForCount(1, in: rows, file: file, line: line)
+		let row = rows.element
+		let start = row.coordinate(withNormalizedOffset: CGVector(dx: 0.85, dy: 0.5))
+		let end = row.coordinate(withNormalizedOffset: CGVector(dx: 0.25, dy: 0.5))
+		start.press(forDuration: 0.05, thenDragTo: end)
+		let action = table.buttons[title]
+		XCTAssertTrue(action.waitForExistence(timeout: 5), "Missing activity action \(title)", file: file, line: line)
+		action.tap()
+	}
+
+	private func backdatedMinuteStrings(minutes: Int, earliest: Date, latest: Date) -> Set<String> {
+		let calendar = Calendar.autoupdatingCurrent
+		return Set(wholeSecondDates(from: earliest, to: latest).map { date in
+			let shifted = calendar.date(byAdding: .minute, value: -minutes, to: date)!
+			return editActivityDateString(for: calendar.dateInterval(of: .minute, for: shifted)!.start)
+		})
+	}
 
 	private final func assertRecordedDuration(in interval: ClosedRange<TimeInterval>, file: StaticString = #file, line: UInt = #line) {
 		let possible = (Int(interval.lowerBound)...Int(interval.upperBound)).map {
