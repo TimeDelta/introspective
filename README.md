@@ -50,6 +50,11 @@ interactive Home/Lock Screen widgets, and choose optional local reminders.
 Everything is processed on-device. See [Mood check-ins](docs/mood-check-ins.md)
 for recording instructions, analytics definitions and reminder scheduling.
 
+### Activity recording
+Keep one-tap start/stop, use **Time / Switch** for backdated recording and
+switching a selected running activity, or add configurable Activity widgets and
+Lock Screen controls. See [Activity recording](docs/activity-recording.md).
+
 ### Custom queries
 Explore your data in a unique way by querying for exactly the records in which you're interested. Specify complex conditions on any attribute for any supported data type by combining them using "and", "or", and condition groups (full boolean algebra support with grouping). Even better, you can limit your query further by looking at other data types within the query. For example, you can find all moods that were recorded within a half hour of socializing.
 

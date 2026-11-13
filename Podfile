@@ -73,6 +73,11 @@ target 'Introspective' do
     inherit! :search_paths
     pod 'SwiftDate', '6.0.3'
   end
+
+  target 'ActivityWidget' do
+    inherit! :search_paths
+    pod 'SwiftDate', '6.0.3'
+  end
 end
 
 # A UI runner is a separate process, not a hosted unit-test bundle.
