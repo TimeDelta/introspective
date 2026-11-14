@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		004CA9C9D5D8F765AFEF57DA /* ActivityQuickRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86461DC90F3B9B3E8F0337D /* ActivityQuickRecorder.swift */; };
 		05DD0D8091C0E629F691EC85 /* HealthExternalRecordReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82D1876E85FDA9F890223AB /* HealthExternalRecordReader.swift */; };
 		05EE468F7D732430A9675A69 /* HealthCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F832C201E0EAEA7509F7D2D /* HealthCatalog.swift */; };
 		3983C8BA7A75603C642372C2 /* MoodTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 908988DE7D50D931BD9B71D0 /* MoodTracking.swift */; };
@@ -16,6 +17,7 @@
 		5C446A57A18AD20881AE82FF /* TimeCoverageSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25137F308E23E99D8421A4EE /* TimeCoverageSummary.swift */; };
 		6CBA46752862A487D1924575 /* ActiveEnergy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C72968A04A278D9F1AB216 /* ActiveEnergy.swift */; };
 		6F92655B529A4B349B64CF72 /* RecordCSVExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946D957102A3495392CE3137 /* RecordCSVExporter.swift */; };
+		752BB0DA050BFA2E95AC92C4 /* ActivityBackdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1631A36D270B5450240BAD5F /* ActivityBackdate.swift */; };
 		7A52E6CEA9C8DEAFE7EC64F9 /* StressCheckIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52A824DD9A19608048A5BDC /* StressCheckIn.swift */; };
 		8AFFFBDDF9D6DA92C52B58EE /* HealthSpecializedDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B7AA762068A830D13C1B23 /* HealthSpecializedDetails.swift */; };
 		92ADCC5940AB9038722A1C10 /* HealthSpecializedSeriesReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50DE1524DC6AB777915AF04 /* HealthSpecializedSeriesReader.swift */; };
@@ -80,6 +82,7 @@
 		A2DEB93C23439F4800551E0B /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2DEB93B23439F4800551E0B /* Persistence.framework */; };
 		A2E30FCD2736DB27004D0A60 /* Steps.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E30FCC2736DB27004D0A60 /* Steps.swift */; };
 		B2E4B39E5FD75B575B22E284 /* HealthCatalogSamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF14BF19D8E822C9D467B511 /* HealthCatalogSamples.swift */; };
+		BC5AD1238A3080EAD8E802FF /* ActivityWidgetRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99C812D7A90F94E939ACC19E /* ActivityWidgetRefresh.swift */; };
 		D965E6C4E68635A121CEC18D /* Pods_Samples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FD9205055C3D47CACA310F2 /* Pods_Samples.framework */; };
 		DCAFB226A05B2931E06EBB14 /* HealthCatalog.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35A33A3C3C6F99E625549C3 /* HealthCatalog.generated.swift */; };
 		E748299A3C0D1EA94FEECCB0 /* LostItemEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAAC731F89AB66BE8320CF9C /* LostItemEvent.swift */; };
@@ -90,6 +93,7 @@
 
 /* Begin PBXFileReference section */
 		0FD9205055C3D47CACA310F2 /* Pods_Samples.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Samples.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1631A36D270B5450240BAD5F /* ActivityBackdate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ActivityBackdate.swift; sourceTree = "<group>"; };
 		25137F308E23E99D8421A4EE /* TimeCoverageSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCoverageSummary.swift; sourceTree = "<group>"; };
 		398DBEC9CC741AD39131D0DA /* Pods-Samples.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Samples.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-Samples/Pods-Samples.debug.xcconfig"; sourceTree = "<group>"; };
 		3A4AE572F858591FB5513F5B /* MetricContextEntry.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MetricContextEntry.swift; sourceTree = "<group>"; };
@@ -100,6 +104,7 @@
 		86C9F901387A002E28284DF2 /* Workout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workout.swift; sourceTree = "<group>"; };
 		908988DE7D50D931BD9B71D0 /* MoodTracking.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MoodTracking.swift; sourceTree = "<group>"; };
 		946D957102A3495392CE3137 /* RecordCSVExporter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RecordCSVExporter.swift; sourceTree = "<group>"; };
+		99C812D7A90F94E939ACC19E /* ActivityWidgetRefresh.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ActivityWidgetRefresh.swift; sourceTree = "<group>"; };
 		9A03171CF18F3FF66913B6CC /* Pods-Samples.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Samples.release.xcconfig"; path = "../Pods/Target Support Files/Pods-Samples/Pods-Samples.release.xcconfig"; sourceTree = "<group>"; };
 		A2034F1624A700F200557F69 /* MoodDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodDAO.swift; sourceTree = "<group>"; };
 		A2034F8024ADB58700557F69 /* TagDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagDAO.swift; sourceTree = "<group>"; };
@@ -173,6 +178,7 @@
 		F5D8D1ECFDC03DD9D718A876 /* HealthExternalReadLifecycle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HealthExternalReadLifecycle.swift; sourceTree = "<group>"; };
 		F7B7AA762068A830D13C1B23 /* HealthSpecializedDetails.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HealthSpecializedDetails.swift; sourceTree = "<group>"; };
 		F82D1876E85FDA9F890223AB /* HealthExternalRecordReader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HealthExternalRecordReader.swift; sourceTree = "<group>"; };
+		F86461DC90F3B9B3E8F0337D /* ActivityQuickRecorder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ActivityQuickRecorder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -350,6 +356,9 @@
 				CAC2FA5E5B39E34A0D507A3B /* MoodReminderService.swift */,
 				7DA7506DC522BFD936DE4CAC /* StressTrackingStore.swift */,
 				D42FC46BBF09CE5D35B40796 /* StressReminderService.swift */,
+				1631A36D270B5450240BAD5F /* ActivityBackdate.swift */,
+				F86461DC90F3B9B3E8F0337D /* ActivityQuickRecorder.swift */,
+				99C812D7A90F94E939ACC19E /* ActivityWidgetRefresh.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -544,6 +553,9 @@
 				92ADCC5940AB9038722A1C10 /* HealthSpecializedSeriesReader.swift in Sources */,
 				FA359D30387D1C8598D355AD /* HealthExternalReadLifecycle.swift in Sources */,
 				05DD0D8091C0E629F691EC85 /* HealthExternalRecordReader.swift in Sources */,
+				752BB0DA050BFA2E95AC92C4 /* ActivityBackdate.swift in Sources */,
+				004CA9C9D5D8F765AFEF57DA /* ActivityQuickRecorder.swift in Sources */,
+				BC5AD1238A3080EAD8E802FF /* ActivityWidgetRefresh.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

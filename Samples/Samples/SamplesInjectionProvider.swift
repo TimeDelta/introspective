@@ -48,7 +48,7 @@ public class SamplesInjectionProvider: InjectionProvider {
 		TagDAO.self,
 	]
 
-	public init() {}
+	public init() { ActivityWidgetRefresh.startObserving() }
 
 	public final func get<Type>(_ type: Type.Type) throws -> Type {
 		if type == MetricContextExporter.self { return try MetricContextExporter() as! Type }

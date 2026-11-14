@@ -36,6 +36,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	private final var userNotificationDelegate: UserNotificationDelegate!
 	private let moodTracking = MoodTrackingCoordinator()
+	private var activityNoteObserver: NSObjectProtocol?
 
 	override init() {
 		super.init()
@@ -104,6 +105,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		UNUserNotificationCenter.current().delegate = userNotificationDelegate
 		guard !Globals.testing && !Globals.uiTesting else { return true }
 		moodTracking.start()
+		activityNoteObserver = NotificationCenter.default.addObserver(
+			forName: ActivityNoteRouting.notification, object: nil, queue: .main
+		) { [weak self] _ in self?.openPendingActivityNote() }
 
 		let options: UNAuthorizationOptions = [.alert, .sound, .badge]
 		UNUserNotificationCenter.current().requestAuthorization(options: options) { granted, error in
@@ -120,10 +124,17 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	final func application(_ application: UIApplication, open url: URL,
 		options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-		guard url.scheme == "introspective", url.host == "mood-check-in",
+		guard url.scheme == "introspective", ["mood-check-in", "activities"].contains(url.host ?? ""),
 			let tabs = window?.rootViewController as? UITabBarController,
 			let navigation = tabs.viewControllers?.first as? UINavigationController else { return false }
 		tabs.selectedIndex = 0
+		if url.host == "activities" {
+			if !(navigation.topViewController is RecordActivityTableViewController) {
+				let storyboard = UIStoryboard(name: "RecordData", bundle: nil)
+				navigation.pushViewController(storyboard.instantiateViewController(withIdentifier: "activitiesTable"), animated: false)
+			}
+			return true
+		}
 		if !(navigation.topViewController is MoodPresetsViewController) {
 			navigation.pushViewController(MoodPresetsViewController(style: .grouped), animated: false)
 		}
@@ -158,6 +169,31 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 			}
 		}
 		Me.wasInBackground = false
+		if !Globals.testing && !Globals.uiTesting { openPendingActivityNote() }
+	}
+
+	private func openPendingActivityNote() {
+		guard let tabs = window?.rootViewController as? UITabBarController,
+			let navigation = tabs.viewControllers?.first as? UINavigationController,
+			let identifier = ActivityNoteRouting.takePending() else { return }
+		// The intent may have stopped the activity in a separate process.
+		injected(Database.self).refreshContext()
+		let context = injected(Database.self).fetchedResultsController(type: Activity.self,
+			sortDescriptors: [NSSortDescriptor(key: "startDate", ascending: false)]).managedObjectContext
+		guard let url = URL(string: identifier), url.scheme == "x-coredata", url.host?.isEmpty == false,
+			url.path.split(separator: "/").count == 2, url.path.split(separator: "/").first == Substring(Activity.entityName),
+			url.user == nil, url.password == nil, url.port == nil, url.query == nil, url.fragment == nil,
+			let objectID = context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: url),
+			objectID.entity.name == Activity.entityName, !objectID.isTemporaryID,
+			objectID.uriRepresentation().absoluteString == identifier,
+			let activity = try? context.existingObject(with: objectID) as? Activity,
+			!activity.isDeleted else { return }
+		let storyboard = UIStoryboard(name: "RecordData", bundle: nil)
+		guard let editor = storyboard.instantiateViewController(withIdentifier: "editActivity") as? EditActivityTableViewController else { return }
+		tabs.selectedIndex = 0
+		editor.activity = activity
+		editor.autoFocusNote = true
+		navigation.pushViewController(editor, animated: false)
 	}
 
 	final func applicationWillTerminate(_: UIApplication) {

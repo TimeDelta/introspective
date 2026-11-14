@@ -46,7 +46,7 @@ public final class StartActivityXAgoIntentHandler: ActivityIntentHandler<StartAc
 		with completion: @escaping (StartActivityXAgoNumTimeUnitsResolutionResult) -> Void
 	) {
 		Me.log.info("Resolving number of time units")
-		guard let num = intent.numTimeUnits as? Int else {
+		guard let number = intent.numTimeUnits, let num = Int(exactly: number.doubleValue), num >= 0 else {
 			completion(StartActivityXAgoNumTimeUnitsResolutionResult.needsValue())
 			return
 		}
@@ -62,7 +62,7 @@ public final class StartActivityXAgoIntentHandler: ActivityIntentHandler<StartAc
 			completion(INStringResolutionResult.needsValue())
 			return
 		}
-		guard let _ = try? Calendar.Component.from(string: timeUnitString) else {
+		guard (try? ActivityBackdate.unit(named: timeUnitString)) != nil else {
 			completion(INStringResolutionResult.needsValue())
 			return
 		}
@@ -119,6 +119,12 @@ public final class StartActivityXAgoIntentHandler: ActivityIntentHandler<StartAc
 		}
 
 		do {
+			guard let count = Int(exactly: numTimeUnits.doubleValue) else {
+				completion(StartActivityXAgoIntentResponse.failure(error: "Use a whole, nonnegative number of time units."))
+				return
+			}
+			let now = Date()
+			let start = try ActivityBackdate.date(value: count, unit: ActivityBackdate.unit(named: timeUnit), now: now)
 			guard let definition = try injected(ActivityDAO.self).getDefinitionWith(name: activityName)
 			else {
 				Me.log.error("Activity named %{private}@ does not exist.", activityName)
@@ -128,8 +134,6 @@ public final class StartActivityXAgoIntentHandler: ActivityIntentHandler<StartAc
 				)
 				return
 			}
-			let now = Date()
-			let start = try injected(ActivityDAO.self).getMostRecentActivityEndDate() ?? now
 			let activity = try injected(ActivityDAO.self).createActivity(
 				definition: definition,
 				startDate: start,
@@ -143,6 +147,10 @@ public final class StartActivityXAgoIntentHandler: ActivityIntentHandler<StartAc
 			))
 		} catch {
 			Me.log.error("Failed StartActivityXAgoIntentResponse: %@", errorInfo(error))
+			if let message = (error as? LocalizedError)?.errorDescription {
+				completion(StartActivityXAgoIntentResponse.failure(error: message))
+				return
+			}
 			guard let error = error as? DisplayableError else {
 				completion(StartActivityXAgoIntentResponse(code: .failure, userActivity: nil))
 				return
