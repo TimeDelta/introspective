@@ -210,8 +210,13 @@ public enum ActivityQuickRecorder {
 
 	private static func objectID(_ identifier: String, entity: String,
 		coordinator: NSPersistentStoreCoordinator) throws -> NSManagedObjectID {
-		guard let url = URL(string: identifier), let id = coordinator.managedObjectID(forURIRepresentation: url),
-			id.entity.name == entity, !id.isTemporaryID else {
+		// Core Data raises an Objective-C exception for malformed URLs; validate
+		// their shape before calling its resolver so callers receive a Swift error.
+		guard let url = URL(string: identifier), url.scheme == "x-coredata", url.host?.isEmpty == false,
+			url.path.split(separator: "/").count == 2, url.path.split(separator: "/").first == Substring(entity),
+			url.user == nil, url.password == nil, url.port == nil, url.query == nil, url.fragment == nil,
+			let id = coordinator.managedObjectID(forURIRepresentation: url),
+			id.entity.name == entity, !id.isTemporaryID, id.uriRepresentation().absoluteString == identifier else {
 			throw ActivityRecordingError("This activity is no longer available. Open Introspective to choose another.")
 		}
 		return id

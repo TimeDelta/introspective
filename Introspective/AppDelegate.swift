@@ -180,9 +180,12 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		injected(Database.self).refreshContext()
 		let context = injected(Database.self).fetchedResultsController(type: Activity.self,
 			sortDescriptors: [NSSortDescriptor(key: "startDate", ascending: false)]).managedObjectContext
-		guard let url = URL(string: identifier),
+		guard let url = URL(string: identifier), url.scheme == "x-coredata", url.host?.isEmpty == false,
+			url.path.split(separator: "/").count == 2, url.path.split(separator: "/").first == Substring(Activity.entityName),
+			url.user == nil, url.password == nil, url.port == nil, url.query == nil, url.fragment == nil,
 			let objectID = context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: url),
-			objectID.entity.name == Activity.entityName,
+			objectID.entity.name == Activity.entityName, !objectID.isTemporaryID,
+			objectID.uriRepresentation().absoluteString == identifier,
 			let activity = try? context.existingObject(with: objectID) as? Activity,
 			!activity.isDeleted else { return }
 		let storyboard = UIStoryboard(name: "RecordData", bundle: nil)
