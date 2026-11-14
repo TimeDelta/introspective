@@ -556,18 +556,27 @@ class UITest: XCTestCase {
 		}
 	}
 
-	/// Alphabetic software keys exercise the same case/layout transitions as a
-	/// user's taps. Punctuation and non-ASCII characters retain one injected event;
+	/// Alphabetic keys and periods exercise visible keyboard layout transitions.
+	/// Other punctuation and non-ASCII characters retain one injected event;
 	/// their exact prefix is checked by the caller, with no replacement or retry.
 	private func enterCharacter(_ character: Character, into field: XCUIElement) -> Bool {
 		let keyboard = app.keyboards.firstMatch
 		let text = String(character)
 		let isASCIILetter = character.asciiValue.map { (65...90).contains($0) || (97...122).contains($0) } ?? false
-		guard isASCIILetter || character == " " else {
+		guard isASCIILetter || character == " " || character == "." else {
 			field.typeText(text)
 			return true
 		}
 		let key = keyboard.keys[character == " " ? "space" : text]
+		if character == ".", !key.exists {
+			let numbers = keyboard.keys.matching(NSPredicate(format: "identifier == 'more' AND label == 'numbers'")).firstMatch
+			guard waitForHittableElement(numbers) else {
+				attachInputDiagnostics()
+				XCTFail("Software keyboard's numbers layout is not reachable")
+				return false
+			}
+			numbers.tap()
+		}
 		if isASCIILetter {
 			let oppositeCase = text == text.uppercased() ? text.lowercased() : text.uppercased()
 			// Numeric fields can leave the keyboard on its numbers page. Return to
@@ -606,6 +615,11 @@ class UITest: XCTestCase {
 	/// keys and the input accessory toolbar. Never accept an unrelated Continue.
 	@discardableResult
 	final func dismissKeyboardIntroductionIfPresent(file: StaticString = #file, line: UInt = #line) -> Bool {
+		// A reachable software key means the tutorial is not blocking input.
+		// Avoid a whole-app overlay lookup on every focus when input is ready.
+		let keyboard = app.keyboards.firstMatch
+		let firstKey = keyboard.keys.firstMatch
+		if keyboard.exists && firstKey.exists && firstKey.isHittable { return true }
 		let introduction = app.otherElements["UIContinuousPathIntroductionView"]
 		guard introduction.exists else { return true }
 		let continueButton = introduction.buttons["Continue"]
