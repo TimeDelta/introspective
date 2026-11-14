@@ -250,7 +250,13 @@ final class ActivityQuickRecorderTests: XCTestCase {
 		for boundary in invalidTimes {
 			XCTAssertThrowsError(try ActivityQuickRecorder.switchActivity(from: sourceID, to: id(lunch), at: boundary, recordedAt: now))
 		}
-		for target in ["not-an-object-id", sourceID] {
+		let targetID = id(lunch)
+		var foreign = try XCTUnwrap(URLComponents(string: targetID))
+		foreign.host = UUID().uuidString
+		for target in ["", "not-an-object-id", "https://example.com/ActivityDefinition/p1",
+			"x-coredata://missing-path", targetID + "?unexpected=true", targetID + "#unexpected",
+			targetID.replacingOccurrences(of: "x-coredata:", with: "X-COREDATA:"),
+			try XCTUnwrap(foreign.string), sourceID] {
 			XCTAssertThrowsError(try ActivityQuickRecorder.switchActivity(from: sourceID, to: target, at: now, recordedAt: now))
 		}
 		let values = try storedActivities()
