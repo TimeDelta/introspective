@@ -780,9 +780,26 @@ class UITest: XCTestCase {
 		setTextFor(field: app.tables.textFields["activity name"], to: definition.name)
 		if let autoNote = definition.autoNote {
 			let control = activityDefinitionAutoNoteField()
+			guard waitForHittableElement(control) else {
+				attachInputDiagnostics()
+				XCTFail("The activity auto-note switch is not reachable")
+				return
+			}
 			let currentlyEnabled = control.value as? String == "1"
 			if currentlyEnabled != autoNote {
-				control.tap()
+				let frame = control.frame
+				let keyboard = app.keyboards.firstMatch
+				guard frame.width > 0, frame.height > 0, app.frame.contains(frame),
+					!keyboard.exists || !frame.intersects(keyboard.frame) else {
+					attachInputDiagnostics()
+					XCTFail("The activity auto-note switch's track is not visible")
+					return
+				}
+				// Move the actual thumb once to the requested side of its track.
+				// Keep keyboard focus and the existing exact-state assertion below.
+				let thumb = control.coordinate(withNormalizedOffset: CGVector(dx: currentlyEnabled ? 0.8 : 0.2, dy: 0.5))
+				let destination = control.coordinate(withNormalizedOffset: CGVector(dx: autoNote ? 0.8 : 0.2, dy: 0.5))
+				thumb.press(forDuration: 0.2, thenDragTo: destination)
 			}
 			let expected = autoNote ? "1" : "0"
 			let changed = NSPredicate { _, _ in control.value as? String == expected }
