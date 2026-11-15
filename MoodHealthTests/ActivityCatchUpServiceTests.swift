@@ -306,13 +306,13 @@ final class ActivityCatchUpServiceTests: XCTestCase {
 		let descriptor = Darwin.open(directory.appendingPathComponent("activity-recording.lock").path,
 			O_CREAT | O_RDWR | O_CLOEXEC, S_IRUSR | S_IWUSR)
 		guard descriptor >= 0 else { XCTFail("Could not open the independent writer lock"); return }
-		defer { _ = Darwin.flock(descriptor, LOCK_UN); _ = Darwin.close(descriptor) }
-		XCTAssertEqual(Darwin.flock(descriptor, LOCK_EX | LOCK_NB), 0)
+		defer { _ = flock(descriptor, LOCK_UN); _ = Darwin.close(descriptor) }
+		XCTAssertEqual(flock(descriptor, LOCK_EX | LOCK_NB), 0)
 		XCTAssertThrowsError(try ActivityCatchUpService.recordGap(definitionID: id(work), from: at(10), to: at(11), recordedAt: now)) { error in
 			XCTAssertTrue(error is ActivityRecordingError)
 		}
 		XCTAssertTrue(try storedActivities().isEmpty)
-		XCTAssertEqual(Darwin.flock(descriptor, LOCK_UN), 0)
+		XCTAssertEqual(flock(descriptor, LOCK_UN), 0)
 		let result = try ActivityCatchUpService.recordGap(definitionID: id(work), from: at(10), to: at(11), recordedAt: now)
 		XCTAssertTrue(result.didChange); XCTAssertEqual(try storedActivities().count, 1)
 	}
