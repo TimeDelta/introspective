@@ -78,6 +78,15 @@ The form checks for newly recorded overlaps before saving and leaves existing
 records unchanged. Short explicit catch-up records are retained even when
 automatic short-activity ignoring is enabled; Auto-Note still applies.
 
+The activity chooser puts **Around this gap** and **Recent** above **All activities**.
+Around this gap shows activities ending exactly at the gap's start or beginning
+exactly at its end. An activity on both sides appears once with both labels;
+overlapping neighbors can each appear. Recent offers up to five other activities
+in order of their most recent recorded start, using the current saved names.
+Searching covers the full list. These choices are suggestions: selecting one
+sets the activity in the form, and you still tap Save to record it. Selection
+leaves both interval timestamps unchanged.
+
 Overlapping activities remain separate entries. Gap calculations use their
 combined coverage, respect local calendar days and daylight-saving changes,
 and stop at now when reviewing today. A complete day is optional.
@@ -113,15 +122,18 @@ daylight-saving transitions and days without a midnight.
 `ActivityQuickRecorderTests` exercises SQLite persistence, atomic switching,
 concurrent activities, stale buttons, auto-ignore and auto-note, timestamp and
 source preservation, legacy display-time conversion, and save-failure rollback.
-Run `python3 scripts/test-activity-day-review.py` for the actual day model and
-persisted notification routes, and `python3 scripts/test-activity-reminders.py`
-for the reminder preferences and one-prompt planning rules. These scripts share
+Run `python3 scripts/test-activity-day-review.py` for the actual day model,
+contextual gap choices and persisted notification routes, and
+`python3 scripts/test-activity-reminders.py` for the reminder preferences and
+one-prompt planning rules. These scripts share
 their production sources and test cases with native CI.
 
 Native SQLite tests also exercise fresh gap checks, exact neighbor timestamps,
-pending edits, reminder actions, scheduling races and authorization settings.
-The UI suite covers filling a gap, ending one of several running timers, and
-reviewing overlaps. Native and UI tests require macOS/iOS. Physical widget,
+pending edits, fresh neighbor choices and recent ordering, reminder actions,
+scheduling races and authorization settings. The UI suite covers filling a gap,
+explicit contextual selection, searching all activities, ending one of several
+running timers, and reviewing overlaps. Native and UI tests require macOS/iOS.
+Physical widget,
 Lock Screen, cold-launch and notification checks remain **not executed** in the
 Linux workspace; use the [device smoke procedure](activity-widget-device-check.md)
 and record results against the installed build.

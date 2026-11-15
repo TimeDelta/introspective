@@ -11,6 +11,76 @@ final class ActivityCatchUpUITests: UITest {
 
 	override func openInitialScreen() { openActivitiesScreen() }
 
+	func testNeighborChoicesRequireSaveAndKeepTheGapBoundaries() {
+		let fixture = seedGapChoices()
+		openReview()
+		tapReviewRow(rows("activityReviewGap.").firstMatch)
+		let editor = app.tables["activityGapEditor"]
+		XCTAssertTrue(waitForElement(editor))
+		XCTAssertFalse(app.navigationBars["Record Past Activity"].buttons["Save"].isEnabled)
+		editor.cells["activityGapDefinition"].tap()
+
+		let before = choice("neighbor", named: fixture.before.name)
+		let after = choice("neighbor", named: fixture.after.name)
+		XCTAssertTrue(waitForElement(before))
+		waitForCount(2, in: choiceRows("neighbor"))
+		XCTAssertTrue(before.staticTexts["Before this gap"].exists)
+		XCTAssertTrue(after.staticTexts["After this gap"].exists)
+		before.tap()
+
+		XCTAssertTrue(waitForElement(editor))
+		XCTAssertTrue(editor.cells["activityGapDefinition"].staticTexts[fixture.before.name].exists)
+		XCTAssertTrue(editor.cells["activityGapStart"].staticTexts[dateString(fixture.start)].exists)
+		XCTAssertTrue(editor.cells["activityGapEnd"].staticTexts[dateString(fixture.end)].exists)
+		XCTAssertTrue(app.navigationBars["Record Past Activity"].buttons["Save"].isEnabled)
+		// Choosing a neighbor only fills the form. Leave without Save and verify
+		// both original records and the unrecorded interval remain.
+		app.navigationBars["Record Past Activity"].buttons.element(boundBy: 0).tap()
+		XCTAssertTrue(waitForElement(review))
+		waitForCount(1, in: rows("activityReviewGap."))
+		waitForCount(2, in: rows("activityReviewRecord."))
+	}
+
+	func testRecentChoicesDeduplicateAndSearchStillFindsAnUnusedActivity() {
+		let fixture = seedGapChoices()
+		openReview()
+		tapReviewRow(rows("activityReviewGap.").firstMatch)
+		let editor = app.tables["activityGapEditor"]
+		XCTAssertTrue(waitForElement(editor))
+		editor.cells["activityGapDefinition"].tap()
+		let chooser = app.tables["activityGapDefinitions"]
+		XCTAssertTrue(waitForElement(chooser))
+		// Two saved uses produce one Recent row. Neighbor suggestions already
+		// have their own context, so neither is repeated in this section.
+		waitForCount(1, in: choiceRows("recent"))
+		XCTAssertFalse(choice("recent", named: fixture.before.name).exists)
+		XCTAssertFalse(choice("recent", named: fixture.after.name).exists)
+		choice("recent", named: fixture.recent.name).tap()
+		XCTAssertTrue(waitForElement(editor))
+		XCTAssertTrue(editor.cells["activityGapDefinition"].staticTexts[fixture.recent.name].exists)
+
+		editor.cells["activityGapDefinition"].tap()
+		XCTAssertTrue(waitForElement(chooser))
+		chooser.swipeDown()
+		let search = app.searchFields.firstMatch
+		XCTAssertTrue(waitForHittableElement(search))
+		search.tap(); search.typeText("un")
+		waitForCount(1, in: choiceRows("all"))
+		waitForCount(0, in: choiceRows("neighbor"))
+		waitForCount(0, in: choiceRows("recent"))
+		choice("all", named: fixture.unused.name).tap()
+		XCTAssertTrue(waitForElement(editor))
+		XCTAssertTrue(editor.cells["activityGapDefinition"].staticTexts[fixture.unused.name].exists)
+		app.navigationBars["Record Past Activity"].buttons["Save"].tap()
+
+		XCTAssertTrue(waitForElement(review))
+		waitForCount(0, in: rows("activityReviewGap."))
+		waitForCount(3, in: rows("activityReviewRecord."))
+		tapReviewRow(record(named: fixture.unused.name))
+		waitForValue(dateString(fixture.start), of: app.tables.cells.staticTexts["start date"])
+		waitForValue(dateString(fixture.end), of: app.tables.cells.staticTexts["end date"])
+	}
+
 	func testFillingUnknownInterval_preservesExactNeighborTimes() {
 		let day = yesterday
 		let nextDay = calendar.date(byAdding: .day, value: 1, to: day)!
@@ -116,6 +186,28 @@ final class ActivityCatchUpUITests: UITest {
 	private func openReview() {
 		app.navigationBars.buttons["Review activities"].tap()
 		XCTAssertTrue(waitForElement(review))
+	}
+	private func seedGapChoices() -> (start: Date, end: Date, before: ActivityDefinition,
+		after: ActivityDefinition, recent: ActivityDefinition, unused: ActivityDefinition) {
+		let day = yesterday, today = calendar.date(byAdding: .day, value: 1, to: day)!
+		let start = time(9, 10, 17, on: day).addingTimeInterval(0.125)
+		let end = time(9, 30, 27, on: day).addingTimeInterval(0.875)
+		let before = ActivityDefinition(name: "Before", autoNote: false)
+		let after = ActivityDefinition(name: "After", autoNote: false)
+		let recent = ActivityDefinition(name: "Recent", autoNote: false)
+		let unused = ActivityDefinition(name: "Unused", autoNote: false)
+		let recordedAt = Date()
+		seed(activityDefinitions: [before, after, recent, unused], activities: [
+			.init(before, start: day, end: start), .init(after, start: end, end: today),
+			.init(recent, start: today, end: recordedAt), .init(recent, start: today, end: recordedAt),
+		])
+		return (start, end, before, after, recent, unused)
+	}
+	private func choiceRows(_ kind: String) -> XCUIElementQuery {
+		app.tables["activityGapDefinitions"].cells.matching(NSPredicate(format: "identifier BEGINSWITH %@", "activityGapChoice.\(kind)."))
+	}
+	private func choice(_ kind: String, named name: String) -> XCUIElement {
+		choiceRows(kind).containing(.staticText, identifier: name).firstMatch
 	}
 	private func rows(_ prefix: String) -> XCUIElementQuery {
 		review.cells.matching(NSPredicate(format: "identifier BEGINSWITH %@", prefix))

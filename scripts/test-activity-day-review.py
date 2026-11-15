@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the production activity-day model/routing and native XCTest cases with SwiftPM."""
+"""Run production activity-day models/routing and native XCTest cases with SwiftPM."""
 from pathlib import Path
 import os
 import shutil
@@ -23,6 +23,7 @@ def main():
         for name in ("ActivityDayReview", "ActivityCatchUpRouting"):
             shutil.copy2(ROOT / f"Common/Common/Utils/{name}.swift", build / f"Common/{name}.swift")
             shutil.copy2(ROOT / f"MoodHealthTests/{name}Tests.swift", build / f"Tests/{name}Tests.swift")
+        shutil.copy2(ROOT / "MoodHealthTests/ActivityGapChoicesTests.swift", build / "Tests/ActivityGapChoicesTests.swift")
         (build / "Package.swift").write_text('''// swift-tools-version: 5.9
 import PackageDescription
 let package = Package(name: "ActivityDayReviewValidation", platforms: [.macOS(.v13)], targets: [

@@ -42,7 +42,7 @@ final class ActivityCatchUpServiceTests: XCTestCase {
 	private var now: Date { day.addingTimeInterval(86400 + 12 * 3600 + 0.875) }
 	private var calendar: Calendar { var value = Calendar(identifier: .gregorian); value.timeZone = TimeZone(secondsFromGMT: 0)!; return value }
 
-	private struct StoredActivity {
+	private struct StoredActivity: Equatable {
 		let id: String
 		let definitionID: String
 		let start: Date
@@ -315,5 +315,106 @@ final class ActivityCatchUpServiceTests: XCTestCase {
 		XCTAssertEqual(flock(descriptor, LOCK_UN), 0)
 		let result = try ActivityCatchUpService.recordGap(definitionID: id(work), from: at(10), to: at(11), recordedAt: now)
 		XCTAssertTrue(result.didChange); XCTAssertEqual(try storedActivities().count, 1)
+	}
+
+	func testGapChoicesUseExactRawNeighborsAcrossDayBoundariesAndCombineBothSides() throws {
+		let reading = try definition("Reading", order: 2), music = try definition("Music", order: 0)
+		let walk = try definition("Walk", order: 1)
+		let interval = DateInterval(start: day, end: at(1).addingTimeInterval(27.875))
+		_ = try activity(reading, from: at(-2).addingTimeInterval(0.125), to: interval.start)
+		_ = try activity(reading, from: at(-1), to: interval.start)
+		_ = try activity(reading, from: interval.end, to: at(3))
+		_ = try activity(music, from: interval.end, to: at(4))
+		_ = try activity(walk, from: at(30), to: at(31), note: "Keep the completed record")
+		let before = try storedActivities().sorted { $0.id < $1.id }
+		DependencyInjector.register([CatchUpDisplayShift()])
+
+		let result = try ActivityCatchUpService.choices(for: interval, asOf: now)
+		XCTAssertEqual(result.definitions.map(\.id), [id(music), id(walk), id(reading)])
+		XCTAssertEqual(result.choices.neighbors, [
+			ActivityGapNeighbor(definitionID: id(music), before: false, after: true),
+			ActivityGapNeighbor(definitionID: id(reading), before: true, after: true),
+		])
+		XCTAssertEqual(result.choices.recentDefinitionIDs, [id(walk)])
+		XCTAssertEqual(try storedActivities().sorted { $0.id < $1.id }, before)
+	}
+
+	func testGapChoicesRankUniqueGlobalRecentsBeyondRepeatedRowsAndIgnoreInvalidOrFutureRecords() throws {
+		let first = try definition("First"), second = try definition("Second")
+		let third = try definition("Third"), fourth = try definition("Fourth")
+		let fifth = try definition("Fifth"), sixth = try definition("Sixth")
+		let invalid = try definition("Invalid"), unused = try definition("Unused")
+		for index in 0..<60 {
+			let start = now.addingTimeInterval(-200 + TimeInterval(index))
+			_ = try activity(first, from: start, to: start.addingTimeInterval(0.125))
+		}
+		for (index, value) in [second, third, fourth, fifth, sixth].enumerated() {
+			let start = now.addingTimeInterval(-300 - TimeInterval(index * 60))
+			_ = try activity(value, from: start, to: start.addingTimeInterval(0.875))
+		}
+		_ = try activity(invalid, from: now.addingTimeInterval(1))
+		_ = try activity(invalid, from: now.addingTimeInterval(-1), to: now.addingTimeInterval(1))
+		_ = try activity(invalid, from: now.addingTimeInterval(-2), to: now.addingTimeInterval(-2))
+		_ = try activity(invalid, from: now.addingTimeInterval(-3), to: now.addingTimeInterval(-4))
+		let before = try storedActivities().sorted { $0.id < $1.id }
+
+		let result = try ActivityCatchUpService.choices(for: DateInterval(start: at(9), end: at(10)), asOf: now)
+		XCTAssertTrue(result.choices.neighbors.isEmpty)
+		XCTAssertEqual(result.choices.recentDefinitionIDs, [id(first), id(second), id(third), id(fourth), id(fifth)])
+		XCTAssertTrue(result.definitions.contains { $0.id == id(unused) })
+		XCTAssertEqual(try storedActivities().sorted { $0.id < $1.id }, before)
+	}
+
+	func testGapChoicesResolveEqualRecentDatesByCurrentDefinitionOrder() throws {
+		let laterInList = try definition("Later in list", order: 1), earlierInList = try definition("Earlier in list", order: 0)
+		let start = at(25).addingTimeInterval(0.125)
+		_ = try activity(laterInList, from: start, to: at(26))
+		_ = try activity(earlierInList, from: start, to: at(27))
+		let result = try ActivityCatchUpService.choices(for: DateInterval(start: at(9), end: at(10)), asOf: now)
+		XCTAssertEqual(result.choices.recentDefinitionIDs, [id(earlierInList), id(laterInList)])
+	}
+
+	func testGapChoicesRefreshRenamedAndDeletedDefinitionsInsteadOfRetainingOldSelections() throws {
+		let original = try definition("Original"), other = try definition("Other")
+		let originalID = id(original), otherID = id(other)
+		_ = try activity(original, from: at(8), to: at(9))
+		_ = try activity(other, from: at(25), to: at(26))
+		let interval = DateInterval(start: at(9), end: at(10))
+		let first = try ActivityCatchUpService.choices(for: interval, asOf: now)
+		XCTAssertEqual(first.choices.neighbors.map(\.definitionID), [originalID])
+		original.name = "Renamed"; try container.viewContext.save()
+		let renamed = try ActivityCatchUpService.choices(for: interval, asOf: now)
+		XCTAssertEqual(renamed.definitions.first { $0.id == originalID }?.name, "Renamed")
+		container.viewContext.delete(original); try container.viewContext.save()
+		let deleted = try ActivityCatchUpService.choices(for: interval, asOf: now)
+		XCTAssertFalse(deleted.definitions.contains { $0.id == originalID })
+		XCTAssertTrue(deleted.choices.neighbors.isEmpty)
+		XCTAssertEqual(deleted.choices.recentDefinitionIDs, [otherID])
+		XCTAssertEqual(first.definitions.first { $0.id == originalID }?.name, "Original", "Earlier chooser values stay immutable")
+	}
+
+	func testGapChoicesLeavePendingRootEditsUnsavedAndReadThePersistedNamesAndBoundaries() throws {
+		let work = try definition("Saved name"), saved = try activity(work, from: at(8), to: at(9), note: "Saved note")
+		let workID = id(work), before = try storedActivities()
+		work.name = "Pending name"; saved.note = "Pending note"; saved.end = at(9.5)
+		let tag = Tag(entity: try entity(Tag.entityName), insertInto: container.viewContext); tag.name = "Pending tag"
+
+		let result = try ActivityCatchUpService.choices(for: DateInterval(start: at(9), end: at(10)), asOf: now)
+		XCTAssertEqual(result.definitions.first { $0.id == workID }?.name, "Saved name")
+		XCTAssertEqual(result.choices.neighbors, [ActivityGapNeighbor(definitionID: workID, before: true, after: false)])
+		XCTAssertEqual(work.name, "Pending name"); XCTAssertEqual(saved.note, "Pending note"); XCTAssertEqual(saved.storedEndDate, at(9.5))
+		XCTAssertTrue(tag.isInserted); XCTAssertTrue(container.viewContext.hasChanges)
+		XCTAssertEqual(try storedActivities(), before)
+	}
+
+	func testGapChoicesHandleAnEmptyStoreAndRejectInvalidIntervalsWithoutMutation() throws {
+		let result = try ActivityCatchUpService.choices(for: DateInterval(start: at(9), end: at(10)), asOf: now)
+		XCTAssertTrue(result.definitions.isEmpty); XCTAssertTrue(result.choices.neighbors.isEmpty)
+		XCTAssertTrue(result.choices.recentDefinitionIDs.isEmpty)
+		XCTAssertThrowsError(try ActivityCatchUpService.choices(for: DateInterval(start: at(9), end: at(9)), asOf: now))
+		XCTAssertThrowsError(try ActivityCatchUpService.choices(for: DateInterval(start: at(9), end: now.addingTimeInterval(1)), asOf: now))
+		XCTAssertThrowsError(try ActivityCatchUpService.choices(for: DateInterval(start: at(9), end: at(10)),
+			asOf: Date(timeIntervalSinceReferenceDate: .infinity)))
+		XCTAssertFalse(container.viewContext.hasChanges); XCTAssertTrue(try storedActivities().isEmpty)
 	}
 }
