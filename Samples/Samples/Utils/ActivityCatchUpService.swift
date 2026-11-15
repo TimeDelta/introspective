@@ -15,6 +15,14 @@ public struct ActivityCatchUpSnapshot: Equatable {
 	}
 }
 
+public struct ActivityGapChoiceSnapshot: Equatable {
+	public let definitions: [ActivityRecordingDefinition]
+	public let choices: ActivityGapChoices
+	public init(definitions: [ActivityRecordingDefinition], choices: ActivityGapChoices) {
+		self.definitions = definitions; self.choices = choices
+	}
+}
+
 /// Call on the main queue. Snapshots contain values, while editors receive root-context objects.
 public enum ActivityCatchUpService {
 	public static func loadDay(_ day: Date, asOf: Date = Date(),
@@ -41,6 +49,57 @@ public enum ActivityCatchUpService {
 					ActivityRecordingItem(id: identifier($0), definitionID: identifier($0.definition),
 						name: $0.definition.name, start: $0.storedStartDate)
 				})
+		}
+	}
+
+	/// Read current names and identities when the chooser opens. Suggestions never
+	/// save pending editor changes or infer an activity for the user.
+	public static func choices(for interval: DateInterval, asOf: Date = Date()) throws -> ActivityGapChoiceSnapshot {
+		_ = try ActivityGapChoices(interval: interval, records: [], availableDefinitionIDs: [],
+			recentDefinitionIDs: [], asOf: asOf)
+		return try ActivityQuickRecorder.read { context, _ in
+			let definitionRequest = ActivityDefinition.fetchRequest()
+			definitionRequest.sortDescriptors = [NSSortDescriptor(key: "recordScreenIndex", ascending: true),
+				NSSortDescriptor(key: "name", ascending: true)]
+			let definitions = try context.fetch(definitionRequest).map {
+				ActivityRecordingDefinition(id: identifier($0), name: $0.name)
+			}
+			let boundaryRequest = Activity.fetchRequest()
+			boundaryRequest.predicate = NSPredicate(format:
+				"definition != nil AND (endDate == %@ OR startDate == %@) AND startDate <= %@ AND (endDate == nil OR (endDate > startDate AND endDate <= %@))",
+				interval.start as NSDate, interval.end as NSDate, asOf as NSDate, asOf as NSDate)
+			let records = try context.fetch(boundaryRequest).map {
+				ActivityReviewRecord(id: identifier($0), definitionID: identifier($0.definition), name: $0.definition.name,
+					start: $0.storedStartDate, end: $0.storedEndDate)
+			}
+
+			// Aggregate in SQLite: one scalar row per used definition, even after
+			// years of repeated recordings. Do not hydrate the full activity history.
+			let latestStart = NSExpressionDescription()
+			latestStart.name = "lastStarted"
+			latestStart.expression = NSExpression(forFunction: "max:", arguments: [NSExpression(forKeyPath: "startDate")])
+			latestStart.expressionResultType = .dateAttributeType
+			let recentRequest = NSFetchRequest<NSDictionary>(entityName: Activity.entityName)
+			recentRequest.resultType = .dictionaryResultType
+			recentRequest.includesPendingChanges = false
+			recentRequest.propertiesToFetch = ["definition", latestStart]
+			recentRequest.propertiesToGroupBy = ["definition"]
+			recentRequest.predicate = NSPredicate(format:
+				"definition != nil AND startDate <= %@ AND (endDate == nil OR (endDate > startDate AND endDate <= %@))", asOf as NSDate, asOf as NSDate)
+			var latestByDefinition: [String: Date] = [:]
+			for row in try context.fetch(recentRequest) {
+				guard let objectID = row["definition"] as? NSManagedObjectID, let date = row["lastStarted"] as? Date else {
+					throw ActivityRecordingError("Could not load recent activities. Try opening the chooser again.")
+				}
+				latestByDefinition[objectID.uriRepresentation().absoluteString] = date
+			}
+			let recentIDs = definitions.enumerated().compactMap { index, definition -> (id: String, date: Date, order: Int)? in
+				guard let date = latestByDefinition[definition.id] else { return nil }
+				return (definition.id, date, index)
+			}.sorted { $0.date == $1.date ? $0.order < $1.order : $0.date > $1.date }.map { $0.id }
+			return ActivityGapChoiceSnapshot(definitions: definitions,
+				choices: try ActivityGapChoices(interval: interval, records: records,
+					availableDefinitionIDs: definitions.map { $0.id }, recentDefinitionIDs: recentIDs, asOf: asOf))
 		}
 	}
 

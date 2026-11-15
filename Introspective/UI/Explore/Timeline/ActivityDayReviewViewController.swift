@@ -308,11 +308,20 @@ private final class ActivityGapRecordViewController: UITableViewController {
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: false)
 		if indexPath.row == 0 {
-			guard !definitions.isEmpty else { showError(title: "No activities available", message: "Create an activity in Record → Activities first."); return }
-			let chooser = ActivityReviewDefinitionChooser(definitions: definitions) { [weak self] selected in
-				self?.definition = selected; self?.tableView.reloadData(); self?.updateSave()
+			do {
+				let context = try ActivityCatchUpService.choices(for: interval)
+				let selectedID = definition?.id
+				definitions = context.definitions
+				definition = definitions.first { $0.id == selectedID }
+				tableView.reloadData(); updateSave()
+				guard !definitions.isEmpty else { showError(title: "No activities available", message: "Create an activity in Record → Activities first."); return }
+				let chooser = ActivityReviewDefinitionChooser(context: context, selectedID: definition?.id) { [weak self] selected in
+					self?.definition = selected; self?.tableView.reloadData(); self?.updateSave()
+				}
+				navigationController?.pushViewController(chooser, animated: true)
+			} catch {
+				showError(title: "Could not load activity choices", error: error)
 			}
-			navigationController?.pushViewController(chooser, animated: true)
 		} else {
 			let changesStart = indexPath.row == 1
 			dateSelection.present(initial: changesStart ? start : end, minimum: changesStart ? interval.start : start,
@@ -348,14 +357,43 @@ private final class ActivityGapRecordViewController: UITableViewController {
 }
 
 private final class ActivityReviewDefinitionChooser: UITableViewController, UISearchResultsUpdating {
-	private let definitions: [ActivityRecordingDefinition]
-	private var shown: [ActivityRecordingDefinition]
+	private struct Choice {
+		let definition: ActivityRecordingDefinition
+		let detail: String?
+		let kind: String
+	}
+	private struct Section {
+		let title: String
+		let rows: [Choice]
+	}
+	private let sections: [Section]
+	private let all: [Choice]
+	private var shown: [Section]
+	private let selectedID: String?
 	private let choose: (ActivityRecordingDefinition) -> Void
 	private let search = UISearchController(searchResultsController: nil)
-	init(definitions: [ActivityRecordingDefinition], choose: @escaping (ActivityRecordingDefinition) -> Void) {
-		self.definitions = definitions; shown = definitions; self.choose = choose; super.init(style: .insetGrouped)
+	init(context: ActivityGapChoiceSnapshot, selectedID: String?, choose: @escaping (ActivityRecordingDefinition) -> Void) {
+		let definitions = Dictionary(uniqueKeysWithValues: context.definitions.map { ($0.id, $0) })
+		let nearby = context.choices.neighbors.compactMap { neighbor -> Choice? in
+			guard let definition = definitions[neighbor.definitionID] else { return nil }
+			let detail = neighbor.before && neighbor.after ? "Before and after this gap" :
+				(neighbor.before ? "Before this gap" : "After this gap")
+			return Choice(definition: definition, detail: detail, kind: "neighbor")
+		}
+		let recent = context.choices.recentDefinitionIDs.compactMap { id -> Choice? in
+			guard let definition = definitions[id] else { return nil }
+			return Choice(definition: definition, detail: nil, kind: "recent")
+		}
+		let all = context.definitions.map { Choice(definition: $0, detail: nil, kind: "all") }
+		var sections: [Section] = []
+		if !nearby.isEmpty { sections.append(Section(title: "Around this gap", rows: nearby)) }
+		if !recent.isEmpty { sections.append(Section(title: "Recent", rows: recent)) }
+		sections.append(Section(title: "All activities", rows: all))
+		self.sections = sections; self.all = all; shown = sections
+		self.selectedID = selectedID; self.choose = choose
+		super.init(style: .insetGrouped)
 	}
-	required init?(coder: NSCoder) { fatalError("Use init(definitions:choose:)") }
+	required init?(coder: NSCoder) { fatalError("Use init(context:selectedID:choose:)") }
 	override func viewDidLoad() {
 		super.viewDidLoad(); title = "Choose Activity"; tableView.accessibilityIdentifier = "activityGapDefinitions"
 		tableView.rowHeight = UITableView.automaticDimension; tableView.estimatedRowHeight = 44
@@ -363,21 +401,33 @@ private final class ActivityReviewDefinitionChooser: UITableViewController, UISe
 		navigationItem.searchController = search; definesPresentationContext = true
 	}
 	func updateSearchResults(for searchController: UISearchController) {
-		let query = searchController.searchBar.text ?? ""
-		shown = query.isEmpty ? definitions : definitions.filter { $0.name.localizedCaseInsensitiveContains(query) }
+		let query = (searchController.searchBar.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+		shown = query.isEmpty ? sections : [Section(title: "All activities", rows:
+			all.filter { $0.definition.name.localizedCaseInsensitiveContains(query) })]
 		tableView.reloadData()
 	}
-	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { shown.count }
+	override func numberOfSections(in tableView: UITableView) -> Int { shown.count }
+	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { shown[section].rows.count }
+	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? { shown[section].title }
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
-		cell.textLabel?.text = shown[indexPath.row].name
+		let choice = shown[indexPath.section].rows[indexPath.row]
+		let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
+		cell.textLabel?.text = choice.definition.name
+		cell.detailTextLabel?.text = choice.detail
 		cell.textLabel?.font = .preferredFont(forTextStyle: .body)
+		cell.detailTextLabel?.font = .preferredFont(forTextStyle: .caption1)
 		cell.textLabel?.adjustsFontForContentSizeCategory = true
+		cell.detailTextLabel?.adjustsFontForContentSizeCategory = true
 		cell.textLabel?.numberOfLines = 0
+		cell.detailTextLabel?.numberOfLines = 0
+		cell.accessoryType = choice.definition.id == selectedID ? .checkmark : .none
+		cell.accessibilityIdentifier = "activityGapChoice.\(choice.kind).\(choice.definition.id)"
 		return cell
 	}
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let selected = shown[indexPath.row]; navigationController?.popViewController(animated: false); choose(selected)
+		let selected = shown[indexPath.section].rows[indexPath.row].definition
+		search.isActive = false
+		navigationController?.popViewController(animated: false); choose(selected)
 	}
 }
 
