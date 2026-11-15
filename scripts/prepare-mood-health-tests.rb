@@ -30,6 +30,7 @@ end
   Introspective/UI/RecordData/Activities/RecordActivityDefinitionTableViewCell.swift
   Introspective/UI/RecordData/Activities/ActivityTagsTableViewCell.swift
   Introspective/UI/RecordData/Activities/ActivityDefinitionTagsTableViewCell.swift
+  Introspective/UI/RecordData/Activities/ActivityRemindersViewController.swift
   Introspective/UI/ActiveImportTableViewCell.swift
   Introspective/UI/Settings/Export/ActiveExportTableViewCell.swift
   Introspective/UI/Results/ResultsProcessing.swift

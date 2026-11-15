@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6C08D2CB0901860F80CAEBE1 /* Pods_Notifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59E4D8D52F92616D950C864F /* Pods_Notifications.framework */; };
+		8CD0E0B7307E1082CB050C2F /* Samples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7210AD67C04869CA1E278D /* Samples.framework */; };
 		A24F9092234647A70047A11C /* Notifications.h in Headers */ = {isa = PBXBuildFile; fileRef = A24F9090234647A70047A11C /* Notifications.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A24F9099234647B80047A11C /* UserNotificationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24F9098234647B80047A11C /* UserNotificationDelegate.swift */; };
 		A24F909C234647CB0047A11C /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A24F909B234647CB0047A11C /* Common.framework */; };
@@ -17,6 +18,7 @@
 
 /* Begin PBXFileReference section */
 		2608FE33C89B752EBC6EC724 /* Pods-Notifications.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Notifications.release.xcconfig"; path = "../Pods/Target Support Files/Pods-Notifications/Pods-Notifications.release.xcconfig"; sourceTree = "<group>"; };
+		2E7210AD67C04869CA1E278D /* Samples.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Samples.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		59E4D8D52F92616D950C864F /* Pods_Notifications.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Notifications.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		83BE22CB3086C81001907BAF /* Pods-Notifications.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Notifications.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-Notifications/Pods-Notifications.debug.xcconfig"; sourceTree = "<group>"; };
 		A24F908D234647A70047A11C /* Notifications.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Notifications.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -37,6 +39,7 @@
 				A24F909E234647CF0047A11C /* DependencyInjection.framework in Frameworks */,
 				A24F909C234647CB0047A11C /* Common.framework in Frameworks */,
 				6C08D2CB0901860F80CAEBE1 /* Pods_Notifications.framework in Frameworks */,
+				8CD0E0B7307E1082CB050C2F /* Samples.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,6 +90,7 @@
 				A24F909D234647CF0047A11C /* DependencyInjection.framework */,
 				A24F909B234647CB0047A11C /* Common.framework */,
 				59E4D8D52F92616D950C864F /* Pods_Notifications.framework */,
+				2E7210AD67C04869CA1E278D /* Samples.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

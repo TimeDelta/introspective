@@ -70,7 +70,7 @@ public final class StartActivitiesIntentHandler: ActivityIntentHandler<StartActi
 			}
 			injected(Database.self).setModifiedExternally(true)
 			let activitiesInfo = startedActivities.map { a in ActivityIntentInfo(a) }
-			completion(StartActivitiesIntentResponse.success(activities: activitiesInfo))
+			completeRecording(StartActivitiesIntentResponse.success(activities: activitiesInfo), completion: completion)
 		} catch {
 			Me.log.error("Failed StartActivitiesIntent: %@", errorInfo(error))
 			guard let error = error as? DisplayableError else {

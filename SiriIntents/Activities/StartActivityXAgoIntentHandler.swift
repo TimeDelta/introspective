@@ -140,11 +140,11 @@ public final class StartActivityXAgoIntentHandler: ActivityIntentHandler<StartAc
 				startDateSetAt: now
 			)
 			injected(Database.self).setModifiedExternally(true)
-			completion(StartActivityXAgoIntentResponse.success(
+			completeRecording(StartActivityXAgoIntentResponse.success(
 				activity: ActivityIntentInfo(activity),
 				numTimeUnits: numTimeUnits,
 				timeUnit: timeUnit
-			))
+			), completion: completion)
 		} catch {
 			Me.log.error("Failed StartActivityXAgoIntentResponse: %@", errorInfo(error))
 			if let message = (error as? LocalizedError)?.errorDescription {

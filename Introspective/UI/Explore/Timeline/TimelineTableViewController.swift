@@ -163,7 +163,9 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 		observe(selector: #selector(sampleChanged), name: Me.sampleChanged)
 
 		let chooseDataTypesButton = barButton(title: "☑️ Data Types", action: #selector(chooseDataTypesButtonPressed))
-		navigationItem.rightBarButtonItem = chooseDataTypesButton
+		let reviewActivitiesButton = UIBarButtonItem(title: "Review", style: .plain, target: self, action: #selector(reviewActivities))
+		reviewActivitiesButton.accessibilityLabel = "Review Activities"
+		navigationItem.rightBarButtonItems = [chooseDataTypesButton, reviewActivitiesButton]
 
 		injected(UiUtil.self).setBackButton(
 			for: self,
@@ -229,6 +231,10 @@ public final class TimelineTableViewControllerImpl: UITableViewController, Timel
 	}
 
 	// MARK: - Actions
+
+	@objc private func reviewActivities() {
+		navigationController?.pushViewController(ActivityDayReviewViewController(day: minDate ?? maxDate ?? Date()), animated: true)
+	}
 
 	@IBAction final func filterDatesButtonPressed(_: Any) {
 		let controller = viewController(named: "dateRangeChooser", fromStoryboard: "Util") as! DateRangeViewController

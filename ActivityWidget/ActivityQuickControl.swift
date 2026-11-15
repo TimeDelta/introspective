@@ -66,7 +66,7 @@ struct SetActivityRunningIntent: SetValueIntent {
 			// Capture the instance shown by the control, not whichever timer is newest now.
 			result = try ActivityQuickRecorder.stop(activityID: expectedActivityID, at: now, recordedAt: now)
 		}
-		ActivityWidgetStore.didRecord()
+		await ActivityWidgetStore.didRecord()
 		return ActivityWidgetStore.actionResult(noteActivityID: result.autoNoteActivityIDs.first)
 	}
 }

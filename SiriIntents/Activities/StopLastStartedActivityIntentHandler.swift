@@ -28,7 +28,7 @@ public final class StopLastStartedActivityIntentHandler: ActivityIntentHandler<S
 		do {
 			let activity = try injected(ActivityDAO.self).stopMostRecentlyStartedIncompleteActivity()
 			injected(Database.self).setModifiedExternally(true)
-			completion(StopLastStartedActivityIntentResponse.success(activity: ActivityIntentInfo(activity)))
+			completeRecording(StopLastStartedActivityIntentResponse.success(activity: ActivityIntentInfo(activity)), completion: completion)
 		} catch {
 			Me.log.error("Error during StopLastStartedActivityIntent: %@", errorInfo(error))
 			guard let error = error as? DisplayableError else {

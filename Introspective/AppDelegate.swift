@@ -37,6 +37,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 	private final var userNotificationDelegate: UserNotificationDelegate!
 	private let moodTracking = MoodTrackingCoordinator()
 	private var activityNoteObserver: NSObjectProtocol?
+	private var activityCatchUpObserver: NSObjectProtocol?
+	private var openingActivityCatchUp = false
 
 	override init() {
 		super.init()
@@ -67,6 +69,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 			try? MoodTrackingPreferences.shared.save(presets: [])
 			try? MoodTrackingPreferences.shared.save(reminders: MoodReminderSettings())
 			try? StressReminderPreferences.shared.save(reminders: StressReminderSettings())
+			try? ActivityReminderPreferences.shared.save(settings: ActivityReminderSettings())
+			_ = ActivityCatchUpRouting.shared.takePending()
 		}
 
 		#if DEBUG
@@ -108,6 +112,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		activityNoteObserver = NotificationCenter.default.addObserver(
 			forName: ActivityNoteRouting.notification, object: nil, queue: .main
 		) { [weak self] _ in self?.openPendingActivityNote() }
+		activityCatchUpObserver = NotificationCenter.default.addObserver(
+			forName: ActivityCatchUpRouting.notification, object: nil, queue: .main
+		) { [weak self] _ in self?.openPendingActivityCatchUp() }
 
 		let options: UNAuthorizationOptions = [.alert, .sound, .badge]
 		UNUserNotificationCenter.current().requestAuthorization(options: options) { granted, error in
@@ -169,7 +176,32 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 			}
 		}
 		Me.wasInBackground = false
-		if !Globals.testing && !Globals.uiTesting { openPendingActivityNote() }
+		if !Globals.testing && !Globals.uiTesting {
+			openPendingActivityNote()
+			openPendingActivityCatchUp()
+			ActivityReminderService.refresh()
+		}
+	}
+
+	private func openPendingActivityCatchUp() {
+		guard !openingActivityCatchUp,
+			let tabs = window?.rootViewController as? UITabBarController,
+			let navigation = tabs.viewControllers?.first as? UINavigationController,
+			let route = ActivityCatchUpRouting.shared.takePending() else { return }
+		openingActivityCatchUp = true
+		let open = { [weak self] in
+			defer { self?.openingActivityCatchUp = false }
+			tabs.selectedIndex = 0
+			if route.openNote {
+				do { try ActivityNoteRouting.request(route.activityID) }
+				catch { Me.log.error("Could not open activity note: %@", errorInfo(error)) }
+			} else {
+				let controller = ActivityDayReviewViewController(day: Date(), activityID: route.editEndTime ? route.activityID : nil)
+				navigation.pushViewController(controller, animated: false)
+			}
+		}
+		if navigation.presentedViewController != nil { navigation.dismiss(animated: false, completion: open) }
+		else { open() }
 	}
 
 	private func openPendingActivityNote() {

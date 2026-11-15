@@ -13,6 +13,7 @@ import UserNotifications
 import Common
 import DependencyInjection
 import Queries
+import Samples
 
 public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
 	// MARK: - Static Variables
@@ -63,6 +64,12 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 		actions: [], intentIdentifiers: [], options: [])
 	public static let stressCheckInReminder = UNNotificationCategory(identifier: StressReminderScheduler.categoryIdentifier,
 		actions: [], intentIdentifiers: [], options: [])
+	public static let activityReminder = UNNotificationCategory(identifier: ActivityReminderService.categoryIdentifier,
+		actions: [
+			UNNotificationAction(identifier: ActivityReminderService.continueActionIdentifier, title: "Continue", options: [.authenticationRequired]),
+			UNNotificationAction(identifier: ActivityReminderService.stopActionIdentifier, title: "Stop now", options: [.foreground, .authenticationRequired]),
+			UNNotificationAction(identifier: ActivityReminderService.reviewActionIdentifier, title: "End earlier", options: [.foreground, .authenticationRequired]),
+		], intentIdentifiers: [], options: [])
 
 	// MARK: Export
 
@@ -79,6 +86,7 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 		finishedImportingMoods,
 		moodCheckInReminder,
 		stressCheckInReminder,
+		activityReminder,
 		finishedExportingRecords,
 	])
 
@@ -100,6 +108,10 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 		withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
 	) {
 		let content = notification.request.content
+		if content.categoryIdentifier == ActivityReminderService.categoryIdentifier {
+			completionHandler([.banner, .sound])
+			return
+		}
 		if content.categoryIdentifier != Me.timeExpired.identifier {
 			let bannerStyle: BannerStyle = isSuccessfulNotification(notification) ? .success : .danger
 			NotificationBanner(title: content.title, subtitle: content.body, style: bannerStyle).show()
@@ -114,6 +126,25 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 		didReceive response: UNNotificationResponse,
 		withCompletionHandler completionHandler: @escaping () -> Void
 	) {
+		let content = response.notification.request.content
+		if content.categoryIdentifier == ActivityReminderService.categoryIdentifier {
+			ActivityReminderService.handleResponse(actionIdentifier: response.actionIdentifier, userInfo: content.userInfo) { result in
+				defer { completionHandler() }
+				do {
+					let value = try result.get()
+					if let id = value.autoNoteActivityID {
+						try ActivityCatchUpRouting.shared.request(activityID: id, openNote: true)
+					} else if let id = value.activityID, value.shouldOpenReview ||
+						(response.actionIdentifier == ActivityReminderService.stopActionIdentifier && value.didChange) {
+						try ActivityCatchUpRouting.shared.request(activityID: id, editEndTime: value.shouldOpenReview)
+					}
+				} catch {
+					Me.log.error("Could not handle activity reminder: %@", errorInfo(error))
+					NotificationBanner(title: "Could not update activity", subtitle: error.localizedDescription, style: .danger).show()
+				}
+			}
+			return
+		}
 		let actionIdentifier = response.actionIdentifier
 		switch actionIdentifier {
 		case UNNotificationDismissActionIdentifier:

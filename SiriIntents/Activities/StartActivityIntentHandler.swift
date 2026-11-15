@@ -124,7 +124,7 @@ public final class StartActivityIntentHandler: ActivityIntentHandler<StartActivi
 				extraTags: try parseTags(intent.extraTags ?? [])
 			)
 			injected(Database.self).setModifiedExternally(true)
-			completion(StartActivityIntentResponse.success(activity: ActivityIntentInfo(activity)))
+			completeRecording(StartActivityIntentResponse.success(activity: ActivityIntentInfo(activity)), completion: completion)
 		} catch {
 			Me.log.error("Failed StartActivityIntent: %@", errorInfo(error))
 			guard let error = error as? DisplayableError else {

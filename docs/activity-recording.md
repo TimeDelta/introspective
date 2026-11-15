@@ -58,6 +58,51 @@ When an activity is configured to ask for a note after stopping, Stop or Switch
 from a widget or control opens its note editor in Introspective after saving.
 Otherwise recording stays in the widget or control.
 
+## Reviewing a day and catching up
+
+Open **Review Activities** from the Timeline to review its selected day, or
+**Review** from Record → Activities to start with yesterday. Use Today,
+Yesterday, the date chooser, or the day arrows to move between dates.
+
+**Still running now** includes timers that started on earlier days. Select one
+and choose **End earlier…** to finish it at the time it actually ended. Only that
+saved instance is stopped; other activities can keep running. **Stop now** and
+the existing record editor are also available.
+
+**No activity recorded** lists intervals with no saved coverage. These intervals
+are unknown time. Select one, choose a saved activity, and save the portion you
+remember. Start and end default to the exact neighboring record timestamps or
+the local day's boundaries. Accepting those defaults preserves their precision;
+explicitly changing a picker value uses the existing lower-unit zeroing rules.
+The form checks for newly recorded overlaps before saving and leaves existing
+records unchanged. Short explicit catch-up records are retained even when
+automatic short-activity ignoring is enabled; Auto-Note still applies.
+
+Overlapping activities remain separate entries. Gap calculations use their
+combined coverage, respect local calendar days and daylight-saving changes,
+and stop at now when reviewing today. A complete day is optional.
+
+## Optional activity reminders
+
+Open **Reminders** from Activity Review. Reminders start off; enabling them
+requires notification permission. Choose 30 minutes, 1 hour, 2 hours (default),
+or 4 hours, then tap Save.
+
+Each running instance gets a generic **Still doing this?** notification without
+its activity name or notes. **Continue** keeps its original start and schedules
+another prompt after the chosen interval. **Stop now** ends only that instance,
+applying its normal auto-ignore and Auto-Note settings. **End earlier**, or
+opening the notification, opens that record for review. Notification recording
+actions require authentication.
+
+Ignoring a prompt does not create repeated reminders. A timer first discovered
+after its interval gets a full interval from that refresh rather than an
+immediate prompt. Activity reminders use at most eight pending notification
+slots and preserve existing mood, stress and other notifications. Turning them
+off removes their requests. Recording from the app, widgets, controls or Siri
+refreshes the schedule; exact saved identities protect restarted timers from
+old actions.
+
 ## Validation
 
 Run `python3 scripts/test-activity-backdating.py` with Swift available to execute
@@ -68,5 +113,15 @@ daylight-saving transitions and days without a midnight.
 `ActivityQuickRecorderTests` exercises SQLite persistence, atomic switching,
 concurrent activities, stale buttons, auto-ignore and auto-note, timestamp and
 source preservation, legacy display-time conversion, and save-failure rollback.
-Those tests require the macOS/iOS native test target. Widget interaction and Lock
-Screen authentication also require platform validation.
+Run `python3 scripts/test-activity-day-review.py` for the actual day model and
+persisted notification routes, and `python3 scripts/test-activity-reminders.py`
+for the reminder preferences and one-prompt planning rules. These scripts share
+their production sources and test cases with native CI.
+
+Native SQLite tests also exercise fresh gap checks, exact neighbor timestamps,
+pending edits, reminder actions, scheduling races and authorization settings.
+The UI suite covers filling a gap, ending one of several running timers, and
+reviewing overlaps. Native and UI tests require macOS/iOS. Physical widget,
+Lock Screen, cold-launch and notification checks remain **not executed** in the
+Linux workspace; use the [device smoke procedure](activity-widget-device-check.md)
+and record results against the installed build.

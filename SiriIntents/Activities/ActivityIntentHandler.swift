@@ -20,6 +20,12 @@ public class ActivityIntentHandler<IntentType: INIntent>: IntentHandler {
 
 	private let log = Log()
 
+	/// Keep the extension alive for scheduling after a successful write. Reminder
+	/// delivery errors do not change the result of an already-saved activity action.
+	final func completeRecording<Response>(_ response: Response, completion: @escaping (Response) -> Void) {
+		ActivityReminderService.refresh { _ in completion(response) }
+	}
+
 	public func provideActivityNameOptions(for _: IntentType, with completion: @escaping ([String]?, Error?) -> Void) {
 		log.info("Providing valid activity names")
 		do {

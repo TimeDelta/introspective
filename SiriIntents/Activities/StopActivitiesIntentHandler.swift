@@ -70,7 +70,7 @@ public final class StopActivitiesIntentHandler: ActivityIntentHandler<StopActivi
 			}
 			injected(Database.self).setModifiedExternally(true)
 			let activitiesInfo = stoppedActivities.map { a in ActivityIntentInfo(a) }
-			completion(StopActivitiesIntentResponse.success(activities: activitiesInfo))
+			completeRecording(StopActivitiesIntentResponse.success(activities: activitiesInfo), completion: completion)
 		} catch {
 			Me.log.error("Failed StopActivitiesIntent: %@", errorInfo(error))
 			guard let error = error as? DisplayableError else {
