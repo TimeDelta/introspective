@@ -356,7 +356,7 @@ private final class ActivityGapRecordViewController: UITableViewController {
 	}
 }
 
-private final class ActivityReviewDefinitionChooser: UITableViewController, UISearchResultsUpdating {
+private final class ActivityReviewDefinitionChooser: UITableViewController, UISearchResultsUpdating, UISearchControllerDelegate {
 	private struct Choice {
 		let definition: ActivityRecordingDefinition
 		let detail: String?
@@ -372,6 +372,8 @@ private final class ActivityReviewDefinitionChooser: UITableViewController, UISe
 	private let selectedID: String?
 	private let choose: (ActivityRecordingDefinition) -> Void
 	private let search = UISearchController(searchResultsController: nil)
+	private var pendingSelection: ActivityRecordingDefinition?
+	private var selectionInProgress = false
 	init(context: ActivityGapChoiceSnapshot, selectedID: String?, choose: @escaping (ActivityRecordingDefinition) -> Void) {
 		let definitions = Dictionary(uniqueKeysWithValues: context.definitions.map { ($0.id, $0) })
 		let nearby = context.choices.neighbors.compactMap { neighbor -> Choice? in
@@ -397,7 +399,8 @@ private final class ActivityReviewDefinitionChooser: UITableViewController, UISe
 	override func viewDidLoad() {
 		super.viewDidLoad(); title = "Choose Activity"; tableView.accessibilityIdentifier = "activityGapDefinitions"
 		tableView.rowHeight = UITableView.automaticDimension; tableView.estimatedRowHeight = 44
-		search.searchResultsUpdater = self; search.obscuresBackgroundDuringPresentation = false
+		search.searchResultsUpdater = self; search.delegate = self
+		search.obscuresBackgroundDuringPresentation = false
 		navigationItem.searchController = search; definesPresentationContext = true
 	}
 	func updateSearchResults(for searchController: UISearchController) {
@@ -425,9 +428,27 @@ private final class ActivityReviewDefinitionChooser: UITableViewController, UISe
 		return cell
 	}
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		guard !selectionInProgress else { return }
 		let selected = shown[indexPath.section].rows[indexPath.row].definition
-		search.isActive = false
-		navigationController?.popViewController(animated: false); choose(selected)
+		selectionInProgress = true
+		if search.isActive {
+			// Dismiss the presented search before removing its presentation context.
+			pendingSelection = selected
+			search.isActive = false
+		} else {
+			finishSelecting(selected)
+		}
+	}
+	func didDismissSearchController(_ searchController: UISearchController) {
+		guard searchController === search, let selected = pendingSelection else { return }
+		pendingSelection = nil
+		finishSelecting(selected)
+	}
+	private func finishSelecting(_ selected: ActivityRecordingDefinition) {
+		selectionInProgress = false
+		guard let navigation = navigationController, navigation.topViewController === self else { return }
+		navigation.popViewController(animated: false)
+		choose(selected)
 	}
 }
 
