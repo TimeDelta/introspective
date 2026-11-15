@@ -47,7 +47,9 @@ final class ActivityCatchUpUITests: UITest {
 		let day = yesterday
 		let workStart = time(9, 10, 17, on: day).addingTimeInterval(0.125)
 		let musicStart = time(8, 0, 37, on: day)
-		let actualEnd = time(12, 30, 0, on: day)
+		// Keep wheel edits between the fractional minimum and noon. Crossing 12
+		// can carry AM/PM and clamp an intermediate value before UIKit settles.
+		let actualEnd = time(10, 30, 0, on: day)
 		let work = ActivityDefinition(name: "Work", autoNote: false)
 		let music = ActivityDefinition(name: "Music", autoNote: false)
 		seed(activityDefinitions: [work, music], activities: [
