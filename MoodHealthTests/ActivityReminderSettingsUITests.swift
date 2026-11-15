@@ -22,7 +22,14 @@ final class ActivityReminderSettingsUITests: XCTestCase {
 		let cell = controller.tableView(controller.tableView, cellForRowAt: IndexPath(row: 0, section: 0))
 		let control = try XCTUnwrap(cell.accessoryView as? UISwitch)
 		control.isOn = enabled
-		control.sendActions(for: .valueChanged)
+		// The hostless test bundle has no UIApplication action dispatcher. Invoke
+		// the control's actual registered action with the same sender instead.
+		let actions = try XCTUnwrap(control.actions(forTarget: controller, forControlEvent: .valueChanged))
+		XCTAssertEqual(actions.count, 1)
+		for action in actions { controller.perform(NSSelectorFromString(action), with: control) }
+		let refreshed = controller.tableView(controller.tableView, cellForRowAt: IndexPath(row: 0, section: 0))
+		XCTAssertEqual(try XCTUnwrap(refreshed.accessoryView as? UISwitch).isOn, enabled,
+			"The wired switch action must update the screen before Save")
 	}
 
 	@MainActor private func save(_ controller: ActivityRemindersViewController) throws {

@@ -102,7 +102,7 @@ final class ActivityReminderServiceTests: XCTestCase {
 	private func id(_ object: NSManagedObject) -> String { object.objectID.uriRepresentation().absoluteString }
 	private func definition(_ name: String, autoNote: Bool = false) throws -> ActivityDefinition {
 		let value = ActivityDefinition(entity: try entity(ActivityDefinition.entityName), insertInto: container.viewContext)
-		value.name = name; value.autoNote = autoNote; value.setSource(.introspective)
+		value.name = name; value.recordScreenIndex = 0; value.autoNote = autoNote; value.setSource(.introspective)
 		try container.viewContext.save(); return value
 	}
 	private func activity(_ definition: ActivityDefinition, start: Date, end: Date? = nil, note: String? = nil) throws -> Activity {
@@ -275,6 +275,7 @@ final class ActivityReminderServiceTests: XCTestCase {
 	}
 
 	func testDefaultRefreshIncludesTimerStartedWhileWaitingForAnotherProcess() throws {
+		let definition = try definition("Started elsewhere")
 		let lockURL = directory.appendingPathComponent("shared-reminder-schedule.lock")
 		let descriptor = open(lockURL.path, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR)
 		XCTAssertGreaterThanOrEqual(descriptor, 0)
@@ -292,10 +293,13 @@ final class ActivityReminderServiceTests: XCTestCase {
 		}
 		XCTAssertEqual(XCTWaiter.wait(for: [early], timeout: 0.05), .completed)
 		// Simulate a widget starting another activity while this app waits for the lock.
-		let running = try activity(definition("Started elsewhere"), start: Date())
+		let recording = Result { try activity(definition, start: Date()) }
 		unlocked = true
 		XCTAssertEqual(flock(descriptor, LOCK_UN), 0)
+		// Even a failed fixture save must drain the waiting provider before teardown
+		// removes its store.
 		wait(for: [done], timeout: 5)
+		let running = try recording.get()
 		XCTAssertEqual(delivery.pendingRequests().compactMap(reminderID), [id(running)])
 	}
 }
