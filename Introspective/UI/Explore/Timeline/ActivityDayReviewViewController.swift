@@ -43,7 +43,7 @@ final class ActivityDayReviewViewController: UITableViewController {
 		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Reminders", style: .plain,
 			target: self, action: #selector(openReminders))
 		configureHeader()
-		for name in [Notification.Name.activityRecordingChanged, .persistenceLayerDidRefresh, Self.recordChanged] {
+		for name in [Notification.Name.activityRecordingChanged, NotificationName.persistenceLayerDidRefresh.toName(), Self.recordChanged] {
 			observers.append(NotificationCenter.default.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
 				guard let self = self, self.isViewLoaded, self.view.window != nil else { return }
 				self.reloadReview()
@@ -262,7 +262,7 @@ final class ActivityDayReviewViewController: UITableViewController {
 	private func openEditor(activityID: String, focusNote: Bool = false) {
 		do {
 			let activity = try ActivityCatchUpService.activity(id: activityID)
-			let controller: EditActivityTableViewController = viewController(named: "editActivity", fromStoryboard: "RecordData")
+			let controller: EditActivityTableViewControllerImpl = viewController(named: "editActivity", fromStoryboard: "RecordData")
 			controller.activity = activity; controller.autoFocusNote = focusNote
 			controller.notificationToSendOnAccept = Self.recordChanged
 			navigationController?.pushViewController(controller, animated: false)
@@ -406,7 +406,7 @@ private final class ActivityReviewDateSelection {
 	func present(initial: Date, minimum: Date? = nil, maximum: Date? = nil,
 		mode: UIDatePicker.Mode = .dateAndTime, accept: @escaping (Date) -> Void) {
 		guard let owner = owner else { return }
-		let controller: SelectDateViewController = owner.viewController(named: "datePicker", fromStoryboard: "Util")
+		let controller: SelectDateViewControllerImpl = owner.viewController(named: "datePicker", fromStoryboard: "Util")
 		controller.initialDate = initial; controller.earliestPossibleDate = minimum; controller.latestPossibleDate = maximum
 		controller.datePickerMode = mode; controller.notificationToSendOnAccept = notification
 		self.accept = accept; picker = controller
