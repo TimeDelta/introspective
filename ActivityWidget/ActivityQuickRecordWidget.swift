@@ -45,10 +45,15 @@ typealias ActivityWidgetActionResult = IntentResultContainer<Never, OpenActivity
 		return try ActivityQuickRecorder.snapshot()
 	}
 
-	static func didRecord() {
+	static func didRecord() async {
 		injected(Database.self).setModifiedExternally(true)
 		WidgetCenter.shared.reloadTimelines(ofKind: widgetKind)
 		ControlCenter.shared.reloadControls(ofKind: controlKind)
+		// Keep the extension alive for reminder delivery after the activity is saved.
+		// A reminder failure must not make a successful recording appear to fail.
+		await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+			ActivityReminderService.refresh { _ in continuation.resume() }
+		}
 	}
 
 	static func actionResult(noteActivityID: String?) -> ActivityWidgetActionResult {
@@ -74,7 +79,7 @@ struct StartRecordedActivityIntent: AppIntent {
 		try SharedWidgetDependencies.prepare()
 		let now = Date()
 		try ActivityQuickRecorder.start(definitionID: definitionID, at: now, recordedAt: now)
-		ActivityWidgetStore.didRecord()
+		await ActivityWidgetStore.didRecord()
 		return .result()
 	}
 }
@@ -93,7 +98,7 @@ struct StopRecordedActivityIntent: AppIntent {
 		let now = Date()
 		// An old Stop button must never stop a later instance of this definition.
 		let result = try ActivityQuickRecorder.stop(activityID: activityID, at: now, recordedAt: now)
-		ActivityWidgetStore.didRecord()
+		await ActivityWidgetStore.didRecord()
 		return ActivityWidgetStore.actionResult(noteActivityID: result.autoNoteActivityIDs.first)
 	}
 }
@@ -115,7 +120,7 @@ struct SwitchRecordedActivityIntent: AppIntent {
 		try SharedWidgetDependencies.prepare()
 		let now = Date()
 		let result = try ActivityQuickRecorder.switchActivity(from: activityID, to: definitionID, at: now, recordedAt: now)
-		ActivityWidgetStore.didRecord()
+		await ActivityWidgetStore.didRecord()
 		return ActivityWidgetStore.actionResult(noteActivityID: result.autoNoteActivityIDs.first)
 	}
 }

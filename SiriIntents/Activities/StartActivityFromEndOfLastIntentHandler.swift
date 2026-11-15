@@ -75,7 +75,7 @@ public final class StartActivityFromEndOfLastIntentHandler: ActivityIntentHandle
 				startDateSetAt: now
 			)
 			injected(Database.self).setModifiedExternally(true)
-			completion(StartActivityFromEndOfLastIntentResponse.success(activity: ActivityIntentInfo(activity)))
+			completeRecording(StartActivityFromEndOfLastIntentResponse.success(activity: ActivityIntentInfo(activity)), completion: completion)
 		} catch {
 			Me.log.error("Failed StartActivityFromEndOfLastIntent: %@", errorInfo(error))
 			guard let error = error as? DisplayableError else {

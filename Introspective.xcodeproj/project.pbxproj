@@ -52,6 +52,7 @@
 		1126C1ECC8DCED954C70FF38E97D04E9 /* EqualToDoubleAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8C96BB1559619CC12D3FCBE6A9053F /* EqualToDoubleAttributeRestrictionUnitTests.swift */; };
 		11520C0039066C381096F585ECE636BB /* BodyMassIndexUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00608A534BB89482446BED92AB511B74 /* BodyMassIndexUnitTests.swift */; };
 		11EB3B1A70E6EB52304A62A44145CB76 /* Query.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8540E15D404F937D84E0729AF6E4A545 /* Query.storyboard */; };
+		1209464BD152D924697DC8E5 /* ActivityDayReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E5C722B4A0AAC615405896 /* ActivityDayReviewViewController.swift */; };
 		123A4E5F3408702BE0F95E952F005877 /* ContinuousMoodRatingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81AAADEC6B30A82892CCB75150850CFB /* ContinuousMoodRatingTableViewCell.swift */; };
 		12F26B900620EE9882C83F6A8769C2CC /* EditActivityTableViewControllerFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3513CFFA164747F3A5DD056F0AAF0822 /* EditActivityTableViewControllerFunctionalTests.swift */; };
 		130987BE653602295BCE461B /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA0DE771DB3EBFA53437856B04F70772 /* Persistence.framework */; };
@@ -106,6 +107,7 @@
 		2BD1A99B711A9E1BF944D93E3233AC32 /* QueryNameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FC3EE4572573A7B175143FF33B7C5E /* QueryNameViewController.swift */; };
 		2BD2A34E947772149EB310C6AB9586D0 /* IntrospectiveMedicationImporterFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D112B235982CF591327A55FA391415 /* IntrospectiveMedicationImporterFunctionalTests.swift */; };
 		2C6C58F800E7821FB668286A4BD07160 /* SubSampleTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3D0D80E7E86D4500CCF74A48C82EDD7 /* SubSampleTypeTableViewCell.swift */; };
+		2D19D96A0BF81CFC394297E7 /* ActivityRemindersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8975B4C071CF48F4AC46798 /* ActivityRemindersViewController.swift */; };
 		2D20966CA84180D000C013A30759A21D /* ActivityDefinitionDescriptionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E5F1C5532BEC1DA058B6659FBD45B1B /* ActivityDefinitionDescriptionTableViewCell.swift */; };
 		2D45C222CEA3CE55123AF26537E4D7FC /* GraphSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ECF803DE85297C577FBE071ABC37BFC /* GraphSetupViewController.swift */; };
 		2E3E089615581A7102A18B3B03FB03CC /* StopLastStartedActivityIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E14F35A335DF8CEEA73A4AFA00E491 /* StopLastStartedActivityIntentHandler.swift */; };
@@ -410,6 +412,7 @@
 		A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FC569196ECE6B2231D16543528A687 /* UITest.swift */; };
 		A19F5B1A5E1C0064F444F8E7 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 24A7B76A18C2845EC40A1088 /* PrivacyInfo.xcprivacy */; };
 		A1BFEC84F4BAEAA66ACE7FA4 /* StressGuideViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95280E181B636E16EDE4B61F /* StressGuideViewController.swift */; };
+		A2123709AAD81D454D7018FF /* ActivityCatchUpUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D51E7A0B899E9475852365 /* ActivityCatchUpUITests.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A26589F32BFC0527881D20D03E4CB48C /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
@@ -809,6 +812,7 @@
 		2763BD3734CEB18405B1CE4963F5E012 /* Pods_IntrospectiveTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_IntrospectiveTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		27CA81A302F9C78DAAC12DAF59773F70 /* MedicationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationInfo.swift; sourceTree = "<group>"; };
 		27D7733A69855DB72184BBCEB84FC22D /* SubQueryMatcherMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubQueryMatcherMatchers.swift; sourceTree = "<group>"; };
+		27E5C722B4A0AAC615405896 /* ActivityDayReviewViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ActivityDayReviewViewController.swift; sourceTree = "<group>"; };
 		283262DF9C5F77A13A07F97A83F69144 /* DescriptionViewControllerUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionViewControllerUnitTests.swift; sourceTree = "<group>"; };
 		287A32D410A26F74A82A65C685055875 /* MoodExporterFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodExporterFunctionalTest.swift; sourceTree = "<group>"; };
 		28E324370F11F9B9AB9B97193F8F26D8 /* MultiSelectAttributeValueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiSelectAttributeValueViewController.swift; sourceTree = "<group>"; };
@@ -1144,6 +1148,7 @@
 		A7E11E1F3E51459587F918F2 /* ActivityTags.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ActivityTags.xcdatamodel; sourceTree = "<group>"; };
 		A81F5224695DE7136BAEFD9397504B1E /* TimelineTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineTableViewCell.swift; sourceTree = "<group>"; };
 		A82EBA6DC1BA46952A0764E31775127F /* QueryMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryMatchers.swift; sourceTree = "<group>"; };
+		A8975B4C071CF48F4AC46798 /* ActivityRemindersViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ActivityRemindersViewController.swift; sourceTree = "<group>"; };
 		A8AF1BA62CF59F285D331C712F7E7FB2 /* QueryScreenUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryScreenUITests.swift; sourceTree = "<group>"; };
 		A919C83E0139BB9E3DAF8008 /* MetricContext.xcdatamodel */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.xcdatamodel; path = MetricContext.xcdatamodel; sourceTree = "<group>"; };
 		A9E14F35A335DF8CEEA73A4AFA00E491 /* StopLastStartedActivityIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopLastStartedActivityIntentHandler.swift; sourceTree = "<group>"; };
@@ -1254,6 +1259,7 @@
 		D26511309FD52B5A8B5B69C603B307F2 /* EqualToDosageAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToDosageAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		D2B0C510FF593ABB3663EDE18DAA324F /* QueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryFunctionalTest.swift; sourceTree = "<group>"; };
 		D3C788FE4F4C95D5B3D0595C072688DC /* DiscreteMoodRatingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscreteMoodRatingTableViewCell.swift; sourceTree = "<group>"; };
+		D4D51E7A0B899E9475852365 /* ActivityCatchUpUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ActivityCatchUpUITests.swift; sourceTree = "<group>"; };
 		D4DFFBB7023B603BA57FF643B00382AD /* ActivityDAOFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityDAOFunctionalTests.swift; sourceTree = "<group>"; };
 		D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		D686A0CBB8DD5CE9108645BAA73B1BA3 /* Pods-IntrospectiveUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IntrospectiveUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-IntrospectiveUITests/Pods-IntrospectiveUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -2303,6 +2309,7 @@
 				7FE23CB07736990976E16F672FB2A196 /* SleepTimelineTableViewCellDelegate.swift */,
 				934C1FD18CB7B43EF9C3A0CEE017CCC4 /* StepsTimelineTableViewCellDelegate.swift */,
 				C47C6482E5A9805465F922E51E9597AE /* WeightTimelineTableViewCellDelegate.swift */,
+				27E5C722B4A0AAC615405896 /* ActivityDayReviewViewController.swift */,
 			);
 			path = Timeline;
 			sourceTree = "<group>";
@@ -2750,6 +2757,7 @@
 				B1A3009B868D953A72240F4A1DC9D85B /* ActivityEndDateTableViewCell.swift */,
 				EE068B8CC403C7E3CBD6C1623FA36359 /* ActivityDefinitionAutoNoteTableViewCell.swift */,
 				F7D536FF84E1CAFC03BFE42AD8AA330C /* ChooseRecentTimePeriodViewController.swift */,
+				A8975B4C071CF48F4AC46798 /* ActivityRemindersViewController.swift */,
 			);
 			path = Activities;
 			sourceTree = "<group>";
@@ -2839,6 +2847,7 @@
 				958F8FB544B7E47057AA85820ADA8B32 /* RecordMedicationsUITests.swift */,
 				7B43D66480405FBD1AAF76472286BBDF /* RecordActivitiesUITests.swift */,
 				E458EFFAB8FDA4DBD8B73B9E /* MoodTrackingUITests.swift */,
+				D4D51E7A0B899E9475852365 /* ActivityCatchUpUITests.swift */,
 			);
 			path = RecordData;
 			sourceTree = "<group>";
@@ -4297,6 +4306,7 @@
 				16ACD678637FCF88BE42FD6E /* PinnedQueryDashboardUITests.swift in Sources */,
 				9E4B984E20A433E485BB7217 /* QueryInspectionUITests.swift in Sources */,
 				7B52C96A8B6DB924CF11EE4D /* UILaunchProfile.swift in Sources */,
+				A2123709AAD81D454D7018FF /* ActivityCatchUpUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4513,6 +4523,8 @@
 				942458D6493E773C506514C5 /* HealthRecordDetailViewController.swift in Sources */,
 				17859EF61392DE120205FCA1 /* HealthRecordAttachmentsViewController.swift in Sources */,
 				53DC2BA6F89C81DA25BCC65D /* OpenActivityNoteIntent.swift in Sources */,
+				1209464BD152D924697DC8E5 /* ActivityDayReviewViewController.swift in Sources */,
+				2D19D96A0BF81CFC394297E7 /* ActivityRemindersViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

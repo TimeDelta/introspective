@@ -114,6 +114,10 @@ public final class RecordActivityTableViewController: UITableViewController {
 		)
 		let sortButton = barButton(title: "⇅", action: #selector(sortButtonPressed))
 		navigationItem.rightBarButtonItems = [addButton, stopAllButton, sortButton]
+		let reviewButton = UIBarButtonItem(title: "Review", style: .plain, target: self, action: #selector(reviewActivities))
+		reviewButton.accessibilityLabel = "Review activities"
+		navigationItem.leftItemsSupplementBackButton = true
+		navigationItem.leftBarButtonItem = reviewButton
 
 		searchController.searchResultsUpdater = self
 		searchController.obscuresBackgroundDuringPresentation = false
@@ -159,6 +163,10 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	// MARK: - TableView Data Source
+
+	@objc private func reviewActivities() {
+		navigationController?.pushViewController(ActivityDayReviewViewController(), animated: true)
+	}
 
 	public final override func numberOfSections(in _: UITableView) -> Int {
 		if !finishedLoading {

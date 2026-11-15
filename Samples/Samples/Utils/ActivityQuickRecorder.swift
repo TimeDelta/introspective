@@ -45,7 +45,7 @@ public struct ActivityRecordingSnapshot: Equatable {
 }
 
 public struct ActivityRecordingResult: Equatable {
-	/// A newly started activity, or the existing running target for an idempotent Start/Switch.
+	/// A newly recorded activity, or the existing running target for an idempotent Start/Switch.
 	public let startedActivityID: String?
 	/// Includes short activities removed by the user's existing auto-ignore rule.
 	public let stoppedActivityIDs: [String]
@@ -93,6 +93,40 @@ public enum ActivityQuickRecorder {
 		at: Date = Date(), recordedAt: Date = Date()) throws -> ActivityRecordingResult {
 		try switchActivity(from: activityID, to: definitionID, at: at, recordedAt: recordedAt,
 			contextFactory: newContext)
+	}
+
+	/// Add a missed completed activity only while the selected interval is still unrecorded.
+	/// Manual catch-up entries retain short intervals instead of applying auto-ignore.
+	@discardableResult public static func recordGap(definitionID: String, from start: Date, to end: Date,
+		recordedAt: Date = Date()) throws -> ActivityRecordingResult {
+		try recordGap(definitionID: definitionID, from: start, to: end, recordedAt: recordedAt, contextFactory: newContext)
+	}
+
+	@discardableResult internal static func recordGap(definitionID: String, from start: Date, to end: Date,
+		recordedAt: Date, contextFactory: () -> NSManagedObjectContext) throws -> ActivityRecordingResult {
+		guard end.timeIntervalSinceReferenceDate.isFinite, end > start, end <= recordedAt else {
+			throw ActivityRecordingError("Choose a positive activity interval ending at or before now.")
+		}
+		return try change(at: start, recordedAt: recordedAt, contextFactory: contextFactory) { context, coordinator in
+			let definition = try requiredDefinition(definitionID, in: context, coordinator: coordinator)
+			let occupied = Activity.fetchRequest()
+			occupied.predicate = NSPredicate(format: "startDate < %@ AND (endDate == nil OR (endDate > startDate AND endDate > %@))",
+				end as NSDate, start as NSDate)
+			occupied.fetchLimit = 1
+			guard try context.fetch(occupied).isEmpty else {
+				throw ActivityRecordingError("This interval now contains an activity. Refresh the review before recording it.")
+			}
+			let recorded = try create(definition, at: start, recordedAt: recordedAt, in: context)
+			recorded.end = end; recorded.endSetAt = recordedAt
+			let id = identifier(recorded)
+			return ActivityRecordingResult(startedActivityID: id,
+				autoNoteActivityIDs: definition.autoNote ? [id] : [], didChange: true)
+		}
+	}
+
+	/// Share the existing queue and fresh-context rules with catch-up snapshots.
+	internal static func read<T>(_ body: (NSManagedObjectContext, NSPersistentStoreCoordinator) throws -> T) throws -> T {
+		try withContext(body)
 	}
 
 	@discardableResult internal static func start(definitionID: String, at: Date, recordedAt: Date,
@@ -208,7 +242,7 @@ public enum ActivityQuickRecorder {
 		object.objectID.uriRepresentation().absoluteString
 	}
 
-	private static func objectID(_ identifier: String, entity: String,
+	internal static func objectID(_ identifier: String, entity: String,
 		coordinator: NSPersistentStoreCoordinator) throws -> NSManagedObjectID {
 		// Core Data raises an Objective-C exception for malformed URLs; validate
 		// their shape before calling its resolver so callers receive a Swift error.
