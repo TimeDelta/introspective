@@ -31,8 +31,9 @@ final class RecordActivitiesUITests: UITest {
 
 	func testCreatingActivityDefinition_showsNameAndDescriptionInActivityListAfterSave() {
 		// given
-		let definition = ActivityDefinition(name: "park walk", autoNote: true,
-			description: "fresh air", tags: ["calm", "walk"])
+		// Keep typing brief; this case verifies creation and persistence of every field.
+		let definition = ActivityDefinition(name: "run", autoNote: true,
+			description: "air", tags: ["out", "fit"])
 
 		// when
 		createActivityDefinition(definition)
