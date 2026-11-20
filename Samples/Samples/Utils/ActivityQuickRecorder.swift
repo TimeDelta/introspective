@@ -58,6 +58,54 @@ public struct ActivityRecordingResult: Equatable {
 	}
 }
 
+/// An in-memory receipt for one successful recording. Only the recorder can
+/// construct it, and a successful Undo consumes it before observers are notified.
+public final class ActivityRecordingUndoToken {
+	fileprivate let before: [String: ActivityRecordingUndoState]
+	fileprivate let after: [String: ActivityRecordingUndoState]
+	fileprivate let activityIDs: Set<String>
+	fileprivate let definitionIDs: Set<String>
+	fileprivate let runningAfter: [String: Set<String>]
+	fileprivate let stores: [ActivityRecordingUndoStore]
+	fileprivate var consumed = false
+
+	fileprivate init(before: [String: ActivityRecordingUndoState], after: [String: ActivityRecordingUndoState],
+		activityIDs: Set<String>, definitionIDs: Set<String>, runningAfter: [String: Set<String>],
+		stores: [ActivityRecordingUndoStore]) {
+		self.before = before; self.after = after; self.activityIDs = activityIDs
+		self.definitionIDs = definitionIDs; self.runningAfter = runningAfter; self.stores = stores
+	}
+}
+
+public struct ActivityUndoableRecordingResult {
+	public let recording: ActivityRecordingResult
+	public let undoToken: ActivityRecordingUndoToken?
+	public init(recording: ActivityRecordingResult, undoToken: ActivityRecordingUndoToken?) {
+		self.recording = recording; self.undoToken = undoToken
+	}
+}
+
+fileprivate struct ActivityRecordingUndoStore: Equatable {
+	let uuid: String
+	let type: String
+	let url: URL?
+}
+
+/// Values are copied from storage, without display-time conversion or setter
+/// defaults. In particular, a legacy nil time-zone or provenance value stays nil.
+fileprivate struct ActivityRecordingUndoState: Equatable {
+	let definitionID: String
+	let tagIDs: Set<String>
+	let start: Date
+	let startSetAt: Date?
+	let startZone: String?
+	let end: Date?
+	let endSetAt: Date?
+	let endZone: String?
+	let note: String?
+	let source: Int16
+}
+
 /// Explicit operations share one independent writer. They never toggle a stale widget's state,
 /// stop unrelated overlapping activities, or save pending edits in the app's view context.
 /// Call from the main queue, as required by the injected database and settings.
@@ -129,39 +177,120 @@ public enum ActivityQuickRecorder {
 		try withContext(body)
 	}
 
+	@discardableResult public static func startWithUndo(definitionID: String, at: Date = Date(),
+		recordedAt: Date = Date()) throws -> ActivityUndoableRecordingResult {
+		try startWithUndo(definitionID: definitionID, at: at, recordedAt: recordedAt, contextFactory: newContext)
+	}
+
+	@discardableResult public static func stopWithUndo(activityID: String, at: Date = Date(),
+		recordedAt: Date = Date()) throws -> ActivityUndoableRecordingResult {
+		try stopWithUndo(activityID: activityID, at: at, recordedAt: recordedAt, contextFactory: newContext)
+	}
+
+	@discardableResult public static func switchActivityWithUndo(from activityID: String, to definitionID: String,
+		at: Date = Date(), recordedAt: Date = Date()) throws -> ActivityUndoableRecordingResult {
+		try switchActivityWithUndo(from: activityID, to: definitionID, at: at, recordedAt: recordedAt,
+			contextFactory: newContext)
+	}
+
+	@discardableResult public static func undo(_ token: ActivityRecordingUndoToken) throws -> ActivityRecordingResult {
+		try undo(token, contextFactory: newContext)
+	}
+
 	@discardableResult internal static func start(definitionID: String, at: Date, recordedAt: Date,
 		contextFactory: () -> NSManagedObjectContext) throws -> ActivityRecordingResult {
-		try change(at: at, recordedAt: recordedAt, contextFactory: contextFactory) { context, coordinator in
+		try perform(.start(definitionID), at: at, recordedAt: recordedAt, captureUndo: false,
+			contextFactory: contextFactory).recording
+	}
+
+	@discardableResult internal static func stop(activityID: String, at: Date, recordedAt: Date,
+		contextFactory: () -> NSManagedObjectContext) throws -> ActivityRecordingResult {
+		try perform(.stop(activityID), at: at, recordedAt: recordedAt, captureUndo: false,
+			contextFactory: contextFactory).recording
+	}
+
+	@discardableResult internal static func switchActivity(from activityID: String, to definitionID: String,
+		at: Date, recordedAt: Date, contextFactory: () -> NSManagedObjectContext) throws -> ActivityRecordingResult {
+		try perform(.switchActivity(activityID, definitionID), at: at, recordedAt: recordedAt, captureUndo: false,
+			contextFactory: contextFactory).recording
+	}
+
+	@discardableResult internal static func startWithUndo(definitionID: String, at: Date, recordedAt: Date,
+		contextFactory: () -> NSManagedObjectContext) throws -> ActivityUndoableRecordingResult {
+		try perform(.start(definitionID), at: at, recordedAt: recordedAt, captureUndo: true, contextFactory: contextFactory)
+	}
+
+	@discardableResult internal static func stopWithUndo(activityID: String, at: Date, recordedAt: Date,
+		contextFactory: () -> NSManagedObjectContext) throws -> ActivityUndoableRecordingResult {
+		try perform(.stop(activityID), at: at, recordedAt: recordedAt, captureUndo: true, contextFactory: contextFactory)
+	}
+
+	@discardableResult internal static func switchActivityWithUndo(from activityID: String, to definitionID: String,
+		at: Date, recordedAt: Date, contextFactory: () -> NSManagedObjectContext) throws -> ActivityUndoableRecordingResult {
+		try perform(.switchActivity(activityID, definitionID), at: at, recordedAt: recordedAt,
+			captureUndo: true, contextFactory: contextFactory)
+	}
+
+	private enum Operation {
+		case start(String)
+		case stop(String)
+		case switchActivity(String, String)
+	}
+
+	private static func perform(_ operation: Operation, at: Date, recordedAt: Date, captureUndo: Bool,
+		contextFactory: () -> NSManagedObjectContext) throws -> ActivityUndoableRecordingResult {
+		var token: ActivityRecordingUndoToken?
+		let recording = try change(at: at, recordedAt: recordedAt, contextFactory: contextFactory) { context, coordinator in
+			var before: [String: ActivityRecordingUndoState] = [:]
+			var definitionIDs = Set<String>()
+			if captureUndo {
+				let objects = try undoObjects(for: operation, in: context, coordinator: coordinator)
+				definitionIDs = objects.definitionIDs
+				for value in objects.activities { before[identifier(value)] = try undoState(value) }
+			}
+			let result = try apply(operation, at: at, recordedAt: recordedAt, in: context, coordinator: coordinator)
+			if captureUndo, result.didChange {
+				var activityIDs = Set(before.keys)
+				if let id = result.startedActivityID { activityIDs.insert(id) }
+				var after: [String: ActivityRecordingUndoState] = [:]
+				for id in activityIDs {
+					if let value = try activity(id, in: context, coordinator: coordinator), !value.isDeleted {
+						after[id] = try undoState(value)
+					}
+				}
+				token = ActivityRecordingUndoToken(before: before, after: after, activityIDs: activityIDs,
+					definitionIDs: definitionIDs, runningAfter: try runningIDs(for: definitionIDs, in: context,
+						coordinator: coordinator), stores: try undoStores(coordinator))
+			}
+			return result
+		}
+		return ActivityUndoableRecordingResult(recording: recording, undoToken: token)
+	}
+
+	/// The same operation bodies serve existing controls and Undo-enabled app actions.
+	private static func apply(_ operation: Operation, at: Date, recordedAt: Date,
+		in context: NSManagedObjectContext, coordinator: NSPersistentStoreCoordinator) throws -> ActivityRecordingResult {
+		switch operation {
+		case let .start(definitionID):
 			let definition = try requiredDefinition(definitionID, in: context, coordinator: coordinator)
 			if let running = try runningActivity(for: definition, in: context) {
 				return ActivityRecordingResult(startedActivityID: identifier(running))
 			}
 			let started = try create(definition, at: at, recordedAt: recordedAt, in: context)
 			return ActivityRecordingResult(startedActivityID: identifier(started), didChange: true)
-		}
-	}
-
-	@discardableResult internal static func stop(activityID: String, at: Date, recordedAt: Date,
-		contextFactory: () -> NSManagedObjectContext) throws -> ActivityRecordingResult {
-		try change(at: at, recordedAt: recordedAt, contextFactory: contextFactory) { context, coordinator in
-			guard let activity = try activity(activityID, in: context, coordinator: coordinator),
-				activity.storedEndDate == nil else { return ActivityRecordingResult() }
-			try validateBoundary(at, for: activity)
-			let autoNote = finish(activity, at: at, recordedAt: recordedAt, in: context)
+		case let .stop(activityID):
+			guard let value = try activity(activityID, in: context, coordinator: coordinator),
+				value.storedEndDate == nil else { return ActivityRecordingResult() }
+			try validateBoundary(at, for: value)
+			let autoNote = finish(value, at: at, recordedAt: recordedAt, in: context)
 			return ActivityRecordingResult(stoppedActivityIDs: [activityID],
 				autoNoteActivityIDs: autoNote ? [activityID] : [], didChange: true)
-		}
-	}
-
-	@discardableResult internal static func switchActivity(from activityID: String, to definitionID: String,
-		at: Date, recordedAt: Date, contextFactory: () -> NSManagedObjectContext) throws -> ActivityRecordingResult {
-		try change(at: at, recordedAt: recordedAt, contextFactory: contextFactory) { context, coordinator in
+		case let .switchActivity(activityID, definitionID):
 			let target = try requiredDefinition(definitionID, in: context, coordinator: coordinator)
 			let existingTarget = try runningActivity(for: target, in: context)
 			guard let source = try activity(activityID, in: context, coordinator: coordinator),
 				source.storedEndDate == nil else {
-				// A repeated Switch may observe its source already stopped (or auto-ignored).
-				// It must never start a fresh timer from an old button after the target ended.
+				// Repeated Switch cannot create a fresh target from a stopped source.
 				if let existingTarget = existingTarget {
 					return ActivityRecordingResult(startedActivityID: identifier(existingTarget))
 				}
@@ -176,6 +305,157 @@ public enum ActivityQuickRecorder {
 			return ActivityRecordingResult(startedActivityID: identifier(started), stoppedActivityIDs: [activityID],
 				autoNoteActivityIDs: autoNote ? [activityID] : [], didChange: true)
 		}
+	}
+
+	private static func undoObjects(for operation: Operation, in context: NSManagedObjectContext,
+		coordinator: NSPersistentStoreCoordinator) throws -> (activities: [Activity], definitionIDs: Set<String>) {
+		var objects: [Activity] = [], definitions = Set<String>()
+		switch operation {
+		case let .start(definitionID):
+			let definition = try requiredDefinition(definitionID, in: context, coordinator: coordinator)
+			definitions.insert(definitionID)
+			if let running = try runningActivity(for: definition, in: context) { objects.append(running) }
+		case let .stop(activityID):
+			if let value = try activity(activityID, in: context, coordinator: coordinator) {
+				objects.append(value); definitions.insert(identifier(value.definition))
+			}
+		case let .switchActivity(activityID, definitionID):
+			let definition = try requiredDefinition(definitionID, in: context, coordinator: coordinator)
+			definitions.insert(definitionID)
+			if let target = try runningActivity(for: definition, in: context) { objects.append(target) }
+			if let source = try activity(activityID, in: context, coordinator: coordinator) {
+				objects.append(source); definitions.insert(identifier(source.definition))
+			}
+		}
+		return (objects, definitions)
+	}
+
+	@discardableResult internal static func undo(_ token: ActivityRecordingUndoToken,
+		contextFactory: () -> NSManagedObjectContext) throws -> ActivityRecordingResult {
+		let now = Date()
+		return try change(at: now, recordedAt: now, contextFactory: contextFactory,
+			beforeNotification: { token.consumed = true }) { context, coordinator in
+			guard !token.consumed, try undoStores(coordinator) == token.stores else {
+				throw undoConflict()
+			}
+			let allStates = Array(token.before.values) + Array(token.after.values)
+			let tagIDs = allStates.reduce(into: Set<String>()) { $0.formUnion($1.tagIDs) }
+			try rejectPendingUndoChanges(activityIDs: token.activityIDs, definitionIDs: token.definitionIDs, tagIDs: tagIDs)
+			for id in token.definitionIDs { _ = try requiredDefinition(id, in: context, coordinator: coordinator) }
+			var tags: [String: NSManagedObject] = [:]
+			for id in tagIDs { tags[id] = try requiredUndoTag(id, in: context, coordinator: coordinator) }
+			for id in token.activityIDs {
+				let current = try activity(id, in: context, coordinator: coordinator)
+				let state = try current.map(undoState)
+				guard state == token.after[id] else { throw undoConflict() }
+			}
+			guard try runningIDs(for: token.definitionIDs, in: context, coordinator: coordinator) == token.runningAfter else {
+				throw undoConflict()
+			}
+			var restoredID: String?
+			var removedIDs: [String] = []
+			for id in token.activityIDs.sorted() {
+				guard let before = token.before[id] else {
+					if let created = try activity(id, in: context, coordinator: coordinator) {
+						context.delete(created); removedIDs.append(id)
+					}
+					continue
+				}
+				guard token.after[id] != before else { continue }
+				let value: Activity
+				if let existing = try activity(id, in: context, coordinator: coordinator) { value = existing }
+				else {
+					// A committed deletion cannot reuse its old URI. Restore the data
+					// under a new permanent identity; stale widget actions remain stale.
+					guard let entity = NSEntityDescription.entity(forEntityName: Activity.entityName, in: context) else {
+						throw undoConflict()
+					}
+					value = Activity(entity: entity, insertInto: context)
+				}
+				let definition = try requiredDefinition(before.definitionID, in: context, coordinator: coordinator)
+				restore(before, to: value, definition: definition, tags: tags)
+				if value.objectID.isTemporaryID { try context.obtainPermanentIDs(for: [value]) }
+				if before.end == nil { restoredID = identifier(value) }
+			}
+			return ActivityRecordingResult(startedActivityID: restoredID, stoppedActivityIDs: removedIDs, didChange: true)
+		}
+	}
+
+	private static func undoState(_ value: Activity) throws -> ActivityRecordingUndoState {
+		guard let definition = value.value(forKey: "definition") as? ActivityDefinition,
+			let start = value.value(forKey: "startDate") as? Date,
+			let source = value.value(forKey: "source") as? NSNumber,
+			let tags = value.value(forKey: "tags") as? NSSet else { throw undoConflict() }
+		let tagObjects = tags.allObjects.compactMap { $0 as? NSManagedObject }
+		guard tagObjects.count == tags.count, !definition.objectID.isTemporaryID,
+			tagObjects.allSatisfy({ !$0.objectID.isTemporaryID }) else { throw undoConflict() }
+		return ActivityRecordingUndoState(definitionID: identifier(definition), tagIDs: Set(tagObjects.map(identifier)),
+			start: start, startSetAt: value.value(forKey: "startDateSetAt") as? Date,
+			startZone: value.value(forKey: "startDateTimeZoneId") as? String,
+			end: value.value(forKey: "endDate") as? Date, endSetAt: value.value(forKey: "endDateSetAt") as? Date,
+			endZone: value.value(forKey: "endDateTimeZoneId") as? String, note: value.value(forKey: "note") as? String,
+			source: source.int16Value)
+	}
+
+	private static func restore(_ state: ActivityRecordingUndoState, to value: Activity,
+		definition: ActivityDefinition, tags: [String: NSManagedObject]) {
+		value.setValue(state.start, forKey: "startDate")
+		value.setValue(state.startSetAt, forKey: "startDateSetAt")
+		value.setValue(state.startZone, forKey: "startDateTimeZoneId")
+		value.setValue(state.end, forKey: "endDate")
+		value.setValue(state.endSetAt, forKey: "endDateSetAt")
+		value.setValue(state.endZone, forKey: "endDateTimeZoneId")
+		value.setValue(state.note, forKey: "note")
+		value.setValue(NSNumber(value: state.source), forKey: "source")
+		value.setValue(definition, forKey: "definition")
+		value.setValue(NSSet(array: state.tagIDs.sorted().compactMap { tags[$0] }), forKey: "tags")
+	}
+
+	private static func runningIDs(for definitionIDs: Set<String>, in context: NSManagedObjectContext,
+		coordinator: NSPersistentStoreCoordinator) throws -> [String: Set<String>] {
+		var values: [String: Set<String>] = [:]
+		for id in definitionIDs {
+			let definition = try requiredDefinition(id, in: context, coordinator: coordinator)
+			let request = Activity.fetchRequest()
+			request.predicate = NSPredicate(format: "definition == %@ AND endDate == nil", definition)
+			values[id] = Set(try context.fetch(request).filter { !$0.isDeleted }.map(identifier))
+		}
+		return values
+	}
+
+	private static func requiredUndoTag(_ id: String, in context: NSManagedObjectContext,
+		coordinator: NSPersistentStoreCoordinator) throws -> NSManagedObject {
+		let objectID = try self.objectID(id, entity: Tag.entityName, coordinator: coordinator)
+		let request = NSFetchRequest<NSManagedObject>(entityName: Tag.entityName)
+		request.predicate = NSPredicate(format: "SELF == %@", objectID)
+		request.fetchLimit = 1
+		guard let value = try context.fetch(request).first else { throw undoConflict() }
+		return value
+	}
+
+	private static func rejectPendingUndoChanges(activityIDs: Set<String>, definitionIDs: Set<String>, tagIDs: Set<String>) throws {
+		let root = injected(Database.self).fetchedResultsController(type: Activity.self,
+			sortDescriptors: [NSSortDescriptor(key: "startDate", ascending: true)]).managedObjectContext
+		for object in root.insertedObjects.union(root.updatedObjects).union(root.deletedObjects) {
+			let id = identifier(object)
+			if activityIDs.contains(id) || definitionIDs.contains(id) || tagIDs.contains(id) { throw undoConflict() }
+			if object.entity.name == Activity.entityName,
+				let definition = object.value(forKey: "definition") as? NSManagedObject,
+				definitionIDs.contains(identifier(definition)) { throw undoConflict() }
+		}
+	}
+
+	private static func undoStores(_ coordinator: NSPersistentStoreCoordinator) throws -> [ActivityRecordingUndoStore] {
+		try coordinator.persistentStores.map { store in
+			guard let uuid = coordinator.metadata(for: store)[NSStoreUUIDKey] as? String else {
+				throw undoConflict()
+			}
+			return ActivityRecordingUndoStore(uuid: uuid, type: store.type, url: store.url?.standardizedFileURL)
+		}.sorted { ($0.uuid, $0.url?.absoluteString ?? "") < ($1.uuid, $1.url?.absoluteString ?? "") }
+	}
+
+	private static func undoConflict() -> ActivityRecordingError {
+		ActivityRecordingError("This activity has changed since recording. Finish or cancel any pending edits, or choose a current activity instead.")
 	}
 
 	private static func newContext() -> NSManagedObjectContext {
@@ -207,7 +487,7 @@ public enum ActivityQuickRecorder {
 	}
 
 	private static func change(at: Date, recordedAt: Date, contextFactory: () -> NSManagedObjectContext,
-		_ body: (NSManagedObjectContext, NSPersistentStoreCoordinator) throws -> ActivityRecordingResult) throws -> ActivityRecordingResult {
+		beforeNotification: (() -> Void)? = nil, _ body: (NSManagedObjectContext, NSPersistentStoreCoordinator) throws -> ActivityRecordingResult) throws -> ActivityRecordingResult {
 		guard at.timeIntervalSinceReferenceDate.isFinite, recordedAt.timeIntervalSinceReferenceDate.isFinite,
 			at <= recordedAt else { throw ActivityRecordingError("Choose an activity time at or before now.") }
 		let result = try withContext(contextFactory: contextFactory) { context, coordinator in
@@ -221,7 +501,10 @@ public enum ActivityQuickRecorder {
 			if result.didChange { try context.save() }
 			return result
 		}
-		if result.didChange { NotificationCenter.default.post(name: .activityRecordingChanged, object: nil) }
+		if result.didChange {
+			beforeNotification?()
+			NotificationCenter.default.post(name: .activityRecordingChanged, object: nil)
+		}
 		return result
 	}
 

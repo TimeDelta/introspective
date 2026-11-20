@@ -30,6 +30,22 @@ the supported singular or plural unit names. It no longer substitutes the last
 activity's end time. The separate **Start activity from end of last** action keeps
 that behavior.
 
+## Undoing an activity action
+
+After a Start or Stop row tap, a **Time / Switch** action, or ending a timer in
+Activity Review, the bottom toolbar offers **Undo** for the latest successful
+action. Start and Stop still take a single tap.
+Undo restores the original stored timestamps, recording metadata, notes and tag
+links, and leaves other running activities alone. It also restores a short
+activity removed by auto-ignore. Undo does not open another Auto-Note editor.
+
+The action is available during the current app session. The next such recording
+replaces it; Undo can be used once. Bulk stops, quick creation and gap saves
+clear the prior action. If an affected record now has saved or pending edits,
+has been deleted, or its activity has restarted elsewhere, Undo reports the
+conflict and preserves the newer data. Undo keeps the lower-unit zeroing rules
+for explicitly backdated times.
+
 ## Home and Lock Screen widgets
 
 Add the **Activity** widget, then edit it to choose a saved activity. Small and

@@ -76,6 +76,32 @@ Previous day, Next day and the review-date chooser against the phone's calendar.
    whole-minute value. Defaults accepted unchanged retain their original
    boundaries; automatic Now captures retain their available precision.
 
+## Undo recording in the app
+
+Keep the overall status **NOT EXECUTED** until these steps run on an installed
+device build. Native persistence tests do not establish toolbar, keyboard,
+navigation, widget refresh or Lock Screen behavior.
+
+1. Start Device A from the Activities list while Device B is already running.
+   Tap **Undo** in the bottom toolbar. A's new record should disappear and B
+   should retain its original start. Start A again to confirm the normal row
+   action still takes one tap.
+2. Stop A and use Undo. Its original start, notes and tags should remain, and
+   it should be running again. Repeating Undo must not create another record.
+3. Switch A to another stopped activity with **Time / Switch**, then Undo.
+   A should resume with its original stored start; only the timer created by
+   that switch should disappear. Other concurrent activities keep running.
+4. Stop an activity configured for Auto-Note, save a changed note, and return
+   to the list. Undo must preserve the saved edit, either by declining the
+   changed record or by no longer offering that action.
+5. Temporarily enable auto-ignore with an interval long enough for a short
+   test. Start and quickly stop A, then Undo. Confirm exactly one restored
+   running record with its original start. A stale widget Stop for the deleted
+   instance must not stop the restored record before the widget refreshes.
+6. After each Undo, verify the app, Home Screen widget, Lock Screen widget and
+   control update to the saved state. With reminders enabled, verify reminders
+   follow the restored running instance. Restore the original settings.
+
 ## Optional running-activity reminders
 
 Reminders start **off**. Enabling them requests notification authorization.

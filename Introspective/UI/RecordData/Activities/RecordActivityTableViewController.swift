@@ -78,6 +78,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private var pendingQuickRecording: QuickRecordingOperation?
 	private weak var quickRecordingDatePicker: UIViewController?
+	private lazy var recordingUndoToolbar = ActivityRecordingUndoToolbar(owner: self)
 
 	private func updateLoadingState() {
 		searchController.searchBar.isUserInteractionEnabled = finishedLoading
@@ -146,8 +147,14 @@ public final class RecordActivityTableViewController: UITableViewController {
 		coachMarksController.skipView = DefaultCoachMarksDataSourceAndDelegate.defaultSkipInstructionsView()
 	}
 
+	public final override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		recordingUndoToolbar.show()
+	}
+
 	public final override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
+		recordingUndoToolbar.show()
 		if !injected(UserDefaultsUtil.self).bool(forKey: .recordActivitiesInstructionsShown) {
 			coachMarksController.start(in: .window(over: self))
 		}
@@ -155,6 +162,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	public final override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
+		recordingUndoToolbar.hide()
 		coachMarksController.stop(immediately: true)
 	}
 
@@ -380,24 +388,25 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private func saveQuickRecording(_ operation: QuickRecordingOperation, at date: Date, recordedAt: Date) {
 		do {
-			let result: ActivityRecordingResult
+			let undoable: ActivityUndoableRecordingResult
+			let title: String
 			switch operation {
 			case let .start(definitionID):
-				result = try ActivityQuickRecorder.start(definitionID: definitionID, at: date, recordedAt: recordedAt)
+				undoable = try ActivityQuickRecorder.startWithUndo(definitionID: definitionID, at: date, recordedAt: recordedAt)
+				title = "Started activity"
 			case let .stop(activityID):
-				result = try ActivityQuickRecorder.stop(activityID: activityID, at: date, recordedAt: recordedAt)
+				undoable = try ActivityQuickRecorder.stopWithUndo(activityID: activityID, at: date, recordedAt: recordedAt)
+				title = "Stopped activity"
 			case let .switchActivity(sourceID, targetID):
-				result = try ActivityQuickRecorder.switchActivity(from: sourceID, to: targetID, at: date, recordedAt: recordedAt)
+				undoable = try ActivityQuickRecorder.switchActivityWithUndo(from: sourceID, to: targetID, at: date, recordedAt: recordedAt)
+				title = "Switched activities"
 			}
+			ActivityRecordingUndoSession.shared.record(undoable, title: title)
+			let result = undoable.recording
 			loadActivitiyDefinitions()
 			guard result.didChange else { return }
 			UINotificationFeedbackGenerator().notificationOccurred(.success)
-			for id in result.autoNoteActivityIDs {
-				guard let context = activeActivitiesFetchedResultsController?.managedObjectContext,
-					let url = URL(string: id), let objectID = context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: url),
-					let activity = try context.existingObject(with: objectID) as? Activity else { continue }
-				showEditScreenForActivity(activity, autoFocusNote: true)
-			}
+			openAutoNotes(for: result)
 		} catch {
 			showError(title: "Failed to record activity", error: error)
 		}
@@ -766,6 +775,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	@IBAction final func stopAllButtonPressed(_ sender: Any) {
 		do {
 			let activitiesToAutoNote = try injected(ActivityDAO.self).stopAllActivities()
+			ActivityRecordingUndoSession.shared.clear()
 			loadActivitiyDefinitions()
 			for activity in activitiesToAutoNote {
 				showEditScreenForActivity(activity, autoFocusNote: true)
@@ -879,6 +889,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 					startDate: now,
 					startDateSetAt: now
 				)
+				ActivityRecordingUndoSession.shared.clear()
 				searchController.searchBar.text = ""
 				loadActivitiyDefinitions()
 			} catch {
@@ -897,7 +908,10 @@ public final class RecordActivityTableViewController: UITableViewController {
 		cell: RecordActivityDefinitionTableViewCell
 	) {
 		do {
-			try injected(ActivityDAO.self).startActivity(activityDefinition)
+			let now = Date()
+			let result = try ActivityQuickRecorder.startWithUndo(definitionID: activityDefinition.objectID.uriRepresentation().absoluteString,
+				at: now, recordedAt: now)
+			ActivityRecordingUndoSession.shared.record(result, title: "Started activity")
 			// just calling updateUiElements here doesn't display the progress indicator for some reason
 			cell.activityDefinition = try injected(Database.self).pull(savedObject: activityDefinition)
 		} catch {
@@ -908,21 +922,21 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final func stopActivity(_ activity: Activity, associatedCell: RecordActivityDefinitionTableViewCell) {
 		let now = Date()
-		if injected(ActivityDAO.self).autoIgnoreIfAppropriate(activity, end: now) {
-			associatedCell.updateUiElements()
-			return
-		}
 		do {
-			let transaction = injected(Database.self).transaction()
-			activity.end = now
-			activity.endSetAt = now
-			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+			let result = try ActivityQuickRecorder.stopWithUndo(activityID: activity.objectID.uriRepresentation().absoluteString,
+				at: now, recordedAt: now)
+			ActivityRecordingUndoSession.shared.record(result, title: "Stopped activity")
 			associatedCell.updateUiElements()
-			if activity.definition.autoNote {
-				showEditScreenForActivity(activity, autoFocusNote: true)
-			}
+			openAutoNotes(for: result.recording)
 		} catch {
 			showError(title: "Failed to stop activity", error: error)
+		}
+	}
+
+	private func openAutoNotes(for result: ActivityRecordingResult) {
+		for id in result.autoNoteActivityIDs {
+			do { showEditScreenForActivity(try ActivityCatchUpService.activity(id: id), autoFocusNote: true) }
+			catch { showError(title: "Could not open activity note", message: error.localizedDescription) }
 		}
 	}
 
