@@ -21,6 +21,7 @@ final class ActivityDayReviewViewController: UITableViewController {
 	private let nextButton = UIButton(type: .system)
 	private let summaryLabel = UILabel()
 	private lazy var dateSelection = ActivityReviewDateSelection(owner: self)
+	private lazy var recordingUndoToolbar = ActivityRecordingUndoToolbar(owner: self)
 	private let calendar = Calendar.autoupdatingCurrent
 
 	init(day: Date? = nil, activityID: String? = nil) {
@@ -55,11 +56,17 @@ final class ActivityDayReviewViewController: UITableViewController {
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+		recordingUndoToolbar.show()
 		reloadReview()
+	}
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		recordingUndoToolbar.hide()
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
+		recordingUndoToolbar.show()
 		guard let id = pendingActivityID else { return }
 		pendingActivityID = nil
 		if let running = currentRunning.first(where: { $0.id == id }) {
@@ -254,7 +261,9 @@ final class ActivityDayReviewViewController: UITableViewController {
 	}
 	private func finish(_ item: ActivityRecordingItem, at date: Date) {
 		do {
-			let result = try ActivityQuickRecorder.stop(activityID: item.id, at: date, recordedAt: Date())
+			let undoable = try ActivityQuickRecorder.stopWithUndo(activityID: item.id, at: date, recordedAt: Date())
+			ActivityRecordingUndoSession.shared.record(undoable, title: "Stopped activity")
+			let result = undoable.recording
 			reloadReview()
 			if let id = result.autoNoteActivityIDs.first { openEditor(activityID: id, focusNote: true) }
 		} catch { reloadReview(); showError(title: "Could not finish activity", error: error) }
@@ -341,6 +350,7 @@ private final class ActivityGapRecordViewController: UITableViewController {
 		updateSave()
 		do {
 			let result = try ActivityCatchUpService.recordGap(definitionID: definition.id, from: start, to: end, recordedAt: Date())
+			ActivityRecordingUndoSession.shared.clear()
 			guard let navigation = navigationController else { return }
 			navigation.popViewController(animated: false)
 			saved(result)
