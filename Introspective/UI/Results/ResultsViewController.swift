@@ -833,6 +833,23 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		}
 	}
 
+	/// Splitting changes query membership and can add a second matching record.
+	/// Reuse the current query and filters rather than replacing only its old row.
+	final func activityWasSplit(originalID: String, secondID: String) {
+		guard !isClosed else { return }
+		selectedEditingSample = nil
+		if query != nil { refreshQuery(); return }
+		do {
+			let first = try ActivityCatchUpService.activity(id: originalID)
+			let second = try ActivityCatchUpService.activity(id: secondID)
+			let remaining = (storedSamples ?? []).filter {
+				guard let activity = $0 as? Activity else { return true }
+				return activity.objectID != first.objectID && activity.objectID != second.objectID
+			}
+			acceptSamples(remaining + [first, second])
+		} catch { showError(title: "Could not refresh split activities", error: error) }
+	}
+
 	// MARK: - Display Edit Screen Functions
 
 	private final func showEditInformationView(_ indexPath: IndexPath) {

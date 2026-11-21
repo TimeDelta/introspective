@@ -464,7 +464,7 @@ private final class ActivityReviewDefinitionChooser: UITableViewController, UISe
 
 /// Shared picker adapter: accept unchanged/Now values exactly, and let the
 /// existing picker apply its manual lower-unit precision rule.
-private final class ActivityReviewDateSelection {
+final class ActivityReviewDateSelection {
 	private weak var owner: UIViewController?
 	private weak var picker: UIViewController?
 	private var accept: ((Date) -> Void)?
