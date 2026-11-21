@@ -11,7 +11,9 @@ SCRIPT = Path(__file__).resolve().parents[1] / 'run-ui-tests.py'
 MODULE = runpy.run_path(str(SCRIPT))
 AX_ERROR = MODULE['AX_ERROR']
 AX_ERRORS = MODULE['AX_ERRORS']
-ELIGIBLE = MODULE['startup_timeout_only']
+BOOTSTRAP_KILL_ERROR = MODULE['BOOTSTRAP_KILL_ERROR']
+CONNECTION_KILL_ERROR = MODULE['CONNECTION_KILL_ERROR']
+ELIGIBLE = MODULE['startup_failure_only']
 
 
 def startup_summary(error=AX_ERROR):
@@ -21,6 +23,19 @@ def startup_summary(error=AX_ERROR):
                 'testIdentifierString': 'IntrospectiveUITests-Runner (26232) encountered an error',
                 'failureText': 'The test runner failed to initialize for UI testing. '
                                f'(Underlying Error: {error})'}]}
+
+
+def killed_summary(pid=26232):
+    result = startup_summary()
+    result['testFailures'][0].update(
+        testIdentifierString=f'IntrospectiveUITests-Runner ({pid}) encountered an error',
+        failureText=f'{BOOTSTRAP_KILL_ERROR} (Underlying Error: {CONNECTION_KILL_ERROR})')
+    return result
+
+
+def killed_log(pid=26232):
+    return (f'IntrospectiveUITests-Runner ({pid}) encountered an error '
+            f'({BOOTSTRAP_KILL_ERROR} (Underlying Error: {CONNECTION_KILL_ERROR}))')
 
 
 class UIStartupRecovery(unittest.TestCase):
@@ -43,17 +58,22 @@ counter = root / 'counter'
 number = int(counter.read_text()) + 1 if counter.exists() else 1
 counter.write_text(str(number))
 bundle = pathlib.Path(sys.argv[sys.argv.index('-resultBundlePath') + 1])
-bundle.mkdir()
-(bundle / 'attempt.txt').write_text(str(number))
+if os.environ.get('RECOVERY_TEST_NO_BUNDLE') != '1':
+    bundle.mkdir()
+    (bundle / 'attempt.txt').write_text(str(number))
 mode = os.environ.get('RECOVERY_TEST_MODE', 'startup')
-if mode == 'success' or number == 2 and mode != 'repeat':
+if mode == 'success' or number == 2 and mode not in ['repeat', 'repeat-killed']:
     print("Test Case '-[UITests testOne]' started.")
     print("Test Case '-[UITests testOne]' passed (0.1 seconds).")
     sys.exit(0)
-if mode in ['real', 'real-loading']:
+if mode in ['real', 'real-loading', 'real-killed']:
     print("Test Case '-[UITests testOne]' started.")
 if mode == 'other':
     print('The simulator was not found')
+elif mode in ['killed', 'repeat-killed', 'real-killed']:
+    print('IntrospectiveUITests-Runner (26232) encountered an error '
+          '(Early unexpected exit, operation never finished bootstrapping - no restart will be attempted. '
+          '(Underlying Error: Test crashed with signal kill before establishing connection.))')
 elif mode in ['loading', 'real-loading']:
     print('The test runner failed to initialize for UI testing. Timed out while loading Accessibility.')
 else:
@@ -199,3 +219,131 @@ elif os.environ.get('RECOVERY_TEST_REBOOT_FAIL') == '1':
         self.assertEqual(result.returncode, 65)
         self.assertEqual(len(self.recorded('xcodebuild')), 1)
         self.assertEqual(saved.read_text(), 'keep original diagnostics')
+
+    def test_killed_runner_retries_once_and_preserves_diagnostics_and_exact_selection(self):
+        summary = killed_summary()
+        self.summary.write_text(json.dumps(summary))
+        result = self.run_ui('killed')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        attempts = self.recorded('xcodebuild')
+        self.assertEqual(len(attempts), 2)
+        self.assertEqual(attempts[0], attempts[1])
+        self.assertIn(killed_log(), (self.root / 'tests-startup-failure.log').read_text())
+        self.assertEqual((self.root / 'Tests-startup-failure.xcresult/attempt.txt').read_text(), '1')
+        self.assertEqual((self.bundle / 'attempt.txt').read_text(), '2')
+        self.assertEqual(json.loads((self.root / 'tests-startup-failure.summary.json').read_text()), summary)
+        self.assertEqual(self.recorded('xcrun')[1:], [
+            ['xcrun', 'simctl', 'shutdown', 'all'], ['xcrun', 'simctl', 'boot', 'simulator-id'],
+            ['xcrun', 'simctl', 'bootstatus', 'simulator-id', '-b']])
+        self.assertIn('one startup retry', result.stdout)
+
+    def test_second_killed_runner_failure_stays_failed_without_a_third_launch(self):
+        self.summary.write_text(json.dumps(killed_summary()))
+        result = self.run_ui('repeat-killed')
+        self.assertEqual(result.returncode, 65)
+        self.assertEqual(len(self.recorded('xcodebuild')), 2)
+        self.assertIn(CONNECTION_KILL_ERROR, self.log.read_text())
+        self.assertEqual((self.root / 'Tests-startup-failure.xcresult/attempt.txt').read_text(), '1')
+
+    def test_started_test_is_never_retried_even_when_runner_is_killed_before_connection(self):
+        self.summary.write_text(json.dumps(killed_summary()))
+        result = self.run_ui('real-killed')
+        self.assertEqual(result.returncode, 65)
+        self.assertEqual(len(self.recorded('xcodebuild')), 1)
+        self.assertEqual(self.recorded('xcrun'), [])
+
+    def test_killed_runner_restart_failure_does_not_launch_the_tests_again(self):
+        self.summary.write_text(json.dumps(killed_summary()))
+        result = self.run_ui('killed', RECOVERY_TEST_REBOOT_FAIL='1')
+        self.assertEqual(result.returncode, 65)
+        self.assertEqual(len(self.recorded('xcodebuild')), 1)
+        self.assertIn('Simulator recovery failed', result.stderr)
+
+    def test_killed_runner_without_a_result_bundle_does_not_restart(self):
+        self.summary.write_text(json.dumps(killed_summary()))
+        result = self.run_ui('killed', RECOVERY_TEST_NO_BUNDLE='1')
+        self.assertEqual(result.returncode, 65)
+        self.assertEqual(len(self.recorded('xcodebuild')), 1)
+        self.assertFalse(self.bundle.exists())
+        self.assertFalse(any(call[1:2] == ['simctl'] for call in self.recorded('xcrun')))
+
+    def test_existing_saved_summary_is_never_overwritten(self):
+        self.summary.write_text(json.dumps(killed_summary()))
+        saved = self.root / 'tests-startup-failure.summary.json'
+        saved.write_text('keep the original summary')
+        result = self.run_ui('killed')
+        self.assertEqual(result.returncode, 65)
+        self.assertEqual(len(self.recorded('xcodebuild')), 1)
+        self.assertEqual(saved.read_text(), 'keep the original summary')
+        self.assertTrue(self.log.exists())
+        self.assertEqual((self.bundle / 'attempt.txt').read_text(), '1')
+
+    def test_killed_runner_requires_both_exact_startup_markers_in_log_and_summary(self):
+        summary = killed_summary()
+        log = killed_log()
+        self.assertTrue(ELIGIBLE(log, summary))
+        for marker in [BOOTSTRAP_KILL_ERROR, CONNECTION_KILL_ERROR]:
+            with self.subTest(missing_from='log', marker=marker):
+                self.assertFalse(ELIGIBLE(log.replace(marker, ''), summary))
+            with self.subTest(missing_from='summary', marker=marker):
+                changed = killed_summary()
+                changed['testFailures'][0]['failureText'] = changed['testFailures'][0]['failureText'].replace(marker, '')
+                self.assertFalse(ELIGIBLE(log, changed))
+        self.assertFalse(ELIGIBLE('', summary))
+        self.assertFalse(ELIGIBLE(log, None))
+        self.assertFalse(ELIGIBLE(AX_ERROR, summary))
+        self.assertFalse(ELIGIBLE(log, startup_summary()))
+
+    def test_killed_runner_requires_matching_runner_identity_in_log_and_summary(self):
+        self.assertFalse(ELIGIBLE(killed_log(pid=19858), killed_summary(pid=26232)))
+        self.assertTrue(ELIGIBLE(killed_log(pid=19858), killed_summary(pid=19858)))
+        self.assertFalse(ELIGIBLE(killed_log().replace('IntrospectiveUITests-Runner', 'OtherRunner'), killed_summary()))
+
+    def test_killed_runner_identity_and_markers_must_share_one_diagnostic_line(self):
+        summary = killed_summary()
+        identity = summary['testFailures'][0]['testIdentifierString']
+        logs = [identity + '\n' + killed_log(pid=19858),
+                f'{identity} ({BOOTSTRAP_KILL_ERROR})\n{CONNECTION_KILL_ERROR}',
+                f'{identity}\n{BOOTSTRAP_KILL_ERROR} ({CONNECTION_KILL_ERROR})']
+        for log in logs:
+            with self.subTest(log=log):
+                self.assertFalse(ELIGIBLE(log, summary))
+
+    def test_other_crashes_and_kills_after_connection_do_not_authorize_retry(self):
+        for replacement in ['Test crashed with signal abort before establishing connection.',
+                            'Test crashed with signal segmentation fault before establishing connection.',
+                            'Test crashed with signal kill after establishing connection.',
+                            'The process was killed.']:
+            with self.subTest(replacement=replacement):
+                changed = killed_summary()
+                changed['testFailures'][0]['failureText'] = changed['testFailures'][0]['failureText'].replace(CONNECTION_KILL_ERROR, replacement)
+                log = killed_log().replace(CONNECTION_KILL_ERROR, replacement)
+                self.assertFalse(ELIGIBLE(log, changed))
+
+    def test_killed_runner_summary_cannot_hide_real_test_results_or_missing_counts(self):
+        summary = killed_summary()
+        variants = [dict(summary, passedTests=1), dict(summary, skippedTests=1),
+                    dict(summary, expectedFailures=1), dict(summary, totalTestCount=2),
+                    dict(summary, failedTests=True), dict(summary, testFailures=[]),
+                    dict(summary, result='Passed')]
+        for count in ['passedTests', 'skippedTests', 'expectedFailures', 'failedTests', 'totalTestCount']:
+            missing = dict(summary)
+            missing.pop(count)
+            variants.append(missing)
+        for field, value in [('testIdentifierString', 'Original/testOne()'),
+                             ('testIdentifierString', None), ('failureText', None),
+                             ('testIdentifierURL', 'test://UI/Original/testOne'),
+                             ('targetName', 'OtherTarget')]:
+            variants.append(dict(summary, testFailures=[dict(summary['testFailures'][0], **{field: value})]))
+        variants.append(dict(summary, testFailures=[summary['testFailures'][0], summary['testFailures'][0]]))
+        for variant in variants:
+            with self.subTest(summary=variant):
+                self.assertFalse(ELIGIBLE(killed_log(), variant))
+
+    def test_any_test_case_or_suite_activity_blocks_killed_runner_recovery(self):
+        for marker in ["Test Case '-[UI testOne]' started.", "Test case 'UI.testOne()' failed on 'Phone'",
+                       "Test Suite 'UI' started.", "Test suite 'UI' passed.",
+                       "2026-11-21T13:05:01.000Z Test Case '-[UI testOne]' started.",
+                       "2026-11-21 13:05:01.000 Test Suite 'UI' started."]:
+            with self.subTest(marker=marker):
+                self.assertFalse(ELIGIBLE(killed_log() + '\n' + marker, killed_summary()))
