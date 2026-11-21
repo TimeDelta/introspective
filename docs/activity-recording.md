@@ -46,6 +46,28 @@ has been deleted, or its activity has restarted elsewhere, Undo reports the
 conflict and preserves the newer data. Undo keeps the lower-unit zeroing rules
 for explicitly backdated times.
 
+## Splitting a recorded activity
+
+Open an existing activity record from Activity Review, the Timeline or results,
+then tap **Split…**. Save any edits to the original record before opening Split.
+The form previews the two parts with a midpoint split time, rounded down to a
+whole minute when that remains inside the interval, and the original activity
+selected for the second part. Choose another activity for the second part if
+needed, then tap **Split** to save both parts together.
+
+Tap **Split time** for 5, 15 or 30 minutes ago, or **Choose time…**. Estimates in
+minutes clear seconds and fractions, using the same backdating rules as recording.
+The split must be strictly inside the original interval. A running record keeps
+its second part running; other running activities keep their own times.
+
+The first part keeps the original start, and the second keeps the original end,
+including their exact stored precision and recording metadata. Both keep the
+original notes and tags. Explicit short parts are retained even when automatic
+short-activity ignoring is enabled. Canceling leaves the saved record unchanged.
+If the original record changes or is deleted while the form is open, saving is
+refused so it cannot overwrite the newer record. A successful split clears the
+previous recording Undo action and returns to the record list.
+
 ## Home and Lock Screen widgets
 
 Add the **Activity** widget, then edit it to choose a saved activity. Small and
@@ -148,7 +170,10 @@ Native SQLite tests also exercise fresh gap checks, exact neighbor timestamps,
 pending edits, fresh neighbor choices and recent ordering, reminder actions,
 scheduling races and authorization settings. The UI suite covers filling a gap,
 explicit contextual selection, searching all activities, ending one of several
-running timers, and reviewing overlaps. Native and UI tests require macOS/iOS.
+running timers, and reviewing overlaps. `ActivitySplitServiceTests` exercises
+atomic splitting, original metadata, short parts, stale or pending changes and
+save-failure rollback. `ActivitySplitUITests` covers completed and running splits,
+choosing the second activity and canceling. Native and UI tests require macOS/iOS.
 Physical widget,
 Lock Screen, cold-launch and notification checks remain **not executed** in the
 Linux workspace; use the [device smoke procedure](activity-widget-device-check.md)

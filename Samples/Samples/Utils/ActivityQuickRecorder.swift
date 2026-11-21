@@ -486,7 +486,7 @@ public enum ActivityQuickRecorder {
 		catch { context.rollback(); throw error }
 	}
 
-	private static func change(at: Date, recordedAt: Date, contextFactory: () -> NSManagedObjectContext,
+	internal static func change(at: Date, recordedAt: Date, contextFactory: () -> NSManagedObjectContext,
 		beforeNotification: (() -> Void)? = nil, _ body: (NSManagedObjectContext, NSPersistentStoreCoordinator) throws -> ActivityRecordingResult) throws -> ActivityRecordingResult {
 		guard at.timeIntervalSinceReferenceDate.isFinite, recordedAt.timeIntervalSinceReferenceDate.isFinite,
 			at <= recordedAt else { throw ActivityRecordingError("Choose an activity time at or before now.") }

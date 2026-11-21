@@ -127,6 +127,12 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 			action: #selector(saveButtonPressed)
 		)
 		navigationItem.rightBarButtonItem = saveButton
+		if activity != nil {
+			let split = UIBarButtonItem(title: "Split…", style: .plain, target: self, action: #selector(splitActivity))
+			split.accessibilityIdentifier = "splitActivity"
+			split.accessibilityLabel = "Split activity"
+			navigationItem.rightBarButtonItems = [saveButton, split]
+		}
 
 		observe(selector: #selector(activityDefinitionChanged), name: Me.activityDefinitionChanged)
 		observe(selector: #selector(startDateChanged), name: Me.startDateChanged)
@@ -316,6 +322,38 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 	}
 
 	// MARK: - Actions
+
+	@objc private func splitActivity() {
+		view.endEditing(true)
+		// Note cells deliver changes on the main queue. Read their latest draft first.
+		DispatchQueue.main.async { [weak self] in self?.openSplitActivity() }
+	}
+
+	private func openSplitActivity() {
+		guard let activity = activity, let navigation = navigationController else { return }
+		guard definition == activity.definition, startDate == activity.start, endDate == activity.end,
+			startDateSetAt == activity.startSetAt, endDateSetAt == activity.endSetAt,
+			note == activity.note, tagNames == Set(activity.tagsArray().map { $0.name }) else {
+			showError(title: "Save changes before splitting", message: "Save this record's changes, then open it again to split it.")
+			return
+		}
+		do {
+			let snapshot = try ActivitySplitService.snapshot(activityID: activity.objectID.uriRepresentation().absoluteString)
+			let controller = ActivitySplitViewController(snapshot: snapshot) { [weak self, weak navigation] result in
+				guard let self = self, let navigation = navigation,
+					let index = navigation.viewControllers.firstIndex(where: { $0 === self }), index > 0 else { return }
+				// Remove the old editor draft as well: its former end would undo the split.
+				navigation.setViewControllers(Array(navigation.viewControllers.prefix(index)), animated: false)
+				if let results = navigation.topViewController as? ResultsViewControllerImpl,
+					let secondID = result.startedActivityID {
+					results.activityWasSplit(originalID: snapshot.activityID, secondID: secondID)
+				} else if let name = self.notificationToSendOnAccept {
+					NotificationCenter.default.post(name: name, object: self, userInfo: self.info([self.userInfoKey: activity]))
+				}
+			}
+			navigation.pushViewController(controller, animated: true)
+		} catch { showError(title: "Could not split activity", error: error) }
+	}
 
 	@objc final func saveButtonPressed(_: Any) {
 		do {
