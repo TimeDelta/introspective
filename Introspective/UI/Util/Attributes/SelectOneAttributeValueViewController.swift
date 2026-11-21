@@ -34,6 +34,7 @@ public final class SelectOneAttributeValueViewController: AttributeValueTypeView
 
 		selectOnePicker.delegate = self
 		selectOnePicker.dataSource = self
+		selectOnePicker.accessibilityIdentifier = "attribute value picker"
 
 		if let index = selectOneAttribute.indexOf(possibleValue: currentValue) {
 			selectOnePicker.selectRow(index, inComponent: 0, animated: false)

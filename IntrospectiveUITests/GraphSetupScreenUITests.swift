@@ -403,9 +403,14 @@ final class GraphSetupScreenUITests: UITest {
 		app.buttons["choose \(groupingType) grouping button"].tap()
 		app.tables.cells.allElementsBoundByIndex[0].tap()
 		app.buttons["set time unit button"].tap()
-		setPicker(to: timeUnit)
+		let wheel = app.pickers["attribute value picker"].pickerWheels.firstMatch
+		guard waitForHittableElement(wheel) else { XCTFail("Time-unit picker did not become reachable"); return }
+		let expectedUnit = timeUnit.localizedCapitalized
+		wheel.adjust(toPickerWheelValue: expectedUnit)
+		// Wait for the actual modal wheel to finish selecting before accepting it.
+		waitForValue(expectedUnit, of: wheel)
 		app.buttons["save button"].tap()
-		waitForValue(timeUnit.localizedCapitalized, of: app.buttons["set time unit button"])
+		waitForValue(expectedUnit, of: app.buttons["set time unit button"])
 		let save = app.buttons["save grouper button"]
 		guard waitForElement(save) else { XCTFail("Grouper Save did not appear"); return }
 		let scroll = app.scrollViews.containing(.button, identifier: "save grouper button").firstMatch
