@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Recover once from XCTest's AX startup timeout before any test has run."""
+"""Recover once from confirmed XCTest startup failures before any test has run."""
 import argparse
 import json
 from pathlib import Path
@@ -10,13 +10,22 @@ import sys
 ROOT = Path(__file__).resolve().parent
 AX_ERROR = 'Timed out waiting for AX loaded notification'
 AX_ERRORS = (AX_ERROR, 'Timed out while loading Accessibility')
+BOOTSTRAP_KILL_ERROR = ('Early unexpected exit, operation never finished bootstrapping '
+                        '- no restart will be attempted.')
+CONNECTION_KILL_ERROR = 'Test crashed with signal kill before establishing connection.'
 RUNNER_ERROR = re.compile(r'^IntrospectiveUITests-Runner \(\d+\) encountered an error$')
-TEST_ACTIVITY = re.compile(r'^\s*Test (?:Case|case|Suite|suite)\b', re.MULTILINE)
+# Timestamps or process prefixes must not hide evidence that a test started.
+TEST_ACTIVITY = re.compile(r'\bTest (?:Case|case|Suite|suite)\b')
 
 
-def startup_timeout_only(log, summary):
+def startup_signature(text):
+    return (any(error in text for error in AX_ERRORS)
+            or BOOTSTRAP_KILL_ERROR in text and CONNECTION_KILL_ERROR in text)
+
+
+def startup_failure_only(log, summary):
     """Xcode counts its synthetic runner error as one failed test. Fail closed."""
-    if not any(error in log for error in AX_ERRORS) or TEST_ACTIVITY.search(log):
+    if not startup_signature(log) or TEST_ACTIVITY.search(log):
         return False
     if not isinstance(summary, dict) or summary.get('result') != 'Failed':
         return False
@@ -36,11 +45,18 @@ def startup_timeout_only(log, summary):
     message = failure.get('failureText')
     if not isinstance(identifier, str) or not isinstance(message, str):
         return False
-    return (failure.get('targetName') == 'IntrospectiveUITests'
-            and RUNNER_ERROR.fullmatch(identifier) is not None
-            and not failure.get('testIdentifierURL')
-            and 'The test runner failed to initialize for UI testing.' in message
-            and any(error in log and error in message for error in AX_ERRORS))
+    if (failure.get('targetName') != 'IntrospectiveUITests'
+            or RUNNER_ERROR.fullmatch(identifier) is None
+            or failure.get('testIdentifierURL')):
+        return False
+    accessibility_timeout = ('The test runner failed to initialize for UI testing.' in message
+                             and any(error in log and error in message for error in AX_ERRORS))
+    kill_markers = (BOOTSTRAP_KILL_ERROR, CONNECTION_KILL_ERROR)
+    killed_before_connection = (all(error in message for error in kill_markers)
+                                and any(identifier in line
+                                        and all(error in line for error in kill_markers)
+                                        for line in log.splitlines()))
+    return accessibility_timeout or killed_before_connection
 
 
 def summary_for(bundle):
@@ -98,22 +114,23 @@ def main():
     if status == 0:
         return 0
     log_text = args.log.read_text(errors='replace')
-    if not any(error in log_text for error in AX_ERRORS) or TEST_ACTIVITY.search(log_text):
+    if not startup_signature(log_text) or TEST_ACTIVITY.search(log_text):
         return status
     summary = summary_for(bundle)
-    if not startup_timeout_only(log_text, summary):
+    if not startup_failure_only(log_text, summary):
         return status
     saved_log, saved_bundle = recovery_path(args.log), recovery_path(bundle)
+    saved_summary = saved_log.with_suffix('.summary.json')
+    recovery_log = args.log.with_name(args.log.stem + '-simulator-recovery.log')
     # Preserve the failed launch and never overwrite diagnostics from another attempt.
-    if saved_log.exists() or saved_bundle.exists() or not bundle.is_dir():
+    if any(path.exists() for path in (saved_log, saved_bundle, saved_summary, recovery_log)) or not bundle.is_dir():
         print('Startup recovery refused: saved diagnostics already exist.', file=sys.stderr)
         return status
     args.log.rename(saved_log)
     bundle.rename(saved_bundle)
-    saved_log.with_suffix('.summary.json').write_text(json.dumps(summary, indent=2) + '\n')
-    print('::warning::XCTest accessibility startup timed out before any test started. '
+    saved_summary.write_text(json.dumps(summary, indent=2) + '\n')
+    print('::warning::XCTest failed during initialization before any test started. '
           'Preserved diagnostics; restarting the simulator for one startup retry.', flush=True)
-    recovery_log = args.log.with_name(args.log.stem + '-simulator-recovery.log')
     if not restart_simulator(args.simulator, args.workers, recovery_log):
         print('Simulator recovery failed; see ' + str(recovery_log), file=sys.stderr)
         return status
